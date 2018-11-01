@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <!-- 请求编码过滤器 -->
+    <filter>
+        <filter-name>CharSetEncoding</filter-name>
+        <filter-class>com.sparrow.utility.web.CharSetEncodingFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharSetEncoding</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <!--Bean容器初始化侦听器 -->
+    <listener>
+        <listener-class>com.sparrow.mvc.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- 文件上传 -->
+    <servlet>
+        <servlet-name>FileUpload</servlet-name>
+        <servlet-class>com.sparrow.file.support.servlet.FileUpload</servlet-class>
+        <init-param>
+            <param-name>timeout</param-name>
+            <param-value>60</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FileUpload</servlet-name>
+        <url-pattern>/FileUpload</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <filter-class>com.sparrow.mvc.UrlRewriteFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>UrlRewriteFilter</filter-name>
+        <url-pattern>*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+
+    <!-- 生成验证码 -->
+    <servlet>
+        <servlet-name>ValidateCode</servlet-name>
+        <servlet-class>com.sparrow.web.support.ValidateCode</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ValidateCode</servlet-name>
+        <url-pattern>/ValidateCode</url-pattern>
+    </servlet-mapping>
+    <!-- 下载服务器文件 -->
+    <servlet>
+        <servlet-name>FileDownLoad</servlet-name>
+        <servlet-class>com.sparrow.file.support.servlet.FileDownLoad</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>FileDownLoad</servlet-name>
+        <url-pattern>/FileDownLoad</url-pattern>
+    </servlet-mapping>
+    <!--
+    <servlet>
+        <servlet-name>connect</servlet-name>
+        <servlet-class>com.sparrow.blog.support.servlet.oauth.Connect</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>connect</servlet-name>
+        <url-pattern>/connect</url-pattern>
+    </servlet-mapping>
+    -->
+    <!-- ActionFilter -->
+    <filter>
+        <filter-name>ActionFilter</filter-name>
+        <filter-class>com.sparrow.mvc.ActionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>ActionFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ActionFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+        <dispatcher>INCLUDE</dispatcher>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>ActionFilter</filter-name>
+        <url-pattern>*.json</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <session-config>
+        <!-- session超时时间单位为分钟 -->
+        <session-timeout>120</session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+        <welcome-file>default.jsp</welcome-file>
+    </welcome-file-list>
+    <jsp-config>
+        <taglib>
+            <taglib-uri>http://www.sparrowzoo.com/ui/extend</taglib-uri>
+            <taglib-location>/WEB-INF/classes/extend.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+</web-app>

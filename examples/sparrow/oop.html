@@ -1,0 +1,17 @@
+<script type="text/javascript" language="javascript">
+    function Book() {
+        var price=100;
+        this.p=200;
+        var name='zhangsan';
+        var getPrice=function () {
+            return price++;
+            //return this.p++;
+        };
+    }
+
+    //alert(Book());
+
+    var book=new Book();
+    alert(book.getPrice());
+    alert(new Book().getPrice());
+</script>

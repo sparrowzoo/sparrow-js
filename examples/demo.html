@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo</title>
+    <script language="javascript" type="text/javascript">
+        var parameters = {};
+        parameters["order-flight.query"] = {
+            "method": "POST",
+            "url": "http://www.baidu.com",
+            "data": {
+                "buyerId": 1,
+                "contactName": "zhangsan"
+            }
+        };
+
+
+        function call(method_lable) {
+            var requestParamerter = parameters[method_lable];
+            var parameter = [];
+            for (var key in requestParamerter.data) {
+                if (parameter.length > 0) {
+                    parameter.push("&");
+                }
+                if (requestParamerter.data.hasOwnProperty(key)) {
+                    parameter.push(key);
+                    parameter.push("=");
+                    parameter.push(requestParamerter.data[key]);
+                }
+            }
+            var data = parameter.join("");
+            ajax.req(requestParamerter.method, requestParamerter.url, data);
+        }
+
+        function button_click() {
+            debugger;
+            call(document.getElementById("methodList").value);
+        }
+
+    </script>
+</head>
+<body>
+<select id="methodList">
+    <option value="order-flight.query">order-flight.query</option>
+</select>
+<input type="button" onclick="button_click()" value="请求"/>
+</body>
+</html>

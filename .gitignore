@@ -4,3 +4,5 @@ target
 classes
 logs
 .DS_Store
+node_modules
+assets

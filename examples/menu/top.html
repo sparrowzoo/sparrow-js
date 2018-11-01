@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/sparrow.min.css">
+    <script type="text/javascript"
+            src="../assets/scripts/sparrow-all.js"></script>
+    <script type="text/javascript">
+        var indexMenu = null;
+        document
+                .ready(function () {
+                    indexMenu = new Menu("menu", $.HORIZONTAL);
+                    indexMenu.config.position["height"]=100;
+                    indexMenu.init();
+                    $(document)
+                            .bind(
+                            "onmouseover",
+                            function (e) {
+                                indexMenu.hidden();
+                            });
+                });
+    </script>
+    <style type="text/css">
+        body {
+            text-align: center;
+            padding: 0px;
+            background-image: url(http://r.sparrowzoo.net/images/background.png);
+            color: #fff;
+            font-size: 10pt;
+            font-family: "Microsoft Yahei", "微软雅黑" !important;
+        }
+
+        .index_menu {background: #c1c1c1;height: 50px;width: 100%;text-align:center;}
+        .index_menu div {margin: auto;}
+        .index_menu .menu ul {list-style: none;height: 50px;width:1004px;padding:0px;margin:0 auto;}
+        .index_menu .menu ul li {float: left;line-height: 50px;padding: 0px 20px 0px 20px;margin:0px;}
+        .index_menu .menu ul li a{font-size:12pt;}
+        .index_menu .list{width:100%;background:#000;overflow:hidden;z-index:1000;left:0;display: block;height: 0;position: absolute;}
+        .index_menu .list ul {height:30px;list-style: none;zoom:1;display:inline-block;margin:0;padding:0;}
+        .index_menu .list ul li {float: left;padding: 0px 30px 0px 30px;line-height:30px; border: #fff 1px solid;}
+    </style>
+</head>
+<body>
+<div id="divMenu" class="index_menu">
+    <div class="menu">
+        <ul>
+            <li><a href="http://www.baidu.com" target="_blank">第一</a></li>
+            <li>第二</li>
+            <li>第三</li>
+        </ul>
+    </div>
+    <div class="list">
+        <ul>
+            <li><a href="http://www.baidu.com" target="_blank">第一</a></li>
+            <li><a href="http://www.baidu.com" target="_blank">第一</a></li>
+            <li><a href="http://www.baidu.com" target="_blank">第一</a></li>
+        </ul>
+        <ul>
+            <li><a href="http://www.baidu.com" target="_blank">第二</a></li>
+            <li><a href="http://www.baidu.com" target="_blank">第二</a></li>
+            <li><a href="http://www.baidu.com" target="_blank">第二</a></li>
+        </ul>
+        <ul>
+            <li>第三</li>
+            <li>第三</li>
+            <li>第三</li>
+        </ul>
+    </div>
+</div>
+</body>
+</html>

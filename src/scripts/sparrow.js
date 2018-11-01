@@ -559,8 +559,8 @@
         document.forms[formIndex].submit();
     };
     Sparrow.isNullOrEmpty = function (sourceString) {
-        return (sourceString == null || typeof (sourceString) == "undefined"
-        || (typeof (sourceString) == "string" && (sourceString.trim() == "" || sourceString.trim() == "null")))
+        return (sourceString == null || typeof (sourceString) === "undefined"
+        || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
     };
     Sparrow.toString = function (sourceString, defaultValue) {
         if (!defaultValue) {
@@ -1796,9 +1796,10 @@
             if (srcElement) {
                 this.srcElement = srcElement;
             }
-            with (objXMLHttp) {
+            //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with
+            //with (objXMLHttp) {
                 try {
-                    if (isay == undefined || isay == null) {
+                    if ($.isNullOrEmpty(isay)) {
                         isay = true;
                     }
                     open(getOrPost, url, isay);
@@ -1859,7 +1860,6 @@
                 } catch (e) {
                     alert(e);
                 }
-            }
         },
         json: function (url, data, callback, srcElement) {
             ajax.req("POST", url,

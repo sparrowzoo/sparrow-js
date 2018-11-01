@@ -1,0 +1,75 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../../assets/styles/sparrow.min.css">
+    <script type="text/javascript"
+            src="../assets/scripts/sparrow-all.js"></script>
+</head>
+<body>
+<div
+        style="margin: auto; background: red; border: red 1px solid; width: 100px; height: 100px; position: relative; z-index: 100">
+    <div onclick="left();"
+         style="z-index: 100; border: yellow 1px solid; width: 20px; height: 100px; position: absolute; left: 0px;">
+        点击向左移动
+    </div>
+    <div id="divList"
+         style="z-index: 1; background: #000; left: 20px; border: yellow 1px solid; width: 510px; height: 100px; position: absolute;">
+
+        <p style="background: blue; width: 60px;height:80px;float:left;">1</p>
+
+        <p style="background: yellow; width: 60px;height:80px;float:left;">2</p>
+
+        <p style="background: blue; width: 60px;height:80px;float:left;">3</p>
+
+        <p style="background: yellow; width: 60px;height:80px;float:left;">4</p>
+
+        <p style="background: blue; width: 60px;height:80px;float:left;">5</p>
+
+        <p style="background: yellow; width: 60px;height:80px;float:left;">6</p>
+
+        <p style="background: blue; width: 60px;height:80px;float:left;">7</p>
+    </div>
+    <div onclick="right();"
+         style="background: red; z-index: 100; border: yellow 1px solid; width: 20px; height: 100px; position: absolute; left: 80px;">
+        点击向右移动
+    </div>
+</div>
+
+<script type="application/javascript">
+
+    var index = 0;
+    var containerWidth = 100;
+    var listWidth = 510;
+    var controlWidth = 20;
+
+    var frameWidth = containerWidth - controlWidth * 2;
+    var maxTarget = controlWidth;
+    var minTarget = -(listWidth - frameWidth - controlWidth);
+    var period = 1;
+    function left() {
+        index++;
+        var targetLeft = -(frameWidth * index - controlWidth);
+        if (targetLeft < minTarget) {
+            targetLeft = minTarget;
+            index--;
+        }
+
+        $("#.divList").stop();
+        $("#.divList").animation("{left:'" + targetLeft + "px'}", period);
+        document.title = targetLeft + "|" + index;
+    }
+    function right() {
+        index--;
+        var targetLeft = -(frameWidth * index - controlWidth);
+        if (targetLeft > maxTarget) {
+            targetLeft = maxTarget;
+            index++;
+        }
+
+        $("#.divList").stop();
+        $("#.divList").animation("{left:'" + targetLeft + "px'}", period);
+        document.title = targetLeft + "|" + index;
+    }
+</script>
+</body>
+</html>

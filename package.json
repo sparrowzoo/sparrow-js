@@ -1,0 +1,31 @@
+{
+  "name": "sparrow-js",
+  "version": "0.0.1",
+  "main": "dist/sparrow.js",
+  "homepage": "http://www.sparrowzoo.com",
+  "scripts": {
+    "test": "coffee make test",
+    "dist": "coffee make dist",
+    "start": "coffee test/server.coffee"
+  },
+  "repository": "sparrowzoo/sparrow-js",
+  "license": "Apache",
+  "dependencies": {
+    "babel-preset-es2017": "^6.24.1",
+    "del": "^3.0.0",
+    "gulp": "^4.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^3.10.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "~4.0.1",
+    "gulp-load-plugins": "^1.5.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify": "^3.0.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0"
+  }
+}
