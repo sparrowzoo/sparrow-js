@@ -1222,7 +1222,7 @@ initCodeToolip : function (codePrefix, ajaxUrl) {
         var codeEntity = this.aNodes[nodeIndex].remark;
         $(this.config.descHiddenId).value = codeEntity.code;
         var descCtrl = $(this.config.descTextBoxId);
-        if (descCtrl.type == "text") {
+        if (descCtrl.type === "text") {
             descCtrl.
                 value = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
         }
@@ -1231,7 +1231,7 @@ initCodeToolip : function (codePrefix, ajaxUrl) {
             descCtrl.
                 innerHTML = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
         }
-        if (typeof (this.config.valueTextBoxId) != "undefined") {
+        if (typeof (this.config.valueTextBoxId) !== "undefined") {
             $(this.config.valueTextBoxId).value = codeEntity.value;
         }
         if (this.codeNodeCallBack) {

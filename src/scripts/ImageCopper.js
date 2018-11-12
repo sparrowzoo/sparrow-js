@@ -6,6 +6,7 @@
         this.OnComplete = complete;
     }
 }
+
 ImageCopper.prototype = {
     init: function (option) {
         //初始化一些参数
@@ -580,11 +581,11 @@ document.ready(function () {
     if(parentImage!=null) {
         $(config.current).src = $.randomUrl(parentImage.src);
     }
-    file.validateUploadFile = function (f) {
+    $.file.validateUploadFile = function (f) {
         file.uploadClick(false, "", "fileUpload");
     };
     //设置上传成功后的回调函数
-    file.uploadCallBack = function (fileInfo, clientFileName) {
+    $.file.uploadCallBack = function (fileInfo, clientFileName) {
         var currentImage = $(config.preview);
         currentImage.src = $.randomUrl(fileInfo.fileName);
         if (imageCopper !== null) {

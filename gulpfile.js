@@ -11,16 +11,52 @@ var paths = {
         src:'src/styles/*.*' ,
         dest: 'assets/styles/'
     },
-    scripts: {
+    images:{
+        src:'src/images/**/*.*',
+        dest:'assets/images'
+    },
+    medias:{
+        src:'src/media/**/*.*',
+        dest:'assets/media'
+    },
+    scripts_dev: {
         src: [
+            'src/scripts/extend.js',
+            'src/scripts/header.js',
+            'src/scripts/selector.js',
+            'src/scripts/browser.js',
+            'src/scripts/container.js',
+            'src/scripts/ready.js',
+            'src/scripts/constant.js',
+            //'src/scripts/ajax.js',
+            //'src/scripts/validator.js',
+            //'src/scripts/pager.js',
             'src/scripts/sparrow.js',
-            'src/scripts/ImageCopper.js',
-            'src/scripts/marquee.js',
-            'src/scripts/sparrowDatePicker.js',
-            'src/scripts/sparrowEditor.js',
-            'src/scripts/sparrowTree.js'
+            //'src/scripts/tooltip.js',
+            //'src/scripts/tabs.js',
+            'src/scripts/windows.js',
+            //'src/scripts/grid-view.js',
+            'src/scripts/file.js',
+            'src/scripts/events.js',
+            'src/scripts/mouse-wheel.js',
+            'src/scripts/select.js',
+            'src/scripts/message.js',
+            'src/scripts/animation.js',
+            'src/scripts/progressbar.js',
+            'src/scripts/tail.js',
+            'src/scripts/menu.js',
+            //'src/scripts/image-switch.js',
+            //'src/scripts/ImageCopper.js',
+            //'src/scripts/marquee.js',
+            //'src/scripts/sparrowDatePicker.js',
+            //'src/scripts/sparrowEditor.js',
+            //'src/scripts/sparrowTree.js'
             ],
         dest: 'assets/scripts/'
+    },
+    scripts_min:{
+        src:['assets/scripts/sparrow-all.js'],
+        dest:'assets/scripts'
     }
 };
 
@@ -44,24 +80,33 @@ function styles() {
         // pass in options to the stream
         .pipe(plugins.rename({
             basename: 'sparrow',
-            suffix: '.min'
+            suffix: '-min'
         }))
         .pipe(gulp.dest(paths.styles.dest));
 }
 
 function scripts() {
-    return gulp.src(paths.scripts.src)
+    return gulp.src(paths.scripts_min.src)
+        .pipe(plugins.concat('sparrow-min.js'))
         .pipe(plugins.babel())
         .pipe(plugins.uglify())
-        .pipe(plugins.concat('sparrow.min.js'))
-        .pipe(gulp.dest(paths.scripts.dest));
+        .pipe(gulp.dest(paths.scripts_min.dest));
+}
+
+function images() {
+    return gulp.src(paths.images.src)
+        .pipe(gulp.dest(paths.images.dest));
+}
+
+function medias() {
+    return gulp.src(paths.medias.src)
+        .pipe(gulp.dest(paths.medias.dest));
 }
 
 function scripts_dev() {
-    return gulp.src(paths.scripts.src,{base:'src/script'})
-        .pipe(plugins.babel())
+    return gulp.src(paths.scripts_dev.src,{base:'src/script'})
         .pipe(plugins.concat('sparrow-all.js'))
-        .pipe(gulp.dest(paths.scripts.dest));
+        .pipe(gulp.dest(paths.scripts_dev.dest));
 }
 
 function watch() {
@@ -74,18 +119,23 @@ function watch() {
  */
 exports.clean = plugins.clean;
 exports.styles = plugins.styles;
+exports.scripts_dev = plugins.scripts_dev;
 exports.scripts = plugins.scripts;
+exports.images=plugins.images;
+exports.medias=plugins.medias;
 exports.watch = plugins.watch;
 
 /*
  * Specify if tasks run in series or parallel using `gulp.series` and `gulp.parallel`
  */
-var build = gulp.series(clean, gulp.parallel(styles, scripts,scripts_dev));
+var build_dev = gulp.series(gulp.parallel(clean,styles,scripts_dev,images,medias));
+
+var build = gulp.series(gulp.parallel(scripts));
 
 /*
  * You can still use `gulp.task` to expose tasks
  */
-gulp.task('build', build);
+gulp.task('dev', build_dev);
 
 /*
  * Define default task that can be called by just running `gulp` from cli
