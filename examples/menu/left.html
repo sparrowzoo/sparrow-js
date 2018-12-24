@@ -1,108 +1,123 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!doctype html>
+<html lang="en">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <link rel="stylesheet" type="text/css" href="../../assets/styles/sparrow-min.css">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description"
+              content="A layout example with a side menu that hides on mobile, just like the Pure website.">
+        <title>Sparrow Example &ndash; Sparrow JS Framework</title>
+
+        <link rel="stylesheet" href="../node_modules/purecss/build/pure.css" integrity="sha384-" crossorigin="anonymous">
+
+        <!--[if lte IE 8]>
+        <link rel="stylesheet" href="css/layouts/index-old-ie.css">
+        <![endif]-->
+        <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="css/layouts/index.css">
+        <!--<![endif]-->
+
         <script type="text/javascript"
-                src="../../assets/scripts/sparrow-all.js"></script>
+                src="../assets/scripts/sparrow-all.js"></script>
 
         <script type="text/javascript">
             document.ready(function () {
                 leftMenu = new Menu("leftMenu", $.VERTICAL).init();
             });
         </script>
-        <style type="text/css">
-            body {
-                text-align: center;
-                padding: 0px;
-                background-image: url(http://r.sparrowzoo.net/images/background.png);
-                color: #000;
-                font-size: 10pt;
-                font-family: "Microsoft Yahei", "微软雅黑" !important
-            }
-
-            .left_menu {
-                background: red;
-                width: 300px;
-                zoom: 1;
-                display: inline-block;
-                margin: 0 auto;
-                list-style: none;
-                padding: 0px;
-            }
-
-            .left_menu .item {
-                font-size: 12pt;
-                over-flow: hidden;
-                border: #ccc 1px solid;
-            }
-
-            .item .link {
-                width: 100%;
-                height: 20px;
-                background: black;
-                display: inline-block;
-            }
-
-            .child {
-                list-style: none;
-                margin: 0 auto;
-                padding: 0px;
-                border: red 1px solid;
-                overflow: hidden;
-            }
-
-            .child li {
-                border: #ccc 1px solid;
-            }
-        </style>
     </head>
     <body>
 
-        <ul class="vertical_menu" id="divLeftMenu">
-            <li class="item">
-                <a class="link" href="http://www.baidu.com"
-                   target="_blank">第一
-                </a>
-                <ul class="child">
-                    <li><a href="http://www.baidu.com" target="_blank">第一</a>
-                    </li>
-                    <li><a href="http://www.baidu.com" target="_blank">第一</a>
-                    </li>
-                    <li><a href="http://www.baidu.com" target="_blank">第一</a>
-                    </li>
-                </ul>
-            </li>
 
-            <li class="item">
-                <a class="link" href="http://www.baidu.com"
-                   target="_blank">第二
-                </a>
-                <ul class="child">
-                    <li><a href="http://www.baidu.com" target="_blank">第二</a>
-                    </li>
-                    <li><a href="http://www.baidu.com" target="_blank">第二</a>
-                    </li>
-                    <li><a href="http://www.baidu.com" target="_blank">第二</a>
-                    </li>
-                </ul>
-            </li>
+        <div id="layout">
+            <!-- Menu toggle -->
+            <a href="#menu" id="menuLink" class="menu-link">
+                <!-- Hamburger icon -->
+                <span></span>
+            </a>
 
-            <li class="item">
-                <a class="link" href="http://www.baidu.com"
-                   target="_blank">第三
-                </a>
-                <ul class="child">
-                    <li><a href="http://www.baidu.com" target="_blank">第三</a>
-                    </li>
-                    <li><a href="http://www.baidu.com" target="_blank">第三</a>
-                    </li>
-                    <li><a href="http://www.baidu.com" target="_blank">第三</a>
-                    </li>
-                </ul>
-            </li>
 
-        </ul>
+            <div id="divLeftMenu">
+                <div class="pure-menu">
+                    <a class="pure-menu-heading" href="#">菜单</a>
 
+                    <ul class="pure-menu-list">
+                        <li class="pure-menu-item"><a target="_blank" href="menu/left.html" class="pure-menu-link">垂直</a></li>
+                        <li class="pure-menu-item"><a target="_blank" href="menu/top.html" class="pure-menu-link">水平</a></li>
+                    </ul>
+                </div>
+
+                <div class="pure-menu">
+                    <a class="pure-menu-heading" href="#">Sparrow2</a>
+
+                    <ul class="pure-menu-list">
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Home</a></li>
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
+
+                        <li class="pure-menu-item">
+                            <a href="#" class="pure-menu-link">Services</a>
+                        </li>
+
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+
+            <div id="main">
+                <div class="header">
+                    <h1>菜单</h1>
+                    <h2>重直菜单</h2>
+                </div>
+
+                <div class="content">
+                    <h2 class="content-subhead">如何使用</h2>
+                    <p>
+                        To use this layout, you can just copy paste the HTML, along with the CSS in <a
+                            href="/css/layouts/side-menu.css" alt="Side Menu CSS">side-menu.css</a>, and the JavaScript in <a
+                            href="/js/ui.js">ui.js</a>. The JS file uses vanilla JavaScript to simply toggle an
+                        <code>active</code> class that makes the menu responsive.
+                    </p>
+
+                    <h2 class="content-subhead">Now Let's Speak Some Latin</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                        ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                        deserunt mollit anim id est laborum.
+                    </p>
+
+                    <div class="pure-g">
+                        <div class="pure-u-1-4">
+                            <img class="pure-img-responsive" src="http://farm3.staticflickr.com/2875/9069037713_1752f5daeb.jpg"
+                                 alt="Peyto Lake">
+                        </div>
+                        <div class="pure-u-1-4">
+                            <img class="pure-img-responsive" src="http://farm3.staticflickr.com/2813/9069585985_80da8db54f.jpg"
+                                 alt="Train">
+                        </div>
+                        <div class="pure-u-1-4">
+                            <img class="pure-img-responsive" src="http://farm6.staticflickr.com/5456/9121446012_c1640e42d0.jpg"
+                                 alt="T-Shirt Store">
+                        </div>
+                        <div class="pure-u-1-4">
+                            <img class="pure-img-responsive" src="http://farm8.staticflickr.com/7357/9086701425_fda3024927.jpg"
+                                 alt="Mountain">
+                        </div>
+                    </div>
+
+                    <h2 class="content-subhead">Try Resizing your Browser</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                        ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                        fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+                        deserunt mollit anim id est laborum.
+                    </p>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

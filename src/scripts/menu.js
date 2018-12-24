@@ -1,6 +1,4 @@
 
-/* 标签tag.js应用实例 */
-
 /*
  * 垂直菜单 menu 与child的对应关系是以 menu.id+_child=child.id 对应
  * 水平菜单 用索引对应 因为html 结构决定
@@ -25,6 +23,7 @@ function Menu(obj, position) {
         };
     this.obj = obj;
     //obj为leftMenu 则id默认为divLeftMenu
+    //for different obj in container
     this.id = "div" + this.obj.firstCharUpperCase();
     this.position = position ? position : "SIDE";// 位置默认右上角
     $.global(obj, this);
@@ -32,7 +31,7 @@ function Menu(obj, position) {
 
 Menu.prototype = {
     init: function () {
-        if (this.position == $.SIDE) {
+        if (this.position === $.SIDE) {
             this.config.frameDiv = $("new.div").s;
             this.config.frameDiv.onmouseover = function (e) {
                 $.event(e).cancelBubble();
@@ -59,11 +58,11 @@ Menu.prototype = {
             menuHTML.push('</ul>');
             this.config.frameDiv.innerHTML = menuHTML.join("");
         }
-        else if (this.position == $.VERTICAL) {
+        else if (this.position === $.VERTICAL) {
             if (!$(this.id)) {
                 return;
             }
-            var item = $("son.li." + this.id);
+            var item = $("son.div." + this.id);
             var obj = this.obj;
             item
                 .each(function (i) {
@@ -88,7 +87,7 @@ Menu.prototype = {
                                     var child = $("#." + this.id + "_child");
                                     var current_menu = null;
                                     if (menu.config.current_menu != null) {
-                                        if (child == menu.config.current_menu) {
+                                        if (child === menu.config.current_menu) {
                                             return;
                                         }
                                         current_menu = menu.config.current_menu;
@@ -111,7 +110,7 @@ Menu.prototype = {
                     }
                 });
         }
-        else if (this.position == $.HORIZONTAL) {
+        else if (this.position === $.HORIZONTAL) {
             if (!$(this.id)) {
                 return;
             }
@@ -126,8 +125,7 @@ Menu.prototype = {
             }
             var menu = $.global(this.obj);
             $(document)
-                .bind(
-                    "onmouseover", function () {
+                .bind("onmouseover", function () {
                         menu.hidden(this);
                     });
             this.config.menu
@@ -148,12 +146,12 @@ Menu.prototype = {
                             function (e) {
                                 e = $.event(e);
                                 e.cancelBubble();
-                                if (e.srcElement.tagName != "LI") {
+                                if (e.srcElement.tagName !== "LI") {
                                     return;
                                 }
                                 var list = $(e.srcElement.id + "_child");
                                 if (menu.config.current_menu != null) {
-                                    if (list == menu.config.current_menu) {
+                                    if (list === menu.config.current_menu) {
                                         return;
                                     }
                                     $(menu.config.current_menu).stop();
@@ -201,7 +199,7 @@ Menu.prototype = {
         if (this.config.container)
             scrollTop = this.config.container.scrollTop;
         var left = $(this.config.srcElement).getAbsoluteLeft();
-        if (this.config.position == this.SIDE) {
+        if (this.config.position === this.SIDE) {
             left += this.config.srcElement.offsetWidth;
         }
         var top = $(this.config.srcElement).getAbsoluteTop()
@@ -219,7 +217,7 @@ Menu.prototype = {
         }
     },
     hidden: function () {
-        if (this.position == $.SIDE) {
+        if (this.position === $.SIDE) {
             if (this.config.frameDiv) {
                 this.config.frameDiv.style.display = "none";
                 // 隐藏其子菜单
@@ -228,7 +226,7 @@ Menu.prototype = {
                 }
             }
         }
-        else if (this.position == $.HORIZONTAL) {
+        else if (this.position === $.HORIZONTAL) {
             var menu = this;
             if (this.config.current_menu != null) {
                 $(this.config.current_menu.parentNode).stop();
