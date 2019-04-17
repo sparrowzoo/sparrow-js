@@ -12,7 +12,7 @@ Add transition to containers so they can push in and out.
 */
 
 #layout,
-#divVerticalMenu,
+#menu,
 .menu-link {
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;
@@ -31,7 +31,7 @@ This is the parent `<div>` that contains the menu and the content area.
     padding-left: 0;
 }
 
-#layout.active #divVerticalMenu {
+#layout.active #menu {
     left: 150px;
     width: 150px;
 }
@@ -80,13 +80,13 @@ The content `<div>` is where all your content goes.
 }
 
 /*
-The `#divVerticalMenu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
+The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
 appears on the left side of the page.
 */
 
-#divVerticalMenu {
+#menu {
     margin-left: -150px;
-    /* "#divVerticalMenu" width */
+    /* "#menu" width */
     width: 150px;
     position: fixed;
     top: 0;
@@ -103,18 +103,18 @@ appears on the left side of the page.
     All anchors inside the menu should be styled like this.
     */
 
-#divVerticalMenu a {
+#menu a {
     color: #999;
     border: none;
     padding: 0.6em 0 0.6em 0.6em;
 }
 
 /*
-    Remove all background/borders, since we are applying them to #divVerticalMenu.
+    Remove all background/borders, since we are applying them to #menu.
     */
 
-#divVerticalMenu .pure-menu,
-#divVerticalMenu .pure-menu ul {
+#menu .pure-menu,
+#menu .pure-menu ul {
     border: none;
     background: transparent;
 }
@@ -123,8 +123,8 @@ appears on the left side of the page.
     Add that light border to separate items into groups.
     */
 
-#divVerticalMenu .pure-menu ul,
-#divVerticalMenu .pure-menu .menu-item-divided {
+#menu .pure-menu ul,
+#menu .pure-menu .menu-item-divided {
     border-top: 1px solid #333;
 }
 
@@ -132,8 +132,8 @@ appears on the left side of the page.
         Change color of the anchor links on hover/focus.
         */
 
-#divVerticalMenu .pure-menu li a:hover,
-#divVerticalMenu .pure-menu li a:focus {
+#menu .pure-menu li a:hover,
+#menu .pure-menu li a:focus {
     background: #333;
 }
 
@@ -141,8 +141,8 @@ appears on the left side of the page.
     This styles the selected menu item `<li>`.
     */
 
-#divVerticalMenu .pure-menu-selected,
-#divVerticalMenu .pure-menu-heading {
+#menu .pure-menu-selected,
+#menu .pure-menu-heading {
     background: #1f8dd6;
 }
 
@@ -150,7 +150,7 @@ appears on the left side of the page.
         This styles a link within a selected menu item `<li>`.
         */
 
-#divVerticalMenu .pure-menu-selected a {
+#menu .pure-menu-selected a {
     color: #fff;
 }
 
@@ -158,7 +158,7 @@ appears on the left side of the page.
     This styles the menu heading.
     */
 
-#divVerticalMenu .pure-menu-heading {
+#menu .pure-menu-heading {
     font-size: 110%;
     color: #fff;
     margin: 0;
@@ -182,7 +182,7 @@ small screens.
     /* show this only on small screens */
     top: 0;
     left: 0;
-    /* "#divVerticalMenu width" */
+    /* "#menu width" */
     background: #000;
     background: rgba(0,0,0,0.7);
     font-size: 10px;
@@ -236,11 +236,11 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 #layout {
     padding-left: 150px;
-    /* left col width "#divVerticalMenu" */
+    /* left col width "#menu" */
     left: 0;
 }
 
-#divVerticalMenu {
+#menu {
     left: 150px;
 }
 
