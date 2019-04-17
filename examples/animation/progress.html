@@ -30,10 +30,43 @@
     </script>
 </head>
 <body>
-Sparrow.prototype.progressbar = function (callback, config)
+
+<a href="../index.html">回首页</a>
+
+<div style="background: greenyellow;width: auto;">
+    进度条...
+</div>
+
+<pre>
+   Sparrow.prototype.progressbar = function (callback, config)
+
+    <br/>
+     function progress() {
+            $(this).progressbar(
+                    function (progress) {
+
+                        if (parseInt(progress.s.style.width, 10) >= 100) {
+                            progress.s.style.width ="100%";
+                            progress.s.innerHTML ="100%";
+                            progress.end();
+                            window.setTimeout(progress.remove, 5000);
+                        }
+                        else {
+                            progress.s.style.width = (parseInt(progress.s.style.width, 10) + Math
+                                    .floor(Math.random() * 3))
+                            + "%";
+                            progress.s.innerHTML = progress.s.style.width;
+                        }
+                    }, {
+                        style: 'width:1000px;height:30px;border:#ccc 1px solid;',
+                        progressStyle: 'background:#ccc;height:30px;'
+                    });
+        }
+</pre>
+
 
 <br/>
-<input type="button" onclick="progress();" value="显示进度条"/>
+<input style="background: yellowgreen;height: 50px;width: 200px;" type="button" onclick="progress();" value="点击我可以显示哟~~"/>
 
 </body>
 </html>
