@@ -8,43 +8,47 @@ var plugins = require('gulp-load-plugins')();
 
 var paths = {
     styles: {
-        src:'src/styles/*.*' ,
-        dest: 'assets/styles/'
+        src:'source/styles/**/*.*' ,
+        dest: 'src/main/webapp/assets/styles/'
+    },
+    purecss:{
+         src:'node_modules/purecss/build/*.*',
+         dest:'src/main/webapp/assets/styles/pure-css'
     },
     images:{
-        src:'src/images/**/*.*',
-        dest:'assets/images'
+        src:'source/images/**/*.*',
+        dest:'src/main/webapp/assets/images'
     },
     medias:{
-        src:'src/media/**/*.*',
-        dest:'assets/media'
+        src:'source/media/**/*.*',
+        dest:'src/main/webapp/assets/media'
     },
     scripts_dev: {
         src: [
-            'src/scripts/extend.js',
-            'src/scripts/header.js',
-            'src/scripts/selector.js',
-            'src/scripts/browser.js',
-            'src/scripts/container.js',
-            'src/scripts/ready.js',
-            'src/scripts/constant.js',
+            'source/scripts/extend.js',
+            'source/scripts/header.js',
+            'source/scripts/selector.js',
+            'source/scripts/browser.js',
+            'source/scripts/container.js',
+            'source/scripts/ready.js',
+            'source/scripts/constant.js',
             //'src/scripts/ajax.js',
             //'src/scripts/validator.js',
             //'src/scripts/pager.js',
-            'src/scripts/sparrow.js',
+            'source/scripts/sparrow.js',
             //'src/scripts/tooltip.js',
             //'src/scripts/tabs.js',
-            'src/scripts/windows.js',
+            'source/scripts/windows.js',
             //'src/scripts/grid-view.js',
-            'src/scripts/file.js',
-            'src/scripts/events.js',
-            'src/scripts/mouse-wheel.js',
-            'src/scripts/select.js',
-            'src/scripts/message.js',
-            'src/scripts/animation.js',
-            'src/scripts/progressbar.js',
-            'src/scripts/tail.js',
-            'src/scripts/menu.js',
+            'source/scripts/file.js',
+            'source/scripts/events.js',
+            'source/scripts/mouse-wheel.js',
+            'source/scripts/select.js',
+            'source/scripts/message.js',
+            'source/scripts/animation.js',
+            'source/scripts/progressbar.js',
+            'source/scripts/tail.js',
+            'source/scripts/menu.js',
             //'src/scripts/image-switch.js',
             //'src/scripts/ImageCopper.js',
             //'src/scripts/marquee.js',
@@ -52,11 +56,11 @@ var paths = {
             //'src/scripts/sparrowEditor.js',
             //'src/scripts/sparrowTree.js'
             ],
-        dest: 'assets/scripts/'
+        dest: 'src/main/webapp/assets/scripts/'
     },
     scripts_min:{
-        src:['assets/scripts/sparrow-all.js'],
-        dest:'assets/scripts'
+        src:['src/main/webapp/assets/scripts/sparrow-all.js'],
+        dest:'src/main/webapp/assets/scripts'
     }
 };
 
@@ -67,7 +71,7 @@ var paths = {
 function clean() {
     // You can use multiple globbing patterns as you would with `gulp.src`,
     // for example if you are using del 2.0 or above, return its promise
-    return del([ 'assets' ]);
+    return del([ 'src/main/webapp/assets' ]);
 }
 
 /*
@@ -78,11 +82,17 @@ function styles() {
         .pipe(plugins.less())
         .pipe(plugins.cleanCss())
         // pass in options to the stream
-        .pipe(plugins.rename({
-            basename: 'sparrow',
-            suffix: '-min'
-        }))
+        // .pipe(plugins.rename({
+        //     basename: 'sparrow',
+        //     suffix: '-min'
+        // }))
         .pipe(gulp.dest(paths.styles.dest));
+}
+
+
+function purecss() {
+    return gulp.src(paths.purecss.src)
+        .pipe(gulp.dest(paths.purecss.dest));
 }
 
 function scripts() {
@@ -104,7 +114,7 @@ function medias() {
 }
 
 function scripts_dev() {
-    return gulp.src(paths.scripts_dev.src,{base:'src/script'})
+    return gulp.src(paths.scripts_dev.src,{base:'source/script'})
         .pipe(plugins.concat('sparrow-all.js'))
         .pipe(gulp.dest(paths.scripts_dev.dest));
 }
@@ -123,12 +133,13 @@ exports.scripts_dev = plugins.scripts_dev;
 exports.scripts = plugins.scripts;
 exports.images=plugins.images;
 exports.medias=plugins.medias;
+exports.purecss=plugins.purecss;
 exports.watch = plugins.watch;
 
 /*
  * Specify if tasks run in series or parallel using `gulp.series` and `gulp.parallel`
  */
-var build_dev = gulp.series(gulp.parallel(clean,styles,scripts_dev,images,medias));
+var build_dev = gulp.series(gulp.parallel(clean,styles,purecss,scripts_dev,images,medias));
 
 var build = gulp.series(gulp.parallel(scripts));
 

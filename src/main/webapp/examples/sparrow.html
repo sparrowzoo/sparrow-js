@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>jwindowDemo.html</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+    <meta http-equiv="description" content="this is my page">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <script type="text/javascript"
+            src="../../../../assets/scripts/sparrow-all.js"></script>
+    <script type="text/javascript">
+        win.okClick = function () {
+            alert(100);
+        };
+    </script>
+
+</head>
+
+<body style="text-align: left;">
+
+
+<div>
+    <h2>Sparrow $</h2>
+    <ul>
+        <li>
+            <a style="background: red;" onclick="$(this).opacity(30);" href="#">设置透明</a>
+        </li>
+
+        <li>
+            <input class="button" type="button" value="设置cookie"
+                   onclick="browser.setCookie('userId2','admin1');"><label>browser.setCookie('userId2','admin1');</label>
+            <input class="button" type="button" value="读cookie"
+                   onclick="alert(browser.getCookie('userId2'));"><label>browser.getCookie('userId2')</label>
+        </li>
+
+        <li>
+            <input class="button" type="button" value="Sparrow 扩展属性 "
+                   onclick="alert($.url.root+'\n'+$.url.resource+'\n'+$.url.name);"><label>
+            $.url.root,$.url.resource,$.url.name
+        </label>
+        </li>
+        <li>
+            <a href="#">该链接会跳到顶部</a>
+            <a href="javascript:void(0);" target="_self">该链接不会跳到顶部</a>
+        </li>
+
+        <li>
+            <a href="sparrow/json.html" target="_blank">JSON 测试</a>
+        </li>
+
+        <li>
+            <a href="sparrow/date_picker.html" target="_blank">date_picker 日期控件</a>
+        </li>
+        <li>
+            <a href="sparrow/editor.html" target="_blank">editor 在线编辑器</a>
+        </li>
+    </ul>
+</div>
+
+<div>
+    <h2>对话框和消息</h2>
+    <ul>
+        <li>
+            <a href="message/jalert.html" target="_blank">对话框jalert</a>
+        </li>
+
+        <li>
+            <a href="message/message.html" target="_blank">消息提示message</a>
+        </li>
+    </ul>
+</div>
+
+<div>
+    <h2>动画</h2>
+    <ul>
+        <li>
+            <a href="animation/show-hidden.html" target="_blank">显示隐藏</a>
+        </li>
+
+        <li>
+            <a href="animation/progress.html" target="_blank">进度条</a>
+        </li>
+
+        <li>
+            <a href="animation/tabs.html" target="_blank">tabs</a>
+        </li>
+        <li>
+            <a href="animation/play.html" target="_blank">play</a>
+        </li>
+
+        <li>
+            <a href="animation/interlace.html" target="_blank">interlace</a>
+        </li>
+        <li>
+            <a href="animation/animation.html" target="_blank">animation</a>
+        </li>
+
+        <li>
+            <a href="animation/marque.html" target="_blank">marque</a>
+        </li>
+
+    </ul>
+</div>
+
+
+<div>
+    <h2>菜单</h2>
+    <ul>
+        <li>
+            <a href="menu/top.html" target="_blank">top.menu</a>
+        </li>
+
+        <li>
+            <a href="menu/left.html" target="_blank">left.menu</a>
+        </li>
+
+    </ul>
+</div>
+<div>
+    <h2>事件</h2>
+    <ul>
+        <li>
+            <a href="event/this.html" target="_blank">event.this</a>
+        </li>
+
+
+    </ul>
+</div>
+
+<div>
+    <h2>时间</h2>
+    <ul>
+        <li>
+            <span id="spanDate"></span>
+            <script type="text/javascript" language="JavaScript">
+                document.getElementById("spanDate").innerHTML= $.getBeforeTime("2015/12/29 00:00:00");
+            </script>
+
+        </li>
+    </ul>
+</div>
+<div>
+    <h2>INCLUDE</h2>
+    <ul>
+        <li>
+        <input id="txtExistJosn" value="test json" type="button"/>
+            <script type="text/javascript" language="JavaScript">
+                $.include("http://www.sparrowzoo.com/sparrow/jsonp.html","alert");
+                $.include($("txtExistJosn"),"http://www.sparrowzoo.com/sparrow/jsonp.html","alert");
+                $.include(function(){return true;},"http://www.sparrowzoo.com/sparrow/jsonp.html","alert");
+                function callback(args){console.info(args);}
+            </script>
+        </li>
+
+    </ul>
+</div>
+<input type="text" id="txtTimer" class="input"/>
+<script type="text/javascript" language="javascript">
+    var end=(new Date("2016/03/24 01:25:00")).valueOf();
+    $.countDown(end,new Date().valueOf(),$("txtTimer"));
+
+</script>
+
+
+<input type="text"/>
+</body>
+</html>
