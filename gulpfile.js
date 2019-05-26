@@ -56,10 +56,10 @@ var paths = {
             //'src/scripts/sparrowEditor.js',
             //'src/scripts/sparrowTree.js'
             ],
-        dest: 'src/main/webapp/assets/scripts/'
+        dest: 'src/main/webapp/assets/scripts-all/'
     },
     scripts_min:{
-        src:['src/main/webapp/assets/scripts/sparrow-all.js'],
+        src:['src/main/webapp/assets/scripts-all/sparrow.js'],
         dest:'src/main/webapp/assets/scripts'
     }
 };
@@ -114,8 +114,8 @@ function medias() {
 }
 
 function scripts_dev() {
-    return gulp.src(paths.scripts_dev.src,{base:'source/script'})
-        .pipe(plugins.concat('sparrow-all.js'))
+    return gulp.src(paths.scripts_dev.src,{base:'source/script-all'})
+        .pipe(plugins.concat('sparrow.js'))
         .pipe(gulp.dest(paths.scripts_dev.dest));
 }
 
