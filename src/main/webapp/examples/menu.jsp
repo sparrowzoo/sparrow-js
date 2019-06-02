@@ -55,7 +55,7 @@
             <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/editor.html" class="pure-menu-link">editor</a></li>
 
             <li class="pure-menu-item">
-                <a href="${root_path}/examples/sparrow/json.html" class="pure-menu-link">json</a>
+                <a href="${root_path}/examples/sparrow/jsonview.jsp" class="pure-menu-link">json 格式化</a>
             </li>
         </ul>
     </div>

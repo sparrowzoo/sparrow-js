@@ -159,7 +159,7 @@ Sparrow.format = function (txt, compress) {
         return;
     }
     var data=null;
-    if(typeof txt==JSON) {
+    if(typeof txt=='object') {
         data = txt;
     }
     else {

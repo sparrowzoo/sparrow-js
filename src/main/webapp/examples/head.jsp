@@ -7,7 +7,7 @@
 <!--[if gt IE 8]><!-->
 <j:style href="$resource/assets/styles/layouts/index.css"/>
 <!--<![endif]-->
-<j:script src="$resource/assets/scripts/sparrow-all.js"/>
+<j:script src="$resource/assets/scripts-all/sparrow.js"/>
 <script type="text/javascript">
     document.ready(function () {
         new Menu("verticalMenu", $.VERTICAL).init();

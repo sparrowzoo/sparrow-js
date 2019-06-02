@@ -14,7 +14,7 @@
 
 
 <div id="layout">
-    <jsp:include page="${root_path}/examples/menu.html"/>
+    <jsp:include page="${root_path}/examples/menu.jsp"/>
     <div id="main">
         <div class="header">
             <h1>Page Title</h1>
