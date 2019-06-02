@@ -1,3 +1,8 @@
+/**
+ * @return {null}
+ * name.
+ * tag.
+ */
 var Sparrow = function (selector) {
     var args = Array.prototype.slice.call(arguments, 0);
     if (selector == null || typeof (selector) === "undefined") {

@@ -247,6 +247,19 @@ Sparrow.prototype.html = function (value) {
     }
     return this.s.innerHTML;
 };
+
+Sparrow.prototype.value = function (value) {
+    if (!this.s) {
+        return;
+    }
+    if (!$.isNullOrEmpty(value)) {
+        this.s.value = value;
+        return;
+    }
+    return this.s.value;
+};
+
+
 Sparrow.prototype.check = function (value) {
     for (var i = 0; i < this.length; i++) {
         if (this[i].value === value) {
