@@ -54,7 +54,8 @@ var paths = {
             //'src/scripts/marquee.js',
             //'src/scripts/sparrowDatePicker.js',
             //'src/scripts/sparrowEditor.js',
-            //'src/scripts/sparrowTree.js'
+            //'src/scripts/sparrowTree.js',
+            'source/scripts/jsonview.js'
             ],
         dest: 'src/main/webapp/assets/scripts-all/'
     },
