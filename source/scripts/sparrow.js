@@ -153,16 +153,23 @@ Sparrow.waitRedirect = function (timerId, period) {
 Sparrow.format = function (txt, compress) {
     /* 格式化JSON源码(对象转换为JSON文本) */
     var indentChar = '    ';
-    if (/^\s*$/.test(txt)) {
+    
+    if (typeof txt=='string'&&/^\s*$/.test(txt)) {
         alert('数据为空,无法格式化! ');
         return;
     }
-    try {
-        var data = eval('(' + txt + ')');
+    var data=null;
+    if(typeof txt==JSON) {
+        data = txt;
     }
-    catch (e) {
-        alert('数据源语法错误,格式化失败! 错误信息: ' + e.description, 'err');
-        return;
+    else {
+        try {
+            data = eval('(' + txt + ')');
+        }
+        catch (e) {
+            alert('数据源语法错误,格式化失败! 错误信息: ' + e.description, 'err');
+            return;
+        }
     }
     var draw = [], last = false, This = this, line = compress ? '' : '\n', nodeCount = 0, maxDepth = 0;
 
