@@ -2,10 +2,10 @@
 <%@taglib uri="http://www.sparrowzoo.com/ui" prefix="j" %>
 <j:style href="$resource/assets/styles/pure-css/pure.css"/>
 <!--[if lte IE 8]>
-<j:style href="$resource/assets/styles/layouts/index-old-ie.css"/>
+<j:style href="$resource/assets/styles/layouts-old-ie.css"/>
 <![endif]-->
 <!--[if gt IE 8]><!-->
-<j:style href="$resource/assets/styles/layouts/index.css"/>
+<j:style href="$resource/assets/styles/layouts.css"/>
 <!--<![endif]-->
 <j:script src="$resource/assets/scripts-all/sparrow.js"/>
 <script type="text/javascript">
