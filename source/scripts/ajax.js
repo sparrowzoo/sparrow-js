@@ -146,9 +146,9 @@ Sparrow.ajax = {
             }, true, data, srcElement);
     },
     get: function (url) {
-        ajax.req("GET", url, _callback, true);
+        ajax.req("GET", url, ajax._callback, true);
     },
     post: function (url, data) {
-        ajax.req("POST", url,_callback, true, data);
+        ajax.req("POST", url,ajax._callback, true, data);
     }
 };
