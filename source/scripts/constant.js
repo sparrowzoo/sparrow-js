@@ -7,7 +7,7 @@ Sparrow.url = {
     }),
     resource: $(function (path) {
         var scripts = document.scripts;
-        var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts/sparrow-all.js"];
+        var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts-all/sparrow.js"];
         if (path) {
             sparrowPath.push(path);
         }
