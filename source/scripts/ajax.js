@@ -40,6 +40,16 @@ Sparrow.ajax = {
         }
         return http_request;
     },
+    _callback:function (xmlHttpRequest) {
+        var result = xmlHttpRequest.responseText.json();
+        if (result == null) {
+            $.message("json parse error " + xmlHttpRequest.responseText);
+            return;
+        }
+        if (result.code === ajax.FAIL) {
+            $.message(result.error);
+        }
+    },
     gourl: function (url) {
         ajax.referWindow.location.href = url;
     },
@@ -120,12 +130,14 @@ Sparrow.ajax = {
         ajax.req("POST", url,
             function (xmlHttpRequest) {
                 var result = xmlHttpRequest.responseText.json();
-                if (callback) {
-                    if (result != null && result.code === ajax.OK) {
+                if (result == null) {
+                    $.message("json parse error " + xmlHttpRequest.responseText);
+                    return;
+                }
+
+                if (result.code === ajax.OK) {
+                    if (callback) {
                         callback(result);
-                    }
-                    else {
-                        $.message(result.error);
                     }
                 }
                 else {
@@ -134,17 +146,9 @@ Sparrow.ajax = {
             }, true, data, srcElement);
     },
     get: function (url) {
-        ajax.req("GET", url,
-            function (xmlHttpRequest) {
-                var result = xmlHttpRequest.responseText.json();
-                $.message(result.error);
-            }, true);
+        ajax.req("GET", url, _callback, true);
     },
     post: function (url, data) {
-        ajax.req("POST", url,
-            function (xmlHttpRequest) {
-                var result = xmlHttpRequest.responseText.json();
-                $.message(result.error);
-            }, true, data);
+        ajax.req("POST", url,_callback, true, data);
     }
 };
