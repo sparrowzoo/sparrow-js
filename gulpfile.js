@@ -32,7 +32,7 @@ var paths = {
             'source/scripts/container.js',
             'source/scripts/ready.js',
             'source/scripts/constant.js',
-            //'src/scripts/ajax.js',
+            'source/scripts/ajax.js',
             //'src/scripts/validator.js',
             //'src/scripts/pager.js',
             'source/scripts/sparrow.js',
