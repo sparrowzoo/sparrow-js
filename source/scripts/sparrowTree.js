@@ -260,7 +260,7 @@ UpdateNode : function (newNode, currentNode) {
             this.clearFloatFrame();
             return;
         }
-            orderDiv = $("new.div.orderDiv").s;
+            orderDiv = $("+div.orderDiv").s;
             orderDiv.style.cssText = "position:absolute;padding:5px;border:#ff9900 1px solid;width:80px;text-align:center;background:#ffffff;";
             orderDiv.innerHTML = '<div id="'
             + addressIndex
@@ -1203,7 +1203,7 @@ initForum:function (forumPrefix, ajaxUrl) {
 },
 // 编码列表
 initCodeToolip : function (codePrefix, ajaxUrl) {
-    var htmlEvents = ("$('#.'+{0}.config.descTextBoxId).bind('onchange',function(){" +
+    var htmlEvents = ("$('#'+{0}.config.descTextBoxId).bind('onchange',function(){" +
         "if($({0}.config.descTextBoxId).value==''){" +
         "$({0}.config.descHiddenId).value='';" +
         "if(typeof({0}.config.valueTextBoxId)!='undefined')" +
@@ -1211,7 +1211,7 @@ initCodeToolip : function (codePrefix, ajaxUrl) {
     eval(htmlEvents);
     var treeObject = this;
     if ($(treeObject.config.floatTreeId) == null) {
-        var floatTree = $("new.div").s;
+        var floatTree = $("+div").s;
         floatTree.id = treeObject.config.floatTreeId;
         floatTree.className = "floatTree";
         document.body.appendChild(floatTree);

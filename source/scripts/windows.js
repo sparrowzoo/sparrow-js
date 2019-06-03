@@ -46,11 +46,11 @@ Sparrow.win = {
      */
     addSound: function () {
         // 背景音乐
-        var sound = $("new.bgsound.sound.doc", null, this.getWindow().document);
+        var sound = $("+bgsound.sound.doc", null, this.getWindow().document);
         sound.s.src = this.config.bgsound;
     },
     addBackDiv: function () {
-        var backDiv = $("new.div.backDiv.doc", null, this.getWindow().document);
+        var backDiv = $("+div.backDiv.doc", null, this.getWindow().document);
         var documentHeight = Math.max(
             this.getWindow().document.body.scrollHeight,
             this.getWindow().document.documentElement.scrollHeight);
@@ -71,7 +71,7 @@ Sparrow.win = {
         if (!height) {
             height = this.config.jalert.height;
         }
-        var dialog = $("new.div.dialog.doc", null, this.getWindow().document);
+        var dialog = $("+div.dialog.doc", null, this.getWindow().document);
         dialog.s.zIndex = 1001;
         dialog.s.style.cssText = "position:absolute;border:#ccc 3px solid;text-align:center;font-size:10pt;background:#fff;";
         dialog.s.style.width = width;
@@ -79,7 +79,7 @@ Sparrow.win = {
     },
     // 自定义对话框主体结构 url
     addPanel: function (url) {
-        var panel = $("new.div.dialog.doc", null, this.getWindow().document);
+        var panel = $("+div.dialog.doc", null, this.getWindow().document);
         panel.s.zIndex = 1001;
         panel.s.style.cssText = "position:absolute;text-align:center;font-size: 10pt;background:white;";
         if (this.config.showHead != false) {
@@ -87,7 +87,7 @@ Sparrow.win = {
         }
 
         this.addRightClose();
-        var frame = $("new.iframe.panel.dialog", null, panel.doc);
+        var frame = $("+iframe.panel.dialog", null, panel.doc);
         frame.s.setAttribute("frameborder", "0", 0);
         frame.s.scrolling = "no";
         frame.s.src = url;
@@ -104,16 +104,16 @@ Sparrow.win = {
                     + "px";
                 panel.s.style.width = width + "px";
                 panel.s.style.height = height + "px";
-                $("#.dialog", null, panel.doc).center();
+                $("#dialog", null, panel.doc).center();
                 if (win.config.showHead != false) {
-                    $("#.divleft", null, panel.doc).s.innerHTML = element.contentWindow.document.title;
+                    $("#divleft", null, panel.doc).s.innerHTML = element.contentWindow.document.title;
                 }
             });
     },
     // 加标题
     addTitle: function (title) {
         if (this.config.showHead != false) {
-            var divtitle = $("new.div.divtitle.dialog", null,
+            var divtitle = $("+div.divtitle.dialog", null,
                 this.getWindow().document);
             divtitle.s.style.cssText = "cursor:move;width:100%;height:"
                 + this.config.titleHeight + "px;background-repeat:repeat;";
@@ -121,7 +121,7 @@ Sparrow.win = {
             divtitle.s.style.backgroundImage = "url(" + this.config.titleImg
                 + ")";
             // 真正的标题文本
-            var divleft = $("new.div.divleft.divtitle", null,
+            var divleft = $("+div.divleft.divtitle", null,
                 this.getWindow().document);
             // divleft.unselectable = "on";
 
@@ -141,7 +141,7 @@ Sparrow.win = {
     addRightClose: function () {
         // 关闭按钮
         if (this.config.showHead) {
-            var divright = $("new.div.divright.divtitle", null, this
+            var divright = $("+div.divright.divtitle", null, this
                 .getWindow().document);
             divright.s.style.cssText = "float:right;width:20px;line-height:"
                 + this.config.titleHeight
@@ -154,7 +154,7 @@ Sparrow.win = {
     },
     // 内容下方的ok按钮
     addOK: function () {
-        var btnOK = $("new.input.btnOK.dialog", null, this.getWindow().document);
+        var btnOK = $("+input.btnOK.dialog", null, this.getWindow().document);
         btnOK.s.id = "btnOK";
         btnOK.s.type = "button";
         btnOK.s.style.cssText = "cursor:pointer;width:80px;height:30px;color:black;";
@@ -166,7 +166,7 @@ Sparrow.win = {
     },
     // 内容下方的取消按钮
     addClose: function () {
-        var btnclose = $("new.input.btnclose.dialog", null, this.getWindow().document);
+        var btnclose = $("+input.btnclose.dialog", null, this.getWindow().document);
         btnclose.attr("type", "button");
         btnclose.s.style.cssText = "cursor:pointer;width:80px;height:30px;c"
             + "olor:black;";
@@ -178,8 +178,8 @@ Sparrow.win = {
     },
     // 内容正文
     addMsgContent: function () {
-        var divcontent = $("new.div.divcontent.dialog", null, this.getWindow().document);
-        var dialog = $("#.dialog", null, this.getWindow().document);
+        var divcontent = $("+div.divcontent.dialog", null, this.getWindow().document);
+        var dialog = $("#dialog", null, this.getWindow().document);
         var height = (parseInt(dialog.s.style.height, 10) - this.config.titleHeight - 50) + "px";
         divcontent.s.style.cssText = "width:100%;text-align:left;text-indent:20px;height:" + height;
     },
@@ -189,9 +189,9 @@ Sparrow.win = {
         $
             .showOrHiddenTag(this.config.tagArray, true,
                 this.getWindow().document);
-        $("#.dialog", null, this.getWindow().document).remove();
-        $("#.backDiv", null, this.getWindow().document).remove();
-        $("#.sound", null, this.getWindow().document).remove();
+        $("#dialog", null, this.getWindow().document).remove();
+        $("#backDiv", null, this.getWindow().document).remove();
+        $("#sound", null, this.getWindow().document).remove();
         $.win.config.currentWindow.focus();
         if ($.win.config.jalert.closeCallBack) {
             $.win.config.jalert.closeCallBack();
@@ -267,14 +267,14 @@ Sparrow.alert = function (msg, type, title, url, wait_message) {
             //<br/><span id="timer">5</span>秒以后将自动跳转,或者<a href="{0}" target="_self">直接点击这里跳转</a>
             content += wait_message.format(url);
         }
-        $("#.divcontent", null, $.win.getWindow().document).s.innerHTML = content;
+        $("#divcontent", null, $.win.getWindow().document).s.innerHTML = content;
         $.waitRedirect("timer");
     }
 
     $.showOrHiddenTag("select", true, $.win.getWindow().document
         .getElementById("divcontent"));
 
-    var dialog = $("#.dialog", null, $.win.getWindow().document);// 设置浮动窗口位置
+    var dialog = $("#dialog", null, $.win.getWindow().document);// 设置浮动窗口位置
     dialog.center();
 };
 // config={url:'',showHead:true,srcElement:id,cache:true}宽高取自页面的宽高
@@ -332,10 +332,10 @@ Sparrow.dialog = function (config) {
     $.win.addOK();
     $.win.addClose();
     if (config.content) {
-        $("#.divcontent", null, $.win.getWindow().document).s.innerHTML = config.content;
+        $("#divcontent", null, $.win.getWindow().document).s.innerHTML = config.content;
     }
     if (config.initialize) {
         config.initialize($("divcontent"));
     }
-    $("#.dialog", null, $.win.getWindow().document).center();
+    $("#dialog", null, $.win.getWindow().document).center();
 };

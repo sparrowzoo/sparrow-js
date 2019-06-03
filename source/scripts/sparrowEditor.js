@@ -571,7 +571,7 @@ function SparrowEditor(objName) {
         loadAttach: function () {
             var editor = this.parentObject;
             //初始化图片的tabs
-            $('#.tab' + editor.obj).tabs();
+            $('#tab' + editor.obj).tabs();
             var uploadedFileList = editor.config.attach.uploadedJson
                 .json();
             // 如果有已经上传的文件
@@ -644,10 +644,10 @@ function SparrowEditor(objName) {
             var attachTable = $(editor.config.attach.tableId);
             if (attachTable) {
                 // 获取当前编辑器的文件id
-                var fileUuidArray = $("name."
+                var fileUuidArray = $("&"
                     + editor.config.attach.fileUUID);
                 // 获取当前编辑器的文件备注信息
-                var fileRemarkArray = $("name."
+                var fileRemarkArray = $("&"
                     + editor.config.attach.fileRemark);
                 var fileInfo = [];
                 for (var i = 0; i < fileUuidArray.length; i++) {
@@ -720,7 +720,7 @@ function SparrowEditor(objName) {
         },
         // 初始化待上传的文件ID数组
         initUploadingFileId: function () {
-            var fileUploads = $("name."
+            var fileUploads = $("&"
                 + this.parentObject.config.attach.iframeName);
             for (var i = 0; i < fileUploads.length; i++) {
                 file.uploadFrameId = fileUploads[i].id;
@@ -1653,7 +1653,7 @@ SparrowEditor.prototype.updateWordCount = function () {
 
 function getImgContainer(fileUrl, clientFileName, editor) {
     var imgArray = [];
-    var imgDiv = $("new.div");
+    var imgDiv = $("+div");
     var fileId = file.getFileName(fileUrl).split('.')[0];
     imgDiv.s.style.cssText = "width:92px;height:90px;float:left;padding:3px;border:#ccc 2px solid;";
     imgArray

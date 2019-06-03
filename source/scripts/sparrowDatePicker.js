@@ -83,7 +83,7 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 	if (!this.pickerDiv) {
 		var sparrowElement=$(this.config.srcElement);
 		this.currentDate = new Date(yyyy, MM, dd);
-		this.pickerDiv = $("new.div");
+		this.pickerDiv = $("+div");
 		this.pickerDiv.s.id = this.obj;
 		this.pickerDiv.s.style.cssText = "position:absolute;width:180px;height:190px;border:#ccc 1px solid;background:#ffffff;display:none;text-align:center";
 		this.pickerDiv.s.style.left =sparrowElement.getAbsoluteLeft()+"px";

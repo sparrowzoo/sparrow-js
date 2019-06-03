@@ -34,7 +34,7 @@ Tooltip.prototype = {
         if (typeof (this.config.descSelectList) == "string") {
             this.config.descSelectList = $(this.config.descSelectList);
         }
-        this.config.toolipDiv = $("new.div").s;
+        this.config.toolipDiv = $("+div").s;
         document.body.appendChild(this.config.toolipDiv);
         var sparrowElement = $(this.config.srcElement);
         var left = sparrowElement.getAbsoluteLeft();
@@ -51,8 +51,8 @@ Tooltip.prototype = {
         };
         // 由于原控件可能会有此事件，为在原控件基础上附加方法，故写成如下方式
         // 示例代码onfocus='v.showMessage(studentInfo.txtClass);'onblur='v.isNull(studentInfo.txtClass);
-        var htmlEvents = "$(#." + this.obj + ".config.srcElement).bind('onkeyup',function(e){" + this.obj + ".show(e);});" +
-            "$(#."
+        var htmlEvents = "$(#" + this.obj + ".config.srcElement).bind('onkeyup',function(e){" + this.obj + ".show(e);});" +
+            "$(#"
             + this.obj + ".config.srcElement).bind('onblur',function(){if("
             + this.obj + ".config.descIdHidden.value==''){" + this.obj
             + ".config.srcElement.value='';}});";

@@ -92,7 +92,7 @@ Sparrow.prototype.interlace = function (targetArray) {
             "{width:'{0}',height:'{1}'}".format(this.s.style.width, this.s.style.height),
             "{top:'{0}',height:'0px',width:'0px',left:'{1}'}".format(this.s.style.height, this.s.style.width)];
     }
-    $("son.div." + this.selector.split(".")[1]).each(function (i) {
+    $("!.div." + this.selector.split(".")[1]).each(function (i) {
         this.style.position = "absolute";
         if (i == 0) {
             this.style.width = this.parentNode.style.width;
@@ -108,12 +108,12 @@ Sparrow.prototype.interlace = function (targetArray) {
     this.s.style.position = "relative";
     this.s.style.overflow = "hidden";
     this.s.onmouseover = function () {
-        $("son.div." + this.id).each(function (i) {
+        $("!div." + this.id).each(function (i) {
             $(this).animation(targetArray[i], 1);
         });
     };
     this.s.onmouseout = function () {
-        $("son.div." + this.id).each(function (i) {
+        $("!.div." + this.id).each(function (i) {
             $(this).animation(targetArray[i + 2], 1);
         });
     };
@@ -197,7 +197,7 @@ Sparrow.showOrHiddenTag = function (tagArray, show, doc) {
     }
     for (var i = 0; i < tagArray.length; i++) {
         var tagName = tagArray[i];
-        var tags = $("tag." + tagName, null, doc);
+        var tags = $("<" + tagName, null, doc);
         tags.each(function () {
             this.zIndex = -1;
             if (!show) {
