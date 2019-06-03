@@ -740,14 +740,14 @@ Sparrow.ajax = {
             $.message("json parse error " + xmlHttpRequest.responseText);
             return;
         }
-        if (result.code === ajax.FAIL) {
+        if (result.code === this.ajax.FAIL) {
             $.message(result.error);
         }
     },
     gourl: function (url) {
-        ajax.referWindow.location.href = url;
+        this.ajax.referWindow.location.href = url;
     },
-    req: function (getOrPost, url, responsef, isay, postStr, srcElement) {
+    req: function (getOrPost, url, responsef, postStr, srcElement) {
         if (url.indexOf("http://") === -1) {
             url = $.url.root + url;
         }
@@ -758,10 +758,7 @@ Sparrow.ajax = {
         //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with
         //with (objXMLHttp) {
         try {
-            if ($.isNullOrEmpty(isay)) {
-                isay = true;
-            }
-            objXMLHttp.open(getOrPost, url, isay);
+            objXMLHttp.open(getOrPost, url, true);
             objXMLHttp.setRequestHeader("pragma", "no-cache");
             objXMLHttp.setRequestHeader("cache-control", "no-cache");
 
@@ -779,10 +776,10 @@ Sparrow.ajax = {
             }
             objXMLHttp.onreadystatechange = function () {
                 // alert("状态信息"+objXMLHttp.readyState);
-                if (objXMLHttp.readyState == 4) {
+                if (objXMLHttp.readyState === 4) {
                     // alert("结果状态"+objXMLHttp.status);
-                    if (objXMLHttp.status == 200) {
-                        if (objXMLHttp.responseText.indexOf("login:false") != -1) {
+                    if (objXMLHttp.status === 200) {
+                        if (objXMLHttp.responseText.indexOf("login:false") !== -1) {
                             alert("login false");
                             var config = objXMLHttp.responseText.json();
                             if (config.inFrame) {
@@ -792,7 +789,7 @@ Sparrow.ajax = {
                                 $.window(config);
                             }
                         } else if (objXMLHttp.responseText
-                            .indexOf("Access Denied") != -1) {
+                            .indexOf("Access Denied") !== -1) {
                             if (!$.message.accessDenied)
                                 $.message.accessDenied = "Access Denied";
                             $.alert($.message.accessDenied, "sad");
@@ -800,13 +797,13 @@ Sparrow.ajax = {
                             responsef(objXMLHttp.responseText);
                         }
                     } else {
-                        if (objXMLHttp.status == 404) {
+                        if (objXMLHttp.status === 404) {
                             alert("资源未找到");//
                         } else {
-                            if (objXMLHttp.status == 500) {
+                            if (objXMLHttp.status === 500) {
                                 alert("服务器错误");//
                             } else {
-                                if (objXMLHttp.status == 12031) {
+                                if (objXMLHttp.status === 12031) {
                                     alert("服务器未启动");//
                                 } else {
                                     alert(objXMLHttp.status + ":未知错误");
@@ -821,7 +818,7 @@ Sparrow.ajax = {
         }
     },
     json: function (url, data, callback, srcElement) {
-        ajax.req("POST", url,
+        $.ajax.req("POST", url,
             function (xmlHttpRequest) {
                 var result = xmlHttpRequest.responseText.json();
                 if (result == null) {
@@ -829,7 +826,7 @@ Sparrow.ajax = {
                     return;
                 }
 
-                if (result.code === ajax.OK) {
+                if (result.code === $.ajax.OK) {
                     if (callback) {
                         callback(result);
                     }
@@ -837,13 +834,13 @@ Sparrow.ajax = {
                 else {
                     $.message(result.error);
                 }
-            }, true, data, srcElement);
+            }, data, srcElement);
     },
     get: function (url) {
-        ajax.req("GET", url, ajax._callback, true);
+        $.ajax.req("GET", url, $.ajax._callback);
     },
     post: function (url, data) {
-        ajax.req("POST", url,ajax._callback, true, data);
+        $.ajax.req("POST", url,$.ajax._callback, data);
     }
 };
 Sparrow.random = function () {
