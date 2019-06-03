@@ -742,7 +742,7 @@ function SparrowEditor(objName) {
         // 从服务器端删除附件
         deleteOnServer: function (fileUUID, srcElement) {
             var editor = this.parentObject;
-            if (window.confirm(l.message.deleteFile)) {
+            if (window.confirm($.message.deleteFile)) {
                 ajax
                     .json($.url.root + "/attach/delete.json", "uuid=" + fileUUID,
                         function (result) {

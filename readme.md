@@ -29,3 +29,8 @@ add dependency
   },
 
 add purecss
+
+
+windows install node
+---
+https://nodejs.org/en/download/

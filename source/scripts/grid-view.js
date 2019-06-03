@@ -60,8 +60,8 @@ Sparrow.gridView = {
             }
         }
         if (selectedId.length === 0) {
-            if (l.message.noSelectRecord) {
-                $.message(l.message.noSelectRecord);
+            if ($.message.noSelectRecord) {
+                $.message($.message.noSelectRecord);
             } else {
                 $.message("please define the json 'l.message.noSelectRecord'!");
             }
