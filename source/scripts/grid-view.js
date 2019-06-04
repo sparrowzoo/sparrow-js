@@ -60,10 +60,10 @@ Sparrow.gridView = {
             }
         }
         if (selectedId.length === 0) {
-            if ($.message.noSelectRecord) {
-                $.message($.message.noSelectRecord);
+            if (lang.message.noSelectRecord) {
+                $.message(lang.message.noSelectRecord);
             } else {
-                $.message("please define the json 'l.message.noSelectRecord'!");
+                $.message("please define the json 'lang.message.noSelectRecord'!");
             }
             return false;
         } else {

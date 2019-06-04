@@ -96,9 +96,9 @@ Sparrow.ajax = {
                             }
                         } else if (objXMLHttp.responseText
                             .indexOf("Access Denied") !== -1) {
-                            if (!$.message.accessDenied)
-                                $.message.accessDenied = "Access Denied";
-                            $.alert($.message.accessDenied, "sad");
+                            if (!lang.message.accessDenied)
+                                lang.message.accessDenied = "Access Denied";
+                            $.alert(lang.message.accessDenied, "sad");
                         } else if (responsef) {
                             responsef(objXMLHttp.responseText);
                         }
