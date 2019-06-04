@@ -58,7 +58,7 @@ var Sparrow = function (selector) {
         &&selector.indexOf("*") === -1
         &&selector.indexOf("-") === -1
         &&selector.indexOf("+") === -1
-        &&selector.indexOf("<") === -1) {
+        &&selector.indexOf("^") === -1) {
         return doc.getElementById(selector);
     }
     if (window === this)
@@ -81,7 +81,7 @@ var Sparrow = function (selector) {
             case "#"://id
                 doms[0] = doc.getElementById(selector);
                 break;
-            case "<": //tag
+            case "^": //tag
                 doms = doc.getElementsByTagName(selector);
                 break;
             case "&": //name
@@ -96,7 +96,7 @@ var Sparrow = function (selector) {
                 } else {
                     doms[0].id = "sparrow_" + $.random();
                 }
-                this.selector = "#." + selectorArray[1];
+                this.selector = "#" + selectorArray[1];
                 sparrow_id = this.selector;
                 if (selectorArray.length >= 3) {
                     if (selectorArray[2] === "doc") {

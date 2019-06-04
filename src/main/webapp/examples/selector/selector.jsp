@@ -1,0 +1,52 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib uri="http://www.sparrowzoo.com/ui" prefix="j" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+          content="A layout example with a side menu that hides on mobile, just like the Pure website.">
+    <title>Sparrow 选择器 &ndash; Sparrow JS Framework</title>
+    <jsp:include page="${root_path}/examples/head.jsp"/>
+</head>
+
+<body>
+
+<div id="layout">
+    <jsp:include page="${root_path}/examples/menu.jsp"/>
+    <div id="main">
+        <div class="header">
+            <h1>SELECTOR</h1>
+            <h2>Sparrow 选择器</h2>
+        </div>
+
+        <div class="content">
+            selector 的第一个字符代码选择的类别
+               <ul id="container">
+                   <li>
+                       原生标签对象 无选择符 $('html label id')
+                       <input type="button" id="btnId" onclick="alert($('btnId').value)" value="点我输出我的value"/>
+                   </li>
+
+                   <li>
+                       Sparrow标签对象 选择符 # 代表id $('#html label id')
+                       <input type="button" id="sparrowId" onclick="alert($('#sparrowId').value())" value="点我输出我的value"/>
+                   </li>
+
+                   <li>
+                       Sparrow标签对象 选择符 & 代表name $('&html label name') 助记 &在计算机中表示引用或地址
+                       <input type="button" name="sparrowName"  onclick="alert($('&sparrowName').value())" value="点我输出我的value"/>
+                   </li>
+
+                   <li>
+                       Sparrow标签对象 选择符 ^ 代表name $('^html label') 助记^表示标签起始标记&lt; 为避免与html冲突 所以用^
+                       <input type="button" name="sparrowName"  onclick="alert($('^input')[0].value)" value="点我输出我的value"/>
+                   </li>
+               </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
