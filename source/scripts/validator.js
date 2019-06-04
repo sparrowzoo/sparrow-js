@@ -27,13 +27,13 @@ Sparrow.v = {
     empty_string: '',
     //字段的索引
     index: null,
-    right_message: '<img src="' + $.url.resource + '/images/' + $.website.themes
+    right_message: '<img alt="" src="' + $.url.resource + '/images/' + $.website.themes
         + '/succeed.gif"/>',
     reset: function () {
-        v.index = null;
+        $.v.index = null;
     },
     getErrorLabel: function (validate) {
-        return validate.errorCtrlId ? $(validate.errorCtrlId.join(v.index)) : null;
+        return validate.errorCtrlId ? $(validate.errorCtrlId.join($.v.index)) : null;
     },
     getInput: function (validate) {
         var id=$.jsonKeys(validate);
@@ -41,7 +41,7 @@ Sparrow.v = {
             return null;
         }
         id=id[0];
-        return id ? $(id.join(v.index)) : null;
+        return id ? $(id.join($.v.index)) : null;
     },
     //click blur 替换成initPlaceholder
     initPlaceholder: function (json) {
@@ -55,10 +55,10 @@ Sparrow.v = {
     },
     // 设置当前控件的父控件背景
     _setBackground: function (validate, color) {
-        if (v.background_color == false) {
+        if ($.v.background_color === false) {
             return;
         }
-        if (!color) color = v.background_color;
+        if (!color) color = $.v.background_color;
         var parentLevel = validate.parentLevel;
         if (typeof (parentLevel) == "undefined")
             parentLevel = 1;
@@ -66,7 +66,7 @@ Sparrow.v = {
             var background = this.getInput(validate);
             if (background == null) return;
             try {
-                while (background.tagName.toUpperCase() != "TR" && background.className != "line" && background.className != "validate") {
+                while (background.tagName.toUpperCase() !== "TR" && background.className !== "line" && background.className !== "validate") {
                     background = background.parentNode;
                 }
                 background.style.background = color;
@@ -335,7 +335,7 @@ Sparrow.v = {
             if (v.validate) {
                 error = v.validate();
             }
-            if (error != true && !$.isNullOrEmpty(error)) {
+            if (error !== true && !$.isNullOrEmpty(error)) {
                 wrongInfo.push(error);
             }
         }
