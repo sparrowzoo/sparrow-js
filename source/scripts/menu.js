@@ -28,7 +28,7 @@ function Menu(obj, position) {
     $.global(obj, this);
 }
 Menu.prototype.side = function () {
-    this.config.frameDiv = $("new.div").s;
+    this.config.frameDiv = $("+div").s;
     this.config.frameDiv.onmouseover = function (e) {
         $.event(e).cancelBubble();
     };
@@ -58,14 +58,14 @@ Menu.prototype.vertical = function () {
     if (!$(this.id)) {
         return;
     }
-    var item = $("son.div." + this.id);
+    var item = $("!div." + this.id);
     var obj = this.obj;
     item
         .each(function (i) {
             var menu = $.global(obj);
-            var item_link = $("son.a", this)[0];
+            var item_link = $("!a", this)[0];
             item_link.id = menu.id + "_" + menu.position + "_menu_" + i;
-            var child = $("son.ul", this)[0];
+            var child = $("!ul", this)[0];
             if (child) {
                 child.id = item_link.id + "_child";
                 menu.config.position[child.id] = child.offsetHeight;
@@ -80,7 +80,7 @@ Menu.prototype.vertical = function () {
                         "onmouseover",
                         function (e) {
                             $.event(e).cancelBubble();
-                            var child = $("#." + this.id + "_child");
+                            var child = $("#" + this.id + "_child");
                             var current_menu = null;
                             if (menu.config.current_menu != null) {
                                 if (child === menu.config.current_menu) {
@@ -168,12 +168,12 @@ Menu.prototype.horizontal=function () {
     if (!$(this.id)) {
         return;
     }
-    var div = $("son.div." + this.id);
+    var div = $("!div." + this.id);
     //初始化菜单
-    this.config.menu = $("son.li", div[0]);
+    this.config.menu = $("!li", div[0]);
     //初始化菜单对应的列表
-    this.config.list = $("son.ul", div[1]);
-    this.config.left_limit = $("#." + this.id).getAbsoluteLeft();
+    this.config.list = $("!ul", div[1]);
+    this.config.left_limit = $("#" + this.id).getAbsoluteLeft();
     if (this.config.position["height"] == null) {
         this.config.position["height"] = 30;
     }

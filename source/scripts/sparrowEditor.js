@@ -220,7 +220,7 @@ function SparrowEditor(objName) {
                     cmd: "justifyfull"
                 },
                 /* 13 */{
-                    split: '<img src="{0}icoBack.gif" style="background:url({0}ico.gif)-940px -8px;width:8px;height:24px;"/>'
+                    split: '<img alt="" src="{0}icoBack.gif" style="background:url({0}ico.gif)-940px -8px;width:8px;height:24px;"/>'
                 },
                 /* 14 */{
                     left: -562,

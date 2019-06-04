@@ -33,7 +33,7 @@
 </body>
 
 <script type="text/javascript">
-    $("#.white").animation(
+    $("#white").animation(
         "{height:'400px',width:'400px',top:'300px',left:'500px'}", 30);
 </script>
 </html>

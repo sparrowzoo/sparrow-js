@@ -92,9 +92,10 @@ Sparrow.prototype.interlace = function (targetArray) {
             "{width:'{0}',height:'{1}'}".format(this.s.style.width, this.s.style.height),
             "{top:'{0}',height:'0px',width:'0px',left:'{1}'}".format(this.s.style.height, this.s.style.width)];
     }
-    $("!.div." + this.selector.split(".")[1]).each(function (i) {
+    var parentId=this.selector.substring(1);
+    $("!div." +parentId).each(function (i) {
         this.style.position = "absolute";
-        if (i == 0) {
+        if (i === 0) {
             this.style.width = this.parentNode.style.width;
             this.style.height = this.parentNode.style.height;
         } else {
@@ -113,7 +114,7 @@ Sparrow.prototype.interlace = function (targetArray) {
         });
     };
     this.s.onmouseout = function () {
-        $("!.div." + this.id).each(function (i) {
+        $("!div." + this.id).each(function (i) {
             $(this).animation(targetArray[i + 2], 1);
         });
     };
@@ -136,7 +137,7 @@ Sparrow.prototype.show = function () {
 };
 Sparrow.prototype.hidden = function () {
     if (this.s) {
-        if (this.height == undefined) {
+        if (!this.height) {
             this.height = this.s.offsetHeight + "px";
             this.s.style.height = this.height;
         }

@@ -92,8 +92,8 @@ Sparrow.file = {
         var fileExtension = this.getExtension(fileName);
         var result = false;
         for (var i = 0; i < righty_type.length; i += 1) {
-            if (righty_type[i].toLocaleLowerCase() == fileExtension
-                || '.' + righty_type[i].toLocaleLowerCase() == fileExtension) {
+            if (righty_type[i].toLocaleLowerCase() === fileExtension
+                || '.' + righty_type[i].toLocaleLowerCase() === fileExtension) {
                 result = true;
                 break;
             }
@@ -118,7 +118,7 @@ Sparrow.file = {
                            srcElement) {
         this.showStatus = showState;
         // 如果显示状态并且状态控件已经显示则说明已经有文件正在上传中...
-        if (showState != false && $("divStatus")) {
+        if (showState !== false && $("divStatus")) {
             $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
             return false;
         }
@@ -127,7 +127,7 @@ Sparrow.file = {
         // 如果没有选择上传文件
         if (this.getUploadFile(uploadingFrameId).value == "") {
             var fileInfo = "{fileName:'"
-                + (oldFileUrl && oldFileUrl != 'undefined' ? oldFileUrl
+                + (oldFileUrl && oldFileUrl !== 'undefined' ? oldFileUrl
                     : "") + "'}";
             // 上传事件回调函数 具体处理方式在uploadCallBack中进行操作
             file.uploadCallBack(fileInfo.json(), "");
@@ -145,11 +145,11 @@ Sparrow.file = {
         this.setFileSerialNumber(uploadFrame.contentWindow.document
             .getElementById("fileInfo").value.split('|')[1]);
         // 如果要显示状态
-        if (showState != false) {
+        if (showState !== false) {
             // 如果状态控件不存在则创建
             if (!$("divStatus")) {
                 var sparrowUploadFrame = $(uploadFrame);
-                var divStatus = $("new.div");
+                var divStatus = $("+.div");
                 divStatus.s.id = "divStatus";
                 divStatus.s.style.cssText = "width:260px;height:100px;position:absolute;color:#ffffff;background:#000000;font-size:10pt;border:#ccc 1px solid;text-align:left;";
                 divStatus.s.innerHTML = "服务器正在加载文件信息...";
@@ -183,14 +183,14 @@ Sparrow.file = {
                 $.url.root + "/FileUpload?fileSerialNumber="
                 + this.getFileSerialNumber() + "&t="
                 + Math.random(),
-                function (xmlHttpRequest) {
-                    if (xmlHttpRequest.responseText) {
+                function (responseText) {
+                    if (responseText) {
                         // 未加载完即获取则继续loading
-                        if (xmlHttpRequest.responseText
-                            .indexOf("loading") == 0) {
+                        if (responseText
+                            .indexOf("loading") === 0) {
                             return;
                         }
-                        var statusJson = xmlHttpRequest.responseText
+                        var statusJson =responseText
                             .json();
                         if (!$.isNullOrEmpty(statusJson.uploadingError)) {
                             $.alert(statusJson.uploadingError, "sad");

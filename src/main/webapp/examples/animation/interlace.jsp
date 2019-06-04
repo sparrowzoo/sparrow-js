@@ -24,8 +24,8 @@
 
         <div class="content">
              <pre>
-     $("#.divContainer").interlace();
-    $("#.divContainer2").interlace();
+     $("#divContainer").interlace();
+    $("#divContainer2").interlace();
 </pre>
             <div id="divContainer"
                  style="background: #000; width: 200px; height: 200px; position: relative;">
@@ -44,8 +44,8 @@
     </div>
 </div>
 <script type="application/javascript">
-    $("#.divContainer").interlace();
-    $("#.divContainer2").interlace();
+    $("#divContainer").interlace();
+    $("#divContainer2").interlace();
 </script>
 </body>
 

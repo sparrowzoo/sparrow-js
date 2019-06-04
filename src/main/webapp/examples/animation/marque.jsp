@@ -36,7 +36,7 @@
 
         <div class="content">
              <pre>
-   $("#.d").marque(0, 2, 50);
+   $("#d").marque(0, 2, 50);
 </pre>
 
             <div class="container">
@@ -108,7 +108,7 @@
     </div>
 </div>
 <script type="application/javascript" language="JavaScript">
-    $("#.d").marque(0, 2, 50);
+    $("#d").marque(0, 2, 50);
 </script>
 </body>
 

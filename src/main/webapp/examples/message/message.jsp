@@ -12,7 +12,7 @@
     <jsp:include page="${root_path}/examples/head.jsp"/>
     <j:style href="$resource/assets/styles/sparrow.css"/>
     <script type="application/javascript">
-        win.okClick = function () {
+        $.win.okClick = function () {
             alert("OK");
             win.closeClick();
         }

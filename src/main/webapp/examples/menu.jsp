@@ -29,7 +29,7 @@
             <li class="pure-menu-item"><a href="${root_path}/examples/animation/show-hidden.jsp" class="pure-menu-link">show-hidden</a></li>
 
             <li class="pure-menu-item">
-                <a href="animation/progress.html" class="pure-menu-link">progress</a>
+                <a href="${root_path}/examples/animation//progress.jsp" class="pure-menu-link">progress</a>
             </li>
 
             <li class="pure-menu-item"><a href="${root_path}/examples//animation/play.html" class="pure-menu-link">play</a></li>
@@ -39,8 +39,8 @@
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">消息</a>
         <ul class="pure-menu-list">
-            <li class="pure-menu-item"><a href="${root_path}/examples//message/jalert.html" class="pure-menu-link">jalert</a></li>
-            <li class="pure-menu-item"><a href="${root_path}/examples//message/message.html" class="pure-menu-link">message</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/examples/message/jalert.jsp" class="pure-menu-link">jalert</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/examples/message/message.jsp" class="pure-menu-link">message</a></li>
 
             <li class="pure-menu-item">
                 <a href="${root_path}/examples/message/window.html" class="pure-menu-link">window</a>

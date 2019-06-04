@@ -4,7 +4,7 @@ Sparrow.message = function (content, srcElement) {
     if (divmsg) {
         divmsg.parentNode.removeChild(divmsg);
     }
-    divmsg = $("new.div." + id);
+    divmsg = $("+div." + id);
     divmsg.s.style.cssText = "position:absolute;background-color:#cccccc;width:auto;padding:10px;text-align:left;";
     divmsg.s.innerHTML = content;
     divmsg.opacity(0);

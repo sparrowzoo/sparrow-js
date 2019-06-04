@@ -57,7 +57,8 @@ var Sparrow = function (selector) {
         &&selector.indexOf("&") === -1
         &&selector.indexOf("*") === -1
         &&selector.indexOf("-") === -1
-        &&selector.indexOf("+") === -1) {
+        &&selector.indexOf("+") === -1
+        &&selector.indexOf("<") === -1) {
         return doc.getElementById(selector);
     }
     if (window === this)
@@ -74,7 +75,7 @@ var Sparrow = function (selector) {
         sparrow_id = this.selector;
     } else if (typeof selector==='string') {
         var switch_char=selector.substring(0,1);
-        selector=selector.substring(0,1);
+        selector=selector.substring(1);
         var selectorArray = selector.split(".");
         switch (switch_char) {
             case "#"://id

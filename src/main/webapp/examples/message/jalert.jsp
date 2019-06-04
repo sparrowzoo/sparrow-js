@@ -12,7 +12,7 @@
     <jsp:include page="${root_path}/examples/head.jsp"/>
     <j:style href="$resource/assets/styles/sparrow.css"/>
     <script type="application/javascript">
-        win.okClick = function () {
+        $.win.okClick = function () {
             alert("OK");
             win.closeClick();
         }
@@ -46,7 +46,7 @@
                    onclick="$.alert('sorry!wait!','wait','title');">
 
             <input type="button" value="弹出windows"
-                   onclick="$.window({url:'/demo/message/window.html'})">
+                   onclick="$.window({url:'/examples/message/window.html'})">
 
 
             <input type="button" value="弹出自定义div"

@@ -26,8 +26,7 @@
 
         <div class="content">
              <pre>
-
-$("#.tabs").tabs();
+$("#tabs").tabs();
 </pre>
 
 

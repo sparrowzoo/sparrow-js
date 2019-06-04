@@ -3,25 +3,25 @@
 
 var gulp = require('gulp');
 //because plugin name is del without "gulp" prefix
-var del= require('del');
+var del = require('del');
 var plugins = require('gulp-load-plugins')();
 
 var paths = {
     styles: {
-        src:'source/styles/**/*.*' ,
+        src: 'source/styles/**/*.*',
         dest: 'src/main/webapp/assets/styles/'
     },
-    purecss:{
-         src:'node_modules/purecss/build/*.*',
-         dest:'src/main/webapp/assets/styles/pure-css'
+    purecss: {
+        src: 'node_modules/purecss/build/*.*',
+        dest: 'src/main/webapp/assets/styles/pure-css'
     },
-    images:{
-        src:'source/images/**/*.*',
-        dest:'src/main/webapp/assets/images'
+    images: {
+        src: 'source/images/**/*.*',
+        dest: 'src/main/webapp/assets/images'
     },
-    medias:{
-        src:'source/media/**/*.*',
-        dest:'src/main/webapp/assets/media'
+    medias: {
+        src: 'source/media/**/*.*',
+        dest: 'src/main/webapp/assets/media'
     },
     scripts_dev: {
         src: [
@@ -55,12 +55,12 @@ var paths = {
             //'src/scripts/sparrowDatePicker.js',
             //'src/scripts/sparrowEditor.js',
             //'src/scripts/sparrowTree.js',
-            ],
+        ],
         dest: 'src/main/webapp/assets/scripts-all/'
     },
-    scripts_min:{
-        src:['src/main/webapp/assets/scripts-all/sparrow.js'],
-        dest:'src/main/webapp/assets/scripts'
+    scripts_min: {
+        src: ['src/main/webapp/assets/scripts-all/sparrow.js'],
+        dest: 'src/main/webapp/assets/scripts'
     }
 };
 
@@ -71,7 +71,7 @@ var paths = {
 function clean() {
     // You can use multiple globbing patterns as you would with `gulp.src`,
     // for example if you are using del 2.0 or above, return its promise
-    return del([ 'src/main/webapp/assets' ]);
+    return del(['src/main/webapp/assets']);
 }
 
 /*
@@ -114,7 +114,7 @@ function medias() {
 }
 
 function scripts_dev() {
-    return gulp.src(paths.scripts_dev.src,{base:'source/script-all'})
+    return gulp.src(paths.scripts_dev.src, {base: 'source/script-all'})
         .pipe(plugins.concat('sparrow.js'))
         .pipe(gulp.dest(paths.scripts_dev.dest));
 }
@@ -131,17 +131,20 @@ exports.clean = plugins.clean;
 exports.styles = plugins.styles;
 exports.scripts_dev = plugins.scripts_dev;
 exports.scripts = plugins.scripts;
-exports.images=plugins.images;
-exports.medias=plugins.medias;
-exports.purecss=plugins.purecss;
+exports.images = plugins.images;
+exports.medias = plugins.medias;
+exports.purecss = plugins.purecss;
 exports.watch = plugins.watch;
 
 /*
  * Specify if tasks run in series or parallel using `gulp.series` and `gulp.parallel`
+ *  The following tasks did not complete: dev, <anonymous>
+ *  [10:21:42] Did you forget to signal async completion?
+ *  use gulp.series is ok
  */
-var build_dev = gulp.series(gulp.parallel(clean,styles,purecss,scripts_dev,images,medias));
+var build_dev = gulp.series(clean, styles, purecss, scripts_dev, images, medias);
 
-var build = gulp.series(gulp.parallel(scripts));
+var build = gulp.series(scripts);
 
 /*
  * You can still use `gulp.task` to expose tasks

@@ -1,10 +1,10 @@
 Sparrow.prototype.progressbar = function (callback, config) {
-    var bar = $("new.div");
+    var bar = $("+div");
     document.body.appendChild(bar.s);
     if (config.style) {
         bar.s.style.cssText = config.style;
     }
-    var progress = $("new.div");
+    var progress = $("+div");
     bar.s.appendChild(progress.s);
     if (config.progressStyle) {
         progress.s.style.cssText = config.progressStyle;
