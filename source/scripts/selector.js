@@ -56,7 +56,6 @@ var Sparrow = function (selector) {
         &&selector.indexOf("$") === -1
         &&selector.indexOf("&") === -1
         &&selector.indexOf("*") === -1
-        &&selector.indexOf("-") === -1
         &&selector.indexOf("+") === -1
         &&selector.indexOf("^") === -1) {
         return doc.getElementById(selector);
