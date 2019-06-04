@@ -1,6 +1,6 @@
 /*------------------------------------validate 表单验证------------------------------------------------*/
 /*
- * ctrlId
+ * key ==ctrlId
  *
  * errorCtrlId
  *
@@ -13,10 +13,19 @@
  * lengthError
  *
  * dateError
+ *
+        prompt: '请输入您的原始密码',
+        minLength: 6,
+        maxLength: 16,
+        lengthError: '密码至少6位',
+        setError: '原始密码输入错误',
+        isExist: false,
+        parentLevel:0
  */
 Sparrow.v = {
     background_color: '#fff',
     empty_string: '',
+    //字段的索引
     index: null,
     right_message: '<img src="' + $.url.resource + '/images/' + $.website.themes
         + '/succeed.gif"/>',
@@ -27,21 +36,26 @@ Sparrow.v = {
         return validate.errorCtrlId ? $(validate.errorCtrlId.join(v.index)) : null;
     },
     getInput: function (validate) {
-        return validate.ctrlId ? $(validate.ctrlId.join(v.index)) : null;
+        var id=$.jsonKeys(validate);
+        if(id.length===0){
+            return null;
+        }
+        id=id[0];
+        return id ? $(id.join(v.index)) : null;
     },
     //click blur 替换成initPlaceholder
     initPlaceholder: function (json) {
         for (var o in json) {
             var property = json[o];
             var ctrl = this.getInput(property);
-            if (ctrl != null && ctrl.type == "text") {
+            if (ctrl != null && ctrl.type === "text") {
                 ctrl.placeholder = property.prompt;
             }
         }
     },
     // 设置当前控件的父控件背景
     _setBackground: function (validate, color) {
-        if (v.background_color != false) {
+        if (v.background_color !== false) {
             if (!color) color = v.background_color;
             var parentLevel = validate.parentLevel;
             if (typeof (parentLevel) == "undefined")
@@ -50,7 +64,7 @@ Sparrow.v = {
                 var background = this.getInput(validate);
                 if (background == null) return;
                 try {
-                    while (background.tagName.toUpperCase() != "TR" && background.className != "line" && background.className != "validate") {
+                    while (background.tagName.toUpperCase() !== "TR" && background.className !== "line" && background.className != "validate") {
                         background = background.parentNode;
                     }
                     background.style.background = color;
@@ -79,7 +93,7 @@ Sparrow.v = {
         var ctrl = this.getInput(validate);
         if (ctrl) {
             ctrl.style.backgroundColor = "#ffffff";
-            if (ctrl.value == "" && validate.defaultValue)
+            if (ctrl.value === "" && validate.defaultValue)
                 ctrl.value = validate.defaultValue;
         }
         return true;
@@ -100,19 +114,19 @@ Sparrow.v = {
         var ctrl = this.getInput(validate);
         var ctrlValue = ctrl.value.trim();
         var errorCtrl = this.getErrorLabel(validate);
-        var length = (ctrl.tagName.toUpperCase() == "SELECT" && ctrl.multiple == true) ? ctrl.options.length
+        var length = (ctrl.tagName.toUpperCase() === "SELECT" && ctrl.multiple === true) ? ctrl.options.length
             : ctrlValue.getByteLength();
         //允许空
-        if (length == 0 && validate.allowNull) {
+        if (length === 0 && validate.allowNull) {
             return this.ok(validate);
         }
         //空但有默认值
-        if (length == 0 && validate.defaultValue != undefined) {
+        if (length === 0 && validate.defaultValue !== undefined) {
             ctrl.value = validate.defaultValue;
             return this.ok(validate);
         }
         //不允许为空
-        if (length == 0 && !validate.allowNull) {
+        if (length === 0 && !validate.allowNull) {
             return this.fail(validate, validate.nullError);
         }
         // 长度不合法
@@ -123,38 +137,38 @@ Sparrow.v = {
         }
 
         //ajax 错误未修改
-        if (errorCtrl && errorCtrl.className == "error" && errorCtrl.innerHTML == ("!" + validate.setError)) {
+        if (errorCtrl && errorCtrl.className === "error" && errorCtrl.innerHTML === ("!" + validate.setError)) {
             return this.fail(validate);
         }
         return true;
     },
     isUserNameRule: function (validate) {
         var result = this._validate(validate);
-        if (result != true) {
+        if (result !== true) {
             return result;
         }
-        if (this.getInput(validate).value.search(/^[a-zA-Z0-9_]{6,20}$/) == -1) {
+        if (this.getInput(validate).value.search(/^[a-zA-Z0-9_]{6,20}$/) === -1) {
             return this.fail(validate, validate.nameRuleError);
         }
         return this.ok(validate);
     },
     isEmail: function (validate) {
         var result = this._validate(validate);
-        if (result != true) {
+        if (result !== true) {
             return result;
         }
-        if (this.getInput(validate).value.search(/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/) == -1) {
+        if (this.getInput(validate).value.search(/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/) === -1) {
             return this.fail(validate, validate.emailError);
         }
         return this.ok(validate);
     },
     isTel: function (validate) {
         var result = this._validate(validate);
-        if (result != true) {
+        if (result !== true) {
             return result;
         }
         if (this.getInput(validate).value
-            .search(/^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/) == -1) {
+            .search(/^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/) === -1) {
             return this.fail(validate, validate.telError);
         }
         return this.ok(validate);
@@ -163,28 +177,28 @@ Sparrow.v = {
         validate.minLength = 11;
         validate.maxLength = 11;
         var result = this._validate(validate);
-        if (result != true) {
+        if (result !== true) {
             return result;
         }
-        if (this.getInput(validate).value.search(/^1[\d]{10}$/) == -1) {
+        if (this.getInput(validate).value.search(/^1[\d]{10}$/) === -1) {
             return this.fail(validate, validate.mobileError);
         }
         return this.ok(validate);
     },
     isIdCard: function (validate) {
         var result = this._validate(validate);
-        if (result != true) {
+        if (result !== true) {
             return result;
         }
         if (this.getInput(validate).value
-            .search(/^([1-9]([0-9]{16}|[0-9]{13})([0-9]|x|X))$/) == -1) {
+            .search(/^([1-9]([0-9]{16}|[0-9]{13})([0-9]|x|X))$/) === -1) {
             return this.fail(validate, validate.idCardError);
         }
         return this.ok(validate);
     },
     isNull: function (validate) {
         var result = this._validate(validate);
-        if (result != true) {
+        if (result !== true) {
             return result;
         }
         return this.ok(validate);
@@ -194,17 +208,17 @@ Sparrow.v = {
         if (result !== true) {
             return result;
         }
-        if (this.getInput(validate).value.search(/^[\u4e00-\u9fa5]$/) == -1) {
+        if (this.getInput(validate).value.search(/^[\u4e00-\u9fa5]$/) === -1) {
             return this.fail(validate, validate.wordError);
         }
         return this.ok(validate);
     },
     isEqual: function (validate) {
         var result = this._validate(validate);
-        if (result != true) {
+        if (result !== true) {
             return result;
         }
-        if (this.getInput(validate).value != $(validate.otherCtrlId.join(v.index)).value.trim()) {
+        if (this.getInput(validate).value !== $(validate.otherCtrlId.join(v.index)).value.trim()) {
             return this.fail(validate, validate.noEqualError);
         }
         return this.ok(validate);
@@ -246,8 +260,8 @@ Sparrow.v = {
     isImgSize: function (srcElement, defaultValue) {
         var size = srcElement.value.split('*');
         if (size.length === 2) {
-            if (size[0].search(/^[0-9]+.?[0-9]$/) == -1
-                || size[1].search(/^[0-9]+.?[0-9]$/) == -1) {
+            if (size[0].search(/^[0-9]+.?[0-9]$/) === -1
+                || size[1].search(/^[0-9]+.?[0-9]$/) === -1) {
                 srcElement.value = defaultValue;
             }
         } else {
@@ -255,16 +269,16 @@ Sparrow.v = {
         }
     },
     isFileLength: function (srcElement, defaultValue) {
-        if (srcElement.value.toUpperCase().indexOf("M") != -1) {
+        if (srcElement.value.toUpperCase().indexOf("M") !== -1) {
             if (srcElement.value.toUpperCase().split('M')[0]
-                .search(/^[0-9]+.?[0-9]$/) != -1) {
+                .search(/^[0-9]+.?[0-9]$/) !== -1) {
                 srcElement.value = srcElement.value.toUpperCase().split('M')[0] + "MB";
             } else {
                 srcElement.value = defaultValue;
             }
-        } else if (srcElement.value.toUpperCase().indexOf("K") != -1) {
+        } else if (srcElement.value.toUpperCase().indexOf("K") !== -1) {
             if (srcElement.value.toUpperCase().split('K')[0]
-                .search(/^[0-9]+.?[0-9]$/) != -1) {
+                .search(/^[0-9]+.?[0-9]$/) !== -1) {
                 srcElement.value = srcElement.value.toUpperCase().split('K')[0] + "KB";
             }
             srcElement.value = defaultValue;
@@ -329,13 +343,11 @@ Sparrow.v = {
             return false;
         } else {
             if (action !== false) {
-                if (typeof(action) === "string" || typeof(action) === "undefined") {
+                if (typeof (action) === "string" || typeof (action) === "undefined") {
                     $.submit(action);
-                }
-                else if (typeof(action) === "function") {
+                } else if (typeof (action) === "function") {
                     action(this);
-                }
-                else if (typeof(action) === "object" && action.s.type === "hidden") {
+                } else if (typeof (action) === "object" && action.s.type === "hidden") {
                     var actionUrl = action.attr("new");
                     if (!$.isNullOrEmpty(action.s.value)) {
                         actionUrl = action.attr("update");

@@ -96,23 +96,23 @@ Sparrow.submit = function (action, formIndex) {
     document.forms[formIndex].submit();
 };
 
-Sparrow.getFormCtrl = function (inputIdArray) {
-    var inputArray = [];
-    if (!inputIdArray) {
-        return inputArray;
+Sparrow.jsonKeys = function (json) {
+    var jsonKeyArray = [];
+    if (!json) {
+        return jsonKeyArray;
     }
     //{}.prototype会多一个this该方法本身
     //区分数组和json
-    if (typeof(inputIdArray.length) === "undefined") {
-        for (var o in inputIdArray) {
-            inputArray.push(inputIdArray[o].ctrlId);
+    if (typeof(json.length) === "undefined") {
+        for (var key in json) {
+            jsonKeyArray.push(key);
         }
-        return inputArray;
+        return jsonKeyArray;
     }
-    return inputIdArray;
+    return json;
 };
 Sparrow.clearForm = function (validateJson) {
-    var inputArray = $.getFormCtrl(validateJson);
+    var inputArray = $.jsonKeys(validateJson);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
         var defaultValue = "";
@@ -123,7 +123,7 @@ Sparrow.clearForm = function (validateJson) {
 Sparrow.getFormData = function (inputIdArray) {
     //{}.prototype会多一个this该方法本身
     var data = [];
-    var inputArray = $.getFormCtrl(inputIdArray);
+    var inputArray = $.jsonKeys(inputIdArray);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
         if (!$.isNullOrEmpty(input.name)) {

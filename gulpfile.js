@@ -33,7 +33,7 @@ var paths = {
             'source/scripts/ready.js',
             'source/scripts/constant.js',
             'source/scripts/ajax.js',
-            //'src/scripts/validator.js',
+            'source/scripts/validator.js',
             //'src/scripts/pager.js',
             'source/scripts/sparrow.js',
             //'src/scripts/tooltip.js',
