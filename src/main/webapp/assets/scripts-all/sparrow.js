@@ -176,7 +176,13 @@ Array.prototype.remove = function (val) {
 /**
  * @return {null}
  * name.
- * tag.
+ * #id  id
+ * &name address equal name
+ * <tag tag name 
+ * !son dot below
+ * $for ---for 4
+ * *checked_value * equal multi
+ * +//new create
  */
 var Sparrow = function (selector) {
     var args = Array.prototype.slice.call(arguments, 0);
@@ -206,7 +212,7 @@ var Sparrow = function (selector) {
 
     var sparrow_id = selector;
     if (typeof (selector) === "object") {
-        sparrow_id = "#." + selector.id;
+        sparrow_id = "#" + selector.id;
     }
     var parent = args[1];
     var doc = args.length === 3 ? args[2] : document;
@@ -219,7 +225,14 @@ var Sparrow = function (selector) {
     if ($.global(sparrow_id)) {
         return $.global(sparrow_id);
     }
-    if (typeof (selector) !== "object" && selector.indexOf(".") === -1) {
+    if (typeof (selector) !== "object" &&
+        selector.indexOf("#") === -1
+        &&selector.indexOf("!") === -1
+        &&selector.indexOf("$") === -1
+        &&selector.indexOf("&") === -1
+        &&selector.indexOf("*") === -1
+        &&selector.indexOf("-") === -1
+        &&selector.indexOf("+") === -1) {
         return doc.getElementById(selector);
     }
     if (window === this)
@@ -232,80 +245,78 @@ var Sparrow = function (selector) {
         if (!selector.id) {
             selector.id = "sparrow_" + $.random();
         }
-        this.selector = "#." + selector.id;
+        this.selector = "#" + selector.id;
         sparrow_id = this.selector;
-    } else if (selector.indexOf(".") > -1) {
+    } else if (typeof selector==='string') {
+        var switch_char=selector.substring(0,1);
+        selector=selector.substring(0,1);
         var selectorArray = selector.split(".");
-        switch (selectorArray[0]) {
-            case "#":
-                doms[0] = doc.getElementById(selectorArray[1]);
+        switch (switch_char) {
+            case "#"://id
+                doms[0] = doc.getElementById(selector);
                 break;
-            case "tag":
-                doms = doc.getElementsByTagName(selectorArray[1]);
+            case "<": //tag
+                doms = doc.getElementsByTagName(selector);
                 break;
-            case "name":
-                var name = selectorArray[1];
-                if (selectorArray.length === 3) {
-                    name += "." + selectorArray[2];
-                }
-                doms = doc.getElementsByName(name);
+            case "&": //name
+                doms = doc.getElementsByName(selector);
                 break;
-            case "new":
-                //new.input.id.parentId.type
-                //new.input&button.id.parentId.type
-                doms[0] = doc.createElement(selectorArray[1]);
-                if (selectorArray.length >= 3) {
-                    doms[0].id = selectorArray[2];
+            case "+":
+                //+input.id.parentId.type
+                //+input&button.id.parentId.type
+                doms[0] = doc.createElement(selectorArray[0]);
+                if (selectorArray.length >= 2) {
+                    doms[0].id = selectorArray[1];
                 } else {
                     doms[0].id = "sparrow_" + $.random();
                 }
-                this.selector = "#." + selectorArray[2];
+                this.selector = "#." + selectorArray[1];
                 sparrow_id = this.selector;
-                if (selectorArray.length >= 4) {
-                    if (selectorArray[3] === "doc") {
+                if (selectorArray.length >= 3) {
+                    if (selectorArray[2] === "doc") {
                         this.doc.body.appendChild(doms[0]);
                     } else {
-                        this.doc.getElementById(selectorArray[3]).appendChild(
+                        this.doc.getElementById(selectorArray[2]).appendChild(
                             doms[0]);
                     }
                 }
                 break;
-            case "son":
+            case "!":
                 var childs = [];
                 if (!parent) {
-                    parent = $(selectorArray[2]);
+                    parent = $(selectorArray[1]);
                 }
-                var allChilds = parent.getElementsByTagName(selectorArray[1]);
-                if (selectorArray[1] === "li") {
+                var allChilds = parent.getElementsByTagName(selectorArray[0]);
+                if (selectorArray[0] === "li") {
                     parent = allChilds[0].parentNode;
                 }
                 this.s = parent;
                 if (!parent.id) {
                     parent.id = "sparrow_" + $.random();
                 }
-                for (var i = 0; i < allChilds.length; i += 1) {
+                for (var i = 0; i < allChilds.length; i ++) {
                     if (allChilds[i].parentNode === parent) {
                         childs[childs.length] = allChilds[i];
                     }
                 }
                 doms = childs;
                 break;
-            case "for":
+            case "$": //for 4
                 var labelList = doc.getElementsByTagName("label");
-                var forId = selectorArray[1];
-                for (var i = 0; i < labelList.length; i += 1) {
+                var forId = selector;
+                for (var i = 0; i < labelList.length; i ++) {
                     if (labelList[i].attributes["for"].value === forId) {
                         doms[0] = labelList[i];
                         break;
                     }
                 }
                 break;
-            case "checkedValue":
+            case "*":
                 var selectedTag = [];
-                var tagArray = doc.getElementsByName(selectorArray[1]);
+                var tagArray = doc.getElementsByName(selectorArray[0]);
                 var attribute = null;
-                if (selectorArray.length > 2) {
-                    attribute = selectorArray[2];
+                if (selectorArray.length > 1) {
+                    attribute = selectorArray[1];
                 }
                 // 获取当前已经选中的标签
                 for (var i = 0; i < tagArray.length; i++) {
@@ -740,14 +751,14 @@ Sparrow.ajax = {
             $.message("json parse error " + xmlHttpRequest.responseText);
             return;
         }
-        if (result.code === this.ajax.FAIL) {
+        if (result.code === ajax.FAIL) {
             $.message(result.error);
         }
     },
     gourl: function (url) {
-        this.ajax.referWindow.location.href = url;
+        ajax.referWindow.location.href = url;
     },
-    req: function (getOrPost, url, responsef, postStr, srcElement) {
+    req: function (getOrPost, url, responsef, isay, postStr, srcElement) {
         if (url.indexOf("http://") === -1) {
             url = $.url.root + url;
         }
@@ -758,12 +769,15 @@ Sparrow.ajax = {
         //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with
         //with (objXMLHttp) {
         try {
-            objXMLHttp.open(getOrPost, url, true);
+            if ($.isNullOrEmpty(isay)) {
+                isay = true;
+            }
+            open(getOrPost, url, isay);
             objXMLHttp.setRequestHeader("pragma", "no-cache");
             objXMLHttp.setRequestHeader("cache-control", "no-cache");
 
             if (getOrPost === "GET") {
-                objXMLHttp.send(null);
+                send(null);
             } else {
                 if (postStr != null) {
                     //warn: Parameters: Character decoding failed
@@ -772,14 +786,14 @@ Sparrow.ajax = {
                         .setRequestHeader("Content-Type",
                             "application/x-www-form-urlencoded;charset=utf-8");
                 }
-                objXMLHttp.send(postStr);
+                send(postStr);
             }
-            objXMLHttp.onreadystatechange = function () {
+            onreadystatechange = function () {
                 // alert("状态信息"+objXMLHttp.readyState);
-                if (objXMLHttp.readyState === 4) {
+                if (objXMLHttp.readyState == 4) {
                     // alert("结果状态"+objXMLHttp.status);
-                    if (objXMLHttp.status === 200) {
-                        if (objXMLHttp.responseText.indexOf("login:false") !== -1) {
+                    if (objXMLHttp.status == 200) {
+                        if (objXMLHttp.responseText.indexOf("login:false") != -1) {
                             alert("login false");
                             var config = objXMLHttp.responseText.json();
                             if (config.inFrame) {
@@ -789,21 +803,21 @@ Sparrow.ajax = {
                                 $.window(config);
                             }
                         } else if (objXMLHttp.responseText
-                            .indexOf("Access Denied") !== -1) {
-                            if (!$.message.accessDenied)
-                                $.message.accessDenied = "Access Denied";
-                            $.alert($.message.accessDenied, "sad");
+                            .indexOf("Access Denied") != -1) {
+                            if (!l.message.accessDenied)
+                                l.message.accessDenied = "Access Denied";
+                            $.alert(l.message.accessDenied, "sad");
                         } else if (responsef) {
-                            responsef(objXMLHttp.responseText);
+                            responsef(objXMLHttp);
                         }
                     } else {
-                        if (objXMLHttp.status === 404) {
+                        if (objXMLHttp.status == 404) {
                             alert("资源未找到");//
                         } else {
-                            if (objXMLHttp.status === 500) {
+                            if (objXMLHttp.status == 500) {
                                 alert("服务器错误");//
                             } else {
-                                if (objXMLHttp.status === 12031) {
+                                if (objXMLHttp.status == 12031) {
                                     alert("服务器未启动");//
                                 } else {
                                     alert(objXMLHttp.status + ":未知错误");
@@ -818,7 +832,7 @@ Sparrow.ajax = {
         }
     },
     json: function (url, data, callback, srcElement) {
-        $.ajax.req("POST", url,
+        ajax.req("POST", url,
             function (xmlHttpRequest) {
                 var result = xmlHttpRequest.responseText.json();
                 if (result == null) {
@@ -826,7 +840,7 @@ Sparrow.ajax = {
                     return;
                 }
 
-                if (result.code === $.ajax.OK) {
+                if (result.code === ajax.OK) {
                     if (callback) {
                         callback(result);
                     }
@@ -834,13 +848,362 @@ Sparrow.ajax = {
                 else {
                     $.message(result.error);
                 }
-            }, data, srcElement);
+            }, true, data, srcElement);
     },
     get: function (url) {
-        $.ajax.req("GET", url, $.ajax._callback);
+        ajax.req("GET", url, ajax._callback, true);
     },
     post: function (url, data) {
-        $.ajax.req("POST", url,$.ajax._callback, data);
+        ajax.req("POST", url,ajax._callback, true, data);
+    }
+};
+/*------------------------------------validate 表单验证------------------------------------------------*/
+/*
+ * ctrlId
+ *
+ * errorCtrlId
+ *
+ * prompt
+ *
+ * nullError
+ *
+ * emailError
+ *
+ * lengthError
+ *
+ * dateError
+ */
+Sparrow.v = {
+    background_color: '#fff',
+    empty_string: '',
+    index: null,
+    right_message: '<img src="' + $.url.resource + '/images/' + $.website.themes
+        + '/succeed.gif"/>',
+    reset: function () {
+        v.index = null;
+    },
+    getErrorLabel: function (validate) {
+        return validate.errorCtrlId ? $(validate.errorCtrlId.join(v.index)) : null;
+    },
+    getInput: function (validate) {
+        return validate.ctrlId ? $(validate.ctrlId.join(v.index)) : null;
+    },
+    //click blur 替换成initPlaceholder
+    initPlaceholder: function (json) {
+        for (var o in json) {
+            var property = json[o];
+            var ctrl = this.getInput(property);
+            if (ctrl != null && ctrl.type == "text") {
+                ctrl.placeholder = property.prompt;
+            }
+        }
+    },
+    // 设置当前控件的父控件背景
+    _setBackground: function (validate, color) {
+        if (v.background_color != false) {
+            if (!color) color = v.background_color;
+            var parentLevel = validate.parentLevel;
+            if (typeof (parentLevel) == "undefined")
+                parentLevel = 1;
+            if (parentLevel > 0) {
+                var background = this.getInput(validate);
+                if (background == null) return;
+                try {
+                    while (background.tagName.toUpperCase() != "TR" && background.className != "line" && background.className != "validate") {
+                        background = background.parentNode;
+                    }
+                    background.style.background = color;
+                } catch (err) {
+                }
+                var errorCtrl = this.getErrorLabel(validate);
+                if (errorCtrl != null) errorCtrl.className = "front";
+            }
+        }
+    },
+    showMessage: function (validate) {
+        var errorCtrl = this.getErrorLabel(validate);
+        if (errorCtrl) {
+            errorCtrl.className = "prompt";
+            errorCtrl.innerHTML = validate.prompt;
+        }
+        this._setBackground(validate);
+    },
+    ok: function (validate) {
+        var errorLabel = this.getErrorLabel(validate);
+        if (errorLabel) {
+            errorLabel.innerHTML = this.right_message;
+            errorLabel.className = "prompt";
+        }
+        this._setBackground(validate, "#ffffff");
+        var ctrl = this.getInput(validate);
+        if (ctrl) {
+            ctrl.style.backgroundColor = "#ffffff";
+            if (ctrl.value == "" && validate.defaultValue)
+                ctrl.value = validate.defaultValue;
+        }
+        return true;
+    },
+    fail: function (validate, errorInfo) {
+        if (!errorInfo) {
+            errorInfo = validate.setError
+        }
+        var errorCtrl = this.getErrorLabel(validate);
+        if (errorCtrl) {
+            errorCtrl.innerHTML = "!" + errorInfo;
+            errorCtrl.className = "error";
+        }
+        return "!" + errorInfo;
+    },
+    _validate: function (validate) {
+        this._setBackground(validate, "#ffffff");
+        var ctrl = this.getInput(validate);
+        var ctrlValue = ctrl.value.trim();
+        var errorCtrl = this.getErrorLabel(validate);
+        var length = (ctrl.tagName.toUpperCase() == "SELECT" && ctrl.multiple == true) ? ctrl.options.length
+            : ctrlValue.getByteLength();
+        //允许空
+        if (length == 0 && validate.allowNull) {
+            return this.ok(validate);
+        }
+        //空但有默认值
+        if (length == 0 && validate.defaultValue != undefined) {
+            ctrl.value = validate.defaultValue;
+            return this.ok(validate);
+        }
+        //不允许为空
+        if (length == 0 && !validate.allowNull) {
+            return this.fail(validate, validate.nullError);
+        }
+        // 长度不合法
+        if ((validate.maxLength
+            && length > validate.maxLength) || (validate.minLength
+            && length < validate.minLength)) {
+            return this.fail(validate, validate.lengthError);
+        }
+
+        //ajax 错误未修改
+        if (errorCtrl && errorCtrl.className == "error" && errorCtrl.innerHTML == ("!" + validate.setError)) {
+            return this.fail(validate);
+        }
+        return true;
+    },
+    isUserNameRule: function (validate) {
+        var result = this._validate(validate);
+        if (result != true) {
+            return result;
+        }
+        if (this.getInput(validate).value.search(/^[a-zA-Z0-9_]{6,20}$/) == -1) {
+            return this.fail(validate, validate.nameRuleError);
+        }
+        return this.ok(validate);
+    },
+    isEmail: function (validate) {
+        var result = this._validate(validate);
+        if (result != true) {
+            return result;
+        }
+        if (this.getInput(validate).value.search(/\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/) == -1) {
+            return this.fail(validate, validate.emailError);
+        }
+        return this.ok(validate);
+    },
+    isTel: function (validate) {
+        var result = this._validate(validate);
+        if (result != true) {
+            return result;
+        }
+        if (this.getInput(validate).value
+            .search(/^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})+(\-[0-9]{1,4})?$/) == -1) {
+            return this.fail(validate, validate.telError);
+        }
+        return this.ok(validate);
+    },
+    isMobile: function (validate) {
+        validate.minLength = 11;
+        validate.maxLength = 11;
+        var result = this._validate(validate);
+        if (result != true) {
+            return result;
+        }
+        if (this.getInput(validate).value.search(/^1[\d]{10}$/) == -1) {
+            return this.fail(validate, validate.mobileError);
+        }
+        return this.ok(validate);
+    },
+    isIdCard: function (validate) {
+        var result = this._validate(validate);
+        if (result != true) {
+            return result;
+        }
+        if (this.getInput(validate).value
+            .search(/^([1-9]([0-9]{16}|[0-9]{13})([0-9]|x|X))$/) == -1) {
+            return this.fail(validate, validate.idCardError);
+        }
+        return this.ok(validate);
+    },
+    isNull: function (validate) {
+        var result = this._validate(validate);
+        if (result != true) {
+            return result;
+        }
+        return this.ok(validate);
+    },
+    isWord: function (validate) {
+        var result = this._validate(validate);
+        if (result !== true) {
+            return result;
+        }
+        if (this.getInput(validate).value.search(/^[\u4e00-\u9fa5]$/) == -1) {
+            return this.fail(validate, validate.wordError);
+        }
+        return this.ok(validate);
+    },
+    isEqual: function (validate) {
+        var result = this._validate(validate);
+        if (result != true) {
+            return result;
+        }
+        if (this.getInput(validate).value != $(validate.otherCtrlId.join(v.index)).value.trim()) {
+            return this.fail(validate, validate.noEqualError);
+        }
+        return this.ok(validate);
+    },
+    allowInputOption: function (validate) {
+        var ctrl = this.getInput(validate);
+        if (!validate.defaultValue) {
+            validate.defaultValue = validate.options[0];
+        }
+        for (var i = 0; i < validate.options.length; i += 1) {
+            if (ctrl.value === validate.options[i]) {
+                break;
+            }
+        }
+        if (i === validate.options.length) {
+            ctrl.value = validate.defaultValue;
+        }
+        this.ok(validate);
+    },
+    isDigital: function (validate) {
+        var ctrlValue = this.getInput(validate).value;
+        var result = this._validate(validate);
+        if (result !== true) {
+            return result;
+        }
+        if (isNaN(ctrlValue)) {
+            return this.fail(validate, validate.digitalError);
+        }
+        var floatValue = parseFloat(ctrlValue);
+        //最小值 定义
+        var defMin = (validate.minValue || validate.minValue === 0);
+        //最大值 定义
+        var defMax = (validate.maxValue || validate.maxValue === 0);
+        if ((defMin && floatValue < validate.minValue) || (defMax && floatValue > validate.maxValue)) {
+            return this.fail(validate, validate.digitalError);
+        }
+        this.ok(validate);
+    },
+    isImgSize: function (srcElement, defaultValue) {
+        var size = srcElement.value.split('*');
+        if (size.length === 2) {
+            if (size[0].search(/^[0-9]+.?[0-9]$/) == -1
+                || size[1].search(/^[0-9]+.?[0-9]$/) == -1) {
+                srcElement.value = defaultValue;
+            }
+        } else {
+            srcElement.value = defaultValue;
+        }
+    },
+    isFileLength: function (srcElement, defaultValue) {
+        if (srcElement.value.toUpperCase().indexOf("M") != -1) {
+            if (srcElement.value.toUpperCase().split('M')[0]
+                .search(/^[0-9]+.?[0-9]$/) != -1) {
+                srcElement.value = srcElement.value.toUpperCase().split('M')[0] + "MB";
+            } else {
+                srcElement.value = defaultValue;
+            }
+        } else if (srcElement.value.toUpperCase().indexOf("K") != -1) {
+            if (srcElement.value.toUpperCase().split('K')[0]
+                .search(/^[0-9]+.?[0-9]$/) != -1) {
+                srcElement.value = srcElement.value.toUpperCase().split('K')[0] + "KB";
+            }
+            srcElement.value = defaultValue;
+        } else {
+            srcElement.value = defaultValue;
+        }
+    },
+    updateTxtCount: function (srcElement, showCtrl, maxLength, e) {
+        var ctrl = $(showCtrl);
+        e = e || window.event;
+        if (e.keyCode < 37 || e.keyCode > 40) {
+            var length = srcElement.value.getByteLength();
+            var allowInputLength = maxLength - length;
+            if (allowInputLength <= 0) {
+                ctrl.innerHTML = 0;
+                srcElement.value = srcElement.value.subString(maxLength, false);
+            } else {
+                ctrl.innerHTML = allowInputLength;
+            }
+        }
+    },
+    /* 获取验证信息*/
+    /*action=false则不提交*/
+    /*action=update.do 指定提交*/
+    /*action=function(){}*
+     /*action=$(#.object)*/
+    /*action默认为提交*/
+    getValidateResult: function (json, action) {
+        var wrongInfo = [];
+        for (var o in json) {
+            var property = json[o];
+            if (!property) {
+                continue;
+            }
+            var error = null;
+            var ctrl = this.getInput(property);
+            if (!ctrl) {
+                continue;
+            }
+            //已输入过 则一定会会error message
+            var errorCtrl = this.getErrorLabel(property);
+            //可能无error ctrl
+            if (errorCtrl) {
+                if (errorCtrl.className === "error") {
+                    error = errorCtrl.innerHTML;
+                }
+            }
+            //未输入过 则判断null
+            if ($.isNullOrEmpty(error)) {
+                error = v.isNull(property);
+            }
+            //无onblur  此情况无ajax请求
+            if (v.validate) {
+                error = v.validate();
+            }
+            if (error != true && !$.isNullOrEmpty(error)) {
+                wrongInfo.push(error);
+            }
+        }
+        if (wrongInfo.length > 0) {
+            $.message(wrongInfo.join("<br/>"));
+            return false;
+        } else {
+            if (action !== false) {
+                if (typeof(action) === "string" || typeof(action) === "undefined") {
+                    $.submit(action);
+                }
+                else if (typeof(action) === "function") {
+                    action(this);
+                }
+                else if (typeof(action) === "object" && action.s.type === "hidden") {
+                    var actionUrl = action.attr("new");
+                    if (!$.isNullOrEmpty(action.s.value)) {
+                        actionUrl = action.attr("update");
+                    }
+                    $.submit(actionUrl);
+                }
+            }
+            return true;
+        }
     }
 };
 /*------------------------------------validate 表单验证------------------------------------------------*/
@@ -1705,11 +2068,11 @@ Sparrow.win = {
      */
     addSound: function () {
         // 背景音乐
-        var sound = $("new.bgsound.sound.doc", null, this.getWindow().document);
+        var sound = $("+bgsound.sound.doc", null, this.getWindow().document);
         sound.s.src = this.config.bgsound;
     },
     addBackDiv: function () {
-        var backDiv = $("new.div.backDiv.doc", null, this.getWindow().document);
+        var backDiv = $("+div.backDiv.doc", null, this.getWindow().document);
         var documentHeight = Math.max(
             this.getWindow().document.body.scrollHeight,
             this.getWindow().document.documentElement.scrollHeight);
@@ -1730,7 +2093,7 @@ Sparrow.win = {
         if (!height) {
             height = this.config.jalert.height;
         }
-        var dialog = $("new.div.dialog.doc", null, this.getWindow().document);
+        var dialog = $("+div.dialog.doc", null, this.getWindow().document);
         dialog.s.zIndex = 1001;
         dialog.s.style.cssText = "position:absolute;border:#ccc 3px solid;text-align:center;font-size:10pt;background:#fff;";
         dialog.s.style.width = width;
@@ -1738,7 +2101,7 @@ Sparrow.win = {
     },
     // 自定义对话框主体结构 url
     addPanel: function (url) {
-        var panel = $("new.div.dialog.doc", null, this.getWindow().document);
+        var panel = $("+div.dialog.doc", null, this.getWindow().document);
         panel.s.zIndex = 1001;
         panel.s.style.cssText = "position:absolute;text-align:center;font-size: 10pt;background:white;";
         if (this.config.showHead != false) {
@@ -1746,7 +2109,7 @@ Sparrow.win = {
         }
 
         this.addRightClose();
-        var frame = $("new.iframe.panel.dialog", null, panel.doc);
+        var frame = $("+iframe.panel.dialog", null, panel.doc);
         frame.s.setAttribute("frameborder", "0", 0);
         frame.s.scrolling = "no";
         frame.s.src = url;
@@ -1763,16 +2126,16 @@ Sparrow.win = {
                     + "px";
                 panel.s.style.width = width + "px";
                 panel.s.style.height = height + "px";
-                $("#.dialog", null, panel.doc).center();
+                $("#dialog", null, panel.doc).center();
                 if (win.config.showHead != false) {
-                    $("#.divleft", null, panel.doc).s.innerHTML = element.contentWindow.document.title;
+                    $("#divleft", null, panel.doc).s.innerHTML = element.contentWindow.document.title;
                 }
             });
     },
     // 加标题
     addTitle: function (title) {
         if (this.config.showHead != false) {
-            var divtitle = $("new.div.divtitle.dialog", null,
+            var divtitle = $("+div.divtitle.dialog", null,
                 this.getWindow().document);
             divtitle.s.style.cssText = "cursor:move;width:100%;height:"
                 + this.config.titleHeight + "px;background-repeat:repeat;";
@@ -1780,7 +2143,7 @@ Sparrow.win = {
             divtitle.s.style.backgroundImage = "url(" + this.config.titleImg
                 + ")";
             // 真正的标题文本
-            var divleft = $("new.div.divleft.divtitle", null,
+            var divleft = $("+div.divleft.divtitle", null,
                 this.getWindow().document);
             // divleft.unselectable = "on";
 
@@ -1800,7 +2163,7 @@ Sparrow.win = {
     addRightClose: function () {
         // 关闭按钮
         if (this.config.showHead) {
-            var divright = $("new.div.divright.divtitle", null, this
+            var divright = $("+div.divright.divtitle", null, this
                 .getWindow().document);
             divright.s.style.cssText = "float:right;width:20px;line-height:"
                 + this.config.titleHeight
@@ -1813,7 +2176,7 @@ Sparrow.win = {
     },
     // 内容下方的ok按钮
     addOK: function () {
-        var btnOK = $("new.input.btnOK.dialog", null, this.getWindow().document);
+        var btnOK = $("+input.btnOK.dialog", null, this.getWindow().document);
         btnOK.s.id = "btnOK";
         btnOK.s.type = "button";
         btnOK.s.style.cssText = "cursor:pointer;width:80px;height:30px;color:black;";
@@ -1825,7 +2188,7 @@ Sparrow.win = {
     },
     // 内容下方的取消按钮
     addClose: function () {
-        var btnclose = $("new.input.btnclose.dialog", null, this.getWindow().document);
+        var btnclose = $("+input.btnclose.dialog", null, this.getWindow().document);
         btnclose.attr("type", "button");
         btnclose.s.style.cssText = "cursor:pointer;width:80px;height:30px;c"
             + "olor:black;";
@@ -1837,8 +2200,8 @@ Sparrow.win = {
     },
     // 内容正文
     addMsgContent: function () {
-        var divcontent = $("new.div.divcontent.dialog", null, this.getWindow().document);
-        var dialog = $("#.dialog", null, this.getWindow().document);
+        var divcontent = $("+div.divcontent.dialog", null, this.getWindow().document);
+        var dialog = $("#dialog", null, this.getWindow().document);
         var height = (parseInt(dialog.s.style.height, 10) - this.config.titleHeight - 50) + "px";
         divcontent.s.style.cssText = "width:100%;text-align:left;text-indent:20px;height:" + height;
     },
@@ -1848,9 +2211,9 @@ Sparrow.win = {
         $
             .showOrHiddenTag(this.config.tagArray, true,
                 this.getWindow().document);
-        $("#.dialog", null, this.getWindow().document).remove();
-        $("#.backDiv", null, this.getWindow().document).remove();
-        $("#.sound", null, this.getWindow().document).remove();
+        $("#dialog", null, this.getWindow().document).remove();
+        $("#backDiv", null, this.getWindow().document).remove();
+        $("#sound", null, this.getWindow().document).remove();
         $.win.config.currentWindow.focus();
         if ($.win.config.jalert.closeCallBack) {
             $.win.config.jalert.closeCallBack();
@@ -1926,14 +2289,14 @@ Sparrow.alert = function (msg, type, title, url, wait_message) {
             //<br/><span id="timer">5</span>秒以后将自动跳转,或者<a href="{0}" target="_self">直接点击这里跳转</a>
             content += wait_message.format(url);
         }
-        $("#.divcontent", null, $.win.getWindow().document).s.innerHTML = content;
+        $("#divcontent", null, $.win.getWindow().document).s.innerHTML = content;
         $.waitRedirect("timer");
     }
 
     $.showOrHiddenTag("select", true, $.win.getWindow().document
         .getElementById("divcontent"));
 
-    var dialog = $("#.dialog", null, $.win.getWindow().document);// 设置浮动窗口位置
+    var dialog = $("#dialog", null, $.win.getWindow().document);// 设置浮动窗口位置
     dialog.center();
 };
 // config={url:'',showHead:true,srcElement:id,cache:true}宽高取自页面的宽高
@@ -1991,12 +2354,12 @@ Sparrow.dialog = function (config) {
     $.win.addOK();
     $.win.addClose();
     if (config.content) {
-        $("#.divcontent", null, $.win.getWindow().document).s.innerHTML = config.content;
+        $("#divcontent", null, $.win.getWindow().document).s.innerHTML = config.content;
     }
     if (config.initialize) {
         config.initialize($("divcontent"));
     }
-    $("#.dialog", null, $.win.getWindow().document).center();
+    $("#dialog", null, $.win.getWindow().document).center();
 };
 Sparrow.file = {
     // 是否显示上传进度
@@ -2662,7 +3025,7 @@ Sparrow.prototype.interlace = function (targetArray) {
             "{width:'{0}',height:'{1}'}".format(this.s.style.width, this.s.style.height),
             "{top:'{0}',height:'0px',width:'0px',left:'{1}'}".format(this.s.style.height, this.s.style.width)];
     }
-    $("son.div." + this.selector.split(".")[1]).each(function (i) {
+    $("!.div." + this.selector.split(".")[1]).each(function (i) {
         this.style.position = "absolute";
         if (i == 0) {
             this.style.width = this.parentNode.style.width;
@@ -2678,12 +3041,12 @@ Sparrow.prototype.interlace = function (targetArray) {
     this.s.style.position = "relative";
     this.s.style.overflow = "hidden";
     this.s.onmouseover = function () {
-        $("son.div." + this.id).each(function (i) {
+        $("!div." + this.id).each(function (i) {
             $(this).animation(targetArray[i], 1);
         });
     };
     this.s.onmouseout = function () {
-        $("son.div." + this.id).each(function (i) {
+        $("!.div." + this.id).each(function (i) {
             $(this).animation(targetArray[i + 2], 1);
         });
     };
@@ -2767,7 +3130,7 @@ Sparrow.showOrHiddenTag = function (tagArray, show, doc) {
     }
     for (var i = 0; i < tagArray.length; i++) {
         var tagName = tagArray[i];
-        var tags = $("tag." + tagName, null, doc);
+        var tags = $("<" + tagName, null, doc);
         tags.each(function () {
             this.zIndex = -1;
             if (!show) {

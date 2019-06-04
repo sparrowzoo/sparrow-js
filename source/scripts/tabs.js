@@ -4,14 +4,14 @@ Sparrow.prototype.tabs = function (config) {
     }
     var withIndexClass = config.withIndexClass;
     var currentIndex = config.index;
-    var tabchilds = $("son.div." + this.s.id);
+    var tabchilds = $("!div." + this.s.id);
     var title = tabchilds[0];
-    var tabArray = $("son.li", title);
+    var tabArray = $("!li", title);
     var content = tabchilds[1];
-    var contentList = $("son.div", content);
+    var contentList = $("!div", content);
     tabArray.each(function (tab_index) {
         if (this.className !== "close" && this.className !== "more") {
-            $($("son.a", this)[0]).bind(
+            $($("!a", this)[0]).bind(
                 "onclick",
                 function (e) {
                     var srcElementHyperLink = $.event(e).srcElement;
@@ -21,7 +21,7 @@ Sparrow.prototype.tabs = function (config) {
                     var tabIndex = $(srcElementHyperLink.parentNode).attr("tab_index");
                     var rev = $(srcElementHyperLink).attr("rev");
                     if (rev) {
-                        var moreHyperCtrl = $("son.a",
+                        var moreHyperCtrl = $("!a",
                             tabArray[tabArray.length - 1]);
                         moreHyperCtrl[0].href = rev;
                     }

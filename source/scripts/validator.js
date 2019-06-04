@@ -55,24 +55,25 @@ Sparrow.v = {
     },
     // 设置当前控件的父控件背景
     _setBackground: function (validate, color) {
-        if (v.background_color !== false) {
-            if (!color) color = v.background_color;
-            var parentLevel = validate.parentLevel;
-            if (typeof (parentLevel) == "undefined")
-                parentLevel = 1;
-            if (parentLevel > 0) {
-                var background = this.getInput(validate);
-                if (background == null) return;
-                try {
-                    while (background.tagName.toUpperCase() !== "TR" && background.className !== "line" && background.className != "validate") {
-                        background = background.parentNode;
-                    }
-                    background.style.background = color;
-                } catch (err) {
+        if (v.background_color == false) {
+            return;
+        }
+        if (!color) color = v.background_color;
+        var parentLevel = validate.parentLevel;
+        if (typeof (parentLevel) == "undefined")
+            parentLevel = 1;
+        if (parentLevel > 0) {
+            var background = this.getInput(validate);
+            if (background == null) return;
+            try {
+                while (background.tagName.toUpperCase() != "TR" && background.className != "line" && background.className != "validate") {
+                    background = background.parentNode;
                 }
-                var errorCtrl = this.getErrorLabel(validate);
-                if (errorCtrl != null) errorCtrl.className = "front";
+                background.style.background = color;
+            } catch (err) {
             }
+            var errorCtrl = this.getErrorLabel(validate);
+            if (errorCtrl != null) errorCtrl.className = "front";
         }
     },
     showMessage: function (validate) {
@@ -304,7 +305,7 @@ Sparrow.v = {
     /*action=false则不提交*/
     /*action=update.do 指定提交*/
     /*action=function(){}*
-     /*action=$(#.object)*/
+     /*action=$(#object)*/
     /*action默认为提交*/
     getValidateResult: function (json, action) {
         var wrongInfo = [];
@@ -341,21 +342,22 @@ Sparrow.v = {
         if (wrongInfo.length > 0) {
             $.message(wrongInfo.join("<br/>"));
             return false;
-        } else {
-            if (action !== false) {
-                if (typeof (action) === "string" || typeof (action) === "undefined") {
-                    $.submit(action);
-                } else if (typeof (action) === "function") {
-                    action(this);
-                } else if (typeof (action) === "object" && action.s.type === "hidden") {
-                    var actionUrl = action.attr("new");
-                    if (!$.isNullOrEmpty(action.s.value)) {
-                        actionUrl = action.attr("update");
-                    }
-                    $.submit(actionUrl);
-                }
-            }
-            return true;
         }
+        if (action !== false) {
+            if (typeof(action) === "string" || typeof(action) === "undefined") {
+                $.submit(action);
+            }
+            else if (typeof(action) === "function") {
+                action(this);
+            }
+            else if (typeof(action) === "object" && action.s.type === "hidden") {
+                var actionUrl = action.attr("new");
+                if (!$.isNullOrEmpty(action.value())) {
+                    actionUrl = action.attr("update");
+                }
+                $.submit(actionUrl);
+            }
+        }
+        return true;
     }
 };
