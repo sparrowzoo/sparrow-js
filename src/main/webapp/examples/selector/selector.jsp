@@ -44,6 +44,12 @@
                        Sparrow标签对象 选择符 ^ 代表name $('^html label') 助记^表示标签起始标记&lt; 为避免与html冲突 所以用^
                        <input type="button" name="sparrowName"  onclick="alert($('^input')[0].value)" value="点我输出我的value"/>
                    </li>
+
+                   <li>
+                       Sparrow标签对象 选择符 $ 获取当前控件的for 标签  $('$html label') 助记$表示数字4的上档键，4英文发音for
+                       <input type="text" value="我有标签" id="txtFor"><label id="lblFor" for="txtFor">我是标签的内容</label>
+                       <input type="button" name="sparrowName"  onclick="alert($('$txtFor').html())" value="点我输出文本控件的for 标签内容"/>
+                   </li>
                </ul>
         </div>
     </div>
