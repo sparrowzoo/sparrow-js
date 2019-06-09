@@ -247,8 +247,7 @@ Sparrow.browser = {
         if (srcElement.href === "javascript:void(0);") {
             $.alert(message, "sad");
             return false;
-        } else {
+        } 
             return true;
-        }
     }
 };

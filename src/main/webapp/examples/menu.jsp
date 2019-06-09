@@ -3,8 +3,8 @@
 <%@taglib uri="http://www.sparrowzoo.com/ui" prefix="j" %>
 
 <a href="#menu" id="menuLink" class="menu-link">
-    <!-- Hamburger icon -->
     <span></span>
+
 </a>
 <div id="divVerticalMenu">
     <div class="pure-menu">
@@ -32,7 +32,7 @@
                 <a href="${root_path}/examples/animation//progress.jsp" class="pure-menu-link">progress</a>
             </li>
 
-            <li class="pure-menu-item"><a href="${root_path}/examples//animation/play.html" class="pure-menu-link">play</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/examples/animation/play.jsp" class="pure-menu-link">play</a></li>
         </ul>
     </div>
 

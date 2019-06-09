@@ -42,17 +42,17 @@ form {
     margin: 0;padding: 0;
 }
 
-a:link {text-decoration: none;color: #333;}
-a:visited {text-decoration: none;color: #333;}
+a:link {text-decoration: none;color: #3b8bba;}
+a:visited {text-decoration: none;color: #265778;}
 a:focus {
-    outline: thin dotted #333;
+    outline: thin dotted #265778;
     outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px;
 }
 a:hover,
 a:active {
     outline: 0;
-    color: #3165CE;
+    color: #265778;
 }
 
 

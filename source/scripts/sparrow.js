@@ -23,7 +23,7 @@ Sparrow.request = function (name) {
 
 Sparrow.isNullOrEmpty = function (sourceString) {
     return (sourceString == null || typeof (sourceString) === "undefined"
-        || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
+    || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
 };
 Sparrow.toString = function (sourceString, defaultValue) {
     if (!defaultValue) {
@@ -135,31 +135,31 @@ Sparrow.getFormData = function (inputIdArray) {
     return data.join("&");
 };
 Sparrow.waitRedirect = function (timerId, period) {
-    var timer = $("#." + timerId);
+    var timer = $("#" + timerId);
     if (timer == null || timer.s == null) return;
     if (!period) period = 1000;
     var interval = window.setInterval(function () {
-        var time = parseInt(timer.s.innerHTML, 10);
+        var time = parseInt(timer.html(), 10);
         if (time-- === 0) {
             window.location.target = "_self";
             window.location.href = timer.attr("url");
             window.clearInterval(interval);
         }
         else {
-            timer.s.innerHTML = time;
+            timer.html(time);
         }
     }, period);
 };
 Sparrow.format = function (txt, compress) {
     /* 格式化JSON源码(对象转换为JSON文本) */
     var indentChar = '    ';
-    
-    if (typeof txt=='string'&&/^\s*$/.test(txt)) {
+
+    if (typeof txt == 'string' && /^\s*$/.test(txt)) {
         alert('数据为空,无法格式化! ');
         return;
     }
-    var data=null;
-    if(typeof txt=='object') {
+    var data = null;
+    if (typeof txt == 'object') {
         data = txt;
     }
     else {

@@ -3,8 +3,7 @@ Sparrow.ajax = {
     referWindow: window,
     url: null,
     srcElement: null,
-    OK: 'OK',
-    FAIL: 'FAIL',
+    SUCCESS:0,
     EXIST: 'EXIST',
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
@@ -46,7 +45,7 @@ Sparrow.ajax = {
             $.message("json parse error " + xmlHttpRequest.responseText);
             return;
         }
-        if (result.code === this.ajax.FAIL) {
+        if (result.code !== this.ajax.SUCCESS) {
             $.message(result.error);
         }
     },
@@ -125,14 +124,14 @@ Sparrow.ajax = {
     },
     json: function (url, data, callback, srcElement) {
         $.ajax.req("POST", url,
-            function (xmlHttpRequest) {
-                var result = xmlHttpRequest.responseText.json();
+            function (responseText) {
+                var result = responseText.json();
                 if (result == null) {
-                    $.message("json parse error " + xmlHttpRequest.responseText);
+                    $.message("json parse error " + responseText);
                     return;
                 }
 
-                if (result.code === $.ajax.OK) {
+                if (result.code === $.ajax.SUCCESS) {
                     if (callback) {
                         callback(result);
                     }
