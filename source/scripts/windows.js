@@ -82,7 +82,7 @@ Sparrow.win = {
         var panel = $("+div.dialog.doc", null, this.getWindow().document);
         panel.s.zIndex = 1001;
         panel.s.style.cssText = "position:absolute;text-align:center;font-size: 10pt;background:white;";
-        if (this.config.showHead != false) {
+        if (this.config.showHead !==false) {
             this.addTitle();
         }
 
@@ -100,19 +100,19 @@ Sparrow.win = {
                     10);
                 frame.s.style.width = (width - 4) + "px";
                 frame.s.style.height = (height
-                    - (win.config.showHead ? win.config.titleHeight : 0) - 5)
+                    - ($.win.config.showHead ? $.win.config.titleHeight : 0) - 5)
                     + "px";
                 panel.s.style.width = width + "px";
                 panel.s.style.height = height + "px";
                 $("#dialog", null, panel.doc).center();
-                if (win.config.showHead != false) {
+                if ($.win.config.showHead !== false) {
                     $("#divleft", null, panel.doc).s.innerHTML = element.contentWindow.document.title;
                 }
             });
     },
     // 加标题
     addTitle: function (title) {
-        if (this.config.showHead != false) {
+        if (this.config.showHead !== false) {
             var divtitle = $("+div.divtitle.dialog", null,
                 this.getWindow().document);
             divtitle.s.style.cssText = "cursor:move;width:100%;height:"
@@ -299,8 +299,8 @@ Sparrow.window = function (config) {
     }
     $.showOrHiddenTag($.win.config.tagArray, false, $.win.getWindow().document);
     if (config.srcElement) {
-        if (config.srcElement.indexOf('#.') < 0) {
-            config.srcElement = "#." + config.srcElement;
+        if (config.srcElement.indexOf('#') < 0) {
+            config.srcElement = "#" + config.srcElement;
         }
         $.win.config.toTopHeight = $(config.srcElement).getAbsoluteTop() - height / 2;
     }

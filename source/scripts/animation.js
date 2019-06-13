@@ -57,7 +57,7 @@ Sparrow.prototype.move = function (s) {
         if (!$.isNullOrEmpty(status.opacity)) {
             this.opacity(status.opacity);
         }
-        if (parseInt(status.height, 10) == 0) {
+        if (parseInt(status.height, 10) === 0) {
             this.s.style.display = "none";
         }
         this.stop();
@@ -124,10 +124,10 @@ Sparrow.prototype.show = function () {
     // 设置超出隐藏
     this.s.style.overflow = "hidden";
     // 如果默认是不显示或者第二次高度为0
-    if (this.s.style.display == "none"
-        || this.s.style.height == "0") {
+    if (this.s.style.display === "none"
+        || this.s.style.height === 0) {
         // 记录当前被控控件的高度
-        if (this.height == undefined) {
+        if (this.height === undefined) {
             this.s.style.display = "block";
             this.height = this.s.offsetHeight + "px";
             this.s.style.height = "0";
@@ -167,11 +167,11 @@ Sparrow.prototype.showHidden = function (descElement, config, all) {
     // 设置超出隐藏
     descElement.style.overflow = "hidden";
     // 如果默认是不显示或者第二次高度为0
-    if (descElement.style.display == "none"
-        || descElement.style.height == "0") {
+    if (descElement.style.display === "none"
+        || descElement.style.height === 0) {
         if (all.show) {
             // 记录当前被控控件的高度
-            if (this.s.tagName.toUpperCase() == "IMG") {
+            if (this.s.tagName.toUpperCase() === "IMG") {
                 this.s.src = config.hiddenIco;
                 this.s.alt = config.hiddenText;
             } else {
@@ -182,7 +182,7 @@ Sparrow.prototype.showHidden = function (descElement, config, all) {
     } else {
         if (all.hidden) {
             $(descElement).hidden();
-            if (this.s.tagName == "img") {
+            if (this.s.tagName === "img") {
                 this.s.src = config.showIco;
                 this.s.alt = config.showText;
             } else {
@@ -198,7 +198,10 @@ Sparrow.showOrHiddenTag = function (tagArray, show, doc) {
     }
     for (var i = 0; i < tagArray.length; i++) {
         var tagName = tagArray[i];
-        var tags = $("<" + tagName, null, doc);
+        var tags = $("^" + tagName, null, doc);
+        if(tags===null||tags.length===0){
+            continue;
+        }
         tags.each(function () {
             this.zIndex = -1;
             if (!show) {
@@ -227,6 +230,8 @@ Sparrow.prototype.marque = function (direction, step, period, deviation) {
             }
             status = "{top:'" + top + "',start:" + deviation + ",percent:" + step
                 + "}";
+            break;
+        default:
             break;
     }
     this.animation(status, period);
