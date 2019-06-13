@@ -145,3 +145,14 @@
 </div>
 </body>
 </html>
+
+
+<div id="dialog" class="modal-body" style="position: fixed; border: 3px solid rgb(204, 204, 204); text-align: center; font-size: 10pt; background: rgb(255, 255, 255); width: 250px; height: auto; top: 241px; left: 497px;">
+    <div id="divtitle" class="modal-header pure-g">
+        <div id="divleft" class="drag-pp pure-u-23-24" style="text-align: left;">title</div>
+        <div id="divright" class="pure-u-1-24" style="cursor: pointer;">×</div>
+    </div>
+    <div id="divcontent"><br>
+        <img align="absMiddle" src="http://localhost:7777/assets/images/themes_default/smile.gif">&nbsp;&nbsp;恭喜!操作成功!
+    </div>
+    <input id="btnclose" class="pure-button" type="button" value="关  闭"></div>

@@ -248,6 +248,6 @@ Sparrow.browser = {
             $.alert(message, "sad");
             return false;
         } 
-            return true;
+        return true;
     }
 };

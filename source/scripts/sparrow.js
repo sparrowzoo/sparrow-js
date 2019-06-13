@@ -327,8 +327,9 @@ Sparrow.prototype.css = function (attribute, value, add) {
     if (Math.abs(value) < 1) {
         value = value < 0 ? -1 : 1;
     }
-    value = Math.ceil(value);
+
     if (attribute === "opacity") {
+        value = Math.ceil(value);
         if (add) {
             value = parseInt(this.opacity(), 10) + value;
         }
@@ -341,8 +342,7 @@ Sparrow.prototype.css = function (attribute, value, add) {
             command += '$("' + this.selector + '").s.style.' + attribute
                 + '=(o+' + value + ')+"px";';
         } else {
-            command = '$("' + this.selector + '").s.style.' + attribute + '='
-                + value + '+"px";';
+            command = '$("' + this.selector + '").s.style.' + attribute + '="'+ value +'"';
         }
         eval(command);
     }

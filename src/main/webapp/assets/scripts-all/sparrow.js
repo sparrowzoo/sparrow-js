@@ -603,7 +603,7 @@ Sparrow.browser = {
             $.alert(message, "sad");
             return false;
         } 
-            return true;
+        return true;
     }
 };
 Sparrow.container = {};
@@ -1542,8 +1542,9 @@ Sparrow.prototype.css = function (attribute, value, add) {
     if (Math.abs(value) < 1) {
         value = value < 0 ? -1 : 1;
     }
-    value = Math.ceil(value);
+
     if (attribute === "opacity") {
+        value = Math.ceil(value);
         if (add) {
             value = parseInt(this.opacity(), 10) + value;
         }
@@ -1556,8 +1557,7 @@ Sparrow.prototype.css = function (attribute, value, add) {
             command += '$("' + this.selector + '").s.style.' + attribute
                 + '=(o+' + value + ')+"px";';
         } else {
-            command = '$("' + this.selector + '").s.style.' + attribute + '='
-                + value + '+"px";';
+            command = '$("' + this.selector + '").s.style.' + attribute + '="'+ value +'"';
         }
         eval(command);
     }
@@ -1752,14 +1752,15 @@ Sparrow.win = {
             height = this.config.jalert.height;
         }
         var dialog = $("+div.dialog.doc", null, this.getWindow().document);
+        dialog.s.className="modal";
         dialog.s.zIndex = 1001;
-        dialog.s.style.cssText = "position:absolute;border:#ccc 3px solid;text-align:center;font-size:10pt;background:#fff;";
         dialog.s.style.width = width;
         dialog.s.style.height = height;
     },
     // 自定义对话框主体结构 url
     addPanel: function (url) {
         var panel = $("+div.dialog.doc", null, this.getWindow().document);
+        //panel.s.className="modal";
         panel.s.zIndex = 1001;
         panel.s.style.cssText = "position:absolute;text-align:center;font-size: 10pt;background:white;";
         if (this.config.showHead !==false) {
@@ -1795,25 +1796,19 @@ Sparrow.win = {
         if (this.config.showHead !== false) {
             var divtitle = $("+div.divtitle.dialog", null,
                 this.getWindow().document);
-            divtitle.s.style.cssText = "cursor:move;width:100%;height:"
-                + this.config.titleHeight + "px;background-repeat:repeat;";
-            divtitle.s.innerHTML = "";
-            divtitle.s.style.backgroundImage = "url(" + this.config.titleImg
-                + ")";
+            divtitle.s.className="modal-header pure-g";
             // 真正的标题文本
             var divleft = $("+div.divleft.divtitle", null,
                 this.getWindow().document);
-            // divleft.unselectable = "on";
+            divleft.css("textAlign","left");
 
-            divleft.s.className = "drag-pp";
+            divleft.s.className = "drag-pp pure-u-23-24";
             divleft.s.onmousedown = function (e) {
                 $.event(e).drags();
             };
             divleft.s.onmouseup = function (e) {
                 $.event(e).move_end();
             };
-            divleft.s.style.cssText = "float:left;width:85%;height:{0}px;line-height:{0}px;color:white;text-align:left;padding:2px;font-size:10pt;font-weight: bold;"
-                .format(this.config.titleHeight - 5);
             divleft.s.innerHTML = title ? title : $.website.name + "提醒您:";
         }
     },
@@ -1823,9 +1818,8 @@ Sparrow.win = {
         if (this.config.showHead) {
             var divright = $("+div.divright.divtitle", null, this
                 .getWindow().document);
-            divright.s.style.cssText = "float:right;width:20px;line-height:"
-                + this.config.titleHeight
-                + "px;color:white;text-align:right;font-size:13pt;cursor:pointer;";
+            divright.s.className="pure-u-1-24";
+            divright.css("cursor","pointer");
             divright.s.innerHTML = "\xd7";
             divright.s.onclick = function () {
                 $.win.closeClick();
@@ -1834,11 +1828,10 @@ Sparrow.win = {
     },
     // 内容下方的ok按钮
     addOK: function () {
-        var btnOK = $("+input.btnOK.dialog", null, this.getWindow().document);
+        var btnOK = $("+input.btnOK.divfooter", null, this.getWindow().document);
         btnOK.s.id = "btnOK";
         btnOK.s.type = "button";
-        btnOK.s.style.cssText = "cursor:pointer;width:80px;height:30px;color:black;";
-        btnOK.s.style.backgroundImage = "url(" + this.config.OKBtnImg + ")";
+        btnOK.s.className="pure-button pure-button-primary";
         btnOK.s.value = "\u786e\u5b9a";
         btnOK.s.onclick = function () {
             $.win.okClick();
@@ -1846,11 +1839,10 @@ Sparrow.win = {
     },
     // 内容下方的取消按钮
     addClose: function () {
-        var btnclose = $("+input.btnclose.dialog", null, this.getWindow().document);
+        var btnclose = $("+input.btnclose.divfooter", null, this.getWindow().document);
+
+        btnclose.s.className="pure-button";
         btnclose.attr("type", "button");
-        btnclose.s.style.cssText = "cursor:pointer;width:80px;height:30px;c"
-            + "olor:black;";
-        btnclose.s.style.backgroundImage = "url(" + this.config.closeBtnImg + ")";
         btnclose.s.value = "\u5173  \u95ed";
         btnclose.s.onclick = function () {
             $.win.closeClick();
@@ -1859,15 +1851,17 @@ Sparrow.win = {
     // 内容正文
     addMsgContent: function () {
         var divcontent = $("+div.divcontent.dialog", null, this.getWindow().document);
-        var dialog = $("#dialog", null, this.getWindow().document);
-        var height = (parseInt(dialog.s.style.height, 10) - this.config.titleHeight - 50) + "px";
-        divcontent.s.style.cssText = "width:100%;text-align:left;text-indent:20px;height:" + height;
+        divcontent.s.className="modal-body";
+    },
+
+    addFooter: function () {
+        var footer = $("+div.divfooter.dialog", null, this.getWindow().document);
+        footer.s.className="modal-footer";
     },
     okClick: function () {
     },
     closeClick: function () {
-        $
-            .showOrHiddenTag(this.config.tagArray, true,
+        $.showOrHiddenTag(this.config.tagArray, true,
                 this.getWindow().document);
         $("#dialog", null, this.getWindow().document).remove();
         $("#backDiv", null, this.getWindow().document).remove();
@@ -1906,15 +1900,19 @@ Sparrow.alert = function (msg, type, title, url, wait_message) {
     $.win.addTitle(title);
     // 内容
     $.win.addMsgContent();
+
+
     /*-----------以上部分全部一致---------------*/
     var typeimg = null;
     switch (type) {
         case "smile":
+            $.win.addFooter();
             $.win.addRightClose();
             $.win.addClose();
             typeimg = $.win.config.smileImg;
             break;
         case "sad":
+            $.win.addFooter();
             $.win.addRightClose();
             $.win.addClose();
             typeimg = $.win.config.sadImg;
@@ -1926,12 +1924,14 @@ Sparrow.alert = function (msg, type, title, url, wait_message) {
             typeimg = $.win.config.waitImg;
             break;
         case "ask":
+            $.win.addFooter();
             $.win.addRightClose();
             $.win.addOK();
             $.win.addClose();
             typeimg = $.win.config.askImg;
             break;
         case undefined:
+            $.win.addFooter();
             $.win.addRightClose();
             $.win.addClose();
             break;
