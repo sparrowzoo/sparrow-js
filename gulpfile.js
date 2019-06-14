@@ -36,7 +36,7 @@ var paths = {
             'source/scripts/validator.js',
             //'src/scripts/pager.js',
             'source/scripts/sparrow.js',
-            //'src/scripts/tooltip.js',
+            'source/scripts/tooltip.js',
             //'src/scripts/tabs.js',
             'source/scripts/windows.js',
             //'src/scripts/grid-view.js',
