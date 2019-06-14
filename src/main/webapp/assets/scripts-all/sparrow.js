@@ -3132,9 +3132,8 @@ function DatePicker(pickerId) {
 DatePicker.prototype.isLeapYear = function(year) {
 	if (0 === year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
 		return true;
-	} else {
-		return false;
 	}
+	return false;
 };
 // 闰年二月为29天
 DatePicker.prototype.getMaxDaysOfMonth = function(year, month) {
@@ -3160,7 +3159,7 @@ DatePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
 			var cdd = dateGroup[3];
 
 			if (!MM) {
-				MM = cMM;
+				MM = cMM-1;
 			}
 			if (!dd) {
 				dd = cdd;
@@ -3228,8 +3227,8 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 			.push('<td colspan="3"><a onclick="{0}.initYear({1});" href="javascript:void(0)">{1}</a>年</td>'
 					.format(this.obj, yyyy));
 	datePickerHTML
-			.push('<td colspan="2"><a onclick="{0}.initMonth({2});" href="javascript:void(0);">{1}</a></td>'
-					.format(this.obj, this.config.month[MM], yyyy));
+			.push('<td colspan="2"><a onclick="{0}.initMonth({2},{3});" href="javascript:void(0);">{1}</a></td>'
+					.format(this.obj, this.config.month[MM], yyyy,MM));
 	datePickerHTML
 			.push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(1)">&gt;<a></td>'
 					.format(this.obj));
@@ -3272,9 +3271,7 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 	}
 	datePickerHTML.push('</tr>');
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-	if (!this.config.allowNull&&this.config.srcElement.value === "") {
 		this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
-	}
 };
 DatePicker.prototype.show = function() {
 	this.pickerDiv.s.style.display = "block";
@@ -3291,8 +3288,10 @@ DatePicker.prototype.hidden = function() {
 // 初始化 年
 DatePicker.prototype.initYear = function(yyyy) {
 	var startYear = yyyy - yyyy % 10;
-	if (startYear < 1900)
+	if (startYear < 1900) {
 		startYear = 1900;
+	}
+
 	var endYear = startYear + 10;
 	var datePickerHTML =[];
 	datePickerHTML
@@ -3305,7 +3304,7 @@ DatePicker.prototype.initYear = function(yyyy) {
 			endYear - 1));
 	datePickerHTML
 			.push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&gt;<a></td>'
-					.format(this.obj, yyyy + 10));
+					.format(this.obj, yyyy<1900?1910:yyyy + 10));
 	datePickerHTML.push('</tr>');
 	datePickerHTML.push('<tr>');
 	var index = 0;
@@ -3328,20 +3327,23 @@ DatePicker.prototype.initYear = function(yyyy) {
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 };
 // 初始化月
-DatePicker.prototype.initMonth = function(yyyy) {
+DatePicker.prototype.initMonth = function(yyyy,MM) {
+	if(!MM){
+		MM=this.getCurrentDate().getMonth();
+	}
 	var datePickerHTML =[];
 	datePickerHTML
 			.push('<table  class="pure-table pure-table-bordered">');
 	datePickerHTML.push('<tr>');
 	datePickerHTML
-			.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1})">&lt;<a></td>'
-					.format(this.obj, yyyy - 1));
+			.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&lt;<a></td>'
+					.format(this.obj, yyyy - 1,MM));
 	datePickerHTML
 			.push('<td style="text-align:center;" colspan="2"><a href="javascript:void(0);" onclick="{0}.initYear({1})">{1}</a></td>'
 					.format(this.obj, yyyy));
 	datePickerHTML
-			.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1})">&gt;<a></td>'
-					.format(this.obj, yyyy + 1));
+			.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&gt;<a></td>'
+					.format(this.obj, yyyy + 1,MM));
 	datePickerHTML.push('</tr>');
 	datePickerHTML.push('<tr>');
 	var index = 0;
@@ -3358,13 +3360,13 @@ DatePicker.prototype.initMonth = function(yyyy) {
 	datePickerHTML.push('</tr>');
 	datePickerHTML.push('</table>');
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-	this.config.srcElement.value = this.getFormatDate(yyyy);
+	this.config.srcElement.value = this.getFormatDate(yyyy,MM);
 };
 DatePicker.prototype.changeMonth = function(direction) {
-	var d=this.config.srcElement.value.split('-');
-	var currentMonth =parseInt(d[1],10)+direction-1;
-	var currentYear =parseInt(d[0],10);
-	var currentDay = parseInt(d[2],10);
+	var d=this.getCurrentDate();
+	var currentMonth =parseInt(d.getMonth(),10)+direction;
+	var currentYear =parseInt(d.getFullYear(),10);
+	var currentDay = parseInt(d.getDate(),10);
 	if (direction === 1 && currentMonth === 12) {
 		currentMonth = 0;
 		currentYear = currentYear + 1;
@@ -3372,6 +3374,7 @@ DatePicker.prototype.changeMonth = function(direction) {
 		currentMonth = 11;
 		currentYear = currentYear - 1;
 	}
+	this.config.srcElement.value=this.getFormatDate(currentYear,currentMonth,currentDay);
 	this.init(currentYear, currentMonth, currentDay);
 };
 DatePicker.prototype.changeDate = function(yyyy, MM, dd) {
@@ -3382,6 +3385,17 @@ DatePicker.prototype.changeDate = function(yyyy, MM, dd) {
 	this.hidden();
 };
 DatePicker.prototype.userValidate = null;
+
+DatePicker.prototype.getCurrentDate=function () {
+	var dateRegExp = this.config.format[this.config.currentFMT];
+	// 因为会出现1次错误一次正常情况
+	var dateGroup = dateRegExp.exec(this.config.srcElement.value);
+	if (dateGroup == null) {
+		dateGroup = dateRegExp.exec(this.config.srcElement.value);
+	}
+	return new Date(dateGroup[1],parseInt(dateGroup[2],10) - 1,dateGroup[3]);
+};
+
 DatePicker.prototype.validate = function(yyyy, MM, dd) {
 	var result = true;
 	var selectedDate = null;
@@ -3396,27 +3410,21 @@ DatePicker.prototype.validate = function(yyyy, MM, dd) {
 		result = false;
 	} else {
 		if (!yyyy) {
-			var dateRegExp = this.config.format[this.config.currentFMT];
-			// 因为会出现1次错误一次正常情况
-			var dateGroup = dateRegExp.exec(this.config.srcElement.value);
-			if (dateGroup == null) {
-				dateGroup = dateRegExp.exec(this.config.srcElement.value);
-			}
-
-			yyyy = dateGroup[1];
-			MM = parseInt(dateGroup[2],10) - 1;
-			dd = dateGroup[3];
+			var date=this.getCurrentDate();
+			yyyy = date.getFullYear();
+			MM = date.getMonth();
+			dd =date.getDate();
 		}
 
 		if (yyyy < 1900 || yyyy > 2099) {
-			m.show("年份超出范围！\n正确年份范围1900-2099",this.config.srcElement);
+			$.m.show("年份超出范围！\n正确年份范围1900-2099",this.config.srcElement);
 			result = false;
 		} else if (MM < 0 || MM > 12) {
-			m.show("月份超出范围!",this.config.srcElement);
+			$.m.show("月份超出范围!",this.config.srcElement);
 			result = false;
 		} else if (dd < 0
-				|| dd > this.getMaxDaysOfMonth(parseInt(yyyy,10), parseInt(MM,10))) {
-			m.show("日期范围超出!",this.config.srcElement);
+				|| dd > this.getMaxDaysOfMonth(yyyy, MM)) {
+			$.m.show("日期范围超出!",this.config.srcElement);
 			result = false;
 		} else {
 			selectedDate = new Date(yyyy, MM, dd);
