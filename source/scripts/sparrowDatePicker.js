@@ -23,7 +23,7 @@ function DatePicker(pickerId) {
 }
 // 判断是否为闰年年
 DatePicker.prototype.isLeapYear = function(year) {
-	if (0 == year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
+	if (0 === year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
 		return true;
 	} else {
 		return false;
@@ -35,7 +35,7 @@ DatePicker.prototype.getMaxDaysOfMonth = function(year, month) {
 		month = 11;
 	}
 	var maxDaysOfMonth = this.config.maxDaysOfMonth[month];
-	if ((month == 1) && this.isLeapYear(year)) {
+	if ((month === 1) && this.isLeapYear(year)) {
 		maxDaysOfMonth += 1;
 	}
 	return maxDaysOfMonth;
@@ -85,7 +85,7 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 		this.currentDate = new Date(yyyy, MM, dd);
 		this.pickerDiv = $("+div");
 		this.pickerDiv.s.id = this.obj;
-		this.pickerDiv.s.style.cssText = "position:absolute;width:180px;height:190px;border:#ccc 1px solid;background:#ffffff;display:none;text-align:center";
+		this.pickerDiv.s.style.cssText = "position:absolute;display:none;text-align:center";
 		this.pickerDiv.s.style.left =sparrowElement.getAbsoluteLeft()+"px";
 		this.pickerDiv.s.style.top =(sparrowElement.getAbsoluteTop()
 				+ this.config.srcElement.clientHeight)+"px";
@@ -112,7 +112,7 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 			- (startDayOfMonth === 0 ? 7 : startDayOfMonth) + 1;
 	var datePickerHTML =[];
 	datePickerHTML
-			.push('<table style="width:182px;height:182px;border:#fff 1px solid;">');
+			.push('<table class="pure-table pure-table-bordered">');
 	datePickerHTML.push('<tr>');
 	datePickerHTML
 			.push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(-1)">&lt;<a></td>'
@@ -165,7 +165,7 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 	}
 	datePickerHTML.push('</tr>');
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-	if (!this.config.allowNull&&this.config.srcElement.value == "") {
+	if (!this.config.allowNull&&this.config.srcElement.value === "") {
 		this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
 	}
 };
@@ -176,7 +176,7 @@ DatePicker.prototype.hidden = function() {
 	yyyy = this.currentDate.getFullYear();
 	MM = this.currentDate.getMonth();
 	dd = this.currentDate.getDate();
-	if (!this.config.allowNull&&this.config.srcElement.value == "") {
+	if (!this.config.allowNull&&this.config.srcElement.value === "") {
 		this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
 	}
 	this.pickerDiv.s.style.display = "none";
@@ -189,7 +189,7 @@ DatePicker.prototype.initYear = function(yyyy) {
 	var endYear = startYear + 10;
 	var datePickerHTML =[];
 	datePickerHTML
-			.push('<table style="width:182px;height:182px;border:#fff 1px solid;">');
+			.push('<table class="pure-table pure-table-bordered">');
 	datePickerHTML.push('<tr>');
 	datePickerHTML
 			.push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&lt;<a></td>'
@@ -203,7 +203,7 @@ DatePicker.prototype.initYear = function(yyyy) {
 	datePickerHTML.push('<tr>');
 	var index = 0;
 	for ( var i = startYear - 1; i < endYear; i += 1) {
-		if (i == startYear - 1 || i == endYear) {
+		if (i === startYear - 1 || i === endYear) {
 			datePickerHTML.push('<td style="color:#ccc">{0}</td>'.format(i));
 		} else {
 			datePickerHTML
@@ -211,7 +211,7 @@ DatePicker.prototype.initYear = function(yyyy) {
 							.format(this.obj, i));
 		}
 		index++;
-		if (index % 4 == 0) {
+		if (index % 4 === 0) {
 			datePickerHTML.push("</tr><tr>");
 		}
 	}
@@ -224,7 +224,7 @@ DatePicker.prototype.initYear = function(yyyy) {
 DatePicker.prototype.initMonth = function(yyyy) {
 	var datePickerHTML =[];
 	datePickerHTML
-			.push('<table style="width:182px;height:182px;border:#fff 1px solid;">');
+			.push('<table  class="pure-table pure-table-bordered">');
 	datePickerHTML.push('<tr>');
 	datePickerHTML
 			.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1})">&lt;<a></td>'
@@ -244,7 +244,7 @@ DatePicker.prototype.initMonth = function(yyyy) {
 						.format(this.obj, yyyy, i, this.currentDate.getDate(),
 								this.config.month[i]));
 		index++;
-		if (index % 4 == 0) {
+		if (index % 4 === 0) {
 			datePickerHTML.push("</tr><tr>");
 		}
 	}
@@ -258,10 +258,10 @@ DatePicker.prototype.changeMonth = function(direction) {
 	var currentMonth =parseInt(d[1],10)+direction-1;
 	var currentYear =parseInt(d[0],10);
 	var currentDay = parseInt(d[2],10);
-	if (direction == 1 && currentMonth == 12) {
+	if (direction === 1 && currentMonth === 12) {
 		currentMonth = 0;
 		currentYear = currentYear + 1;
-	} else if (direction == -1 && currentMonth == -1) {
+	} else if (direction === -1 && currentMonth === -1) {
 		currentMonth = 11;
 		currentYear = currentYear - 1;
 	}
@@ -279,7 +279,7 @@ DatePicker.prototype.validate = function(yyyy, MM, dd) {
 	var result = true;
 	var selectedDate = null;
 	if (this.config.srcElement.value
-			.search(this.config.format[this.config.currentFMT]) == -1) {
+			.search(this.config.format[this.config.currentFMT]) === -1) {
 		if (this.config.srcElement.value.trim() === "") {
 			if (this.config.allowNull) {
 				return true;
@@ -331,7 +331,7 @@ DatePicker.prototype.validate = function(yyyy, MM, dd) {
 			}
 		}
 	}
-	if (result == true) {
+	if (result) {
 		this.currentDate = selectedDate;
 	}
 	return result;

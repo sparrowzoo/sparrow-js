@@ -581,7 +581,7 @@ function SparrowEditor(objName) {
                 if (imgContainer == null) {
                     editor.run('tool_' + 23 + '_' + editor.obj);
                 } else {
-                    if (imgContainer.innerHTML.trim() == "") {
+                    if (imgContainer.innerHTML.trim() === "") {
                         for (var i = uploadedFileList.length - 1; i >= 0; i--) {
                             var clientFileName = uploadedFileList[i].clientFileName;
                             var fileUrl = uploadedFileList[i].url;
@@ -702,7 +702,7 @@ function SparrowEditor(objName) {
                 if (editor.config.attach.uploadingFileId.length > 0) {
                     var htmlFrame = $(editor.obj + "_"
                         + editor.config.tool.toolBar[23].htmlFrameId);
-                    if (htmlFrame.style.display == "none") {
+                    if (htmlFrame.style.display === "none") {
                         htmlFrame.style.display = "block";
                         editor.config.currentHtmlId = htmlFrame.id;
                     }
@@ -805,10 +805,10 @@ SparrowEditor.prototype.getTempNode = function (tagName) {
         var nodeArray = this.frame.contentWindow.document
             .getElementsByTagName(tagName);
         for (var i = nodeArray.length - 1; i >= 0; i--) {
-            if (tagName == "font" || tagName == "span") {
+            if (tagName === "font" || tagName === "span") {
                 tempAttributeValue = ($.browser.ie || $.browser.opera) ? nodeArray[i].face
                     : nodeArray[i].style.fontFamily;
-            } else if (tagName = "a") {
+            } else if (tagName === "a") {
                 try {
                     tempAttributeValue = nodeArray[i].href;
                 } catch (err) {
@@ -816,7 +816,7 @@ SparrowEditor.prototype.getTempNode = function (tagName) {
             }
             if (tempAttributeValue
                 && tempAttributeValue
-                    .indexOf(this.config.tempNodeAttribute) != -1) {
+                    .indexOf(this.config.tempNodeAttribute) !== -1) {
                 nodeArray[i].id = this.config.tempNodeAttribute;
                 return nodeArray[i];
                 break;
@@ -854,7 +854,7 @@ SparrowEditor.prototype.getBrief = function () {
 SparrowEditor.prototype.getEditorContent = function () {
     if (this.config.tool.convertHTML.isConvert) {
         var tdconvertHTML = document.getElementById(this.config.tool.convertHTML.ctrlId);
-        if (tdconvertHTML.innerHTML != "HTML") {
+        if (tdconvertHTML.innerHTML !== "HTML") {
             tdconvertHTML.innerHTML = "HTML";
             document.getElementById(this.config.tool.icon.containerId).style.display = "block";
             if ($.browser.ie) {
@@ -865,8 +865,8 @@ SparrowEditor.prototype.getEditorContent = function () {
         }
     }
     this.clear();
-    if (this.frame.contentWindow.document.body.innerHTML == "<br>"
-        || this.frame.contentWindow.document.body.innerHTML == "<br/>") {
+    if (this.frame.contentWindow.document.body.innerHTML === "<br>"
+        || this.frame.contentWindow.document.body.innerHTML === "<br/>") {
         return "";
     }
     return this.frame.contentWindow.document.body.innerHTML;
@@ -918,7 +918,7 @@ SparrowEditor.prototype.m_up = function (srcObj) {
 SparrowEditor.prototype.clearTag = function (tagName) {
     var tags = this.frame.contentWindow.document.getElementsByTagName(tagName);
     for (var i = tags.length - 1; i >= 0; i--) {
-        if (tags[i].innerHTML == "") {
+        if (tags[i].innerHTML === "") {
             tags[i].parentNode.removeChild(tags[i]);
         }
     }
@@ -1008,8 +1008,8 @@ SparrowEditor.prototype.findTagNode = function (tagName) {
     if (currentSelectedElement.nodeName.toLowerCase() == tagName) {
         tagNode = currentSelectedElement;
     } else {
-        while (currentSelectedElement.nodeName.toLowerCase() != "body") {
-            if (currentSelectedElement.nodeName.toLowerCase() == tagName) {
+        while (currentSelectedElement.nodeName.toLowerCase() !== "body") {
+            if (currentSelectedElement.nodeName.toLowerCase() === tagName) {
                 tagNode = currentSelectedElement;
                 break;
             } else {
@@ -1333,7 +1333,7 @@ SparrowEditor.prototype.getHtml = function (key) {
 };
 SparrowEditor.prototype.adjust = function (style, obj) {
     try {
-        if (style == "width") {
+        if (style === "width") {
             var objWidth = parseInt(obj.value);
             if (objWidth > this.config.container.maxWidth) {
                 alert('\u7f16\u8f91\u5668\u6700\u5927\u5bbd\u5ea6:'
@@ -1359,7 +1359,7 @@ SparrowEditor.prototype.adjust = function (style, obj) {
             document.getElementById(this.config.container.id).style.height = obj.value;
         }
     } catch (ex) {
-        if (style == "width") {
+        if (style === "width") {
             obj.value = document.getElementById(this.config.container.id).style.width;
         } else {
             obj.value = document.getElementById(this.config.container.id).style.height;
@@ -1375,7 +1375,7 @@ SparrowEditor.prototype.autoAdjust = function (obj) {
 };
 SparrowEditor.prototype.convertHTML = function (obj) {
     this.clear();
-    if (obj.innerHTML == "HTML") {
+    if (obj.innerHTML === "HTML") {
         obj.innerHTML = "\u8fd4\u56de";
         obj.title = "\u8fd4\u56de\u6240\u89c1\u5373\u6240\u5f97\u6a21\u5f0f";
         document.getElementById(this.config.tool.icon.containerId).style.display = "none";
@@ -1398,7 +1398,7 @@ SparrowEditor.prototype.insertVideo = function () {
     var result = false;
     var videoURL = document.getElementById(this.obj + "_txtVideo").value;
     var errorMessage = $(this.obj + "_spanVideoErrorMessage");
-    if (videoURL.trim() == "") {
+    if (videoURL.trim() === "") {
         errorMessage.className = "error";
         errorMessage.innerHTML = "请输入视频地址<br/>例:http://player.youku.com/player.php/sid/qxiaoqu/v.swf";
     } else if (videoURL.search(/^[http:\/\/][^<]*\.swf[^<]*/) == -1) {
@@ -1538,16 +1538,16 @@ SparrowEditor.prototype.initTool = function () {
     if (this.config.tool.adjust.adjustable) {
         iconContainerWidth = iconContainerWidth - this.adjust.width;
     }
-    toolHTML.push('<table style="width:auto;margin:0;border:0;">');
-    toolHTML.push('<tr><td id="' + this.config.tool.icon.containerId + '" style="width:'
+    toolHTML.push('<div class="pure-g tool-bar">');
+    toolHTML.push('<div class="pure-u-16-24" id="' + this.config.tool.icon.containerId + '" style="width:'
         + iconContainerWidth + 'px;text-align:left;">');
     if (this.config.style != null) {
         // 保留以后扩展使用
-        if (this.config.style == "simple") {
+        if (this.config.style === "simple") {
             toolBarList = this.config.tool.style.simple;
-        } else if (this.config.style == "comment") {
+        } else if (this.config.style === "comment") {
             toolBarList = this.config.tool.style.comment;
-        } else if (this.config.style == "thread") {
+        } else if (this.config.style === "thread") {
             toolBarList = this.config.tool.style.list;
         }
         for (var i = 0; i < toolBarList.length; i++) {
@@ -1598,31 +1598,30 @@ SparrowEditor.prototype.initTool = function () {
             }
         }
     }
-    toolHTML.push('</td>');
+    toolHTML.push('</div>');
     if (this.config.tool.convertHTML.isConvert) {
         toolHTML
-            .push('<td id="'
+            .push('<div id="'
                 + this.config.tool.convertHTML.ctrlId
-                + '" style="border:0px;border-left:#ccc 1px solid;margin:bottom:3px;font-size:14pt;font-weight:bold;width:'
-                + this.config.tool.convertHTML.ctrlWidth
-                + 'px;border:0px;" onclick="' + this.obj
-                + '.convertHTML(this);">HTML</td>');
+                + '" class="pure-u-2-24" " onclick="' + this.obj
+                + '.convertHTML(this);">HTML</div>');
     }
     if (this.config.tool.adjust.adjustable) {
         var container = document.getElementById(this.config.container.id);
         toolHTML
-            .push('<td align="center" title="\u5728\u6b64\u8c03\u6574\u7f16\u8f91\u5668\u5927\u5c0f\u3002\u9f20\u6807\u79bb\u5f00\u5373\u751f\u6548\u3002" style="text-align:center;color:#ff9900;border:0px;border-left:#ccc 1px solid;font-weight:bold;width:'
+            .push('<div align="center" title="\u5728\u6b64\u8c03\u6574\u7f16\u8f91\u5668\u5927\u5c0f\u3002\u9f20\u6807\u79bb\u5f00\u5373\u751f\u6548\u3002" ' +
+                'class="pure-u-6-24" '
                 + this.config.tool.adjust.width
                 + 'px;"><input onblur="'
                 + this.obj
-                + '.adjust(\'width\',this);" style="width:40px;height:20px;border:0px;" type="text" value="'
+                + '.adjust(\'width\',this);" class="pure-input-3-8" type="text" value="'
                 + container.style.width
-                + '"/>\xd7<input onblur="'
+                + '"/><span class="pure-input-1-8">\xd7</span><input onblur="'
                 + this.obj
-                + '.adjust(\'height\',this);" style="width:40px;height:20px;border:0px;" type="text" value="'
-                + container.style.height + '"/></td>');
+                + '.adjust(\'height\',this);" class="pure-input-3-8" type="text" value="'
+                + container.style.height + '"/></div>');
     }
-    toolHTML.push('</tr></table>');
+    toolHTML.push('</div>');
     return '<div class="tool-bar" id="' + this.config.tool.id + '" style="width:'
         + document.getElementById(this.config.container.id).style.width
         + ';height:auto;">' + toolHTML.join("") + '</div>';
@@ -1693,7 +1692,7 @@ SparrowEditor.prototype.initImageUploadEvent = function (coverKey) {
         if (file.checkFileType(file.getFileName(f.value), ["jpg", "jpeg",
                 "gif", "png"], "error" + coverKey)) {
             //非编辑器上传
-            if (key != contentEditor.config.attach.key) {
+            if (key !== contentEditor.config.attach.key) {
                 file.uploadCallBack = function (fileInfo, clientFileName) {
                     if (fileInfo.fileName) {
                         $("div" + coverKey).innerHTML = "<a href='" + fileInfo.fileName + "' target='_blank'><img src='" + fileInfo.fileName
@@ -1704,7 +1703,7 @@ SparrowEditor.prototype.initImageUploadEvent = function (coverKey) {
                 file.uploadClick(false, '', key);
             } else {
                 file.uploadCallBack = function (fileInfo, clientFileName, editor) {
-                    if (clientFileName != "") {
+                    if (clientFileName !== "") {
                         $(contentEditor.config.attach.uploadImgContainerId)
                             .appendChild(
                                 getImgContainer(fileInfo.fileName,
