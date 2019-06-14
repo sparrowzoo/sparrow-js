@@ -11,7 +11,6 @@
     <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
     <jsp:include page="${root_path}/examples/head.jsp"/>
     <j:style href="$resource/assets/styles/modal.css"/>
-    <j:style href="$resource/assets/styles/sparrow.css"/>
     <script type="application/javascript">
         $.win.okClick = function () {
             alert("OK");
