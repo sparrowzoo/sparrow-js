@@ -51,8 +51,8 @@
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">sparrow</a>
         <ul class="pure-menu-list">
-            <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/date_picker.html" class="pure-menu-link">date picker</a></li>
-            <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/editor.html" class="pure-menu-link">editor</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/date_picker.jsp" class="pure-menu-link">date picker</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/editor.jsp" class="pure-menu-link">editor</a></li>
 
             <li class="pure-menu-item">
                 <a href="${root_path}/examples/sparrow/jsonview.jsp" class="pure-menu-link">json 格式化</a>
