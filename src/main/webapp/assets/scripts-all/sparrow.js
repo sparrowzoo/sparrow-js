@@ -1213,6 +1213,45 @@ Sparrow.v = {
         return true;
     }
 };
+Sparrow.page = {
+    toTargetPage: function (pageCount, pageFormat, srcElement) {
+        var defPageIndex = parseInt($('defPageIndex').value);
+        var currentPageIndex = parseInt($('spanCurrentPageIndex').innerHTML
+            .trim());
+        if (defPageIndex <= 0 || defPageIndex > pageCount) {
+            $.message('超出页码范围', srcElement);
+        } else if (defPageIndex == currentPageIndex) {
+            $.message('当前页即是目标页', srcElement);
+        } else {
+            window.location.href = pageFormat.replace("$pageIndex", defPageIndex);
+        }
+    },
+    defaction: null,
+    action: function (pageIndex, formIndex) {
+        $("currentPageIndex").value = pageIndex;
+        window.location.href = "#top";
+        if (this.defaction != null) {
+            this.defaction(pageIndex);
+        } else {
+            $.submit(null, formIndex);
+        }
+    },
+    next: function () {
+        var elementArray = $("divPage").getElementsByTagName("a");
+        var nextLink = null;
+        for (var i = 0; i < elementArray.length; i++) {
+            if (elementArray[i].innerHTML == "下一页") {
+                nextLink = elementArray[i].href;
+                break;
+            }
+        }
+        if ($.isNullOrEmpty(nextLink)) {
+            alert("亲，您已经翻到最后了哟");
+        } else {
+            window.location.href = nextLink;
+        }
+    }
+};
 Sparrow.random = function () {
     return (Math.random() + "").substring(2);
 };
@@ -1677,6 +1716,64 @@ Sparrow.prototype.enter = function (handle) {
             handle();
         }
     };
+};
+Sparrow.prototype.tabs = function (config) {
+    if (!config) {
+        config = {};
+    }
+    //首页的样式，默认为无
+    var withIndexClass = config.withIndexClass;
+    //当前tab 的index
+    var currentIndex = config.index;
+    //tab 框的子div
+    var tabchilds = $("!div." + this.s.id);
+    //第一个为title tab 控制
+    var tabControllerContainer = tabchilds[0];
+    //具体的tab 控制框
+    var tabControllerList = $("!li", tabControllerContainer);
+    //第二个为内容框
+    var contentContainer = tabchilds[1];
+    //具体的内容框
+    var contentList = $("!div", contentContainer);
+    //每个控制框的绑定事件
+    tabControllerList.each(function (tab_index) {
+        $(this).attr("tab_index", tab_index);
+        if (this.className.indexOf("close")>0 ||this.className.indexOf("more")>0) {
+           return;
+        }
+        //<a><span onclick=></span></a>
+            $($("!a", this)[0]).bind(
+                "onclick",
+                function (e) {
+                    var srcElementHyperLink = $.event(e).srcElement;
+                    if (srcElementHyperLink.tagName === "SPAN") {
+                        srcElementHyperLink = srcElementHyperLink.parentNode;
+                    }
+                    var tabIndex = $(srcElementHyperLink.parentNode).attr("tab_index");
+                    //将当前的rev http://www.w3school.com.cn/tags/att_a_rev.asp
+                    var rev = $(srcElementHyperLink).attr("rev");
+                    if (rev) {
+                        var moreHyperCtrl = $("!a",
+                            tabControllerList[tabControllerList.length - 1]);
+                        moreHyperCtrl[0].href = rev;
+                    }
+                    contentList.each(function (contentIndex) {
+                        if (withIndexClass)
+                            tabControllerList[0].className = "pure-menu-item pure-menu-heading";
+                        if (contentIndex == tabIndex) {
+                            tabControllerList[contentIndex].className = "pure-menu-item pure-menu-selected";
+                            this.className = "block";
+                        } else {
+                            tabControllerList[contentIndex].className = "pure-menu-item";
+                            this.className = "none";
+                        }
+                    });
+                });
+    });
+    //select 当前tab
+    if (currentIndex) {
+        tabControllerList[currentIndex].onclick();
+    }
 };
 /*
      * 日期2009 08 09 作者:张立志 邮箱:zh_harry@163.com QQ: 492006183 IE6 ie7 遨游 火狐下测试通过
@@ -3576,7 +3673,7 @@ function SparrowEditor(objName) {
                     title: "字号",
                     cmd: "fontsize",
                     htmlFrameId: "font_size",
-                    htmlheight: 275,
+                    htmlheight: 315,
                     htmlwidth: 170
                 },
                 /* 2 */{
@@ -3587,7 +3684,7 @@ function SparrowEditor(objName) {
                     title: "字体",
                     cmd: "fontname",
                     htmlFrameId: "font_family",
-                    htmlheight: 310,
+                    htmlheight: 360,
                     htmlwidth: 130
                 },
                 /* 3 */{
@@ -3622,7 +3719,7 @@ function SparrowEditor(objName) {
                     title: "文字颜色",
                     cmd: "forecolor",
                     htmlFrameId: "FColor",
-                    htmlheight: 244,
+                    htmlheight: 308,
                     htmlwidth: 364
                 },
                 /* 7 */{
@@ -3634,7 +3731,7 @@ function SparrowEditor(objName) {
                     cmd: "BackColor",
                     firefoxcmd: "hilitecolor",
                     htmlFrameId: "HColor",
-                    htmlheight: 244,
+                    htmlheight: 308,
                     htmlwidth: 364
                 },
                 /* 8 */{
@@ -3681,7 +3778,7 @@ function SparrowEditor(objName) {
                     width: 26,
                     height: 22,
                     title: "编号",
-                    cmd: "insertorde#ca151dlist"
+                    cmd: "InsertOrderedList"
                 },
                 /* 15 */{
                     left: -588,
@@ -3689,7 +3786,7 @@ function SparrowEditor(objName) {
                     width: 26,
                     height: 22,
                     title: "项目符号",
-                    cmd: "insertunorde#ca151dlist"
+                    cmd: "InsertUnorderedList"
                 },
                 /* 16 */{
                     left: -504,
@@ -3709,7 +3806,7 @@ function SparrowEditor(objName) {
                 },
                 /* 18 */
                 {
-                    split: '<br/>'
+                    split: ''
                 },
                 /* 19 */{
                     left: -700,
@@ -3748,7 +3845,7 @@ function SparrowEditor(objName) {
                     title: "插入表情",
                     cmd: "face",
                     htmlFrameId: "face",
-                    htmlheight: 260,
+                    htmlheight: 280,
                     htmlwidth: 340
                 },
                 /* 23 */{
@@ -4582,6 +4679,7 @@ SparrowEditor.prototype.intervalShow = function (key, maxHeight) {
         listDiv.style.height = divHeight + "px";
     }
 };
+
 SparrowEditor.prototype.getHtml = function (key) {
     var HTML = [];
     switch (key) {
@@ -4622,7 +4720,7 @@ SparrowEditor.prototype.getHtml = function (key) {
             break;
         case 5:
         case 6:
-            var color = new Array("00", "33", "66", "99", "cc", "ff");
+            var color = ["00", "33", "66", "99", "cc", "ff"];
             var index = 0;
             for (var i = 0; i < 6; i += 1) {
                 for (var j = 0; j < 6; j += 1) {
@@ -4676,7 +4774,7 @@ SparrowEditor.prototype.getHtml = function (key) {
                 HTML.push('<tr>');
                 for (j = 0; j < col; j++) {
                     if (index < this.config.tool.face.length) {
-                        HTML.push('<td><img title="'
+                        HTML.push('<td><img style="cursor: pointer;" title="'
                             + this.config.tool.face[index].name + '" src="'
                             + this.config.tool.face[index].url + '" onclick="'
                             + this.obj + '.callBackRun(22,event);" /></td>');
@@ -4991,8 +5089,8 @@ SparrowEditor.prototype.initTool = function () {
     if (this.config.tool.adjust.adjustable) {
         iconContainerWidth = iconContainerWidth - this.adjust.width;
     }
-    toolHTML.push('<div class="pure-g tool-bar">');
-    toolHTML.push('<div class="pure-u-16-24" id="' + this.config.tool.icon.containerId + '" style="width:'
+    toolHTML.push('<div style="border-bottom:1px #ccc solid;" class="pure-g tool-bar">');
+    toolHTML.push('<div class="pure-u-18-24" id="' + this.config.tool.icon.containerId + '" style="width:'
         + iconContainerWidth + 'px;text-align:left;">');
     if (this.config.style != null) {
         // 保留以后扩展使用
@@ -5054,7 +5152,7 @@ SparrowEditor.prototype.initTool = function () {
     toolHTML.push('</div>');
     if (this.config.tool.convertHTML.isConvert) {
         toolHTML
-            .push('<div id="'
+            .push('<div align="center" id="'
                 + this.config.tool.convertHTML.ctrlId
                 + '" class="pure-u-2-24" " onclick="' + this.obj
                 + '.convertHTML(this);">HTML</div>');
@@ -5063,16 +5161,16 @@ SparrowEditor.prototype.initTool = function () {
         var container = document.getElementById(this.config.container.id);
         toolHTML
             .push('<div align="center" title="\u5728\u6b64\u8c03\u6574\u7f16\u8f91\u5668\u5927\u5c0f\u3002\u9f20\u6807\u79bb\u5f00\u5373\u751f\u6548\u3002" ' +
-                'class="pure-u-6-24" '
+                'class="pure-u-4-24 pure-form pure-form-aligned" '
                 + this.config.tool.adjust.width
-                + 'px;"><input onblur="'
+                + 'px;"><fieldset class="pure-group"><input onblur="'
                 + this.obj
-                + '.adjust(\'width\',this);" class="pure-input-3-8" type="text" value="'
+                + '.adjust(\'width\',this);" style="height: 30px;" placeholder="width" class="pure-input-1" type="text" value="'
                 + container.style.width
-                + '"/><span class="pure-input-1-8">\xd7</span><input onblur="'
+                + '"/><input onblur="'
                 + this.obj
-                + '.adjust(\'height\',this);" class="pure-input-3-8" type="text" value="'
-                + container.style.height + '"/></div>');
+                + '.adjust(\'height\',this);" style="height: 30px;" placeholder="height" class="pure-input-rounded pure-input-1" type="text" value="'
+                + container.style.height + '"/></fieldset></div>');
     }
     toolHTML.push('</div>');
     return '<div class="tool-bar" id="' + this.config.tool.id + '" style="width:'
@@ -5107,6 +5205,7 @@ function getImgContainer(fileUrl, clientFileName, editor) {
     var imgArray = [];
     var imgDiv = $("+div");
     var fileId = file.getFileName(fileUrl).split('.')[0];
+    imgDiv.s.className="";
     imgDiv.s.style.cssText = "width:92px;height:90px;float:left;padding:3px;border:#ccc 2px solid;";
     imgArray
         .push('<a target="_blank" href="{0}" title="{1}"><img style="width:91px;height:67px;" src="{2}"/></a>'
