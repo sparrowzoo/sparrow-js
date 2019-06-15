@@ -128,9 +128,8 @@ var Sparrow = function (selector) {
                 break;
             case "$": //for 4
                 var labelList = doc.getElementsByTagName("label");
-                var forId = selector;
                 for (var i = 0; i < labelList.length; i ++) {
-                    if (labelList[i].attributes["for"].value === forId) {
+                    if (labelList[i].attributes["for"].value === selector) {
                         doms[0] = labelList[i];
                         break;
                     }

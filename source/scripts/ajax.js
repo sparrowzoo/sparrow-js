@@ -84,7 +84,7 @@ Sparrow.ajax = {
                 if (objXMLHttp.readyState === 4) {
                     // alert("结果状态"+objXMLHttp.status);
                     if (objXMLHttp.status === 200) {
-                        if (objXMLHttp.responseText.indexOf("login:false") !== -1) {
+                        if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
                             alert("login false");
                             var config = objXMLHttp.responseText.json();
                             if (config.inFrame) {
@@ -123,6 +123,11 @@ Sparrow.ajax = {
         }
     },
     json: function (url, data, callback, srcElement) {
+        if(typeof data =="function"){
+            callback=data;
+            data=null;
+        }
+
         $.ajax.req("POST", url,
             function (responseText) {
                 var result = responseText.json();

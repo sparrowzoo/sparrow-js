@@ -36,7 +36,7 @@ var paths = {
             'source/scripts/validator.js',
             //'src/scripts/pager.js',
             'source/scripts/sparrow.js',
-            'src/scripts/tooltip.js',
+            // 'src/scripts/tooltip.js',
             'source/scripts/tabs.js',
             'source/scripts/windows.js',
             //'src/scripts/grid-view.js',
@@ -54,7 +54,7 @@ var paths = {
             //'src/scripts/marquee.js',
             'source/scripts/sparrowDatePicker.js',
             'source/scripts/sparrowEditor.js',
-            //'src/scripts/sparrowTree.js',
+            'source/scripts/sparrowTree.js'
         ],
         dest: 'src/main/webapp/assets/scripts-all/'
     },

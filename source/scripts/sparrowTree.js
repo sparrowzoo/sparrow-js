@@ -1,5 +1,5 @@
 //config.treeFrameId与显示列表框无关只有管理时的增删改有关
-function Node(id, pid, name, url, title, target, childCount, showCtrl, remark,
+function Node(id, pid, name, url, title, target, childCount, showCtrl, businessEntity,
               icon) {
 
     this.id = id;
@@ -16,7 +16,7 @@ function Node(id, pid, name, url, title, target, childCount, showCtrl, remark,
 
     this.showCtrl = showCtrl ? showCtrl : true;
 
-    this.remark = remark;
+    this.businessEntity = businessEntity;
 
     this.childCount = childCount ? childCount : 0;
 
@@ -38,7 +38,7 @@ function Node(id, pid, name, url, title, target, childCount, showCtrl, remark,
 
 }
 
-function iTree(objName) {
+function SparrowTree(objName) {
     this.config = {
 
         target: "_self",
@@ -139,7 +139,7 @@ function iTree(objName) {
 
     this.interval = null;
 
-    this.currentSelectId = new Object();
+    this.currentSelectId ={};
 
     this.floatTreeFrameId = null;// read only
 
@@ -157,7 +157,7 @@ function iTree(objName) {
 
     this.completed = false;
 }
-iTree.prototype={
+SparrowTree.prototype={
         resetIcon:function () {
         this.icon.root = this.config.imageDir + '/base.gif';
 
@@ -192,21 +192,22 @@ iTree.prototype={
         this.icon.nlMinus = this.config.imageDir + '/nolines_minus.gif';
 
     },
-addremark :function (id, pid, name, url, title, remark) {
+addBusinessEntity :function (id, pid, name, url, title, businessEntity) {
     this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title,
-        "_self", undefined, true, remark);
+        "_self", undefined, true, businessEntity);
 },add:function (id, pid, name, url, title, target, childCount,
-                                showCtrl, remark, icon) {
+                                showCtrl, businessEntity, icon) {
     this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title,
-        target, childCount, showCtrl, remark, icon);
+        target, childCount, showCtrl, businessEntity, icon);
 
-},openAll:function () {
+},
+    openAll:function () {
     this.oAll(true);
 },
 closeAll: function () {
     this.oAll(false);
-},toString:function () {
-    var str = '<div class="iTree">';
+}, toString:function () {
+    var str = '<div class="sparrow-tree">';
     if (document.getElementById) {
         if (this.config.useCookies)
             this.selectedNodeIndex = this.getSelectedAi();
@@ -218,10 +219,10 @@ closeAll: function () {
     this.completed = true;
     return str;
 },
-delete_click:function () {
-    alert('delete_click not defined!');
+deleteClick:function () {
+    alert('deleteClick not defined!');
 },
-DeleteNode :function (currentNode) {
+removeNode :function (currentNode) {
     if (!currentNode) {
         currentNode = this.aNodes[this.getSelectedAi()];
     }
@@ -230,17 +231,17 @@ DeleteNode :function (currentNode) {
     $(this.config.treeFrameId).innerHTML = this.toString();
     this.clearFloatFrame();
 },
-AppendNode:function (newNode) {
+appendNode:function (newNode) {
     this.aNodes.push(newNode);
     $(this.config.treeFrameId).innerHTML = this.toString();
 },
-UpdateNode : function (newNode, currentNode) {
+updateNode : function (newNode, currentNode) {
     if (!currentNode) {
         currentNode = this.aNodes[this.getSelectedAi()];
     }
     if (currentNode.pid != newNode.pid) {
-        this.DeleteNode(currentNode);
-        this.AppendNode(newNode);
+        this.removeNode(currentNode);
+        this.appendNode(newNode);
     } else {
         this.aNodes[this.getSelectedAi()] = newNode;
     }
@@ -266,7 +267,7 @@ UpdateNode : function (newNode, currentNode) {
             + addressIndex
             + '" onclick="'
             + this.obj
-            + '.delete_click(parseInt(this.id));";'
+            + '.deleteClick(parseInt(this.id));";'
             + this.obj
             + ".clearFloatFrame();\" style='width:78px;border:#ff9900 1px solid;line-height:30px;text-align:center;margin:1px;cursor:pointer' onclick=\"alert('删除')\";>删除</div>"
             + "<div style=\"border:#ccc 1px dotted;width:80px;height:150px;overflow:auto;\">当前位置<br/>第"
@@ -294,7 +295,7 @@ UpdateNode : function (newNode, currentNode) {
                         index++;
                         listHTML += "<li onclick=\""
                         + this.obj
-                        + ".Order("
+                        + ".order("
                         + addressIndex
                         + ",this.value)\" value=\""
                         + index
@@ -310,42 +311,42 @@ UpdateNode : function (newNode, currentNode) {
             selectHTML.innerHTML = listHTML;
             $("currentOrderNo").innerHTML = currentIndex;
     }
-},Order:function (srcAddressIndex, descNo) {
+},order:function (srcAddressIndex, descNo) {
     var srcNode = this.aNodes[srcAddressIndex];
     var srcNo = $("currentOrderNo").innerHTML;
     var postString = "uuid=" + srcNode.id + "&descNo=" + descNo;
-    var iTreeObj = this;
+    var tree = this;
     ajax.json(this.config.orderURL, postString, function (json) {
         var descNodes = [];
         var descNode = null;
         var srcParentNode = srcNode._parentNode;
         var childNo = 0;
-        for (var i = 0; i < iTreeObj.aNodes.length; i++) {
-            if (iTreeObj.aNodes[i].pid == srcParentNode.id) {
+        for (var i = 0; i < tree.aNodes.length; i++) {
+            if (tree.aNodes[i].pid == srcParentNode.id) {
                 childNo++;
                 if (childNo == descNo) {
-                    descNode = iTreeObj.aNodes[i];
+                    descNode = tree.aNodes[i];
                     break;
                 }
             }
         }
-        iTreeObj.aNodes.splice(srcAddressIndex, 1);
-        for (i = 0; i < iTreeObj.aNodes.length; i++) {
-            if (iTreeObj.aNodes[i].id == descNode.id) {
+        tree.aNodes.splice(srcAddressIndex, 1);
+        for (i = 0; i < tree.aNodes.length; i++) {
+            if (tree.aNodes[i].id == descNode.id) {
                 if (descNo > srcNo) {
-                    descNodes.push(iTreeObj.aNodes[i]);
+                    descNodes.push(tree.aNodes[i]);
                 }
                 descNodes.push(srcNode);
                 if (descNo < srcNo) {
-                    descNodes.push(iTreeObj.aNodes[i]);
+                    descNodes.push(tree.aNodes[i]);
                 }
             } else {
-                descNodes.push(iTreeObj.aNodes[i]);
+                descNodes.push(tree.aNodes[i]);
             }
         }
-        iTreeObj.aNodes = descNodes;
-        $(iTreeObj.config.treeFrameId).innerHTML = iTreeObj.toString();
-        iTreeObj.clearFloatFrame();
+        tree.aNodes = descNodes;
+        $(tree.config.treeFrameId).innerHTML = tree.toString();
+        tree.clearFloatFrame();
     });
 },addNode:function (pNode) {
     var str = '';
@@ -1219,8 +1220,8 @@ initCodeToolip : function (codePrefix, ajaxUrl) {
     if (!ajaxUrl)
         ajaxUrl = $.url.root + "/code/load.json";
     this.dbs = function (nodeIndex) {
-        var codeEntity = this.aNodes[nodeIndex].remark;
-        $(this.config.descHiddenId).value = codeEntity.code;
+        var businessEntity = this.aNodes[nodeIndex].businessEntity;
+        $(this.config.descHiddenId).value = businessEntity.code;
         var descCtrl = $(this.config.descTextBoxId);
         if (descCtrl.type === "text") {
             descCtrl.
@@ -1232,7 +1233,7 @@ initCodeToolip : function (codePrefix, ajaxUrl) {
                 innerHTML = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
         }
         if (typeof (this.config.valueTextBoxId) !== "undefined") {
-            $(this.config.valueTextBoxId).value = codeEntity.value;
+            $(this.config.valueTextBoxId).value = businessEntity.value;
         }
         if (this.codeNodeCallBack) {
             this.codeNodeCallBack(this.aNodes[nodeIndex]);
