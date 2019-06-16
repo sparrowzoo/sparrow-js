@@ -51,10 +51,10 @@ var paths = {
             //'src/scripts/image-switch.js',
             //'src/scripts/ImageCopper.js',
             //'src/scripts/marquee.js',
-            'source/scripts/sparrowDatePicker.js',
+            'source/scripts/datePicker.js',
             'source/scripts/sparrowEditor.js',
-            'source/scripts/sparrowTree.js',
-            'source/scripts/sparrowDispatcher.js',
+            'source/scripts/tree.js',
+            'source/scripts/dispatcher.js',
             'source/scripts/tail.js'
         ],
         dest: 'src/main/webapp/assets/scripts-all/'

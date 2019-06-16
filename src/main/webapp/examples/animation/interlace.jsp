@@ -48,5 +48,4 @@
     $("#divContainer2").interlace();
 </script>
 </body>
-
 </html>

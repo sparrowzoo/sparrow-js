@@ -19,5 +19,4 @@ Sparrow.prototype.progressbar = function (callback, config) {
     progress.remove = function () {
         document.body.removeChild(progress.s.parentNode);
     };
-
 };

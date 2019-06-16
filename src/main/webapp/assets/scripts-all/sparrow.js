@@ -174,6 +174,24 @@ Array.prototype.remove = function (val) {
         this.splice(index, 1);
     }
 };
+
+// If Push and pop is not implemented by the browser
+
+if (!Array.prototype.push) {
+    Array.prototype.push = function array_push() {
+        for (var i = 0; i < arguments.length; i++)
+            this[this.length] = arguments[i];
+        return this.length;
+    };
+}
+
+if (!Array.prototype.pop) {
+    Array.prototype.pop = function array_pop() {
+        lastElement = this[this.length - 1];
+        this.length = Math.max(this.length - 1, 0);
+        return lastElement;
+    };
+}
 /**
  * @return {null}
  * name.
@@ -2911,14 +2929,13 @@ Sparrow.prototype.progressbar = function (callback, config) {
     progress.remove = function () {
         document.body.removeChild(progress.s.parentNode);
     };
-
 };
 /*
  * 垂直菜单 menu 与child的对应关系是以 menu.id+_child=child.id 对应
  * 水平菜单 用索引对应 因为html 结构决定
  * position[child.id]=child.position(height etc...)
  * */
-function Menu(obj, position) {
+Sparrow.menu=function (obj, position) {
     this.config = // 菜单显示需要的常量配置
     {
         current_menu: null,
@@ -2941,8 +2958,8 @@ function Menu(obj, position) {
     this.id = "div" + this.obj.firstCharUpperCase();
     this.position = position ? position : "SIDE";// 位置默认右上角
     $.global(obj, this);
-}
-Menu.prototype.side = function () {
+};
+Sparrow.menu.prototype.side = function () {
     this.config.frameDiv = $("+div").s;
     this.config.frameDiv.onmouseover = function (e) {
         $.event(e).cancelBubble();
@@ -2969,7 +2986,7 @@ Menu.prototype.side = function () {
     menuHTML.push('</ul>');
     this.config.frameDiv.innerHTML = menuHTML.join("");
 };
-Menu.prototype.vertical = function () {
+Sparrow.menu.prototype.vertical = function () {
     if (!$(this.id)) {
         return;
     }
@@ -3021,12 +3038,12 @@ Menu.prototype.vertical = function () {
             }
         });
 };
-Menu.prototype.dispose = function () {
+Sparrow.menu.prototype.dispose = function () {
     if (this.config.frameDiv) {
         document.body.removeChild(this.config.frameDiv);
     }
 };
-Menu.prototype.hidden = function () {
+Sparrow.menu.prototype.hidden = function () {
     if (this.position === $.SIDE) {
         if (this.config.frameDiv) {
             this.config.frameDiv.style.display = "none";
@@ -3049,7 +3066,7 @@ Menu.prototype.hidden = function () {
     }
 };
 
-Menu.prototype.show = function (srcElement, parentMenu) {
+Sparrow.menu.prototype.show = function (srcElement, parentMenu) {
     this.config.parent = parentMenu;
     this.config.srcElement = srcElement;
     var scrollTop = 0;
@@ -3073,13 +3090,13 @@ Menu.prototype.show = function (srcElement, parentMenu) {
         this.config.brothers[i].hidden();
     }
 };
-Menu.prototype.itemClick = function (index) {
+Sparrow.menu.prototype.itemClick = function (index) {
     alert("click:" + this.config.menu[index].text);
 };
-Menu.prototype.itemMore = function (srcElement, index) {
+Sparrow.menu.prototype.itemMore = function (srcElement, index) {
     alert("more:" + this.config.menu[index].text);
 };
-Menu.prototype.horizontal=function () {
+Sparrow.menu.prototype.horizontal=function () {
     if (!$(this.id)) {
         return;
     }
@@ -3155,7 +3172,7 @@ Menu.prototype.horizontal=function () {
                     });
         });
 };
-Menu.prototype.init = function () {
+Sparrow.menu.prototype.init = function () {
     if (this.position === $.SIDE) {
         this.side();
     }
@@ -3166,7 +3183,7 @@ Menu.prototype.init = function () {
        this.horizontal();
     }
 };
-function DatePicker(pickerId) {
+Sparrow.datePicker=function(pickerId) {
 	var dateFormat = Object();
 	dateFormat["yyyy年MM月dd日"] = new RegExp("^(\\d{4})年(\\d{2})月(\\d{2})日$",
 			"ig");
@@ -3190,14 +3207,14 @@ function DatePicker(pickerId) {
 	};
 }
 // 判断是否为闰年年
-DatePicker.prototype.isLeapYear = function(year) {
+Sparrow.datePicker.prototype.isLeapYear = function(year) {
 	if (0 === year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
 		return true;
 	}
 	return false;
 };
 // 闰年二月为29天
-DatePicker.prototype.getMaxDaysOfMonth = function(year, month) {
+Sparrow.datePicker.prototype.getMaxDaysOfMonth = function(year, month) {
 	if (month === -1) {
 		month = 11;
 	}
@@ -3207,7 +3224,7 @@ DatePicker.prototype.getMaxDaysOfMonth = function(year, month) {
 	}
 	return maxDaysOfMonth;
 };
-DatePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
 	if (typeof(MM)=='undefined'||typeof(dd)=='undefined') {
 		var dateRegExp = this.config.format[this.config.currentFMT];
 		// 因为会出现1次错误一次正常情况
@@ -3239,7 +3256,7 @@ DatePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
 };
 
 // 初始化日期
-DatePicker.prototype.init = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.init = function(yyyy, MM, dd) {
 	if (!yyyy) {
 		var currentDateTime = this.currentDate;
 		yyyy = currentDateTime.getFullYear();
@@ -3334,10 +3351,10 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 		this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
 };
-DatePicker.prototype.show = function() {
+Sparrow.datePicker.prototype.show = function() {
 	this.pickerDiv.s.style.display = "block";
 };
-DatePicker.prototype.hidden = function() {
+Sparrow.datePicker.prototype.hidden = function() {
 	yyyy = this.currentDate.getFullYear();
 	MM = this.currentDate.getMonth();
 	dd = this.currentDate.getDate();
@@ -3347,7 +3364,7 @@ DatePicker.prototype.hidden = function() {
 	this.pickerDiv.s.style.display = "none";
 };
 // 初始化 年
-DatePicker.prototype.initYear = function(yyyy) {
+Sparrow.datePicker.prototype.initYear = function(yyyy) {
 	var startYear = yyyy - yyyy % 10;
 	if (startYear < 1900) {
 		startYear = 1900;
@@ -3388,7 +3405,7 @@ DatePicker.prototype.initYear = function(yyyy) {
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 };
 // 初始化月
-DatePicker.prototype.initMonth = function(yyyy,MM) {
+Sparrow.datePicker.prototype.initMonth = function(yyyy,MM) {
 	if(!MM){
 		MM=this.getCurrentDate().getMonth();
 	}
@@ -3423,7 +3440,7 @@ DatePicker.prototype.initMonth = function(yyyy,MM) {
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 	this.config.srcElement.value = this.getFormatDate(yyyy,MM);
 };
-DatePicker.prototype.changeMonth = function(direction) {
+Sparrow.datePicker.prototype.changeMonth = function(direction) {
 	var d=this.getCurrentDate();
 	var currentMonth =parseInt(d.getMonth(),10)+direction;
 	var currentYear =parseInt(d.getFullYear(),10);
@@ -3438,16 +3455,16 @@ DatePicker.prototype.changeMonth = function(direction) {
 	this.config.srcElement.value=this.getFormatDate(currentYear,currentMonth,currentDay);
 	this.init(currentYear, currentMonth, currentDay);
 };
-DatePicker.prototype.changeDate = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.changeDate = function(yyyy, MM, dd) {
 	this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
 	if (this.validate(yyyy, MM, dd)) {
 		this.currentDate = new Date(yyyy, MM, dd);
 	}
 	this.hidden();
 };
-DatePicker.prototype.userValidate = null;
+Sparrow.datePicker.prototype.userValidate = null;
 
-DatePicker.prototype.getCurrentDate=function () {
+Sparrow.datePicker.prototype.getCurrentDate=function () {
 	var dateRegExp = this.config.format[this.config.currentFMT];
 	// 因为会出现1次错误一次正常情况
 	var dateGroup = dateRegExp.exec(this.config.srcElement.value);
@@ -3457,7 +3474,7 @@ DatePicker.prototype.getCurrentDate=function () {
 	return new Date(dateGroup[1],parseInt(dateGroup[2],10) - 1,dateGroup[3]);
 };
 
-DatePicker.prototype.validate = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.validate = function(yyyy, MM, dd) {
 	var result = true;
 	var selectedDate = null;
 	if (this.config.srcElement.value
@@ -5288,8 +5305,8 @@ Sparrow.upload = {
  * (file.multiFile == 0) { // 文件上传完毕后提交 editor.attach._submit(); } } };
  */
 //config.treeFrameId与显示列表框无关只有管理时的增删改有关
-function Node(id, pid, name, url, title, target, childCount, showCtrl, businessEntity,
-              icon) {
+Sparrow.treeNode=function(id, pid, name, url, title, target, childCount, showCtrl, businessEntity,
+                           icon) {
 
     this.id = id;
 
@@ -5325,9 +5342,9 @@ function Node(id, pid, name, url, title, target, childCount, showCtrl, businessE
 
     this._hasChild = childCount > 0;
 
-}
+};
 
-function SparrowTree(objName) {
+Sparrow.tree=function(objName) {
     this.config = {
 
         target: "_self",
@@ -5438,7 +5455,7 @@ function SparrowTree(objName) {
 
     this.aIndent = [];
 
-    this.root = new Node(-1);
+    this.root = new Sparrow.treeNode(-1);
 
     this.selectedNodeIndex = null;
 
@@ -5446,7 +5463,8 @@ function SparrowTree(objName) {
 
     this.completed = false;
 }
-SparrowTree.prototype={
+
+Sparrow.tree.prototype={
         resetIcon:function () {
         this.icon.root = this.config.imageDir + '/base.gif';
 
@@ -5482,11 +5500,11 @@ SparrowTree.prototype={
 
     },
 addBusinessEntity :function (id, pid, name, url, title, businessEntity) {
-    this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title,
+    this.aNodes[this.aNodes.length] = new Sparrow.treeNode(id, pid, name, url, title,
         "_self", undefined, true, businessEntity);
 },add:function (id, pid, name, url, title, target, childCount,
                                 showCtrl, businessEntity, icon) {
-    this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title,
+    this.aNodes[this.aNodes.length] = new Sparrow.treeNode(id, pid, name, url, title,
         target, childCount, showCtrl, businessEntity, icon);
 
 },
@@ -6560,33 +6578,6 @@ codeNodeClick: function (nodeIndex) {
 }
 };
 
-// If Push and pop is not implemented by the browser
-
-if (!Array.prototype.push) {
-
-    Array.prototype.push = function array_push() {
-
-        for (var i = 0; i < arguments.length; i++)
-
-            this[this.length] = arguments[i];
-
-        return this.length;
-
-    };
-}
-
-if (!Array.prototype.pop) {
-
-    Array.prototype.pop = function array_pop() {
-
-        lastElement = this[this.length - 1];
-
-        this.length = Math.max(this.length - 1, 0);
-
-        return lastElement;
-
-    };
-}
 
 function getForumType(t) {
     // prompt:"1系统菜单 2系统页面 3控件 4 CMS频道 5 CMS链接 6 CMS内容 7 CMS版块 8 论坛版块"

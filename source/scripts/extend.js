@@ -154,3 +154,21 @@ Array.prototype.remove = function (val) {
         this.splice(index, 1);
     }
 };
+
+// If Push and pop is not implemented by the browser
+
+if (!Array.prototype.push) {
+    Array.prototype.push = function array_push() {
+        for (var i = 0; i < arguments.length; i++)
+            this[this.length] = arguments[i];
+        return this.length;
+    };
+}
+
+if (!Array.prototype.pop) {
+    Array.prototype.pop = function array_pop() {
+        lastElement = this[this.length - 1];
+        this.length = Math.max(this.length - 1, 0);
+        return lastElement;
+    };
+}

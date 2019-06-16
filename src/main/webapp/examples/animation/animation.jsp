@@ -11,7 +11,7 @@
     <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
     <jsp:include page="${root_path}/examples/head.jsp"/>
     <script language="JavaScript" type="text/javascript">
-        require(['Sparrow','domReady'], function ($,dom) {
+        require(['sparrow','domReady!'], function ($,dom) {
             $("#white").animation(
                 "{height:'400px',width:'400px',top:'300px',left:'500px'}", 30);
         });

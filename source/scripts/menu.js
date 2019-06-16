@@ -3,7 +3,7 @@
  * 水平菜单 用索引对应 因为html 结构决定
  * position[child.id]=child.position(height etc...)
  * */
-function Menu(obj, position) {
+Sparrow.menu=function (obj, position) {
     this.config = // 菜单显示需要的常量配置
     {
         current_menu: null,
@@ -26,8 +26,8 @@ function Menu(obj, position) {
     this.id = "div" + this.obj.firstCharUpperCase();
     this.position = position ? position : "SIDE";// 位置默认右上角
     $.global(obj, this);
-}
-Menu.prototype.side = function () {
+};
+Sparrow.menu.prototype.side = function () {
     this.config.frameDiv = $("+div").s;
     this.config.frameDiv.onmouseover = function (e) {
         $.event(e).cancelBubble();
@@ -54,7 +54,7 @@ Menu.prototype.side = function () {
     menuHTML.push('</ul>');
     this.config.frameDiv.innerHTML = menuHTML.join("");
 };
-Menu.prototype.vertical = function () {
+Sparrow.menu.prototype.vertical = function () {
     if (!$(this.id)) {
         return;
     }
@@ -106,12 +106,12 @@ Menu.prototype.vertical = function () {
             }
         });
 };
-Menu.prototype.dispose = function () {
+Sparrow.menu.prototype.dispose = function () {
     if (this.config.frameDiv) {
         document.body.removeChild(this.config.frameDiv);
     }
 };
-Menu.prototype.hidden = function () {
+Sparrow.menu.prototype.hidden = function () {
     if (this.position === $.SIDE) {
         if (this.config.frameDiv) {
             this.config.frameDiv.style.display = "none";
@@ -134,7 +134,7 @@ Menu.prototype.hidden = function () {
     }
 };
 
-Menu.prototype.show = function (srcElement, parentMenu) {
+Sparrow.menu.prototype.show = function (srcElement, parentMenu) {
     this.config.parent = parentMenu;
     this.config.srcElement = srcElement;
     var scrollTop = 0;
@@ -158,13 +158,13 @@ Menu.prototype.show = function (srcElement, parentMenu) {
         this.config.brothers[i].hidden();
     }
 };
-Menu.prototype.itemClick = function (index) {
+Sparrow.menu.prototype.itemClick = function (index) {
     alert("click:" + this.config.menu[index].text);
 };
-Menu.prototype.itemMore = function (srcElement, index) {
+Sparrow.menu.prototype.itemMore = function (srcElement, index) {
     alert("more:" + this.config.menu[index].text);
 };
-Menu.prototype.horizontal=function () {
+Sparrow.menu.prototype.horizontal=function () {
     if (!$(this.id)) {
         return;
     }
@@ -240,7 +240,7 @@ Menu.prototype.horizontal=function () {
                     });
         });
 };
-Menu.prototype.init = function () {
+Sparrow.menu.prototype.init = function () {
     if (this.position === $.SIDE) {
         this.side();
     }

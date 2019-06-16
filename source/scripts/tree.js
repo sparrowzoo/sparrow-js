@@ -1,6 +1,6 @@
 //config.treeFrameId与显示列表框无关只有管理时的增删改有关
-function Node(id, pid, name, url, title, target, childCount, showCtrl, businessEntity,
-              icon) {
+Sparrow.treeNode=function(id, pid, name, url, title, target, childCount, showCtrl, businessEntity,
+                           icon) {
 
     this.id = id;
 
@@ -36,9 +36,9 @@ function Node(id, pid, name, url, title, target, childCount, showCtrl, businessE
 
     this._hasChild = childCount > 0;
 
-}
+};
 
-function SparrowTree(objName) {
+Sparrow.tree=function(objName) {
     this.config = {
 
         target: "_self",
@@ -149,7 +149,7 @@ function SparrowTree(objName) {
 
     this.aIndent = [];
 
-    this.root = new Node(-1);
+    this.root = new Sparrow.treeNode(-1);
 
     this.selectedNodeIndex = null;
 
@@ -157,7 +157,8 @@ function SparrowTree(objName) {
 
     this.completed = false;
 }
-SparrowTree.prototype={
+
+Sparrow.tree.prototype={
         resetIcon:function () {
         this.icon.root = this.config.imageDir + '/base.gif';
 
@@ -193,11 +194,11 @@ SparrowTree.prototype={
 
     },
 addBusinessEntity :function (id, pid, name, url, title, businessEntity) {
-    this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title,
+    this.aNodes[this.aNodes.length] = new Sparrow.treeNode(id, pid, name, url, title,
         "_self", undefined, true, businessEntity);
 },add:function (id, pid, name, url, title, target, childCount,
                                 showCtrl, businessEntity, icon) {
-    this.aNodes[this.aNodes.length] = new Node(id, pid, name, url, title,
+    this.aNodes[this.aNodes.length] = new Sparrow.treeNode(id, pid, name, url, title,
         target, childCount, showCtrl, businessEntity, icon);
 
 },
@@ -1271,33 +1272,6 @@ codeNodeClick: function (nodeIndex) {
 }
 };
 
-// If Push and pop is not implemented by the browser
-
-if (!Array.prototype.push) {
-
-    Array.prototype.push = function array_push() {
-
-        for (var i = 0; i < arguments.length; i++)
-
-            this[this.length] = arguments[i];
-
-        return this.length;
-
-    };
-}
-
-if (!Array.prototype.pop) {
-
-    Array.prototype.pop = function array_pop() {
-
-        lastElement = this[this.length - 1];
-
-        this.length = Math.max(this.length - 1, 0);
-
-        return lastElement;
-
-    };
-}
 
 function getForumType(t) {
     // prompt:"1系统菜单 2系统页面 3控件 4 CMS频道 5 CMS链接 6 CMS内容 7 CMS版块 8 论坛版块"

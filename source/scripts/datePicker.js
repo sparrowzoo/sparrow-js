@@ -1,4 +1,4 @@
-function DatePicker(pickerId) {
+Sparrow.datePicker=function(pickerId) {
 	var dateFormat = Object();
 	dateFormat["yyyy年MM月dd日"] = new RegExp("^(\\d{4})年(\\d{2})月(\\d{2})日$",
 			"ig");
@@ -22,14 +22,14 @@ function DatePicker(pickerId) {
 	};
 }
 // 判断是否为闰年年
-DatePicker.prototype.isLeapYear = function(year) {
+Sparrow.datePicker.prototype.isLeapYear = function(year) {
 	if (0 === year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
 		return true;
 	}
 	return false;
 };
 // 闰年二月为29天
-DatePicker.prototype.getMaxDaysOfMonth = function(year, month) {
+Sparrow.datePicker.prototype.getMaxDaysOfMonth = function(year, month) {
 	if (month === -1) {
 		month = 11;
 	}
@@ -39,7 +39,7 @@ DatePicker.prototype.getMaxDaysOfMonth = function(year, month) {
 	}
 	return maxDaysOfMonth;
 };
-DatePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
 	if (typeof(MM)=='undefined'||typeof(dd)=='undefined') {
 		var dateRegExp = this.config.format[this.config.currentFMT];
 		// 因为会出现1次错误一次正常情况
@@ -71,7 +71,7 @@ DatePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
 };
 
 // 初始化日期
-DatePicker.prototype.init = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.init = function(yyyy, MM, dd) {
 	if (!yyyy) {
 		var currentDateTime = this.currentDate;
 		yyyy = currentDateTime.getFullYear();
@@ -166,10 +166,10 @@ DatePicker.prototype.init = function(yyyy, MM, dd) {
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 		this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
 };
-DatePicker.prototype.show = function() {
+Sparrow.datePicker.prototype.show = function() {
 	this.pickerDiv.s.style.display = "block";
 };
-DatePicker.prototype.hidden = function() {
+Sparrow.datePicker.prototype.hidden = function() {
 	yyyy = this.currentDate.getFullYear();
 	MM = this.currentDate.getMonth();
 	dd = this.currentDate.getDate();
@@ -179,7 +179,7 @@ DatePicker.prototype.hidden = function() {
 	this.pickerDiv.s.style.display = "none";
 };
 // 初始化 年
-DatePicker.prototype.initYear = function(yyyy) {
+Sparrow.datePicker.prototype.initYear = function(yyyy) {
 	var startYear = yyyy - yyyy % 10;
 	if (startYear < 1900) {
 		startYear = 1900;
@@ -220,7 +220,7 @@ DatePicker.prototype.initYear = function(yyyy) {
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 };
 // 初始化月
-DatePicker.prototype.initMonth = function(yyyy,MM) {
+Sparrow.datePicker.prototype.initMonth = function(yyyy,MM) {
 	if(!MM){
 		MM=this.getCurrentDate().getMonth();
 	}
@@ -255,7 +255,7 @@ DatePicker.prototype.initMonth = function(yyyy,MM) {
 	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 	this.config.srcElement.value = this.getFormatDate(yyyy,MM);
 };
-DatePicker.prototype.changeMonth = function(direction) {
+Sparrow.datePicker.prototype.changeMonth = function(direction) {
 	var d=this.getCurrentDate();
 	var currentMonth =parseInt(d.getMonth(),10)+direction;
 	var currentYear =parseInt(d.getFullYear(),10);
@@ -270,16 +270,16 @@ DatePicker.prototype.changeMonth = function(direction) {
 	this.config.srcElement.value=this.getFormatDate(currentYear,currentMonth,currentDay);
 	this.init(currentYear, currentMonth, currentDay);
 };
-DatePicker.prototype.changeDate = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.changeDate = function(yyyy, MM, dd) {
 	this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
 	if (this.validate(yyyy, MM, dd)) {
 		this.currentDate = new Date(yyyy, MM, dd);
 	}
 	this.hidden();
 };
-DatePicker.prototype.userValidate = null;
+Sparrow.datePicker.prototype.userValidate = null;
 
-DatePicker.prototype.getCurrentDate=function () {
+Sparrow.datePicker.prototype.getCurrentDate=function () {
 	var dateRegExp = this.config.format[this.config.currentFMT];
 	// 因为会出现1次错误一次正常情况
 	var dateGroup = dateRegExp.exec(this.config.srcElement.value);
@@ -289,7 +289,7 @@ DatePicker.prototype.getCurrentDate=function () {
 	return new Date(dateGroup[1],parseInt(dateGroup[2],10) - 1,dateGroup[3]);
 };
 
-DatePicker.prototype.validate = function(yyyy, MM, dd) {
+Sparrow.datePicker.prototype.validate = function(yyyy, MM, dd) {
 	var result = true;
 	var selectedDate = null;
 	if (this.config.srcElement.value
