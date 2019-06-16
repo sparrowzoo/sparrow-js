@@ -1,3 +1,23 @@
+//For CommonJS and CommonJS-like
+// CMD:Common Module Definition
+//Asynchronous Modules Definition
+//http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition
+//http://www.commonjs.org/
+(function (global, factory) {
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = global.document ?
+            factory(global, true) :
+            function (w) {
+                if (!w.document) {
+                    throw new Error("Sparrow requires a window with a document");
+                }
+                return factory(w);
+            };
+    } else {
+        factory(global);
+    }
+}(typeof window !== "undefined" ? window : this, function (window, noGlobal) {
+
 String.prototype.trim = function () {
     return this.replace(/(^\s*)|(\s*$)/g, "");
 };
@@ -154,25 +174,6 @@ Array.prototype.remove = function (val) {
         this.splice(index, 1);
     }
 };
-//For CommonJS and CommonJS-like
-// CMD:Common Module Definition
-//Asynchronous Modules Definition
-//http://wiki.commonjs.org/wiki/Modules/AsynchronousDefinition
-//http://www.commonjs.org/
-(function (global, factory) {
-    if (typeof module === "object" && typeof module.exports === "object") {
-        module.exports = global.document ?
-            factory(global, true) :
-            function (w) {
-                if (!w.document) {
-                    throw new Error("jQuery requires a window with a document");
-                }
-                return factory(w);
-            };
-    } else {
-        factory(global);
-    }
-}(typeof window !== "undefined" ? window : this, function (window, noGlobal) {
 /**
  * @return {null}
  * name.
@@ -2912,8 +2913,6 @@ Sparrow.prototype.progressbar = function (callback, config) {
     };
 
 };
-return Sparrow;
-}));
 /*
  * 垂直菜单 menu 与child的对应关系是以 menu.id+_child=child.id 对应
  * 水平菜单 用索引对应 因为html 结构决定
@@ -6605,3 +6604,63 @@ function getForumType(t) {
     }
     return forumTypeName;
 }
+Sparrow.dispatcher = {
+    builder: {
+        id: "id",//控件标签 id
+        delegate: "delegate",//事件委托
+        api: "api",//ajax请求的api
+        strategy: "strategy",//策略 控件的 value
+        eventName: "eventName"//事件的名称 默认为onclick
+    },
+    commandAdapter: {},
+    ctrlIdEventMap: {},
+    eventRegistry: [],
+    register: function (eventConfig) {
+        this.eventRegistry.push(eventConfig);
+    },
+    controller: function (e, srcElement) {
+        var commandKey = srcElement.id + "_" + srcElement.value;
+        var builder = this.commandAdapter[commandKey];
+
+        var delegate = null;
+        if (builder != null) {
+            delegate = builder.delegate;
+        }
+
+        if (delegate == null) {
+            builder = this.commandAdapter[srcElement.id];
+            if (builder != null) {
+                delegate = builder.delegate;
+            }
+        }
+        if (builder != null && delegate != null) {
+            if (builder.api) {
+                $.ajax.json(builder.api, builder.parameter, delegate, srcElement);
+            } else {
+                delegate(e, srcElement);
+            }
+        }
+    },
+    bind: function () {
+        for (var i = 0; i < this.eventRegistry.length; i++) {
+            var builder = this.eventRegistry[i];
+            var strategy = builder.strategy;
+            var eventName = builder.eventName;
+            var commandKey = builder.id + (strategy ? "_" + strategy : "");
+            this.commandAdapter[commandKey] = builder;
+            this.ctrlIdEventMap[builder.id] = eventName ? eventName : "onclick";
+        }
+        for (ctrlId in this.ctrlIdEventMap) {
+            $("#" + ctrlId).bind(this.ctrlIdEventMap[ctrlId], function (e) {
+                Sparrow.dispatcher.controller(e, $.event(e).srcElement)
+            });
+        }
+    }
+};
+if ( typeof define === "function" && define.amd ) {
+    define( "Sparrow", [], function() {
+        return Sparrow;
+    });
+}
+return Sparrow;
+}));

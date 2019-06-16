@@ -9,7 +9,7 @@
             factory(global, true) :
             function (w) {
                 if (!w.document) {
-                    throw new Error("jQuery requires a window with a document");
+                    throw new Error("Sparrow requires a window with a document");
                 }
                 return factory(w);
             };

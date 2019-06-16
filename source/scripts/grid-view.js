@@ -7,7 +7,7 @@ Sparrow.gridView = {
         return $(this.id);
     },
     init: function () {
-        var hdnGridResult = $("#.hdnGridResult");
+        var hdnGridResult = $("#hdnGridResult");
         if (hdnGridResult != null) {
             if (!$.isNullOrEmpty(hdnGridResult.attr("gridViewId"))) {
                 this.id = hdnGridResult.attr("gridViewId");

@@ -25,8 +25,8 @@ var paths = {
     },
     scripts_dev: {
         src: [
-            'source/scripts/extend.js',
             'source/scripts/header.js',
+            'source/scripts/extend.js',
             'source/scripts/selector.js',
             'source/scripts/browser.js',
             'source/scripts/container.js',
@@ -47,20 +47,25 @@ var paths = {
             'source/scripts/message.js',
             'source/scripts/animation.js',
             'source/scripts/progressbar.js',
-            'source/scripts/tail.js',
             'source/scripts/menu.js',
             //'src/scripts/image-switch.js',
             //'src/scripts/ImageCopper.js',
             //'src/scripts/marquee.js',
             'source/scripts/sparrowDatePicker.js',
             'source/scripts/sparrowEditor.js',
-            'source/scripts/sparrowTree.js'
+            'source/scripts/sparrowTree.js',
+            'source/scripts/sparrowDispatcher.js',
+            'source/scripts/tail.js'
         ],
         dest: 'src/main/webapp/assets/scripts-all/'
     },
     scripts_min: {
         src: ['src/main/webapp/assets/scripts-all/sparrow.js'],
         dest: 'src/main/webapp/assets/scripts'
+    },
+    requirejs: {
+        src: ['node_modules/requirejs/require.js','node_modules/requirejs-domready/domReady.js'],
+        dest: 'src/main/webapp/assets/scripts-all'
     }
 };
 
@@ -108,6 +113,12 @@ function images() {
         .pipe(gulp.dest(paths.images.dest));
 }
 
+function requirejs() {
+    return gulp.src(paths.requirejs.src)
+        .pipe(gulp.dest(paths.requirejs.dest));
+}
+
+
 function medias() {
     return gulp.src(paths.medias.src)
         .pipe(gulp.dest(paths.medias.dest));
@@ -142,7 +153,7 @@ exports.watch = plugins.watch;
  *  [10:21:42] Did you forget to signal async completion?
  *  use gulp.series is ok
  */
-var build_dev = gulp.series(clean, styles, purecss, scripts_dev, images, medias);
+var build_dev = gulp.series(clean, styles, purecss, scripts_dev,requirejs,images, medias);
 
 var build = gulp.series(scripts);
 

@@ -7,9 +7,12 @@
 <!--[if gt IE 8]><!-->
 <j:style href="$resource/assets/styles/layouts.css"/>
 <!--<![endif]-->
-<j:script src="$resource/assets/scripts-all/sparrow.js"/>
+<j:script src="$resource/assets/scripts-all/require.js"/>
 <script type="text/javascript">
-    document.ready(function () {
-        new Menu("verticalMenu", $.VERTICAL).init();
+    requirejs.config({
+        baseUrl: "/assets/scripts-all",
+        paths: {
+           // Sparrow: 'sparrow'
+        }
     });
 </script>
