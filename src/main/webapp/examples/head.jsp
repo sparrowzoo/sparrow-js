@@ -8,3 +8,11 @@
 <j:style href="$resource/assets/styles/layouts.css"/>
 <!--<![endif]-->
 <j:script src="$resource/assets/scripts-all/require.js"/>
+<script type="text/javascript">
+    requirejs.config({
+        baseUrl: "/assets/scripts-all",
+        paths: {
+           // Sparrow: 'sparrow'
+        }
+    });
+</script>

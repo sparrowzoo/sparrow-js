@@ -54,6 +54,7 @@ var paths = {
             'source/scripts/sparrowDatePicker.js',
             'source/scripts/sparrowEditor.js',
             'source/scripts/sparrowTree.js',
+            'source/scripts/sparrowDispatcher.js',
             'source/scripts/tail.js'
         ],
         dest: 'src/main/webapp/assets/scripts-all/'
