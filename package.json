@@ -21,7 +21,8 @@
     "gulp-rename": "^1.4.0",
     "gulp-uglify": "^3.0.1",
     "purecss": "^1.0.0",
-    "requirejs": "^2.3.6"
+    "requirejs": "^2.3.6",
+    "requirejs-domready": "^2.0.3"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",

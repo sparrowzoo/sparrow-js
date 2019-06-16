@@ -63,7 +63,7 @@ var paths = {
         dest: 'src/main/webapp/assets/scripts'
     },
     requirejs: {
-        src: 'node_modules/requirejs/require.js',
+        src: ['node_modules/requirejs/require.js','node_modules/requirejs-domready/domReady.js'],
         dest: 'src/main/webapp/assets/scripts-all'
     }
 };
