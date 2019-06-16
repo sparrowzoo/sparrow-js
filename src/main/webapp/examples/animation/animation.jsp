@@ -10,6 +10,14 @@
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
     <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
     <jsp:include page="${root_path}/examples/head.jsp"/>
+    <script language="JavaScript" type="text/javascript">
+        require(['Sparrow'], function ($) {
+            alert( "helle {0}".format("zhangsan"));
+            document.ready(function () {
+                new Menu("verticalMenu", $.VERTICAL).init();
+            });
+        });
+    </script>
 </head>
 
 <body>
@@ -31,9 +39,4 @@
     </div>
 </div>
 </body>
-
-<script type="text/javascript">
-    $("#white").animation(
-        "{height:'400px',width:'400px',top:'300px',left:'500px'}", 30);
-</script>
 </html>

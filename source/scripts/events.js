@@ -1,10 +1,10 @@
-Sparrow.event = function (src) {
+Sparrow.event = function (e) {
     if (!(this instanceof Sparrow.event)) {
-        return new Sparrow.event(src);
+        return new Sparrow.event(e);
     }
-    if (src) {
-        this.originalEvent = src;
-        this.type = src.type;
+    if (e) {
+        this.originalEvent = e;
+        this.type = e.type;
         this.e = window.event || this.originalEvent;
         this.srcElement = this.e.srcElement || this.e.target;
         this.toElement = this.e.toElement || this.e.relatedTarget;

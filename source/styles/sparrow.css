@@ -29,14 +29,6 @@ html {
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
 }
-body {
-    text-align: center;
-    background-image:url(../images/background.png);
-    color: #333333;
-    font-family:"Microsoft Yahei","微软雅黑" !important;
-    font-size: 14px;
-    background-color: #ffffff;
-}
 
 form {
     margin: 0;padding: 0;
@@ -71,14 +63,6 @@ img {
     /*- iE7.0中自带的-ms-interpolation-mode属性可以解决缩放失真问题*/
 }
 
-button,
-input,
-select,
-textarea {
-    margin: 0;
-    font-size: 100%;
-    vertical-align: middle;
-}
 
 
 p{margin-top:3px;margin-bottom:0;}
@@ -221,41 +205,18 @@ table {border-collapse: collapse;empty-cells: show;}
 .content ul li a.link{width:70%;overflow:hidden;float:left;height:25px;line-height:25px;}
 .content ul li span.text{width:40px;float:right;text-align:right;}
 
-/*标签样式 全局使用*/
-.tag-title {border-bottom: #ccc 1px solid;height: 20px;line-height: 20px;}
-.tag-content {padding: 5px;}
-.tag-content .tag {background: #DEF2FE;color: #5B5B5B;margin:3px;display:inline-block;overflow:hidden;}
-
 
 /*--tab公共样式 规格样式*/
-.tab{border:#ccc 1px solid;overflow:hidden;}
-/*----------标题样式--------------------------*/
-.tab .tab-title{width:100%;font-size:12pt;font-weight:bold;margin:0;padding:0;height:50px;padding-left:5px;}
-.tab .tab-title ul{width:100%;margin:0;padding:0;border:0;overflow:hidden;}
-.tab .tab-title ul li{float:left;line-height:30px;list-style: none;margin:10px 5px 10px 5px;}
-.tab .tab-title ul li a{line-height:28px;padding:0 5px 0 5px;border:#ca151d 1px solid;text-align:center;display:block;margin:0;}
-.tab .tab-title ul li.select{background:#ca151d;}
-.tab .tab-title ul li.select a:hover{background:#ca151d;}
-.tab .tab-title ul li.select a span{color:#ffffff !important;font-weight:bold;font-size:12pt;}
-.tab .tab-title ul li.noselect a{border:#ccc 1px solid;}
-.tab .tab-title ul li.noselect a:hover{background:#ca151d;border:#ca151d 1px solid;}
-.tab .tab-title ul li.noselect{background:#fff;}
-.tab .tab-title ul li.noselect a span{color:#000;font-weight:normal;font-size:12pt;}
-.tab .tab-title ul li.noselect a:hover span{color:#fff;font-weight:bold;}
-.tab .tab-title ul li.more{float:right;width:80px;}
-.tab .tab-title ul li.more a{width:80px;display:block;margin:0;text-align:center;font-size:10pt;border:none;}
-.tab .tab-title ul li.more a:hover{background:#ca151d;line-height:30px;color:#fff;}
-.tab .tab-title ul li.more a span{display:block;text-align:right;padding-left:10px;padding-right:10px;}
-.tab .tab-title ul li.index{background:#ca151d}
-/*-----------------标题样式定义结束--------------*/
+.tab{border:#ccc 1px solid;overflow:hidden;text-align: left;}
+.tab .more{float: right;}
 /*-----------------内容定义开始-----------------*/
-.tab .tab-content{margin:0;width:100%;padding:2px 10px 0 10px;overflow:hidden;}
+.tab .tab-content{margin:0;width:100%;padding:2px 10px 0 10px;overflow:hidden;text-align: left !important;}
 .tab .tab-content div.none{display: none;overflow:hidden;}
 .tab .tab-content div.block{display: block;text-align:center;width:98%;overflow:hidden;}
-.tab .tab-content ul.items{line-height:25px;list-style:disc;overflow:hidden;margin:0;padding:0;width:96%;}
-.tab .tab-content ul li.item{float:left;width:46%;padding:1px;margin-left:15px;}
-.tab .tab-content ul li a.link{float:left;text-align:left;overflow:hidden;height:25px;line-height:25px;display:inline-block;width:70%;}
-.tab .tab-content ul li span.text{float:right;text-align:right;padding-right:20px;}
+.tab .tab-content .items{line-height:25px;list-style:disc;overflow:hidden;margin:0;padding:0;width:96%;}
+.tab .tab-content .item{float:left;width:46%;padding:1px;margin-left:15px;}
+.tab .tab-content .item a.link{float:left;text-align:left;overflow:hidden;height:25px;line-height:25px;display:inline-block;width:70%;}
+.tab .tab-content .item span.text{float:right;text-align:right;padding-right:20px;}
 
 /*图片轮播效果 count效果因为不一致没有加入到公共样式中*/
 .photo-tab {position: relative;background: #fff;border-radius:2px;border:1px solid #ccc;overflow:hidden;margin-bottom:10px;text-align:center;}

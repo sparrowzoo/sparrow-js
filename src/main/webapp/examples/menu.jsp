@@ -33,6 +33,8 @@
             </li>
 
             <li class="pure-menu-item"><a href="${root_path}/examples/animation/play.jsp" class="pure-menu-link">play</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/examples/animation/tabs.jsp" class="pure-menu-link">tabs</a></li>
+
         </ul>
     </div>
 
