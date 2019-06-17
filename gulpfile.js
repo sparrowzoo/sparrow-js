@@ -25,7 +25,7 @@ var paths = {
     },
     scripts_dev: {
         src: [
-            'source/scripts/header.js',
+            // 'source/scripts/header.js',
             'source/scripts/extend.js',
             'source/scripts/selector.js',
             'source/scripts/browser.js',
@@ -55,7 +55,7 @@ var paths = {
             'source/scripts/sparrowEditor.js',
             'source/scripts/sparrowTree.js',
             'source/scripts/sparrowDispatcher.js',
-            'source/scripts/tail.js'
+            // 'source/scripts/tail.js'
         ],
         dest: 'src/main/webapp/assets/scripts-all/'
     },

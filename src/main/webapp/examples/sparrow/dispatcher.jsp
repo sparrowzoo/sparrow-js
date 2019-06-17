@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
-    <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
+    <title>Dispatcher 请求分发 Sparrow JS Framework</title>
     <jsp:include page="${root_path}/examples/head.jsp"/>
     <script language="JavaScript" type="text/javascript">
         require(['sparrow', 'domReady'], function ($, dom) {
@@ -37,7 +37,6 @@
                 },//事件委托
                 //api: "api",//ajax请求的api
             });
-
             $.dispatcher.bind();
         });
     </script>
