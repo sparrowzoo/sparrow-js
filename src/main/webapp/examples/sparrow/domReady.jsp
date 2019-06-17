@@ -20,7 +20,6 @@
             console.log("dom ready -"+dom);
 
             console.log("helle {0}".format(" sparrow !"));
-            new Menu("verticalMenu", $.VERTICAL).init();
         });
 
         document.ready(function () {

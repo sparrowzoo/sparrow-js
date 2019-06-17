@@ -79,9 +79,9 @@ Sparrow.file = {
     // 获取文件名
     getFileName: function (fileName) {
         fileName = $.browser.getUrlWithoutParameter(fileName);
-        if (fileName.indexOf("\\") != -1) {
+        if (fileName.indexOf("\\") !== -1) {
             return fileName.substring(fileName.lastIndexOf("\\") + 1);
-        } else if (fileName.indexOf('/') != -1) {
+        } else if (fileName.indexOf('/') !== -1) {
             return fileName.substring(fileName.lastIndexOf("/") + 1);
         } else {
             return fileName;

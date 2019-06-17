@@ -15,4 +15,8 @@
            // Sparrow: 'sparrow'
         }
     });
+
+    require(['sparrow','domReady!'], function ($,dom) {
+        new $.menu("verticalMenu", $.VERTICAL).init();
+    });
 </script>

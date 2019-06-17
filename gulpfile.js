@@ -25,7 +25,7 @@ var paths = {
     },
     scripts_dev: {
         src: [
-            // 'source/scripts/header.js',
+            'source/scripts/header.js',
             'source/scripts/extend.js',
             'source/scripts/selector.js',
             'source/scripts/browser.js',
@@ -51,21 +51,21 @@ var paths = {
             //'src/scripts/image-switch.js',
             //'src/scripts/ImageCopper.js',
             //'src/scripts/marquee.js',
-            'source/scripts/sparrowDatePicker.js',
+            'source/scripts/datePicker.js',
             'source/scripts/sparrowEditor.js',
-            'source/scripts/sparrowTree.js',
-            'source/scripts/sparrowDispatcher.js',
-            // 'source/scripts/tail.js'
+            'source/scripts/tree.js',
+            'source/scripts/dispatcher.js',
+            'source/scripts/tail.js'
         ],
-        dest: 'src/main/webapp/assets/scripts-all/'
+        dest: 'src/main/webapp/assets/scripts-dev/'
     },
     scripts_min: {
-        src: ['src/main/webapp/assets/scripts-all/sparrow.js'],
+        src: ['src/main/webapp/assets/scripts-dev/sparrow.js','node_modules/requirejs/require.js','node_modules/requirejs-domready/domReady.js'],
         dest: 'src/main/webapp/assets/scripts'
     },
     requirejs: {
         src: ['node_modules/requirejs/require.js','node_modules/requirejs-domready/domReady.js'],
-        dest: 'src/main/webapp/assets/scripts-all'
+        dest: 'src/main/webapp/assets/scripts-dev'
     }
 };
 
@@ -87,10 +87,6 @@ function styles() {
         .pipe(plugins.less())
         .pipe(plugins.cleanCss())
         // pass in options to the stream
-        // .pipe(plugins.rename({
-        //     basename: 'sparrow',
-        //     suffix: '-min'
-        // }))
         .pipe(gulp.dest(paths.styles.dest));
 }
 
@@ -102,9 +98,11 @@ function purecss() {
 
 function scripts() {
     return gulp.src(paths.scripts_min.src)
-        .pipe(plugins.concat('sparrow-min.js'))
         .pipe(plugins.babel())
         .pipe(plugins.uglify())
+        // .pipe(plugins.rename({
+        //     suffix: '-min'
+        // }))
         .pipe(gulp.dest(paths.scripts_min.dest));
 }
 
@@ -125,7 +123,7 @@ function medias() {
 }
 
 function scripts_dev() {
-    return gulp.src(paths.scripts_dev.src, {base: 'source/script-all'})
+    return gulp.src(paths.scripts_dev.src, {base: 'source/script-dev'})
         .pipe(plugins.concat('sparrow.js'))
         .pipe(gulp.dest(paths.scripts_dev.dest));
 }

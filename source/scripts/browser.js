@@ -18,25 +18,25 @@ Sparrow.browser = {
         return navigator.userAgent.search(/MSIE/img) != -1;
     }),
     opera: $(function () {
-        return navigator.userAgent.search(/Opera/img) != -1;
+        return navigator.userAgent.search(/Opera/img) !== -1;
     }),
     firefox: $(function () {
-        return navigator.userAgent.search(/Firefox/img) != -1;
+        return navigator.userAgent.search(/Firefox/img) !== -1;
     }),
     google: $(function () {
-        return navigator.userAgent.search(/Chrome/img) != -1;
+        return navigator.userAgent.search(/Chrome/img) !== -1;
     }),
     version: $(function () {
-        if (navigator.userAgent.search(/MSIE/img) != -1) {
+        if (navigator.userAgent.search(/MSIE/img) !== -1) {
             navigator.userAgent.match(/MSIE\b\s*([0-9\.0-9]+);/img);
             return RegExp.$1;
-        } else if (navigator.userAgent.search(/Opera/img) != -1) {
+        } else if (navigator.userAgent.search(/Opera/img) !== -1) {
             navigator.userAgent.match(/Version\/([0-9\.]+)/img);
             return RegExp.$1;
-        } else if (navigator.userAgent.search(/Firefox/img) != -1) {
+        } else if (navigator.userAgent.search(/Firefox/img) !== -1) {
             navigator.userAgent.match(/Firefox\/([0-9\.]+)/img);
             return RegExp.$1;
-        } else if (navigator.userAgent.search(/Chrome/img) != -1) {
+        } else if (navigator.userAgent.search(/Chrome/img) !== -1) {
             navigator.userAgent.search(/Chrome\/([0-9\.]+)/img);
             return RegExp.$1;
         }

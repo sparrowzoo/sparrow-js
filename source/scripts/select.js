@@ -21,13 +21,14 @@ Sparrow.prototype.existItem = function (srcOption) {
 Sparrow.prototype.addItemToSelect = function (descSelect) {
     var sparrowDescSelect = $(descSelect);
     for (var i = 0; i < this.s.options.length; i += 1) {
-        if (srcSelect.options[i].selected) {
-            var value = this.s.options[i].value;
-            var text = this.s.options[i].innerHTML;
-            var newoption = new Option(text, value);
-            if (!sparrowDescSelect.existItem(this.s.options[i]))
-                descSelect.options.add(newoption);
+        if (!srcSelect.options[i].selected) {
+            continue;
         }
+        var value = this.s.options[i].value;
+        var text = this.s.options[i].innerHTML;
+        var newoption = new Option(text, value);
+        if (!sparrowDescSelect.existItem(this.s.options[i]))
+            descSelect.options.add(newoption);
     }
 };
 Sparrow.prototype.addAllItemToSelect = function (descSelect) {
@@ -66,10 +67,10 @@ Sparrow.prototype.upDown = function (direction) {
     if (this.s.selectedIndex < 0)
         return;
     if (direction < 0) {
-        if (this.s.selectedIndex == 0)
+        if (this.s.selectedIndex === 0)
             return;
     } else {
-        if (this.s.selectedIndex == this.s.options.length - 1)
+        if (this.s.selectedIndex === this.s.options.length - 1)
             return;
     }
     var srcOption = this.s.options[this.s.selectedIndex];

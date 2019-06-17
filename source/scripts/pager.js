@@ -5,7 +5,7 @@ Sparrow.page = {
             .trim());
         if (defPageIndex <= 0 || defPageIndex > pageCount) {
             $.message('超出页码范围', srcElement);
-        } else if (defPageIndex == currentPageIndex) {
+        } else if (defPageIndex === currentPageIndex) {
             $.message('当前页即是目标页', srcElement);
         } else {
             window.location.href = pageFormat.replace("$pageIndex", defPageIndex);
@@ -25,7 +25,7 @@ Sparrow.page = {
         var elementArray = $("divPage").getElementsByTagName("a");
         var nextLink = null;
         for (var i = 0; i < elementArray.length; i++) {
-            if (elementArray[i].innerHTML == "下一页") {
+            if (elementArray[i].innerHTML === "下一页") {
                 nextLink = elementArray[i].href;
                 break;
             }

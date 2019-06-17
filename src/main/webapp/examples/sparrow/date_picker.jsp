@@ -10,6 +10,15 @@
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
     <title>Sparrow DatePicker &ndash; Sparrow JS Framework</title>
     <jsp:include page="${root_path}/examples/head.jsp"/>
+
+    <script language="JavaScript" type="text/javascript">
+        var datePicker=null;
+        require(['sparrow','domReady'], function ($,dom) {
+             datePicker= new $.datePicker("datePicker");
+                datePicker.config.srcElement = $("txtDatePicker");
+                datePicker.init();
+        });
+    </script>
 </head>
 
 <body>
@@ -30,11 +39,4 @@
 </div>
 </body>
 
-<script type="text/javascript">
-    var datePicker = new DatePicker("datePicker");
-    window.onload = function () {
-        datePicker.config.srcElement = $("txtDatePicker");
-        datePicker.init();
-    }
-</script>
 </html>

@@ -21,7 +21,7 @@ Sparrow.gridView = {
         return checkBox.parentNode.cellIndex;
     },
     allCheckClick: function (allCheckBox) {
-        var checkBoxList = $("name." + this.id);
+        var checkBoxList = $("&" + this.id);
         for (var i = 0; i < checkBoxList.length; i += 1) {
             var checkBox = checkBoxList[i];
             checkBox.checked = allCheckBox.checked;
@@ -32,7 +32,7 @@ Sparrow.gridView = {
             $(allCheckBox).checked = false;
         } else {
             var isAllCheck = true;
-            var checkBoxList = $("name." + this.id);
+            var checkBoxList = $("&" + this.id);
             for (var i = 0; i < checkBoxList.length; i++) {
                 if (checkBoxList[i].checked === false)
                     isAllCheck = false;
@@ -45,7 +45,7 @@ Sparrow.gridView = {
     mustSelect: function (message) {
         var selectedId = [];
         // var gridViewRowCount=this.getTable().rows.length;
-        var checkBoxList = $("name." + this.id);
+        var checkBoxList = $("&" + this.id);
         var selectId = null;
         for (var i = 0; i < checkBoxList.length; i += 1) {
             var checkBox = checkBoxList[i];
@@ -66,19 +66,18 @@ Sparrow.gridView = {
                 $.message("please define the json 'lang.message.noSelectRecord'!");
             }
             return false;
+        }
+        if (selectedId.length === 1) {
+            selectedId.pop();
+            selectedId.push(selectId);
+        }
+        if (!message) {
+            return selectedId;
         } else {
-            if (selectedId.length === 1) {
-                selectedId.pop();
-                selectedId.push(selectId);
-            }
-            if (!message) {
+            if (window.confirm(message)) {
                 return selectedId;
             } else {
-                if (window.confirm(message)) {
-                    return selectedId;
-                } else {
-                    return false;
-                }
+                return false;
             }
         }
     },
@@ -155,7 +154,7 @@ Sparrow.table.prototype = {
     },
     _initRow: function (row, i) {
         row.style.cssText = table.tr[i].cssText;
-        if (table.tr[i].className && table.tr[i].className != "")
+        if (table.tr[i].className && table.tr[i].className !== "")
             row.className = table.tr[i].className;
         for (var j = 0; j < this.tr[i].td.length; j++) {
             var cell = row.insertCell(-1);

@@ -12,7 +12,7 @@ Sparrow.dispatcher = {
     register: function (eventConfig) {
         this.eventRegistry.push(eventConfig);
     },
-    controller: function (e, srcElement) {
+    dispatcher: function (e, srcElement) {
         var commandKey = srcElement.id + "_" + srcElement.value;
         var builder = this.commandAdapter[commandKey];
 

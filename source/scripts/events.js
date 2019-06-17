@@ -55,10 +55,10 @@ Sparrow.event.prototype = {
     },
     drags: function () {
         try {
-            if (this.srcElement.className.indexOf("drag") != -1) {
-                if (this.srcElement.className == "drag-p") {
+            if (this.srcElement.className.indexOf("drag") !== -1) {
+                if (this.srcElement.className === "drag-p") {
                     this.srcElement = this.srcElement.parentNode;
-                } else if (this.srcElement.className == "drag-pp") {
+                } else if (this.srcElement.className === "drag-pp") {
                     this.srcElement = this.srcElement.parentNode.parentNode;
                 } else {
                     this.srcElement = null;
