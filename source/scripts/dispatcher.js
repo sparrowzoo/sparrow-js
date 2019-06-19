@@ -46,7 +46,7 @@ Sparrow.dispatcher = {
         }
         for (ctrlId in this.ctrlIdEventMap) {
             $("#" + ctrlId).bind(this.ctrlIdEventMap[ctrlId], function (e) {
-                Sparrow.dispatcher.controller(e, $.event(e).srcElement)
+                Sparrow.dispatcher.dispatcher(e, $.event(e).srcElement)
             });
         }
     }
