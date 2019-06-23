@@ -59,6 +59,9 @@
             <li class="pure-menu-item">
                 <a href="${root_path}/examples/sparrow/jsonview.jsp" class="pure-menu-link">json 格式化</a>
             </li>
+            <li class="pure-menu-item">
+                <a href="${root_path}/examples/sparrow/jsonp-demo.jsp" class="pure-menu-link">jsonp</a>
+            </li>
         </ul>
     </div>
 </div>

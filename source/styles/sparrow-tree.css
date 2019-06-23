@@ -188,3 +188,10 @@
     background: #ffffff;
     display: inline;
 }
+
+.pure-order-menu{
+  text-align:left;background:#ffffff;
+}
+.pure-order-menu-heading{
+    cursor: pointer;
+}

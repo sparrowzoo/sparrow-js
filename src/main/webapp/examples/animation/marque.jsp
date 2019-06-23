@@ -22,6 +22,14 @@
             text-align: left;
         }
     </style>
+
+    <script type="application/javascript">
+
+        require(['sparrow','domReady!'], function ($,dom) {
+            $("#d").marque(0, 2, 50);
+        });
+    </script>
+
 </head>
 
 <body>
@@ -107,9 +115,7 @@
 
     </div>
 </div>
-<script type="application/javascript" language="JavaScript">
-    $("#d").marque(0, 2, 50);
-</script>
+
 </body>
 
 </html>

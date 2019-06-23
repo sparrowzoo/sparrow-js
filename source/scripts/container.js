@@ -5,3 +5,6 @@ Sparrow.global = function (key, obj) {
     }
     this.container[key] = obj;
 };
+Sparrow.remove=function (key) {
+  delete this.container[key];
+};

@@ -7,10 +7,10 @@
 <!--[if gt IE 8]><!-->
 <j:style href="$resource/assets/styles/layouts.css"/>
 <!--<![endif]-->
-<j:script src="$resource/assets/scripts-all/require.js"/>
+<j:script src="$resource/assets/scripts-dev/require.js"/>
 <script type="text/javascript">
     requirejs.config({
-        baseUrl: "/assets/scripts-all",
+        baseUrl: "/assets/scripts-dev",
         paths: {
            // Sparrow: 'sparrow'
         }
