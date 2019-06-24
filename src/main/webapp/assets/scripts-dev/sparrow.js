@@ -279,7 +279,7 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
             return $.global(sparrowContainerKey);
         }
         var beginSelector=["#","!","$","&","*","+","^"];
-        if (typeof (selector) !== "object" &&beginSelector.indexOf(selector.substring(0,1)==-1)) {
+        if (typeof (selector) !== "object" &&beginSelector.indexOf(selector.substring(0,1))==-1) {
             return doc.getElementById(selector);
         }
         return new Sparrow(selector, parent, doc,cache,sparrowContainerKey);
@@ -2169,9 +2169,9 @@ Sparrow.file = {
     // file.uploadClick(this,pathKey);
     // upload frame的id与key要保持一致
     validateUploadFile: function (f, key) {
-        if (file.checkFileType(file.getFileName(f.value), ["jpg",
+        if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
             "jpeg", "gif", "png"], "errorImgForumIco")) {
-            file.uploadClick(false, "", key);
+            $.file.uploadClick(false, "", key);
         }
     },
     // 文件上传成功后的重置方法

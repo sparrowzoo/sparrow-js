@@ -85,7 +85,7 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
             return $.global(sparrowContainerKey);
         }
         var beginSelector=["#","!","$","&","*","+","^"];
-        if (typeof (selector) !== "object" &&beginSelector.indexOf(selector.substring(0,1)==-1)) {
+        if (typeof (selector) !== "object" &&beginSelector.indexOf(selector.substring(0,1))==-1) {
             return doc.getElementById(selector);
         }
         return new Sparrow(selector, parent, doc,cache,sparrowContainerKey);
