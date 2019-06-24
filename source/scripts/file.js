@@ -180,7 +180,7 @@ Sparrow.file = {
         ajax
             .req(
                 "GET",
-                $.url.root + "/FileUpload?fileSerialNumber="
+                $.url.root + "/file-upload?fileSerialNumber="
                 + this.getFileSerialNumber() + "&t="
                 + Math.random(),
                 function (responseText) {
@@ -242,11 +242,11 @@ Sparrow.file = {
                         if (typeof(coverKey) == "object") {
                             suffix = coverKey[key];
                         }
-                        $("div" + suffix).innerHTML = "<a href='" + fileInfo.fileName + "' target='_blank'><img src='" + fileInfo.fileName
-                            + "'/></a>";
-                        $("hdn" + suffix).value = fileInfo.fileName;
-                        $("error" + suffix).className = "prompt";
-                        $("error" + suffix).innerHTML = "";
+                        $("#div" + suffix).html("<a href='" + fileInfo.fileName + "' target='_blank'><img src='" + fileInfo.fileName
+                            + "'/></a>");
+                        $("#hdn" + suffix).value(fileInfo.fileName);
+                        $("#error" + suffix).class("prompt");
+                        $("#error" + suffix).html("");
                     }
                 };
                 $.file.uploadClick(false, '', key);
