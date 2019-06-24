@@ -149,10 +149,10 @@ Sparrow.file = {
             // 如果状态控件不存在则创建
             if (!$("divStatus")) {
                 var sparrowUploadFrame = $(uploadFrame);
-                var divStatus = $("+.div");
+                var divStatus = $("+div");
                 divStatus.s.id = "divStatus";
                 divStatus.s.style.cssText = "width:260px;height:100px;position:absolute;color:#ffffff;background:#000000;font-size:10pt;border:#ccc 1px solid;text-align:left;";
-                divStatus.s.innerHTML = "服务器正在加载文件信息...";
+                divStatus.html("服务器正在加载文件信息...");
                 document.body.appendChild(divStatus.s);
                 divStatus.s.style.top = (sparrowUploadFrame
                         .getAbsoluteTop() - 10)
@@ -165,10 +165,10 @@ Sparrow.file = {
             // 设置状态跟踪
             if (typeof (editor) == "undefined") {
                 // 非编辑器控件
-                this.wit = window.setInterval("file.getStatus(" + showState
+                this.wit = window.setInterval("$.file.getStatus(" + showState
                     + ")", 1000);
             } else {
-                this.wit = window.setInterval("file.getStatus(" + showState
+                this.wit = window.setInterval("$.file.getStatus(" + showState
                     + "," + editor.obj + ")", 1000);
             }
         }
@@ -177,10 +177,10 @@ Sparrow.file = {
     },
     getStatus: function (showState, editor) {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
-        ajax
+        $.ajax
             .req(
                 "GET",
-                $.url.root + "/file-upload?fileSerialNumber="
+                $.url.upload + "/file-upload?fileSerialNumber="
                 + this.getFileSerialNumber() + "&t="
                 + Math.random(),
                 function (responseText) {
