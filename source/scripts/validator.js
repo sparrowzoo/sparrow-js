@@ -47,6 +47,9 @@ Sparrow.v = {
     },
     // 设置当前控件的父控件背景
     _setBackground: function (validate, color,srcElement) {
+        if(!srcElement){
+            return;
+        }
         if ($.v.background_color === false) {
             return;
         }

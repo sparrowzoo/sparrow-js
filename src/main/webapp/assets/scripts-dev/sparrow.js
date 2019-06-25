@@ -952,6 +952,9 @@ Sparrow.v = {
     },
     // 设置当前控件的父控件背景
     _setBackground: function (validate, color,srcElement) {
+        if(!srcElement){
+            return;
+        }
         if ($.v.background_color === false) {
             return;
         }
@@ -2195,21 +2198,22 @@ Sparrow.file = {
     },
     // 获取文件的全路径文件名?
     getFullPath: function (obj) {
-        if (obj) {
-            if ($.browser.ie) {
-                obj.select();
-                var txt = document.frames[0].document.selection.createRange().text;
-                document.frames[0].document.selection.empty();
-                return txt;
-            }
-            if ($.browser.firefox) {
-                if (obj.files) {
-                    return obj.files.item(0).getAsDataURL();
-                }
-                return obj.value;
+        if (!obj) {
+            return ""
+        }
+        if ($.browser.ie) {
+            obj.select();
+            var txt = document.frames[0].document.selection.createRange().text;
+            document.frames[0].document.selection.empty();
+            return txt;
+        }
+        if ($.browser.firefox) {
+            if (obj.files) {
+                return obj.files.item(0).getAsDataURL();
             }
             return obj.value;
         }
+        return obj.value;
     },
     // 获文件扩展名
     getExtension: function (fileName) {
@@ -2229,28 +2233,27 @@ Sparrow.file = {
         return fileName;
     },
     // 验证文件类型
-    checkFileType: function (fileName, righty_type, errorCtrl) {
+    checkFileType: function (fileName, rightExtension, errorCtrl) {
         var fileExtension = this.getExtension(fileName);
         var result = false;
-        for (var i = 0; i < righty_type.length; i += 1) {
-            if (righty_type[i].toLocaleLowerCase() === fileExtension
-                || '.' + righty_type[i].toLocaleLowerCase() === fileExtension) {
+        for (var i = 0; i < rightExtension.length; i += 1) {
+            if (rightExtension[i].toLocaleLowerCase() === fileExtension
+                || '.' + rightExtension[i].toLocaleLowerCase() === fileExtension) {
                 result = true;
                 break;
             }
         }
+
         if (result) {
-            if ($(errorCtrl) != null) {
-                $(errorCtrl).className = "prompt";
-                $(errorCtrl).innerHTML = "";
-            }
+            $.v.ok(errorCtrl)
             return result;
         }
-        if ($(errorCtrl) != null) {
-            $(errorCtrl).className = "error";
-            $(errorCtrl).innerHTML = "!只支持:" + righty_type + "格式";
+        var errorLabel=$("#"+errorCtrl);
+        if (errorLabel != null&&errorLabel.source()!=null) {
+            errorLabel.class("error");
+            errorLabel.html("!只支持:" + rightExtension + "格式");
         }
-        $.message("文件格式不正确，只支持以下格式:\n" + righty_type);
+        $.message("文件格式不正确，只支持以下格式:\n" + rightExtension);
         return result;
     },
     // 如果editor为null则表示非编辑器控件
@@ -2266,7 +2269,7 @@ Sparrow.file = {
         // 设置正在上传的文件控件ID
         this.uploadFrameId = uploadingFrameId;
         // 如果没有选择上传文件
-        if (this.getUploadFile(uploadingFrameId).value == "") {
+        if (this.getUploadFile(uploadingFrameId).value === "") {
             var fileInfo = "{fileName:'"
                 + (oldFileUrl && oldFileUrl !== 'undefined' ? oldFileUrl
                     : "") + "'}";
@@ -2321,7 +2324,7 @@ Sparrow.file = {
         $.ajax
             .req(
                 "GET",
-                $.url.upload + "/file-upload?fileSerialNumber="
+                $.url.upload + "/file-upload?file-serial-number="
                 + this.getFileSerialNumber() + "&t="
                 + Math.random(),
                 function (responseText) {
@@ -2341,7 +2344,7 @@ Sparrow.file = {
                         // 正常显示状态
                         var statusString = [];
                         var status = Math
-                                .ceil(parseFloat(statusJson.readedFileLength)
+                                .ceil(parseFloat(statusJson.readLength)
                                     / parseFloat(statusJson.contentLength)
                                     * 1000000)
                             / 10000 + "%";
@@ -2351,14 +2354,15 @@ Sparrow.file = {
                                     .getFileName($.file.clientFileName)
                                 + "》</span><br/>");
                         statusString.push("文件大小:"
-                            + statusJson.contentLengthStr
+                            + statusJson.humanReadableContentLength
                             + "<br/>");
                         statusString.push("上传大小:"
-                            + statusJson.readedFileLengthStr
+                            + statusJson.humanReadableReadLength
                             + "<br/>");
                         statusString.push("上传进度:" + status);
+                        $("#divStatus").html(statusString.toString());
                         // 上传完毕
-                        if (statusJson.contentLength <= statusJson.readedFileLength) {
+                        if (statusJson.contentLength <= statusJson.readLength) {
                             if ($.file.uploadCallBack) {
                                 // 回调上传完毕后要执行的函数
                                 $.file
