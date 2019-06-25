@@ -39,7 +39,7 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
                 document.head.removeChild(oldScript);
             }
             document.head.appendChild(script);
-            return;
+            return null;
         }
 
         sparrowContainerKey = selector;
@@ -84,23 +84,17 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
         if ($.global(sparrowContainerKey)) {
             return $.global(sparrowContainerKey);
         }
-        if (typeof (selector) !== "object" &&
-            selector.indexOf("#") === -1
-            &&selector.indexOf("!") === -1
-            &&selector.indexOf("$") === -1
-            &&selector.indexOf("&") === -1
-            &&selector.indexOf("*") === -1
-            &&selector.indexOf("+") === -1
-            &&selector.indexOf("^") === -1) {
+        var beginSelector=["#","!","$","&","*","+","^"];
+        if (typeof (selector) !== "object" &&beginSelector.indexOf(selector.substring(0,1))==-1) {
             return doc.getElementById(selector);
         }
         return new Sparrow(selector, parent, doc,cache,sparrowContainerKey);
     }
-    var doms = [];
+    var elements = [];
     this.selector = selector;
     this.doc = doc;
     if (typeof (selector) === "object") {
-        doms[0] = selector;
+        elements[0] = selector;
         if (!selector.id) {
             selector.id = "sparrow_" + $.random();
         }
@@ -110,33 +104,34 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
         var switch_char=selector.substring(0,1);
         selector=selector.substring(1);
         var selectorArray = selector.split(".");
+        var i=0;
         switch (switch_char) {
             case "#"://id
-                doms[0] = doc.getElementById(selector);
+                elements[0] = doc.getElementById(selector);
                 break;
             case "^": //tag
-                doms = doc.getElementsByTagName(selector);
+                elements = doc.getElementsByTagName(selector);
                 break;
             case "&": //name
-                doms = doc.getElementsByName(selector);
+                elements = doc.getElementsByName(selector);
                 break;
             case "+":
                 //+input.id.parentId.type
                 //+input&button.id.parentId.type
-                doms[0] = doc.createElement(selectorArray[0]);
+                elements[0] = doc.createElement(selectorArray[0]);
                 if (selectorArray.length >= 2) {
-                    doms[0].id = selectorArray[1];
+                    elements[0].id = selectorArray[1];
                 } else {
-                    doms[0].id = "sparrow_" + $.random();
+                    elements[0].id = "sparrow_" + $.random();
                 }
                 this.selector = "#" + selectorArray[1];
                 sparrowContainerKey = this.selector;
                 if (selectorArray.length >= 3) {
                     if (selectorArray[2] === "doc") {
-                        this.doc.body.appendChild(doms[0]);
+                        this.doc.body.appendChild(elements[0]);
                     } else {
                         this.doc.getElementById(selectorArray[2]).appendChild(
-                            doms[0]);
+                            elements[0]);
                     }
                 }
                 break;
@@ -153,18 +148,18 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
                 if (!parent.id) {
                     parent.id = "sparrow_" + $.random();
                 }
-                for (var i = 0; i < allChilds.length; i ++) {
+                for (i = 0; i < allChilds.length; i ++) {
                     if (allChilds[i].parentNode === parent) {
                         childs[childs.length] = allChilds[i];
                     }
                 }
-                doms = childs;
+                elements = childs;
                 break;
             case "$": //for 4
                 var labelList = doc.getElementsByTagName("label");
-                for (var i = 0; i < labelList.length; i ++) {
+                for (i = 0; i < labelList.length; i ++) {
                     if (labelList[i].attributes["for"].value === selector) {
-                        doms[0] = labelList[i];
+                        elements[0] = labelList[i];
                         break;
                     }
                 }
@@ -177,7 +172,7 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
                     attribute = selectorArray[1];
                 }
                 // 获取当前已经选中的标签
-                for (var i = 0; i < tagArray.length; i++) {
+                for (i = 0; i < tagArray.length; i++) {
                     if (tagArray[i].checked) {
                         if (attribute) {
                             selectedTag[selectedTag.length] = (tagArray[i].attributes[attribute].value);
@@ -186,25 +181,21 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
                         }
                     }
                 }
-                doms = selectedTag;
+                elements = selectedTag;
                 break;
         }
     }
     if (selector) {
-        var arr = [];
-        for (var i = 0; i < doms.length; i++) {
-            arr.push(doms[i]);
-        }
         this.length = 0;
-        if (doms.length > 0) {
+        if (elements.length > 0) {
             if (!this.s) {
-                this.s = doms[0];
+                this.s = elements[0];
             }
             if (this.s && this.s.id&&cache) {
                 $.global(sparrowContainerKey, this);
             }
         }
-        [].push.apply(this, arr);
+        [].push.apply(this, elements);
     }
     this.interval = [];
     return this;

@@ -150,10 +150,10 @@ Sparrow.file = {
             // 如果状态控件不存在则创建
             if (!$("divStatus")) {
                 var sparrowUploadFrame = $(uploadFrame);
-                var divStatus = $("+.div");
+                var divStatus = $("+div");
                 divStatus.s.id = "divStatus";
                 divStatus.s.style.cssText = "width:260px;height:100px;position:absolute;color:#ffffff;background:#000000;font-size:10pt;border:#ccc 1px solid;text-align:left;";
-                divStatus.s.innerHTML = "服务器正在加载文件信息...";
+                divStatus.html("服务器正在加载文件信息...");
                 document.body.appendChild(divStatus.s);
                 divStatus.s.style.top = (sparrowUploadFrame
                         .getAbsoluteTop() - 10)
@@ -181,7 +181,7 @@ Sparrow.file = {
         $.ajax
             .req(
                 "GET",
-                $.url.root + "/FileUpload?fileSerialNumber="
+                $.url.upload + "/file-upload?fileSerialNumber="
                 + this.getFileSerialNumber() + "&t="
                 + Math.random(),
                 function (responseText) {
@@ -243,11 +243,11 @@ Sparrow.file = {
                         if (typeof (coverKey) == "object") {
                             suffix = coverKey[key];
                         }
-                        $("div" + suffix).innerHTML = "<a href='" + fileInfo.fileName + "' target='_blank'><img src='" + fileInfo.fileName
-                            + "'/></a>";
-                        $("hdn" + suffix).value = fileInfo.fileName;
-                        $("error" + suffix).className = "prompt";
-                        $("error" + suffix).innerHTML = "";
+                        $("#div" + suffix).html("<a href='" + fileInfo.fileName + "' target='_blank'><img src='" + fileInfo.fileName
+                            + "'/></a>");
+                        $("#hdn" + suffix).value(fileInfo.fileName);
+                        $("#error" + suffix).class("prompt");
+                        $("#error" + suffix).html("");
                     }
                 };
                 $.file.uploadClick(false, '', key);
