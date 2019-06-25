@@ -8,34 +8,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
-    <title>JSON VIEW &ndash; Sparrow JS Framework</title>
+    <title>JSONP &ndash; Sparrow JS Framework</title>
     <jsp:include page="${root_path}/examples/head.jsp"/>
-
     <script type="text/javascript">
         require(['sparrow','domReady!'], function ($,dom) {
-            var originalJson = {"name": "sparrow js by harry", "sex": "男", "age": "25","a":{"b":{"c":{"d":"1"}}}};
-
-            //(3)将格式化好后的json写入页面中
-            document.getElementById("jsonview").innerHTML = '<pre>' +$.format(originalJson) + '<pre/>';
-
+            $("jsonp","jsonp.html", "jsonp_id");
         });
+        function callback(args) {
+            document.getElementById("jsonp").innerHTML=args;
+            alert(args);
+            console.info(args);
+
+        }
     </script>
 </head>
-
 <body>
-
 <div id="layout">
     <jsp:include page="${root_path}/examples/menu.jsp"/>
     <div id="main">
         <div class="header">
-            <h1>JSON 格式化视图</h1>
-            <h2>json viewer</h2>
+            <h1>JSONP</h1>
+            <h2>jsonp demo</h2>
         </div>
-
-        <div id="jsonview" class="content">
+        <div id="jsonp" class="content">
 
         </div>
-
     </div>
 </div>
 </body>

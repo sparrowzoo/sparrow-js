@@ -10,6 +10,16 @@
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
     <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
     <jsp:include page="${root_path}/examples/head.jsp"/>
+
+
+    <script type="application/javascript">
+
+        require(['sparrow','domReady!'], function ($,dom) {
+
+            $("#divContainer").interlace();
+            $("#divContainer2").interlace();
+        });
+    </script>
 </head>
 
 <body>
@@ -43,9 +53,6 @@
 
     </div>
 </div>
-<script type="application/javascript">
-    $("#divContainer").interlace();
-    $("#divContainer2").interlace();
-</script>
+
 </body>
 </html>

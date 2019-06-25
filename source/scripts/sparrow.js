@@ -321,7 +321,17 @@ Sparrow.prototype.getAbsoluteLeft = function () {
     }
     return returnValue;
 };
+Sparrow.prototype.source=function () {
+  return this.s;
+};
 
+Sparrow.prototype.class=function (className) {
+    if(className){
+        this.s.className=className;
+    return;
+    }
+    return this.s.className;
+};
 
 Sparrow.prototype.css = function (attribute, value, add) {
     if (Math.abs(value) < 1) {

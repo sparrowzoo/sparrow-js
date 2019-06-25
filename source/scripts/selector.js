@@ -9,59 +9,93 @@
  * *checked_value * equal multi
  * +//new create
  */
-var Sparrow = function (selector) {
-    var args = Array.prototype.slice.call(arguments, 0);
-    if (selector == null || typeof (selector) === "undefined") {
-        return null;
-    }
-    if (typeof(selector) === "function") {
-        //call不为数组
-        //apply 的参数为数组
-        //Array.prototype.slice 将arguments 转化成数组
-        return selector.apply(selector, args.slice(1));
-    }
-    //jsonp./system/cms/jsonp.jsp.id.http://www.baidu.com
-    if (args[0] === "jsonp") {
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.language = "javascript";
-        script.src = args[1];
-        script.id = args[2];
-        var oldScript = document.getElementById(script.id);
-        if (oldScript != null) {
-            document.head.removeChild(oldScript);
+var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
+    if (window === this) {
+        var args = Array.prototype.slice.call(arguments, 0);
+        if (!selector) {
+            return null;
         }
-        document.head.appendChild(script);
-        return;
-    }
+        //execute method and return result for constant
+        /**
+         * root_domain: $(function () {
+            return window.location.host.substr(window.location.host.indexOf('.'));
+        })
+         */
+        if (typeof(selector) === "function") {
+            //call不为数组
+            //apply 的参数为数组
+            //Array.prototype.slice 将arguments 转化成数组
+            return selector.apply(selector, args.slice(1));
+        }
 
-    var sparrow_id = selector;
-    if (typeof (selector) === "object") {
-        sparrow_id = "#" + selector.id;
-    }
-    var parent = args[1];
-    var doc = args.length === 3 ? args[2] : document;
-    if (parent != null && typeof(parent) === "object") {
-        if (parent.id != null && typeof(parent.id) !== "undefined") {
-            parent.id = "sparrow_" + $.random();
+        if (args[0] === "jsonp") {
+            var script = document.createElement("script");
+            script.type = "text/javascript";
+            script.language = "javascript";
+            script.src = args[1];
+            script.id = args[2];
+            var oldScript = document.getElementById(script.id);
+            if (oldScript != null) {
+                document.head.removeChild(oldScript);
+            }
+            document.head.appendChild(script);
+            return;
         }
-        sparrow_id += parent.id;
+
+        sparrowContainerKey = selector;
+        if (typeof (selector) === "object") {
+            sparrowContainerKey = "#" + selector.id;
+        }
+
+        parent =null;
+        doc = document;
+        cache=true;
+        if(args.length>=2) {
+            //selector,cache
+            if (typeof args[1] == "boolean") {
+                cache = args[1];
+            }
+            else {
+                //selector,parent
+                parent = args[1];
+            }
+            if (args.length >= 3) {
+                //selector,parent,cache
+                if (typeof args[2] == "boolean") {
+                    cache = args[2];
+                }
+                else {
+                    //select,parent doc
+                    doc = args[2];
+                }
+            }
+            //selector,parent,doc,cache
+            if (args.length == 4) {
+                cache = args[3];
+            }
+        }
+
+        if (parent != null && typeof(parent) === "object") {
+            if (!parent.id) {
+                parent.id = "sparrow_" + $.random();
+            }
+            sparrowContainerKey +="_"+parent.id;
+        }
+        if ($.global(sparrowContainerKey)) {
+            return $.global(sparrowContainerKey);
+        }
+        if (typeof (selector) !== "object" &&
+            selector.indexOf("#") === -1
+            &&selector.indexOf("!") === -1
+            &&selector.indexOf("$") === -1
+            &&selector.indexOf("&") === -1
+            &&selector.indexOf("*") === -1
+            &&selector.indexOf("+") === -1
+            &&selector.indexOf("^") === -1) {
+            return doc.getElementById(selector);
+        }
+        return new Sparrow(selector, parent, doc,cache,sparrowContainerKey);
     }
-    if ($.global(sparrow_id)) {
-        return $.global(sparrow_id);
-    }
-    if (typeof (selector) !== "object" &&
-        selector.indexOf("#") === -1
-        &&selector.indexOf("!") === -1
-        &&selector.indexOf("$") === -1
-        &&selector.indexOf("&") === -1
-        &&selector.indexOf("*") === -1
-        &&selector.indexOf("+") === -1
-        &&selector.indexOf("^") === -1) {
-        return doc.getElementById(selector);
-    }
-    if (window === this)
-        return new Sparrow(selector, parent, doc);
     var doms = [];
     this.selector = selector;
     this.doc = doc;
@@ -71,7 +105,7 @@ var Sparrow = function (selector) {
             selector.id = "sparrow_" + $.random();
         }
         this.selector = "#" + selector.id;
-        sparrow_id = this.selector;
+        sparrowContainerKey = this.selector;
     } else if (typeof selector==='string') {
         var switch_char=selector.substring(0,1);
         selector=selector.substring(1);
@@ -96,7 +130,7 @@ var Sparrow = function (selector) {
                     doms[0].id = "sparrow_" + $.random();
                 }
                 this.selector = "#" + selectorArray[1];
-                sparrow_id = this.selector;
+                sparrowContainerKey = this.selector;
                 if (selectorArray.length >= 3) {
                     if (selectorArray[2] === "doc") {
                         this.doc.body.appendChild(doms[0]);
@@ -166,8 +200,8 @@ var Sparrow = function (selector) {
             if (!this.s) {
                 this.s = doms[0];
             }
-            if (this.s && this.s.id) {
-                $.global(sparrow_id, this);
+            if (this.s && this.s.id&&cache) {
+                $.global(sparrowContainerKey, this);
             }
         }
         [].push.apply(this, arr);

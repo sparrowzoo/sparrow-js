@@ -29,9 +29,9 @@ Sparrow.file = {
     // file.uploadClick(this,pathKey);
     // upload frame的id与key要保持一致
     validateUploadFile: function (f, key) {
-        if (file.checkFileType(file.getFileName(f.value), ["jpg",
+        if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
             "jpeg", "gif", "png"], "errorImgForumIco")) {
-            file.uploadClick(false, "", key);
+            $.file.uploadClick(false, "", key);
         }
     },
     // 文件上传成功后的重置方法
@@ -61,7 +61,8 @@ Sparrow.file = {
                 var txt = document.frames[0].document.selection.createRange().text;
                 document.frames[0].document.selection.empty();
                 return txt;
-            } else if ($.browser.firefox) {
+            }
+            if ($.browser.firefox) {
                 if (obj.files) {
                     return obj.files.item(0).getAsDataURL();
                 }
@@ -81,11 +82,11 @@ Sparrow.file = {
         fileName = $.browser.getUrlWithoutParameter(fileName);
         if (fileName.indexOf("\\") !== -1) {
             return fileName.substring(fileName.lastIndexOf("\\") + 1);
-        } else if (fileName.indexOf('/') !== -1) {
-            return fileName.substring(fileName.lastIndexOf("/") + 1);
-        } else {
-            return fileName;
         }
+        if (fileName.indexOf('/') !== -1) {
+            return fileName.substring(fileName.lastIndexOf("/") + 1);
+        }
+        return fileName;
     },
     // 验证文件类型
     checkFileType: function (fileName, righty_type, errorCtrl) {
@@ -103,13 +104,13 @@ Sparrow.file = {
                 $(errorCtrl).className = "prompt";
                 $(errorCtrl).innerHTML = "";
             }
-        } else {
-            if ($(errorCtrl) != null) {
-                $(errorCtrl).className = "error";
-                $(errorCtrl).innerHTML = "!只支持:" + righty_type + "格式";
-            }
-            $.message("文件格式不正确，只支持以下格式:\n" + righty_type);
+            return result;
         }
+        if ($(errorCtrl) != null) {
+            $(errorCtrl).className = "error";
+            $(errorCtrl).innerHTML = "!只支持:" + righty_type + "格式";
+        }
+        $.message("文件格式不正确，只支持以下格式:\n" + righty_type);
         return result;
     },
     // 如果editor为null则表示非编辑器控件
@@ -130,7 +131,7 @@ Sparrow.file = {
                 + (oldFileUrl && oldFileUrl !== 'undefined' ? oldFileUrl
                     : "") + "'}";
             // 上传事件回调函数 具体处理方式在uploadCallBack中进行操作
-            file.uploadCallBack(fileInfo.json(), "");
+            $.file.uploadCallBack(fileInfo.json(), "");
             // 自动批量上传不是用事件触发的,所以srcElement可能为null
             if (srcElement)
                 $.message("请选择上传文件!", srcElement);
@@ -165,10 +166,10 @@ Sparrow.file = {
             // 设置状态跟踪
             if (typeof (editor) == "undefined") {
                 // 非编辑器控件
-                this.wit = window.setInterval("file.getStatus(" + showState
+                this.wit = window.setInterval("$.file.getStatus(" + showState
                     + ")", 1000);
             } else {
-                this.wit = window.setInterval("file.getStatus(" + showState
+                this.wit = window.setInterval("$.file.getStatus(" + showState
                     + "," + editor.obj + ")", 1000);
             }
         }
@@ -177,7 +178,7 @@ Sparrow.file = {
     },
     getStatus: function (showState, editor) {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
-        ajax
+        $.ajax
             .req(
                 "GET",
                 $.url.root + "/FileUpload?fileSerialNumber="
@@ -190,7 +191,7 @@ Sparrow.file = {
                             .indexOf("loading") === 0) {
                             return;
                         }
-                        var statusJson =responseText
+                        var statusJson = responseText
                             .json();
                         if (!$.isNullOrEmpty(statusJson.uploadingError)) {
                             $.alert(statusJson.uploadingError, "sad");
@@ -207,7 +208,7 @@ Sparrow.file = {
                         statusString
                             .push("正在上传文件<br/><span class='highlight'>《"
                                 + $.file
-                                    .getFileName(file.clientFileName)
+                                    .getFileName($.file.clientFileName)
                                 + "》</span><br/>");
                         statusString.push("文件大小:"
                             + statusJson.contentLengthStr
@@ -239,7 +240,7 @@ Sparrow.file = {
                 $.file.uploadCallBack = function (fileInfo, clientFileName) {
                     if (fileInfo.fileName) {
                         var suffix = coverKey;
-                        if (typeof(coverKey) == "object") {
+                        if (typeof (coverKey) == "object") {
                             suffix = coverKey[key];
                         }
                         $("div" + suffix).innerHTML = "<a href='" + fileInfo.fileName + "' target='_blank'><img src='" + fileInfo.fileName

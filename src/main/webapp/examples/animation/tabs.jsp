@@ -12,7 +12,9 @@
     <jsp:include page="${root_path}/examples/head.jsp"/>
     <j:style href="$resource/assets/styles/sparrow.css"/>
     <script type="text/javascript" language="JavaScript">
-        document.ready(function () {
+
+
+        require(['sparrow','domReady!'], function ($,dom) {
             $("#tabs").tabs();
         });
     </script>
