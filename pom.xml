@@ -26,6 +26,22 @@
             <artifactId>sparrow-json</artifactId>
         </dependency>
         <dependency>
+                <groupId>com.sparrow</groupId>
+                <artifactId>sparrow-markdown</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sparrow</groupId>
+            <artifactId>sparrow-mvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>jsp-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
