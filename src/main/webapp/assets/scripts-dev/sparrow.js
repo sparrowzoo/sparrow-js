@@ -2160,8 +2160,9 @@ Sparrow.file = {
     },
     // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
     clearStatus: function () {
-        if (this.showStatus) {
-            document.body.removeChild($('divStatus'));
+        var divStatus=$('divStatus');
+        if (this.showStatus&&divStatus!=null) {
+            document.body.removeChild(divStatus);
         }
         window.clearInterval(this.wit);
     },
@@ -2360,7 +2361,7 @@ Sparrow.file = {
                             + statusJson.humanReadableReadLength
                             + "<br/>");
                         statusString.push("上传进度:" + status);
-                        $("#divStatus").html(statusString.toString());
+                        $("#divStatus",false).html(statusString.toString());
                         // 上传完毕
                         if (statusJson.contentLength <= statusJson.readLength) {
                             if ($.file.uploadCallBack) {

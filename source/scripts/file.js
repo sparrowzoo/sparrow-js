@@ -218,7 +218,7 @@ Sparrow.file = {
                             + statusJson.humanReadableReadLength
                             + "<br/>");
                         statusString.push("上传进度:" + status);
-                        $("#divStatus").html(statusString.toString());
+                        $("#divStatus",false).html(statusString.toString());
                         // 上传完毕
                         if (statusJson.contentLength <= statusJson.readLength) {
                             if ($.file.uploadCallBack) {
