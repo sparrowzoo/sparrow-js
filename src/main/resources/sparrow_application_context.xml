@@ -4,5 +4,5 @@
 <beans>
     <bean name="sparrowServletContainer" class="com.sparrow.web.support.SparrowServletContainer"/>
     <bean name="cookieUtility" class="com.sparrow.support.web.CookieUtility"/>
-    <bean name="helloController" class="com.sparrow.controller.HelloController" controller="true"/>
+    <bean name="previewController" class="com.sparrow.markdown.controller.PreviewController" controller="true"/>
 </beans>

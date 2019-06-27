@@ -3,13 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-
-    <!--ioc 容器的location地址 可以缺省，默认为beans.xml 不要加classpath:-->
-    <context-param>
+  <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/sparrow_application_context.xml</param-value>
     </context-param>
-    <!--默认的全局配置文件 可以缺少，默认为 /system_config.properties 不要加classpath:-->
     <context-param>
         <param-name>configLocation</param-name>
         <param-value>/sparrow_system_config.properties</param-value>
@@ -28,12 +25,9 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>FORWARD</dispatcher>
     </filter-mapping>
-    <!--Bean容器初始化侦听器 -->
     <listener>
         <listener-class>com.sparrow.mvc.ContextLoaderListener</listener-class>
     </listener>
-
-    <!-- 生成验证码 -->
     <servlet>
         <servlet-name>ValidateCode</servlet-name>
         <servlet-class>com.sparrow.web.support.ValidateCode</servlet-class>
@@ -57,7 +51,7 @@
     </filter>
     <filter-mapping>
         <filter-name>DispatcherFilter</filter-name>
-        <url-pattern>*</url-pattern>
+        <url-pattern>*.json</url-pattern>
         <dispatcher>INCLUDE</dispatcher>
         <dispatcher>REQUEST</dispatcher>
         <!--是否使用则业务端决定，框架建议注掉-->
