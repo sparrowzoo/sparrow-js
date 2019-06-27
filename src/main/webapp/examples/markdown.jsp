@@ -10,6 +10,13 @@
     <title>Sparrow Markdown &ndash; Sparrow JS Framework</title>
     <jsp:include page="head.jsp"/>
 
+    <style type="text/css">
+        hr{
+            border:none;
+            border-bottom:1px #ccc dashed;
+        }
+    </style>
+
     <script type="text/javascript">
         var lastPressTime=new Date().getTime();
         var lastContext=null;
@@ -18,14 +25,14 @@
         }
         window.setInterval(function () {
             var currentTime=new Date().getTime();
-            if(currentTime-lastPressTime>1000&&lastContext!==$("#divPreview").html()){
+            if(currentTime-lastPressTime>500&&lastContext!==$("#divContent").html()){
                 previewRequest();
             }
         },1000);
         function previewRequest() {
             $.ajax.json("${root_path}"+"/preview.json","markdown="+$("divContent").innerText,function(json){
                 $("#divPreview").html(json.data.html);
-                lastContext=$("#divPreview").html()
+                lastContext=$("#divContent").html()
             });
         }
     </script>

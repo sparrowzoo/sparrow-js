@@ -45,6 +45,10 @@
             <groupId>jstl</groupId>
             <artifactId>jstl</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.sparrow</groupId>
+            <artifactId>sparrow-log</artifactId>
+        </dependency>
     </dependencies>
     <packaging>war</packaging>
 
