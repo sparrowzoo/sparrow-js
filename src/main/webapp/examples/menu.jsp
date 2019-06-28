@@ -4,7 +4,6 @@
 
 <a href="#menu" id="menuLink" class="menu-link">
     <span></span>
-
 </a>
 <div id="divVerticalMenu">
     <div class="pure-menu">
@@ -61,6 +60,9 @@
             </li>
             <li class="pure-menu-item">
                 <a href="${root_path}/examples/sparrow/jsonp-demo.jsp" class="pure-menu-link">jsonp</a>
+            </li>
+            <li class="pure-menu-item">
+                <a href="${root_path}/examples/markdown.jsp" class="pure-menu-link">markdown demo</a>
             </li>
         </ul>
     </div>
