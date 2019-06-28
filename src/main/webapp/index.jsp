@@ -25,7 +25,7 @@
         </div>
 
         <div class="content">
-     welcome to sparrow js framework
+            welcome to sparrow js framework
         </div>
     </div>
 
