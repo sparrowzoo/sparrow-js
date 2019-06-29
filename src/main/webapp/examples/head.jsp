@@ -17,6 +17,15 @@
     });
 
     require(['sparrow','domReady!'], function ($,dom) {
-        new $.menu("verticalMenu", $.VERTICAL).init();
+        new $.menu("verticalMenu", $.VERTICAL,"menuLink").init();
     });
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?7d0cb4019538f62bb1700d28db7d1e65";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
 </script>

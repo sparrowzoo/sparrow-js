@@ -8,7 +8,17 @@
     <meta name="description"
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
     <title>Sparrow Markdown &ndash; Sparrow JS Framework</title>
-    <jsp:include page="head.jsp"/>
+    <j:style href="$resource/assets/styles/pure-css/pure.css"/>
+    <!--[if lte IE 8]>
+    <j:style href="$resource/assets/styles/layouts-old-ie.css"/>
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+    <j:style href="$resource/assets/styles/layouts.css"/>
+    <!--<![endif]-->
+    <j:script src="$resource/assets/scripts-dev/sparrow.js"/>
+
+    <script language="javascript" type="text/javascript"
+            src="/assets/scripts-dev/code-prettify/sparrow-prettify.js?lang=css&skin=sunburst"></script>
 
     <style type="text/css">
         hr {
@@ -47,8 +57,8 @@
             text-indent: 10px;
             border-left: 1px solid red;
         }
-        .code
-        {
+
+        .code {
             background-color: #ccc;
         }
     </style>
@@ -56,25 +66,32 @@
     <script type="text/javascript">
         var lastPressTime = new Date().getTime();
         var lastContext = "";
+
         function preview() {
             lastPressTime = new Date().getTime();
         }
+
         window.setInterval(function () {
             var currentTime = new Date().getTime();
             if (currentTime - lastPressTime > 500 && lastContext !== $("#txtContent").value()) {
                 previewRequest();
             }
         }, 1000);
+
         //(getOrPost, url, responsef, postStr, srcElement)
         function previewRequest() {
             $.ajax.req("POST", "${root_path}" + "/preview.json", function (responseText) {
                 var json = responseText.json();
                 if (json.code == 0) {
                     $("#divPreview").html(json.data.html);
+                    PR.prettyPrint();
                 }
                 lastContext = $("#txtContent").value()
             }, "markdown=" + $("#txtContent").value());
         }
+        document.ready(function () {
+            new $.menu("verticalMenu", $.VERTICAL,"menuLink").init();
+        });
     </script>
 </head>
 <body>
@@ -84,8 +101,8 @@
     <jsp:include page="menu.jsp"/>
     <div id="main">
         <div class="header">
-            <h1>Page Title</h1>
-            <h2>A subtitle for your page goes here</h2>
+            <h1>Sparrow markdown</h1>
+            <h2>sparrow markdown</h2>
         </div>
 
         <div style="max-width: 100%;" class="content">

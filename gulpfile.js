@@ -8,13 +8,14 @@ var plugins = require('gulp-load-plugins')();
 
 var paths = {
     styles: {
-        src: 'source/styles/**/*.*',
-        dest: 'src/main/webapp/assets/styles/'
+        src: ['source/styles/**/*.*'],
+        dest: 'src/main/webapp/assets/styles/',
+        code_pretty_src:['node_modules/code-prettify/styles/*.css','node_modules/code-prettify/src/*.css'],
+        code_pretty_dest:'src/main/webapp/assets/scripts-dev/code-prettify/skins',
+        purecss_src: 'node_modules/purecss/build/*.*',
+        purecss_dest: 'src/main/webapp/assets/styles/pure-css'
     },
-    purecss: {
-        src: 'node_modules/purecss/build/*.*',
-        dest: 'src/main/webapp/assets/styles/pure-css'
-    },
+
     images: {
         src: 'source/images/**/*.*',
         dest: 'src/main/webapp/assets/images'
@@ -63,9 +64,14 @@ var paths = {
         src: ['src/main/webapp/assets/scripts-dev/sparrow.js','node_modules/requirejs/require.js','node_modules/requirejs-domready/domReady.js'],
         dest: 'src/main/webapp/assets/scripts'
     },
-    requirejs: {
-        src: ['node_modules/requirejs/require.js','node_modules/requirejs-domready/domReady.js'],
-        dest: 'src/main/webapp/assets/scripts-dev'
+    dependency: {
+        src: ['node_modules/requirejs/require.js',
+            'node_modules/requirejs-domready/domReady.js'],
+        dest: 'src/main/webapp/assets/scripts-dev',
+        code_pretty_src:['node_modules/code-prettify/src/*.js'],
+        code_pretty_dest:'src/main/webapp/assets/scripts-dev/code-prettify',
+        code_pretty_run_src:'source/scripts/sparrow-prettify.js',
+        code_pretty_run_desc:'src/main/webapp/assets/scripts-dev/code-prettify'
     }
 };
 
@@ -83,18 +89,19 @@ function clean() {
  * Define our tasks using plain functions
  */
 function styles() {
-    return gulp.src(paths.styles.src)
+     gulp.src(paths.styles.src)
         .pipe(plugins.less())
         .pipe(plugins.cleanCss())
         // pass in options to the stream
         .pipe(gulp.dest(paths.styles.dest));
+
+    gulp.src(paths.styles.code_pretty_src)
+        .pipe(gulp.dest(paths.styles.code_pretty_dest));
+
+    return gulp.src(paths.styles.purecss_src)
+        .pipe(gulp.dest(paths.styles.purecss_dest));
 }
 
-
-function purecss() {
-    return gulp.src(paths.purecss.src)
-        .pipe(gulp.dest(paths.purecss.dest));
-}
 
 function scripts() {
     return gulp.src(paths.scripts_min.src)
@@ -111,9 +118,16 @@ function images() {
         .pipe(gulp.dest(paths.images.dest));
 }
 
-function requirejs() {
-    return gulp.src(paths.requirejs.src)
-        .pipe(gulp.dest(paths.requirejs.dest));
+function dependency() {
+    gulp.src(paths.dependency.src)
+        .pipe(gulp.dest(paths.dependency.dest));
+
+    gulp.src(paths.dependency.code_pretty_src)
+        .pipe(gulp.dest(paths.dependency.code_pretty_dest));
+
+  return  gulp.src(paths.dependency.code_pretty_run_src)
+        .pipe(gulp.dest(paths.dependency.code_pretty_run_desc));
+
 }
 
 
@@ -151,7 +165,7 @@ exports.watch = plugins.watch;
  *  [10:21:42] Did you forget to signal async completion?
  *  use gulp.series is ok
  */
-var build_dev = gulp.series(clean, styles, purecss, scripts_dev,requirejs,images, medias);
+var build_dev = gulp.series(clean, styles, scripts_dev,dependency,images, medias);
 
 var build = gulp.series(scripts);
 

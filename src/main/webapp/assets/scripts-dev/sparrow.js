@@ -700,11 +700,11 @@ Sparrow.url = {
         return window.location.protocol + "//" + window.location.host;
         //+ (false ? pathName : "");
     }),
-    resource: $(function (path) {
+    _resource: function (path) {
         var scripts = document.scripts;
         var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts-dev/sparrow.js"];
         if (path) {
-            sparrowPath.push(path);
+            sparrowPath=[path];
         }
         var r = null;
         for (var i in scripts) {
@@ -721,9 +721,10 @@ Sparrow.url = {
             }
         }
         return r;
-    }),
+    },
     name: $.browser.cookie.domain.split('.')[0]
 };
+Sparrow.url.resource=$.url._resource();
 Sparrow.website = {
     name: $.browser.getCookie($.browser.cookie.website_name),
     themes: $(function () {
@@ -2980,7 +2981,7 @@ Sparrow.prototype.progressbar = function (callback, config) {
  * 水平菜单 用索引对应 因为html 结构决定
  * position[child.id]=child.position(height etc...)
  * */
-Sparrow.menu=function (obj, position) {
+Sparrow.menu=function (obj, position,menuLink) {
     this.config = // 菜单显示需要的常量配置
     {
         current_menu: null,
@@ -2998,6 +2999,7 @@ Sparrow.menu=function (obj, position) {
         brothers: []// 兄弟节点
     };
     this.obj = obj;
+    this.menuLink=menuLink;
     //obj为leftMenu 则id默认为divLeftMenu
     //for different obj in container
     this.id = "div" + this.obj.firstCharUpperCase();
@@ -3035,6 +3037,7 @@ Sparrow.menu.prototype.vertical = function () {
     if (!$(this.id)) {
         return;
     }
+
     var item = $("!div." + this.id);
     var obj = this.obj;
     item
@@ -3082,6 +3085,17 @@ Sparrow.menu.prototype.vertical = function () {
                         });
             }
         });
+    var menuContainer=$("#"+this.id);
+    menuContainer.bind("onmouseover",function (e) {
+        $.event(e).cancelBubble();
+    })
+    $("#"+this.menuLink).bind("onmouseover",function (e) {
+        $.event(e).cancelBubble();
+        menuContainer.css("marginLeft","0px");
+    });
+    $(document).bind("onmouseover",function () {
+        menuContainer.css("marginLeft","-150px");
+    })
 };
 Sparrow.menu.prototype.dispose = function () {
     if (this.config.frameDiv) {

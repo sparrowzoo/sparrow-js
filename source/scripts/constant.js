@@ -5,11 +5,11 @@ Sparrow.url = {
         return window.location.protocol + "//" + window.location.host;
         //+ (false ? pathName : "");
     }),
-    resource: $(function (path) {
+    _resource: function (path) {
         var scripts = document.scripts;
         var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts-dev/sparrow.js"];
         if (path) {
-            sparrowPath.push(path);
+            sparrowPath=[path];
         }
         var r = null;
         for (var i in scripts) {
@@ -26,9 +26,10 @@ Sparrow.url = {
             }
         }
         return r;
-    }),
+    },
     name: $.browser.cookie.domain.split('.')[0]
 };
+Sparrow.url.resource=$.url._resource();
 Sparrow.website = {
     name: $.browser.getCookie($.browser.cookie.website_name),
     themes: $(function () {

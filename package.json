@@ -12,6 +12,7 @@
   "license": "Apache",
   "dependencies": {
     "babel-preset-es2017": "^6.24.1",
+    "code-prettify": "^0.1.0",
     "del": "^3.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^3.10.0",

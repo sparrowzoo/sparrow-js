@@ -3,7 +3,7 @@
  * 水平菜单 用索引对应 因为html 结构决定
  * position[child.id]=child.position(height etc...)
  * */
-Sparrow.menu=function (obj, position) {
+Sparrow.menu=function (obj, position,menuLink) {
     this.config = // 菜单显示需要的常量配置
     {
         current_menu: null,
@@ -21,6 +21,7 @@ Sparrow.menu=function (obj, position) {
         brothers: []// 兄弟节点
     };
     this.obj = obj;
+    this.menuLink=menuLink;
     //obj为leftMenu 则id默认为divLeftMenu
     //for different obj in container
     this.id = "div" + this.obj.firstCharUpperCase();
@@ -58,6 +59,7 @@ Sparrow.menu.prototype.vertical = function () {
     if (!$(this.id)) {
         return;
     }
+
     var item = $("!div." + this.id);
     var obj = this.obj;
     item
@@ -105,6 +107,17 @@ Sparrow.menu.prototype.vertical = function () {
                         });
             }
         });
+    var menuContainer=$("#"+this.id);
+    menuContainer.bind("onmouseover",function (e) {
+        $.event(e).cancelBubble();
+    })
+    $("#"+this.menuLink).bind("onmouseover",function (e) {
+        $.event(e).cancelBubble();
+        menuContainer.css("marginLeft","0px");
+    });
+    $(document).bind("onmouseover",function () {
+        menuContainer.css("marginLeft","-150px");
+    })
 };
 Sparrow.menu.prototype.dispose = function () {
     if (this.config.frameDiv) {

@@ -26,6 +26,10 @@
 
         <div class="content">
             welcome to sparrow js framework
+
+            <h3>github</h3>
+            js                    <a href="https://github.com/sparrowzoo/sparrow-js">https://github.com/sparrowzoo/sparrow-js</a><br/>
+            markdown:<a href="https://github.com/sparrowzoo/sparrow-markdown">https://github.com/sparrowzoo/sparrow-markdown</a><br/>
         </div>
     </div>
 

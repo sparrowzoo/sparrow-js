@@ -7,7 +7,7 @@
 </a>
 <div id="divVerticalMenu">
     <div class="pure-menu">
-        <a class="pure-menu-heading" href="${root_path}">首页</a>
+        <a class="pure-menu-heading" href="http://www.sparrowzoo.net">首页</a>
     </div>
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">菜单</a>
