@@ -10,14 +10,14 @@
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
     <title>Sparrow Example &ndash; Sparrow JS Framework</title>
 
-    <jsp:include page="${root_path}/examples/head.jsp"/>
+    <jsp:include page="/examples/head.jsp"/>
     <j:style href="$resource/assets/styles/modal.css"/>
 </head>
 <body>
 
 
 <div id="layout">
-    <jsp:include page="${root_path}/examples/menu.jsp"/>
+    <jsp:include page="/examples/menu.jsp"/>
     <div id="main">
         <div class="header">
             <h1>sparrow js</h1>

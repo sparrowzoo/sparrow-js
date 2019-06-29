@@ -2,7 +2,7 @@
   "name": "sparrow-js",
   "version": "0.0.1",
   "main": "dist/sparrow.js",
-  "homepage": "http://www.sparrowzoo.com",
+  "homepage": "http://www.sparrowzoo.net",
   "scripts": {
     "test": "coffee make test",
     "dist": "coffee make dist",
