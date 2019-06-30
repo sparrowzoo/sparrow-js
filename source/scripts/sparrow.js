@@ -154,12 +154,12 @@ Sparrow.format = function (txt, compress) {
     /* 格式化JSON源码(对象转换为JSON文本) */
     var indentChar = '    ';
 
-    if (typeof txt == 'string' && /^\s*$/.test(txt)) {
+    if (typeof txt === 'string' && /^\s*$/.test(txt)) {
         alert('数据为空,无法格式化! ');
         return;
     }
     var data = null;
-    if (typeof txt == 'object') {
+    if (typeof txt === 'object') {
         data = txt;
     }
     else {
@@ -347,12 +347,12 @@ Sparrow.prototype.css = function (attribute, value, add) {
     } else {
         var command = null;
         if (add) {
-            command = 'var o=parseInt($("' + this.selector + '").s.style.'
+            command = 'var o=parseInt($("' + this.s.id + '").style.'
                 + attribute + ',10);';
-            command += '$("' + this.selector + '").s.style.' + attribute
+            command += '$("' + this.s.id + '").style.' + attribute
                 + '=(o+' + value + ')+"px";';
         } else {
-            command = '$("' + this.selector + '").s.style.' + attribute + '="'+ value +'"';
+            command = '$("' + this.s.id + '").style.' + attribute + '="'+ value +'"';
         }
         eval(command);
     }

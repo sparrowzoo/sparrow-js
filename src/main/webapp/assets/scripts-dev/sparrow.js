@@ -1617,12 +1617,12 @@ Sparrow.prototype.css = function (attribute, value, add) {
     } else {
         var command = null;
         if (add) {
-            command = 'var o=parseInt($("' + this.selector + '").s.style.'
+            command = 'var o=parseInt($("' + this.s.id + '").style.'
                 + attribute + ',10);';
-            command += '$("' + this.selector + '").s.style.' + attribute
+            command += '$("' + this.s.id + '").style.' + attribute
                 + '=(o+' + value + ')+"px";';
         } else {
-            command = '$("' + this.selector + '").s.style.' + attribute + '="'+ value +'"';
+            command = '$("' + this.s.id + '").style.' + attribute + '="'+ value +'"';
         }
         eval(command);
     }
