@@ -466,7 +466,7 @@ Sparrow.prototype.enter = function (handle) {
         e = window.event || e;
         if (e.keyCode === 13) {
             if (typeof(handle) === "string") {
-                $(handle).onclick();
+                $(handle).onclick(e);
                 return;
             }
             handle();
