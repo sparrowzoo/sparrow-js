@@ -9,39 +9,42 @@
     <meta name="description"
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
     <title>Sparrow DatePicker &ndash; Sparrow JS Framework</title>
-    <jsp:include page="${root_path}/examples/head.jsp"/>
+    <jsp:include page="/examples/head.jsp"/>
+    <j:style href="$resource/assets/styles/sparrow.css"/>
 
     <script type="text/javascript">
-        var editor = new SparrowEditor("editor");
-        var editor2 = new SparrowEditor("editor2");
-        window.onload = function () {
+        var editor = null;
+        var editor2 = null;
+
+        function showOuterHTML() {
+            alert(editor.getEditorContent());
+        }
+
+        require(['sparrow', 'domReady!'], function ($, dom) {
+            $.url.upload="http://upload.sparrowzoo.com";
+            editor = new Sparrow.editor("editor");
+            editor.initImageUploadEvent();
+            editor.config.attach.key="forum";
+            editor2 = new Sparrow.editor("editor2");
             editor.config.tool.adjust.adjustable = true;
             editor2.config.style = "simple";
 
-
             editor.initialize("divEditor");
-
             editor.attach.validate = function () {
                 $("hdnContent").value = editor.getEditorContent();
                 return true;
             };
             editor.attach.setParentObject(editor);
             editor2.initialize("divEditor2");
-
-
-
-
-        }
-        function showOuterHTML() {
-            alert(editor.getEditorContent());
-        }
+            document.domain=$.browser.cookie.root_domain;
+        });
     </script>
 </head>
 
 <body>
 
 <div id="layout">
-    <jsp:include page="${root_path}/examples/menu.jsp"/>
+    <jsp:include page="/examples/menu.jsp"/>
     <div id="main">
         <div class="header">
             <h1>日期控件</h1>

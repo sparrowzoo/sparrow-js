@@ -10,7 +10,7 @@ Sparrow.browser = {
         themes: "sparrow.themes",
         // 配置cookie的域并非cookie的key
         root_domain: $(function () {
-            return window.location.host.substr(window.location.host.indexOf('.'));
+            return window.location.host.substr(window.location.host.indexOf('.')+1);
         }),
         domain: window.location.host
     },

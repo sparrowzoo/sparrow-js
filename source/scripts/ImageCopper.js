@@ -582,7 +582,7 @@ document.ready(function () {
         $(config.current).src = $.randomUrl(parentImage.src);
     }
     $.file.validateUploadFile = function (f) {
-        file.uploadClick(false, "", "fileUpload");
+        file.uploadDelegate(false, "", "fileUpload");
     };
     //设置上传成功后的回调函数
     $.file.uploadCallBack = function (fileInfo, clientFileName) {

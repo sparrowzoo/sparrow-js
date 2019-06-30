@@ -1,7 +1,6 @@
-﻿var editorArray = [];
-// 构造函数 objName:对象ID与对象同名；
-function SparrowEditor(objName) {
-    // 编辑器的对象名称与var SparrowEditor=new SparrowEditor("SparrowEditor");一致.
+﻿// 构造函数 objName:对象ID与对象同名；
+Sparrow.editor=function(objName) {
+    // 编辑器的对象名称与var Sparrow.editor=new Sparrow.editor("Sparrow.editor");一致.
     this.obj = objName;
     // 编辑器的iframe框架对象
     this.frame = null;
@@ -59,8 +58,8 @@ function SparrowEditor(objName) {
             fileUUID: objName + "_fileUUID",
             // 上传框架 name(上传iframe的id有用立即上传时会使用，保留不必删除)
             iframeName: objName + "_fileUpload",
-            // 上传框架ID 创建时生成ID，{0}用format(index)替换
-            iframeId: objName + "_fileUpload_{0}",
+            // 上传框架ID 创建时生成ID，{0}用format(this.config.attach.key)替换
+            iframeId: objName + "_{0}",
             // 文件备注的 控件name
             fileRemark: objName + "_fileRemark",
             // 保存附件信息的隐藏控件id post到服务器端之后经过解析后入库保存需要手动在页面上配置
@@ -519,7 +518,7 @@ function SparrowEditor(objName) {
                 uploadFileInitHtml
                     .push('" class="file-frame" frameborder="0"');
                 uploadFileInitHtml.push(' src="' + $.url.root
-                    + '/FileUpload?pathKey='
+                    + '/file-upload?path-key='
                     + editor.config.attach.key + '&editor=' + editor.obj + '&t='
                     + $.random() + '"></iframe>');
                 table.id = editor.config.attach.tableId;
@@ -546,7 +545,7 @@ function SparrowEditor(objName) {
                             + '.attach.deleteRow(this,\''
                             + editor.config.attach.tableId
                             + '\');">删除</a>'
-                            + '｜<a href="javascript:void(0);" target="_self" onclick="file.multiFile=-1;file.uploadClick(true,\'\',\''
+                            + '｜<a href="javascript:void(0);" target="_self" onclick="$.file.multiFile=-1;$.file.uploadClick(true,\'\',\''
                             + uploadFrameId
                             + '\','
                             + editor.obj
@@ -707,7 +706,7 @@ function SparrowEditor(objName) {
                         editor.config.currentHtmlId = htmlFrame.id;
                     }
                     // 多文件标志
-                    file.multiFile = 1;
+                    $.file.multiFile = 1;
                     // 先上传文件
                     this.uploadFile();
                 } else {
@@ -723,8 +722,8 @@ function SparrowEditor(objName) {
             var fileUploads = $("&"
                 + this.parentObject.config.attach.iframeName);
             for (var i = 0; i < fileUploads.length; i++) {
-                file.uploadFrameId = fileUploads[i].id;
-                if (file.getUploadFile(fileUploads[i].id).value) {
+                $.file.uploadFrameId = fileUploads[i].id;
+                if ($.file.getUploadFile(fileUploads[i].id).value) {
                     this.parentObject.config.attach.uploadingFileId
                         .push(fileUploads[i].id);
                 }
@@ -755,8 +754,8 @@ function SparrowEditor(objName) {
         deleteImg: function (srcElement) {
             $(srcElement.parentNode.parentNode
                 .removeChild(srcElement.parentNode));
-            if (file.wit) {
-                window.clearInterval(file.wit);
+            if ($.file.wit) {
+                window.clearInterval($.file.wit);
             }
             if ($("divState")) {
                 document.body.removeChild($("divState"));
@@ -767,8 +766,8 @@ function SparrowEditor(objName) {
             table.id = tableId;
             var currentRowIndex = srcElement.parentNode.parentNode.rowIndex;
             table.removeRow(currentRowIndex);
-            if (file.wit) {
-                window.clearInterval(file.wit);
+            if ($.file.wit) {
+                window.clearInterval($.file.wit);
             }
             if ($("divState")) {
                 document.body.removeChild($("divState"));
@@ -785,12 +784,14 @@ function SparrowEditor(objName) {
                     editor);
         }
     }
-}
+};
+Sparrow.editor.editorArray = [];
+Sparrow.editor.uploadUrl="http://upload.sparrowzoo.com"
 // 获取编辑中的对象通过控件ID
-SparrowEditor.prototype.$ = function (id) {
+Sparrow.editor.prototype.$ = function (id) {
     return this.frame.contentWindow.document.getElementById(id);
 };
-SparrowEditor.prototype.getTempNode = function (tagName) {
+Sparrow.editor.prototype.getTempNode = function (tagName) {
     // document.createElementByTagName() 具有临时ID的标签一定会被清除
     var tempNode = this.$(this.config.tempNodeAttribute);
     if (tempNode) {
@@ -824,7 +825,7 @@ SparrowEditor.prototype.getTempNode = function (tagName) {
         }
     }
 };
-SparrowEditor.prototype.replaceTagWithInnerHTML = function (currentTag) {
+Sparrow.editor.prototype.replaceTagWithInnerHTML = function (currentTag) {
     if ($.browser.firefox) {
         var range = this.getRange();
         range.setStartBefore(currentTag);
@@ -834,11 +835,11 @@ SparrowEditor.prototype.replaceTagWithInnerHTML = function (currentTag) {
         currentTag.outerHTML = currentTag.innerHTML;
     }
 };
-SparrowEditor.prototype.removeElementById = function () {
+Sparrow.editor.prototype.removeElementById = function () {
     var currentCtrl = this.$(this.config.tempNodeAttribute);
     this.replaceTagWithInnerHTML(currentCtrl);
 };
-SparrowEditor.prototype.getBrief = function () {
+Sparrow.editor.prototype.getBrief = function () {
     var brief = null;
     if ($.browser.ie) {
         brief = this.frame.contentWindow.document.body.innerText.substring(0,
@@ -851,7 +852,7 @@ SparrowEditor.prototype.getBrief = function () {
     }
     return brief;
 };
-SparrowEditor.prototype.getEditorContent = function () {
+Sparrow.editor.prototype.getEditorContent = function () {
     if (this.config.tool.convertHTML.isConvert) {
         var tdconvertHTML = document.getElementById(this.config.tool.convertHTML.ctrlId);
         if (tdconvertHTML.innerHTML !== "HTML") {
@@ -871,51 +872,49 @@ SparrowEditor.prototype.getEditorContent = function () {
     }
     return this.frame.contentWindow.document.body.innerHTML;
 };
-
 // iframe onload时执行
-SparrowEditor.prototype.initContent = function () {
+Sparrow.editor.prototype.initContent = function () {
 };
-SparrowEditor.prototype.focus = function () {
+Sparrow.editor.prototype.focus = function () {
     this.frame.contentWindow.document.body.focus();
 };
-
-SparrowEditor.prototype.setEditorContent = function (contentHtml) {
+Sparrow.editor.prototype.setEditorContent = function (contentHtml) {
     $(this.config.contentCtrlId).value = contentHtml;
     this.frame.contentWindow.document.body.innerHTML = contentHtml;
     this.updateWordCount();
 };
-SparrowEditor.prototype.setEditorText = function (contentText) {
-    this.Frame.contentWindow.document.body.innerText = contentText;
+Sparrow.editor.prototype.setEditorText = function (contentText) {
+    this.frame.contentWindow.document.body.innerText = contentText;
     this.updateWordCount();
 };
-SparrowEditor.prototype.getRange = function () {
+Sparrow.editor.prototype.getRange = function () {
     this.frame.contentWindow.document.body.focus();
     return ($.browser.ie ? this.frame.contentWindow.document.selection
             .createRange()
         : this.frame.contentWindow.getSelection().getRangeAt(0));
 };
-SparrowEditor.prototype.m_over = function (srcObj) {
+Sparrow.editor.prototype.m_over = function (srcObj) {
     this.config.tool.icon.backGroundColor = srcObj.style.backgroundColor;
-    srcObj.style.backgroundColor = "#426eb4";
+    srcObj.style.backgroundColor = "#595959";
     srcObj.style.cursor = "pointer";
 };
-SparrowEditor.prototype.m_out = function (srcObj) {
+Sparrow.editor.prototype.m_out = function (srcObj) {
     srcObj.style.backgroundColor = this.config.tool.icon.backGroundColor;
 };
-SparrowEditor.prototype.m_down = function (srcObj) {
+Sparrow.editor.prototype.m_down = function (srcObj) {
     var key = srcObj.id.split('_')[1];
     srcObj.style.background = "url(" + this.config.tool.icon.path + "ico.gif) "
         + (this.config.tool.toolBar[key].left + 1) + "px "
         + (this.config.tool.toolBar[key].top + 1) + "px";
 };
-SparrowEditor.prototype.m_up = function (srcObj) {
+Sparrow.editor.prototype.m_up = function (srcObj) {
     var key = srcObj.id.split('_')[1];
     srcObj.style.background = "url(" + this.config.tool.icon.path + "ico.gif) "
         + (this.config.tool.toolBar[key].left) + "px "
         + (this.config.tool.toolBar[key].top) + "px";
     this.run(srcObj.id);
 };
-SparrowEditor.prototype.clearTag = function (tagName) {
+Sparrow.editor.prototype.clearTag = function (tagName) {
     var tags = this.frame.contentWindow.document.getElementsByTagName(tagName);
     for (var i = tags.length - 1; i >= 0; i--) {
         if (tags[i].innerHTML === "") {
@@ -923,7 +922,7 @@ SparrowEditor.prototype.clearTag = function (tagName) {
         }
     }
 };
-SparrowEditor.prototype.clear = function () {
+Sparrow.editor.prototype.clear = function () {
     this.clearTag("span");
     this.clearTag("font");
     this.clearTag("div");
@@ -946,7 +945,7 @@ SparrowEditor.prototype.clear = function () {
         tempNode = this.getTempNode() || this.getTempNode("a");
     }
 };
-SparrowEditor.prototype.createTempNode = function (newTagName) {
+Sparrow.editor.prototype.createTempNode = function (newTagName) {
     if (!newTagName) {
         // a or span
         newTagName = "a";
@@ -977,7 +976,7 @@ SparrowEditor.prototype.createTempNode = function (newTagName) {
         }
     }
 };
-SparrowEditor.prototype.findTagNode = function (tagName) {
+Sparrow.editor.prototype.findTagNode = function (tagName) {
     tagName = tagName.toLowerCase();
     var tagNode = null;
     var currentSelectedElement = null;
@@ -1005,7 +1004,7 @@ SparrowEditor.prototype.findTagNode = function (tagName) {
         }
     } catch (err) {
     }
-    if (currentSelectedElement.nodeName.toLowerCase() == tagName) {
+    if (currentSelectedElement.nodeName.toLowerCase() === tagName) {
         tagNode = currentSelectedElement;
     } else {
         while (currentSelectedElement.nodeName.toLowerCase() !== "body") {
@@ -1022,7 +1021,7 @@ SparrowEditor.prototype.findTagNode = function (tagName) {
     }
     return tagNode;
 };
-SparrowEditor.prototype.run = function (srcElementId) {
+Sparrow.editor.prototype.run = function (srcElementId) {
     var srcElement = $(srcElementId);
     key = srcElement.id.split('_')[1];
     this.frame.contentWindow.focus();
@@ -1041,7 +1040,7 @@ SparrowEditor.prototype.run = function (srcElementId) {
     }
     this.frame.contentWindow.focus();
 };
-SparrowEditor.prototype.callBackRun = function (key, e) {
+Sparrow.editor.prototype.callBackRun = function (key, e) {
     e = e || window.event;
     var srcObject = e.srcElement || e.target;
     switch (key) {
@@ -1071,7 +1070,7 @@ SparrowEditor.prototype.callBackRun = function (key, e) {
     document.body.removeChild(listDiv);
     this.config.currentHtmlId = null;
 };
-SparrowEditor.prototype.show = function (srcObject, key, width, maxHeight) {
+Sparrow.editor.prototype.show = function (srcObject, key, width, maxHeight) {
     var sparrowObject = $(srcObject);
     // 如果当前div菜单还存在则用样式隐藏
     if (this.config.currentHtmlId) {
@@ -1089,7 +1088,7 @@ SparrowEditor.prototype.show = function (srcObject, key, width, maxHeight) {
     }
     listDiv.style.cssText = "display:block;position:absolute;width:"
         + width
-        + "px;height:0px;border:#990000 1px solid;background:#ffffff; padding:1px;text-align:center;";
+        + "px;height:0px;border:#595959 1px solid;background:#ffffff; padding:1px;text-align:center;";
     listDiv.onclick = function (e) {
         $.event(e).cancelBubble();
     };
@@ -1104,7 +1103,7 @@ SparrowEditor.prototype.show = function (srcObject, key, width, maxHeight) {
     this.config.interval = window.setInterval(this.obj + ".intervalShow(" + key
         + "," + maxHeight + ")", 10);
 };
-SparrowEditor.prototype.intervalShow = function (key, maxHeight) {
+Sparrow.editor.prototype.intervalShow = function (key, maxHeight) {
     var listDiv = document.getElementById(this.obj + "_"
         + this.config.tool.toolBar[key].htmlFrameId);
     // var divWidth = parseInt(listDiv.style.width.replace("px", ""));
@@ -1129,8 +1128,7 @@ SparrowEditor.prototype.intervalShow = function (key, maxHeight) {
         listDiv.style.height = divHeight + "px";
     }
 };
-
-SparrowEditor.prototype.getHtml = function (key) {
+Sparrow.editor.prototype.getHtml = function (key) {
     var HTML = [];
     switch (key) {
         case 0:
@@ -1200,11 +1198,11 @@ SparrowEditor.prototype.getHtml = function (key) {
                 this.createTempNode("a");
             }
             HTML
-                .push('\u94fe\u63a5\u5730\u5740<input onkeyup="if(this.value.substring(0,7)!=\'http://\'){this.value=\'http://\'}" value="http://'
+                .push('<label>\u94fe\u63a5\u5730\u5740</label><input class="pure-input-1" onkeyup="if(this.value.substring(0,7)!=\'http://\'){this.value=\'http://\'}" value="http://'
                     + url
                     + '" type="text" id="'
                     + this.obj
-                    + '_txtURL" /><br/><input type="button" value="\u786e\u5b9a" id="ok" onclick="if(document.getElementById(\''
+                    + '_txtURL" />  <input class="pure-button pure-button-primary" type="button" value="\u786e\u5b9a" id="ok" onclick="if(document.getElementById(\''
                     + this.obj
                     + '_txtURL\').value==\'http://\'&&'
                     + !hasLink
@@ -1239,17 +1237,17 @@ SparrowEditor.prototype.getHtml = function (key) {
             break;
         case 22:
             this.createTempNode("span");
-            HTML.push('FLASH视频URL:<input style="width:300px;" id="' + this.obj
+            HTML.push('<label>FLASH视频URL</label><input class="pure-input-rounded" id="' + this.obj
                 + '_txtVideo" type="text"/><br/><span id="' + this.obj
                 + '_spanVideoErrorMessage"></span><br/>');
-            HTML.push('<input value="插入视频" type="button" onclick="' + this.obj
+            HTML.push('<input value="插入视频" class="pure-button pure-button-primary" type="button" onclick="' + this.obj
                 + '.callBackRun(23,event);"/>');
             break;
         case 23:
             this.createTempNode("span");
-            HTML.push('<div  id="tab' + this.obj + '" class="editorAttachFrame">');
-            HTML.push('<div class="title">');
-            HTML.push('<ul>');
+            HTML.push('<div  id="tab' + this.obj + '" class="tab">');
+            HTML.push('<div class="pure-menu pure-menu-horizontal">');
+            HTML.push('<ul class="pure-menu-list" style="width: 100%;">');
             /*
              * HTML.push('<li class="select">'); HTML .push('<a target="_self"
              * href="javascript:void(0);" onclick="webtab.setTab(\'' + this.obj +
@@ -1257,22 +1255,21 @@ SparrowEditor.prototype.getHtml = function (key) {
              * HTML.push('</li>');
              */
 
-            HTML.push('<li class="select">');
-            HTML
-                .push('<a target="_self" href="javascript:void(0);">');
-            HTML.push('本地图片');
+
+            HTML.push('<li class="pure-menu-item">');
+            HTML.push('<a target="_self" href="javascript:void(0);" class="pure-menu-link">');
+            HTML.push('<span>本地图片</span>');
             HTML.push('</a>');
             HTML.push('</li>');
 
-            HTML.push('<li class="noselect">');
-            HTML
-                .push('<a target="_self" href="javascript:void(0);">');
-            HTML.push('网络图片');
+            HTML.push('<li class="pure-menu-item">');
+            HTML.push('<a target="_self" href="javascript:void(0);" class="pure-menu-link">');
+            HTML.push('<span>网络图片</span>');
             HTML.push('</a>');
             HTML.push('</li>');
             HTML.push('</ul>');
             HTML.push('</div>');
-            HTML.push('<div class="content">');
+            HTML.push('<div class="tab-content">');
             /*
              * // 插入本地文件 HTML.push('<div class="block">'); HTML.push('');
              * HTML.push('<table class="attach" id="' + this.config.attach.tableId +
@@ -1296,7 +1293,7 @@ SparrowEditor.prototype.getHtml = function (key) {
              * href="javascript:void(0);" target="_self" onclick="' + this.obj +
              * '.attach.deleteRow(this,\'' + this.config.attach.tableId + '\');">删除</a>');
              * HTML .push('｜<a href="javascript:void(0);" target="_self"
-             * onclick="file.multiFile=-1;file.uploadClick(true,\'\',\'' +
+             * onclick="$.file.multiFile=-1;$.file.uploadClick(true,\'\',\'' +
              * this.config.attach.iframeId.format(i) + '\',' + this.obj +
              * ',this);">立即上传</a>'); HTML.push('</td>'); HTML.push('</tr>');
              * this.config.attach.index = i; } HTML.push('</tbody>'); HTML.push('</table>');
@@ -1310,9 +1307,9 @@ SparrowEditor.prototype.getHtml = function (key) {
                 .push('<div style="width:100%;height:auto;overflow:hidden;padding:2px;" id="'
                     + this.config.attach.uploadImgContainerId + '"></div>');
             HTML.push('<iframe name="' + this.config.attach.iframeName + '" id="'
-                + this.config.attach.iframeId.format("image")
+                + this.config.attach.iframeId.format(this.config.attach.key)
                 + '" class="file-frame" frameborder="0"');
-            HTML.push(' src="' + $.url.root + '/FileUpload?pathKey='
+            HTML.push(' src="' + $.editor.uploadUrl + '/file-upload?path-key='
                 + this.config.attach.key + '&editor=' + this.obj + '"></iframe><br/>');
             HTML.push('</div>');
             // 插入本地图片结束
@@ -1332,7 +1329,7 @@ SparrowEditor.prototype.getHtml = function (key) {
     }
     return HTML.join("");
 };
-SparrowEditor.prototype.adjust = function (style, obj) {
+Sparrow.editor.prototype.adjust = function (style, obj) {
     try {
         if (style === "width") {
             var objWidth = parseInt(obj.value);
@@ -1368,13 +1365,13 @@ SparrowEditor.prototype.adjust = function (style, obj) {
     }
     this.autoAdjust(document.getElementById(this.config.iframeId));
 };
-SparrowEditor.prototype.autoAdjust = function (obj) {
+Sparrow.editor.prototype.autoAdjust = function (obj) {
     var parentDivHeight = parseInt(document
         .getElementById(this.config.container.id).style.height);
     var toolBarHeight = document.getElementById(this.config.tool.id).clientHeight + 10;
     obj.style.height = parentDivHeight - toolBarHeight;
 };
-SparrowEditor.prototype.convertHTML = function (obj) {
+Sparrow.editor.prototype.convertHTML = function (obj) {
     this.clear();
     if (obj.innerHTML === "HTML") {
         obj.innerHTML = "\u8fd4\u56de";
@@ -1395,16 +1392,16 @@ SparrowEditor.prototype.convertHTML = function (obj) {
         }
     }
 };
-SparrowEditor.prototype.insertVideo = function () {
+Sparrow.editor.prototype.insertVideo = function () {
     var result = false;
     var videoURL = document.getElementById(this.obj + "_txtVideo").value;
     var errorMessage = $(this.obj + "_spanVideoErrorMessage");
     if (videoURL.trim() === "") {
         errorMessage.className = "error";
-        errorMessage.innerHTML = "请输入视频地址<br/>例:http://player.youku.com/player.php/sid/qxiaoqu/v.swf";
-    } else if (videoURL.search(/^[http:\/\/][^<]*\.swf[^<]*/) == -1) {
+        errorMessage.innerHTML = "请输入视频地址<br/>例:http://player.youku.com/player.php/sid/sparrow/v.swf";
+    } else if (videoURL.search(/^[http:\/\/][^<]*\.swf[^<]*/) === -1) {
         errorMessage.className = "error";
-        errorMessage.innerHTML = "请输入正确的视频地址。例:http://player.youku.com/player.php/sid/qxiaoqu/v.swf";
+        errorMessage.innerHTML = "请输入正确的视频地址。例:http://player.youku.com/player.php/sid/sparrow/v.swf";
     } else {
         var tempNode = this.getTempNode();
         var flashUrl = document.getElementById(this.obj + "_txtVideo").value;
@@ -1412,7 +1409,7 @@ SparrowEditor.prototype.insertVideo = function () {
         var videoHtml;
         if (this.config.flash_thumbnail) {
             //直接可播放为了预览视频效果 展示时通过正则转换成 image
-            ajax
+            $.ajax
                 .json($.url.root + "/attach/getFlashThumbnail.json", "parameter=" + encodeURIComponent(flashUrl),
                     function (result) {
                         videoHtml = result.message;
@@ -1437,10 +1434,10 @@ SparrowEditor.prototype.insertVideo = function () {
     }
     return result;
 };
-SparrowEditor.prototype.insertImage = function () {
+Sparrow.editor.prototype.insertImage = function () {
     var imageURL = document.getElementById(this.obj + "_txtImage").value;
     var errorMessage = $(this.obj + "_spanImageErrorMessage");
-    if (imageURL.trim() == "") {
+    if (imageURL.trim() === "") {
         errorMessage.className = "error";
         errorMessage.innerHTML = "请输入图片地址<br/>例:" + $.url.resource
             + "/img.jpg<br/>格式限制:gif|jpg|png";
@@ -1450,52 +1447,52 @@ SparrowEditor.prototype.insertImage = function () {
             + "/img.jpg<br/>格式限制:gif|jpg|png";
     } else {
         var editor = this;
-        ajax.json($.url.root + '/attach/downloadInternetPic.json', "imageUrl=" + imageURL,
+        $.ajax.json($.url.root + '/attach/downloadInternetPic.json', "imageUrl=" + imageURL,
             function (result) {
                 $(editor.config.attach.uploadImgContainerId).appendChild(
                     getImgContainer(result.message,
                         imageURL, editor));
-                editor.attach.insertEditor(file.getFileName(imageURL),
+                editor.attach.insertEditor($.file.getFileName(imageURL),
                     result.message);
             });
     }
 };
-SparrowEditor.prototype.insertFace = function (srcObject) {
+Sparrow.editor.prototype.insertFace = function (srcObject) {
     var face = this.getTempNode();
     if (face) {
         face.innerHTML = "<img src=\"" + srcObject.src + "\"/>";
         if ($(this.config.titleCtrlId)
-            && $(this.config.titleCtrlId).value == "") {
+            && $(this.config.titleCtrlId).value === "") {
             $(this.config.titleCtrlId).value = srcObject.title;
         }
         this.removeElementById();
-    } else {
+        return;
+    }
         this.frame.contentWindow.document.execCommand("insertImage", false,
             srcObject.src);
-    }
 };
-SparrowEditor.prototype.insertHyperLink = function () {
+Sparrow.editor.prototype.insertHyperLink = function () {
     var hyperLink = this.getTempNode("a");
     var txtURL = document.getElementById(this.obj + "_txtURL").value;
-    if (hyperLink) {
-        if (txtURL == "http://") {
+    if (!hyperLink) {return}
+
+        if (txtURL === "http://") {
             if (window
                     .confirm("\u60a8\u786e\u8ba4\u8981\u53d6\u6d88\u94fe\u63a5\u5417?")) {
                 this.removeElementById();
             }
         } else {
-            if (hyperLink.innerHTML == "") {
+            if (hyperLink.innerHTML === "") {
                 hyperLink.innerHTML = txtURL;
             }
             hyperLink.removeAttribute("id");
             hyperLink.setAttribute("target", "blank");
             hyperLink.setAttribute("href", txtURL);
         }
-    }
 };
-SparrowEditor.prototype.initialize = function (containerId) {
+Sparrow.editor.prototype.initialize = function (containerId) {
     $.global(this.obj, this);
-    editorArray.push(this);
+    $.editor.editorArray.push(this);
     this.config.container.id = containerId;
     var iframeId = "iframe" + $.random();
     this.config.iframeId = iframeId;
@@ -1525,7 +1522,7 @@ SparrowEditor.prototype.initialize = function (containerId) {
     } catch (e) {
     }
 };
-SparrowEditor.prototype.initTool = function () {
+Sparrow.editor.prototype.initTool = function () {
     var key = 0;
     var toolHTML = [];
     var toolBarList = null;
@@ -1627,7 +1624,7 @@ SparrowEditor.prototype.initTool = function () {
         + document.getElementById(this.config.container.id).style.width
         + ';height:auto;">' + toolHTML.join("") + '</div>';
 };
-SparrowEditor.prototype.initEditor = function (iframeId) {
+Sparrow.editor.prototype.initEditor = function (iframeId) {
     return '<iframe onload="'
         + this.obj
         + '.autoAdjust(this);'
@@ -1643,7 +1640,7 @@ SparrowEditor.prototype.initEditor = function (iframeId) {
         + "px"
         + ';scrollbar-face-color: #F7F5F4;" frameborder="0" marginheight="0" marginwidth="0" src="about:blank"></iframe>';
 };
-SparrowEditor.prototype.updateWordCount = function () {
+Sparrow.editor.prototype.updateWordCount = function () {
     var obj = this.obj || this.body.id;
     var editor = $.global(obj);
     if ($(editor.config.wordCount)) {
@@ -1654,70 +1651,55 @@ SparrowEditor.prototype.updateWordCount = function () {
 function getImgContainer(fileUrl, clientFileName, editor) {
     var imgArray = [];
     var imgDiv = $("+div");
-    var fileId = file.getFileName(fileUrl).split('.')[0];
+    var fileId = $.file.getFileName(fileUrl).split('.')[0];
     imgDiv.s.className="";
     imgDiv.s.style.cssText = "width:92px;height:90px;float:left;padding:3px;border:#ccc 2px solid;";
     imgArray
         .push('<a target="_blank" href="{0}" title="{1}"><img style="width:91px;height:67px;" src="{2}"/></a>'
-            .format(fileUrl, file.getFileName(clientFileName), fileUrl));
+            .format(fileUrl, $.file.getFileName(clientFileName), fileUrl));
     imgArray.push('<br/><a href="javascript:void(0);" target="_self" onclick="'
         + editor.obj + '.attach.deleteOnServer(\'' + fileId
         + '\',this);">删除</a>'
         + '｜<a href="javascript:void(0);" target="_self" onclick="'
         + editor.obj + '.attach.insertEditor(\''
-        + file.getFileName(clientFileName) + '\',\'' + fileUrl
+        + $.file.getFileName(clientFileName) + '\',\'' + fileUrl
         + '\');">插入</a>' + '<input type="hidden" name="'
         + editor.config.attach.fileUUID + '" value="' + fileId + '"/>');
     imgDiv.s.innerHTML = imgArray.join("");
     return imgDiv.s;
 }
 function clearHtmlFrame() {
-    for (var i = 0; i < editorArray.length; i++) {
-        if (editorArray[i].config.currentHtmlId) {
-            document.getElementById(editorArray[i].config.currentHtmlId).style.display = "none";
-            editorArray[i].config.currentHtmlId = null;
-            editorArray[i].clear();
+    for (var i = 0; i < $.editor.editorArray.length; i++) {
+        if ($.editor.editorArray[i].config.currentHtmlId) {
+            document.getElementById($.editor.editorArray[i].config.currentHtmlId).style.display = "none";
+            $.editor.editorArray[i].config.currentHtmlId = null;
+            $.editor.editorArray[i].clear();
         }
     }
 }
 $(document).bind("onclick", function () {
     clearHtmlFrame();
 });
-// 从编辑器上传成功后的回调函数
-// 图片上传 成功
-SparrowEditor.prototype.initImageUploadEvent = function (coverKey) {
-    var contentEditor = this;
+//初始化图片上传事件
+Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
     if (!coverKey) {
         coverKey = this.config.cover_key;
     }
-    file.validateUploadFile = function (f, key) {
-        if (file.checkFileType(file.getFileName(f.value), ["jpg", "jpeg",
+    $.file.validateUploadFile = function (f, key,editor) {
+        if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
                 "gif", "png"], "error" + coverKey)) {
-            //非编辑器上传
-            if (key !== contentEditor.config.attach.key) {
-                file.uploadCallBack = function (fileInfo, clientFileName) {
-                    if (fileInfo.fileName) {
-                        $("div" + coverKey).innerHTML = "<a href='" + fileInfo.fileName + "' target='_blank'><img src='" + fileInfo.fileName
-                            + "'/></a>";
-                        $("hdn" + coverKey).value = fileInfo.fileName;
-                    }
-                };
-                file.uploadClick(false, '', key);
-            } else {
-                file.uploadCallBack = function (fileInfo, clientFileName, editor) {
+                $.file.uploadCallBack = function (uploadProgress, editor) {
+                    var clientFileName=uploadProgress.clientFileName;
                     if (clientFileName !== "") {
-                        $(contentEditor.config.attach.uploadImgContainerId)
+                        $(editor.config.attach.uploadImgContainerId)
                             .appendChild(
-                                getImgContainer(fileInfo.fileName,
+                                getImgContainer(uploadProgress.fileUrl,
                                     clientFileName, editor));
-                        contentEditor.attach.insertEditor(file
-                            .getFileName(clientFileName), fileInfo.fileName);
+                        editor.attach.insertEditor($.file
+                            .getFileName(clientFileName), uploadProgress.fileUrl);
                     }
                 };
-                file.multiFile = -1;
-                file.uploadClick(true, '', contentEditor.config.attach.iframeId
-                    .format("image"), contentEditor);
-            }
+                $.file.uploadDelegate(true,key,editor);
         }
     };
 };
@@ -1732,22 +1714,22 @@ Sparrow.upload = {
     }
 };
 /*
- * file.uploadCallBack = function(fileInfo, clientFileName, editor) { if
+ * $.file.uploadCallBack = function(fileInfo, clientFileName, editor) { if
  * (clientFileName != "") { editor.config.attach.uploadedIndex++; if
  * (editor.config.attach.uploadedIndex ==
  * editor.config.attach.uploadingFileId.length) { // 多文件上传 所有文件上传完毕
- * file.multiFile = 0; editor.config.attach.uploadedIndex = 0;
+ * $.file.multiFile = 0; editor.config.attach.uploadedIndex = 0;
  * editor.config.attach.uploadingFileId = new Array(); } table.id =
  * editor.config.attach.tableId; //var uploadFileInitHtml = new Array(); var
  * fileToolip = new Array(); var currentRowIndex =
- * $(file.uploadFrameId).parentNode.parentNode.rowIndex; if
+ * $($.file.uploadFrameId).parentNode.parentNode.rowIndex; if
  * (fileInfo.FileType.indexOf("image") == 0) {
  * fileToolip.push("\u6587\u4ef6\u540d :\u300a" +
- * file.getFileName(clientFileName) + "\u300b");
+ * $.file.getFileName(clientFileName) + "\u300b");
  * fileToolip.push("\u7531\u7f51\u53cb\uff1a" + browser.getUserName() + "\u4e8e" +
  * new Date().toLocaleString() + "\u4e0a\u4f20"); table.tr = [ { td : [ {
  * innerHTML : '<a target="_blank" href="' + fileInfo.FileName + '">' +
- * file.getFileName(clientFileName) + '</a>', align : "left", className :
+ * $.file.getFileName(clientFileName) + '</a>', align : "left", className :
  * "fileName" }, {}, { innerHTML : '<a href="javascript:void(0);"
  * target="_self" onclick="' + editor.obj + '.attach.deleteOnServer(\'' +
  * fileInfo.FileUUID + '\',this);">删除</a>' + '｜<a href="javascript:void(0);"
@@ -1758,18 +1740,18 @@ Sparrow.upload = {
  * align : "left", className : 'fileOperation' } ] } ];
  * editor.attach.insertEditor(currentRowIndex, fileToolip.join("\n"),
  * fileInfo.FileUUID, fileInfo.FileName); } else {
- * fileToolip.push('\u6587\u4ef6\u540d :' + file.getFileName(clientFileName));
+ * fileToolip.push('\u6587\u4ef6\u540d :' + $.file.getFileName(clientFileName));
  * fileToolip.push('\u6587\u4ef6\u5927\u5c0f:' + fileInfo.ContentLengthStr);
  * fileToolip.push('\u6587\u4ef6\u7c7b\u578b:' + fileInfo.FileType); table.tr = [ {
  * td : [ { innerHTML : '<a target="_blank" href="' + sparrow.rootPath +
  * '/FileDownLoad?fileUUID=' + fileInfo.FileUUID + '">' +
- * file.getFileName(clientFileName) + '</a>', align : 'left', className :
+ * $.file.getFileName(clientFileName) + '</a>', align : 'left', className :
  * 'fileName' }, {}, { innerHTML : '<a href="javascript:void(0);"
  * target="_self" onclick="' + editor.obj + '.attach.deleteOnServer(\'' +
  * fileInfo.FileUUID + '\',this);">删除</a>' + '<input type="hidden" name="' +
  * editor.config.attach.fileUUID + '" value="' + fileInfo.FileUUID + '"/>',
  * align : 'left', className : 'fileOperation' } ] } ]; }
- * table.updateRow(currentRowIndex); if (file.multiFile == 1) {
+ * table.updateRow(currentRowIndex); if ($.file.multiFile == 1) {
  * window.setTimeout(editor.obj + ".attach.uploadFile();", 1000); } else if
- * (file.multiFile == 0) { // 文件上传完毕后提交 editor.attach._submit(); } } };
+ * ($.file.multiFile == 0) { // 文件上传完毕后提交 editor.attach._submit(); } } };
  */
