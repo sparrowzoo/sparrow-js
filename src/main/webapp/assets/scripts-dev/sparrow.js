@@ -786,7 +786,7 @@ Sparrow.ajax = {
             }
         }
         if (http_request === null) {
-            window.alert("浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器");
+            console.log("浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器");
         }
         return http_request;
     },
@@ -836,7 +836,7 @@ Sparrow.ajax = {
                     // alert("结果状态"+objXMLHttp.status);
                     if (objXMLHttp.status === 200) {
                         if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
-                            alert("login false");
+                            console.log("login false");
                             var config = objXMLHttp.responseText.json();
                             if (config.inFrame) {
                                 //window.parent.location.href = config.url;
@@ -854,15 +854,15 @@ Sparrow.ajax = {
                         }
                     } else {
                         if (objXMLHttp.status === 404) {
-                            alert("资源未找到");//
+                            console.log("资源未找到");//
                         } else {
                             if (objXMLHttp.status === 500) {
-                                alert("服务器错误");//
+                                console.log("服务器错误");//
                             } else {
                                 if (objXMLHttp.status === 12031) {
-                                    alert("服务器未启动");//
+                                    console.log("服务器未启动");//
                                 } else {
-                                    alert(objXMLHttp.status + ":未知错误");
+                                    console.log(objXMLHttp.status + ":未知错误");
                                 }
                             }
                         }
@@ -870,7 +870,7 @@ Sparrow.ajax = {
                 }
             };
         } catch (e) {
-            alert(e);
+            console.log(e);
         }
     },
     json: function (url, data, callback, srcElement) {

@@ -18,7 +18,6 @@
             document.getElementById("jsonp").innerHTML=args;
             alert(args);
             console.info(args);
-
         }
     </script>
 </head>
