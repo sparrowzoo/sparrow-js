@@ -47,8 +47,8 @@
     <jsp:include page="/examples/menu.jsp"/>
     <div id="main">
         <div class="header">
-            <h1>日期控件</h1>
-            <h2>windows 日期选择控件</h2>
+            <h1>在线编辑器</h1>
+            <h2>sparrow editor</h2>
         </div>
 
         <div class="content">

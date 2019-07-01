@@ -2158,6 +2158,7 @@ Sparrow.file = {
     uploadCallBack: function (fileInfo, clientFileName, editor) {
         console.info(fileInfo);
         console.info(clientFileName);
+        this.clearStatus();
     },
     // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
     clearStatus: function () {
@@ -2325,7 +2326,8 @@ Sparrow.file = {
         // 提交
         uploadFrame.contentWindow.document.forms[0].submit();
     },
-    progressCallback: function (uploadProgress,editor) {
+    //只负责显示进度
+    progressCallback: function (uploadProgress) {
         if (uploadProgress == null) {
             return;
         }
@@ -2357,23 +2359,12 @@ Sparrow.file = {
             + "<br/>");
         statusString.push("上传进度:" + status);
         $("#divStatus", false).html(statusString.toString());
-        // 上传完毕
-        if (uploadProgress.contentLength <= uploadProgress.readLength) {
-            if ($.file.uploadCallBack) {
-                // 回调上传完毕后要执行的函数
-                $.file
-                    .uploadCallBack(
-                        uploadProgress,
-                        editor);
-            }
-            $.file.clearStatus();
-        }
     },
     getStatus: function (showState, editor) {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
         $("jsonp", $.url.upload + "/file-upload?file-serial-number="
             + this.getFileSerialNumber() + "&t="
-            + Math.random(), "uploadProgress");
+            + Math.random()+"&callback=progressCallback", "uploadProgress");
     },
     initCoverImageEvent: function (coverKey) {
         if (!coverKey) coverKey = "Cover";
@@ -2392,6 +2383,7 @@ Sparrow.file = {
                         $("#error" + suffix).class("prompt");
                         $("#error" + suffix).html("");
                     }
+                    $.file.clearStatus();
                 };
                 $.file.uploadDelegate(false, key, editor);
             }
@@ -4175,51 +4167,6 @@ Sparrow.editor=function(objName) {
                                 fileUrl, clientFileName, editor));
                         }
                     }
-
-                    // [{ID:'170',Type:'0',Status:'1',FileLength:'879744',FileId:'332',FileType:'image/pjpeg',ClientFileName:'Chrysanthemum.jpg',CreateTime:'2012-05-21
-                    // 22:44:06.0',CreateUserId:'47',ServerCode:'0',DownLoadTimes:'0',ReadLevel:'0',Remarks:'',Url=''}]
-                    /*
-                     * // 附件表行索引 var rowIndex = 0; // 将原有的附件信息清除 for (
-                     * var i = 0; i < rowCount - 2; i++) {
-                     * table.removeRow(1); } // 文件备注||文件名 //
-                     * 由网友：zh_harry于2011年9月10日 13:12:10上传 for ( var i =
-                     * uploadedFileList.length - 1; i >= 0; i--) { //
-                     * 图片toolip var fileToolip = new Array(); if
-                     * (uploadedFileList[i].FileType .indexOf("image") ==
-                     * 0) {
-                     *  // 如果有备注则显示备份 if
-                     * (uploadedFileList[i].Remarks.trim() != "") {
-                     * fileToolip .push(uploadedFileList[i].Remarks
-                     * .trim()); } // 否则显示文件名 else { fileToolip
-                     * .push(uploadedFileList[i].ClientFileName
-                     * .split('.')[0]); } } table.tr[rowIndex++] = { td : [ {
-                     * innerHTML : '<a target="_blank" href="' +
-                     * sparrow.rootPath + '/FileDownLoad?fileUUID=' +
-                     * uploadedFileList[i].FileId + '">' +
-                     * uploadedFileList[i].ClientFileName + '</a>',
-                     * align : "left", className : "fileName" }, {
-                     * innerHTML : '<input name="' +
-                     * editor.config.attach.fileRemark + '" value="' +
-                     * uploadedFileList[i].Remarks + '" style="width:
-                     * 120px;" type="text" />', align : "left",
-                     * className : "fileRemarks" }, { innerHTML : '<a
-                     * href="javascript:void(0);" target="_self"
-                     * onclick="' + editor.obj +
-                     * '.attach.deleteOnServer(\'' +
-                     * uploadedFileList[i].FileId + '\',this);">删除</a>' + '<input
-                     * type="hidden" name="' +
-                     * editor.config.attach.fileUUID + '" value="' +
-                     * uploadedFileList[i].FileId + '"/>' +
-                     * (uploadedFileList[i].FileType .indexOf("image") ==
-                     * 0 ? '｜<a href="javascript:void(0);"
-                     * target="_self" onclick="' + editor.obj +
-                     * '.attach.insertEditor(event,\'' + fileToolip
-                     * .join("\\n") + '\',\'' +
-                     * uploadedFileList[i].FileId + '\',\'' +
-                     * uploadedFileList[i].Url + '\');">插入到编辑器</a>' :
-                     * ""), align : "left", className : "fileOperation" } ] }; }
-                     * table.insertRow(1);
-                     */
                 }
             }
         },
@@ -4326,14 +4273,14 @@ Sparrow.editor=function(objName) {
             editor.removeElementById();
         },
         // 从服务器端删除附件
-        deleteOnServer: function (fileUUID, srcElement) {
+        deleteOnServer: function (fileId, srcElement) {
             var editor = this.parentObject;
             if (window.confirm($.message.deleteFile)) {
-                ajax
+                $.ajax
                     .json($.url.root + "/attach/delete.json", "uuid=" + fileUUID,
                         function (result) {
                             editor.attach
-                                .deleteImg(ajax.srcElement);
+                                .deleteImg($.ajax.srcElement);
                             $.message("删除成功！");
                         }, srcElement);
             }
@@ -4707,8 +4654,9 @@ Sparrow.editor.prototype.intervalShow = function (key, maxHeight) {
         } else if (key == 22) {
             $(this.obj + "_txtVideo").focus();
         } else if (key == 23) {
+            this.attach.setParentObject(this);
             // load 原有文件
-            this.attach.loadAttach(this.config.attach.fileKey);
+            this.attach.loadAttach(this.config.attach.key);
         }
         this.config.currentHtmlId = listDiv.id;
     } else {
@@ -4835,13 +4783,6 @@ Sparrow.editor.prototype.getHtml = function (key) {
             HTML.push('<div  id="tab' + this.obj + '" class="tab">');
             HTML.push('<div class="pure-menu pure-menu-horizontal">');
             HTML.push('<ul class="pure-menu-list" style="width: 100%;">');
-            /*
-             * HTML.push('<li class="select">'); HTML .push('<a target="_self"
-             * href="javascript:void(0);" onclick="webtab.setTab(\'' + this.obj +
-             * '\',0);this.blur();">'); HTML.push('本地文件'); HTML.push('</a>');
-             * HTML.push('</li>');
-             */
-
 
             HTML.push('<li class="pure-menu-item">');
             HTML.push('<a target="_self" href="javascript:void(0);" class="pure-menu-link">');
@@ -4857,35 +4798,6 @@ Sparrow.editor.prototype.getHtml = function (key) {
             HTML.push('</ul>');
             HTML.push('</div>');
             HTML.push('<div class="tab-content">');
-            /*
-             * // 插入本地文件 HTML.push('<div class="block">'); HTML.push('');
-             * HTML.push('<table class="attach" id="' + this.config.attach.tableId +
-             * '">'); HTML.push('<tbody>'); HTML.push('<tr>'); HTML.push('<th class="fileName">');
-             * HTML .push('<a style="color:#ff9900;font-weight:bold;"
-             * href="javascript:void(0);" target="_self" onclick="' + this.obj +
-             * '.attach.newAttach(this);" type="button">新附件</a>');
-             *
-             * HTML.push('</th>'); HTML.push('<th class="fileRemarks">备注</th>');
-             * HTML.push('<th class="fileOperation">操作</th>'); HTML.push('</tr>');
-             * for ( var i = 1; i <= 3; i++) { HTML.push('<tr>'); HTML.push('<td class="fileName">');
-             * HTML.push('<iframe name="' + this.config.attach.iframeName + '"
-             * id="' + this.config.attach.iframeId.format(i) + '" class="file-frame"
-             * frameborder="0"'); HTML.push(' src="' + sparrow.rootPath +
-             * '/FileUpload?pathKey=' + this.config.attach.key + '"></iframe>');
-             * HTML.push('</td>'); HTML.push('<td class="fileRemarks">');
-             * HTML.push('<input style="width: 120px" name="' +
-             * this.config.attach.fileRemark + '">'); HTML.push('</td>');
-             * HTML.push('<td class="fileOperation">'); HTML.push('<input name="' +
-             * this.config.attach.fileUUID + '" type="hidden"/>'); HTML.push('<a
-             * href="javascript:void(0);" target="_self" onclick="' + this.obj +
-             * '.attach.deleteRow(this,\'' + this.config.attach.tableId + '\');">删除</a>');
-             * HTML .push('｜<a href="javascript:void(0);" target="_self"
-             * onclick="$.file.multiFile=-1;$.file.uploadClick(true,\'\',\'' +
-             * this.config.attach.iframeId.format(i) + '\',' + this.obj +
-             * ',this);">立即上传</a>'); HTML.push('</td>'); HTML.push('</tr>');
-             * this.config.attach.index = i; } HTML.push('</tbody>'); HTML.push('</table>');
-             * HTML.push('</div>'); // 本地文件插入结束
-             */
 
             // 插入本地图片
             HTML.push('<div id="' + this.config.attach.key
@@ -5285,63 +5197,12 @@ Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
                         editor.attach.insertEditor($.file
                             .getFileName(clientFileName), uploadProgress.fileUrl);
                     }
+                    $.file.clearStatus();
                 };
                 $.file.uploadDelegate(true,key,editor);
         }
     };
 };
-Sparrow.upload = {
-    login_callback: function (parameters) {
-        //pathKey+editorId=parameters
-        var tabAttach = $(parameters + "_localUploadImgTab").getElementsByTagName(
-            "iframe");
-        for (var i = 0; i < tabAttach.length; i++) {
-            tabAttach[i].src = tabAttach[i].src + "&t=" + Math.random();
-        }
-    }
-};
-/*
- * $.file.uploadCallBack = function(fileInfo, clientFileName, editor) { if
- * (clientFileName != "") { editor.config.attach.uploadedIndex++; if
- * (editor.config.attach.uploadedIndex ==
- * editor.config.attach.uploadingFileId.length) { // 多文件上传 所有文件上传完毕
- * $.file.multiFile = 0; editor.config.attach.uploadedIndex = 0;
- * editor.config.attach.uploadingFileId = new Array(); } table.id =
- * editor.config.attach.tableId; //var uploadFileInitHtml = new Array(); var
- * fileToolip = new Array(); var currentRowIndex =
- * $($.file.uploadFrameId).parentNode.parentNode.rowIndex; if
- * (fileInfo.FileType.indexOf("image") == 0) {
- * fileToolip.push("\u6587\u4ef6\u540d :\u300a" +
- * $.file.getFileName(clientFileName) + "\u300b");
- * fileToolip.push("\u7531\u7f51\u53cb\uff1a" + browser.getUserName() + "\u4e8e" +
- * new Date().toLocaleString() + "\u4e0a\u4f20"); table.tr = [ { td : [ {
- * innerHTML : '<a target="_blank" href="' + fileInfo.FileName + '">' +
- * $.file.getFileName(clientFileName) + '</a>', align : "left", className :
- * "fileName" }, {}, { innerHTML : '<a href="javascript:void(0);"
- * target="_self" onclick="' + editor.obj + '.attach.deleteOnServer(\'' +
- * fileInfo.FileUUID + '\',this);">删除</a>' + '｜<a href="javascript:void(0);"
- * target="_self" onclick="' + editor.obj + '.attach.insertEditor(event,\'' +
- * fileToolip.join('\\r\\n') + '\',\'' + fileInfo.FileUUID + '\',\'' +
- * fileInfo.FileName + '\');">插入编辑器</a>' + '<input type="hidden" name="' +
- * editor.config.attach.fileUUID + '" value="' + fileInfo.FileUUID + '"/>',
- * align : "left", className : 'fileOperation' } ] } ];
- * editor.attach.insertEditor(currentRowIndex, fileToolip.join("\n"),
- * fileInfo.FileUUID, fileInfo.FileName); } else {
- * fileToolip.push('\u6587\u4ef6\u540d :' + $.file.getFileName(clientFileName));
- * fileToolip.push('\u6587\u4ef6\u5927\u5c0f:' + fileInfo.ContentLengthStr);
- * fileToolip.push('\u6587\u4ef6\u7c7b\u578b:' + fileInfo.FileType); table.tr = [ {
- * td : [ { innerHTML : '<a target="_blank" href="' + sparrow.rootPath +
- * '/FileDownLoad?fileUUID=' + fileInfo.FileUUID + '">' +
- * $.file.getFileName(clientFileName) + '</a>', align : 'left', className :
- * 'fileName' }, {}, { innerHTML : '<a href="javascript:void(0);"
- * target="_self" onclick="' + editor.obj + '.attach.deleteOnServer(\'' +
- * fileInfo.FileUUID + '\',this);">删除</a>' + '<input type="hidden" name="' +
- * editor.config.attach.fileUUID + '" value="' + fileInfo.FileUUID + '"/>',
- * align : 'left', className : 'fileOperation' } ] } ]; }
- * table.updateRow(currentRowIndex); if ($.file.multiFile == 1) {
- * window.setTimeout(editor.obj + ".attach.uploadFile();", 1000); } else if
- * ($.file.multiFile == 0) { // 文件上传完毕后提交 editor.attach._submit(); } } };
- */
 //config.treeFrameId与显示列表框无关只有管理时的增删改有关
 Sparrow.treeNode = function (id, pid, name, url, title, target, childCount, showCtrl, businessEntity,
                              icon) {

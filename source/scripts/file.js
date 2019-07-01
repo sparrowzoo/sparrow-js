@@ -14,6 +14,7 @@ Sparrow.file = {
     uploadCallBack: function (fileInfo, clientFileName, editor) {
         console.info(fileInfo);
         console.info(clientFileName);
+        this.clearStatus();
     },
     // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
     clearStatus: function () {
@@ -181,7 +182,8 @@ Sparrow.file = {
         // 提交
         uploadFrame.contentWindow.document.forms[0].submit();
     },
-    progressCallback: function (uploadProgress,editor) {
+    //只负责显示进度
+    progressCallback: function (uploadProgress) {
         if (uploadProgress == null) {
             return;
         }
@@ -213,23 +215,12 @@ Sparrow.file = {
             + "<br/>");
         statusString.push("上传进度:" + status);
         $("#divStatus", false).html(statusString.toString());
-        // 上传完毕
-        if (uploadProgress.contentLength <= uploadProgress.readLength) {
-            if ($.file.uploadCallBack) {
-                // 回调上传完毕后要执行的函数
-                $.file
-                    .uploadCallBack(
-                        uploadProgress,
-                        editor);
-            }
-            $.file.clearStatus();
-        }
     },
     getStatus: function (showState, editor) {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
         $("jsonp", $.url.upload + "/file-upload?file-serial-number="
             + this.getFileSerialNumber() + "&t="
-            + Math.random(), "uploadProgress");
+            + Math.random()+"&callback=progressCallback", "uploadProgress");
     },
     initCoverImageEvent: function (coverKey) {
         if (!coverKey) coverKey = "Cover";
@@ -248,6 +239,7 @@ Sparrow.file = {
                         $("#error" + suffix).class("prompt");
                         $("#error" + suffix).html("");
                     }
+                    $.file.clearStatus();
                 };
                 $.file.uploadDelegate(false, key, editor);
             }
