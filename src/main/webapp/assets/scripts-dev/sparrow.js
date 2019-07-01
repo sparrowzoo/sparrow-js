@@ -874,7 +874,7 @@ Sparrow.ajax = {
         }
     },
     json: function (url, data, callback, srcElement) {
-        if(typeof data =="function"){
+        if(typeof data ==="function"){
             callback=data;
             data=null;
         }
@@ -2174,10 +2174,10 @@ Sparrow.file = {
     // file.uploadDelegate(this,pathKey);
     // upload frame的id与editorId_pathKey要保持一致
     // path key 对应后台配置的上传策略
-    validateUploadFile: function (f, key,editor) {
+    validateUploadFile: function (f, key, editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
             "jpeg", "gif", "png"], "errorImgForumIco")) {
-            $.file.uploadDelegate(false,key,editor);
+            $.file.uploadDelegate(false, key, editor);
         }
     },
     // 文件上传成功后的重置方法
@@ -2193,14 +2193,14 @@ Sparrow.file = {
     },
     // 获取上传的input type="file"控件
     getUploadFile: function (frame) {
-        if(!frame){
-            frame=this.getUploadFrame();
+        if (!frame) {
+            frame = this.getUploadFrame();
         }
         return frame.contentWindow.document.getElementById("file_upload");
     },
-    getUploadFileInfo:function(frame){
-        if(!frame){
-            frame=this.getUploadFrame();
+    getUploadFileInfo: function (frame) {
+        if (!frame) {
+            frame = this.getUploadFrame();
         }
         return frame.contentWindow.document.getElementById("fileInfo");
     },
@@ -2280,8 +2280,8 @@ Sparrow.file = {
             $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
             return false;
         }
-        this.uploadFrameId = (editor?editor.obj:"null")+"_"+key;
-        var uploadFrame=this.getUploadFrame();
+        this.uploadFrameId = (editor ? editor.obj : "null") + "_" + key;
+        var uploadFrame = this.getUploadFrame();
         // 客户端文件名
         this.clientFileName = this.getUploadFile(uploadFrame).value;
         // 如果没有选择上传文件
@@ -2290,8 +2290,8 @@ Sparrow.file = {
             return false;
         }
 
-        var fileInfo=this.getUploadFileInfo(uploadFrame).value;
-        var fileInfoArray=fileInfo.split("_");
+        var fileInfo = this.getUploadFileInfo(uploadFrame).value;
+        var fileInfoArray = fileInfo.split("_");
         // 设置当前文件的序列号
         this.setFileSerialNumber(fileInfoArray[2]);
         // 如果要显示状态
@@ -2313,7 +2313,7 @@ Sparrow.file = {
                 divStatus.opacity(90);
             }
             // 设置状态跟踪
-            if (typeof (editor) === "undefined"||editor===null) {
+            if (typeof (editor) === "undefined" || editor === null) {
                 // 非编辑器控件
                 this.wit = window.setInterval("$.file.getStatus(" + isShowProgress
                     + ")", 1000);
@@ -2325,65 +2325,59 @@ Sparrow.file = {
         // 提交
         uploadFrame.contentWindow.document.forms[0].submit();
     },
+    progressCallback: function (uploadProgress,editor) {
+        if (uploadProgress == null) {
+            return;
+        }
+        if (uploadProgress.status==="loading") {
+            return;
+        }
+        if (!$.isNullOrEmpty(uploadProgress.uploadingError)) {
+            $.alert(uploadProgress.uploadingError, "sad");
+            $.file.clearStatus();
+            return;
+        }
+        // 正常显示状态
+        var statusString = [];
+        var status = Math
+                .ceil(parseFloat(uploadProgress.readLength)
+                    / parseFloat(uploadProgress.contentLength)
+                    * 1000000)
+            / 10000 + "%";
+        statusString
+            .push("正在上传文件<br/><span class='highlight'>《"
+                + $.file
+                    .getFileName($.file.clientFileName)
+                + "》</span><br/>");
+        statusString.push("文件大小:"
+            + uploadProgress.humanReadableContentLength
+            + "<br/>");
+        statusString.push("上传大小:"
+            + uploadProgress.humanReadableReadLength
+            + "<br/>");
+        statusString.push("上传进度:" + status);
+        $("#divStatus", false).html(statusString.toString());
+        // 上传完毕
+        if (uploadProgress.contentLength <= uploadProgress.readLength) {
+            if ($.file.uploadCallBack) {
+                // 回调上传完毕后要执行的函数
+                $.file
+                    .uploadCallBack(
+                        uploadProgress,
+                        editor);
+            }
+            $.file.clearStatus();
+        }
+    },
     getStatus: function (showState, editor) {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
-        $.ajax
-            .req(
-                "GET",
-                $.url.upload + "/file-upload?file-serial-number="
-                + this.getFileSerialNumber() + "&t="
-                + Math.random(),
-                function (responseText) {
-                    if (responseText) {
-                        // 未加载完即获取则继续loading
-                        if (responseText
-                            .indexOf("loading") === 0) {
-                            return;
-                        }
-                        var uploadProgress = responseText
-                            .json();
-                        if (!$.isNullOrEmpty(uploadProgress.uploadingError)) {
-                            $.alert(uploadProgress.uploadingError, "sad");
-                            $.file.clearStatus();
-                            return;
-                        }
-                        // 正常显示状态
-                        var statusString = [];
-                        var status = Math
-                                .ceil(parseFloat(uploadProgress.readLength)
-                                    / parseFloat(uploadProgress.contentLength)
-                                    * 1000000)
-                            / 10000 + "%";
-                        statusString
-                            .push("正在上传文件<br/><span class='highlight'>《"
-                                + $.file
-                                    .getFileName($.file.clientFileName)
-                                + "》</span><br/>");
-                        statusString.push("文件大小:"
-                            + uploadProgress.humanReadableContentLength
-                            + "<br/>");
-                        statusString.push("上传大小:"
-                            + uploadProgress.humanReadableReadLength
-                            + "<br/>");
-                        statusString.push("上传进度:" + status);
-                        $("#divStatus", false).html(statusString.toString());
-                        // 上传完毕
-                        if (uploadProgress.contentLength <= uploadProgress.readLength) {
-                            if ($.file.uploadCallBack) {
-                                // 回调上传完毕后要执行的函数
-                                $.file
-                                    .uploadCallBack(
-                                        uploadProgress,
-                                        editor);
-                            }
-                            $.file.clearStatus();
-                        }
-                    }
-                }, "true");
+        $("jsonp", $.url.upload + "/file-upload?file-serial-number="
+            + this.getFileSerialNumber() + "&t="
+            + Math.random(), "uploadProgress");
     },
     initCoverImageEvent: function (coverKey) {
         if (!coverKey) coverKey = "Cover";
-        $.file.validateUploadFile = function (f, key,editor) {
+        $.file.validateUploadFile = function (f, key, editor) {
             if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
                 "gif", "png"], "error" + coverKey)) {
                 $.file.uploadCallBack = function (uploadingProgress) {
@@ -2399,7 +2393,7 @@ Sparrow.file = {
                         $("#error" + suffix).html("");
                     }
                 };
-                $.file.uploadDelegate(false, key,editor);
+                $.file.uploadDelegate(false, key, editor);
             }
         };
     }

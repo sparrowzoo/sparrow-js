@@ -123,7 +123,7 @@ Sparrow.ajax = {
         }
     },
     json: function (url, data, callback, srcElement) {
-        if(typeof data =="function"){
+        if(typeof data ==="function"){
             callback=data;
             data=null;
         }
