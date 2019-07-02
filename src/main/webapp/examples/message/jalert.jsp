@@ -51,8 +51,6 @@
                    onclick="$.dialog({content:'内容',width:'500px',height:'300px'});">
 
 
-            <input type="button" value="Sparrow 扩展属性 "
-                   onclick="alert($.url.root);alert($.url.resource);alert($.url.name);">
 
         </div>
 

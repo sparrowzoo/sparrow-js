@@ -52,6 +52,8 @@
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">sparrow</a>
         <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="${root_path}/examples/selector/selector.jsp" class="pure-menu-link">选择器</a></li>
+
             <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/date_picker.jsp" class="pure-menu-link">date picker</a></li>
             <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/editor.jsp" class="pure-menu-link">editor</a></li>
 
@@ -63,6 +65,13 @@
             </li>
             <li class="pure-menu-item">
                 <a href="${root_path}/examples/markdown.jsp" class="pure-menu-link">markdown demo</a>
+            </li>
+
+            <li class="pure-menu-item">
+                <a href="${root_path}/examples/sparrow/sparrow.jsp" class="pure-menu-link">sparrow</a>
+            </li>
+            <li class="pure-menu-item">
+                <a href="${root_path}/examples/sparrow/dispatcher.jsp" class="pure-menu-link">dispatcher</a>
             </li>
         </ul>
     </div>

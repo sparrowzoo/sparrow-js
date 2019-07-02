@@ -40,6 +40,9 @@
             <input class="button" type="button" value="读cookie"
                    onclick="alert($.browser.getCookie('userId2'));"><label>browser.getCookie('userId2')</label><br/>
 
+            <input type="button" value="Sparrow 扩展属性 "
+                   onclick="alert($.url.root);alert($.url.resource);alert($.url.name);">
+
         </div>
     </div>
 
