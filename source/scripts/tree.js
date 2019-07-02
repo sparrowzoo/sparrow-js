@@ -293,8 +293,8 @@ Sparrow.tree.prototype = {
         orderDiv.bind("onclick",function (e) {
             $.event(e).cancelBubble();
         });
-        $("#hyperJump").bind("onmouseover",function () {
-            $("#ulChildrenList").css("display","block");
+        $("#hyperJump",false).bind("onmouseover",function () {
+            $("#ulChildrenList",false).css("display","block");
         });
         orderDiv.css("left",(sparrowElement.getAbsoluteLeft() + srcObject.offsetWidth)+"px");
         orderDiv.css("top",(sparrowElement.getAbsoluteTop()+ srcObject.offsetHeight)+"px");

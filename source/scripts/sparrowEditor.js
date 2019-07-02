@@ -59,7 +59,7 @@ Sparrow.editor=function(objName) {
             // 上传框架 name(上传iframe的id有用立即上传时会使用，保留不必删除)
             iframeName: objName + "_fileUpload",
             // 上传框架ID 创建时生成ID，{0}用format(this.config.attach.key)替换
-            iframeId: objName + "_{0}",
+            iframeId: objName + ".{0}",
             // 文件备注的 控件name
             fileRemark: objName + "_fileRemark",
             // 保存附件信息的隐藏控件id post到服务器端之后经过解析后入库保存需要手动在页面上配置
@@ -502,65 +502,6 @@ Sparrow.editor=function(objName) {
         parentObject: null,
         setParentObject: function (editor) {
             this.parentObject = editor;
-        },
-        // 新建文件上传控件
-        newAttach: function (srcElement) {
-            var editor = this.parentObject;
-            table.id = editor.config.attach.tableId;
-            if (table.obj().rows.length <= editor.config.attach.maxAllowCount) {
-                editor.config.attach.index++;
-                var uploadFrameId = editor.config.attach.iframeId
-                    .format(editor.config.attach.index);
-                var uploadFileInitHtml = [];
-                uploadFileInitHtml.push('<iframe name="'
-                    + editor.config.attach.iframeName + '" id="'
-                    + uploadFrameId + '"');
-                uploadFileInitHtml
-                    .push('" class="file-frame" frameborder="0"');
-                uploadFileInitHtml.push(' src="' + $.url.root
-                    + '/file-upload?path-key='
-                    + editor.config.attach.key + '&editor=' + editor.obj + '&t='
-                    + $.random() + '"></iframe>');
-                table.id = editor.config.attach.tableId;
-                table.tr = [{
-                    td: [
-                        {
-                            innerHTML: uploadFileInitHtml.join(""),
-                            align: "left",
-                            className: "fileName"
-                        },
-                        {
-                            innerHTML: '<input name="'
-                            + editor.config.attach.fileRemark
-                            + '" style="width: 120px;" type="text" />',
-                            align: "left",
-                            className: "fileRemarks"
-                        },
-                        {
-                            innerHTML: '<input type="hidden" name="'
-                            + editor.config.attach.fileUUID
-                            + '"/>'
-                            + '<a href="javascript:void(0);" target="_self" onclick="'
-                            + editor.obj
-                            + '.attach.deleteRow(this,\''
-                            + editor.config.attach.tableId
-                            + '\');">删除</a>'
-                            + '｜<a href="javascript:void(0);" target="_self" onclick="$.file.uploadClick(true,\'\',\''
-                            + uploadFrameId
-                            + '\','
-                            + editor.obj
-                            + ',this);">立即上传</a>',
-
-                            align: 'left',
-                            className: 'fileOperation'
-                        }]
-                }];
-                table.appendRow();
-            } else {
-                $.message("最多允许上传{0}个文件!"
-                        .format(editor.config.attach.maxAllowCount),
-                    srcElement);
-            }
         },
         // 加载已经上传的文件信息
         // /

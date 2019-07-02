@@ -134,7 +134,7 @@ Sparrow.file = {
             $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
             return false;
         }
-        this.uploadFrameId = (editor ? editor.obj : "null") + "_" + key;
+        this.uploadFrameId = (editor ? editor.obj : "null") + "." + key;
         var uploadFrame = this.getUploadFrame();
         // 客户端文件名
         this.clientFileName = this.getUploadFile(uploadFrame).value;
@@ -145,7 +145,7 @@ Sparrow.file = {
         }
 
         var fileInfo = this.getUploadFileInfo(uploadFrame).value;
-        var fileInfoArray = fileInfo.split("_");
+        var fileInfoArray = fileInfo.split(".");
         // 设置当前文件的序列号
         this.setFileSerialNumber(fileInfoArray[2]);
         // 如果要显示状态
