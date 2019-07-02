@@ -43,12 +43,12 @@
 <body>
 
 <div id="layout">
-    <jsp:include page="${root_path}/examples/menu.jsp"/>
+    <jsp:include page="/examples/menu.jsp"/>
 
     <div id="main">
         <div class="header">
-            <h1>Requirejs domReady</h1>
-            <h2>https://requirejs.org/docs/download.html#domReady</h2>
+            <h1>Sparrow Dispatcher</h1>
+            <h2>Sparrow Dispatcher Controller</h2>
         </div>
 
         <div class="content">
