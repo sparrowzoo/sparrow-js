@@ -1,6 +1,6 @@
 
 // 类搜索框提示信息
-function Tooltip(obj) {
+Sparrow.tooltip=function (obj) {
     this.config = // 提示框显示需要的常量配置
         {
             tooltipDiv: null, // 显示提示框的DIV
@@ -20,18 +20,18 @@ function Tooltip(obj) {
     this.listArray = []; // 需要显示的内容列表 列表项(uuid,name,fullName)
 }
 
-Tooltip.prototype = {
+Sparrow.tooltip.prototype = {
     init: function () {
-        if (typeof (this.config.toolipDiv) == "string") {
+        if (typeof (this.config.toolipDiv) === "string") {
             this.config.toolipDiv = $(this.config.toolipDiv);
         }
-        if (typeof (this.config.descIdHidden) == "string") {
+        if (typeof (this.config.descIdHidden) === "string") {
             this.config.descIdHidden = $(this.config.descIdHidden);
         }
-        if (typeof (this.config.srcElement) == "string") {
+        if (typeof (this.config.srcElement) === "string") {
             this.config.srcElement = $(this.config.srcElement);
         }
-        if (typeof (this.config.descSelectList) == "string") {
+        if (typeof (this.config.descSelectList) === "string") {
             this.config.descSelectList = $(this.config.descSelectList);
         }
         this.config.toolipDiv = $("+div").s;
@@ -86,7 +86,6 @@ Tooltip.prototype = {
             }
             content.push("</ul>");
             this.config.toolipDiv.innerHTML = content.join("");
-
         }
         this.config.toolipDiv.style.display = "block";
     },
@@ -94,12 +93,12 @@ Tooltip.prototype = {
         e = e || window.event;
         this.keyCode = e.keyCode;
         if (this.config.srcElement.value.trim().length > 0) {
-            if (this.keyCode == 13) {
+            if (this.keyCode === 13) {
                 this.appendToItemList();
                 this.config.toolipDiv.style.display = "none";
                 this.currentIndex = -1;
                 this.listCount = 0;
-                if (this.config.descIdHidden.value.trim() == "") {
+                if (this.config.descIdHidden.value.trim() === "") {
                     var currentLi = $("item0");
                     if (currentLi) {
                         var currentItem = this.listArray[0];
