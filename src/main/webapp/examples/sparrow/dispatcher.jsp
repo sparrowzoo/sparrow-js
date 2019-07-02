@@ -8,8 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatcher 请求分发 Sparrow JS Framework</title>
     <jsp:include page="/examples/head.jsp"/>
+    <j:script src="$resource/assets/scripts-dev/sparrow.js"/>
+
+    <script language="javascript" type="text/javascript"
+            src="/assets/scripts-dev/code-prettify/sparrow-prettify.js?lang=css&skin=sunburst"></script>
+
     <script language="JavaScript" type="text/javascript">
-        require(['sparrow', 'domReady'], function ($, dom) {
+        document.ready(function () {
+            PR.prettyPrint();
             $.dispatcher.eventRegistry = [{
                 id: "btn1",//控件标签 id
                 delegate: function (e, srcElement) {
@@ -51,7 +57,7 @@
             <h2>Sparrow Dispatcher Controller</h2>
         </div>
 
-        <pre>
+        <pre class="prettyprint linenums:1 prettyprinted">
             require(['sparrow', 'domReady'], function ($, dom) {
             $.dispatcher.eventRegistry = [{
                 id: "btn1",//控件标签 id
@@ -85,7 +91,6 @@
             <input type="button" id="btn1" value="insert"/>
             <input type="button" id="btn2" value="delete"/>
         </div>
-
     </div>
 </div>
 </body>
