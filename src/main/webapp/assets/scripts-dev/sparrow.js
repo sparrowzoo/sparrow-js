@@ -2151,9 +2151,6 @@ Sparrow.file = {
     clientFileName: null,
     // 上传框架id
     uploadFrameId: null,
-    // -1:单个文件上传 (单文件上传不提交)
-    // 1:多个文件 （上传完毕后上传下一个文件) 0：多文件上传完毕 （提交表单)
-    multiFile: -1,
     // 上传回调函数
     uploadCallBack: function (fileInfo, clientFileName, editor) {
         console.info(fileInfo);
@@ -2334,8 +2331,8 @@ Sparrow.file = {
         if (uploadProgress.status==="loading") {
             return;
         }
-        if (!$.isNullOrEmpty(uploadProgress.uploadingError)) {
-            $.alert(uploadProgress.uploadingError, "sad");
+        if (!$.isNullOrEmpty(uploadProgress.error)) {
+            $.alert(uploadProgress.error, "sad");
             $.file.clearStatus();
             return;
         }
@@ -4124,7 +4121,7 @@ Sparrow.editor=function(objName) {
                             + '.attach.deleteRow(this,\''
                             + editor.config.attach.tableId
                             + '\');">删除</a>'
-                            + '｜<a href="javascript:void(0);" target="_self" onclick="$.file.multiFile=-1;$.file.uploadClick(true,\'\',\''
+                            + '｜<a href="javascript:void(0);" target="_self" onclick="$.file.uploadClick(true,\'\',\''
                             + uploadFrameId
                             + '\','
                             + editor.obj
@@ -4239,8 +4236,6 @@ Sparrow.editor=function(objName) {
                         htmlFrame.style.display = "block";
                         editor.config.currentHtmlId = htmlFrame.id;
                     }
-                    // 多文件标志
-                    $.file.multiFile = 1;
                     // 先上传文件
                     this.uploadFile();
                 } else {
@@ -4486,9 +4481,9 @@ Sparrow.editor.prototype.createTempNode = function (newTagName) {
     }
     var range = this.getRange();
     var rangeText = $.browser.ie ? range.text : range;
-    if (rangeText == "") {
+    if (rangeText === "") {
         var i_temp_node = document.createElement(newTagName);
-        if (newTagName == "a") {
+        if (newTagName === "a") {
             i_temp_node.href = this.config.tempNodeAttribute;
         } else {
             i_temp_node.id = this.config.tempNodeAttribute;
@@ -5186,8 +5181,9 @@ Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
     }
     $.file.validateUploadFile = function (f, key,editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                "gif", "png"], "error" + coverKey)) {
+                "gif", "png","zip"], "error" + coverKey)) {
                 $.file.uploadCallBack = function (uploadProgress, editor) {
+                    $.file.clearStatus();
                     var clientFileName=uploadProgress.clientFileName;
                     if (clientFileName !== "") {
                         $(editor.config.attach.uploadImgContainerId)
@@ -5197,7 +5193,6 @@ Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
                         editor.attach.insertEditor($.file
                             .getFileName(clientFileName), uploadProgress.fileUrl);
                     }
-                    $.file.clearStatus();
                 };
                 $.file.uploadDelegate(true,key,editor);
         }

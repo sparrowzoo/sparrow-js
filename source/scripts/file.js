@@ -7,9 +7,6 @@ Sparrow.file = {
     clientFileName: null,
     // 上传框架id
     uploadFrameId: null,
-    // -1:单个文件上传 (单文件上传不提交)
-    // 1:多个文件 （上传完毕后上传下一个文件) 0：多文件上传完毕 （提交表单)
-    multiFile: -1,
     // 上传回调函数
     uploadCallBack: function (fileInfo, clientFileName, editor) {
         console.info(fileInfo);
@@ -190,8 +187,8 @@ Sparrow.file = {
         if (uploadProgress.status==="loading") {
             return;
         }
-        if (!$.isNullOrEmpty(uploadProgress.uploadingError)) {
-            $.alert(uploadProgress.uploadingError, "sad");
+        if (!$.isNullOrEmpty(uploadProgress.error)) {
+            $.alert(uploadProgress.error, "sad");
             $.file.clearStatus();
             return;
         }
