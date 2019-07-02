@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
-    <title>Sparrow DatePicker &ndash; Sparrow JS Framework</title>
+    <title>Sparrow Editor &ndash; Sparrow JS Framework</title>
     <jsp:include page="/examples/head.jsp"/>
     <j:style href="$resource/assets/styles/sparrow.css"/>
 

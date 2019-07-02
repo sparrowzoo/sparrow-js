@@ -6,12 +6,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-          content="A layout example with a side menu that hides on mobile, just like the Pure website.">
-    <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
+     <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
 
 
-    <jsp:include page="${root_path}/examples/head.jsp"/>
+    <jsp:include page="/examples/head.jsp"/>
     <!--test document ready-->
     <j:script src="$resource/assets/scripts-all/sparrow.js"/>
     <script language="JavaScript" type="text/javascript">

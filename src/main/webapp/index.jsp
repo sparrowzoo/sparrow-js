@@ -6,10 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description"
-          content="从零开始的js框架，从原理开始！！！ 麻雀虽小，但五脏俱全">
-    <title>Sparrow Example &ndash; Sparrow JS Framework</title>
-
+    <title>从零开始的轻量级js框架,麻雀虽小，但五脏俱全 &ndash; Sparrow JS Framework</title>
     <jsp:include page="/examples/head.jsp"/>
     <j:style href="$resource/assets/styles/modal.css"/>
 </head>
