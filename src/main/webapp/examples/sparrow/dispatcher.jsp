@@ -11,7 +11,7 @@
     <j:script src="$resource/assets/scripts-dev/sparrow.js"/>
 
     <script language="javascript" type="text/javascript"
-            src="/assets/scripts-dev/code-prettify/sparrow-prettify.js?lang=css&skin=sunburst"></script>
+            src="/assets/scripts-dev/code-prettify/sparrow-prettify.js?lang=css&skin=desert"></script>
 
     <script language="JavaScript" type="text/javascript">
         document.ready(function () {
@@ -57,7 +57,8 @@
             <h2>Sparrow Dispatcher Controller</h2>
         </div>
 
-        <pre class="prettyprint linenums:1 prettyprinted">
+
+        <pre class="prettyprint linenums:1">
             require(['sparrow', 'domReady'], function ($, dom) {
             $.dispatcher.eventRegistry = [{
                 id: "btn1",//控件标签 id
@@ -88,8 +89,8 @@
         });
         </pre>
         <div class="content">
-            <input type="button" id="btn1" value="insert"/>
-            <input type="button" id="btn2" value="delete"/>
+            <input type="button" id="btn1" class="pure-button" value="insert"/>
+            <input type="button" id="btn2"  class="pure-button" value="delete"/>
         </div>
     </div>
 </div>
