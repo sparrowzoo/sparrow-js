@@ -14,7 +14,7 @@
 
         <ul class="pure-menu-list">
             <li class="pure-menu-item"><a target="_blank" href="javascript:alert('hi i.m vertical menu');" class="pure-menu-link">垂直</a></li>
-            <li class="pure-menu-item"><a target="_blank" href="menu/top.html" class="pure-menu-link">水平</a></li>
+            <%--<li class="pure-menu-item"><a target="_blank" href="menu/top.html" class="pure-menu-link">水平</a></li>--%>
         </ul>
     </div>
 
