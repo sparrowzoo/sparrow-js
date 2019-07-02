@@ -222,24 +222,26 @@ Sparrow.file = {
     initCoverImageEvent: function (coverKey) {
         if (!coverKey) coverKey = "Cover";
         $.file.validateUploadFile = function (f, key, editor) {
-            if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                "gif", "png"], "error" + coverKey)) {
-                $.file.uploadCallBack = function (uploadingProgress) {
-                    if (uploadingProgress.fileUrl) {
-                        var suffix = coverKey;
-                        if (typeof (coverKey) === "object") {
-                            suffix = coverKey[key];
-                        }
-                        $("#div" + suffix).html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
-                            + "'/></a>");
-                        $("#hdn" + suffix).value(uploadingProgress.fileUrl);
-                        $("#error" + suffix).class("prompt");
-                        $("#error" + suffix).html("");
-                    }
-                    $.file.clearStatus();
-                };
-                $.file.uploadDelegate(false, key, editor);
+            if (!$.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
+                    "gif", "png"], "error" + coverKey)) {
+                return;
             }
+            $.file.uploadCallBack = function (uploadingProgress) {
+                $.file.clearStatus();
+                if (!uploadingProgress.fileUrl) {
+                    return;
+                }
+                var suffix = coverKey;
+                if (typeof (coverKey) === "object") {
+                    suffix = coverKey[key];
+                }
+                $("#div" + suffix).html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
+                    + "'/></a>");
+                $("#hdn" + suffix).value(uploadingProgress.fileUrl);
+                $("#error" + suffix).class("prompt");
+                $("#error" + suffix).html("");
+            };
+            $.file.uploadDelegate(false, key, editor);
         };
     }
 };
