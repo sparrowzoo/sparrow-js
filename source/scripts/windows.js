@@ -124,7 +124,7 @@ Sparrow.win = {
             divleft.s.onmouseup = function (e) {
                 $.event(e).move_end();
             };
-            divleft.s.innerHTML = title ? title : $.website.name + "提醒您:";
+            divleft.html(title ? title : $.website.name + "提醒您:");
         }
     },
     // 标题右上角关闭按钮
@@ -135,7 +135,7 @@ Sparrow.win = {
                 .getWindow().document);
             divright.s.className="pure-u-1-24";
             divright.css("cursor","pointer");
-            divright.s.innerHTML = "\xd7";
+            divright.html("\xd7");
             divright.s.onclick = function () {
                 $.win.closeClick();
             };
