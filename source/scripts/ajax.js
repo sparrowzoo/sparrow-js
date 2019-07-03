@@ -4,7 +4,6 @@ Sparrow.ajax = {
     url: null,
     srcElement: null,
     SUCCESS:0,
-    EXIST: 'EXIST',
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
             if (this._objPool[i].readyState === 0
@@ -80,9 +79,7 @@ Sparrow.ajax = {
                 objXMLHttp.send(postStr);
             }
             objXMLHttp.onreadystatechange = function () {
-                // alert("状态信息"+objXMLHttp.readyState);
                 if (objXMLHttp.readyState === 4) {
-                    // alert("结果状态"+objXMLHttp.status);
                     if (objXMLHttp.status === 200) {
                         if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
                             console.log("login false");

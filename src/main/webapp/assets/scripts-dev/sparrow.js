@@ -755,7 +755,6 @@ Sparrow.ajax = {
     url: null,
     srcElement: null,
     SUCCESS:0,
-    EXIST: 'EXIST',
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
             if (this._objPool[i].readyState === 0
@@ -831,9 +830,7 @@ Sparrow.ajax = {
                 objXMLHttp.send(postStr);
             }
             objXMLHttp.onreadystatechange = function () {
-                // alert("状态信息"+objXMLHttp.readyState);
                 if (objXMLHttp.readyState === 4) {
-                    // alert("结果状态"+objXMLHttp.status);
                     if (objXMLHttp.status === 200) {
                         if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
                             console.log("login false");
@@ -1927,7 +1924,7 @@ Sparrow.win = {
             divleft.s.onmouseup = function (e) {
                 $.event(e).move_end();
             };
-            divleft.s.innerHTML = title ? title : $.website.name + "提醒您:";
+            divleft.html(title ? title : $.website.name + "提醒您:");
         }
     },
     // 标题右上角关闭按钮
@@ -1938,7 +1935,7 @@ Sparrow.win = {
                 .getWindow().document);
             divright.s.className="pure-u-1-24";
             divright.css("cursor","pointer");
-            divright.s.innerHTML = "\xd7";
+            divright.html("\xd7");
             divright.s.onclick = function () {
                 $.win.closeClick();
             };
@@ -2273,7 +2270,7 @@ Sparrow.file = {
             $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
             return false;
         }
-        this.uploadFrameId = (editor ? editor.obj : "null") + "_" + key;
+        this.uploadFrameId = (editor ? editor.obj : "null") + "." + key;
         var uploadFrame = this.getUploadFrame();
         // 客户端文件名
         this.clientFileName = this.getUploadFile(uploadFrame).value;
@@ -2284,7 +2281,7 @@ Sparrow.file = {
         }
 
         var fileInfo = this.getUploadFileInfo(uploadFrame).value;
-        var fileInfoArray = fileInfo.split("_");
+        var fileInfoArray = fileInfo.split(".");
         // 设置当前文件的序列号
         this.setFileSerialNumber(fileInfoArray[2]);
         // 如果要显示状态
@@ -2361,24 +2358,26 @@ Sparrow.file = {
     initCoverImageEvent: function (coverKey) {
         if (!coverKey) coverKey = "Cover";
         $.file.validateUploadFile = function (f, key, editor) {
-            if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                "gif", "png"], "error" + coverKey)) {
-                $.file.uploadCallBack = function (uploadingProgress) {
-                    if (uploadingProgress.fileUrl) {
-                        var suffix = coverKey;
-                        if (typeof (coverKey) === "object") {
-                            suffix = coverKey[key];
-                        }
-                        $("#div" + suffix).html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
-                            + "'/></a>");
-                        $("#hdn" + suffix).value(uploadingProgress.fileUrl);
-                        $("#error" + suffix).class("prompt");
-                        $("#error" + suffix).html("");
-                    }
-                    $.file.clearStatus();
-                };
-                $.file.uploadDelegate(false, key, editor);
+            if (!$.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
+                    "gif", "png"], "error" + coverKey)) {
+                return;
             }
+            $.file.uploadCallBack = function (uploadingProgress) {
+                $.file.clearStatus();
+                if (!uploadingProgress.fileUrl) {
+                    return;
+                }
+                var suffix = coverKey;
+                if (typeof (coverKey) === "object") {
+                    suffix = coverKey[key];
+                }
+                $("#div" + suffix).html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
+                    + "'/></a>");
+                $("#hdn" + suffix).value(uploadingProgress.fileUrl);
+                $("#error" + suffix).class("prompt");
+                $("#error" + suffix).html("");
+            };
+            $.file.uploadDelegate(false, key, editor);
         };
     }
 };
@@ -3630,7 +3629,7 @@ Sparrow.editor=function(objName) {
             // 上传框架 name(上传iframe的id有用立即上传时会使用，保留不必删除)
             iframeName: objName + "_fileUpload",
             // 上传框架ID 创建时生成ID，{0}用format(this.config.attach.key)替换
-            iframeId: objName + "_{0}",
+            iframeId: objName + ".{0}",
             // 文件备注的 控件name
             fileRemark: objName + "_fileRemark",
             // 保存附件信息的隐藏控件id post到服务器端之后经过解析后入库保存需要手动在页面上配置
@@ -4073,65 +4072,6 @@ Sparrow.editor=function(objName) {
         parentObject: null,
         setParentObject: function (editor) {
             this.parentObject = editor;
-        },
-        // 新建文件上传控件
-        newAttach: function (srcElement) {
-            var editor = this.parentObject;
-            table.id = editor.config.attach.tableId;
-            if (table.obj().rows.length <= editor.config.attach.maxAllowCount) {
-                editor.config.attach.index++;
-                var uploadFrameId = editor.config.attach.iframeId
-                    .format(editor.config.attach.index);
-                var uploadFileInitHtml = [];
-                uploadFileInitHtml.push('<iframe name="'
-                    + editor.config.attach.iframeName + '" id="'
-                    + uploadFrameId + '"');
-                uploadFileInitHtml
-                    .push('" class="file-frame" frameborder="0"');
-                uploadFileInitHtml.push(' src="' + $.url.root
-                    + '/file-upload?path-key='
-                    + editor.config.attach.key + '&editor=' + editor.obj + '&t='
-                    + $.random() + '"></iframe>');
-                table.id = editor.config.attach.tableId;
-                table.tr = [{
-                    td: [
-                        {
-                            innerHTML: uploadFileInitHtml.join(""),
-                            align: "left",
-                            className: "fileName"
-                        },
-                        {
-                            innerHTML: '<input name="'
-                            + editor.config.attach.fileRemark
-                            + '" style="width: 120px;" type="text" />',
-                            align: "left",
-                            className: "fileRemarks"
-                        },
-                        {
-                            innerHTML: '<input type="hidden" name="'
-                            + editor.config.attach.fileUUID
-                            + '"/>'
-                            + '<a href="javascript:void(0);" target="_self" onclick="'
-                            + editor.obj
-                            + '.attach.deleteRow(this,\''
-                            + editor.config.attach.tableId
-                            + '\');">删除</a>'
-                            + '｜<a href="javascript:void(0);" target="_self" onclick="$.file.uploadClick(true,\'\',\''
-                            + uploadFrameId
-                            + '\','
-                            + editor.obj
-                            + ',this);">立即上传</a>',
-
-                            align: 'left',
-                            className: 'fileOperation'
-                        }]
-                }];
-                table.appendRow();
-            } else {
-                $.message("最多允许上传{0}个文件!"
-                        .format(editor.config.attach.maxAllowCount),
-                    srcElement);
-            }
         },
         // 加载已经上传的文件信息
         // /
@@ -5488,8 +5428,8 @@ Sparrow.tree.prototype = {
         orderDiv.bind("onclick",function (e) {
             $.event(e).cancelBubble();
         });
-        $("#hyperJump").bind("onmouseover",function () {
-            $("#ulChildrenList").css("display","block");
+        $("#hyperJump",false).bind("onmouseover",function () {
+            $("#ulChildrenList",false).css("display","block");
         });
         orderDiv.css("left",(sparrowElement.getAbsoluteLeft() + srcObject.offsetWidth)+"px");
         orderDiv.css("top",(sparrowElement.getAbsoluteTop()+ srcObject.offsetHeight)+"px");
