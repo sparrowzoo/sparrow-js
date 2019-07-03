@@ -1801,11 +1801,6 @@ Sparrow.prototype.tabs = function (config) {
         tabControllerList[currentIndex].onclick();
     }
 };
-/*
-     * 日期2009 08 09 作者:张立志 邮箱:zh_harry@163.com QQ: 492006183 IE6 ie7 遨游 火狐下测试通过
-     * 功能说明:系统提示对话框 参数： msg：提示信息 isone:是否为根目录 type:提示类型 title:标题
-     * sparrow.themes:全局变量设置前台皮肤图片 returnCallBack:关闭后事件 例子: win.isInFrame=false;
-     */
 Sparrow.win = {
     config: {
         isInFrame: false,
