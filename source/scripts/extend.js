@@ -12,16 +12,17 @@ String.prototype.json = function () {
     if (this === "" || this === "''") {
         return null;
     }
-    if (this.indexOf("error|") === -1) {
-        try {
-            var json = this;
-            json = json.decodeSplitKey();
-            return eval("("
-                + json.replace(/\r\n/g, "<br/>").replace(/\n/g, "<br/>")
-                + ")");
-        } catch (err) {
-            return null;
-        }
+    if (this.indexOf("error|") !== -1) {
+        console.log(this);
+    }
+    try {
+        var json = this;
+        json = json.decodeSplitKey();
+        return eval("("
+            + json.replace(/\r\n/g, "<br/>").replace(/\n/g, "<br/>")
+            + ")");
+    } catch (err) {
+        return console.log(err);
     }
 };
 
