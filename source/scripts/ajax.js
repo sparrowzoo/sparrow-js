@@ -51,7 +51,7 @@ Sparrow.ajax = {
     gourl: function (url) {
         this.ajax.referWindow.location.href = url;
     },
-    req: function (getOrPost, url, responsef, postStr, srcElement) {
+    req: function (getOrPost, url, callback, postStr, srcElement) {
         if (url.indexOf("http://") === -1) {
             url = $.url.root + url;
         }
@@ -95,8 +95,8 @@ Sparrow.ajax = {
                             if (!lang.message.accessDenied)
                                 lang.message.accessDenied = "Access Denied";
                             $.alert(lang.message.accessDenied, "sad");
-                        } else if (responsef) {
-                            responsef(objXMLHttp.responseText);
+                        } else if (callback) {
+                            callback(objXMLHttp.responseText);
                         }
                     } else {
                         if (objXMLHttp.status === 404) {
