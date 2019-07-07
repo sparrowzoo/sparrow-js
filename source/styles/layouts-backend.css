@@ -57,14 +57,29 @@ The `#divVerticalMenu` `<div>` is the parent `<div>` that contains the `.pure-me
 appears on the left side of the page.
 */
 
-#divVerticalMenu {
+.menu_container {
     margin-left: -150px; /* "#divVerticalMenu" width */
     width: 150px;
     position: fixed;
-    top: 60px;
+    top: 0;
     left: 0;
     bottom: 0;
     z-index: 1000; /* so the menu or its navicon stays above all content */
+    background: #191818;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.menu_container .logo{
+    width: 150px;
+    height: 60px;
+    border:0;
+}
+
+#divVerticalMenu {
+    width: 150px;
+    bottom: 0;
+    z-index: 1001; /* so the menu or its navicon stays above all content */
     background: #191818;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -202,7 +217,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         left: 0;
     }
 
-    #divVerticalMenu {
+    .menu_container {
         left: 150px;
     }
 

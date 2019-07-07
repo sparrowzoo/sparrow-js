@@ -1,22 +1,24 @@
 Sparrow.page = {
     toTargetPage: function (pageCount, pageFormat, srcElement) {
-        var defPageIndex = parseInt($('defPageIndex').value);
+        var consumerPageIndex = parseInt($('consumerPageIndex').value);
         var currentPageIndex = parseInt($('spanCurrentPageIndex').innerHTML
-            .trim());
-        if (defPageIndex <= 0 || defPageIndex > pageCount) {
+                                            .trim());
+        if (consumerPageIndex <= 0 || consumerPageIndex > pageCount) {
             $.message('超出页码范围', srcElement);
-        } else if (defPageIndex === currentPageIndex) {
-            $.message('当前页即是目标页', srcElement);
-        } else {
-            window.location.href = pageFormat.replace("$pageIndex", defPageIndex);
+            return;
         }
+        if (consumerPageIndex === currentPageIndex) {
+            $.message('当前页即是目标页', srcElement);
+            return;
+        }
+        window.location.href = pageFormat.replace("$pageIndex", consumerPageIndex);
     },
-    defaction: null,
+    consumerAction: null,
     action: function (pageIndex, formIndex) {
         $("currentPageIndex").value = pageIndex;
         window.location.href = "#top";
-        if (this.defaction != null) {
-            this.defaction(pageIndex);
+        if (this.consumerAction != null) {
+            this.consumerAction(pageIndex);
         } else {
             $.submit(null, formIndex);
         }
@@ -32,8 +34,8 @@ Sparrow.page = {
         }
         if ($.isNullOrEmpty(nextLink)) {
             alert("亲，您已经翻到最后了哟");
-        } else {
-            window.location.href = nextLink;
+            return
         }
+        window.location.href = nextLink;
     }
 };

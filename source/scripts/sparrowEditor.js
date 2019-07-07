@@ -655,18 +655,6 @@ Sparrow.editor=function(objName) {
                 document.body.removeChild($("divState"));
             }
         },
-        // 客户端删除附件
-        deleteRow: function (srcElement, tableId) {
-            table.id = tableId;
-            var currentRowIndex = srcElement.parentNode.parentNode.rowIndex;
-            table.removeRow(currentRowIndex);
-            if ($.file.wit) {
-                window.clearInterval($.file.wit);
-            }
-            if ($("divState")) {
-                document.body.removeChild($("divState"));
-            }
-        },
         // 文件批量上传
         uploadFile: function () {
             var editor = this.parentObject;

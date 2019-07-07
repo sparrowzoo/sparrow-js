@@ -7,7 +7,7 @@ Sparrow.gridView = {
         return $(this.id);
     },
     init: function () {
-        var hdnGridResult = $("#hdnGridResult");
+        var hdnGridResult = $("#" + this.resultCtrlId);
         if (hdnGridResult != null) {
             if (!$.isNullOrEmpty(hdnGridResult.attr("gridViewId"))) {
                 this.id = hdnGridResult.attr("gridViewId");
@@ -30,16 +30,17 @@ Sparrow.gridView = {
     recordCheckClick: function (checkBox, allCheckBox) {
         if (checkBox.checked === false) {
             $(allCheckBox).checked = false;
-        } else {
-            var isAllCheck = true;
-            var checkBoxList = $("&" + this.id);
-            for (var i = 0; i < checkBoxList.length; i++) {
-                if (checkBoxList[i].checked === false)
-                    isAllCheck = false;
+            return;
+        }
+        var isAllCheck = true;
+        var checkBoxList = $("&" + this.id);
+        for (var i = 0; i < checkBoxList.length; i++) {
+            if (checkBoxList[i].checked === false) {
+                isAllCheck = false;
             }
-            if (isAllCheck) {
-                $(allCheckBox).checked = true;
-            }
+        }
+        if (isAllCheck) {
+            $(allCheckBox).checked = true;
         }
     },
     mustSelect: function (message) {
@@ -111,12 +112,12 @@ Sparrow.gridView = {
                 $.message("please defined system.noSelectRecord!");
             }
             return false;
-        } else if (checkCount !== 1) {
+        }
+        if (checkCount !== 1) {
             $.message(strMessage);
             return false;
-        } else {
-            return true;
         }
+        return true;
     },
     action: function (postUrl, message, isOnlyOne) {
         var result = isOnlyOne ? this.onlyCheckedOne(message) : this
@@ -149,13 +150,15 @@ Sparrow.table.prototype = {
         cell.className = this.tr[i].td[j].className;
         cell.align = this.tr[i].td[j].align;
         cell.innerHTML = this.tr[i].td[j].innerHTML;
-        if (this.tr[i].td[j].colspan)
+        if (this.tr[i].td[j].colspan) {
             cell.setAttribute("colspan", this.tr[i].td[j].colspan);
+        }
     },
     _initRow: function (row, i) {
         row.style.cssText = table.tr[i].cssText;
-        if (table.tr[i].className && table.tr[i].className !== "")
+        if (table.tr[i].className && table.tr[i].className !== "") {
             row.className = table.tr[i].className;
+        }
         for (var j = 0; j < this.tr[i].td.length; j++) {
             var cell = row.insertCell(-1);
             this._initCell(cell, i, j);
