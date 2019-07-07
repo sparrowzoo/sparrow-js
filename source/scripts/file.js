@@ -30,9 +30,17 @@ Sparrow.file = {
     // path key 对应后台配置的上传策略
     validateUploadFile: function (f, key, editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
-            "jpeg", "gif", "png"], "errorImgForumIco")) {
+                "jpeg", "gif", "png"], "errorImgForumIco")) {
             $.file.uploadDelegate(false, key, editor);
         }
+    },
+    callbackValidate: function (uploadProgress) {
+        if ($.isNullOrEmpty(uploadProgress.error)) {
+            return true;
+        }
+        $.alert(uploadProgress.error, "sad");
+        $.file.clearStatus();
+        return false;
     },
     // 文件上传成功后的重置方法
     // 因为文件上传完毕之后需要重置上传序列号。所以一定要手动设置该方法
@@ -184,12 +192,11 @@ Sparrow.file = {
         if (uploadProgress == null) {
             return;
         }
-        if (uploadProgress.status==="loading") {
+        if (uploadProgress.status === "loading") {
             return;
         }
-        if (!$.isNullOrEmpty(uploadProgress.error)) {
-            $.alert(uploadProgress.error, "sad");
-            $.file.clearStatus();
+        
+        if(!this.callbackValidate(uploadProgress)){
             return;
         }
         // 正常显示状态
@@ -217,7 +224,7 @@ Sparrow.file = {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
         $("jsonp", $.url.upload + "/file-upload?file-serial-number="
             + this.getFileSerialNumber() + "&t="
-            + Math.random()+"&callback=progressCallback", "uploadProgress");
+            + Math.random() + "&callback=progressCallback", "uploadProgress");
     },
     initCoverImageEvent: function (coverKey) {
         if (!coverKey) coverKey = "Cover";
