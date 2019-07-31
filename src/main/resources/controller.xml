@@ -6,4 +6,9 @@
     <controller id="previewController">
         <action name="/preview.json" method="preview"/>
     </controller>
+
+    <controller id="yamlController">
+        <action name="/to-yaml.json" method="toYaml"/>
+        <action name="/to-properties.json" method="toProperties"/>
+    </controller>
 </mvc>

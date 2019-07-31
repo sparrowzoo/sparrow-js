@@ -49,6 +49,10 @@
             <groupId>com.sparrow</groupId>
             <artifactId>sparrow-log</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
     </dependencies>
     <packaging>war</packaging>
 
