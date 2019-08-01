@@ -8,13 +8,14 @@ Sparrow.gridView = {
     },
     init: function () {
         var hdnGridResult = $("#" + this.resultCtrlId);
-        if (hdnGridResult != null) {
-            if (!$.isNullOrEmpty(hdnGridResult.attr("gridViewId"))) {
-                this.id = hdnGridResult.attr("gridViewId");
-            }
-            if (!$.isNullOrEmpty(hdnGridResult.attr("keyType"))) {
-                this.keyType = hdnGridResult.attr("keyType");
-            }
+        if (hdnGridResult == null) {
+            return;
+        }
+        if (!$.isNullOrEmpty(hdnGridResult.attr("gridViewId"))) {
+            this.id = hdnGridResult.attr("gridViewId");
+        }
+        if (!$.isNullOrEmpty(hdnGridResult.attr("keyType"))) {
+            this.keyType = hdnGridResult.attr("keyType");
         }
     },
     getCellIndex: function (checkBox) {
@@ -43,7 +44,7 @@ Sparrow.gridView = {
             $(allCheckBox).checked = true;
         }
     },
-    mustSelect: function (message) {
+    mustSelect: function (confirmMessage) {
         var selectedId = [];
         // var gridViewRowCount=this.getTable().rows.length;
         var checkBoxList = $("&" + this.id);
@@ -64,7 +65,7 @@ Sparrow.gridView = {
             if (lang.message.noSelectRecord) {
                 $.message(lang.message.noSelectRecord);
             } else {
-                $.message("please define the json 'lang.message.noSelectRecord'!");
+                $.message("please define 'lang.message.noSelectRecord'!");
             }
             return false;
         }
@@ -72,32 +73,19 @@ Sparrow.gridView = {
             selectedId.pop();
             selectedId.push(selectId);
         }
-        if (!message) {
+        if (!confirmMessage) {
             return selectedId;
-        } else {
-            if (window.confirm(message)) {
-                return selectedId;
-            } else {
-                return false;
-            }
         }
+        if (window.confirm(confirmMessage)) {
+            return selectedId;
+        }
+        return false;
     },
-    onlyCheckedOne: function (message) {
-        var strMessage = null;
-        if (message) {
-            strMessage = message;
-        } else {
-            if (system.onlySelectOneRecord) {
-                strMessage = system.onlySelectOneRecord;
-            } else {
-                $.message("please defined system.onlySelectOneRecord");
-            }
-        }
-        // var rowsCount=this.getTable().rows.length;
+    onlyCheckedOne: function (confirmMessage) {
         var checkCount = 0;
-        // var selectedId=null;
+        var selectedId= null;
         var checkBoxList = $("name." + this.id);
-        for (var i = 1; i < checkBoxList.length; i += 1) {
+        for (var i = 1; i < checkBoxList.length; i++) {
             var checkBox = checkBoxList[i];
             if (checkBox.checked) {
                 checkCount += 1;
@@ -106,30 +94,37 @@ Sparrow.gridView = {
         }
 
         if (checkCount === 0) {
-            if (system.noSelectRecord) {
-                $.message(system.noSelectRecord);
+            if (lang.message.noSelectRecord) {
+                $.message(lang.message.noSelectRecord);
             } else {
-                $.message("please defined system.noSelectRecord!");
+                $.message("please define lang.message.noSelectRecord!");
             }
             return false;
         }
         if (checkCount !== 1) {
-            $.message(strMessage);
+            if (lang.message.onlySelectOneRecord) {
+                $.message(lang.message.onlySelectOneRecord);
+            } else {
+                $.message("please define lang.message.onlySelectOneRecord");
+            }
             return false;
+        }
+        if (window.confirm(confirmMessage)) {
+            return selectedId;
         }
         return true;
     },
-    action: function (postUrl, message, isOnlyOne) {
-        var result = isOnlyOne ? this.onlyCheckedOne(message) : this
-            .mustSelect(message);
-        if (result) {
-            $(this.resultCtrlId).value = result;
-            if (postUrl === "return") {
-                return true;
-            } else {
-                $.submit(postUrl);
-            }
+    submit: function (postUrl, confirmMessage, isOnlyOne) {
+        var result = isOnlyOne ? this.onlyCheckedOne(confirmMessage) : this
+            .mustSelect(confirmMessage);
+        if (!result) {
+            return;
         }
+        $(this.resultCtrlId).value = result;
+        if (postUrl === "return") {
+            return true;
+        }
+        $.submit(postUrl);
     }
 };
 Sparrow.table = function (id) {

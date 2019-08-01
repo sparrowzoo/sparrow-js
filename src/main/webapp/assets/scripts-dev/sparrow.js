@@ -2252,30 +2252,17 @@ Sparrow.gridView = {
         }
         if (!message) {
             return selectedId;
-        } else {
-            if (window.confirm(message)) {
-                return selectedId;
-            } else {
-                return false;
-            }
         }
+        if (window.confirm(message)) {
+            return selectedId;
+        }
+        return false;
     },
-    onlyCheckedOne: function (message) {
-        var strMessage = null;
-        if (message) {
-            strMessage = message;
-        } else {
-            if (system.onlySelectOneRecord) {
-                strMessage = system.onlySelectOneRecord;
-            } else {
-                $.message("please defined system.onlySelectOneRecord");
-            }
-        }
-        // var rowsCount=this.getTable().rows.length;
+    onlyCheckedOne: function (confirmMessage) {
         var checkCount = 0;
-        // var selectedId=null;
+        var selectedId= null;
         var checkBoxList = $("name." + this.id);
-        for (var i = 1; i < checkBoxList.length; i += 1) {
+        for (var i = 1; i < checkBoxList.length; i++) {
             var checkBox = checkBoxList[i];
             if (checkBox.checked) {
                 checkCount += 1;
@@ -2284,30 +2271,37 @@ Sparrow.gridView = {
         }
 
         if (checkCount === 0) {
-            if (system.noSelectRecord) {
-                $.message(system.noSelectRecord);
+            if (lang.message.noSelectRecord) {
+                $.message(lang.message.noSelectRecord);
             } else {
                 $.message("please defined system.noSelectRecord!");
             }
             return false;
         }
         if (checkCount !== 1) {
-            $.message(strMessage);
+            if (lang.message.onlySelectOneRecord) {
+                $.message(lang.message.onlySelectOneRecord);
+            } else {
+                $.message("please defined system.onlySelectOneRecord");
+            }
             return false;
+        }
+        if (window.confirm(confirmMessage)) {
+            return selectedId;
         }
         return true;
     },
-    action: function (postUrl, message, isOnlyOne) {
-        var result = isOnlyOne ? this.onlyCheckedOne(message) : this
-            .mustSelect(message);
-        if (result) {
-            $(this.resultCtrlId).value = result;
-            if (postUrl === "return") {
-                return true;
-            } else {
-                $.submit(postUrl);
-            }
+    submit: function (postUrl, confirmMessage, isOnlyOne) {
+        var result = isOnlyOne ? this.onlyCheckedOne(confirmMessage) : this
+            .mustSelect(confirmMessage);
+        if (!result) {
+            return;
         }
+        $(this.resultCtrlId).value = result;
+        if (postUrl === "return") {
+            return true;
+        }
+        $.submit(postUrl);
     }
 };
 Sparrow.table = function (id) {
@@ -6686,5 +6680,13 @@ if ( typeof define === "function" && define.amd ) {
         return Sparrow;
     });
 }
+
+
+// Expose Sparrow and $ identifiers, even in AMD
+// and CommonJS for browser emulators
+if ( !noGlobal ) {
+    window.Sparrow = window.$ = Sparrow;
+}
+
 return Sparrow;
 }));
