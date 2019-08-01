@@ -72,19 +72,7 @@ String.prototype.subString = function (len, hasDot) {
     }
     return newStr;
 };
-/*
- * String.prototype.encodeSplitKey = function() { var str = this; str =
- * str.replace(/#/g, "#limit"); str = str.replace(/:/g, "#colon#"); str =
- * str.replace(/,/g, "#dot#"); str = str.replace(/"/g, "#ref#"); return str; };
- */
-String.prototype.decodeSplitKey = function () {
-    var str = this;
-    str = str.replace(/#colon#/g, ":");
-    str = str.replace(/#dot#/g, ",");
-    str = str.replace(/#ref#/g, "\\\"");
-    str = str.replace(/#limit/g, "#");
-    return str;
-};
+
 String.prototype.decodeHtml = function () {
     var html = this;
     html = html.replace(/&amp;/g, "&");
