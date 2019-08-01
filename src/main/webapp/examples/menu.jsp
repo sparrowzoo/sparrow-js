@@ -74,5 +74,15 @@
                 <a href="${root_path}/examples/sparrow/dispatcher.jsp" class="pure-menu-link">dispatcher</a>
             </li>
         </ul>
+
+
+    </div>
+
+
+    <div class="pure-menu">
+        <a class="pure-menu-heading" href="#">工具</a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/properties-yaml-converter.jsp" class="pure-menu-link">yam转换器</a></li>
+        </ul>
     </div>
 </div>

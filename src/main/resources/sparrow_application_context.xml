@@ -5,4 +5,5 @@
     <bean name="sparrowServletContainer" class="com.sparrow.web.support.SparrowServletContainer"/>
     <bean name="cookieUtility" class="com.sparrow.support.web.CookieUtility"/>
     <bean name="previewController" class="com.sparrow.markdown.controller.PreviewController" controller="true"/>
+    <bean name="yamlController" class="com.sparrow.yaml.controller.YamlController" controller="true"/>
 </beans>

@@ -42,22 +42,68 @@
         }
 
         .tab {
-            border-left: 3px solid #ccc;
-            margin-left: 10px;
-            padding: 10px;
-        }
-
-        .highlight {
-            background-color: red;
-        }
-
-        .quote {
             text-indent: 10px;
             border-left: 1px solid red;
         }
 
+        .highlight {
+            color: #c7254e;
+            background-color: #f9f2f4;
+            border-radius: 4px;
+        }
+
+        .quote {
+            padding: 20px;
+            background-color: #f2f2f2;
+            border-left: 6px solid #b3b3b3;
+            word-break: break-word;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 30px;
+            margin: 0 0 20px;
+        }
+
         .code {
             background-color: #ccc;
+        }
+
+        .image-package {
+            margin: 0 -40px 20px;
+            width: calc(100% + 80px);
+            text-align: center;
+            font-size: 0;
+        }
+
+         .image-package label {
+            min-width: 20%;
+            max-width: 80%;
+            display: inline-block;
+            padding: 10px;
+            margin: 0 auto;
+            border-bottom: 1px solid #d9d9d9;
+            font-size: 13px;
+            color: #999;
+            line-height: 1.7;
+        }
+        .image-package img {
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            vertical-align: middle;
+            border: 0;
+        }
+
+        ol{
+            list-style-type: decimal;
+        }
+        .ol_0{
+            list-style-type: lower-roman;
+        }
+        .ol_1{
+            list-style-type: lower-alpha;
+        }
+        .ol_1 ol{
+            list-style-type: lower-alpha;
         }
     </style>
 
@@ -89,6 +135,22 @@
         }
         document.ready(function () {
             new $.menu("verticalMenu", $.VERTICAL,"menuLink").init();
+            //textarea支持tab缩进
+            $("#txtContent").bind(
+                'onkeydown',
+                function(e) {
+                    if (e.keyCode !== 9) {return;}
+                        e.preventDefault();
+                        var indent = '    ';
+                        var start = this.selectionStart;
+                        var end = this.selectionEnd;
+                        var selected = window.getSelection().toString();
+                        selected = indent + selected.replace(/\n/g, '\n' + indent);
+                        this.value = this.value.substring(0, start) + selected
+                            + this.value.substring(end);
+                        this.setSelectionRange(start + indent.length, start
+                            + selected.length);
+                })
         });
     </script>
 </head>
@@ -108,7 +170,7 @@
                 <textarea id="txtContent" onkeyup="preview(this);" style="max-height: 100%;height:800px;"
                           class="pure-u-11-24"
                           contenteditable="true">
-横线支持
+Sparrow markdown
 ---
 正文部分**加粗**
 
@@ -120,7 +182,7 @@
 
 ==重点==
 
-> 引用
+> 引用，这里是引用文字，回车换行支持
 
 # h1
 ## h2
@@ -128,37 +190,41 @@
 #### h4
 ##### h5
 ###### h6
-- 1
-   - 1.1
-      - 1.1.1
-         - 1.1.1.1
-         - 1.1.1.1.1
-         - 1.1.1.1.2
-      - 1.1.2
-         - 1.1.2.1
-         - 1.1.2.2
-   - 1.2
-   - 1.3
-- 2
-- 3
-1. 1
-2. 2
-3. 3
-   1. 3.1
-       1. 3.1.1
-       2. 3.1.2
-       3. 3.1.3
-   2. 3.2
-       1. 3.2.1
-这时是3.2.1内容**嵌套的加粗文本**==嵌套高亮文本==
-4. 4
-5. 5
-5的列表内容
+- 这里是标题
+    - 子标题
+        - 孙子标题
+            - 从孙子标题
+            - 从孙子标题2
+            - 从孙子标题3
+        - 孙子标题2
+            - 孙子标题2的大儿子
+            - 孙子标题2的小儿子
+                - 孙子标题2的大儿子
+                - 孙子标题2的小儿子
+- 第二个标题
+- 第三个标题
+
+
+1. 这里是标题
+    1. 子标题
+        1. 孙子标题
+            1. 从孙子标题
+            1. 从孙子标题2
+            1. 从孙子标题3
+        1. 孙子标题2
+            1. 孙子标题2的大儿子
+            1. 孙子标题2的小儿子
+                1. 孙子标题2的大儿子
+                1. 孙子标题2的小儿子
+1. 第二个标题
+1. 第三个标题
+1. **嵌套的加粗文本**==嵌套高亮文本==
+
 
 表头1 | 表头2
 ---|---
-内容自定义<br/>回车行吗？| 2222
-row 2 col 1 | row 2 col 2
+第一行，第一列|第一行，第二列
+第二行，第一列 |第二行，第二列
 
 
 ```
@@ -190,10 +256,10 @@ class A {}
 
 *斜体字 ++下划线++==高亮==**加粗(都支持嵌套哟)***
 
-![image](http://s3.sinaimg.cn/bmiddle/003aGgFyzy6IXdCe80y52)
+![图片的标题](http://s3.sinaimg.cn/bmiddle/003aGgFyzy6IXdCe80y52)
 
-- [ ] 这里![图标](http://note.youdao.com/favicon.ico)是*复选框*
-- [x] 这里![图标](http://note.youdao.com/favicon.ico)==是复选框==
+- [ ] 复选框![图标](http://note.youdao.com/favicon.ico)
+- [x] ==选中复选框==![图标](http://note.youdao.com/favicon.ico)
 
 
 
@@ -219,6 +285,11 @@ class A {}
         return markEntity;
     }
 ```
+
+
+
+
+
                 </textarea>
                 <div id="divPreview" style="max-height: 100%;height:800px;overflow: scroll;" class="pure-u-12-24"></div>
             </div>
