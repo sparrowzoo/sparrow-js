@@ -1,6 +1,6 @@
 /*---------------------------------------------JGridView全选和单选---------------------------------------------*/
 Sparrow.gridView = {
-    keyType: "string",// int
+    keyType: "int",// string
     id: "grvManageList",
     resultCtrlId: "hdnGridResult",
     getTable: function () {

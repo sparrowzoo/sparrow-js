@@ -2,7 +2,7 @@ Sparrow.page = {
     toTargetPage: function (pageCount, pageFormat, srcElement) {
         var consumerPageIndex = parseInt($('consumerPageIndex').value);
         var currentPageIndex = parseInt($('spanCurrentPageIndex').innerHTML
-                                            .trim());
+            .trim());
         if (consumerPageIndex <= 0 || consumerPageIndex > pageCount) {
             $.message('超出页码范围', srcElement);
             return;
@@ -14,14 +14,14 @@ Sparrow.page = {
         window.location.href = pageFormat.replace("$pageIndex", consumerPageIndex);
     },
     consumerAction: null,
-    action: function (pageIndex, formIndex) {
+    submit: function (pageIndex, formIndex) {
         $("currentPageIndex").value = pageIndex;
         window.location.href = "#top";
         if (this.consumerAction != null) {
             this.consumerAction(pageIndex);
-        } else {
-            $.submit(null, formIndex);
+            return;
         }
+        $.submit(null, formIndex);
     },
     next: function () {
         var elementArray = $("divPage").getElementsByTagName("a");

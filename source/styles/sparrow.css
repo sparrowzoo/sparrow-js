@@ -135,7 +135,7 @@ hr {
 .page .first{border-left-width:1px;}
 .page .num {background:#fff;}
 .page .disable{color: #ccc;}
-.page input{float: left;border: #ccc 1px solid;border-left-width: 0;color:#00648d;padding:5px 10px 5px 10px;margin:0;width:20px;line-height:17px;text-align: center;}
+.page input{float: left;border: #ccc 1px solid;border-left-width: 0;color:#00648d;padding:5px 10px 5px 10px;margin:0;width:50px;line-height:17px;text-align: center;}
 .pure-table tr:hover{background:#36aef4;}
 
 .file-frame {width: 250px;height: 42px;}
@@ -202,6 +202,11 @@ hr {
 .footer dd{width:100%;margin:0;padding:0;}
 .footer dd a{padding:5px;display:inline-block;}
 
+
+.inline-block{display: inline-block;}
+.inline-block label{
+    width: 4em !important;
+}
 
 .button-success,
 .button-error,
