@@ -66,16 +66,16 @@
 
 
 <div id="layout">
-    <jsp:include page="../menu.jsp"/>
+    <jsp:include page="../examples/menu.jsp"/>
     <div id="main">
         <div class="header">
             <h1>spring properties yaml 在线转换器</h1>
         </div>
 
         <div style="max-width: 100%;" class="content">
-            <input onclick="properties2Yaml();" type="button" value="spring properties 转 yaml"/>
+            <input onclick="properties2Yaml();" class="pure-button pure-button-primary" type="button" value="spring properties 转 yaml"/>
 
-            <input onclick="yaml2Properties();" type="button" value="spring yaml 转 properties"/>
+            <input onclick="yaml2Properties();" class="pure-button pure-button-primary" type="button" value="spring yaml 转 properties"/>
 
             <div style="width: 100%;" class="pure-g">
                 <textarea id="txtContent" style="max-height: 100%;height:800px;"

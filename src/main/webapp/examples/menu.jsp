@@ -58,7 +58,7 @@
             <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/editor.jsp" class="pure-menu-link">editor</a></li>
 
             <li class="pure-menu-item">
-                <a href="${root_path}/examples/sparrow/jsonview.jsp" class="pure-menu-link">json 格式化</a>
+                <a href="${root_path}/tools/jsonview.jsp" class="pure-menu-link">json 格式化</a>
             </li>
             <li class="pure-menu-item">
                 <a href="${root_path}/examples/sparrow/jsonp-demo.jsp" class="pure-menu-link">jsonp</a>
@@ -82,7 +82,9 @@
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">工具</a>
         <ul class="pure-menu-list">
-            <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/properties-yaml-converter.jsp" class="pure-menu-link">yam转换器</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/tools/properties-yaml-converter.jsp" class="pure-menu-link">yaml转换器</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/tools/jsonview.jsp" class="pure-menu-link">JSON格式化</a></li>
+
         </ul>
     </div>
 </div>
