@@ -1109,6 +1109,7 @@ Sparrow.v = {
         return this.ok(validate,srcElement);
     },
     isWord: function (validate,srcElement) {
+        validate=validate[srcElement.id];
         var result = this._validate(validate,srcElement);
         if (result !== true) {
             return result;
@@ -1145,6 +1146,7 @@ Sparrow.v = {
         this.ok(validate,srcElement);
     },
     isDigital: function (validate,srcElement) {
+        validate=validate[srcElement.id];
         var srcElementValue =srcElement.value;
         var result = this._validate(validate,srcElement);
         if (result !== true) {
@@ -1270,7 +1272,7 @@ Sparrow.page = {
     toTargetPage: function (pageCount, pageFormat, srcElement) {
         var consumerPageIndex = parseInt($('consumerPageIndex').value);
         var currentPageIndex = parseInt($('spanCurrentPageIndex').innerHTML
-                                            .trim());
+            .trim());
         if (consumerPageIndex <= 0 || consumerPageIndex > pageCount) {
             $.message('超出页码范围', srcElement);
             return;
@@ -1282,14 +1284,14 @@ Sparrow.page = {
         window.location.href = pageFormat.replace("$pageIndex", consumerPageIndex);
     },
     consumerAction: null,
-    action: function (pageIndex, formIndex) {
+    submit: function (pageIndex, formIndex) {
         $("currentPageIndex").value = pageIndex;
         window.location.href = "#top";
         if (this.consumerAction != null) {
             this.consumerAction(pageIndex);
-        } else {
-            $.submit(null, formIndex);
+            return;
         }
+        $.submit(null, formIndex);
     },
     next: function () {
         var elementArray = $("divPage").getElementsByTagName("a");
@@ -2178,7 +2180,7 @@ Sparrow.dialog = function (config) {
 };
 /*---------------------------------------------JGridView全选和单选---------------------------------------------*/
 Sparrow.gridView = {
-    keyType: "string",// int
+    keyType: "int",// string
     id: "grvManageList",
     resultCtrlId: "hdnGridResult",
     getTable: function () {
@@ -2186,13 +2188,14 @@ Sparrow.gridView = {
     },
     init: function () {
         var hdnGridResult = $("#" + this.resultCtrlId);
-        if (hdnGridResult != null) {
-            if (!$.isNullOrEmpty(hdnGridResult.attr("gridViewId"))) {
-                this.id = hdnGridResult.attr("gridViewId");
-            }
-            if (!$.isNullOrEmpty(hdnGridResult.attr("keyType"))) {
-                this.keyType = hdnGridResult.attr("keyType");
-            }
+        if (hdnGridResult == null) {
+            return;
+        }
+        if (!$.isNullOrEmpty(hdnGridResult.attr("gridViewId"))) {
+            this.id = hdnGridResult.attr("gridViewId");
+        }
+        if (!$.isNullOrEmpty(hdnGridResult.attr("keyType"))) {
+            this.keyType = hdnGridResult.attr("keyType");
         }
     },
     getCellIndex: function (checkBox) {
@@ -2221,7 +2224,7 @@ Sparrow.gridView = {
             $(allCheckBox).checked = true;
         }
     },
-    mustSelect: function (message) {
+    mustSelect: function (confirmMessage) {
         var selectedId = [];
         // var gridViewRowCount=this.getTable().rows.length;
         var checkBoxList = $("&" + this.id);
@@ -2242,7 +2245,7 @@ Sparrow.gridView = {
             if (lang.message.noSelectRecord) {
                 $.message(lang.message.noSelectRecord);
             } else {
-                $.message("please define the json 'lang.message.noSelectRecord'!");
+                $.message("please define 'lang.message.noSelectRecord'!");
             }
             return false;
         }
@@ -2250,32 +2253,19 @@ Sparrow.gridView = {
             selectedId.pop();
             selectedId.push(selectId);
         }
-        if (!message) {
+        if (!confirmMessage) {
             return selectedId;
-        } else {
-            if (window.confirm(message)) {
-                return selectedId;
-            } else {
-                return false;
-            }
         }
+        if (window.confirm(confirmMessage)) {
+            return selectedId;
+        }
+        return false;
     },
-    onlyCheckedOne: function (message) {
-        var strMessage = null;
-        if (message) {
-            strMessage = message;
-        } else {
-            if (system.onlySelectOneRecord) {
-                strMessage = system.onlySelectOneRecord;
-            } else {
-                $.message("please defined system.onlySelectOneRecord");
-            }
-        }
-        // var rowsCount=this.getTable().rows.length;
+    onlyCheckedOne: function (confirmMessage) {
         var checkCount = 0;
-        // var selectedId=null;
+        var selectedId= null;
         var checkBoxList = $("name." + this.id);
-        for (var i = 1; i < checkBoxList.length; i += 1) {
+        for (var i = 1; i < checkBoxList.length; i++) {
             var checkBox = checkBoxList[i];
             if (checkBox.checked) {
                 checkCount += 1;
@@ -2284,30 +2274,37 @@ Sparrow.gridView = {
         }
 
         if (checkCount === 0) {
-            if (system.noSelectRecord) {
-                $.message(system.noSelectRecord);
+            if (lang.message.noSelectRecord) {
+                $.message(lang.message.noSelectRecord);
             } else {
-                $.message("please defined system.noSelectRecord!");
+                $.message("please define lang.message.noSelectRecord!");
             }
             return false;
         }
         if (checkCount !== 1) {
-            $.message(strMessage);
+            if (lang.message.onlySelectOneRecord) {
+                $.message(lang.message.onlySelectOneRecord);
+            } else {
+                $.message("please define lang.message.onlySelectOneRecord");
+            }
             return false;
+        }
+        if (window.confirm(confirmMessage)) {
+            return selectedId;
         }
         return true;
     },
-    action: function (postUrl, message, isOnlyOne) {
-        var result = isOnlyOne ? this.onlyCheckedOne(message) : this
-            .mustSelect(message);
-        if (result) {
-            $(this.resultCtrlId).value = result;
-            if (postUrl === "return") {
-                return true;
-            } else {
-                $.submit(postUrl);
-            }
+    submit: function (postUrl, confirmMessage, isOnlyOne) {
+        var result = isOnlyOne ? this.onlyCheckedOne(confirmMessage) : this
+            .mustSelect(confirmMessage);
+        if (!result) {
+            return;
         }
+        $(this.resultCtrlId).value = result;
+        if (postUrl === "return") {
+            return true;
+        }
+        $.submit(postUrl);
     }
 };
 Sparrow.table = function (id) {
@@ -6686,5 +6683,13 @@ if ( typeof define === "function" && define.amd ) {
         return Sparrow;
     });
 }
+
+
+// Expose Sparrow and $ identifiers, even in AMD
+// and CommonJS for browser emulators
+if ( !noGlobal ) {
+    window.Sparrow = window.$ = Sparrow;
+}
+
 return Sparrow;
 }));

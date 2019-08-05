@@ -205,6 +205,7 @@ Sparrow.v = {
         return this.ok(validate,srcElement);
     },
     isWord: function (validate,srcElement) {
+        validate=validate[srcElement.id];
         var result = this._validate(validate,srcElement);
         if (result !== true) {
             return result;
@@ -241,6 +242,7 @@ Sparrow.v = {
         this.ok(validate,srcElement);
     },
     isDigital: function (validate,srcElement) {
+        validate=validate[srcElement.id];
         var srcElementValue =srcElement.value;
         var result = this._validate(validate,srcElement);
         if (result !== true) {
