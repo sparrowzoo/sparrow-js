@@ -84,6 +84,7 @@
         <ul class="pure-menu-list">
             <li class="pure-menu-item"><a href="${root_path}/tools/properties-yaml-converter.jsp" class="pure-menu-link">yaml转换器</a></li>
             <li class="pure-menu-item"><a href="${root_path}/tools/jsonview.jsp" class="pure-menu-link">JSON格式化</a></li>
+            <li class="pure-menu-item"><a href="${root_path}/tools/qr-code.jsp" class="pure-menu-link">二维码在线生成器</a></li>
 
         </ul>
     </div>
