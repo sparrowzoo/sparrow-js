@@ -6,18 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>spring properties yaml 在线转换器 Sparrow JS Framework</title>
-    <j:style href="$resource/assets/styles/pure-css/pure.css"/>
-    <!--[if lte IE 8]>
-    <j:style href="$resource/assets/styles/layouts-old-ie.css"/>
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
-    <j:style href="$resource/assets/styles/layouts.css"/>
-    <!--<![endif]-->
-    <j:script src="$resource/assets/scripts-dev/sparrow.js"/>
-
-    <script language="javascript" type="text/javascript"
-            src="/assets/scripts-dev/code-prettify/sparrow-prettify.js?lang=css&skin=sunburst"></script>
-
+    <jsp:include page="../examples/head.jsp"/>
 
     <script type="text/javascript">
         function properties2Yaml() {

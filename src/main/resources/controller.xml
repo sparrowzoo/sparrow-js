@@ -11,4 +11,8 @@
         <action name="/to-yaml.json" method="toYaml"/>
         <action name="/to-properties.json" method="toProperties"/>
     </controller>
+
+    <controller id="commendLineFormatController">
+        <action name="/commend-line-format.json" method="format"/>
+    </controller>
 </mvc>

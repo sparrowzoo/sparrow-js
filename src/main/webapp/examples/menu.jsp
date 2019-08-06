@@ -1,4 +1,3 @@
-<!-- Menu toggle -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://www.sparrowzoo.com/ui" prefix="j" %>
 
@@ -7,9 +6,12 @@
 </a>
 <div id="divVerticalMenu">
     <div class="pure-menu">
+        <a class="pure-menu-heading" href="javascript:$.browser.addFavorite('http://www.sparrowzoo.net','Sparrow 程序员在线工具')">收藏本站</a>
+
         <a class="pure-menu-heading" href="http://www.sparrowzoo.net">首页</a>
     </div>
     <div class="pure-menu">
+
         <a class="pure-menu-heading" href="#">菜单</a>
 
         <ul class="pure-menu-list">
@@ -85,7 +87,7 @@
             <li class="pure-menu-item"><a href="${root_path}/tools/properties-yaml-converter.jsp" class="pure-menu-link">yaml转换器</a></li>
             <li class="pure-menu-item"><a href="${root_path}/tools/jsonview.jsp" class="pure-menu-link">JSON格式化</a></li>
             <li class="pure-menu-item"><a href="${root_path}/tools/qr-code.jsp" class="pure-menu-link">二维码在线生成器</a></li>
-
+            <li class="pure-menu-item"><a href="${root_path}/tools/commend-line-format.jsp" class="pure-menu-link">Linux 命令行格式化</a></li>
         </ul>
     </div>
 </div>
