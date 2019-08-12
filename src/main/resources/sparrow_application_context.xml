@@ -6,4 +6,5 @@
     <bean name="cookieUtility" class="com.sparrow.support.web.CookieUtility"/>
     <bean name="previewController" class="com.sparrow.markdown.controller.PreviewController" controller="true"/>
     <bean name="yamlController" class="com.sparrow.yaml.controller.YamlController" controller="true"/>
+    <bean name="commendLineFormatController" class="com.sparrow.jvm.controller.CommendLineFormatController" controller="true"/>
 </beans>
