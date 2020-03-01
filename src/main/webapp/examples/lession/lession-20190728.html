@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>title</title>
+    <script language="javascript" type="text/javascript"  src="http://www.sparrowzoo.net/assets/scripts-dev/require.js"></script>
+    <script language="JavaScript" type="text/javascript" src="http://www.sparrowzoo.net/assets/scripts-dev/sparrow.js"></script>
 </head>
 <body>
 
 
 <input value="sparrowzoo" type="text" id="txtUserName" name="userName"/>
 
+<div id="divHello"></div>
+
 
 <script language="JavaScript" type="text/javascript">
     console.log(document.getElementById("txtUserName").value);
 
-    document.getElementById("htmlId").innerHTML="hello world";
+    document.getElementById("divHello").innerHTML="hello world";
 
-    $( "button.continue" ).html( "Next Step..." )
+    $("#divHello").html("Next Step...");
     //y=f(x);
 
     function func() {
