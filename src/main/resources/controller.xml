@@ -15,4 +15,8 @@
     <controller id="commendLineFormatController">
         <action name="/commend-line-format.json" method="format"/>
     </controller>
+
+    <controller id="wordCountController">
+        <action name="/flink/word-count.json" method="wordCount"/>
+    </controller>
 </mvc>

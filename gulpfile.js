@@ -56,17 +56,23 @@ var paths = {
             'source/scripts/sparrowEditor.js',
             'source/scripts/tree.js',
             'source/scripts/dispatcher.js',
-            'source/scripts/tail.js'
+            'source/scripts/tail.js',
+            'source/scripts/metricChart.js'
         ],
         dest: 'src/main/webapp/assets/scripts-dev/'
     },
     scripts_min: {
-        src: ['src/main/webapp/assets/scripts-dev/sparrow.js','node_modules/requirejs/require.js','node_modules/requirejs-domready/domReady.js'],
+        src: ['src/main/webapp/assets/scripts-dev/sparrow.js'
+            ,'node_modules/requirejs/require.js'
+            ,'node_modules/requirejs-domready/domReady.js'
+            ,'node_modules/echarts/dist/echarts.js'],
         dest: 'src/main/webapp/assets/scripts'
     },
     dependency: {
         src: ['node_modules/requirejs/require.js',
-            'node_modules/requirejs-domready/domReady.js'],
+            'node_modules/requirejs-domready/domReady.js',
+            'node_modules/echarts/dist/echarts.js'
+        ],
         dest: 'src/main/webapp/assets/scripts-dev',
         code_pretty_src:['node_modules/code-prettify/src/*.js'],
         code_pretty_dest:'src/main/webapp/assets/scripts-dev/code-prettify',

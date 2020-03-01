@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE beans PUBLIC "-//sparrow Framework//DTD ioc Configuration//EN"
-    "beans.dtd">
+        "beans.dtd">
 <beans>
+    <bean name="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxActive" value="${redis.pool.maxActive}"/>
+        <property name="maxIdle" value="${redis.pool.maxIdle}"/>
+        <property name="maxWait" value="${redis.pool.maxWait}"/>
+        <property name="minIdle" value="${redis.pool.minIdle}"/>
+        <property name="testOnBorrow" value="${redis.pool.testOnBorrow}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${redis.pool.timeBetweenEvictionRunsMillis}"/>
+        <property name="minEvictableIdleTimeMillis" value="${redis.pool.minEvictableIdleTimeMillis}"/>
+    </bean>
+
+    <bean name="redisPool" class="com.sparrow.cache.impl.redis.RedisPool">
+        <property name="urls" value="${redis_url}"/>
+        <property name="config" ref="poolConfig"/>
+    </bean>
+    <bean name="cacheClient" class="com.sparrow.cache.impl.redis.RedisCacheClient">
+        <property name="redisPool" ref="redisPool"/>
+    </bean>
+
+
     <bean name="sparrowServletContainer" class="com.sparrow.web.support.SparrowServletContainer"/>
     <bean name="cookieUtility" class="com.sparrow.support.web.CookieUtility"/>
     <bean name="previewController" class="com.sparrow.markdown.controller.PreviewController" controller="true"/>
     <bean name="yamlController" class="com.sparrow.yaml.controller.YamlController" controller="true"/>
-    <bean name="commendLineFormatController" class="com.sparrow.jvm.controller.CommendLineFormatController" controller="true"/>
+    <bean name="commendLineFormatController" class="com.sparrow.jvm.controller.CommendLineFormatController"
+          controller="true"/>
+    <bean name="wordCountController" class="com.sparrow.flink.controller.WordCountController" controller="true">
+        <property name="cacheClient" ref="cacheClient"/>
+    </bean>
+
 </beans>

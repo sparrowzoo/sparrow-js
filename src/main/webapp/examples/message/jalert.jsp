@@ -50,8 +50,6 @@
             <input type="button" value="弹出自定义div"
                    onclick="$.dialog({content:'内容',width:'500px',height:'300px'});">
 
-
-
         </div>
 
     </div>
