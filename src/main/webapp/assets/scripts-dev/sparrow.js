@@ -194,18 +194,20 @@ if (!Array.prototype.pop) {
     };
 }
 /**
- * @return {null}
- * name.
- * #id  id
- * &name address equal name
- * <tag tag name 
- * !son dot below
- * $for ---for 4
- * *checked_value * equal multi
- * +//new create
+ * @return
+ *
+ * # id  id
+ * & name address equal name
+ * ^ tag tag name
+ * ! son dot below
+ * $ for ---for 4
+ * * checked_value * equal multi
+ * + new create
+ * ...
  */
-var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
+var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
     if (window === this) {
+        //Array.prototype.slice 将arguments 转化成数组
         var args = Array.prototype.slice.call(arguments, 0);
         if (!selector) {
             return null;
@@ -216,7 +218,7 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
             return window.location.host.substr(window.location.host.indexOf('.'));
         })
          */
-        if (typeof(selector) === "function") {
+        if (typeof (selector) === "function") {
             //call不为数组
             //apply 的参数为数组
             //Array.prototype.slice 将arguments 转化成数组
@@ -242,15 +244,15 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
             sparrowContainerKey = "#" + selector.id;
         }
 
-        parent =null;
+        parent = null;
         doc = document;
-        cache=true;
-        if(args.length>=2) {
+        cache = true;
+        //selector, parent, doc, cache, sparrowContainerKey
+        if (args.length >= 2) {
             //selector,cache
             if (typeof args[1] == "boolean") {
                 cache = args[1];
-            }
-            else {
+            } else {
                 //selector,parent
                 parent = args[1];
             }
@@ -258,32 +260,33 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
                 //selector,parent,cache
                 if (typeof args[2] == "boolean") {
                     cache = args[2];
-                }
-                else {
+                } else {
                     //select,parent doc
                     doc = args[2];
                 }
             }
             //selector,parent,doc,cache
-            if (args.length == 4) {
+            if (args.length === 4) {
                 cache = args[3];
             }
         }
 
-        if (parent != null && typeof(parent) === "object") {
+        if (parent != null && typeof (parent) === "object") {
             if (!parent.id) {
                 parent.id = "sparrow_" + $.random();
             }
-            sparrowContainerKey +="_"+parent.id;
+            sparrowContainerKey += "_" + parent.id;
         }
         if ($.global(sparrowContainerKey)) {
             return $.global(sparrowContainerKey);
         }
-        var beginSelector=["#","!","$","&","*","+","^"];
-        if (typeof (selector) !== "object" &&beginSelector.indexOf(selector.substring(0,1))==-1) {
+        var beginSelector = ["#", "!", "$", "&", "*", "+", "^"];
+        //$("btnButtonId") .... equal document.getElementById("btnButtonId");
+        if (typeof (selector) !== "object" && beginSelector.indexOf(selector.substring(0, 1)) == -1) {
+            //btnButtonId
             return doc.getElementById(selector);
         }
-        return new Sparrow(selector, parent, doc,cache,sparrowContainerKey);
+        return new Sparrow(selector, parent, doc, cache, sparrowContainerKey);
     }
     var elements = [];
     this.selector = selector;
@@ -295,11 +298,12 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
         }
         this.selector = "#" + selector.id;
         sparrowContainerKey = this.selector;
-    } else if (typeof selector==='string') {
-        var switch_char=selector.substring(0,1);
-        selector=selector.substring(1);
+    } else if (typeof selector === 'string') {
+        //["#", "!", "$", "&", "*", "+", "^"]
+        var switch_char = selector.substring(0, 1);
+        selector = selector.substring(1);
         var selectorArray = selector.split(".");
-        var i=0;
+        var i = 0;
         switch (switch_char) {
             case "#"://id
                 elements[0] = doc.getElementById(selector);
@@ -311,8 +315,7 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
                 elements = doc.getElementsByName(selector);
                 break;
             case "+":
-                //+input.id.parentId.type
-                //+input&button.id.parentId.type
+                //+html-label.id.parentId.type
                 elements[0] = doc.createElement(selectorArray[0]);
                 if (selectorArray.length >= 2) {
                     elements[0].id = selectorArray[1];
@@ -329,30 +332,34 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
                             elements[0]);
                     }
                 }
+                if(selectorArray.length>=4){
+                    elements[0].type=selectorArray[3];
+                }
                 break;
             case "!":
+                //!html-label.parentId"
                 var childs = [];
                 if (!parent) {
                     parent = $(selectorArray[1]);
                 }
-                var allChilds = parent.getElementsByTagName(selectorArray[0]);
+                var children = parent.getElementsByTagName(selectorArray[0]);
                 if (selectorArray[0] === "li") {
-                    parent = allChilds[0].parentNode;
+                    parent = children[0].parentNode;
                 }
                 this.s = parent;
                 if (!parent.id) {
                     parent.id = "sparrow_" + $.random();
                 }
-                for (i = 0; i < allChilds.length; i ++) {
-                    if (allChilds[i].parentNode === parent) {
-                        childs[childs.length] = allChilds[i];
+                for (i = 0; i < children.length; i++) {
+                    if (children[i].parentNode === parent) {
+                        childs[childs.length] = children[i];
                     }
                 }
                 elements = childs;
                 break;
             case "$": //for 4
                 var labelList = doc.getElementsByTagName("label");
-                for (i = 0; i < labelList.length; i ++) {
+                for (i = 0; i < labelList.length; i++) {
                     if (labelList[i].attributes["for"].value === selector) {
                         elements[0] = labelList[i];
                         break;
@@ -386,7 +393,7 @@ var Sparrow = function (selector,parent,doc,cache,sparrowContainerKey) {
             if (!this.s) {
                 this.s = elements[0];
             }
-            if (this.s && this.s.id&&cache) {
+            if (this.s && this.s.id && cache) {
                 $.global(sparrowContainerKey, this);
             }
         }
@@ -888,6 +895,9 @@ Sparrow.ajax = {
                 if (result.code === $.ajax.SUCCESS) {
                     if (callback) {
                         callback(result);
+                    }
+                    else {
+                        $.message(result.data);
                     }
                 }
                 else {

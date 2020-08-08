@@ -123,6 +123,7 @@ hr {
 
 
 .body{text-align: left;width:98%;}
+.content{max-width: 900px;}
 .navigation {width: 100%;text-indent: 20px;line-height: 40px;border-bottom: #ccc 1px dotted;text-align:left;}
 .prompt {color: #8CAEB5;font-size: 10pt;}
 .star {color: #ca151d;font-size: 10pt;}
