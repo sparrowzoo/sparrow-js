@@ -115,6 +115,10 @@ Sparrow.clearForm = function (validateJson) {
     var inputArray = $.jsonKeys(validateJson);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
+        if(input==null) {
+            console.log(inputArray[i] + " not exist!")
+            continue;
+        }
         var defaultValue = "";
         if (validateJson[inputArray[i]]) defaultValue = validateJson[inputArray[i]].defaultValue;
         input.value = $.toString("", defaultValue);
@@ -126,6 +130,10 @@ Sparrow.getFormData = function (inputIdArray) {
     var inputArray = $.jsonKeys(inputIdArray);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
+        if(input==null){
+            console.log(inputArray[i]+" not exist!")
+            continue;
+        }
         if (!$.isNullOrEmpty(input.name)) {
             var value = input.value;
             //todo 加判断其他控件

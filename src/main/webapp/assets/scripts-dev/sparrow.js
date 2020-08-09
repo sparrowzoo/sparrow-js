@@ -1436,6 +1436,10 @@ Sparrow.clearForm = function (validateJson) {
     var inputArray = $.jsonKeys(validateJson);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
+        if(input==null) {
+            console.log(inputArray[i] + "not exist!")
+            continue;
+        }
         var defaultValue = "";
         if (validateJson[inputArray[i]]) defaultValue = validateJson[inputArray[i]].defaultValue;
         input.value = $.toString("", defaultValue);
@@ -1447,6 +1451,10 @@ Sparrow.getFormData = function (inputIdArray) {
     var inputArray = $.jsonKeys(inputIdArray);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
+        if(input==null){
+            console.log(inputArray[i]+"not exist!")
+            continue;
+        }
         if (!$.isNullOrEmpty(input.name)) {
             var value = input.value;
             //todo 加判断其他控件
@@ -2378,14 +2386,15 @@ Sparrow.table.prototype = {
         this.body.deleteRow(rowIndex);
     }
 };
+//document.domain=$.browser.cookie.root_domain; 解决跨域
 Sparrow.file = {
     // 是否显示上传进度
     isShowProgress: false,
     // 等待
     wit: null,
-    // 客 户端文件名
+    // 客户端文件名
     clientFileName: null,
-    // 上传框架id
+    // 上传框架id editorId.path-key 非editor id为null e.g null.forum 表示path-key为forum 的无editor 上传组件
     uploadFrameId: null,
     // 上传回调函数
     uploadCallBack: function (fileInfo, clientFileName, editor) {
