@@ -1437,7 +1437,7 @@ Sparrow.clearForm = function (validateJson) {
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
         if(input==null) {
-            console.log(inputArray[i] + "not exist!")
+            console.log(inputArray[i] + " not exist!")
             continue;
         }
         var defaultValue = "";
@@ -1452,7 +1452,7 @@ Sparrow.getFormData = function (inputIdArray) {
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
         if(input==null){
-            console.log(inputArray[i]+"not exist!")
+            console.log(inputArray[i]+" not exist!")
             continue;
         }
         if (!$.isNullOrEmpty(input.name)) {
