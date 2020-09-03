@@ -193,6 +193,22 @@ if (!Array.prototype.pop) {
         return lastElement;
     };
 }
+
+Date.prototype.format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 /**
  * @return
  *
@@ -6553,20 +6569,20 @@ Sparrow.tree.prototype = {
         this.initCodeToolip(forumPrefix, ajaxUrl);
         var treeObject = this;
         this.config.loadFloatTree = function () {
-            ajax.json(ajaxUrl, forumPrefix, function (result) {
-                var jsonList = result.value || result.message;
+            $.ajax.json(ajaxUrl, forumPrefix, function (result) {
+                var jsonList = result.data || result.message;
                 treeObject.aNodes = [];
                 treeObject.resetIcon();
                 treeObject.config.usePlusMinusIcons = false;
                 treeObject.config.useRootIcon = false;
-                treeObject.add(jsonList[0].parentUUID, -1, "");
+                treeObject.add(jsonList[0].parentId, -1, "");
                 treeObject.resetIcon();
-                treeObject.add(jsonList[0].uuid, -1, "");
+                treeObject.add(jsonList[0].id, -1, "");
                 for (var i = 1; i < jsonList.length; i++) {
                     if ($.isNullOrEmpty(jsonList[i].forumIcoUrl)) {
                         jsonList[i].forumIcoUrl = $.defaultForumIcoUrl;
                     }
-                    treeObject.add(jsonList[i].uuid, jsonList[i].parentUUID,
+                    treeObject.add(jsonList[i].id, jsonList[i].parentId,
                         jsonList[i].name, "javascript:" + treeObject.obj
                         + ".codeNodeClick(" + (i + 1) + ");", jsonList[i].name, undefined,
                         undefined, undefined, jsonList[i],
@@ -6616,15 +6632,15 @@ Sparrow.tree.prototype = {
         };
         treeObject.config.loadFloatTree = function () {
             ajax.json(ajaxUrl, "loadOption=" + codePrefix, function (result) {
-                var jsonList = result.value || result.message;
+                var jsonList = result.data || result.message;
                 treeObject.aNodes = [];
                 treeObject.resetIcon();
                 treeObject.config.usePlusMinusIcons = false;
                 treeObject.config.useRootIcon = false;
-                treeObject.add(jsonList[0].parentUUID, -1, "");
+                treeObject.add(jsonList[0].parentId, -1, "");
                 for (var i = 0; i < jsonList.length; i++) {
-                    treeObject.add(jsonList[i].uuid,
-                        jsonList[i].parentUUID, jsonList[i].name,
+                    treeObject.add(jsonList[i].id,
+                        jsonList[i].parentId, jsonList[i].name,
                         "javascript:" + treeObject.obj
                         + ".codeNodeClick(" + (i + 1) + ");",
                         jsonList[i].code + "|" + jsonList[i].name,
