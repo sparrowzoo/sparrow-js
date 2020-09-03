@@ -1170,20 +1170,20 @@ Sparrow.tree.prototype = {
         this.initCodeToolip(forumPrefix, ajaxUrl);
         var treeObject = this;
         this.config.loadFloatTree = function () {
-            ajax.json(ajaxUrl, forumPrefix, function (result) {
-                var jsonList = result.value || result.message;
+            $.ajax.json(ajaxUrl, forumPrefix, function (result) {
+                var jsonList = result.data || result.message;
                 treeObject.aNodes = [];
                 treeObject.resetIcon();
                 treeObject.config.usePlusMinusIcons = false;
                 treeObject.config.useRootIcon = false;
-                treeObject.add(jsonList[0].parentUUID, -1, "");
+                treeObject.add(jsonList[0].parentId, -1, "");
                 treeObject.resetIcon();
-                treeObject.add(jsonList[0].uuid, -1, "");
+                treeObject.add(jsonList[0].id, -1, "");
                 for (var i = 1; i < jsonList.length; i++) {
                     if ($.isNullOrEmpty(jsonList[i].forumIcoUrl)) {
                         jsonList[i].forumIcoUrl = $.defaultForumIcoUrl;
                     }
-                    treeObject.add(jsonList[i].uuid, jsonList[i].parentUUID,
+                    treeObject.add(jsonList[i].id, jsonList[i].parentId,
                         jsonList[i].name, "javascript:" + treeObject.obj
                         + ".codeNodeClick(" + (i + 1) + ");", jsonList[i].name, undefined,
                         undefined, undefined, jsonList[i],
@@ -1233,15 +1233,15 @@ Sparrow.tree.prototype = {
         };
         treeObject.config.loadFloatTree = function () {
             ajax.json(ajaxUrl, "loadOption=" + codePrefix, function (result) {
-                var jsonList = result.value || result.message;
+                var jsonList = result.data || result.message;
                 treeObject.aNodes = [];
                 treeObject.resetIcon();
                 treeObject.config.usePlusMinusIcons = false;
                 treeObject.config.useRootIcon = false;
-                treeObject.add(jsonList[0].parentUUID, -1, "");
+                treeObject.add(jsonList[0].parentId, -1, "");
                 for (var i = 0; i < jsonList.length; i++) {
-                    treeObject.add(jsonList[i].uuid,
-                        jsonList[i].parentUUID, jsonList[i].name,
+                    treeObject.add(jsonList[i].id,
+                        jsonList[i].parentId, jsonList[i].name,
                         "javascript:" + treeObject.obj
                         + ".codeNodeClick(" + (i + 1) + ");",
                         jsonList[i].code + "|" + jsonList[i].name,
