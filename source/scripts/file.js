@@ -9,9 +9,9 @@ Sparrow.file = {
     // 上传框架id editorId.path-key 非editor id为null e.g null.forum 表示path-key为forum 的无editor 上传组件
     uploadFrameId: null,
     // 上传回调函数
-    uploadCallBack: function (fileInfo, clientFileName, editor) {
+    uploadCallBack: function (fileInfo, editor, size) {
         console.info(fileInfo);
-        console.info(clientFileName);
+        console.info(size);
         this.clearStatus();
     },
     // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
@@ -31,7 +31,7 @@ Sparrow.file = {
     // path key 对应后台配置的上传策略
     validateUploadFile: function (f, key, editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
-                "jpeg", "gif", "png"], "errorImgForumIco")) {
+            "jpeg", "gif", "png"], "errorImgForumIco")) {
             $.file.uploadDelegate(false, key, editor);
         }
     },
@@ -112,6 +112,7 @@ Sparrow.file = {
     },
     // 验证文件类型
     checkFileType: function (fileName, rightExtension, errorCtrl) {
+        //这里封装跨域可以复用，因为
         var fileExtension = this.getExtension(fileName);
         var result = false;
         for (var i = 0; i < rightExtension.length; i += 1) {
@@ -196,8 +197,8 @@ Sparrow.file = {
         if (uploadProgress.status === "loading") {
             return;
         }
-        
-        if(!this.callbackValidate(uploadProgress)){
+
+        if (!this.callbackValidate(uploadProgress)) {
             return;
         }
         // 正常显示状态
@@ -227,11 +228,27 @@ Sparrow.file = {
             + this.getFileSerialNumber() + "&t="
             + Math.random() + "&callback=progressCallback", "uploadProgress");
     },
-    initCoverImageEvent: function (coverKey) {
-        if (!coverKey) coverKey = "Cover";
+    /**
+     *
+     * @param upload_path upload.sparrowzoo.com
+     * @param key path-key
+     * @param pathKeySuffixPair {path-key:suffix}
+     */
+    initImageUploadEvent: function (upload_path, key, pathKeySuffixPair) {
+        document.domain=$.browser.cookie.root_domain;
+        if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
+        $("null."+key).src=upload_path+"/file-upload?path-key="+key;
+        //第一次加载初始化
+        $.file.uploadCallBack = function (fileInfo, editor, size) {
+            console.info(size);
+        };
         $.file.validateUploadFile = function (f, key, editor) {
+            var suffix = pathKeySuffixPair;
+            if (typeof (pathKeySuffixPair) === "object") {
+                suffix = pathKeySuffixPair[key];
+            }
             if (!$.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                    "gif", "png"], "error" + coverKey)) {
+                "gif", "png"], "error" + suffix)) {
                 return;
             }
             $.file.uploadCallBack = function (uploadingProgress) {
@@ -239,10 +256,7 @@ Sparrow.file = {
                 if (!uploadingProgress.fileUrl) {
                     return;
                 }
-                var suffix = coverKey;
-                if (typeof (coverKey) === "object") {
-                    suffix = coverKey[key];
-                }
+
                 $("#div" + suffix).html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
                     + "'/></a>");
                 $("#hdn" + suffix).value(uploadingProgress.fileUrl);

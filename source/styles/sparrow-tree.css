@@ -1,76 +1,56 @@
-.sparrow-tree {
+.iTree {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 11px;
 }
 
-.sparrow-tree img {
+.iTree img {
     border: 0;
     vertical-align: middle;
 }
 
-.sparrow-tree a {
+.iTree a {
     color: #333;
     text-decoration: none;
 }
 
-.sparrow-tree a.node {
+.iTree a.node {
     white-space: nowrap;
     padding: 1px 2px 1px 2px;
 }
 
-.sparrow-tree a.node:hover, .sparrow-tree a.nodeSel:hover {
+.iTree a.node:hover, .iTree a.nodeSel:hover {
     cursor: pointer;
 }
 
-.sparrow-tree a.nodeSel {
+.iTree a.nodeSel {
     font-size: 14px;
     font-style: italic;
 }
 
-.sparrow-tree .clip {
+.iTree .clip {
     overflow: hidden;
 }
 
 /*--------------------menuTree-------------------------*/
-.sparrow-treeNodeMenuTree1:hover {
-    line-height: 30px;
-    display: inline;
+.iTreeNodeMenuTree1:hover {
+    line-height: 50px;
+    display: inline-block;
     font-weight: bold;
     background-color: #36aef4;
     cursor: pointer;
     border: none;
 }
 
-.sparrow-treeNodeMenuTree1 {
-    line-height: 30px;
-    display: inline;
+.iTreeNodeMenuTree1 {
+    line-height: 50px;
     font-weight: bold;
-    border-bottom: #ccc 1px dotted;
+    width: 100%;
+    border-bottom: 1px #fff dashed;
 }
 
-.sparrow-treeNodeSelectMenuTree1 {
-    line-height: 30px;
-    display: inline;
-    font-weight: bold;
-    background-color: #36aef4;
-    color: #fff;
-    cursor: pointer;
-    border: none;
-}
-
-.sparrow-treeNodeSelectMenuTree1 span
-{
-    font-size: 12pt;
-    color:#fff;
-}
-.sparrow-treeNodeMenuTree1:hover span{
-    font-size: 12pt;
-    color:#fff;
-}
-
-.sparrow-treeNodeMenuTree2:hover {
-    line-height: 25px;
-    display: inline;
+.iTreeNodeSelectMenuTree1 {
+    line-height: 50px;
+    width: 100%;
     font-weight: bold;
     background-color: #36aef4;
     color: #fff;
@@ -78,115 +58,92 @@
     border: none;
 }
 
-.sparrow-treeNodeMenuTree2 {
-    line-height: 25px;
-    display: inline;
-    border-bottom: #ccc 1px dotted;
-}
-
-.sparrow-treeNodeSelectMenuTree2 span
-{
-    font-size: 12pt;
-    color:#fff;
-}
-.sparrow-treeNodeMenuTree2:hover span{
-    font-size: 12pt;
-    color:#fff;
-}
-
-.sparrow-treeNodeSelectMenuTree2 {
-    line-height: 25px;
-    display: inline;
-    font-weight: bold;
-    background-color: #36aef4;
-    color: #fff;
-    cursor: pointer;
-    border: none;
-}
-
-.sparrow-treeNodeMenuTree3:hover {
-    line-height: 20px;
-    display: inline;
-    font-weight: bold;
-    background-color: #36aef4;
-    color: #fff;
-    cursor: pointer;
-    border: none;
-}
-
-.sparrow-treeNodeMenuTree3 {
-    line-height: 20px;
-    display: inline;
-    border-bottom: #ccc 1px dotted;
-}
-
-.sparrow-treeNodeSelectMenuTree3 {
-    line-height: 20px;
-    display: inline;
-    font-weight: bold;
-    background-color: #36aef4;
-    color: #fff;
-    cursor: pointer;
-    border: none;
-}
-.sparrow-treeNodeSelectMenuTree3 span
-{
-    font-size: 12pt;
-    color:#fff;
-}
-.sparrow-treeNodeMenuTree3:hover span{
-    font-size: 12pt;
-    color:#fff;
-}
-/*--------------------forumTree-------------------------*/
-.sparrow-treeNodeHoverForumTree1 {
-    line-height: 30px;
-    background: #ff6500;
-    display: inline;
-    font-weight: bold;
-}
-
-.sparrow-treeNodeForumTree1 {
-    line-height: 30px;
-    background: #ffffff;
-    display: inline;
-    font-weight: bold;
-    border-bottom: #ca151d 2px solid;
-}
-
-.sparrow-treeNodeForumTree1 span
+.iTreeNodeSelectMenuTree1 span
 {
     font-size: 14pt;
+    color:#fff;
 }
-
-.sparrow-treeNodeHoverForumTree1 span {
-    color: #ffffff;
+.iTreeNodeMenuTree1:hover span{
     font-size: 14pt;
+    color:#fff;
 }
 
-.sparrow-treeNodeHoverForumTree2 {
+.iTreeNodeMenuTree2:hover {
     line-height: 25px;
-    background: #ff6500;
-    display: inline;
+    display: inline-block;
+    width: 100%;
+    font-weight: bold;
+    background-color: #36aef4;
+    color: #fff;
+    cursor: pointer;
+    border: none;
 }
 
-.sparrow-treeNodeForumTree2 {
+.iTreeNodeMenuTree2 {
     line-height: 25px;
-    background: #ffffff;
-    display: inline;
-    border-bottom: #ccc 1px dotted;
+    width: 100%;
+    display: inline-block;
 }
 
-.sparrow-treeNodeHoverForumTree3 {
-    line-height: 20px;
-    background: #ff6500;
-    display: inline;
+.iTreeNodeSelectMenuTree2 span
+{
+    font-size: 12pt;
+    color:#fff;
+    width: 100%;
+}
+.iTreeNodeMenuTree2:hover span{
+    font-size: 12pt;
+    color:#fff;
 }
 
-.sparrow-treeNodeForumTree3 {
+.iTreeNodeSelectMenuTree2 {
+    line-height: 25px;
+    width: 100%;
+    display: inline-block;
+    font-weight: bold;
+    background-color: #36aef4;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+.iTreeNodeMenuTree3:hover {
     line-height: 20px;
-    background: #ffffff;
-    display: inline;
+    width: 100%;
+    display: inline-block;
+    font-weight: bold;
+    background-color: #36aef4;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+
+.iTreeNodeMenuTree3 {
+    line-height: 20px;
+    width: 100%;
+    display: inline-block;
+}
+
+.iTreeNodeSelectMenuTree3 {
+    line-height: 20px;
+    width: 100%;
+    display: inline-block;
+    font-weight: bold;
+    background-color: #36aef4;
+    color: #fff;
+    cursor: pointer;
+    border: none;
+}
+.iTreeNodeSelectMenuTree3 span
+{
+    font-size: 12pt;
+    width: 100%;
+    color:#fff;
+}
+.iTreeNodeMenuTree3:hover span{
+    font-size: 12pt;
+    width: 100%;
+    color:#fff;
 }
 
 .pure-order-menu{

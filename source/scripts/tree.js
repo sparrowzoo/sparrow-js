@@ -39,7 +39,7 @@ Sparrow.treeNode = function (id, pid, name, url, title, target, childCount, show
 };
 
 
-Sparrow.tree = function (objName) {
+Sparrow.tree = function (objName, parentName) {
     this.config = {
 
         target: "_self",
@@ -60,6 +60,7 @@ Sparrow.tree = function (objName) {
 
         useMouseover: true,
 
+        //class name 包含tree-id
         useTreeIdInNodeClass: false,
 
         useLevelInNodeClass: false,
@@ -81,6 +82,8 @@ Sparrow.tree = function (objName) {
         descTextBoxId: null,
 
         validate: null,
+
+        validateConfig: null,
 
         isValue: false,
 
@@ -105,7 +108,7 @@ Sparrow.tree = function (objName) {
         imageDir: $.url.resource + "/images/treeimg",
 
         // prompt:"1系统菜单 2系统页面 3控件 4 CMS频道 5 CMS链接 6 CMS内容 7 CMS版块 8 论坛版块"
-        forumType: {
+        RESOURCE_TYPE: {
             "1": "[系统菜单]",
             "2": "[系统页面]",
             "3": "[控件事件]"
@@ -152,6 +155,10 @@ Sparrow.tree = function (objName) {
     this.floatTreeFrameId = null;// read only
 
     this.obj = objName;
+
+    this.parentName = parentName;
+
+    this.fullObjName = parentName ? (parentName + "." + objName) : objName;
 
     this.aNodes = [];
 
@@ -207,7 +214,7 @@ Sparrow.tree.prototype = {
             "_self", undefined, true, businessEntity);
     },
     add: function (id, pid, name, url, title, target, childCount,
-                      showCtrl, businessEntity, icon) {
+                   showCtrl, businessEntity, icon) {
         this.aNodes[this.aNodes.length] = new Sparrow.treeNode(id, pid, name, url, title,
             target, childCount, showCtrl, businessEntity, icon);
 
@@ -271,7 +278,7 @@ Sparrow.tree.prototype = {
         var srcObject = $.event(e).srcElement;
         //remove old label,because it's in container cache !!important
         //$.remove("#"+srcObject.id);
-        var sparrowElement = $(srcObject,false);
+        var sparrowElement = $(srcObject, false);
         var addressIndex = srcObject.id.substring(this.obj.length + 1);
         var currentNode = this.aNodes[addressIndex];
         if (currentNode.pid == -1) {
@@ -282,27 +289,27 @@ Sparrow.tree.prototype = {
         orderDiv = $("+div.orderDiv");
         document.body.appendChild(orderDiv.s);
         orderDiv.class("pure-menu pure-order-menu");
-        orderDiv.css("position","absolute");
+        orderDiv.css("position", "absolute");
         orderDiv.html(('<span class="pure-menu-heading pure-menu-link pure-order-menu-heading" onclick="{0}.delete_click({1});{0}.clearFloatFrame();" >删除</span>'
-        + '<ul class="pure-menu-list">'
-        + '<li class="pure-menu-item"><a href="#" class="pure-menu-link">当前第<span id="currentOrderNo"></span>位</a></li>'
-        + '<li class="pure-menu-item pure-menu-has-children">'
-        + '<a  id="hyperJump" class="pure-menu-link">你可以跳转至</a>'
-        +' <ul id="ulChildrenList" class="pure-menu-children"></ul></li></ul>').format(this.obj,addressIndex));
+            + '<ul class="pure-menu-list">'
+            + '<li class="pure-menu-item"><a href="#" class="pure-menu-link">当前第<span id="currentOrderNo"></span>位</a></li>'
+            + '<li class="pure-menu-item pure-menu-has-children">'
+            + '<a  id="hyperJump" class="pure-menu-link">你可以跳转至</a>'
+            + ' <ul id="ulChildrenList" class="pure-menu-children"></ul></li></ul>').format(this.fullObjName, addressIndex));
 
-        orderDiv.bind("onclick",function (e) {
+        orderDiv.bind("onclick", function (e) {
             $.event(e).cancelBubble();
         });
-        $("#hyperJump",false).bind("onmouseover",function () {
-            $("#ulChildrenList",false).css("display","block");
+        $("#hyperJump", false).bind("onmouseover", function () {
+            $("#ulChildrenList", false).css("display", "block");
         });
-        orderDiv.css("left",(sparrowElement.getAbsoluteLeft() + srcObject.offsetWidth)+"px");
-        orderDiv.css("top",(sparrowElement.getAbsoluteTop()+ srcObject.offsetHeight)+"px");
+        orderDiv.css("left", (sparrowElement.getAbsoluteLeft() + srcObject.offsetWidth) + "px");
+        orderDiv.css("top", (sparrowElement.getAbsoluteTop() + srcObject.offsetHeight) + "px");
 
         var pNode = currentNode._parentNode;
         var index = 0;
         var currentIndex = 0;
-        var listHTML ="";
+        var listHTML = "";
         for (var i = 0; i < this.aNodes.length; i++) {
             if (this.aNodes[i].pid != pNode.id) {
                 continue;
@@ -312,33 +319,33 @@ Sparrow.tree.prototype = {
                 continue;
             }
             index++;
-            listHTML+='<li class="pure-menu-item" onclick="{0}.order({1},{2})"><a href="#" class="pure-menu-link">第<span>{2}</span>位</a></li>'.format(this.obj,addressIndex,index);
+            listHTML += '<li class="pure-menu-item" onclick="{0}.order({1},{2})"><a href="#" class="pure-menu-link">第<span>{2}</span>位</a></li>'.format(this.fullObjName, addressIndex, index);
             if (this.aNodes[i]._lastOfSameLevel) {
                 break;
             }
         }
         //without cache
-        $("#ulChildrenList",false).html(listHTML);
-        $("#currentOrderNo",false).html(currentIndex);
+        $("#ulChildrenList", false).html(listHTML);
+        $("#currentOrderNo", false).html(currentIndex);
     },
     order: function (srcAddressIndex, sort) {
         var srcNode = this.aNodes[srcAddressIndex];
         var srcNo = $("currentOrderNo").innerHTML;
         var postString = "id=" + srcNode.id + "&sort=" + sort;
         var tree = this;
-        var nodes=this.aNodes;
+        var nodes = this.aNodes;
         $.ajax.json(this.config.orderURL, postString, function (json) {
             srcNode = nodes[srcAddressIndex];
             var destNode = null;
             var srcParentNode = srcNode._parentNode;
             var childNo = 0;
-            var destIndex=0;
+            var destIndex = 0;
             //find dest node
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].pid == srcParentNode.id) {
                     childNo++;
                     if (childNo == sort) {
-                        destIndex=i;
+                        destIndex = i;
                         destNode = nodes[i];
                         break;
                     }
@@ -347,8 +354,8 @@ Sparrow.tree.prototype = {
             //delete src index
             nodes.splice(srcAddressIndex, 1);
             //insert new at dest insert
-            nodes.splice(destIndex,0,srcNode);
-            $("#"+tree.config.treeFrameId).html(tree);
+            nodes.splice(destIndex, 0, srcNode);
+            $("#" + tree.config.treeFrameId).html(tree);
             tree.clearFloatFrame();
         });
     }, addNode: function (pNode) {
@@ -403,7 +410,7 @@ Sparrow.tree.prototype = {
                 + this.obj.substring(1);
         if (this.config.useLevelInNodeClass)
             classNum += (this.aIndent.length > 1 ? 3 : (this.aIndent.length + 1));
-        var str = '<div onclick="' + this.obj + '.select(this,\'' + classNum + '\');"';
+        var str = '<div onclick="' + this.fullObjName + '.select(this,\'' + classNum + '\');"';
         if (this.config.useRootIcon || node.pid != this.root.id)
             str += ' class="iTreeNode' + classNum + '"';
         str += 'id="node' + this.obj + nodeId + '"  >' + this.indent(node, nodeId);
@@ -419,8 +426,8 @@ Sparrow.tree.prototype = {
             }
             if (this.config.useRootIcon || node.pid != this.root.id) {
                 str += '<img '
-                    + (this.config.showOrder ? ' onmouseover="' + this.obj
-                    + '.showOrder(event)"' : '') + ' id="i' + this.obj
+                    + (this.config.showOrder ? ' onmouseover="' + this.fullObjName
+                        + '.showOrder(event)"' : '') + ' id="i' + this.obj
                     + nodeId + '" src="'
                     + ((node._isOpened) ? node.iconOpen : node.icon)
                     + '" alt="" align="absMiddle"/>';
@@ -428,16 +435,16 @@ Sparrow.tree.prototype = {
             if ((node.showCtrl && node.pid != -1)
                 || (node.pid == -1 && this.userRootIcon == true)) {
                 if (this.config.useRadio) {
-                    str += '<input style="line-height:15px;height:15px;border:0;" type="radio" name="iTreerdb" id="r{1}{0}" onclick="{1}.getRadioSelected({0});{1}.s({0});" value="{2}"/>'.format(nodeId, this.obj, node.id);
+                    str += '<input style="line-height:15px;height:15px;border:0;" type="radio" name="iTreerdb" id="r{1}{0}" onclick="{1}.getRadioSelected({0});{1}.s({0});" value="{2}"/>'.format(nodeId, this.fullObjName, node.id);
                 }
                 if (this.config.useCheckbox == true) {
-                    str += '<input style="line-height:15px;height:15px;border:0;" type="checkbox" name="iTreecbx" id="c{1}{0}" onclick="{1}.selectCheckbox({0});" value="{2}"/>'.format(nodeId, this.obj, node.id);
+                    str += '<input style="line-height:15px;height:15px;border:0;" type="checkbox" name="iTreecbx" id="c{1}{0}" onclick="{1}.selectCheckbox({0});" value="{2}"/>'.format(nodeId, this.fullObjName, node.id);
                 }
             }
         }
         if (node.url) {
             str += '<a ondblclick="javascript:'
-                + this.obj
+                + this.fullObjName
                 + '.dbs('
                 + nodeId
                 + ');" id="s'
@@ -454,18 +461,18 @@ Sparrow.tree.prototype = {
 
             if (this.config.useSelection
                 && ((node._hasChild && this.config.useFolderLinks) || !node._hasChild)) {
-                str += ' onclick="javascript: ' + this.obj + '.s(' + nodeId + ');';
+                str += ' onclick="javascript: ' + this.fullObjName + '.s(' + nodeId + ');';
             }
             str += (this.config.usePlusMinusIcons ? ''
-                    : (node._hasChild && node._parentNode.id != -1 ? (this.obj
-                + '.o(' + nodeId + ')') : ''))
+                : (node._hasChild && node._parentNode.id != -1 ? (this.fullObjName
+                    + '.o(' + nodeId + ')') : ''))
                 + '">';
         }
 
         else if ((!this.config.useFolderLinks || !node.url) && node._hasChild
             && node.pid != this.root.id)
 
-            str += '<a href="javascript: ' + this.obj + '.o(' + nodeId
+            str += '<a href="javascript: ' + this.fullObjName + '.o(' + nodeId
                 + ');" class="node">';
 
         str += '<span id="ntext' + this.obj + nodeId + '">' + node.name + '</span>';
@@ -520,7 +527,7 @@ Sparrow.tree.prototype = {
                     + nodeId + '"/>';
             } else {
                 if (node._hasChild) {
-                    str += '<a href="javascript: ' + this.obj + '.o(' + nodeId
+                    str += '<a href="javascript: ' + this.fullObjName + '.o(' + nodeId
                         + ');"><img id="j' + this.obj + nodeId + '" src="';
                     if (!this.config.useLines)
                         str += (node._isOpened) ? this.icon.nlMinus
@@ -529,7 +536,7 @@ Sparrow.tree.prototype = {
                         str += ((node._isOpened) ? ((node._lastOfSameLevel && this.config.useLines) ? this.icon.minusBottom
                             : this.icon.minus)
                             : ((node._lastOfSameLevel && this.config.useLines) ? this.icon.plusBottom
-                            : this.icon.plus));
+                                : this.icon.plus));
                     str += '"/></a>';
                 } else {
                     str += '<img id="j'
@@ -911,7 +918,7 @@ Sparrow.tree.prototype = {
                 ((isOpen) ? ((isLastNodeOfSameLevel) ? this.icon.minusBottom
                     : this.icon.minus)
                     : ((isLastNodeOfSameLevel) ? this.icon.plusBottom
-                    : this.icon.plus)) :
+                        : this.icon.plus)) :
 
                 ((isOpen) ? this.icon.nlMinus : this.icon.nlPlus);
         } else {
@@ -1126,7 +1133,7 @@ Sparrow.tree.prototype = {
                 + "px";
             HTMLObject.style.top = (sparrowElement.getAbsoluteTop() + srcObject.offsetHeight)
                 + "px";
-            this.interval = window.setInterval(this.obj + ".intervalShow("
+            this.interval = window.setInterval(this.fullObjName + ".intervalShow("
                 + maxHeight + ")", 10);
         }
     },
@@ -1165,12 +1172,12 @@ Sparrow.tree.prototype = {
             document.body.removeChild($("orderDiv"));
         }
     },
-    initForum: function (forumPrefix, ajaxUrl) {
-        if (!ajaxUrl)ajaxUrl = $.url.root + "/forum/load.json";
-        this.initCodeToolip(forumPrefix, ajaxUrl);
+    initResourceTree: function (resourcePrefix, ajaxUrl) {
+        if (!ajaxUrl) ajaxUrl = $.url.root + "/resource/load-all.json";
+        this.initCodeToolip(resourcePrefix, ajaxUrl);
         var treeObject = this;
         this.config.loadFloatTree = function () {
-            $.ajax.json(ajaxUrl, forumPrefix, function (result) {
+            $.ajax.json(ajaxUrl, resourcePrefix, function (result) {
                 var jsonList = result.data || result.message;
                 treeObject.aNodes = [];
                 treeObject.resetIcon();
@@ -1178,16 +1185,15 @@ Sparrow.tree.prototype = {
                 treeObject.config.useRootIcon = false;
                 treeObject.add(jsonList[0].parentId, -1, "");
                 treeObject.resetIcon();
-                treeObject.add(jsonList[0].id, -1, "");
-                for (var i = 1; i < jsonList.length; i++) {
-                    if ($.isNullOrEmpty(jsonList[i].forumIcoUrl)) {
-                        jsonList[i].forumIcoUrl = $.defaultForumIcoUrl;
+                for (var i = 0; i < jsonList.length; i++) {
+                    if ($.isNullOrEmpty(jsonList[i].icoUrl)) {
+                        jsonList[i].icoUrl = $.DEFAULT_RESOURCE_ICO_URL;
                     }
                     treeObject.add(jsonList[i].id, jsonList[i].parentId,
-                        jsonList[i].name, "javascript:" + treeObject.obj
-                        + ".codeNodeClick(" + (i + 1) + ");", jsonList[i].name, undefined,
+                        jsonList[i].name, "javascript:" + treeObject.fullObjName
+                        + ".codeNodeClick(" + (i+1)+ ");", jsonList[i].name, undefined,
                         undefined, undefined, jsonList[i],
-                        jsonList[i].forumIcoUrl);
+                        jsonList[i].icoUrl);
                 }
                 $(treeObject.config.floatTreeId).innerHTML = treeObject;
             });
@@ -1196,10 +1202,10 @@ Sparrow.tree.prototype = {
 // 编码列表
     initCodeToolip: function (codePrefix, ajaxUrl) {
         var htmlEvents = ("$('#'+{0}.config.descTextBoxId).bind('onchange',function(){" +
-        "if($({0}.config.descTextBoxId).value==''){" +
-        "$({0}.config.descHiddenId).value='';" +
-        "if(typeof({0}.config.valueTextBoxId)!='undefined')" +
-        "{$({0}.config.valueTextBoxId).value='';$({0}.config.valueTextBoxId).readOnly='readonly';}}});").format(this.obj);
+            "if($({0}.config.descTextBoxId).value==''){" +
+            "$({0}.config.descHiddenId).value='';" +
+            "if(typeof({0}.config.valueTextBoxId)!='undefined')" +
+            "{$({0}.config.valueTextBoxId).value='';$({0}.config.valueTextBoxId).readOnly='readonly';}}});").format(this.fullObjName);
         eval(htmlEvents);
         var treeObject = this;
         if ($(treeObject.config.floatTreeId) == null) {
@@ -1212,15 +1218,19 @@ Sparrow.tree.prototype = {
             ajaxUrl = $.url.root + "/code/load.json";
         this.dbs = function (nodeIndex) {
             var businessEntity = this.aNodes[nodeIndex].businessEntity;
-            $(this.config.descHiddenId).value = businessEntity.code;
-            var descCtrl = $(this.config.descTextBoxId);
-            if (descCtrl.type === "text") {
-                descCtrl.value = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+            if (this.config.descHiddenId != null) {
+                $(this.config.descHiddenId).value = businessEntity.code;
             }
-            else {
-                descCtrl.innerHTML = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+            if (this.config.descTextBoxId != null) {
+                var descCtrl = $(this.config.descTextBoxId);
+                if (descCtrl.type === "text") {
+                    descCtrl.value = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+                }
+                else {
+                    descCtrl.innerHTML = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+                }
             }
-            if (typeof (this.config.valueTextBoxId) !== "undefined") {
+            if (this.config.valueTextBoxId!=null) {
                 $(this.config.valueTextBoxId).value = businessEntity.value;
             }
             if (this.codeNodeCallBack) {
@@ -1229,6 +1239,9 @@ Sparrow.tree.prototype = {
             this.clearFloatFrame();
             if (this.config.validate) {
                 this.config.validate();
+            }
+            else if (this.config.validateConfig) {
+                $.v.isNull(this.config.validateConfig, descCtrl);
             }
         };
         treeObject.config.loadFloatTree = function () {
@@ -1242,7 +1255,7 @@ Sparrow.tree.prototype = {
                 for (var i = 0; i < jsonList.length; i++) {
                     treeObject.add(jsonList[i].id,
                         jsonList[i].parentId, jsonList[i].name,
-                        "javascript:" + treeObject.obj
+                        "javascript:" + treeObject.fullObjName
                         + ".codeNodeClick(" + (i + 1) + ");",
                         jsonList[i].code + "|" + jsonList[i].name,
                         undefined, undefined, undefined, jsonList[i]);

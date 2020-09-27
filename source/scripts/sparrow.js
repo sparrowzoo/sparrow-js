@@ -23,7 +23,7 @@ Sparrow.request = function (name) {
 
 Sparrow.isNullOrEmpty = function (sourceString) {
     return (sourceString == null || typeof (sourceString) === "undefined"
-    || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
+        || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
 };
 Sparrow.toString = function (sourceString, defaultValue) {
     if (!defaultValue) {
@@ -115,7 +115,7 @@ Sparrow.clearForm = function (validateJson) {
     var inputArray = $.jsonKeys(validateJson);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
-        if(input==null) {
+        if (input == null) {
             console.log(inputArray[i] + " not exist!")
             continue;
         }
@@ -130,8 +130,8 @@ Sparrow.getFormData = function (inputIdArray) {
     var inputArray = $.jsonKeys(inputIdArray);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
-        if(input==null){
-            console.log(inputArray[i]+" not exist!")
+        if (input == null) {
+            console.log(inputArray[i] + " not exist!")
             continue;
         }
         if (!$.isNullOrEmpty(input.name)) {
@@ -267,11 +267,10 @@ Sparrow.prototype.value = function (value) {
     if (!this.s) {
         return;
     }
-    if (!$.isNullOrEmpty(value)) {
-        this.s.value = value;
-        return;
+    if (value===undefined||value===null) {
+        return this.s.value;
     }
-    return this.s.value;
+    this.s.value = value;
 };
 
 
@@ -329,14 +328,14 @@ Sparrow.prototype.getAbsoluteLeft = function () {
     }
     return returnValue;
 };
-Sparrow.prototype.source=function () {
-  return this.s;
+Sparrow.prototype.source = function () {
+    return this.s;
 };
 
-Sparrow.prototype.class=function (className) {
-    if(className){
-        this.s.className=className;
-    return;
+Sparrow.prototype.class = function (className) {
+    if (className) {
+        this.s.className = className;
+        return;
     }
     return this.s.className;
 };
@@ -360,7 +359,7 @@ Sparrow.prototype.css = function (attribute, value, add) {
             command += '$("' + this.s.id + '").style.' + attribute
                 + '=(o+' + value + ')+"px";';
         } else {
-            command = '$("' + this.s.id + '").style.' + attribute + '="'+ value +'"';
+            command = '$("' + this.s.id + '").style.' + attribute + '="' + value + '"';
         }
         eval(command);
     }
@@ -414,6 +413,10 @@ Sparrow.prototype.fix = function (top, left) {
     if (!this.s) {
         return;
     }
+    var weight = this.s.offsetWidth;
+    if (!left) {
+        left = this.getAbsoluteLeft();
+    }
     if ($.browser.ie && $.browser.version === "6.0") {
         this.doc.documentElement.style.backgroundImage = "url(about:blank)";
         this.doc.documentElement.style.backgroundAttachment = "fixed";
@@ -425,6 +428,7 @@ Sparrow.prototype.fix = function (top, left) {
     }
     this.s.style.top = top + "px";
     this.s.style.left = left + "px";
+    this.s.style.width = weight + "px";
 };
 Sparrow.prototype.center = function () {
     if (!this.s) {

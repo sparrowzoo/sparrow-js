@@ -18,6 +18,7 @@
             PR.prettyPrint();
             $.dispatcher.eventRegistry = [{
                 id: "btn1",//控件标签 id
+                eventName:"onclick",
                 delegate: function (e, srcElement) {
                     alert(srcElement.value);
                     srcElement.value = "update";
@@ -79,6 +80,7 @@
             }];
 
             $.dispatcher.register({
+
                 id: "btn2",//控件标签 id
                 delegate: function (e, srcElement) {
                     alert(srcElement.value);
