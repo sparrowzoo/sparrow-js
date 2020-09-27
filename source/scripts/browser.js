@@ -211,7 +211,7 @@ Sparrow.browser = {
         if ($.isNullOrEmpty(defaultUrl)) {
             defaultUrl = this.url.manage;
         }
-        ajax.json($.url.root + logoutUrl, null, function (result) {
+        $.ajax.json($.url.root + logoutUrl, function (result) {
             var permissionKey = result.value;
             if ($.isNullOrEmpty(permissionKey)) {
                 permissionKey = $.browser.cookie.permission;
@@ -224,7 +224,6 @@ Sparrow.browser = {
                 window.location.href = window.location.href;
             }
         }, true);
-
     },
     /***************************************************************************
      * 取窗口可视范围的高度

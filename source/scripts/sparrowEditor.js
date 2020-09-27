@@ -1,5 +1,5 @@
 ﻿// 构造函数 objName:对象ID与对象同名；
-Sparrow.editor=function(objName) {
+Sparrow.editor = function (objName) {
     // 编辑器的对象名称与var Sparrow.editor=new Sparrow.editor("Sparrow.editor");一致.
     this.obj = objName;
     // 编辑器的iframe框架对象
@@ -532,7 +532,8 @@ Sparrow.editor=function(objName) {
                 }
             }
         },
-        // 按一定格式拼写文件http的post请头信息。服务器端接受后会进行解析 以当前编辑对象作为参数
+        // 按一定格式拼写文件http的post请头信息。
+        // 服务器端接受后会进行解析 以当前编辑对象作为参数
         collectFilePostInfo: function () {
             var editor = this.parentObject;
             // 当前编辑器的附件表格对象
@@ -557,12 +558,11 @@ Sparrow.editor=function(objName) {
             }
         },
         // 验证方法
-        validate: function () {
-            return true;
+        validate: function (validateConfig) {
+           return $.v.getValidateResult(validateConfig,false);
         },
         // 提交表单的私有方法
         _submit: function () {
-
             // 收集需要上传的文件信息
             $(this.parentObject.config.attach.fileInfoId).value = this.parentObject.attach
                 .collectFilePostInfo();
@@ -570,59 +570,30 @@ Sparrow.editor=function(objName) {
                 $.submit(
                     this.parentObject.config.attach.actionUrl,
                     this.parentObject.config.attach.formIndex);
-            } else {
-                if (this.parentObject.config.attach.currentUUID) {
-                    $
-                        .submit(
-                            "update.do",
-                            this.parentObject.config.attach.formIndex);
-                } else {
-                    $
-                        .submit(
-                            null,
-                            this.parentObject.config.attach.formIndex);
-                }
+                return;
             }
+            if (this.parentObject.config.attach.currentUUID) {
+                $.submit("update.do",
+                    this.parentObject.config.attach.formIndex);
+                return;
+            }
+            $.submit(
+                null,
+                this.parentObject.config.attach.formIndex);
         },
         // 表单提交的js方法 (需要显示调用)
-        submit: function (editorIndex) {
+        submit: function (validateConfig) {
             // 获取当前编辑器
             var editor = this.parentObject;
             $(editor.config.contentCtrlId).value = editor.frame.contentWindow.document.body.innerHTML;
-
-            if (this.validate()) {
-                // 初始化还未上传的文件控件数组
-                editor.attach.initUploadingFileId();
-                // 待上传的文件不为0
-                if (editor.config.attach.uploadingFileId.length > 0) {
-                    var htmlFrame = $(editor.obj + "_"
-                        + editor.config.tool.toolBar[23].htmlFrameId);
-                    if (htmlFrame.style.display === "none") {
-                        htmlFrame.style.display = "block";
-                        editor.config.currentHtmlId = htmlFrame.id;
-                    }
-                    // 先上传文件
-                    this.uploadFile();
-                } else {
-                    // 直接提交
-                    this._submit();
-                }
+            if (this.validate(validateConfig)) {
+                // 直接提交
+                this._submit();
             } else {
                 $(this.parentObject.config.submitButtonId).disabled = false;
             }
         },
-        // 初始化待上传的文件ID数组
-        initUploadingFileId: function () {
-            var fileUploads = $("&"
-                + this.parentObject.config.attach.iframeName);
-            for (var i = 0; i < fileUploads.length; i++) {
-                $.file.uploadFrameId = fileUploads[i].id;
-                if ($.file.getUploadFile(fileUploads[i].id).value) {
-                    this.parentObject.config.attach.uploadingFileId
-                        .push(fileUploads[i].id);
-                }
-            }
-        },// 将图片插入到编辑器
+        // 将图片插入到编辑器
         insertEditor: function (toolip, serverFileName) {
             var editor = this.parentObject;
             var insertHtml = '<img title="' + toolip + '"' + " src=\""
@@ -654,21 +625,11 @@ Sparrow.editor=function(objName) {
             if ($("divState")) {
                 document.body.removeChild($("divState"));
             }
-        },
-        // 文件批量上传
-        uploadFile: function () {
-            var editor = this.parentObject;
-            file
-                .uploadClick(
-                    true,
-                    "",
-                    editor.config.attach.uploadingFileId[editor.config.attach.uploadedIndex],
-                    editor);
         }
     }
 };
 Sparrow.editor.editorArray = [];
-Sparrow.editor.uploadUrl="http://upload.sparrowzoo.com"
+Sparrow.editor.uploadUrl = "http://upload.sparrowzoo.com"
 // 获取编辑中的对象通过控件ID
 Sparrow.editor.prototype.$ = function (id) {
     return this.frame.contentWindow.document.getElementById(id);
@@ -1315,27 +1276,29 @@ Sparrow.editor.prototype.insertFace = function (srcObject) {
         this.removeElementById();
         return;
     }
-        this.frame.contentWindow.document.execCommand("insertImage", false,
-            srcObject.src);
+    this.frame.contentWindow.document.execCommand("insertImage", false,
+        srcObject.src);
 };
 Sparrow.editor.prototype.insertHyperLink = function () {
     var hyperLink = this.getTempNode("a");
     var txtURL = document.getElementById(this.obj + "_txtURL").value;
-    if (!hyperLink) {return}
+    if (!hyperLink) {
+        return
+    }
 
-        if (txtURL === "http://") {
-            if (window
-                    .confirm("\u60a8\u786e\u8ba4\u8981\u53d6\u6d88\u94fe\u63a5\u5417?")) {
-                this.removeElementById();
-            }
-        } else {
-            if (hyperLink.innerHTML === "") {
-                hyperLink.innerHTML = txtURL;
-            }
-            hyperLink.removeAttribute("id");
-            hyperLink.setAttribute("target", "blank");
-            hyperLink.setAttribute("href", txtURL);
+    if (txtURL === "http://") {
+        if (window
+            .confirm("\u60a8\u786e\u8ba4\u8981\u53d6\u6d88\u94fe\u63a5\u5417?")) {
+            this.removeElementById();
         }
+    } else {
+        if (hyperLink.innerHTML === "") {
+            hyperLink.innerHTML = txtURL;
+        }
+        hyperLink.removeAttribute("id");
+        hyperLink.setAttribute("target", "blank");
+        hyperLink.setAttribute("href", txtURL);
+    }
 };
 Sparrow.editor.prototype.initialize = function (containerId) {
     $.global(this.obj, this);
@@ -1343,16 +1306,17 @@ Sparrow.editor.prototype.initialize = function (containerId) {
     this.config.container.id = containerId;
     var iframeId = "iframe" + $.random();
     this.config.iframeId = iframeId;
-    document.getElementById(containerId).innerHTML = this.config.tool.position == "top" ? (this
-            .initTool() + this.initEditor(iframeId))
-        : (this.initEditor(iframeId) + this.initTool());
+    document.getElementById(containerId).innerHTML =
+        this.config.tool.position == "top" ? (this
+                .initTool() + this.initEditor(iframeId))
+            : (this.initEditor(iframeId) + this.initTool());
     this.frame = document.getElementById(iframeId);
     this.frame.contentWindow.document.open();
     this.frame.contentWindow.document
         .write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
     this.frame.contentWindow.document
         .write('<html><body id="' + this.obj + '" style="width:100%;height:{0}px;" contenteditable="true"></body></html>'
-                .format($(iframeId).offsetHeight));
+            .format($(iframeId).offsetHeight));
     this.frame.contentWindow.document.close();
     // 兼容flash能够正常播放
     // this.Frame.contentWindow.document.designMode = "on";
@@ -1374,18 +1338,7 @@ Sparrow.editor.prototype.initTool = function () {
     var toolHTML = [];
     var toolBarList = null;
     // icon图标工具栏的宽度
-    var iconContainerWidth = parseInt(document
-        .getElementById(this.config.container.id).style.width);
-    if (this.config.tool.convertHTML.isConvert) {
-        iconContainerWidth = iconContainerWidth
-            - this.config.tool.convertHTML.ctrlWidth;
-    }
-    if (this.config.tool.adjust.adjustable) {
-        iconContainerWidth = iconContainerWidth - this.adjust.width;
-    }
-    toolHTML.push('<div style="border-bottom:1px #ccc solid;" class="pure-g tool-bar">');
-    toolHTML.push('<div class="pure-u-18-24" id="' + this.config.tool.icon.containerId + '" style="width:'
-        + iconContainerWidth + 'px;text-align:left;">');
+    toolHTML.push('<div class="pure-u-18-24" id="' + this.config.tool.icon.containerId + '" style="text-align:left;">');
     if (this.config.style != null) {
         // 保留以后扩展使用
         if (this.config.style === "simple") {
@@ -1457,17 +1410,16 @@ Sparrow.editor.prototype.initTool = function () {
             .push('<div align="center" title="\u5728\u6b64\u8c03\u6574\u7f16\u8f91\u5668\u5927\u5c0f\u3002\u9f20\u6807\u79bb\u5f00\u5373\u751f\u6548\u3002" ' +
                 'class="pure-u-4-24 pure-form pure-form-aligned" '
                 + this.config.tool.adjust.width
-                + 'px;"><fieldset class="pure-group"><input onblur="'
+                + 'px;"><input onblur="'
                 + this.obj
-                + '.adjust(\'width\',this);" style="height: 30px;" placeholder="width" class="pure-input-1" type="text" value="'
+                + '.adjust(\'width\',this);" style="height: 30px;" placeholder="width" class="pure-input-rounded pure-input-1" type="text" value="'
                 + container.style.width
                 + '"/><input onblur="'
                 + this.obj
                 + '.adjust(\'height\',this);" style="height: 30px;" placeholder="height" class="pure-input-rounded pure-input-1" type="text" value="'
-                + container.style.height + '"/></fieldset></div>');
+                + container.style.height + '"/></div>');
     }
-    toolHTML.push('</div>');
-    return '<div class="tool-bar" id="' + this.config.tool.id + '" style="width:'
+    return '<div class="pure-g tool-bar" id="' + this.config.tool.id + '" style="border-bottom:#ccc 1px solid; width:'
         + document.getElementById(this.config.container.id).style.width
         + ';height:auto;">' + toolHTML.join("") + '</div>';
 };
@@ -1483,7 +1435,8 @@ Sparrow.editor.prototype.initEditor = function (iframeId) {
         + '" name="'
         + iframeId
         + '" style="background:#ffffff;width: 100%;height:'
-        + (document.getElementById(this.config.container.id).offsetHeight - this.config.tool.height)
+        //-2为border
+        + (document.getElementById(this.config.container.id).offsetHeight - this.config.tool.height - 2)
         + "px"
         + ';scrollbar-face-color: #F7F5F4;" frameborder="0" marginheight="0" marginwidth="0" src="about:blank"></iframe>';
 };
@@ -1499,7 +1452,7 @@ function getImgContainer(fileUrl, clientFileName, editor) {
     var imgArray = [];
     var imgDiv = $("+div");
     var fileId = $.file.getFileName(fileUrl).split('.')[0];
-    imgDiv.s.className="";
+    imgDiv.s.className = "";
     imgDiv.s.style.cssText = "width:92px;height:90px;float:left;padding:3px;border:#ccc 2px solid;";
     imgArray
         .push('<a target="_blank" href="{0}" title="{1}"><img style="width:91px;height:67px;" src="{2}"/></a>'
@@ -1515,6 +1468,7 @@ function getImgContainer(fileUrl, clientFileName, editor) {
     imgDiv.s.innerHTML = imgArray.join("");
     return imgDiv.s;
 }
+
 function clearHtmlFrame() {
     for (var i = 0; i < $.editor.editorArray.length; i++) {
         if ($.editor.editorArray[i].config.currentHtmlId) {
@@ -1524,6 +1478,7 @@ function clearHtmlFrame() {
         }
     }
 }
+
 $(document).bind("onclick", function () {
     clearHtmlFrame();
 });
@@ -1532,22 +1487,22 @@ Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
     if (!coverKey) {
         coverKey = this.config.cover_key;
     }
-    $.file.validateUploadFile = function (f, key,editor) {
+    $.file.validateUploadFile = function (f, key, editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                "gif", "png","zip"], "error" + coverKey)) {
-                $.file.uploadCallBack = function (uploadProgress, editor) {
-                    $.file.clearStatus();
-                    var clientFileName=uploadProgress.clientFileName;
-                    if (clientFileName !== "") {
-                        $(editor.config.attach.uploadImgContainerId)
-                            .appendChild(
-                                getImgContainer(uploadProgress.fileUrl,
-                                    clientFileName, editor));
-                        editor.attach.insertEditor($.file
-                            .getFileName(clientFileName), uploadProgress.fileUrl);
-                    }
-                };
-                $.file.uploadDelegate(true,key,editor);
+            "gif", "png", "zip"], "error" + coverKey)) {
+            $.file.uploadCallBack = function (uploadProgress, editor) {
+                $.file.clearStatus();
+                var clientFileName = uploadProgress.clientFileName;
+                if (clientFileName !== "") {
+                    $(editor.config.attach.uploadImgContainerId)
+                        .appendChild(
+                            getImgContainer(uploadProgress.fileUrl,
+                                clientFileName, editor));
+                    editor.attach.insertEditor($.file
+                        .getFileName(clientFileName), uploadProgress.fileUrl);
+                }
+            };
+            $.file.uploadDelegate(true, key, editor);
         }
     };
 };

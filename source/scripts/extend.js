@@ -9,7 +9,7 @@ String.prototype.rtrim = function () {
 };
 // 如果为""或者是''则返回为null 所以在调用之前要做了null判断
 String.prototype.json = function () {
-    if (this === "" || this === "''") {
+    if (this === "" || this === "''"||this.length===0) {
         return null;
     }
     if (this.indexOf("error|") !== -1) {

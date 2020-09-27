@@ -56,8 +56,10 @@ var paths = {
             'source/scripts/sparrowEditor.js',
             'source/scripts/tree.js',
             'source/scripts/dispatcher.js',
-            'source/scripts/tail.js',
-            'source/scripts/metricChart.js'
+            'source/scripts/metricChart.js',
+            'source/scripts/user.js',
+            'source/scripts/share.js',
+            'source/scripts/tail.js'
         ],
         dest: 'src/main/webapp/assets/scripts-dev/'
     },

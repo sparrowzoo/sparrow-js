@@ -9,7 +9,7 @@ Sparrow.url = {
         var scripts = document.scripts;
         var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts-dev/sparrow.js"];
         if (path) {
-            sparrowPath=[path];
+            sparrowPath = [path];
         }
         var r = null;
         for (var i in scripts) {
@@ -29,7 +29,10 @@ Sparrow.url = {
     },
     name: $.browser.cookie.domain.split('.')[0]
 };
-Sparrow.url.resource=$.url._resource();
+Sparrow.url.resource = $.url._resource();
+Sparrow.url.passport = $(function () {
+    return $.url.root.replace("www", "passport");
+});
 Sparrow.website = {
     name: $.browser.getCookie($.browser.cookie.website_name),
     themes: $(function () {
@@ -52,5 +55,5 @@ Sparrow.HORIZONTAL = "HORIZONTAL";
 Sparrow.VERTICAL = "VERTICAL";
 Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/" + $.url.name
     + "/images/user.png";
-Sparrow.DEFAULT_FORUM_ICO_URL= $.url.resource + "/" + $.url.name/**/
-    + "/images/forum.gif";
+Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/" + $.url.name/**/
+    + "/images/resource.gif";

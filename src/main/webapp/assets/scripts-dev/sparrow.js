@@ -29,7 +29,7 @@ String.prototype.rtrim = function () {
 };
 // 如果为""或者是''则返回为null 所以在调用之前要做了null判断
 String.prototype.json = function () {
-    if (this === "" || this === "''") {
+    if (this === "" || this === "''"||this.length===0) {
         return null;
     }
     if (this.indexOf("error|") !== -1) {
@@ -633,7 +633,7 @@ Sparrow.browser = {
         if ($.isNullOrEmpty(defaultUrl)) {
             defaultUrl = this.url.manage;
         }
-        ajax.json($.url.root + logoutUrl, null, function (result) {
+        $.ajax.json($.url.root + logoutUrl, function (result) {
             var permissionKey = result.value;
             if ($.isNullOrEmpty(permissionKey)) {
                 permissionKey = $.browser.cookie.permission;
@@ -646,7 +646,6 @@ Sparrow.browser = {
                 window.location.href = window.location.href;
             }
         }, true);
-
     },
     /***************************************************************************
      * 取窗口可视范围的高度
@@ -728,7 +727,7 @@ Sparrow.url = {
         var scripts = document.scripts;
         var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts-dev/sparrow.js"];
         if (path) {
-            sparrowPath=[path];
+            sparrowPath = [path];
         }
         var r = null;
         for (var i in scripts) {
@@ -748,7 +747,10 @@ Sparrow.url = {
     },
     name: $.browser.cookie.domain.split('.')[0]
 };
-Sparrow.url.resource=$.url._resource();
+Sparrow.url.resource = $.url._resource();
+Sparrow.url.passport = $(function () {
+    return $.url.root.replace("www", "passport");
+});
 Sparrow.website = {
     name: $.browser.getCookie($.browser.cookie.website_name),
     themes: $(function () {
@@ -771,8 +773,8 @@ Sparrow.HORIZONTAL = "HORIZONTAL";
 Sparrow.VERTICAL = "VERTICAL";
 Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/" + $.url.name
     + "/images/user.png";
-Sparrow.DEFAULT_FORUM_ICO_URL= $.url.resource + "/" + $.url.name/**/
-    + "/images/forum.gif";
+Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/" + $.url.name/**/
+    + "/images/resource.gif";
 Sparrow.ajax = {
     _objPool: [],
     referWindow: window,
@@ -1161,12 +1163,12 @@ Sparrow.v = {
         if (!validate.defaultValue) {
             validate.defaultValue = validate.options[0];
         }
-        for (var i = 0; i < validate.options.length; i += 1) {
-            if (srcElement.value === validate.options[i]) {
+        for (var i = 0; i < validate.options.length; i ++) {
+            if (srcElement.value == validate.options[i]) {
                 break;
             }
         }
-        if (i === validate.options.length) {
+        if (i == validate.options.length) {
             srcElement.value = validate.defaultValue;
         }
         this.ok(validate,srcElement);
@@ -1360,7 +1362,7 @@ Sparrow.request = function (name) {
 
 Sparrow.isNullOrEmpty = function (sourceString) {
     return (sourceString == null || typeof (sourceString) === "undefined"
-    || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
+        || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
 };
 Sparrow.toString = function (sourceString, defaultValue) {
     if (!defaultValue) {
@@ -1452,7 +1454,7 @@ Sparrow.clearForm = function (validateJson) {
     var inputArray = $.jsonKeys(validateJson);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
-        if(input==null) {
+        if (input == null) {
             console.log(inputArray[i] + " not exist!")
             continue;
         }
@@ -1467,8 +1469,8 @@ Sparrow.getFormData = function (inputIdArray) {
     var inputArray = $.jsonKeys(inputIdArray);
     for (var i = 0; i < inputArray.length; i++) {
         var input = $(inputArray[i]);
-        if(input==null){
-            console.log(inputArray[i]+" not exist!")
+        if (input == null) {
+            console.log(inputArray[i] + " not exist!")
             continue;
         }
         if (!$.isNullOrEmpty(input.name)) {
@@ -1604,11 +1606,10 @@ Sparrow.prototype.value = function (value) {
     if (!this.s) {
         return;
     }
-    if (!$.isNullOrEmpty(value)) {
-        this.s.value = value;
-        return;
+    if (value===undefined||value===null) {
+        return this.s.value;
     }
-    return this.s.value;
+    this.s.value = value;
 };
 
 
@@ -1666,14 +1667,14 @@ Sparrow.prototype.getAbsoluteLeft = function () {
     }
     return returnValue;
 };
-Sparrow.prototype.source=function () {
-  return this.s;
+Sparrow.prototype.source = function () {
+    return this.s;
 };
 
-Sparrow.prototype.class=function (className) {
-    if(className){
-        this.s.className=className;
-    return;
+Sparrow.prototype.class = function (className) {
+    if (className) {
+        this.s.className = className;
+        return;
     }
     return this.s.className;
 };
@@ -1697,7 +1698,7 @@ Sparrow.prototype.css = function (attribute, value, add) {
             command += '$("' + this.s.id + '").style.' + attribute
                 + '=(o+' + value + ')+"px";';
         } else {
-            command = '$("' + this.s.id + '").style.' + attribute + '="'+ value +'"';
+            command = '$("' + this.s.id + '").style.' + attribute + '="' + value + '"';
         }
         eval(command);
     }
@@ -1751,6 +1752,10 @@ Sparrow.prototype.fix = function (top, left) {
     if (!this.s) {
         return;
     }
+    var weight = this.s.offsetWidth;
+    if (!left) {
+        left = this.getAbsoluteLeft();
+    }
     if ($.browser.ie && $.browser.version === "6.0") {
         this.doc.documentElement.style.backgroundImage = "url(about:blank)";
         this.doc.documentElement.style.backgroundAttachment = "fixed";
@@ -1762,6 +1767,7 @@ Sparrow.prototype.fix = function (top, left) {
     }
     this.s.style.top = top + "px";
     this.s.style.left = left + "px";
+    this.s.style.width = weight + "px";
 };
 Sparrow.prototype.center = function () {
     if (!this.s) {
@@ -2413,9 +2419,9 @@ Sparrow.file = {
     // 上传框架id editorId.path-key 非editor id为null e.g null.forum 表示path-key为forum 的无editor 上传组件
     uploadFrameId: null,
     // 上传回调函数
-    uploadCallBack: function (fileInfo, clientFileName, editor) {
+    uploadCallBack: function (fileInfo, editor, size) {
         console.info(fileInfo);
-        console.info(clientFileName);
+        console.info(size);
         this.clearStatus();
     },
     // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
@@ -2435,7 +2441,7 @@ Sparrow.file = {
     // path key 对应后台配置的上传策略
     validateUploadFile: function (f, key, editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
-                "jpeg", "gif", "png"], "errorImgForumIco")) {
+            "jpeg", "gif", "png"], "errorImgForumIco")) {
             $.file.uploadDelegate(false, key, editor);
         }
     },
@@ -2516,6 +2522,7 @@ Sparrow.file = {
     },
     // 验证文件类型
     checkFileType: function (fileName, rightExtension, errorCtrl) {
+        //这里封装跨域可以复用，因为
         var fileExtension = this.getExtension(fileName);
         var result = false;
         for (var i = 0; i < rightExtension.length; i += 1) {
@@ -2600,8 +2607,8 @@ Sparrow.file = {
         if (uploadProgress.status === "loading") {
             return;
         }
-        
-        if(!this.callbackValidate(uploadProgress)){
+
+        if (!this.callbackValidate(uploadProgress)) {
             return;
         }
         // 正常显示状态
@@ -2631,11 +2638,27 @@ Sparrow.file = {
             + this.getFileSerialNumber() + "&t="
             + Math.random() + "&callback=progressCallback", "uploadProgress");
     },
-    initCoverImageEvent: function (coverKey) {
-        if (!coverKey) coverKey = "Cover";
+    /**
+     *
+     * @param upload_path upload.sparrowzoo.com
+     * @param key path-key
+     * @param pathKeySuffixPair {path-key:suffix}
+     */
+    initImageUploadEvent: function (upload_path, key, pathKeySuffixPair) {
+        document.domain=$.browser.cookie.root_domain;
+        if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
+        $("null."+key).src=upload_path+"/file-upload?path-key="+key;
+        //第一次加载初始化
+        $.file.uploadCallBack = function (fileInfo, editor, size) {
+            console.info(size);
+        };
         $.file.validateUploadFile = function (f, key, editor) {
+            var suffix = pathKeySuffixPair;
+            if (typeof (pathKeySuffixPair) === "object") {
+                suffix = pathKeySuffixPair[key];
+            }
             if (!$.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                    "gif", "png"], "error" + coverKey)) {
+                "gif", "png"], "error" + suffix)) {
                 return;
             }
             $.file.uploadCallBack = function (uploadingProgress) {
@@ -2643,10 +2666,7 @@ Sparrow.file = {
                 if (!uploadingProgress.fileUrl) {
                     return;
                 }
-                var suffix = coverKey;
-                if (typeof (coverKey) === "object") {
-                    suffix = coverKey[key];
-                }
+
                 $("#div" + suffix).html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
                     + "'/></a>");
                 $("#hdn" + suffix).value(uploadingProgress.fileUrl);
@@ -3845,7 +3865,7 @@ Sparrow.datePicker.prototype.validate = function(yyyy, MM, dd) {
 	return result;
 };
 ﻿// 构造函数 objName:对象ID与对象同名；
-Sparrow.editor=function(objName) {
+Sparrow.editor = function (objName) {
     // 编辑器的对象名称与var Sparrow.editor=new Sparrow.editor("Sparrow.editor");一致.
     this.obj = objName;
     // 编辑器的iframe框架对象
@@ -4378,7 +4398,8 @@ Sparrow.editor=function(objName) {
                 }
             }
         },
-        // 按一定格式拼写文件http的post请头信息。服务器端接受后会进行解析 以当前编辑对象作为参数
+        // 按一定格式拼写文件http的post请头信息。
+        // 服务器端接受后会进行解析 以当前编辑对象作为参数
         collectFilePostInfo: function () {
             var editor = this.parentObject;
             // 当前编辑器的附件表格对象
@@ -4403,12 +4424,11 @@ Sparrow.editor=function(objName) {
             }
         },
         // 验证方法
-        validate: function () {
-            return true;
+        validate: function (validateConfig) {
+           return $.v.getValidateResult(validateConfig,false);
         },
         // 提交表单的私有方法
         _submit: function () {
-
             // 收集需要上传的文件信息
             $(this.parentObject.config.attach.fileInfoId).value = this.parentObject.attach
                 .collectFilePostInfo();
@@ -4416,59 +4436,30 @@ Sparrow.editor=function(objName) {
                 $.submit(
                     this.parentObject.config.attach.actionUrl,
                     this.parentObject.config.attach.formIndex);
-            } else {
-                if (this.parentObject.config.attach.currentUUID) {
-                    $
-                        .submit(
-                            "update.do",
-                            this.parentObject.config.attach.formIndex);
-                } else {
-                    $
-                        .submit(
-                            null,
-                            this.parentObject.config.attach.formIndex);
-                }
+                return;
             }
+            if (this.parentObject.config.attach.currentUUID) {
+                $.submit("update.do",
+                    this.parentObject.config.attach.formIndex);
+                return;
+            }
+            $.submit(
+                null,
+                this.parentObject.config.attach.formIndex);
         },
         // 表单提交的js方法 (需要显示调用)
-        submit: function (editorIndex) {
+        submit: function (validateConfig) {
             // 获取当前编辑器
             var editor = this.parentObject;
             $(editor.config.contentCtrlId).value = editor.frame.contentWindow.document.body.innerHTML;
-
-            if (this.validate()) {
-                // 初始化还未上传的文件控件数组
-                editor.attach.initUploadingFileId();
-                // 待上传的文件不为0
-                if (editor.config.attach.uploadingFileId.length > 0) {
-                    var htmlFrame = $(editor.obj + "_"
-                        + editor.config.tool.toolBar[23].htmlFrameId);
-                    if (htmlFrame.style.display === "none") {
-                        htmlFrame.style.display = "block";
-                        editor.config.currentHtmlId = htmlFrame.id;
-                    }
-                    // 先上传文件
-                    this.uploadFile();
-                } else {
-                    // 直接提交
-                    this._submit();
-                }
+            if (this.validate(validateConfig)) {
+                // 直接提交
+                this._submit();
             } else {
                 $(this.parentObject.config.submitButtonId).disabled = false;
             }
         },
-        // 初始化待上传的文件ID数组
-        initUploadingFileId: function () {
-            var fileUploads = $("&"
-                + this.parentObject.config.attach.iframeName);
-            for (var i = 0; i < fileUploads.length; i++) {
-                $.file.uploadFrameId = fileUploads[i].id;
-                if ($.file.getUploadFile(fileUploads[i].id).value) {
-                    this.parentObject.config.attach.uploadingFileId
-                        .push(fileUploads[i].id);
-                }
-            }
-        },// 将图片插入到编辑器
+        // 将图片插入到编辑器
         insertEditor: function (toolip, serverFileName) {
             var editor = this.parentObject;
             var insertHtml = '<img title="' + toolip + '"' + " src=\""
@@ -4500,21 +4491,11 @@ Sparrow.editor=function(objName) {
             if ($("divState")) {
                 document.body.removeChild($("divState"));
             }
-        },
-        // 文件批量上传
-        uploadFile: function () {
-            var editor = this.parentObject;
-            file
-                .uploadClick(
-                    true,
-                    "",
-                    editor.config.attach.uploadingFileId[editor.config.attach.uploadedIndex],
-                    editor);
         }
     }
 };
 Sparrow.editor.editorArray = [];
-Sparrow.editor.uploadUrl="http://upload.sparrowzoo.com"
+Sparrow.editor.uploadUrl = "http://upload.sparrowzoo.com"
 // 获取编辑中的对象通过控件ID
 Sparrow.editor.prototype.$ = function (id) {
     return this.frame.contentWindow.document.getElementById(id);
@@ -5161,27 +5142,29 @@ Sparrow.editor.prototype.insertFace = function (srcObject) {
         this.removeElementById();
         return;
     }
-        this.frame.contentWindow.document.execCommand("insertImage", false,
-            srcObject.src);
+    this.frame.contentWindow.document.execCommand("insertImage", false,
+        srcObject.src);
 };
 Sparrow.editor.prototype.insertHyperLink = function () {
     var hyperLink = this.getTempNode("a");
     var txtURL = document.getElementById(this.obj + "_txtURL").value;
-    if (!hyperLink) {return}
+    if (!hyperLink) {
+        return
+    }
 
-        if (txtURL === "http://") {
-            if (window
-                    .confirm("\u60a8\u786e\u8ba4\u8981\u53d6\u6d88\u94fe\u63a5\u5417?")) {
-                this.removeElementById();
-            }
-        } else {
-            if (hyperLink.innerHTML === "") {
-                hyperLink.innerHTML = txtURL;
-            }
-            hyperLink.removeAttribute("id");
-            hyperLink.setAttribute("target", "blank");
-            hyperLink.setAttribute("href", txtURL);
+    if (txtURL === "http://") {
+        if (window
+            .confirm("\u60a8\u786e\u8ba4\u8981\u53d6\u6d88\u94fe\u63a5\u5417?")) {
+            this.removeElementById();
         }
+    } else {
+        if (hyperLink.innerHTML === "") {
+            hyperLink.innerHTML = txtURL;
+        }
+        hyperLink.removeAttribute("id");
+        hyperLink.setAttribute("target", "blank");
+        hyperLink.setAttribute("href", txtURL);
+    }
 };
 Sparrow.editor.prototype.initialize = function (containerId) {
     $.global(this.obj, this);
@@ -5189,16 +5172,17 @@ Sparrow.editor.prototype.initialize = function (containerId) {
     this.config.container.id = containerId;
     var iframeId = "iframe" + $.random();
     this.config.iframeId = iframeId;
-    document.getElementById(containerId).innerHTML = this.config.tool.position == "top" ? (this
-            .initTool() + this.initEditor(iframeId))
-        : (this.initEditor(iframeId) + this.initTool());
+    document.getElementById(containerId).innerHTML =
+        this.config.tool.position == "top" ? (this
+                .initTool() + this.initEditor(iframeId))
+            : (this.initEditor(iframeId) + this.initTool());
     this.frame = document.getElementById(iframeId);
     this.frame.contentWindow.document.open();
     this.frame.contentWindow.document
         .write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
     this.frame.contentWindow.document
         .write('<html><body id="' + this.obj + '" style="width:100%;height:{0}px;" contenteditable="true"></body></html>'
-                .format($(iframeId).offsetHeight));
+            .format($(iframeId).offsetHeight));
     this.frame.contentWindow.document.close();
     // 兼容flash能够正常播放
     // this.Frame.contentWindow.document.designMode = "on";
@@ -5220,18 +5204,7 @@ Sparrow.editor.prototype.initTool = function () {
     var toolHTML = [];
     var toolBarList = null;
     // icon图标工具栏的宽度
-    var iconContainerWidth = parseInt(document
-        .getElementById(this.config.container.id).style.width);
-    if (this.config.tool.convertHTML.isConvert) {
-        iconContainerWidth = iconContainerWidth
-            - this.config.tool.convertHTML.ctrlWidth;
-    }
-    if (this.config.tool.adjust.adjustable) {
-        iconContainerWidth = iconContainerWidth - this.adjust.width;
-    }
-    toolHTML.push('<div style="border-bottom:1px #ccc solid;" class="pure-g tool-bar">');
-    toolHTML.push('<div class="pure-u-18-24" id="' + this.config.tool.icon.containerId + '" style="width:'
-        + iconContainerWidth + 'px;text-align:left;">');
+    toolHTML.push('<div class="pure-u-18-24" id="' + this.config.tool.icon.containerId + '" style="text-align:left;">');
     if (this.config.style != null) {
         // 保留以后扩展使用
         if (this.config.style === "simple") {
@@ -5303,17 +5276,16 @@ Sparrow.editor.prototype.initTool = function () {
             .push('<div align="center" title="\u5728\u6b64\u8c03\u6574\u7f16\u8f91\u5668\u5927\u5c0f\u3002\u9f20\u6807\u79bb\u5f00\u5373\u751f\u6548\u3002" ' +
                 'class="pure-u-4-24 pure-form pure-form-aligned" '
                 + this.config.tool.adjust.width
-                + 'px;"><fieldset class="pure-group"><input onblur="'
+                + 'px;"><input onblur="'
                 + this.obj
-                + '.adjust(\'width\',this);" style="height: 30px;" placeholder="width" class="pure-input-1" type="text" value="'
+                + '.adjust(\'width\',this);" style="height: 30px;" placeholder="width" class="pure-input-rounded pure-input-1" type="text" value="'
                 + container.style.width
                 + '"/><input onblur="'
                 + this.obj
                 + '.adjust(\'height\',this);" style="height: 30px;" placeholder="height" class="pure-input-rounded pure-input-1" type="text" value="'
-                + container.style.height + '"/></fieldset></div>');
+                + container.style.height + '"/></div>');
     }
-    toolHTML.push('</div>');
-    return '<div class="tool-bar" id="' + this.config.tool.id + '" style="width:'
+    return '<div class="pure-g tool-bar" id="' + this.config.tool.id + '" style="border-bottom:#ccc 1px solid; width:'
         + document.getElementById(this.config.container.id).style.width
         + ';height:auto;">' + toolHTML.join("") + '</div>';
 };
@@ -5329,7 +5301,8 @@ Sparrow.editor.prototype.initEditor = function (iframeId) {
         + '" name="'
         + iframeId
         + '" style="background:#ffffff;width: 100%;height:'
-        + (document.getElementById(this.config.container.id).offsetHeight - this.config.tool.height)
+        //-2为border
+        + (document.getElementById(this.config.container.id).offsetHeight - this.config.tool.height - 2)
         + "px"
         + ';scrollbar-face-color: #F7F5F4;" frameborder="0" marginheight="0" marginwidth="0" src="about:blank"></iframe>';
 };
@@ -5345,7 +5318,7 @@ function getImgContainer(fileUrl, clientFileName, editor) {
     var imgArray = [];
     var imgDiv = $("+div");
     var fileId = $.file.getFileName(fileUrl).split('.')[0];
-    imgDiv.s.className="";
+    imgDiv.s.className = "";
     imgDiv.s.style.cssText = "width:92px;height:90px;float:left;padding:3px;border:#ccc 2px solid;";
     imgArray
         .push('<a target="_blank" href="{0}" title="{1}"><img style="width:91px;height:67px;" src="{2}"/></a>'
@@ -5361,6 +5334,7 @@ function getImgContainer(fileUrl, clientFileName, editor) {
     imgDiv.s.innerHTML = imgArray.join("");
     return imgDiv.s;
 }
+
 function clearHtmlFrame() {
     for (var i = 0; i < $.editor.editorArray.length; i++) {
         if ($.editor.editorArray[i].config.currentHtmlId) {
@@ -5370,6 +5344,7 @@ function clearHtmlFrame() {
         }
     }
 }
+
 $(document).bind("onclick", function () {
     clearHtmlFrame();
 });
@@ -5378,22 +5353,22 @@ Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
     if (!coverKey) {
         coverKey = this.config.cover_key;
     }
-    $.file.validateUploadFile = function (f, key,editor) {
+    $.file.validateUploadFile = function (f, key, editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                "gif", "png","zip"], "error" + coverKey)) {
-                $.file.uploadCallBack = function (uploadProgress, editor) {
-                    $.file.clearStatus();
-                    var clientFileName=uploadProgress.clientFileName;
-                    if (clientFileName !== "") {
-                        $(editor.config.attach.uploadImgContainerId)
-                            .appendChild(
-                                getImgContainer(uploadProgress.fileUrl,
-                                    clientFileName, editor));
-                        editor.attach.insertEditor($.file
-                            .getFileName(clientFileName), uploadProgress.fileUrl);
-                    }
-                };
-                $.file.uploadDelegate(true,key,editor);
+            "gif", "png", "zip"], "error" + coverKey)) {
+            $.file.uploadCallBack = function (uploadProgress, editor) {
+                $.file.clearStatus();
+                var clientFileName = uploadProgress.clientFileName;
+                if (clientFileName !== "") {
+                    $(editor.config.attach.uploadImgContainerId)
+                        .appendChild(
+                            getImgContainer(uploadProgress.fileUrl,
+                                clientFileName, editor));
+                    editor.attach.insertEditor($.file
+                        .getFileName(clientFileName), uploadProgress.fileUrl);
+                }
+            };
+            $.file.uploadDelegate(true, key, editor);
         }
     };
 };
@@ -5438,7 +5413,7 @@ Sparrow.treeNode = function (id, pid, name, url, title, target, childCount, show
 };
 
 
-Sparrow.tree = function (objName) {
+Sparrow.tree = function (objName, parentName) {
     this.config = {
 
         target: "_self",
@@ -5459,6 +5434,7 @@ Sparrow.tree = function (objName) {
 
         useMouseover: true,
 
+        //class name 包含tree-id
         useTreeIdInNodeClass: false,
 
         useLevelInNodeClass: false,
@@ -5480,6 +5456,8 @@ Sparrow.tree = function (objName) {
         descTextBoxId: null,
 
         validate: null,
+
+        validateConfig: null,
 
         isValue: false,
 
@@ -5504,7 +5482,7 @@ Sparrow.tree = function (objName) {
         imageDir: $.url.resource + "/images/treeimg",
 
         // prompt:"1系统菜单 2系统页面 3控件 4 CMS频道 5 CMS链接 6 CMS内容 7 CMS版块 8 论坛版块"
-        forumType: {
+        RESOURCE_TYPE: {
             "1": "[系统菜单]",
             "2": "[系统页面]",
             "3": "[控件事件]"
@@ -5551,6 +5529,10 @@ Sparrow.tree = function (objName) {
     this.floatTreeFrameId = null;// read only
 
     this.obj = objName;
+
+    this.parentName = parentName;
+
+    this.fullObjName = parentName ? (parentName + "." + objName) : objName;
 
     this.aNodes = [];
 
@@ -5606,7 +5588,7 @@ Sparrow.tree.prototype = {
             "_self", undefined, true, businessEntity);
     },
     add: function (id, pid, name, url, title, target, childCount,
-                      showCtrl, businessEntity, icon) {
+                   showCtrl, businessEntity, icon) {
         this.aNodes[this.aNodes.length] = new Sparrow.treeNode(id, pid, name, url, title,
             target, childCount, showCtrl, businessEntity, icon);
 
@@ -5670,7 +5652,7 @@ Sparrow.tree.prototype = {
         var srcObject = $.event(e).srcElement;
         //remove old label,because it's in container cache !!important
         //$.remove("#"+srcObject.id);
-        var sparrowElement = $(srcObject,false);
+        var sparrowElement = $(srcObject, false);
         var addressIndex = srcObject.id.substring(this.obj.length + 1);
         var currentNode = this.aNodes[addressIndex];
         if (currentNode.pid == -1) {
@@ -5681,27 +5663,27 @@ Sparrow.tree.prototype = {
         orderDiv = $("+div.orderDiv");
         document.body.appendChild(orderDiv.s);
         orderDiv.class("pure-menu pure-order-menu");
-        orderDiv.css("position","absolute");
+        orderDiv.css("position", "absolute");
         orderDiv.html(('<span class="pure-menu-heading pure-menu-link pure-order-menu-heading" onclick="{0}.delete_click({1});{0}.clearFloatFrame();" >删除</span>'
-        + '<ul class="pure-menu-list">'
-        + '<li class="pure-menu-item"><a href="#" class="pure-menu-link">当前第<span id="currentOrderNo"></span>位</a></li>'
-        + '<li class="pure-menu-item pure-menu-has-children">'
-        + '<a  id="hyperJump" class="pure-menu-link">你可以跳转至</a>'
-        +' <ul id="ulChildrenList" class="pure-menu-children"></ul></li></ul>').format(this.obj,addressIndex));
+            + '<ul class="pure-menu-list">'
+            + '<li class="pure-menu-item"><a href="#" class="pure-menu-link">当前第<span id="currentOrderNo"></span>位</a></li>'
+            + '<li class="pure-menu-item pure-menu-has-children">'
+            + '<a  id="hyperJump" class="pure-menu-link">你可以跳转至</a>'
+            + ' <ul id="ulChildrenList" class="pure-menu-children"></ul></li></ul>').format(this.fullObjName, addressIndex));
 
-        orderDiv.bind("onclick",function (e) {
+        orderDiv.bind("onclick", function (e) {
             $.event(e).cancelBubble();
         });
-        $("#hyperJump",false).bind("onmouseover",function () {
-            $("#ulChildrenList",false).css("display","block");
+        $("#hyperJump", false).bind("onmouseover", function () {
+            $("#ulChildrenList", false).css("display", "block");
         });
-        orderDiv.css("left",(sparrowElement.getAbsoluteLeft() + srcObject.offsetWidth)+"px");
-        orderDiv.css("top",(sparrowElement.getAbsoluteTop()+ srcObject.offsetHeight)+"px");
+        orderDiv.css("left", (sparrowElement.getAbsoluteLeft() + srcObject.offsetWidth) + "px");
+        orderDiv.css("top", (sparrowElement.getAbsoluteTop() + srcObject.offsetHeight) + "px");
 
         var pNode = currentNode._parentNode;
         var index = 0;
         var currentIndex = 0;
-        var listHTML ="";
+        var listHTML = "";
         for (var i = 0; i < this.aNodes.length; i++) {
             if (this.aNodes[i].pid != pNode.id) {
                 continue;
@@ -5711,33 +5693,33 @@ Sparrow.tree.prototype = {
                 continue;
             }
             index++;
-            listHTML+='<li class="pure-menu-item" onclick="{0}.order({1},{2})"><a href="#" class="pure-menu-link">第<span>{2}</span>位</a></li>'.format(this.obj,addressIndex,index);
+            listHTML += '<li class="pure-menu-item" onclick="{0}.order({1},{2})"><a href="#" class="pure-menu-link">第<span>{2}</span>位</a></li>'.format(this.fullObjName, addressIndex, index);
             if (this.aNodes[i]._lastOfSameLevel) {
                 break;
             }
         }
         //without cache
-        $("#ulChildrenList",false).html(listHTML);
-        $("#currentOrderNo",false).html(currentIndex);
+        $("#ulChildrenList", false).html(listHTML);
+        $("#currentOrderNo", false).html(currentIndex);
     },
     order: function (srcAddressIndex, sort) {
         var srcNode = this.aNodes[srcAddressIndex];
         var srcNo = $("currentOrderNo").innerHTML;
         var postString = "id=" + srcNode.id + "&sort=" + sort;
         var tree = this;
-        var nodes=this.aNodes;
+        var nodes = this.aNodes;
         $.ajax.json(this.config.orderURL, postString, function (json) {
             srcNode = nodes[srcAddressIndex];
             var destNode = null;
             var srcParentNode = srcNode._parentNode;
             var childNo = 0;
-            var destIndex=0;
+            var destIndex = 0;
             //find dest node
             for (var i = 0; i < nodes.length; i++) {
                 if (nodes[i].pid == srcParentNode.id) {
                     childNo++;
                     if (childNo == sort) {
-                        destIndex=i;
+                        destIndex = i;
                         destNode = nodes[i];
                         break;
                     }
@@ -5746,8 +5728,8 @@ Sparrow.tree.prototype = {
             //delete src index
             nodes.splice(srcAddressIndex, 1);
             //insert new at dest insert
-            nodes.splice(destIndex,0,srcNode);
-            $("#"+tree.config.treeFrameId).html(tree);
+            nodes.splice(destIndex, 0, srcNode);
+            $("#" + tree.config.treeFrameId).html(tree);
             tree.clearFloatFrame();
         });
     }, addNode: function (pNode) {
@@ -5802,7 +5784,7 @@ Sparrow.tree.prototype = {
                 + this.obj.substring(1);
         if (this.config.useLevelInNodeClass)
             classNum += (this.aIndent.length > 1 ? 3 : (this.aIndent.length + 1));
-        var str = '<div onclick="' + this.obj + '.select(this,\'' + classNum + '\');"';
+        var str = '<div onclick="' + this.fullObjName + '.select(this,\'' + classNum + '\');"';
         if (this.config.useRootIcon || node.pid != this.root.id)
             str += ' class="iTreeNode' + classNum + '"';
         str += 'id="node' + this.obj + nodeId + '"  >' + this.indent(node, nodeId);
@@ -5818,8 +5800,8 @@ Sparrow.tree.prototype = {
             }
             if (this.config.useRootIcon || node.pid != this.root.id) {
                 str += '<img '
-                    + (this.config.showOrder ? ' onmouseover="' + this.obj
-                    + '.showOrder(event)"' : '') + ' id="i' + this.obj
+                    + (this.config.showOrder ? ' onmouseover="' + this.fullObjName
+                        + '.showOrder(event)"' : '') + ' id="i' + this.obj
                     + nodeId + '" src="'
                     + ((node._isOpened) ? node.iconOpen : node.icon)
                     + '" alt="" align="absMiddle"/>';
@@ -5827,16 +5809,16 @@ Sparrow.tree.prototype = {
             if ((node.showCtrl && node.pid != -1)
                 || (node.pid == -1 && this.userRootIcon == true)) {
                 if (this.config.useRadio) {
-                    str += '<input style="line-height:15px;height:15px;border:0;" type="radio" name="iTreerdb" id="r{1}{0}" onclick="{1}.getRadioSelected({0});{1}.s({0});" value="{2}"/>'.format(nodeId, this.obj, node.id);
+                    str += '<input style="line-height:15px;height:15px;border:0;" type="radio" name="iTreerdb" id="r{1}{0}" onclick="{1}.getRadioSelected({0});{1}.s({0});" value="{2}"/>'.format(nodeId, this.fullObjName, node.id);
                 }
                 if (this.config.useCheckbox == true) {
-                    str += '<input style="line-height:15px;height:15px;border:0;" type="checkbox" name="iTreecbx" id="c{1}{0}" onclick="{1}.selectCheckbox({0});" value="{2}"/>'.format(nodeId, this.obj, node.id);
+                    str += '<input style="line-height:15px;height:15px;border:0;" type="checkbox" name="iTreecbx" id="c{1}{0}" onclick="{1}.selectCheckbox({0});" value="{2}"/>'.format(nodeId, this.fullObjName, node.id);
                 }
             }
         }
         if (node.url) {
             str += '<a ondblclick="javascript:'
-                + this.obj
+                + this.fullObjName
                 + '.dbs('
                 + nodeId
                 + ');" id="s'
@@ -5853,18 +5835,18 @@ Sparrow.tree.prototype = {
 
             if (this.config.useSelection
                 && ((node._hasChild && this.config.useFolderLinks) || !node._hasChild)) {
-                str += ' onclick="javascript: ' + this.obj + '.s(' + nodeId + ');';
+                str += ' onclick="javascript: ' + this.fullObjName + '.s(' + nodeId + ');';
             }
             str += (this.config.usePlusMinusIcons ? ''
-                    : (node._hasChild && node._parentNode.id != -1 ? (this.obj
-                + '.o(' + nodeId + ')') : ''))
+                : (node._hasChild && node._parentNode.id != -1 ? (this.fullObjName
+                    + '.o(' + nodeId + ')') : ''))
                 + '">';
         }
 
         else if ((!this.config.useFolderLinks || !node.url) && node._hasChild
             && node.pid != this.root.id)
 
-            str += '<a href="javascript: ' + this.obj + '.o(' + nodeId
+            str += '<a href="javascript: ' + this.fullObjName + '.o(' + nodeId
                 + ');" class="node">';
 
         str += '<span id="ntext' + this.obj + nodeId + '">' + node.name + '</span>';
@@ -5919,7 +5901,7 @@ Sparrow.tree.prototype = {
                     + nodeId + '"/>';
             } else {
                 if (node._hasChild) {
-                    str += '<a href="javascript: ' + this.obj + '.o(' + nodeId
+                    str += '<a href="javascript: ' + this.fullObjName + '.o(' + nodeId
                         + ');"><img id="j' + this.obj + nodeId + '" src="';
                     if (!this.config.useLines)
                         str += (node._isOpened) ? this.icon.nlMinus
@@ -5928,7 +5910,7 @@ Sparrow.tree.prototype = {
                         str += ((node._isOpened) ? ((node._lastOfSameLevel && this.config.useLines) ? this.icon.minusBottom
                             : this.icon.minus)
                             : ((node._lastOfSameLevel && this.config.useLines) ? this.icon.plusBottom
-                            : this.icon.plus));
+                                : this.icon.plus));
                     str += '"/></a>';
                 } else {
                     str += '<img id="j'
@@ -6310,7 +6292,7 @@ Sparrow.tree.prototype = {
                 ((isOpen) ? ((isLastNodeOfSameLevel) ? this.icon.minusBottom
                     : this.icon.minus)
                     : ((isLastNodeOfSameLevel) ? this.icon.plusBottom
-                    : this.icon.plus)) :
+                        : this.icon.plus)) :
 
                 ((isOpen) ? this.icon.nlMinus : this.icon.nlPlus);
         } else {
@@ -6525,7 +6507,7 @@ Sparrow.tree.prototype = {
                 + "px";
             HTMLObject.style.top = (sparrowElement.getAbsoluteTop() + srcObject.offsetHeight)
                 + "px";
-            this.interval = window.setInterval(this.obj + ".intervalShow("
+            this.interval = window.setInterval(this.fullObjName + ".intervalShow("
                 + maxHeight + ")", 10);
         }
     },
@@ -6564,12 +6546,12 @@ Sparrow.tree.prototype = {
             document.body.removeChild($("orderDiv"));
         }
     },
-    initForum: function (forumPrefix, ajaxUrl) {
-        if (!ajaxUrl)ajaxUrl = $.url.root + "/forum/load.json";
-        this.initCodeToolip(forumPrefix, ajaxUrl);
+    initResourceTree: function (resourcePrefix, ajaxUrl) {
+        if (!ajaxUrl) ajaxUrl = $.url.root + "/resource/load-all.json";
+        this.initCodeToolip(resourcePrefix, ajaxUrl);
         var treeObject = this;
         this.config.loadFloatTree = function () {
-            $.ajax.json(ajaxUrl, forumPrefix, function (result) {
+            $.ajax.json(ajaxUrl, resourcePrefix, function (result) {
                 var jsonList = result.data || result.message;
                 treeObject.aNodes = [];
                 treeObject.resetIcon();
@@ -6577,16 +6559,15 @@ Sparrow.tree.prototype = {
                 treeObject.config.useRootIcon = false;
                 treeObject.add(jsonList[0].parentId, -1, "");
                 treeObject.resetIcon();
-                treeObject.add(jsonList[0].id, -1, "");
-                for (var i = 1; i < jsonList.length; i++) {
-                    if ($.isNullOrEmpty(jsonList[i].forumIcoUrl)) {
-                        jsonList[i].forumIcoUrl = $.defaultForumIcoUrl;
+                for (var i = 0; i < jsonList.length; i++) {
+                    if ($.isNullOrEmpty(jsonList[i].icoUrl)) {
+                        jsonList[i].icoUrl = $.DEFAULT_RESOURCE_ICO_URL;
                     }
                     treeObject.add(jsonList[i].id, jsonList[i].parentId,
-                        jsonList[i].name, "javascript:" + treeObject.obj
-                        + ".codeNodeClick(" + (i + 1) + ");", jsonList[i].name, undefined,
+                        jsonList[i].name, "javascript:" + treeObject.fullObjName
+                        + ".codeNodeClick(" + (i+1)+ ");", jsonList[i].name, undefined,
                         undefined, undefined, jsonList[i],
-                        jsonList[i].forumIcoUrl);
+                        jsonList[i].icoUrl);
                 }
                 $(treeObject.config.floatTreeId).innerHTML = treeObject;
             });
@@ -6595,10 +6576,10 @@ Sparrow.tree.prototype = {
 // 编码列表
     initCodeToolip: function (codePrefix, ajaxUrl) {
         var htmlEvents = ("$('#'+{0}.config.descTextBoxId).bind('onchange',function(){" +
-        "if($({0}.config.descTextBoxId).value==''){" +
-        "$({0}.config.descHiddenId).value='';" +
-        "if(typeof({0}.config.valueTextBoxId)!='undefined')" +
-        "{$({0}.config.valueTextBoxId).value='';$({0}.config.valueTextBoxId).readOnly='readonly';}}});").format(this.obj);
+            "if($({0}.config.descTextBoxId).value==''){" +
+            "$({0}.config.descHiddenId).value='';" +
+            "if(typeof({0}.config.valueTextBoxId)!='undefined')" +
+            "{$({0}.config.valueTextBoxId).value='';$({0}.config.valueTextBoxId).readOnly='readonly';}}});").format(this.fullObjName);
         eval(htmlEvents);
         var treeObject = this;
         if ($(treeObject.config.floatTreeId) == null) {
@@ -6611,15 +6592,19 @@ Sparrow.tree.prototype = {
             ajaxUrl = $.url.root + "/code/load.json";
         this.dbs = function (nodeIndex) {
             var businessEntity = this.aNodes[nodeIndex].businessEntity;
-            $(this.config.descHiddenId).value = businessEntity.code;
-            var descCtrl = $(this.config.descTextBoxId);
-            if (descCtrl.type === "text") {
-                descCtrl.value = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+            if (this.config.descHiddenId != null) {
+                $(this.config.descHiddenId).value = businessEntity.code;
             }
-            else {
-                descCtrl.innerHTML = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+            if (this.config.descTextBoxId != null) {
+                var descCtrl = $(this.config.descTextBoxId);
+                if (descCtrl.type === "text") {
+                    descCtrl.value = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+                }
+                else {
+                    descCtrl.innerHTML = this.getAllNameOfNode(this.aNodes[nodeIndex], "/");
+                }
             }
-            if (typeof (this.config.valueTextBoxId) !== "undefined") {
+            if (this.config.valueTextBoxId!=null) {
                 $(this.config.valueTextBoxId).value = businessEntity.value;
             }
             if (this.codeNodeCallBack) {
@@ -6628,6 +6613,9 @@ Sparrow.tree.prototype = {
             this.clearFloatFrame();
             if (this.config.validate) {
                 this.config.validate();
+            }
+            else if (this.config.validateConfig) {
+                $.v.isNull(this.config.validateConfig, descCtrl);
             }
         };
         treeObject.config.loadFloatTree = function () {
@@ -6641,7 +6629,7 @@ Sparrow.tree.prototype = {
                 for (var i = 0; i < jsonList.length; i++) {
                     treeObject.add(jsonList[i].id,
                         jsonList[i].parentId, jsonList[i].name,
-                        "javascript:" + treeObject.obj
+                        "javascript:" + treeObject.fullObjName
                         + ".codeNodeClick(" + (i + 1) + ");",
                         jsonList[i].code + "|" + jsonList[i].name,
                         undefined, undefined, undefined, jsonList[i]);
@@ -6713,21 +6701,6 @@ Sparrow.dispatcher = {
         }
     }
 };
-if ( typeof define === "function" && define.amd ) {
-    define( "Sparrow", [], function() {
-        return Sparrow;
-    });
-}
-
-
-// Expose Sparrow and $ identifiers, even in AMD
-// and CommonJS for browser emulators
-if ( !noGlobal ) {
-    window.Sparrow = window.$ = Sparrow;
-}
-
-return Sparrow;
-}));
 Sparrow.metricChart = function (container, chartId, config) {
     this.container = container;
     this.chartId = chartId;
@@ -6792,3 +6765,202 @@ Sparrow.metricChart.changeType = function (chartId, type) {
     }
     chart.setOption(option, true);
 };
+Sparrow.user = {
+    login: {
+        dialog: function (option, args) {
+            var url = $.url.passport + "/login-dialog?shortRegister=false&option=" + option;
+            if (!$.isNullOrEmpty(args)) {
+                url += '&parameter=' + args;
+            }
+            $.window({url: url, showHead: false});
+        },
+        option: {
+            publish: "thread",
+            attention: "user.attention",
+            cancel_attention: "user.attention.cancel",
+            comment: "thread.comment",
+            up_thread: "thread.up",
+            upload: "upload",
+            like_thread: "thread.like"
+        }
+    },
+    getZone: function (userId) {
+        return $.url.root + "/zone-" + userId;
+    },
+    getAvatar: function (avatar) {
+        return avatar ? avatar
+            : $.defaultHeadIcoUrl;
+    },
+    // 是否有编辑权限
+    editable: function (authorId) {
+        var currentUserId = $.browser.getUserId();
+        if (currentUserId <= 0) {
+            return false;
+        }
+        return authorId === currentUserId
+    },
+    initLoginBar: function () {
+        if (!$("divAccount")) {
+            return
+        }
+        if ($.browser.isLogin()) {
+            $("divAccount").style.display = "block";
+            $("divLogin").style.display = "none";
+            $("hyperUser").html($.browser.getUserName());
+            $("hyperUser").title = $.browser.getUserName();
+            $("hyperUser").href = $.user.getZone($.browser.getUserId());
+            return;
+        }
+        $("divAccount").style.display = "none";
+        $("divLogin").style.display = "block";
+    },
+    // 游客的鼠标悬停头象效果
+    initAvatar: function (srcElement, userInfo) {
+        var divUserInfo = $("divUserInfo");
+        if (divUserInfo == null) {
+            divUserInfo = $("new.div.divUserInfo");
+            divUserInfo.s.style.cssText = "border: #ccc 1px solid; position: absolute; width:300px; height:120px; display: none; background: #ffffff;overflow: hidden;";
+            divUserInfo.s.onmouseover = function (e) {
+                $.event(e).cancelBubble();
+            };
+            document.body.appendChild(divUserInfo.s);
+        }
+        $("divUserInfo").style.top = $(srcElement).getAbsoluteTop() - 2 + "px";
+        $("divUserInfo").style.left = $(srcElement).getAbsoluteLeft() - 2 + "px";
+
+        var POPUP_HTML = [];
+        POPUP_HTML.push('<table style="border: 0;background:#fff;" cellpadding="0" cellspacing="0">');
+        POPUP_HTML.push('<tr>');
+        POPUP_HTML.push('<td style="border: 0; width:60px;" valign="top">');
+        POPUP_HTML.push('<a href="{0}" target="_blank"><img style="width:50px; height: 50px; border: 2px #EDEDED solid;" src="{1}" /></a>'.format(this.getZone(userInfo.userId), this.getAvatar(userInfo.avatar)));
+        POPUP_HTML.push('</td>');
+        POPUP_HTML.push('<td style="border: 0; width: 240px; line-height: 25px;text-align:left;">');
+        POPUP_HTML.push('昵称:<a href="{2}" target="_blank"><span>{0}</span></a>{1}<br />'.format(userInfo.userLoginName, userInfo.extend.ATTENTION_RELATION, this.getZone(userInfo.userId)));
+        POPUP_HTML.push('性别:<span>{0}</span><br />'.format(userInfo.sexName));
+        if (userInfo.createTime) {
+            POPUP_HTML.push('注册日期:<span>{0}</span><br />'.format(userInfo.createTime.split(".")[0]));
+        }
+
+        if (userInfo.lastLoginTime) {
+            POPUP_HTML.push('最后登陆:<span>{0}</span><br />'.format(userInfo.lastLoginTime.split(".")[0]));
+        }
+        if (!$.isNullOrEmpty(userInfo.status)) {
+            POPUP_HTML.push('状态：<span>{0}</span><br />'.format(userInfo.status));
+        }
+
+        if (userInfo.extend && userInfo.extend.COUNT) {
+            POPUP_HTML.push('COUNT：<span>{0}</span><br />'.format(userInfo.extend.COUNT));
+        }
+        $("divUserInfo").innerHTML = POPUP_HTML.join("");
+        $("#.divUserInfo").show();
+
+        // 鼠标离开头象效果
+        document.onmouseover = function (e) {
+            $("#.divUserInfo").hidden();
+        };
+    },
+    // 鼠标悬停头象效果
+    // 访问的userId
+    popup: function (srcElement, userId, e) {
+        $.ajax.json($.url.root + "/user/popup.json", "userId=" + userId,
+            function (result) {
+                var userInfo = result.value;
+                this.attention();
+                $.user.initAvatar($.ajax.srcElement, userInfo);
+            }, $.event(e).srcElement);
+        $.event(e).cancelBubble();
+    },
+    attention:function () {
+        return false;
+        /**
+         * // 是否关注过
+         var attention = "";
+         if (userInfo.extend.ATTENTION_RELATION != "NONE") {
+                    // 当前用户是游客或者未关注该用户
+                    if (!$.browser.isLogin()
+                        || userInfo.extend.ATTENTION_RELATION == "NULL" || userInfo.extend.ATTENTION_RELATION == "FANS") {
+                        // 需要登录后关注
+                        attention = '<a target="_self" onclick="attention(\''
+                            + userId
+                            + '\',this);"'
+                            + 'href="javascript:void(0);">关注</a>';
+                    } else {
+                        // 我关注过该用户
+                        if (userInfo.extend.ATTENTION_RELATION == "ATTENTION" || userInfo.extend.ATTENTION_RELATION == "EACH_OTHER_ATTENTION") {
+                            attention = '<a target="_self" onclick="cancelattention(\''
+                                + userId
+                                + '\',this);"'
+                                + 'href="javascript:void(0);">取消关注</a>';
+                        }
+                    }
+                    userInfo.extend.ATTENTION_RELATION = attention;
+                }
+         else {
+                    userInfo.extend.ATTENTION_RELATION = ""
+                }
+         */
+    }
+};
+/* 第三方分享实现 */
+Sparrow.share = {
+    config: {
+        icon: $.url.resource + '/images/share.png',
+        share: [
+            // 无appkey但有websit配置
+            {
+                url: 'http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?style=202&width=80&height=31&showcount=1&url={0}&title={1}&pics={2}&desc={3}&summary={4}&site='
+                + encodeURIComponent($.browser.getCookie($.browser.cookie.website_name))
+                + '&otype=share',
+                position: {
+                    left: 160,
+                    top: 0
+                },
+                title: "分享到QQ空间"
+            },
+            {
+                url: 'http://service.weibo.com/share/share.php?appkey=318168823&url={0}&title={1}&pic={2}&ralateUid=3199233727',
+                position: {
+                    left: 0,
+                    top: 0
+                },
+                title: "分享到新浪微博"
+            }]
+    },
+    init: function () {
+        var shareArray = document.getElementsByName("share");
+        var shareTemplateArray = [];
+        for (var j = 0; j < this.config.share.length; j++) {
+            shareTemplateArray
+                .push('<a target="_blank" style="height:32px;width:32px;display:inline-block;background:url({0}) {1}px {2}px;" title="{3}" href="{4}"></a>'
+                    .format(this.config.icon,
+                        this.config.share[j].position.left,
+                        this.config.share[j].position.top,
+                        this.config.share[j].title,
+                        this.config.share[j].url));
+        }
+        shareTemplate = shareTemplateArray.join("");
+        for (var i = shareArray.length - 1; i >= 0; i--) {
+            var shareData = shareArray[i].value.json();
+            shareArray[i].parentNode.innerHTML = shareTemplate.format(encodeURIComponent(shareData.url),
+                encodeURIComponent(shareData.title),
+                encodeURIComponent(shareData.pic),
+                encodeURIComponent(shareData.comment),
+                encodeURIComponent(shareData.summary));
+        }
+    }
+};
+if ( typeof define === "function" && define.amd ) {
+    define( "Sparrow", [], function() {
+        return Sparrow;
+    });
+}
+
+
+// Expose Sparrow and $ identifiers, even in AMD
+// and CommonJS for browser emulators
+if ( !noGlobal ) {
+    window.Sparrow = window.$ = Sparrow;
+}
+
+return Sparrow;
+}));

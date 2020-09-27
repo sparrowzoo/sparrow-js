@@ -231,12 +231,12 @@ Sparrow.v = {
         if (!validate.defaultValue) {
             validate.defaultValue = validate.options[0];
         }
-        for (var i = 0; i < validate.options.length; i += 1) {
-            if (srcElement.value === validate.options[i]) {
+        for (var i = 0; i < validate.options.length; i ++) {
+            if (srcElement.value == validate.options[i]) {
                 break;
             }
         }
-        if (i === validate.options.length) {
+        if (i == validate.options.length) {
             srcElement.value = validate.defaultValue;
         }
         this.ok(validate,srcElement);
