@@ -432,7 +432,7 @@ Sparrow.browser = {
         themes: "sparrow.themes",
         // 配置cookie的域并非cookie的key
         root_domain: $(function () {
-            return window.location.host.substr(window.location.host.indexOf('.')+1);
+            return window.location.host.substr(window.location.host.indexOf('.') + 1);
         }),
         domain: window.location.host
     },
@@ -664,11 +664,19 @@ Sparrow.browser = {
         return Math.max(document.body.scrollHeight,
             document.documentElement.scrollHeight);
     },
-    hyperClick: function (srcElement, message) {
-        if (srcElement.href === "javascript:void(0);") {
+    linkClick: function (condition, message) {
+        if (typeof(condition) === "boolean") {
+            if (!condition) {
+                $.alert(message, "sad");
+                return false;
+            }
+            return true;
+        }
+        //非field.value==1 则为this对象
+        if (condition.href === "javascript:void(0);") {
             $.alert(message, "sad");
             return false;
-        } 
+        }
         return true;
     }
 };
