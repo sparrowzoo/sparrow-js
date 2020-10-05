@@ -129,7 +129,8 @@ ImageSwitch.prototype = {
             this.index = 0;
         }
         this.numButtonClick(this.index);
-    }, right: function () {
+    },
+    right: function () {
         this.index--;
         if (this.index < 0) {
             this.index = this.numButton.length - 1;

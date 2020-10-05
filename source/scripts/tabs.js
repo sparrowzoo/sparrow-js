@@ -7,52 +7,54 @@ Sparrow.prototype.tabs = function (config) {
     //当前tab 的index
     var currentIndex = config.index;
     //tab 框的子div
-    var tabchilds = $("!div." + this.s.id);
+    var tabChildren = $("!div." + this.s.id);
     //第一个为title tab 控制
-    var tabControllerContainer = tabchilds[0];
+    var controllerContainer = tabChildren[0];
     //具体的tab 控制框
-    var tabControllerList = $("!li", tabControllerContainer);
+    var controllerMenuList = $("!li", controllerContainer);
     //第二个为内容框
-    var contentContainer = tabchilds[1];
+    var contentContainer = tabChildren[1];
     //具体的内容框
     var contentList = $("!div", contentContainer);
+    var menuSwitch = function (tabIndex) {
+        var menuHyperCtrl = $("!a",
+            controllerMenuList[tabIndex])[0];
+        //将当前的rev  more
+        // http://www.w3school.com.cn/tags/att_a_rev.asp
+        var rev = $(menuHyperCtrl).attr("rev");
+        if (rev) {
+            var moreHyperCtrl = $("!a",
+                controllerMenuList[controllerMenuList.length - 1]);
+            moreHyperCtrl[0].href = rev;
+        }
+        contentList.each(function (contentIndex) {
+            if (withIndexClass)
+                controllerMenuList[0].className = "pure-menu-item pure-menu-heading";
+            if (contentIndex == tabIndex) {
+                controllerMenuList[contentIndex].className = "pure-menu-item pure-menu-selected";
+                this.className = "block";
+                return;
+            }
+            controllerMenuList[contentIndex].className = "pure-menu-item";
+            this.className = "none";
+        });
+    }
     //每个控制框的绑定事件
-    tabControllerList.each(function (tab_index) {
+    controllerMenuList.each(function (tab_index) {
         $(this).attr("tab_index", tab_index);
-        if (this.className.indexOf("close")>0 ||this.className.indexOf("more")>0) {
-           return;
+        if (this.className.indexOf("close") > 0 || this.className.indexOf("more") > 0) {
+            return;
         }
         //<a><span onclick=></span></a>
-            $($("!a", this)[0]).bind(
-                "onclick",
-                function (e) {
-                    var srcElementHyperLink = $.event(e).srcElement;
-                    if (srcElementHyperLink.tagName === "SPAN") {
-                        srcElementHyperLink = srcElementHyperLink.parentNode;
-                    }
-                    var tabIndex = $(srcElementHyperLink.parentNode).attr("tab_index");
-                    //将当前的rev http://www.w3school.com.cn/tags/att_a_rev.asp
-                    var rev = $(srcElementHyperLink).attr("rev");
-                    if (rev) {
-                        var moreHyperCtrl = $("!a",
-                            tabControllerList[tabControllerList.length - 1]);
-                        moreHyperCtrl[0].href = rev;
-                    }
-                    contentList.each(function (contentIndex) {
-                        if (withIndexClass)
-                            tabControllerList[0].className = "pure-menu-item pure-menu-heading";
-                        if (contentIndex == tabIndex) {
-                            tabControllerList[contentIndex].className = "pure-menu-item pure-menu-selected";
-                            this.className = "block";
-                        } else {
-                            tabControllerList[contentIndex].className = "pure-menu-item";
-                            this.className = "none";
-                        }
-                    });
-                });
+        $(this).bind(
+            "onclick",
+            function () {
+                var tabIndex = $(this).attr("tab_index");
+                menuSwitch(tabIndex);
+            });
     });
     //select 当前tab
     if (currentIndex) {
-        tabControllerList[currentIndex].onclick();
+        menuSwitch(currentIndex);
     }
 };
