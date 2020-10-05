@@ -3,7 +3,7 @@ Sparrow.ajax = {
     referWindow: window,
     url: null,
     srcElement: null,
-    SUCCESS:0,
+    SUCCESS:"0",
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
             if (this._objPool[i].readyState === 0
@@ -84,6 +84,7 @@ Sparrow.ajax = {
                         if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
                             console.log("login false");
                             var config = objXMLHttp.responseText.json();
+                            document.domain=$.browser.cookie.root_domain;
                             if (config.inFrame) {
                                 //window.parent.location.href = config.url;
                             }
@@ -138,11 +139,11 @@ Sparrow.ajax = {
                         callback(result);
                     }
                     else {
-                        $.message(result.data);
+                        $.message(result.data,$.ajax.srcElement);
                     }
                 }
                 else {
-                    $.message(result.error);
+                    $.message(result.error,$.ajax.srcElement);
                 }
             }, data, srcElement);
     },

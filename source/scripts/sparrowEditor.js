@@ -1,7 +1,8 @@
 ﻿// 构造函数 objName:对象ID与对象同名；
-Sparrow.editor = function (objName) {
+Sparrow.editor = function (objName,parentName) {
     // 编辑器的对象名称与var Sparrow.editor=new Sparrow.editor("Sparrow.editor");一致.
     this.obj = objName;
+    this.fullObjName = parentName ? (parentName + "." + objName) : objName;
     // 编辑器的iframe框架对象
     this.frame = null;
     // config配置
@@ -717,12 +718,19 @@ Sparrow.editor.prototype.getEditorContent = function () {
 };
 // iframe onload时执行
 Sparrow.editor.prototype.initContent = function () {
+    var content=$(this.config.contentCtrlId).value;
+    this.setEditorContent(decodeURIComponent(content));
+    this.attach.setParentObject(this);
+    this.config.attach.uploadedJson=decodeURIComponent('');
 };
 Sparrow.editor.prototype.focus = function () {
     this.frame.contentWindow.document.body.focus();
 };
 Sparrow.editor.prototype.setEditorContent = function (contentHtml) {
     $(this.config.contentCtrlId).value = contentHtml;
+    if(this.frame==null){
+        return;
+    }
     this.frame.contentWindow.document.body.innerHTML = contentHtml;
     this.updateWordCount();
 };
@@ -943,7 +951,7 @@ Sparrow.editor.prototype.show = function (srcObject, key, width, maxHeight) {
     listDiv.style.left = leftPosition + "px";
     listDiv.style.top = (sparrowObject.getAbsoluteTop() + srcObject.offsetHeight)
         + "px";
-    this.config.interval = window.setInterval(this.obj + ".intervalShow(" + key
+    this.config.interval = window.setInterval(this.fullObjName + ".intervalShow(" + key
         + "," + maxHeight + ")", 10);
 };
 Sparrow.editor.prototype.intervalShow = function (key, maxHeight) {
@@ -981,7 +989,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
             for (var i = 0; i < this.config.tool.font_size.length; i++) {
                 HTML
                     .push('<li unselectable="on" onclick="'
-                        + this.obj
+                        + this.fullObjName
                         + '.callBackRun('
                         + key
                         + ',event);" style="border-bottom:#ccc 1px dotted;padding:5px;cursor:pointer;font-size:'
@@ -999,7 +1007,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
             for (i = 0; i < this.config.tool.font_family.length; i++) {
                 HTML
                     .push('<li unselectable="on" onclick="'
-                        + this.obj
+                        + this.fullObjName
                         + '.callBackRun('
                         + key
                         + ',event);" title="'
@@ -1019,7 +1027,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
                     for (var k = 0; k < 6; k += 1) {
                         var c = "#" + color[i] + color[j] + color[k];
                         HTML.push('<img src="' + this.config.tool.icon.path
-                            + 'icoBack.gif" onclick="' + this.obj
+                            + 'icoBack.gif" onclick="' + this.fullObjName
                             + '.callBackRun(' + key + ',event); " title="' + c
                             + '" style="background:' + c
                             + ';width:20px;height:20px;cursor:pointer"/>');
@@ -1051,7 +1059,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
                     + '_txtURL\').value==\'http://\'&&'
                     + !hasLink
                     + '){alert(\'\u8bf7\u8f93\u5165\u6b63\u786e\u7684url\u5730\u5740\');}else{'
-                    + this.obj + '.callBackRun(21,event);}" />');
+                    + this.fullObjName + '.callBackRun(21,event);}" />');
             break;
         case 21:
             this.createTempNode("span");
@@ -1069,7 +1077,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
                         HTML.push('<td><img style="cursor: pointer;" title="'
                             + this.config.tool.face[index].name + '" src="'
                             + this.config.tool.face[index].url + '" onclick="'
-                            + this.obj + '.callBackRun(22,event);" /></td>');
+                            + this.fullObjName + '.callBackRun(22,event);" /></td>');
                     } else {
                         HTML.push('<td></td>');
                     }
@@ -1084,7 +1092,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
             HTML.push('<label>FLASH视频URL</label><input class="pure-input-rounded" id="' + this.obj
                 + '_txtVideo" type="text"/><br/><span id="' + this.obj
                 + '_spanVideoErrorMessage"></span><br/>');
-            HTML.push('<input value="插入视频" class="pure-button pure-button-primary" type="button" onclick="' + this.obj
+            HTML.push('<input value="插入视频" class="pure-button pure-button-primary" type="button" onclick="' + this.fullObjName
                 + '.callBackRun(23,event);"/>');
             break;
         case 23:
@@ -1127,7 +1135,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
             HTML.push('图片URL:<input style="width:300px;" id="' + this.obj
                 + '_txtImage" type="text"/><br/><span id="' + this.obj
                 + '_spanImageErrorMessage"></span><br/>');
-            HTML.push('<input value="插入图片" type="button" onclick="' + this.obj
+            HTML.push('<input value="插入图片" type="button" onclick="' + this.fullObjName
                 + '.insertImage();"/>');
             HTML.push('</div>');
             // 网络图片插入结束
@@ -1364,10 +1372,10 @@ Sparrow.editor.prototype.initTool = function () {
                     + this.config.tool.toolBar[key].top + 'px;width:'
                     + this.config.tool.toolBar[key].width + 'px;height:'
                     + this.config.tool.toolBar[key].height + 'px"');
-                toolHTML.push(' onmouseover="' + this.obj
-                    + '.m_over(this);" onmouseout="' + this.obj
-                    + '.m_out(this);"' + ' onmousedown="' + this.obj
-                    + '.m_down(this);" onmouseup="' + this.obj
+                toolHTML.push(' onmouseover="' + this.fullObjName
+                    + '.m_over(this);" onmouseout="' + this.fullObjName
+                    + '.m_out(this);"' + ' onmousedown="' + this.fullObjName
+                    + '.m_down(this);" onmouseup="' + this.fullObjName
                     + '.m_up(this);"');
                 toolHTML.push('/>');
             }
@@ -1387,10 +1395,10 @@ Sparrow.editor.prototype.initTool = function () {
                     + this.config.tool.toolBar[key].top + 'px;width:'
                     + this.config.tool.toolBar[key].width + 'px;height:'
                     + this.config.tool.toolBar[key].height + 'px"');
-                toolHTML.push(' onmouseover="' + this.obj
-                    + '.m_over(this);" onmouseout="' + this.obj
-                    + '.m_out(this);" onmousedown="' + this.obj
-                    + '.m_down(this);" onmouseup="' + this.obj
+                toolHTML.push(' onmouseover="' + this.fullObjName
+                    + '.m_over(this);" onmouseout="' + this.fullObjName
+                    + '.m_out(this);" onmousedown="' + this.fullObjName
+                    + '.m_down(this);" onmouseup="' + this.fullObjName
                     + '.m_up(this);"');
                 toolHTML.push('/>');
             }
@@ -1401,7 +1409,7 @@ Sparrow.editor.prototype.initTool = function () {
         toolHTML
             .push('<div align="center" id="'
                 + this.config.tool.convertHTML.ctrlId
-                + '" class="pure-u-2-24" " onclick="' + this.obj
+                + '" class="pure-u-2-24" " onclick="' + this.fullObjName
                 + '.convertHTML(this);">HTML</div>');
     }
     if (this.config.tool.adjust.adjustable) {
@@ -1411,11 +1419,11 @@ Sparrow.editor.prototype.initTool = function () {
                 'class="pure-u-4-24 pure-form pure-form-aligned" '
                 + this.config.tool.adjust.width
                 + 'px;"><input onblur="'
-                + this.obj
+                + this.fullObjName
                 + '.adjust(\'width\',this);" style="height: 30px;" placeholder="width" class="pure-input-rounded pure-input-1" type="text" value="'
                 + container.style.width
                 + '"/><input onblur="'
-                + this.obj
+                + this.fullObjName
                 + '.adjust(\'height\',this);" style="height: 30px;" placeholder="height" class="pure-input-rounded pure-input-1" type="text" value="'
                 + container.style.height + '"/></div>');
     }
@@ -1425,9 +1433,9 @@ Sparrow.editor.prototype.initTool = function () {
 };
 Sparrow.editor.prototype.initEditor = function (iframeId) {
     return '<iframe onload="'
-        + this.obj
+        + this.fullObjName
         + '.autoAdjust(this);'
-        + this.obj
+        + this.fullObjName
         + '.initContent();" class="'
         + iframeId
         + '" id="'

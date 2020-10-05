@@ -235,9 +235,13 @@ Sparrow.file = {
      * @param pathKeySuffixPair {path-key:suffix}
      */
     initImageUploadEvent: function (upload_path, key, pathKeySuffixPair) {
+        var fileFrame=$("null."+key);
+        if(fileFrame==null){
+            return;
+        }
         document.domain=$.browser.cookie.root_domain;
         if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
-        $("null."+key).src=upload_path+"/file-upload?path-key="+key;
+        fileFrame.src=upload_path+"/file-upload?path-key="+key;
         //第一次加载初始化
         $.file.uploadCallBack = function (fileInfo, editor, size) {
             console.info(size);

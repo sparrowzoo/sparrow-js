@@ -1,18 +1,18 @@
 Sparrow.user = {
     login: {
-        dialog: function (option, args) {
-            var url = $.url.passport + "/login-dialog?shortRegister=false&option=" + option;
+        dialog: function (nsOfCallBack, args) {
+            var url = $.url.passport + "/login-dialog?register=false&callback-ns=" + nsOfCallBack;
             if (!$.isNullOrEmpty(args)) {
                 url += '&parameter=' + args;
             }
+            document.domain=$.browser.cookie.root_domain;
             $.window({url: url, showHead: false});
         },
-        option: {
-            publish: "thread",
+        ns_callback: {
+            publish: "thread.publish",
             attention: "user.attention",
             cancel_attention: "user.attention.cancel",
             comment: "thread.comment",
-            up_thread: "thread.up",
             upload: "upload",
             like_thread: "thread.like"
         }
@@ -22,7 +22,7 @@ Sparrow.user = {
     },
     getAvatar: function (avatar) {
         return avatar ? avatar
-            : $.defaultHeadIcoUrl;
+            : $.DEFAULT_AVATOR_URL;
     },
     // 是否有编辑权限
     editable: function (authorId) {
@@ -39,9 +39,10 @@ Sparrow.user = {
         if ($.browser.isLogin()) {
             $("divAccount").style.display = "block";
             $("divLogin").style.display = "none";
-            $("hyperUser").html($.browser.getUserName());
-            $("hyperUser").title = $.browser.getUserName();
-            $("hyperUser").href = $.user.getZone($.browser.getUserId());
+            var hyperUser=$("hyperUser");
+            $(hyperUser).html($.browser.getUserName());
+            hyperUser.title = $.browser.getUserName();
+            hyperUser.href = $.user.getZone($.browser.getUserId());
             return;
         }
         $("divAccount").style.display = "none";
@@ -85,11 +86,11 @@ Sparrow.user = {
             POPUP_HTML.push('COUNT：<span>{0}</span><br />'.format(userInfo.extend.COUNT));
         }
         $("divUserInfo").innerHTML = POPUP_HTML.join("");
-        $("#.divUserInfo").show();
+        $("#divUserInfo").show();
 
         // 鼠标离开头象效果
         document.onmouseover = function (e) {
-            $("#.divUserInfo").hidden();
+            $("#divUserInfo").hidden();
         };
     },
     // 鼠标悬停头象效果
