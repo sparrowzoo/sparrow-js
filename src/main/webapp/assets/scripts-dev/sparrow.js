@@ -29,7 +29,7 @@ String.prototype.rtrim = function () {
 };
 // 如果为""或者是''则返回为null 所以在调用之前要做了null判断
 String.prototype.json = function () {
-    if (this === "" || this === "''"||this.length===0) {
+    if (this === "" || this === "''" || this.length === 0) {
         return null;
     }
     if (this.indexOf("error|") !== -1) {
@@ -118,6 +118,24 @@ String.prototype.decodeHtml = function () {
 // 字符格式化方法
 String.prototype.format = function () {
     var newStr = this;
+    if (arguments.length >=1 && typeof arguments[0] === "object") {
+        var re = /#{(.*?)}/ig;
+        while (r = re.exec(this)) {
+            var placeHolder = r[0];
+            var property=r[1];
+            var value = arguments[0].value(property);
+            if(arguments.length>1){
+                for(var i=1;i<arguments.length;i++){
+                    value=arguments[i].value(property);
+                    if(value){
+                        break;
+                    }
+                }
+            }
+            newStr = newStr.replace(placeHolder, $.isNullOrEmpty(value) ? "-" : value);
+        }
+        return newStr;
+    }
     var reg = null;
     for (var i = 0; i < arguments.length; i++) {
         reg = new RegExp('\\{' + i + '\\}', 'gm');
@@ -208,6 +226,18 @@ Date.prototype.format = function (fmt) {
     for (var k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
+}
+
+Object.prototype.value=function(arg) {
+   if(arg.indexOf(".")<0){
+      return this[arg];
+   }
+   var properties=arg.split(".");
+   var current=this;
+   for(var i=0;i<properties.length;i++){
+       current=current[properties[i]];
+   }
+   return current;
 }
 /**
  * @return
@@ -1258,6 +1288,9 @@ Sparrow.v = {
             if (!property) {
                 continue;
             }
+            if(typeof(property)!=="object"){
+                continue;
+            }
             var error = null;
             var ctrl = $(o);
             if (!ctrl) {
@@ -1611,11 +1644,21 @@ Sparrow.prototype.html = function (value) {
     return this.s.innerHTML;
 };
 
+Sparrow.prototype.format = function (html,args) {
+    if (!this.s) {
+        return;
+    }
+    if($(html)!=null){
+        html=$("#"+html).html();
+    }
+    this.s.innerHTML =html.format(args);
+};
+
 Sparrow.prototype.value = function (value) {
     if (!this.s) {
         return;
     }
-    if (value===undefined||value===null) {
+    if (value === undefined || value === null) {
         return this.s.value;
     }
     this.s.value = value;
@@ -3009,6 +3052,7 @@ Sparrow.message = function (content, srcElement) {
 };
 Sparrow.prototype.move = function (s) {
     var status = s.json();
+    console.log("move status ", status);
     var _move = function (sparrowElement, start, end, percent, change) {
         if (!$.isNullOrEmpty(end)) {
             var distance = (parseInt(end, 10) - parseInt(start, 10));
@@ -3083,15 +3127,16 @@ Sparrow.prototype.stop = function () {
     window.clearInterval(this.interval.pop());
 };
 Sparrow.prototype.animation = function (s, period) {
+    console.log(s);
     if (!period) {
         period = 30;
     }
     this.s.style.display = "block";
     this.stop();
     var command = "$('" + this.selector + "').move(\"" + s + "\");";
+    console.log(command);
     this.interval.push(window.setInterval(command, period));
 };
-
 
 
 Sparrow.prototype.interlace = function (targetArray) {
@@ -3101,8 +3146,8 @@ Sparrow.prototype.interlace = function (targetArray) {
             "{width:'{0}',height:'{1}'}".format(this.s.style.width, this.s.style.height),
             "{top:'{0}',height:'0px',width:'0px',left:'{1}'}".format(this.s.style.height, this.s.style.width)];
     }
-    var parentId=this.selector.substring(1);
-    $("!div." +parentId).each(function (i) {
+    var parentId = this.selector.substring(1);
+    $("!div." + parentId).each(function (i) {
         this.style.position = "absolute";
         if (i === 0) {
             this.style.width = this.parentNode.style.width;
@@ -3134,7 +3179,7 @@ Sparrow.prototype.show = function () {
     this.s.style.overflow = "hidden";
     // 如果默认是不显示或者第二次高度为0
     if (this.s.style.display === "none"
-        || this.s.style.height === 0) {
+        || this.s.offsetHeight === 0) {
         // 记录当前被控控件的高度
         if (this.height === undefined) {
             this.s.style.display = "block";
@@ -3208,7 +3253,7 @@ Sparrow.showOrHiddenTag = function (tagArray, show, doc) {
     for (var i = 0; i < tagArray.length; i++) {
         var tagName = tagArray[i];
         var tags = $("^" + tagName, null, doc);
-        if(tags===null||tags.length===0){
+        if (tags === null || tags.length === 0) {
             continue;
         }
         tags.each(function () {
@@ -3880,7 +3925,7 @@ Sparrow.datePicker.prototype.validate = function(yyyy, MM, dd) {
 	return result;
 };
 ﻿// 构造函数 objName:对象ID与对象同名；
-Sparrow.editor = function (objName,parentName) {
+Sparrow.editor = function (objName, parentName) {
     // 编辑器的对象名称与var Sparrow.editor=new Sparrow.editor("Sparrow.editor");一致.
     this.obj = objName;
     this.fullObjName = parentName ? (parentName + "." + objName) : objName;
@@ -4440,10 +4485,14 @@ Sparrow.editor = function (objName,parentName) {
             }
         },
         // 验证方法
-        validate: function (validateConfig) {
-           return $.v.getValidateResult(validateConfig,false);
+        validate: function (validateConfig,nsOfLoginCallback) {
+            if (nsOfLoginCallback!=null&&!$.browser.isLogin()) {
+                $.user.login.dialog(nsOfLoginCallback);
+                return false;
+            }
+            return $.v.getValidateResult(validateConfig, false);
         },
-        // 提交表单的私有方法
+        // 提交表单的私有方法 form action
         _submit: function () {
             // 收集需要上传的文件信息
             $(this.parentObject.config.attach.fileInfoId).value = this.parentObject.attach
@@ -4464,11 +4513,11 @@ Sparrow.editor = function (objName,parentName) {
                 this.parentObject.config.attach.formIndex);
         },
         // 表单提交的js方法 (需要显示调用)
-        submit: function (validateConfig) {
+        submit: function (validateConfig,nsOfLoginCallback) {
             // 获取当前编辑器
             var editor = this.parentObject;
             $(editor.config.contentCtrlId).value = editor.frame.contentWindow.document.body.innerHTML;
-            if (this.validate(validateConfig)) {
+            if (this.validate(validateConfig,nsOfLoginCallback)) {
                 // 直接提交
                 this._submit();
             } else {
@@ -4599,17 +4648,20 @@ Sparrow.editor.prototype.getEditorContent = function () {
 };
 // iframe onload时执行
 Sparrow.editor.prototype.initContent = function () {
-    var content=$(this.config.contentCtrlId).value;
-    this.setEditorContent(decodeURIComponent(content));
+    var contentCtrl = $(this.config.contentCtrlId);
+    if (contentCtrl != null) {
+        var content = contentCtrl.value;
+        this.setEditorContent(decodeURIComponent(content));
+    }
     this.attach.setParentObject(this);
-    this.config.attach.uploadedJson=decodeURIComponent('');
+    this.config.attach.uploadedJson = decodeURIComponent('');
 };
 Sparrow.editor.prototype.focus = function () {
     this.frame.contentWindow.document.body.focus();
 };
 Sparrow.editor.prototype.setEditorContent = function (contentHtml) {
     $(this.config.contentCtrlId).value = contentHtml;
-    if(this.frame==null){
+    if (this.frame == null) {
         return;
     }
     this.frame.contentWindow.document.body.innerHTML = contentHtml;
@@ -4684,9 +4736,9 @@ Sparrow.editor.prototype.createTempNode = function (newTagName) {
     }
     var range = this.getRange();
     var rangeText = $.browser.ie ? range.text : range;
-    if (rangeText === "") {
+    if (rangeText == "") {
         var i_temp_node = document.createElement(newTagName);
-        if (newTagName === "a") {
+        if (newTagName == "a") {
             i_temp_node.href = this.config.tempNodeAttribute;
         } else {
             i_temp_node.id = this.config.tempNodeAttribute;
@@ -4982,7 +5034,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
             HTML.push('<div class="pure-menu pure-menu-horizontal">');
             HTML.push('<ul class="pure-menu-list" style="width: 100%;">');
 
-            HTML.push('<li class="pure-menu-item">');
+            HTML.push('<li class="pure-menu-item pure-menu-selected">');
             HTML.push('<a target="_self" href="javascript:void(0);" class="pure-menu-link">');
             HTML.push('<span>本地图片</span>');
             HTML.push('</a>');
@@ -5007,7 +5059,7 @@ Sparrow.editor.prototype.getHtml = function (key) {
                 + this.config.attach.iframeId.format(this.config.attach.key)
                 + '" class="file-frame" frameborder="0"');
             HTML.push(' src="' + $.editor.uploadUrl + '/file-upload?path-key='
-                + this.config.attach.key + '&editor=' + this.obj + '"></iframe><br/>');
+                + this.config.attach.key + '&editor=' + this.fullObjName + '"></iframe><br/>');
             HTML.push('</div>');
             // 插入本地图片结束
 
@@ -5313,6 +5365,7 @@ Sparrow.editor.prototype.initTool = function () {
         + ';height:auto;">' + toolHTML.join("") + '</div>';
 };
 Sparrow.editor.prototype.initEditor = function (iframeId) {
+    document.domain = $.browser.cookie.root_domain;
     return '<iframe onload="'
         + this.fullObjName
         + '.autoAdjust(this);'
@@ -5347,10 +5400,10 @@ function getImgContainer(fileUrl, clientFileName, editor) {
         .push('<a target="_blank" href="{0}" title="{1}"><img style="width:91px;height:67px;" src="{2}"/></a>'
             .format(fileUrl, $.file.getFileName(clientFileName), fileUrl));
     imgArray.push('<br/><a href="javascript:void(0);" target="_self" onclick="'
-        + editor.obj + '.attach.deleteOnServer(\'' + fileId
+        + editor.fullObjName + '.attach.deleteOnServer(\'' + fileId
         + '\',this);">删除</a>'
         + '｜<a href="javascript:void(0);" target="_self" onclick="'
-        + editor.obj + '.attach.insertEditor(\''
+        + editor.fullObjName + '.attach.insertEditor(\''
         + $.file.getFileName(clientFileName) + '\',\'' + fileUrl
         + '\');">插入</a>' + '<input type="hidden" name="'
         + editor.config.attach.fileUUID + '" value="' + fileId + '"/>');
@@ -6789,13 +6842,15 @@ Sparrow.metricChart.changeType = function (chartId, type) {
     chart.setOption(option, true);
 };
 Sparrow.user = {
+    authorMap: null,
+    author: null,
     login: {
         dialog: function (nsOfCallBack, args) {
             var url = $.url.passport + "/login-dialog?register=false&callback-ns=" + nsOfCallBack;
             if (!$.isNullOrEmpty(args)) {
                 url += '&parameter=' + args;
             }
-            document.domain=$.browser.cookie.root_domain;
+            document.domain = $.browser.cookie.root_domain;
             $.window({url: url, showHead: false});
         },
         ns_callback: {
@@ -6829,7 +6884,7 @@ Sparrow.user = {
         if ($.browser.isLogin()) {
             $("divAccount").style.display = "block";
             $("divLogin").style.display = "none";
-            var hyperUser=$("hyperUser");
+            var hyperUser = $("hyperUser");
             $(hyperUser).html($.browser.getUserName());
             hyperUser.title = $.browser.getUserName();
             hyperUser.href = $.user.getZone($.browser.getUserId());
@@ -6839,12 +6894,14 @@ Sparrow.user = {
         $("divLogin").style.display = "block";
     },
     // 游客的鼠标悬停头象效果
-    initAvatar: function (srcElement, userInfo) {
+    popup: function (srcElement, userId) {
+        var userInfo = this.authorMap == null ? this.author : this.authorMap[userId];
         var divUserInfo = $("divUserInfo");
         if (divUserInfo == null) {
-            divUserInfo = $("new.div.divUserInfo");
-            divUserInfo.s.style.cssText = "border: #ccc 1px solid; position: absolute; width:300px; height:120px; display: none; background: #ffffff;overflow: hidden;";
+            divUserInfo = $("+div.divUserInfo");
+            divUserInfo.s.style.cssText = "border: #ccc 1px solid; position: absolute; width:300px; height:120px; background: #ffffff;overflow: hidden;";
             divUserInfo.s.onmouseover = function (e) {
+                console.log("user info  mouse over ...");
                 $.event(e).cancelBubble();
             };
             document.body.appendChild(divUserInfo.s);
@@ -6856,25 +6913,25 @@ Sparrow.user = {
         POPUP_HTML.push('<table style="border: 0;background:#fff;" cellpadding="0" cellspacing="0">');
         POPUP_HTML.push('<tr>');
         POPUP_HTML.push('<td style="border: 0; width:60px;" valign="top">');
-        POPUP_HTML.push('<a href="{0}" target="_blank"><img style="width:50px; height: 50px; border: 2px #EDEDED solid;" src="{1}" /></a>'.format(this.getZone(userInfo.userId), this.getAvatar(userInfo.avatar)));
+        POPUP_HTML.push('<a href="{0}" target="_blank"><img style="width:50px; height: 50px; border: 2px #EDEDED solid;" src="{1}" /></a>'.format(this.getZone(userInfo.id), this.getAvatar(userInfo.avatar)));
         POPUP_HTML.push('</td>');
         POPUP_HTML.push('<td style="border: 0; width: 240px; line-height: 25px;text-align:left;">');
-        POPUP_HTML.push('昵称:<a href="{2}" target="_blank"><span>{0}</span></a>{1}<br />'.format(userInfo.userLoginName, userInfo.extend.ATTENTION_RELATION, this.getZone(userInfo.userId)));
-        POPUP_HTML.push('性别:<span>{0}</span><br />'.format(userInfo.sexName));
+        POPUP_HTML.push('昵称:<a href="{2}" target="_blank"><span>{0}</span></a>{1}<br />'.format(userInfo.name, 'attention', this.getZone(userInfo.id)));
+        POPUP_HTML.push('性别:<span>{0}</span><br />'.format(userInfo.gender));
         if (userInfo.createTime) {
-            POPUP_HTML.push('注册日期:<span>{0}</span><br />'.format(userInfo.createTime.split(".")[0]));
+            POPUP_HTML.push('注册日期:<span>{0}</span><br />'.format(userInfo.createTime));
         }
 
         if (userInfo.lastLoginTime) {
-            POPUP_HTML.push('最后登陆:<span>{0}</span><br />'.format(userInfo.lastLoginTime.split(".")[0]));
+            POPUP_HTML.push('最后登陆:<span>{0}</span><br />'.format(userInfo.lastLoginTime));
         }
         if (!$.isNullOrEmpty(userInfo.status)) {
             POPUP_HTML.push('状态：<span>{0}</span><br />'.format(userInfo.status));
         }
 
-        if (userInfo.extend && userInfo.extend.COUNT) {
-            POPUP_HTML.push('COUNT：<span>{0}</span><br />'.format(userInfo.extend.COUNT));
-        }
+        // if (userInfo.extend && userInfo.extend.COUNT) {
+        //     POPUP_HTML.push('COUNT：<span>{0}</span><br />'.format(userInfo.extend.COUNT));
+        // }
         $("divUserInfo").innerHTML = POPUP_HTML.join("");
         $("#divUserInfo").show();
 
@@ -6883,18 +6940,20 @@ Sparrow.user = {
             $("#divUserInfo").hidden();
         };
     },
-    // 鼠标悬停头象效果
-    // 访问的userId
-    popup: function (srcElement, userId, e) {
-        $.ajax.json($.url.root + "/user/popup.json", "userId=" + userId,
-            function (result) {
-                var userInfo = result.value;
-                this.attention();
-                $.user.initAvatar($.ajax.srcElement, userInfo);
-            }, $.event(e).srcElement);
-        $.event(e).cancelBubble();
+    json: function (json) {
+        var jsonHidden = $(json);
+        if (jsonHidden != null) {
+            json = jsonHidden.value.json();
+        }
+        return json;
     },
-    attention:function () {
+    initAuthor: function (json) {
+        this.author = this.json(json);
+    },
+    initAuthorMap: function (json) {
+        this.authorMap = this.json(json);
+    },
+    attention: function () {
         return false;
         /**
          * // 是否关注过
@@ -6960,7 +7019,7 @@ Sparrow.share = {
                         this.config.share[j].position.left,
                         this.config.share[j].position.top,
                         this.config.share[j].title,
-                        $.url.root+this.config.share[j].url));
+                        this.config.share[j].url));
         }
         shareTemplate = shareTemplateArray.join("");
         for (var i = shareArray.length - 1; i >= 0; i--) {

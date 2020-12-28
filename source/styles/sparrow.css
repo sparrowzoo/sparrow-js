@@ -174,7 +174,7 @@ hr {
 
 
 /*--tab公共样式 规格样式*/
-.tab{border:#ccc 1px solid;overflow:hidden;text-align: left;}
+.tab{border:#ccc 1px solid;overflow:hidden;text-align: left;text-indent:0}
 .tab .more{float: right;}
 .pure-menu-selected .pure-menu-link,
 .pure-menu-selected .pure-menu-link:visited {
