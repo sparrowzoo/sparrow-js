@@ -263,11 +263,21 @@ Sparrow.prototype.html = function (value) {
     return this.s.innerHTML;
 };
 
+Sparrow.prototype.format = function (html,args) {
+    if (!this.s) {
+        return;
+    }
+    if($(html)!=null){
+        html=$("#"+html).html();
+    }
+    this.s.innerHTML =html.format(args);
+};
+
 Sparrow.prototype.value = function (value) {
     if (!this.s) {
         return;
     }
-    if (value===undefined||value===null) {
+    if (value === undefined || value === null) {
         return this.s.value;
     }
     this.s.value = value;

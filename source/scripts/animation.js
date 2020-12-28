@@ -1,5 +1,6 @@
 Sparrow.prototype.move = function (s) {
     var status = s.json();
+    console.log("move status ", status);
     var _move = function (sparrowElement, start, end, percent, change) {
         if (!$.isNullOrEmpty(end)) {
             var distance = (parseInt(end, 10) - parseInt(start, 10));
@@ -80,9 +81,9 @@ Sparrow.prototype.animation = function (s, period) {
     this.s.style.display = "block";
     this.stop();
     var command = "$('" + this.selector + "').move(\"" + s + "\");";
+    console.log("animation"+command);
     this.interval.push(window.setInterval(command, period));
 };
-
 
 
 Sparrow.prototype.interlace = function (targetArray) {
@@ -92,8 +93,8 @@ Sparrow.prototype.interlace = function (targetArray) {
             "{width:'{0}',height:'{1}'}".format(this.s.style.width, this.s.style.height),
             "{top:'{0}',height:'0px',width:'0px',left:'{1}'}".format(this.s.style.height, this.s.style.width)];
     }
-    var parentId=this.selector.substring(1);
-    $("!div." +parentId).each(function (i) {
+    var parentId = this.selector.substring(1);
+    $("!div." + parentId).each(function (i) {
         this.style.position = "absolute";
         if (i === 0) {
             this.style.width = this.parentNode.style.width;
@@ -125,7 +126,7 @@ Sparrow.prototype.show = function () {
     this.s.style.overflow = "hidden";
     // 如果默认是不显示或者第二次高度为0
     if (this.s.style.display === "none"
-        || this.s.style.height === 0) {
+        || this.s.offsetHeight === 0) {
         // 记录当前被控控件的高度
         if (this.height === undefined) {
             this.s.style.display = "block";
@@ -199,7 +200,7 @@ Sparrow.showOrHiddenTag = function (tagArray, show, doc) {
     for (var i = 0; i < tagArray.length; i++) {
         var tagName = tagArray[i];
         var tags = $("^" + tagName, null, doc);
-        if(tags===null||tags.length===0){
+        if (tags === null || tags.length === 0) {
             continue;
         }
         tags.each(function () {

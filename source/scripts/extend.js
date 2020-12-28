@@ -9,7 +9,7 @@ String.prototype.rtrim = function () {
 };
 // 如果为""或者是''则返回为null 所以在调用之前要做了null判断
 String.prototype.json = function () {
-    if (this === "" || this === "''"||this.length===0) {
+    if (this === "" || this === "''" || this.length === 0) {
         return null;
     }
     if (this.indexOf("error|") !== -1) {
@@ -98,6 +98,24 @@ String.prototype.decodeHtml = function () {
 // 字符格式化方法
 String.prototype.format = function () {
     var newStr = this;
+    if (arguments.length >=1 && typeof arguments[0] === "object") {
+        var re = /#{(.*?)}/ig;
+        while (r = re.exec(this)) {
+            var placeHolder = r[0];
+            var property=r[1];
+            var value = arguments[0].value(property);
+            if(arguments.length>1){
+                for(var i=1;i<arguments.length;i++){
+                    value=arguments[i].value(property);
+                    if(value){
+                        break;
+                    }
+                }
+            }
+            newStr = newStr.replace(placeHolder, $.isNullOrEmpty(value) ? "-" : value);
+        }
+        return newStr;
+    }
     var reg = null;
     for (var i = 0; i < arguments.length; i++) {
         reg = new RegExp('\\{' + i + '\\}', 'gm');
@@ -188,4 +206,16 @@ Date.prototype.format = function (fmt) {
     for (var k in o)
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
+}
+
+Object.prototype.value=function(arg) {
+   if(arg.indexOf(".")<0){
+      return this[arg];
+   }
+   var properties=arg.split(".");
+   var current=this;
+   for(var i=0;i<properties.length;i++){
+       current=current[properties[i]];
+   }
+   return current;
 }

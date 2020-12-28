@@ -317,6 +317,9 @@ Sparrow.v = {
             if (!property) {
                 continue;
             }
+            if(typeof(property)!=="object"){
+                continue;
+            }
             var error = null;
             var ctrl = $(o);
             if (!ctrl) {
