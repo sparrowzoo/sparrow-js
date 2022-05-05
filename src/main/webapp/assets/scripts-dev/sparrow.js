@@ -3127,14 +3127,13 @@ Sparrow.prototype.stop = function () {
     window.clearInterval(this.interval.pop());
 };
 Sparrow.prototype.animation = function (s, period) {
-    console.log(s);
     if (!period) {
         period = 30;
     }
     this.s.style.display = "block";
     this.stop();
     var command = "$('" + this.selector + "').move(\"" + s + "\");";
-    console.log(command);
+    console.log("animation"+command);
     this.interval.push(window.setInterval(command, period));
 };
 
