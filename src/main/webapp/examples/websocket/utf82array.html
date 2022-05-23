@@ -6,12 +6,12 @@
   <title>Insert title here</title>
 
   <script type="text/javascript">
-    function stringToArrayBuffer(str) {
+    String.prototype.toArrayBuffer=function(){
       var bytes = [];
       var len, c;
-      len = str.length;
+      len = this.length;
       for (var i = 0; i < len; i++) {
-        c = str.charCodeAt(i);
+        c = this.charCodeAt(i);
         if (c >= 0x010000 && c <= 0x10FFFF) {
           bytes.push(((c >> 18) & 0x07) | 0xF0);
           bytes.push(((c >> 12) & 0x3F) | 0x80);
@@ -33,20 +33,15 @@
         array[i] = bytes[i];
       }
       return array;
-    }
+    };
 
-    function arrayBufferToString(arr) {
-      if (typeof arr === 'string') {
-        return arr;
-      }
-      var dataview = new DataView(arr.buffer);
-      var ints = new Uint8Array(arr.buffer.byteLength);
+    Int8Array.prototype.toString=function() {
+      var dataView = new DataView(this.buffer);
+      var ints = new Uint8Array(this.buffer.byteLength);
       for (var i = 0; i < ints.length; i++) {
-        ints[i] = dataview.getUint8(i);
+        ints[i] = dataView.getUint8(i);
       }
-      arr = ints;
-      var str = '',
-          _arr = arr;
+      var str = '', _arr = ints;
       for (var i = 0; i < _arr.length; i++) {
         var one = _arr[i].toString(2),
             v = one.match(/^1+?(?=0)/);
@@ -63,13 +58,13 @@
         }
       }
       return str;
-    }
+    };
 
   </script>
   <script type="text/javascript">
-    var buffer = stringToArrayBuffer("我爱北京天安门");
-    alert(buffer);
-    var str = arrayBufferToString(buffer);
+    var buffer = "我爱北京天安门 HELLO world".toArrayBuffer();
+    //alert(buffer);
+    var str = buffer.toString();
     alert(str);
   </script>
 
@@ -81,4 +76,6 @@ https://www.javascripture.com/DataView<br/>
 https://websockets.spec.whatwg.org<br/>
 
 https://zhuanlan.zhihu.com/p/97768916<br/>
+
+https://zhuanlan.zhihu.com/p/407711596
 </body>
