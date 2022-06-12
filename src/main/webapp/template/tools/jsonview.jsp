@@ -27,8 +27,6 @@
         <div class="header">
             <h1>JSON 在线格式化</h1>
         </div>
-
-
         <div style="max-width: 100%;" class="content">
             <input id="btnFormat" class="pure-button pure-button-primary" type="button" value="格式化"/>
             <div style="width: 100%;" class="pure-g">
