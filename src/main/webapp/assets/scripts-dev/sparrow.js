@@ -1876,6 +1876,61 @@ Sparrow.prototype.enter = function (handle) {
         }
     };
 };
+
+
+String.prototype.toArrayBuffer=function(){
+  var bytes = [];
+  var len, c;
+  len = this.length;
+  for (var i = 0; i < len; i++) {
+    c = this.charCodeAt(i);
+    if (c >= 0x010000 && c <= 0x10FFFF) {
+      bytes.push(((c >> 18) & 0x07) | 0xF0);
+      bytes.push(((c >> 12) & 0x3F) | 0x80);
+      bytes.push(((c >> 6) & 0x3F) | 0x80);
+      bytes.push((c & 0x3F) | 0x80);
+    } else if (c >= 0x000800 && c <= 0x00FFFF) {
+      bytes.push(((c >> 12) & 0x0F) | 0xE0);
+      bytes.push(((c >> 6) & 0x3F) | 0x80);
+      bytes.push((c & 0x3F) | 0x80);
+    } else if (c >= 0x000080 && c <= 0x0007FF) {
+      bytes.push(((c >> 6) & 0x1F) | 0xC0);
+      bytes.push((c & 0x3F) | 0x80);
+    } else {
+      bytes.push(c & 0xFF);
+    }
+  }
+  var array = new Int8Array(bytes.length);
+  for (var i in bytes) {
+    array[i] = bytes[i];
+  }
+  return array;
+};
+
+Int8Array.prototype.toString=function() {
+  var dataView = new DataView(this.buffer);
+  var ints = new Uint8Array(this.buffer.byteLength);
+  for (var i = 0; i < ints.length; i++) {
+    ints[i] = dataView.getUint8(i);
+  }
+  var str = '', _arr = ints;
+  for (var i = 0; i < _arr.length; i++) {
+    var one = _arr[i].toString(2),
+        v = one.match(/^1+?(?=0)/);
+    if (v && one.length == 8) {
+      var bytesLength = v[0].length;
+      var store = _arr[i].toString(2).slice(7 - bytesLength);
+      for (var st = 1; st < bytesLength; st++) {
+        store += _arr[st + i].toString(2).slice(2);
+      }
+      str += String.fromCharCode(parseInt(store, 2));
+      i += bytesLength - 1;
+    } else {
+      str += String.fromCharCode(_arr[i]);
+    }
+  }
+  return str;
+};
 Sparrow.prototype.tabs = function (config) {
     if (!config) {
         config = {};
@@ -3319,7 +3374,7 @@ Sparrow.prototype.progressbar = function (callback, config) {
 Sparrow.menu=function (obj, position,menuLink) {
     this.config = // 菜单显示需要的常量配置
     {
-        current_menu: null,
+        current_menu: null, //当前菜单
         left_limit: -1,
         period: 3,
         frameDiv: null, // 菜单提示框的DIV
@@ -3330,7 +3385,7 @@ Sparrow.menu=function (obj, position,menuLink) {
         parent: null, // 父菜单
         menu: [],
         list: [],//水平菜单的列表 与menu 一一 对应
-        childs: [],//快捷菜单隐藏时使用
+        children: [],//快捷菜单隐藏时使用
         brothers: []// 兄弟节点
     };
     this.obj = obj;
@@ -3372,7 +3427,6 @@ Sparrow.menu.prototype.vertical = function () {
     if (!$(this.id)) {
         return;
     }
-
     var item = $("!div." + this.id);
     var obj = this.obj;
     item
@@ -3396,27 +3450,28 @@ Sparrow.menu.prototype.vertical = function () {
                         function (e) {
                             $.event(e).cancelBubble();
                             var child = $("#" + this.id + "_child");
-                            var current_menu = null;
                             if (menu.config.current_menu != null) {
-                                if (child === menu.config.current_menu) {
-                                    return;
-                                }
-                                current_menu = menu.config.current_menu;
-                                current_menu.stop();
+                                return;
                             }
                             menu.config.current_menu = child;
-                            child.s.style.display = "block";
-                            child.move_end = function () {
-                                if (current_menu != null) {
-                                    current_menu.animation("{height:'0px'}", menu.config.period);
-                                }
-                            };
-                            child
-                                .animation(
-                                    "{height:'"
-                                    + menu.config.position[child.s.id]
-                                    + "px'}",
-                                    menu.config.period);
+                            if(child.s.style.display==='block'){
+                                child.move_end = function () {
+                                    menu.config.current_menu=null;
+                                };
+                                child.animation("{height:'0px'}", menu.config.period);
+                            }
+                            else {
+                                child.s.style.display = "block";
+                                child.move_end = function () {
+                                    menu.config.current_menu=null;
+                                };
+                                child
+                                    .animation(
+                                        "{height:'"
+                                        + menu.config.position[child.s.id]
+                                        + "px'}",
+                                        menu.config.period);
+                            }
                         });
             }
         });
@@ -3442,8 +3497,8 @@ Sparrow.menu.prototype.hidden = function () {
         if (this.config.frameDiv) {
             this.config.frameDiv.style.display = "none";
             // 隐藏其子菜单
-            for (var i = 0; i < this.config.childs.length; i++) {
-                this.config.childs[i].hidden();
+            for (var i = 0; i < this.config.children.length; i++) {
+                this.config.children[i].hidden();
             }
         }
     }
@@ -3476,8 +3531,8 @@ Sparrow.menu.prototype.show = function (srcElement, parentMenu) {
     this.config.frameDiv.style.top = (top - 2) + "px";
     this.config.frameDiv.style.display = "block";
     // 显示菜单同时隐藏子菜单
-    for (var i = 0; i < this.config.childs.length; i++) {
-        this.config.childs[i].hidden();
+    for (var i = 0; i < this.config.children.length; i++) {
+        this.config.children[i].hidden();
     }
     // 隐藏兄弟菜单
     for (var i = 0; i < this.config.brothers.length; i++) {

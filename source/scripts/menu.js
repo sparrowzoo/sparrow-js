@@ -6,7 +6,7 @@
 Sparrow.menu=function (obj, position,menuLink) {
     this.config = // 菜单显示需要的常量配置
     {
-        current_menu: null,
+        current_menu: null, //当前菜单
         left_limit: -1,
         period: 3,
         frameDiv: null, // 菜单提示框的DIV
@@ -17,7 +17,7 @@ Sparrow.menu=function (obj, position,menuLink) {
         parent: null, // 父菜单
         menu: [],
         list: [],//水平菜单的列表 与menu 一一 对应
-        childs: [],//快捷菜单隐藏时使用
+        children: [],//快捷菜单隐藏时使用
         brothers: []// 兄弟节点
     };
     this.obj = obj;
@@ -59,7 +59,6 @@ Sparrow.menu.prototype.vertical = function () {
     if (!$(this.id)) {
         return;
     }
-
     var item = $("!div." + this.id);
     var obj = this.obj;
     item
@@ -83,27 +82,28 @@ Sparrow.menu.prototype.vertical = function () {
                         function (e) {
                             $.event(e).cancelBubble();
                             var child = $("#" + this.id + "_child");
-                            var current_menu = null;
                             if (menu.config.current_menu != null) {
-                                if (child === menu.config.current_menu) {
-                                    return;
-                                }
-                                current_menu = menu.config.current_menu;
-                                current_menu.stop();
+                                return;
                             }
                             menu.config.current_menu = child;
-                            child.s.style.display = "block";
-                            child.move_end = function () {
-                                if (current_menu != null) {
-                                    current_menu.animation("{height:'0px'}", menu.config.period);
-                                }
-                            };
-                            child
-                                .animation(
-                                    "{height:'"
-                                    + menu.config.position[child.s.id]
-                                    + "px'}",
-                                    menu.config.period);
+                            if(child.s.style.display==='block'){
+                                child.move_end = function () {
+                                    menu.config.current_menu=null;
+                                };
+                                child.animation("{height:'0px'}", menu.config.period);
+                            }
+                            else {
+                                child.s.style.display = "block";
+                                child.move_end = function () {
+                                    menu.config.current_menu=null;
+                                };
+                                child
+                                    .animation(
+                                        "{height:'"
+                                        + menu.config.position[child.s.id]
+                                        + "px'}",
+                                        menu.config.period);
+                            }
                         });
             }
         });
@@ -129,8 +129,8 @@ Sparrow.menu.prototype.hidden = function () {
         if (this.config.frameDiv) {
             this.config.frameDiv.style.display = "none";
             // 隐藏其子菜单
-            for (var i = 0; i < this.config.childs.length; i++) {
-                this.config.childs[i].hidden();
+            for (var i = 0; i < this.config.children.length; i++) {
+                this.config.children[i].hidden();
             }
         }
     }
@@ -163,8 +163,8 @@ Sparrow.menu.prototype.show = function (srcElement, parentMenu) {
     this.config.frameDiv.style.top = (top - 2) + "px";
     this.config.frameDiv.style.display = "block";
     // 显示菜单同时隐藏子菜单
-    for (var i = 0; i < this.config.childs.length; i++) {
-        this.config.childs[i].hidden();
+    for (var i = 0; i < this.config.children.length; i++) {
+        this.config.children[i].hidden();
     }
     // 隐藏兄弟菜单
     for (var i = 0; i < this.config.brothers.length; i++) {

@@ -2,6 +2,14 @@
 <!DOCTYPE beans PUBLIC "-//sparrow Framework//DTD ioc Configuration//EN"
         "beans.dtd">
 <beans>
+    <!---当前进程的所有datasource实例-->
+    <bean name="dataSourceFactory" class="com.sparrow.datasource.DataSourceFactoryImpl">
+        <constructor-arg index="1" name="initDatasourceKeys" value="sparrow_default" type="string"/>
+    </bean>
+    <bean name="connectionContextHolder" class="com.sparrow.datasource.ConnectionContextHolderImpl">
+        <property name="dataSourceFactory" ref="dataSourceFactory"/>
+    </bean>
+    <bean name="initializer" class="com.sparrow.web.WebApplicationInitializer"/>
     <bean name="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxActive" value="${redis.pool.maxActive}"/>
         <property name="maxIdle" value="${redis.pool.maxIdle}"/>
@@ -19,10 +27,28 @@
     <bean name="cacheClient" class="com.sparrow.cache.impl.redis.RedisCacheClient">
         <property name="redisPool" ref="redisPool"/>
     </bean>
+    <bean name="cookieUtility" class="com.sparrow.support.web.CookieUtility">
+        <property name="cacheClient" ref="cacheClient"/>
+        <property name="backend" value="false"/>
+    </bean>
 
+    <bean name="sparrowServletContainer" class="com.sparrow.web.support.SparrowServletContainer">
+        <property name="cookieUtility" ref="cookieUtility"/>
+    </bean>
 
-    <bean name="sparrowServletContainer" class="com.sparrow.web.support.SparrowServletContainer"/>
-    <bean name="cookieUtility" class="com.sparrow.support.web.CookieUtility"/>
+    <bean name="sparrow_default" class="com.sparrow.datasource.ConnectionPool">
+        <property name="dataSourceFactory" ref="dataSourceFactory"/>
+    </bean>
+
+    <bean name="authorizingService" class="com.sparrow.authorizing.AuthorizingDemo"/>
+    <bean name="helloController" class="com.sparrow.demo.HelloController" controller="true">
+        <property name="authorizingSupport" ref="authorizingService"/>
+        <property name="servletContainer" ref="sparrowServletContainer"/>
+    </bean>
+    <bean name="elasticSearchController" class="com.sparrow.controller.ElasticSearchController" controller="true"/>
+    <bean name="sparrowHandlerInterceptor" class="com.sparrow.interceptor.SparrowHandlerInterceptor"
+          interceptor="true"/>
+    <bean name="classLoaderController" class="com.sparrow.controller.ClassLoaderController" controller="true"/>
     <bean name="previewController" class="com.sparrow.markdown.controller.PreviewController" controller="true"/>
     <bean name="yamlController" class="com.sparrow.yaml.controller.YamlController" controller="true"/>
     <bean name="commendLineFormatController" class="com.sparrow.jvm.controller.CommendLineFormatController"
@@ -30,5 +56,4 @@
     <bean name="wordCountController" class="com.sparrow.flink.controller.WordCountController" controller="true">
         <property name="cacheClient" ref="cacheClient"/>
     </bean>
-
 </beans>

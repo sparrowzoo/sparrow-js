@@ -1,3 +1,22 @@
+```aidl
+Docroot is: /opt/homebrew/var/www
+
+The default port has been set in /opt/homebrew/etc/nginx/nginx.conf to 8080 so that
+nginx can run without sudo.
+
+nginx will load all files in /opt/homebrew/etc/nginx/servers/.
+
+To restart nginx after an upgrade:
+  brew services restart nginx
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/nginx/bin/nginx -g daemon off;
+```
+
+windows install node
+---
+https://nodejs.org/en/download/
+
+
 gulp install
 ---
 https://www.gulpjs.com.cn/docs/getting-started/
@@ -31,6 +50,3 @@ add dependency
 add purecss
 
 
-windows install node
----
-https://nodejs.org/en/download/
