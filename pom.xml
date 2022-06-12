@@ -11,10 +11,6 @@
     <dependencies>
         <dependency>
             <groupId>com.sparrow</groupId>
-            <artifactId>sparrow-mvc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sparrow</groupId>
             <artifactId>sparrow-container</artifactId>
         </dependency>
         <dependency>
@@ -46,16 +42,16 @@
             <artifactId>jstl</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
-            <artifactId>sparrow-log</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
             <groupId>com.sparrow</groupId>
             <artifactId>sparrow-sharded-jedis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sparrow</groupId>
+            <artifactId>sparrow-data-source</artifactId>
         </dependency>
     </dependencies>
     <packaging>war</packaging>

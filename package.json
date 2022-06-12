@@ -1,6 +1,6 @@
 {
   "name": "sparrow-js",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "dist/sparrow.js",
   "homepage": "http://www.sparrowzoo.net",
   "scripts": {
@@ -8,8 +8,11 @@
     "dist": "coffee make dist",
     "start": "coffee test/server.coffee"
   },
-  "repository": "sparrowzoo/sparrow-js",
-  "license": "Apache",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sparrowzoo/sparrow-js.git"
+  },
+  "license": "Apache-2.0",
   "dependencies": {
     "babel-preset-es2017": "^6.24.1",
     "code-prettify": "^0.1.0",
@@ -32,5 +35,14 @@
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
     "gulp": "^4.0.2"
-  }
+  },
+  "description": "windows install node --- https://nodejs.org/en/download/",
+  "bugs": {
+    "url": "https://github.com/sparrowzoo/sparrow-js/issues"
+  },
+  "keywords": [
+    "sparrow",
+    "js"
+  ],
+  "author": "harry"
 }

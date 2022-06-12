@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
 	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
-  <context-param>
+    <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/sparrow_application_context.xml</param-value>
     </context-param>
@@ -34,7 +34,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>ValidateCode</servlet-name>
-        <url-pattern>/ValidateCode</url-pattern>
+        <url-pattern>/validate-code</url-pattern>
     </servlet-mapping>
     <servlet>
         <servlet-name>qrcode</servlet-name>
@@ -48,21 +48,24 @@
     <filter>
         <filter-name>DispatcherFilter</filter-name>
         <filter-class>com.sparrow.mvc.DispatcherFilter</filter-class>
+        <init-param>
+            <param-name>except_url</param-name>
+            <param-value>/qrcode,/validate-code</param-value>
+        </init-param>
     </filter>
     <filter-mapping>
         <filter-name>DispatcherFilter</filter-name>
-        <url-pattern>*.json</url-pattern>
+        <url-pattern>*</url-pattern>
         <dispatcher>INCLUDE</dispatcher>
         <dispatcher>REQUEST</dispatcher>
         <!--是否使用则业务端决定，框架建议注掉-->
-        <!--<dispatcher>FORWARD</dispatcher>-->
+        <!--        <dispatcher>FORWARD</dispatcher>-->
     </filter-mapping>
-
     <session-config>
         <!-- session超时时间单位为分钟 -->
         <session-timeout>120</session-timeout>
     </session-config>
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>/template/index.jsp</welcome-file>
     </welcome-file-list>
 </web-app>
