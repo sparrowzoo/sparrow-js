@@ -69,6 +69,7 @@ public class HelloController {
         loginToken.setAvatar("http://localhost");
         ServletUtility servletUtility = ServletUtility.getInstance();
         loginToken.setDeviceId(servletUtility.getDeviceId(request));
+        logger.debug("login device id {}", loginToken.getDeviceId());
         loginToken.setCent(100L);
         loginToken.setExpireAt(System.currentTimeMillis() + 1000 * 60 * 60);
         loginToken.setDays(20);
