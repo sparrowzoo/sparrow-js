@@ -9,7 +9,11 @@ import com.sparrow.protocol.AuthorizingSupport;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginToken;
 import com.sparrow.servlet.ServletContainer;
+import com.sparrow.support.IpSupport;
+import com.sparrow.support.web.ServletUtility;
+import com.sparrow.utility.web.SparrowServletUtility;
 import com.sparrow.vo.HelloVO;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,11 +63,12 @@ public class HelloController {
         return ViewWithModel.forward(new HelloVO("jsp page content from server ..."));
     }
 
-    public ViewWithModel login() throws BusinessException, CacheNotFoundException {
+    public ViewWithModel login(HttpServletRequest request) throws BusinessException, CacheNotFoundException {
         LoginToken loginToken = new LoginToken();
         loginToken.setNickName("nick-zhangsan");
         loginToken.setAvatar("http://localhost");
-        loginToken.setDeviceId("0");
+        ServletUtility servletUtility = ServletUtility.getInstance();
+        loginToken.setDeviceId(servletUtility.getDeviceId(request));
         loginToken.setCent(100L);
         loginToken.setExpireAt(System.currentTimeMillis() + 1000 * 60 * 60);
         loginToken.setDays(20);
