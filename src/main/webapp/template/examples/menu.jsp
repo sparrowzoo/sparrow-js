@@ -7,9 +7,9 @@
 <div id="divVerticalMenu">
     <div class="pure-menu">
         <a class="pure-menu-heading"
-           href="javascript:$.browser.addFavorite('http://www.sparrowzoo.net','Sparrow 程序员在线工具')">收藏本站</a>
+           href="javascript:$.browser.addFavorite('http://www.sparrowzoo.com','Sparrow 为程序员服务')">收藏本站</a>
 
-        <a class="pure-menu-heading" href="http://www.sparrowzoo.net">首页</a>
+        <a class="pure-menu-heading" href="http://www.sparrowzoo.com">首页</a>
     </div>
     <div class="pure-menu">
 
@@ -54,10 +54,6 @@
             </li>
             <li class="pure-menu-item"><a href="${root_path}/examples/message/message"
                                           class="pure-menu-link">message</a></li>
-
-            <li class="pure-menu-item">
-                <a href="${root_path}/examples/message/window.html" class="pure-menu-link">window</a>
-            </li>
         </ul>
     </div>
 
