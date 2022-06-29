@@ -9,7 +9,7 @@
     <title>Sparrow 框架静态成员</title>
     <jsp:include page="/template/examples/head.jsp"/>
     <script language="JavaScript" type="text/javascript">
-        require(['src/main/webapp/template/examples/sparrow/sparrow', 'domReady'], function ($, dom) {
+        require(['sparrow', 'domReady'], function ($, dom) {
             var end = (new Date("2099/12/31 23:59:59")).valueOf();
             $.countDown(end, new Date().valueOf(), $("txtTimer"));
 

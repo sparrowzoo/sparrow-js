@@ -8,7 +8,7 @@
     <meta http-equiv="pragma" content="no-cache"/>
     <meta http-equiv="cache-control" content="no-cache"/>
     <meta http-equiv="expires" content="0"/>
-    <j:script src="$resource/assets/scripts-dev/require.js"/>
+    <j:script src="$resource/scripts/require.js"/>
     <script type="text/javascript">
         requirejs.config({
             baseUrl: "/assets/scripts-dev",

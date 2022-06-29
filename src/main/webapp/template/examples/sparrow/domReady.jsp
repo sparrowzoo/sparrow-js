@@ -11,12 +11,10 @@
 
     <jsp:include page="/template/examples/head.jsp"/>
     <!--test document ready-->
-    <j:script src="$resource/assets/scripts-all/sparrow.js"/>
     <script language="JavaScript" type="text/javascript">
-        require(['src/main/webapp/template/examples/sparrow/sparrow','domReady'], function ($, dom) {
+        require(['sparrow','domReady'], function ($, dom) {
             console.log("require ready");
             console.log("dom ready -"+dom);
-
             console.log("helle {0}".format(" sparrow !"));
         });
 
