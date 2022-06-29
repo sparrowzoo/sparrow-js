@@ -78,7 +78,7 @@ Sparrow.menu.prototype.vertical = function () {
 
                 $(item_link)
                     .bind(
-                        "onmouseover",
+                        "onclick",
                         function (e) {
                             $.event(e).cancelBubble();
                             var child = $("#" + this.id + "_child");
