@@ -17,14 +17,12 @@
     <jsp:include page="/template/examples/menu.jsp"/>
     <div id="main">
         <div class="header">
-            <h1>sparrow js</h1>
-            <h2>sparrow js demo</h2>
+            <h1>Sparrow</h1>
+            <h2>高性能 零依赖的java WEB前后端全栈框架</h2>
         </div>
 
         <div class="content">
-            welcome to sparrow js framework
-
-            <h3>github</h3>
+            <h2>github</h2>
             <ul>
                 <li>
                     git clone <a href="https://github.com/sparrowzoo/sparrow-js">https://github.com/sparrowzoo/sparrow-js</a>
@@ -36,16 +34,39 @@
                 <li>
                     cd ${workspace}/sparrow-js
                 </li>
-                <li>npm install</li>
+            </ul>
+
+            <h2>JAVA环境依赖</h2>
+            <ul>
                 <li>
-                    gulp dev (开发版) OR gulp (release版)
+                    64bit JDK 1.8
+                </li>
+                <li>
+                    MAVEN 3.3.9
+                </li>
+                <li>
+                    Git
                 </li>
             </ul>
 
-            <h3>环境依赖</h3>
+            <h2>Js环境依赖</h2>
             <ul>
                 <li>
-                    JDK1.8
+                    install node
+                    https://nodejs.org/en/download/
+                </li>
+                <li>
+                    gulp install
+                    https://www.gulpjs.com.cn/docs/getting-started/
+                </li>
+            </ul>
+            <h2>Build</h2>
+            <ul>
+                <li>
+                    js: gulp dev (开发版) OR gulp (release版)
+                </li>
+                <li>
+                    java:mvn clean install -Dmaven.test.skip
                 </li>
             </ul>
         </div>
