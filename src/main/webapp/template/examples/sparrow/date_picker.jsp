@@ -11,7 +11,7 @@
 
     <script language="JavaScript" type="text/javascript">
         var datePicker = null;
-        require(['/sparrow', 'domReady'], function ($, dom) {
+        require(['sparrow', 'domReady'], function ($, dom) {
             datePicker = new $.datePicker("datePicker");
             datePicker.config.srcElement = $("txtDatePicker");
             datePicker.init();

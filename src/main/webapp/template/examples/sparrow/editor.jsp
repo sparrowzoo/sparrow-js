@@ -10,7 +10,7 @@
           content="A layout example with a side menu that hides on mobile, just like the Pure website.">
     <title>Sparrow Editor &ndash; Sparrow JS Framework</title>
     <jsp:include page="/template/examples/head.jsp"/>
-    <j:style href="$resource/assets/styles/sparrow.css"/>
+    <j:style href="$resource/styles/sparrow.css"/>
 
     <script type="text/javascript">
         var editor = null;
@@ -20,7 +20,7 @@
             alert(editor.getEditorContent());
         }
 
-        require(['src/main/webapp/template/examples/sparrow/sparrow', 'domReady!'], function ($, dom) {
+        require(['sparrow', 'domReady!'], function ($, dom) {
             $.url.upload="http://upload.sparrowzoo.com";
             editor = new Sparrow.editor("editor");
             editor.initImageUploadEvent();

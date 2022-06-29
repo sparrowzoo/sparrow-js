@@ -8,10 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dispatcher 请求分发 Sparrow JS Framework</title>
     <jsp:include page="/template/examples/head.jsp"/>
-    <j:script src="$resource/assets/scripts-dev/sparrow.js"/>
+    <j:script src="$resource/scripts/sparrow.js"/>
 
     <script language="javascript" type="text/javascript"
-            src="/assets/scripts-dev/code-prettify/sparrow-prettify.js?lang=css&skin=desert"></script>
+            src="/scripts/code-prettify/sparrow-prettify.js?lang=css&skin=desert"></script>
 
     <script language="JavaScript" type="text/javascript">
         document.ready(function () {
