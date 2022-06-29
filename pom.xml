@@ -53,6 +53,18 @@
             <groupId>com.sparrow</groupId>
             <artifactId>sparrow-data-source</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sparrow</groupId>
+            <artifactId>sparrow-protocol</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sparrow</groupId>
+            <artifactId>sparrow-loader</artifactId>
+        </dependency>
     </dependencies>
     <packaging>war</packaging>
 

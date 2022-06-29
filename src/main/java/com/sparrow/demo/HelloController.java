@@ -9,16 +9,21 @@ import com.sparrow.protocol.AuthorizingSupport;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginToken;
 import com.sparrow.servlet.ServletContainer;
+import com.sparrow.support.IpSupport;
+import com.sparrow.support.web.ServletUtility;
+import com.sparrow.utility.web.SparrowServletUtility;
 import com.sparrow.vo.HelloVO;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * @author harry
- */
 public class HelloController {
 
     private AuthorizingSupport authorizingSupport;
 
     private ServletContainer servletContainer;
+
+    private static Logger logger = LoggerFactory.getLogger(HelloController.class);
 
     public void setAuthorizingSupport(AuthorizingSupport authorizingSupport) {
         this.authorizingSupport = authorizingSupport;
@@ -29,6 +34,7 @@ public class HelloController {
     }
 
     public ViewWithModel hello() throws BusinessException {
+        logger.info("hello");
         return ViewWithModel.forward("hello", new HelloVO("我来自遥远的sparrow 星球,累死我了..."));
     }
 
@@ -57,19 +63,21 @@ public class HelloController {
         return ViewWithModel.forward(new HelloVO("jsp page content from server ..."));
     }
 
-    public ViewWithModel login() throws BusinessException, CacheNotFoundException {
+    public ViewWithModel login(HttpServletRequest request) throws BusinessException, CacheNotFoundException {
         LoginToken loginToken = new LoginToken();
         loginToken.setNickName("nick-zhangsan");
         loginToken.setAvatar("http://localhost");
-        loginToken.setDeviceId("0");
+        ServletUtility servletUtility = ServletUtility.getInstance();
+        loginToken.setDeviceId(servletUtility.getDeviceId(request));
+        logger.debug("login device id {}", loginToken.getDeviceId());
         loginToken.setCent(100L);
-        loginToken.setExpireAt(System.currentTimeMillis() + 1000*60*60);
+        loginToken.setExpireAt(System.currentTimeMillis() + 1000 * 60 * 60);
         loginToken.setDays(20);
         loginToken.setUserId(1L);
         loginToken.setUserName("zhangsan");
         loginToken.setActivate(true);
-        String sign= authorizingSupport.sign(loginToken,"111111");
-        servletContainer.rootCookie(User.PERMISSION,sign, 6);
+        String sign = authorizingSupport.sign(loginToken, "111111");
+        servletContainer.rootCookie(User.PERMISSION, sign, 6);
         return ViewWithModel.redirect("authorizing", loginToken);
     }
 

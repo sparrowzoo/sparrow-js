@@ -30,7 +30,7 @@
                     git clone <a href="https://github.com/sparrowzoo/sparrow-js">https://github.com/sparrowzoo/sparrow-js</a>
                 </li>
                 <li>
-                    git clone markdown:<a href="https://github.com/sparrowzoo/sparrow-markdown">https://github.com/sparrowzoo/sparrow-markdown</a>
+                    git clone markdown:<a href="https://github.com/sparrowzoo/sparrow-shell">https://github.com/sparrowzoo/sparrow-shell</a>
                     依赖sparrow java 框架,可参见 <a href="https://github.com/sparrowzoo/sparrow-shell">https://github.com/sparrowzoo/sparrow-shell</a>
                 </li>
                 <li>
@@ -39,6 +39,13 @@
                 <li>npm install</li>
                 <li>
                     gulp dev (开发版) OR gulp (release版)
+                </li>
+            </ul>
+
+            <h3>环境依赖</h3>
+            <ul>
+                <li>
+                    JDK1.8
                 </li>
             </ul>
         </div>

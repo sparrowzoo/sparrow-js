@@ -9,20 +9,20 @@ var plugins = require('gulp-load-plugins')();
 var paths = {
     styles: {
         src: ['source/styles/**/*.*'],
-        dest: 'src/main/webapp/assets/styles/',
+        dest: 'assets/styles/',
         code_pretty_src:['node_modules/code-prettify/styles/*.css','node_modules/code-prettify/src/*.css'],
-        code_pretty_dest:'src/main/webapp/assets/scripts-dev/code-prettify/skins',
+        code_pretty_dest:'assets/scripts-dev/code-prettify/skins',
         purecss_src: 'node_modules/purecss/build/*.*',
-        purecss_dest: 'src/main/webapp/assets/styles/pure-css'
+        purecss_dest: 'assets/styles/pure-css'
     },
 
     images: {
         src: 'source/images/**/*.*',
-        dest: 'src/main/webapp/assets/images'
+        dest: 'assets/images'
     },
     medias: {
         src: 'source/media/**/*.*',
-        dest: 'src/main/webapp/assets/media'
+        dest: 'assets/media'
     },
     scripts_dev: {
         src: [
@@ -61,25 +61,25 @@ var paths = {
             'source/scripts/share.js',
             'source/scripts/tail.js'
         ],
-        dest: 'src/main/webapp/assets/scripts-dev/'
+        dest: 'assets/scripts-dev/'
     },
     scripts_min: {
-        src: ['src/main/webapp/assets/scripts-dev/sparrow.js'
+        src: ['assets/scripts-dev/sparrow.js'
             ,'node_modules/requirejs/require.js'
             ,'node_modules/requirejs-domready/domReady.js'
             ,'node_modules/echarts/dist/echarts.js'],
-        dest: 'src/main/webapp/assets/scripts'
+        dest: 'assets/scripts'
     },
     dependency: {
         src: ['node_modules/requirejs/require.js',
             'node_modules/requirejs-domready/domReady.js',
             'node_modules/echarts/dist/echarts.js'
         ],
-        dest: 'src/main/webapp/assets/scripts-dev',
+        dest: 'assets/scripts-dev',
         code_pretty_src:['node_modules/code-prettify/src/*.js'],
-        code_pretty_dest:'src/main/webapp/assets/scripts-dev/code-prettify',
+        code_pretty_dest:'assets/scripts-dev/code-prettify',
         code_pretty_run_src:'source/scripts/sparrow-prettify.js',
-        code_pretty_run_desc:'src/main/webapp/assets/scripts-dev/code-prettify'
+        code_pretty_run_desc:'assets/scripts-dev/code-prettify'
     }
 };
 
@@ -90,7 +90,7 @@ var paths = {
 function clean() {
     // You can use multiple globbing patterns as you would with `gulp.src`,
     // for example if you are using del 2.0 or above, return its promise
-    return del(['src/main/webapp/assets']);
+    return del(['assets']);
 }
 
 /*

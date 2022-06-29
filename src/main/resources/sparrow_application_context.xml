@@ -45,10 +45,8 @@
         <property name="authorizingSupport" ref="authorizingService"/>
         <property name="servletContainer" ref="sparrowServletContainer"/>
     </bean>
-    <bean name="elasticSearchController" class="com.sparrow.controller.ElasticSearchController" controller="true"/>
     <bean name="sparrowHandlerInterceptor" class="com.sparrow.interceptor.SparrowHandlerInterceptor"
           interceptor="true"/>
-    <bean name="classLoaderController" class="com.sparrow.controller.ClassLoaderController" controller="true"/>
     <bean name="previewController" class="com.sparrow.markdown.controller.PreviewController" controller="true"/>
     <bean name="yamlController" class="com.sparrow.yaml.controller.YamlController" controller="true"/>
     <bean name="commendLineFormatController" class="com.sparrow.jvm.controller.CommendLineFormatController"
