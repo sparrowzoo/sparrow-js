@@ -6,15 +6,15 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Sparrow DatePicker &ndash; Sparrow JS Framework</title>
+    <title>Sparrow DatePicker &ndash; Sparrow JS Framework</title>
     <jsp:include page="/template/examples/head.jsp"/>
 
     <script language="JavaScript" type="text/javascript">
-        var datePicker=null;
-        require(['src/main/webapp/template/examples/sparrow/sparrow','domReady'], function ($, dom) {
-             datePicker= new $.datePicker("datePicker");
-                datePicker.config.srcElement = $("txtDatePicker");
-                datePicker.init();
+        var datePicker = null;
+        require(['/sparrow', 'domReady'], function ($, dom) {
+            datePicker = new $.datePicker("datePicker");
+            datePicker.config.srcElement = $("txtDatePicker");
+            datePicker.init();
         });
     </script>
 </head>
