@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>从零开始的轻量级js框架,麻雀虽小，但五脏俱全 &ndash; Sparrow JS Framework</title>
+    <title>高性能、零依赖的Java前后端全栈框架,麻雀虽小，但五脏俱全 &ndash; Sparrow Framework</title>
     <jsp:include page="/template/examples/head.jsp"/>
     <j:style href="$resource/styles/modal.css"/>
 </head>
@@ -22,17 +22,13 @@
         </div>
 
         <div class="content">
-            <h2>github</h2>
+            <h2>Github</h2>
             <ul>
                 <li>
                     git clone <a href="https://github.com/sparrowzoo/sparrow-js">https://github.com/sparrowzoo/sparrow-js</a>
                 </li>
                 <li>
-                    git clone markdown:<a href="https://github.com/sparrowzoo/sparrow-shell">https://github.com/sparrowzoo/sparrow-shell</a>
-                    依赖sparrow java 框架,可参见 <a href="https://github.com/sparrowzoo/sparrow-shell">https://github.com/sparrowzoo/sparrow-shell</a>
-                </li>
-                <li>
-                    cd ${workspace}/sparrow-js
+                    git clone <a href="https://github.com/sparrowzoo/sparrow-shell">https://github.com/sparrowzoo/sparrow-shell</a>
                 </li>
             </ul>
 
@@ -52,21 +48,29 @@
             <h2>Js环境依赖</h2>
             <ul>
                 <li>
-                    install node
-                    https://nodejs.org/en/download/
+                    node
+                    https://nodejs.org/en/download
                 </li>
                 <li>
-                    gulp install
-                    https://www.gulpjs.com.cn/docs/getting-started/
+                    gulp
+                    https://www.gulpjs.com.cn/docs/getting-started
                 </li>
             </ul>
             <h2>Build</h2>
             <ul>
+
                 <li>
-                    js: gulp dev (开发版) OR gulp (release版)
+                    <H4>java</H4>
+                    cd ${workspace}/sparrow-shell/sparrow-bom<br/>
+                    mvn clean install -Dmaven.test.skip<br/>
+                    cd ${workspace}/sparrow-shell<br/>
+                    mvn clean install -Dmaven.test.skip<br/>
                 </li>
                 <li>
-                    java:mvn clean install -Dmaven.test.skip
+                    <h4>JS</h4>
+                    cd ${workspace}/sparrow-js<br/>
+                    gulp dev (开发版) <br/>
+                    gulp (release版)<br/>
                 </li>
             </ul>
         </div>
