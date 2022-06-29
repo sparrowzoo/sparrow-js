@@ -1271,5 +1271,3 @@ Sparrow.tree.prototype = {
         }
     }
 };
-
-

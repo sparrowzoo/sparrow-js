@@ -9,10 +9,10 @@
 <!--[if gt IE 8]><!-->
 <j:style href="$resource/styles/layouts.css"/>
 <!--<![endif]-->
-<j:script src="$resource/scripts-dev/require.js"/>
+<j:script src="$resource/scripts/require.js"/>
 <script type="text/javascript">
     requirejs.config({
-        baseUrl: "${resource}/scripts-dev",
+        baseUrl: "${resource}/scripts",
         paths: {
            // Sparrow: 'sparrow'
         }
