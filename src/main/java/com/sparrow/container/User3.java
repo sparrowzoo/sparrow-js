@@ -8,17 +8,17 @@ import com.sparrow.protocol.POJO;
 
 public class User3 implements POJO {
 
-  private String user;
+    private String user;
 
-  public User3(String user) {
-    this.user = user;
-  }
+    public User3(String user) {
+        this.user = user;
+    }
 
-  public String getUser() {
-    return user;
-  }
+    public String getUser() {
+        return user;
+    }
 
-  public void setUser(String user) {
-    this.user = user;
-  }
+    public void setUser(String user) {
+        this.user = user;
+    }
 }
