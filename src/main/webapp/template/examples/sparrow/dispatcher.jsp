@@ -18,7 +18,7 @@
             PR.prettyPrint();
             $.dispatcher.eventRegistry = [{
                 id: "btn1",//控件标签 id
-                eventName:"onclick",
+                eventName: "onclick",
                 delegate: function (e, srcElement) {
                     alert(srcElement.value);
                     srcElement.value = "update";
@@ -92,7 +92,7 @@
         </pre>
         <div class="content">
             <input type="button" id="btn1" class="pure-button" value="insert"/>
-            <input type="button" id="btn2"  class="pure-button" value="delete"/>
+            <input type="button" id="btn2" class="pure-button" value="delete"/>
         </div>
     </div>
 </div>
