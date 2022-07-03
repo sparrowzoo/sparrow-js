@@ -11,7 +11,7 @@ var paths = {
         src: ['source/styles/**/*.*'],
         dest: 'assets/styles/',
         code_pretty_src:['node_modules/code-prettify/styles/*.css','node_modules/code-prettify/src/*.css'],
-        code_pretty_dest:'assets/scripts-dev/code-prettify/skins',
+        code_pretty_dest:'assets/scripts/code-prettify/skins',
         purecss_src: 'node_modules/purecss/build/*.*',
         purecss_dest: 'assets/styles/pure-css'
     },
@@ -36,7 +36,6 @@ var paths = {
             'source/scripts/ajax.js',
             'source/scripts/validator.js',
             'source/scripts/pager.js',
-            'source/scripts/sparrow.js',
             // 'src/scripts/tooltip.js',
             'source/scripts/tabs.js',
             'source/scripts/windows.js',
@@ -61,13 +60,18 @@ var paths = {
             'source/scripts/share.js',
             'source/scripts/tail.js'
         ],
-        dest: 'assets/scripts-dev/'
+        dest: 'source/scripts/'
+    },
+    ext: {
+        src: ['source/ext/**/*.*'],
+        dest: 'assets/ext/'
     },
     scripts_min: {
-        src: ['assets/scripts-dev/sparrow.js'
-            ,'node_modules/requirejs/require.js'
-            ,'node_modules/requirejs-domready/domReady.js'
-            ,'node_modules/echarts/dist/echarts.js'],
+        src: ['source/scripts/sparrow.js'
+            ,'source/scripts/require.js'
+            ,'source/scripts/domReady.js'
+            ,'source/scripts/echarts.js'
+            ,'source/scripts/*-prettify/*.*'],
         dest: 'assets/scripts'
     },
     dependency: {
@@ -75,11 +79,11 @@ var paths = {
             'node_modules/requirejs-domready/domReady.js',
             'node_modules/echarts/dist/echarts.js'
         ],
-        dest: 'assets/scripts-dev',
+        dest: 'source/scripts',
         code_pretty_src:['node_modules/code-prettify/src/*.js'],
-        code_pretty_dest:'assets/scripts-dev/code-prettify',
+        code_pretty_dest:'source/scripts/code-prettify',
         code_pretty_run_src:'source/scripts/sparrow-prettify.js',
-        code_pretty_run_desc:'assets/scripts-dev/code-prettify'
+        code_pretty_run_desc:'source/scripts/code-prettify'
     }
 };
 
@@ -126,6 +130,11 @@ function images() {
         .pipe(gulp.dest(paths.images.dest));
 }
 
+function ext() {
+    return gulp.src(paths.ext.src)
+        .pipe(gulp.dest(paths.ext.dest));
+}
+
 function dependency() {
     gulp.src(paths.dependency.src)
         .pipe(gulp.dest(paths.dependency.dest));
@@ -145,7 +154,7 @@ function medias() {
 }
 
 function scripts_dev() {
-    return gulp.src(paths.scripts_dev.src, {base: 'source/script-dev'})
+    return gulp.src(paths.scripts_dev.src, {base: 'source/script'})
         .pipe(plugins.concat('sparrow.js'))
         .pipe(gulp.dest(paths.scripts_dev.dest));
 }
@@ -173,9 +182,11 @@ exports.watch = plugins.watch;
  *  [10:21:42] Did you forget to signal async completion?
  *  use gulp.series is ok
  */
-var build_dev = gulp.series(clean, styles, scripts_dev,dependency,images, medias);
+var build_dev = gulp.series(clean, scripts_dev,dependency);
 
-var build = gulp.series(scripts);
+//var build_dev = gulp.series(clean, styles, scripts_dev,dependency,images, medias,ext);
+
+var build = gulp.series(clean,scripts,styles,images,medias,ext);
 
 /*
  * You can still use `gulp.task` to expose tasks
