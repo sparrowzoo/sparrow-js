@@ -36,6 +36,7 @@ var paths = {
             'source/scripts/ajax.js',
             'source/scripts/validator.js',
             'source/scripts/pager.js',
+            'source/scripts/sparrow-core.js',
             // 'src/scripts/tooltip.js',
             'source/scripts/tabs.js',
             'source/scripts/windows.js',
