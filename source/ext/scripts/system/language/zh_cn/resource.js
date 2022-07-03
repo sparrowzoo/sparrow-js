@@ -1,0 +1,105 @@
+var lang = {
+    command: {
+        save: "保存",
+        cancel: "取消",
+        update: "更新",
+        add: "新建"
+    },
+    message: {
+        save: "资源[{0}]新建成功",
+        update: "资源{0}更新成功",
+        delete_hash_child: "该资源下有子资源，故不能删除！",
+        delete_confirm: "资源删除后将无法恢复，您确认将该资源删除？",
+        del: "删除成功！",
+        list_url_not_set: "未设置列表链接",
+        accessDenied:"访问被拒绝"
+    }
+};
+var resourceInfo =
+{
+    txtParentResourceName: {
+        errorCtrlId: "errorParentResourceName",
+        prompt: "新资源的所属资源",
+        nullError: "请选择新资源的所属资源"
+    },
+    hdnParentId:{},
+    txtResourceCode: {
+        errorCtrlId: "errorResourceCode",
+        prompt: "资源编码要继承自上级资源编码",
+        nullError: "资源编码不能为空，且要继承自上级资源编码"
+    },
+    txtResourceName: {
+        errorCtrlId: "errorResourceName",
+        prompt: "资源名称",
+        nullError: "资源名称不能为空"
+    },
+    txtAccessUrl: {
+        errorCtrlId: "errorAccessUrl",
+        prompt: "请输入访问该资源的url路径<br/>例如:JAVA资源的url为java",
+        allowNull:true
+    },
+    txtResourceType: {
+        errorCtrlId: "errorResourceType",
+        prompt: "1系统菜单 2系统页面 3事件",
+        options:[1, 2, 3],
+        defaultValue:2
+    },
+    txtMaxRecordCount: {
+        errorCtrlId: "errorMaxRecordCount",
+        prompt: "资源下允许新建的最大记录数<br/>-1为不限制(默认)",
+        defaultValue: -1
+    },
+    txtManager: {
+        errorCtrlId: "errorManager",
+        prompt: "资源的管理员 默认为admin",
+        defaultValue:"admin"
+    },
+    txtManageUrl: {
+        errorCtrlId: "errorManageUrl",
+        prompt: "资源后台管理地址",
+        defaultValue:"/cms/manage/$access"
+    },
+    txtNewUrl: {
+        errorCtrlId: "errorNewUrl",
+        prompt: "资源发帖时的地址",
+        defaultValue:"/cms/article"
+    },
+    txtListUrl: {
+        errorCtrlId: "errorListUrl",
+        prompt: "资源列表显示地址",
+        defaultValue:"/list/$access"
+    },
+    txtDetailUrl: {
+        errorCtrlId: "errorDetailUrl",
+        prompt: "资源下内容显示地址",
+        defaultValue:"/detail"
+    },
+    txtUploadKey: {
+        errorCtrlId: "errorUploadKey",
+        prompt: "请输入文件上传的AttachKey,与system_config.properties中配置的一致。",
+        allowNull:true
+    },
+    txtOpenType: {
+        errorCtrlId: "errorOpenType",
+        prompt: "打开方式 _blank _self _parent 默认为_self",
+        option:["_blank","_self","_parent"],
+        defaultValue:"_self"
+    },
+    txtStatus: {
+        errorCtrlId: "errorStatus",
+        prompt: "0无效 1 有效 2 只有admin有管理权限",
+        options: [0, 1, 2, 3],
+        defaultValue:1
+    },
+    hdnCover: {
+        allowNull:true
+    },
+    hdnIco: {
+        allowNull:true
+    },
+    txtRemark: {
+        errorCtrlId: "errorRemark",
+        prompt: "资源简介，不超过500 字",
+        allowNull:true
+    }
+};

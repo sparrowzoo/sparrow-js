@@ -12,7 +12,7 @@ public class AuthorizingDemo extends AbstractAuthorizingService {
     }
 
     @Override
-    public boolean isAuthorized(LoginToken user, String url, String code) throws BusinessException {
+    public boolean isAuthorized(LoginToken user, String url) throws BusinessException {
         return true;
     }
 }
