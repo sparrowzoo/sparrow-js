@@ -29,7 +29,7 @@
 
     <div class="content">
         <br/>
-        <form action="login.do" method="post" class="pure-form pure-form-aligned">
+        <form action="/login.do" method="post" class="pure-form pure-form-aligned">
             <fieldset>
                 <div class="pure-control-group">
                     <label for="txtusername">
