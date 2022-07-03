@@ -5,13 +5,13 @@ import com.sparrow.constant.User;
 import com.sparrow.exception.CacheNotFoundException;
 import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
+import com.sparrow.mvc.result.ResultAssembler;
 import com.sparrow.protocol.AuthorizingSupport;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginToken;
+import com.sparrow.protocol.Result;
 import com.sparrow.servlet.ServletContainer;
-import com.sparrow.support.IpSupport;
 import com.sparrow.support.web.ServletUtility;
-import com.sparrow.utility.web.SparrowServletUtility;
 import com.sparrow.vo.HelloVO;
 import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -78,7 +78,8 @@ public class HelloController {
         loginToken.setActivate(true);
         String sign = authorizingSupport.sign(loginToken, "111111");
         servletContainer.rootCookie(User.PERMISSION, sign, 6);
-        return ViewWithModel.redirect("authorizing", loginToken);
+        Result result = ResultAssembler.assemble(new Result<>(loginToken, "login_success"));
+        return ViewWithModel.transit("/login_success", "/", result);
     }
 
     public ViewWithModel authorizing() {
