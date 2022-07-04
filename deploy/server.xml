@@ -21,6 +21,7 @@
                 <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
                        resourceName="UserDatabase"/>
             </Realm>
+            <!--appBase 对应根目录的项目目录 (www,upload,webapps)bin    conf   lib    logs work webapps  upload www-->
             <Host appBase="www" autoDeploy="true" name="www.sparrowzoo.com"
                   unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">
                 <Context path="" docBase="/workspace/sparrow-js/target/sparrow-js-1.0.0-SNAPSHOT.war"
