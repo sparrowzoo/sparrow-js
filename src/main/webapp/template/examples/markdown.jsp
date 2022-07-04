@@ -13,7 +13,7 @@
     <!--[if gt IE 8]><!-->
     <j:style href="$resource/styles/layouts.css"/>
     <!--<![endif]-->
-    <j:script src="$resource/scripts-dev/sparrow.js"/>
+    <j:script src="$resource/scripts/sparrow.js"/>
 
     <script language="javascript" type="text/javascript"
             src="/assets/scripts-dev/code-prettify/sparrow-prettify.js?lang=css&skin=sunburst"></script>
