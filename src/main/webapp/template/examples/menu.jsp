@@ -107,6 +107,8 @@
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">MVC</a>
         <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a target="_blank" href="${root_path}/upload" class="pure-menu-link">文件上传</a>
+            </li>
             <li class="pure-menu-item"><a target="_blank" href="${root_path}/hello-world" class="pure-menu-link">hello-world</a>
             </li>
 
