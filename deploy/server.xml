@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+    <Listener className="org.apache.catalina.startup.VersionLoggerListener"/>
+    <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on"/>
+    <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener"/>
+    <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"/>
+    <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener"/>
+    <GlobalNamingResources>
+        <Resource name="UserDatabase" auth="Container"
+                  type="org.apache.catalina.UserDatabase"
+                  description="User database that can be updated and saved"
+                  factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+                  pathname="conf/tomcat-users.xml"/>
+    </GlobalNamingResources>
+    <Service name="Catalina">
+        <Connector port="7777" protocol="HTTP/1.1"
+                   connectionTimeout="20000"
+                   redirectPort="8443"/>
+        <Engine name="Catalina" defaultHost="localhost">
+            <Realm className="org.apache.catalina.realm.LockOutRealm">
+                <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+                       resourceName="UserDatabase"/>
+            </Realm>
+            <!--appBase 对应根目录的项目目录 (www,upload,webapps)bin    conf   lib    logs work webapps  upload www-->
+            <Host appBase="www" autoDeploy="true" name="www.sparrowzoo.com"
+                  unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">
+                <Context path="" docBase="/workspace/sparrow-js/target/sparrow-js-1.0.0-SNAPSHOT.war"
+                         reloadable="true"/>
+            </Host>
+            <Host appBase="upload" autoDeploy="true" name="upload.sparrowzoo.com"
+                  unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">
+                <Context path=""
+                         docBase="/workspace/sparrow-integration/sparrow-file/file-gateway/target/file-gateway-1.0.0-SNAPSHOT.war"
+                         reloadable="true"/>
+            </Host>
+        </Engine>
+    </Service>
+</Server>
