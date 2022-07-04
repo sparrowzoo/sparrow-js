@@ -39,11 +39,11 @@
             }
             $.url.upload = "http://upload.sparrowzoo.com";
             document.domain = $.browser.cookie.root_domain;
-            $("#null.forum").attr("src", "http://upload.sparrowzoo.com/file-upload?path-key=forum");
+            $("#null.forum").attr("src", "http://upload.sparrowzoo.com/file-upload?path-key=forum&amp;t=" + $.random());
 
-            $("#null.group").attr("src", "http://upload.sparrowzoo.com/file-upload?path-key=group");
+            $("#null.group").attr("src", "http://upload.sparrowzoo.com/file-upload?path-key=group&amp;t=" + $.random());
 
-            $("#null.forum_cover").attr("src", "http://upload.sparrowzoo.com/file-upload?path-key=forum_cover");
+            $("#null.forum_cover").attr("src", "http://upload.sparrowzoo.com/file-upload?path-key=forum_cover&amp;t=" + $.random());
 
         });
     </script>

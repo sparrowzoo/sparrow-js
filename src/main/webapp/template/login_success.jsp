@@ -27,7 +27,7 @@
     </div>
     <div class="content">
         <br/>
-        <span url="${pageContext.request.queryString}" id="timer">5</span>秒以后将自动跳转,或者<a
+        <span class="highlight" url="${pageContext.request.queryString}" id="timer">5</span>秒以后将自动跳转,或者<a
             href="${pageContext.request.queryString}" target="_self">直接点击这里跳转</a>
         <script type="text/javascript">
             $.waitRedirect("timer");
