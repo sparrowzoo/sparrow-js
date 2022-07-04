@@ -61,10 +61,6 @@
             <groupId>com.sparrow</groupId>
             <artifactId>sparrow-protocol</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.sparrow</groupId>
-            <artifactId>sparrow-loader</artifactId>
-        </dependency>
     </dependencies>
     <packaging>war</packaging>
 
