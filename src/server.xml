@@ -71,27 +71,16 @@
                        resourceName="UserDatabase"/>
             </Realm>
 
-            <Host appBase="webapps" autoDeploy="true" name="www.sparrowzoo.com"
+            <Host appBase="www" autoDeploy="true" name="www.sparrowzoo.com"
                   unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">
                 <Context path="" docBase="/workspace/sparrow-js/target/sparrow-js-1.0.0-SNAPSHOT.war"
                          reloadable="true"/>
             </Host>
-            <Host appBase="webapps" autoDeploy="true" name="upload.sparrowzoo.com"
+            <Host appBase="upload" autoDeploy="true" name="upload.sparrowzoo.com"
                   unpackWARs="true" xmlNamespaceAware="false" xmlValidation="false">
                 <Context path="" docBase="/workspace/sparrow-integration/sparrow-file/file-gateway/target/file-gateway-1.0.0-SNAPSHOT.war"
                          reloadable="true"/>
             </Host>
-
-            <Host name="localhost" appBase="webapps"
-                  unpackWARs="true" autoDeploy="true">
-
-                <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
-                       prefix="localhost_access_log" suffix=".txt"
-                       pattern="%h %l %u %t &quot;%r&quot; %s %b"/>
-
-            </Host>
-
-
         </Engine>
     </Service>
 </Server>
