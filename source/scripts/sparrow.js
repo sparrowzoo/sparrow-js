@@ -763,7 +763,7 @@ Sparrow.url = {
     }),
     _resource: function (path) {
         var scripts = document.scripts;
-        var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts-dev/sparrow.js"];
+        var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts/sparrow.js"];
         if (path) {
             sparrowPath = [path];
         }

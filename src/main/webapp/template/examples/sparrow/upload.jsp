@@ -11,7 +11,7 @@
     <j:script src="$resource/scripts/require.js"/>
     <script type="text/javascript">
         requirejs.config({
-            baseUrl: "/assets/scripts-dev",
+            baseUrl: "/assets/scripts",
             paths: {
                 // Sparrow: 'sparrow'
             }
