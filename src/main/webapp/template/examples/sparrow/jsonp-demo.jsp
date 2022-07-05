@@ -10,7 +10,7 @@
     <jsp:include page="/template/examples/head.jsp"/>
     <script type="text/javascript">
         require(['sparrow','domReady!'], function ($, dom) {
-            $("jsonp","jsonp.html", "jsonp_id");
+            $("jsonp","/examples/sparrow/jsonp", "jsonp_id");
         });
         function callback(args) {
             document.getElementById("jsonp").innerHTML=args;
