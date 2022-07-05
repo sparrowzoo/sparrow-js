@@ -9,7 +9,7 @@
      <title>JSONP &ndash; Sparrow JS Framework</title>
     <jsp:include page="/template/examples/head.jsp"/>
     <script type="text/javascript">
-        require(['src/main/webapp/template/examples/sparrow/sparrow','domReady!'], function ($, dom) {
+        require(['sparrow','domReady!'], function ($, dom) {
             $("jsonp","jsonp.html", "jsonp_id");
         });
         function callback(args) {
