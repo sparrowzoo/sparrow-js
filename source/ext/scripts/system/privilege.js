@@ -106,9 +106,11 @@
             // title=manageURL+code
             for (var i = 0; i < allResource.length; i++) {
                 var resource = allResource[i];
-                resourceTree.add(resource.id,
+                resourceTree.add(
+                    resource.id,
                     resource.parentId,
-                    resource.name, "javascript:void(0)",
+                    resource.name,
+                    "javascript:void(0)",
                     resource.manageUrl,
                     undefined, undefined, true, resource.code,
                     resourceTree.config.imageDir + "/base.gif");
@@ -175,6 +177,7 @@
         var data = "selectedStrategies=" + selectedStrategy.join()
             + "&selectedResources=" + resourceTree.getAllCheckedTitle()
             + "&groupId=" + $("hdnGroupId").value;
+
         $.ajax.json($.url.root + privilegeController.api.set,
             data, function (result) {
                 alert(result);
