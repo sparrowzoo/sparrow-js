@@ -58,6 +58,8 @@ var resourceController = {
             }];
         $.dispatcher.bind();
 
+
+
         resourceController.resourceTree = new $.tree("resourceTree");
         var resourceTree = resourceController.resourceTree;
         resourceTree.config.reBuildTree = function () {
