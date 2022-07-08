@@ -11,9 +11,9 @@ var paths = {
         src: ['source/styles/**/*.*'],
         dest: 'assets/styles/',
         code_pretty_src:['node_modules/code-prettify/styles/*.css','node_modules/code-prettify/src/*.css'],
-        code_pretty_dest:'assets/scripts/code-prettify/skins',
+        code_pretty_dest:'source/styles/code-prettify/skins',
         purecss_src: 'node_modules/purecss/build/*.*',
-        purecss_dest: 'assets/styles/pure-css'
+        purecss_dest: 'source/styles/pure-css'
     },
 
     images: {
@@ -108,13 +108,14 @@ function styles() {
         // pass in options to the stream
         .pipe(gulp.dest(paths.styles.dest));
 
+}
+function styles_dev() {
     gulp.src(paths.styles.code_pretty_src)
         .pipe(gulp.dest(paths.styles.code_pretty_dest));
 
     return gulp.src(paths.styles.purecss_src)
         .pipe(gulp.dest(paths.styles.purecss_dest));
 }
-
 
 function scripts() {
     return gulp.src(paths.scripts_min.src)
@@ -183,7 +184,7 @@ exports.watch = plugins.watch;
  *  [10:21:42] Did you forget to signal async completion?
  *  use gulp.series is ok
  */
-var build_dev = gulp.series(clean, scripts_dev,dependency);
+var build_dev = gulp.series(clean, scripts_dev,styles_dev,dependency);
 
 //var build_dev = gulp.series(clean, styles, scripts_dev,dependency,images, medias,ext);
 

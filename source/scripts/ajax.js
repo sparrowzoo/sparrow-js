@@ -45,7 +45,7 @@ Sparrow.ajax = {
             return;
         }
         if (result.code !== this.ajax.SUCCESS) {
-            $.message(result.error);
+            $.message(result.message);
         }
     },
     gourl: function (url) {
@@ -143,7 +143,7 @@ Sparrow.ajax = {
                     }
                 }
                 else {
-                    $.message(result.error,$.ajax.srcElement);
+                    $.message(result.message,$.ajax.srcElement);
                 }
             }, data, srcElement);
     },
