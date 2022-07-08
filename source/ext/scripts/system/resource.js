@@ -59,7 +59,6 @@ var resourceController = {
         $.dispatcher.bind();
 
 
-
         resourceController.resourceTree = new $.tree("resourceTree");
         var resourceTree = resourceController.resourceTree;
         resourceTree.config.reBuildTree = function () {
@@ -84,8 +83,7 @@ var resourceController = {
             if (listUrl != "") {
                 listUrl = $.url.root + listUrl + "?code=" + cn.businessEntity.code;
                 alert(listUrl);
-            }
-            else {
+            } else {
                 $.message(lang.message.list_url_not_set, this);
             }
         };
@@ -101,7 +99,7 @@ var resourceController = {
         resourceTree.config.orderURL = $.url.root + this.api.order;
         resourceTree.config.treeFrameId = "divResourceTree";
         resourceTree.config.floatTreeId = "divSelectingResourceTree";
-        resourceTree.config.treeNodeClass="Menu";
+        resourceTree.config.treeNodeClass = "Menu";
         resourceTree.config.usePlusMinusIcons = false;
         resourceTree.config.useTreeIdInNodeClass = true;
         resourceTree.config.useLevelInNodeClass = true;

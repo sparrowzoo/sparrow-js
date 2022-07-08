@@ -3,7 +3,7 @@ Sparrow.ajax = {
     referWindow: window,
     url: null,
     srcElement: null,
-    SUCCESS:"0",
+    SUCCESS: "0",
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
             if (this._objPool[i].readyState === 0
@@ -38,7 +38,7 @@ Sparrow.ajax = {
         }
         return http_request;
     },
-    _callback:function (xmlHttpRequest) {
+    _callback: function (xmlHttpRequest) {
         var result = xmlHttpRequest.responseText.json();
         if (result == null) {
             $.message("json parse error " + xmlHttpRequest.responseText);
@@ -84,11 +84,10 @@ Sparrow.ajax = {
                         if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
                             console.log("login false");
                             var config = objXMLHttp.responseText.json();
-                            document.domain=$.browser.cookie.root_domain;
+                            document.domain = $.browser.cookie.root_domain;
                             if (config.inFrame) {
                                 //window.parent.location.href = config.url;
-                            }
-                            else {
+                            } else {
                                 $.window(config);
                             }
                         } else if (objXMLHttp.responseText
@@ -121,9 +120,9 @@ Sparrow.ajax = {
         }
     },
     json: function (url, data, callback, srcElement) {
-        if(typeof data ==="function"){
-            callback=data;
-            data=null;
+        if (typeof data === "function") {
+            callback = data;
+            data = null;
         }
 
         $.ajax.req("POST", url,
@@ -137,13 +136,11 @@ Sparrow.ajax = {
                 if (result.code === $.ajax.SUCCESS) {
                     if (callback) {
                         callback(result);
+                    } else {
+                        $.message(result.data, $.ajax.srcElement);
                     }
-                    else {
-                        $.message(result.data,$.ajax.srcElement);
-                    }
-                }
-                else {
-                    $.message(result.message,$.ajax.srcElement);
+                } else {
+                    $.message(result.message, $.ajax.srcElement);
                 }
             }, data, srcElement);
     },
@@ -151,6 +148,6 @@ Sparrow.ajax = {
         $.ajax.req("GET", url, $.ajax._callback);
     },
     post: function (url, data) {
-        $.ajax.req("POST", url,$.ajax._callback, data);
+        $.ajax.req("POST", url, $.ajax._callback, data);
     }
 };
