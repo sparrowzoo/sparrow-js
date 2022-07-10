@@ -8,12 +8,15 @@ var plugins = require('gulp-load-plugins')();
 
 var paths = {
     styles: {
-        src: ['source/styles/**/*.*'],
+        src: ['source/styles/*.css'],
         dest: 'assets/styles/',
         code_pretty_src:['node_modules/code-prettify/styles/*.css','node_modules/code-prettify/src/*.css'],
         code_pretty_dest:'source/styles/code-prettify/skins',
+        code_pretty_assets_dest:'assets/styles/code-prettify/skins',
+
         purecss_src: 'node_modules/purecss/build/*.*',
-        purecss_dest: 'source/styles/pure-css'
+        purecss_dest: 'source/styles/pure-css',
+        purecss_assets_dest: 'assets/styles/pure-css'
     },
 
     images: {
@@ -102,12 +105,17 @@ function clean() {
  * Define our tasks using plain functions
  */
 function styles() {
-     gulp.src(paths.styles.src)
+    gulp.src(paths.styles.code_pretty_src)
+        .pipe(gulp.dest(paths.styles.code_pretty_assets_dest));
+
+    gulp.src(paths.styles.purecss_src)
+        .pipe(gulp.dest(paths.styles.purecss_assets_dest));
+
+    return  gulp.src(paths.styles.src)
         .pipe(plugins.less())
         .pipe(plugins.cleanCss())
         // pass in options to the stream
         .pipe(gulp.dest(paths.styles.dest));
-
 }
 function styles_dev() {
     gulp.src(paths.styles.code_pretty_src)
@@ -188,7 +196,7 @@ var build_dev = gulp.series(clean, scripts_dev,styles_dev,dependency);
 
 //var build_dev = gulp.series(clean, styles, scripts_dev,dependency,images, medias,ext);
 
-var build = gulp.series(clean,scripts,styles,images,medias,ext);
+var build = gulp.series(clean,scripts,images,medias,ext,styles);
 
 /*
  * You can still use `gulp.task` to expose tasks
