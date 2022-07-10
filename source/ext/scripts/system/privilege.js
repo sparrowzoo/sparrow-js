@@ -1,6 +1,6 @@
 ﻿var privilegeController = {
     api: {
-        enable_list: "/group/enable-list.json",
+        enable_group_list: "/group/enable-list.json",
         init: "/privilege/init.json",
         set: "/privilege/set.json"
     },
@@ -8,6 +8,8 @@
     groupTree: null,
 // 资源树
     resourceTree: null,
+
+    urlIdPair:{},
 
 // 加载角色树
     load: function () {
@@ -21,11 +23,7 @@
         groupTree.config.useTreeIdInNodeClass = true;
         groupTree.config.useLevelInNodeClass = true;
         groupTree.resetIcon();
-        // 延迟加载 鼠标点击时加载
-        groupTree.config.loadFloatTree = function () {
-            privilegeController.initGroup();
-        };
-
+        privilegeController.initGroup();
 
         $("#txtGroupName").bind("onclick", function () {
             groupTree.show(event, 325, 400);
@@ -47,9 +45,9 @@
         };
     },
 
-// 角色、用户组回调
+// 角色、用户组初始化
     initGroup: function () {
-        $.ajax.json($.url.root + privilegeController.api.enable_list, function (data) {
+        $.ajax.json($.url.root + privilegeController.api.enable_group_list, function (data) {
             groupTree.aNodes = [];
             groupTree.add(0, -1, "");
 
@@ -101,22 +99,22 @@
             resourceTree.resetIcon();
             resourceTree.add(0, -1, "");
             var selectedResourceId = [];
-            // (id, pid, name, url, title, target,
-            // childCount,showCtrl,remark,icon)
-            // title=manageURL+code
+            // id, pid, name, url, title, target, childCount,showCtrl, businessEntity, icon
+            // title=manageURL
             for (var i = 0; i < allResource.length; i++) {
                 var resource = allResource[i];
+                this.urlIdPair[resource.manageUrl]=resource.id+"";
                 resourceTree.add(
                     resource.id,
                     resource.parentId,
                     resource.name,
                     "javascript:void(0)",
                     resource.manageUrl,
-                    undefined, undefined, true, resource.code,
+                    undefined, undefined, true, resource,
                     resourceTree.config.imageDir + "/base.gif");
             }
             for (var i = 0; i < selectedResource.length; i++) {
-                selectedResourceId.push(selectedResource[i].id);
+                selectedResourceId.push(this.urlIdPair[selectedResource[i].resource]);
             }
 
             $("divResource").innerHTML = resourceTree;
@@ -128,8 +126,10 @@
     writeStrategy: function (allStrategy, selectedStrategy) {
         var strategyHTML = [];
         var selectedStrategyId = [];
-        for (var i = 0; i < selectedStrategy.length; i++) {
-            selectedStrategyId.push(selectedStrategy[i].resourceStrategy);
+        if(selectedStrategy) {
+            for (var i = 0; i < selectedStrategy.length; i++) {
+                selectedStrategyId.push(selectedStrategy[i].resourceStrategy);
+            }
         }
         strategyHTML.push('<div class="pure-form pure-form-aligned"><fieldset>');
         for (var i = 0; i < allStrategy.length; i++) {
@@ -143,17 +143,17 @@
             strategyHTML.push('<div class="pure-control-group">');
             strategyHTML.push('<label>' + strategy.name + '</label>');
             if (strategy.value.trim() === "CheckBox") {
-                strategyHTML.push('<input id="' + strategy.code
+                strategyHTML.push('<input id="' + strategy.strategy
                     + '" name="strategy" value="true" type="checkbox"');
-                if (selectedStrategyId.indexOf(strategy.code) >= 0) {
+                if (selectedStrategyId.indexOf(strategy.strategy) >= 0) {
                     strategyHTML.push(' checked="true"');
                 }
                 strategyHTML.push(' /></div>');
                 continue;
             }
-            strategyHTML.push('<input id="' + strategy.code
+            strategyHTML.push('<input id="' + strategy.strategy
                 + '" name="strategy" type="text" ');
-            if (selectedStrategyId.indexOf(strategy.code) > -0) {
+            if (selectedStrategyId.indexOf(strategy.strategy) > -0) {
                 strategyHTML.push(' value="' + selectedStrategy[index].value + '"');
             }
             strategyHTML.push(' /></div>');
@@ -164,7 +164,8 @@
 
 
     submit: function () {
-        var strategyArray = $("&strategy");
+        //不用缓存
+        var strategyArray = $("&strategy",false);
         var selectedStrategy = [];
         for (var i = 0; i < strategyArray.length; i++) {
             if (strategyArray[i].type === "text") {
@@ -181,7 +182,7 @@
         $.ajax.json($.url.root + privilegeController.api.set,
             data, function (result) {
                 alert(result);
-                $.alert(lang.message.setPrivilegeSucessMessage.forms($("txtGroupName").value), "smile");
+                $.alert(lang.message.setPrivilegeSuccessMessage.format($("txtGroupName").value), "smile");
             });
     }
 }

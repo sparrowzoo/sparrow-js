@@ -56,7 +56,7 @@ var groupController = {
             }];
         $.dispatcher.bind();
 
-        $("&group.groupType").each(function () {
+        $("&groupType").each(function () {
             if(this.checked){
                 groupController.initGroupType(this.value);
             }

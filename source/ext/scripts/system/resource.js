@@ -80,7 +80,7 @@ var resourceController = {
         $.tree.prototype.dbs = function (nodeId) {
             var cn = resourceTree.aNodes[nodeId];
             var listUrl = $.toString(cn.businessEntity.listUrl);
-            if (listUrl != "") {
+            if (listUrl !== "") {
                 listUrl = $.url.root + listUrl + "?code=" + cn.businessEntity.code;
                 alert(listUrl);
             } else {

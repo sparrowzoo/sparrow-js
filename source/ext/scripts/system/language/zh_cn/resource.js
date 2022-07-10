@@ -56,23 +56,23 @@ var resourceInfo =
     },
     txtManageUrl: {
         errorCtrlId: "errorManageUrl",
-        prompt: "资源后台管理地址",
-        defaultValue:"/cms/manage/$access"
+        prompt: "资源后台管理地址<br/> CMS 版块示例 /cms/manage/$access，类型为系统菜单时与编码一致",
+        nullError: "资源后台管理地址<br/> CMS 版块示例 /cms/manage/$access，类型为系统菜单时与编码一致"
     },
     txtNewUrl: {
         errorCtrlId: "errorNewUrl",
-        prompt: "资源发帖时的地址",
-        defaultValue:"/cms/article"
+        prompt: "资源发帖时的地址 CMS 版块示例 /cms/article",
+        defaultValue:""
     },
     txtListUrl: {
         errorCtrlId: "errorListUrl",
-        prompt: "资源列表显示地址",
-        defaultValue:"/list/$access"
+        prompt: "资源列表显示地址<br/> CMS 版块示例 /list/$access,类型为系统菜单时与编码一致",
+        nullError:"资源列表显示地址<br/> CMS 版块示例 /list/$access,类型为系统菜单时与编码一致"
     },
     txtDetailUrl: {
         errorCtrlId: "errorDetailUrl",
-        prompt: "资源下内容显示地址",
-        defaultValue:"/detail"
+        prompt: "资源下内容显示地址 CMS 版块示例  /detail",
+        defaultValue:""
     },
     txtUploadKey: {
         errorCtrlId: "errorUploadKey",

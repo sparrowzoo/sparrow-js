@@ -207,15 +207,3 @@ Date.prototype.format = function (fmt) {
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
-
-Object.prototype.value=function(arg) {
-   if(arg.indexOf(".")<0){
-      return this[arg];
-   }
-   var properties=arg.split(".");
-   var current=this;
-   for(var i=0;i<properties.length;i++){
-       current=current[properties[i]];
-   }
-   return current;
-}
