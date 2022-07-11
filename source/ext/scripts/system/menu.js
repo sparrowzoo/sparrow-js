@@ -52,11 +52,9 @@
 
         for (var i = 0; i < menuList.length; i++) {
             var url = "";
-            if (menuList[i].manageUrl && menuList[i].resourceType != 1) {
+            if (menuList[i].actualManageUrl && menuList[i].resourceType != 1) {
                 url = $.url.root
-                    + menuList[i].manageUrl.replace("$access",
-                        menuList[i].accessUrl).replace("$code",
-                        menuList[i].code);
+                    + menuList[i].actualManageUrl;
             }
             if ($.isNullOrEmpty(menuList[i].icoUrl)) {
                 menuList[i].icoUrl = $.DEFAULT_RESOURCE_ICO_URL;
