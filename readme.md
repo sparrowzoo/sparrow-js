@@ -34,7 +34,16 @@ TypeError: Cannot read property 'apply' of undefined issue
 ---
 https://github.com/gulpjs/gulp-cli/issues/84
 
-## 为 supervisor 创建新用户 否则启动后无法监控其状态 导致重试
+
+## supervisor 报错
+
+```
+entered FATAL state, too many start retries too quickly
+```
+
+## 解决方案
+ 
+为 supervisor 创建新用户 否则启动后无法监控其状态 导致重试
 ```
 # groupadd webuser
 # useradd -g webuser tomcat
