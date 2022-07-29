@@ -64,6 +64,7 @@ var findPassword={
         parentLevel: 0
     }
 };
+
 var regInfo = {
     txtEmail: {
         errorCtrlId: 'errorEmail',
