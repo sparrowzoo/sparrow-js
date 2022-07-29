@@ -20,6 +20,8 @@
             <h1>Sparrow</h1>
             <h2>高性能 零依赖的java WEB前后端全栈框架</h2>
             <h3>Sparrow Admin 后台管理系统 Demo上线</h3>
+            <h4><a href="https://www.jianshu.com/u/2477662600e7" target="_blank">志哥博客</a></h4>
+
             <h4><a href="http://admin.sparrowzoo.com" target="_blank">admin.sparrowzoo.com</a> 持续更新中...</h4>
         </div>
 

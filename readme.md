@@ -33,3 +33,10 @@ Or, if you don't want/need a background service you can just run:
 TypeError: Cannot read property 'apply' of undefined issue
 ---
 https://github.com/gulpjs/gulp-cli/issues/84
+
+## 为 supervisor 创建新用户 否则启动后无法监控其状态 导致重试
+```
+# groupadd webuser
+# useradd -g webuser tomcat
+# chown -R tomcat ~/apache-tomcat-8.5.81
+```
