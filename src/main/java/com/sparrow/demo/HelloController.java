@@ -6,7 +6,7 @@ import com.sparrow.exception.CacheNotFoundException;
 import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
 import com.sparrow.mvc.result.ResultAssembler;
-import com.sparrow.protocol.AuthorizingSupport;
+import com.sparrow.protocol.Authenticator;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginToken;
 import com.sparrow.protocol.Result;
@@ -19,14 +19,14 @@ import org.slf4j.LoggerFactory;
 
 public class HelloController {
 
-    private AuthorizingSupport authorizingSupport;
+    private Authenticator authenticator;
 
     private ServletContainer servletContainer;
 
     private static Logger logger = LoggerFactory.getLogger(HelloController.class);
 
-    public void setAuthorizingSupport(AuthorizingSupport authorizingSupport) {
-        this.authorizingSupport = authorizingSupport;
+    public void setAuthenticator(Authenticator authenticator) {
+        this.authenticator = authenticator;
     }
 
     public void setServletContainer(ServletContainer servletContainer) {
@@ -76,7 +76,7 @@ public class HelloController {
         loginToken.setUserId(1L);
         loginToken.setUserName("zhangsan");
         loginToken.setActivate(true);
-        String sign = authorizingSupport.sign(loginToken, "111111");
+        String sign = authenticator.sign(loginToken, "111111");
         servletContainer.rootCookie(User.PERMISSION, sign, 6);
         Result result = ResultAssembler.assemble(new Result<>(loginToken, "login_success"));
         return ViewWithModel.transit("/login_success", "/", result);

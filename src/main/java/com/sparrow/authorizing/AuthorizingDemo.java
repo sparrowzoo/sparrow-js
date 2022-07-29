@@ -1,18 +1,11 @@
 package com.sparrow.authorizing;
 
-import com.sparrow.protocol.BusinessException;
-import com.sparrow.protocol.LoginToken;
-import com.sparrow.support.AbstractAuthorizingService;
+import com.sparrow.support.AbstractAuthenticatorService;
 
-public class AuthorizingDemo extends AbstractAuthorizingService {
+public class AuthorizingDemo extends AbstractAuthenticatorService {
     @Override
     protected String getSecret(Long userId) {
         //getPasswordByUserId();
         return "111111";
-    }
-
-    @Override
-    public boolean isAuthorized(LoginToken user, String url) throws BusinessException {
-        return true;
     }
 }
