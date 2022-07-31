@@ -98,7 +98,7 @@ var paths = {
 function clean() {
     // You can use multiple globbing patterns as you would with `gulp.src`,
     // for example if you are using del 2.0 or above, return its promise
-    return del(['assets']);
+    return del(['assets/ext']);
 }
 
 /*
