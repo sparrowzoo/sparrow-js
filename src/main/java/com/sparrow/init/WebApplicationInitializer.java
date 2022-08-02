@@ -1,13 +1,15 @@
-package com.sparrow.web;
+package com.sparrow.init;
 
 import com.sparrow.container.Container;
 import com.sparrow.support.Initializer;
+import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author harry
  */
+@Named("initializer")
 public class WebApplicationInitializer implements Initializer {
 
     private final Logger logger = LoggerFactory.getLogger(WebApplicationInitializer.class);

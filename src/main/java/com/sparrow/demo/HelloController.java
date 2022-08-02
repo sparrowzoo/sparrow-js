@@ -33,7 +33,7 @@ public class HelloController {
         this.servletContainer = servletContainer;
     }
 
-    public ViewWithModel hello() throws BusinessException {
+    public ViewWithModel hello() {
         logger.info("hello");
         return ViewWithModel.forward("hello", new HelloVO("我来自遥远的sparrow 星球,累死我了..."));
     }
@@ -42,7 +42,7 @@ public class HelloController {
         throw new BusinessException(SparrowError.SYSTEM_SERVER_ERROR);
     }
 
-    public ViewWithModel fly() throws BusinessException {
+    public ViewWithModel fly() {
         return ViewWithModel.redirect("fly-here", new HelloVO("我是从fly.jsp飞过来，你是不是没感觉？"));
     }
 
