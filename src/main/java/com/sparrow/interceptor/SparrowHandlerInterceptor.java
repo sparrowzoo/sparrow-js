@@ -2,12 +2,14 @@ package com.sparrow.interceptor;
 
 
 import com.sparrow.servlet.HandlerInterceptor;
+import javax.inject.Named;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by harry on 2018/2/1.
  */
+@Named
 public class SparrowHandlerInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response) throws Exception {
