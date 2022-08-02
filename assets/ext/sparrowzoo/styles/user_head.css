@@ -1,0 +1,41 @@
+.headTitle {
+    width: 680px;
+    height: 50px;
+    border-bottom: #ccc 1px solid;
+    color: #ff9900;
+    font-weight: bold;
+    font-size: 16pt;
+    text-align: left;
+    line-height:50px;
+}
+
+.headContent {
+    height: 420px;
+    width: 680px;
+}
+
+.currentUserHead {
+    float: left;
+    height: 420px;
+    width: 196px;
+    border-right: #ccc 1px solid;
+}
+
+.currentUserHead img {
+    height: 150px;
+    width: 150px;
+    margin-top: 20px;
+}
+
+.localUpload {
+    float: right;
+    height: 420px;
+    width: 480px;
+    border-left: #ccc 1px solid;
+}
+
+.localUpload img {
+    width: 300px;
+    height: 300px;
+    margin-top: 20px;
+}
