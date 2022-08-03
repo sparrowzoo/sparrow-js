@@ -42,10 +42,15 @@ entered FATAL state, too many start retries too quickly
 ```
 
 ## 解决方案
- 
-为 supervisor 创建新用户 否则启动后无法监控其状态 导致重试
+- tomcat 启动用run 非start start 为守护进程无法监控
+```
+/root/tomcat-sparrow/bin/catalina.sh run
+```
+- 为 supervisor 创建新用户 否则启动后无法监控其状态 导致重试
 ```
 # groupadd webuser
 # useradd -g webuser tomcat
-# chown -R tomcat ~/apache-tomcat-8.5.81
+# chown -R tomcat /root/tomcat-sparrow
+# chown -R tomcat /var/log/supervisor
+# chown -R tomcat /var/log/sparrow
 ```
