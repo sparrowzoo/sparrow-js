@@ -208,6 +208,8 @@ Sparrow.file = {
                     / parseFloat(uploadProgress.contentLength)
                     * 1000000)
             / 10000 + "%";
+
+
         statusString
             .push("正在上传文件<br/><span class='highlight'>《"
                 + $.file
@@ -221,6 +223,11 @@ Sparrow.file = {
             + "<br/>");
         statusString.push("上传进度:" + status);
         $("#divStatus", false).html(statusString.toString());
+        if (status === "100%") {
+            window.setTimeout(function () {
+                $.file.clearStatus();
+            }, 1000);
+        }
     },
     getStatus: function (showState, editor) {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
@@ -234,14 +241,14 @@ Sparrow.file = {
      * @param key path-key
      * @param pathKeySuffixPair {path-key:suffix}
      */
-    initImageUploadEvent: function (upload_path, key, pathKeySuffixPair) {
-        var fileFrame=$("null."+key);
-        if(fileFrame==null){
+    initImageUploadEvent: function (upload_path, key, pathKeySuffixPair,isShowProgress) {
+        var fileFrame = $("null." + key);
+        if (fileFrame == null) {
             return;
         }
-        document.domain=$.browser.cookie.root_domain;
+        document.domain = $.browser.cookie.root_domain;
         if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
-        fileFrame.src=upload_path+"/file-upload?path-key="+key;
+        fileFrame.src = upload_path + "/file-upload?path-key=" + key;
         //第一次加载初始化
         $.file.uploadCallBack = function (fileInfo, editor, size) {
             console.info(size);
@@ -267,7 +274,7 @@ Sparrow.file = {
                 $("#error" + suffix).class("prompt");
                 $("#error" + suffix).html("");
             };
-            $.file.uploadDelegate(false, key, editor);
+            $.file.uploadDelegate(isShowProgress, key, editor);
         };
     }
 };
