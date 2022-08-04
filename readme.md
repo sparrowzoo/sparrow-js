@@ -59,4 +59,6 @@ sudo chmod -R 750 /workspace/upload
 属主：rwx=4+2+1=7。
 属组：r-x=4+0+1=5。
 其他：---=0+0+0=0
+
+groups www //show groups of www
 ```
