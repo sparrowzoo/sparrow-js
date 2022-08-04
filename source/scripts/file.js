@@ -32,7 +32,7 @@ Sparrow.file = {
     validateUploadFile: function (f, key, editor) {
         if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
             "jpeg", "gif", "png"], "errorImgForumIco")) {
-            $.file.uploadDelegate(false, key, editor);
+            $.file.uploadDelegate(key, editor);
         }
     },
     callbackValidate: function (uploadProgress) {
@@ -136,11 +136,10 @@ Sparrow.file = {
         return result;
     },
     // 如果editor为null则表示非编辑器控件
-    uploadDelegate: function (isShowProgress, key, editor,
+    uploadDelegate: function(key, editor,
                               srcElement) {
-        this.isShowProgress = isShowProgress;
         // 如果显示状态并且状态控件已经显示则说明已经有文件正在上传中...
-        if (isShowProgress !== false && $("divStatus")) {
+        if (this.isShowProgress !== false && $("divStatus")) {
             $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
             return false;
         }
@@ -159,7 +158,7 @@ Sparrow.file = {
         // 设置当前文件的序列号
         this.setFileSerialNumber(fileInfoArray[2]);
         // 如果要显示状态
-        if (isShowProgress !== false) {
+        if ($.file.isShowProgress !== false) {
             // 如果状态控件不存在则创建
             if (!$("divStatus")) {
                 var sparrowUploadFrame = $(uploadFrame);
@@ -179,11 +178,9 @@ Sparrow.file = {
             // 设置状态跟踪
             if (typeof (editor) === "undefined" || editor === null) {
                 // 非编辑器控件
-                this.wit = window.setInterval("$.file.getStatus(" + isShowProgress
-                    + ")", 1000);
+                this.wit = window.setInterval("$.file.getStatus()", 1000);
             } else {
-                this.wit = window.setInterval("$.file.getStatus(" + isShowProgress
-                    + "," + editor.obj + ")", 1000);
+                this.wit = window.setInterval("$.file.getStatus()", 1000);
             }
         }
         // 提交
@@ -229,7 +226,7 @@ Sparrow.file = {
             }, 1000);
         }
     },
-    getStatus: function (showState, editor) {
+    getStatus: function () {
         // 根据当前文件的序列号,实时获取当前文件的上传状态
         $("jsonp", $.url.upload + "/file-upload?file-serial-number="
             + this.getFileSerialNumber() + "&t="
@@ -241,7 +238,7 @@ Sparrow.file = {
      * @param key path-key
      * @param pathKeySuffixPair {path-key:suffix}
      */
-    initImageUploadEvent: function (upload_path, key, pathKeySuffixPair,isShowProgress) {
+    initImageUploadEvent: function (upload_path, key, pathKeySuffixPair) {
         var fileFrame = $("null." + key);
         if (fileFrame == null) {
             return;
@@ -274,7 +271,7 @@ Sparrow.file = {
                 $("#error" + suffix).class("prompt");
                 $("#error" + suffix).html("");
             };
-            $.file.uploadDelegate(isShowProgress, key, editor);
+            $.file.uploadDelegate(key, editor);
         };
     }
 };

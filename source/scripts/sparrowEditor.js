@@ -1518,7 +1518,7 @@ Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
                         .getFileName(clientFileName), uploadProgress.fileUrl);
                 }
             };
-            $.file.uploadDelegate(true, key, editor);
+            $.file.uploadDelegate(key, editor);
         }
     };
 };
