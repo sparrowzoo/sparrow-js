@@ -349,152 +349,152 @@ Sparrow.editor = function (objName, parentName) {
             face: [
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/01.gif",
+                        + "/images/sparrowEditor/face/01.gif",
                     name: "呲牙"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/02.gif",
+                        + "/images/sparrowEditor/face/02.gif",
                     name: "不嘛"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/03.gif",
+                        + "/images/sparrowEditor/face/03.gif",
                     name: "哭泣"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/04.gif",
+                        + "/images/sparrowEditor/face/04.gif",
                     name: "嘟嘟"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/05.gif",
+                        + "/images/sparrowEditor/face/05.gif",
                     name: "嗯嗯"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/06.gif",
+                        + "/images/sparrowEditor/face/06.gif",
                     name: "思考下"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/07.gif",
+                        + "/images/sparrowEditor/face/07.gif",
                     name: "翻跟斗"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/08.gif",
+                        + "/images/sparrowEditor/face/08.gif",
                     name: "我靠"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/09.gif",
+                        + "/images/sparrowEditor/face/09.gif",
                     name: "扫射"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/10.gif",
+                        + "/images/sparrowEditor/face/10.gif",
                     name: "嘘!"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/11.gif",
+                        + "/images/sparrowEditor/face/11.gif",
                     name: "害羞"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/12.gif",
+                        + "/images/sparrowEditor/face/12.gif",
                     name: "眯眯"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/13.gif",
+                        + "/images/sparrowEditor/face/13.gif",
                     name: "求保佑"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/14.gif",
+                        + "/images/sparrowEditor/face/14.gif",
                     name: "晕"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/15.gif",
+                        + "/images/sparrowEditor/face/15.gif",
                     name: "来一拳"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/16.gif",
+                        + "/images/sparrowEditor/face/16.gif",
                     name: "胜利"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/17.gif",
+                        + "/images/sparrowEditor/face/17.gif",
                     name: "嚎叫"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/18.gif",
+                        + "/images/sparrowEditor/face/18.gif",
                     name: "BIBI"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/19.gif",
+                        + "/images/sparrowEditor/face/19.gif",
                     name: "哼哼"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/20.gif",
+                        + "/images/sparrowEditor/face/20.gif",
                     name: "冷汗"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/21.gif",
+                        + "/images/sparrowEditor/face/21.gif",
                     name: "泼墨"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/22.gif",
+                        + "/images/sparrowEditor/face/22.gif",
                     name: "吐血"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/23.gif",
+                        + "/images/sparrowEditor/face/23.gif",
                     name: "扣鼻子"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/24.gif",
+                        + "/images/sparrowEditor/face/24.gif",
                     name: "挠挠脸"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/25.gif",
+                        + "/images/sparrowEditor/face/25.gif",
                     name: "舔手指"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/26.gif",
+                        + "/images/sparrowEditor/face/26.gif",
                     name: "吃饭啦"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/27.gif",
+                        + "/images/sparrowEditor/face/27.gif",
                     name: "打哈欠"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/28.gif",
+                        + "/images/sparrowEditor/face/28.gif",
                     name: "拜拜"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/29.gif",
+                        + "/images/sparrowEditor/face/29.gif",
                     name: "抽一口"
                 },
                 {
                     url: $.url.resource
-                    + "/images/sparrowEditor/face/30.gif",
+                        + "/images/sparrowEditor/face/30.gif",
                     name: "杀死"
                 }]
         }
@@ -559,8 +559,8 @@ Sparrow.editor = function (objName, parentName) {
             }
         },
         // 验证方法
-        validate: function (validateConfig,nsOfLoginCallback) {
-            if (nsOfLoginCallback!=null&&!$.browser.isLogin()) {
+        validate: function (validateConfig, nsOfLoginCallback) {
+            if (nsOfLoginCallback != null && !$.browser.isLogin()) {
                 $.user.login.dialog(nsOfLoginCallback);
                 return false;
             }
@@ -587,11 +587,11 @@ Sparrow.editor = function (objName, parentName) {
                 this.parentObject.config.attach.formIndex);
         },
         // 表单提交的js方法 (需要显示调用)
-        submit: function (validateConfig,nsOfLoginCallback) {
+        submit: function (validateConfig, nsOfLoginCallback) {
             // 获取当前编辑器
             var editor = this.parentObject;
             $(editor.config.contentCtrlId).value = editor.frame.contentWindow.document.body.innerHTML;
-            if (this.validate(validateConfig,nsOfLoginCallback)) {
+            if (this.validate(validateConfig, nsOfLoginCallback)) {
                 // 直接提交
                 this._submit();
             } else {
@@ -1243,8 +1243,7 @@ Sparrow.editor.prototype.insertVideo = function () {
                             editor.frame.contentWindow.document.body.innerHTML += videoHtml;
                         }
                     });
-        }
-        else {
+        } else {
             videoHtml = '<embed src="{0}" quality="high" wmode="opaque" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="500" height="500"/>'.format(flashUrl);
             if (tempNode) {
                 tempNode.innerHTML = videoHtml;

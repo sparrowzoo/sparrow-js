@@ -10,10 +10,10 @@ var resourceController = {
     },
     resourceTree: null,
     selectingResourceTree: null,
-    load: function (upload_path) {
+    load: function () {
         var pathKeySuffixPair = {'resource': 'Ico', 'resource_cover': 'Cover'};
-        $.file.initImageUploadEvent(upload_path, 'resource', pathKeySuffixPair);
-        $.file.initImageUploadEvent(upload_path, 'resource_cover', pathKeySuffixPair);
+        $.file.initImageUploadEvent('resource', pathKeySuffixPair);
+        $.file.initImageUploadEvent('resource_cover', pathKeySuffixPair);
         $.dispatcher.eventRegistry = [
             {
                 id: "btnCancel",
