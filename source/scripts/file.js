@@ -136,7 +136,7 @@ Sparrow.file = {
         return result;
     },
     // 如果editor为null则表示非编辑器控件
-    uploadDelegate: function(key, editor,
+    uploadDelegate: function (key, editor,
                               srcElement) {
         // 如果显示状态并且状态控件已经显示则说明已经有文件正在上传中...
         if (this.isShowProgress !== false && $("divStatus")) {
@@ -233,19 +233,21 @@ Sparrow.file = {
             + Math.random() + "&callback=progressCallback", "uploadProgress");
     },
     /**
-     *
-     * @param upload_path upload.sparrowzoo.com
      * @param key path-key
      * @param pathKeySuffixPair {path-key:suffix}
      */
-    initImageUploadEvent: function (upload_path, key, pathKeySuffixPair) {
+    initImageUploadEvent: function (key, pathKeySuffixPair) {
+        if (!$.url.upload) {
+            console.error("please config $.url.upload the default config is $.url.root ["+$.url.root+"]");
+            $.url.upload = $.url.root;
+        }
         var fileFrame = $("null." + key);
         if (fileFrame == null) {
             return;
         }
         document.domain = $.browser.cookie.root_domain;
         if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
-        fileFrame.src = upload_path + "/file-upload?path-key=" + key;
+        fileFrame.src = $.url.upload + "/file-upload?path-key=" + key;
         //第一次加载初始化
         $.file.uploadCallBack = function (fileInfo, editor, size) {
             console.info(size);
@@ -265,11 +267,20 @@ Sparrow.file = {
                     return;
                 }
 
-                $("#div" + suffix).html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
-                    + "'/></a>");
-                $("#hdn" + suffix).value(uploadingProgress.fileUrl);
-                $("#error" + suffix).class("prompt");
-                $("#error" + suffix).html("");
+                var divContainer = $("#div" + suffix);
+                if (divContainer != null) {
+                    divContainer.html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
+                        + "'/></a>");
+                }
+                var hdnWebUrl = $("#hdn" + suffix);
+                if (hdnWebUrl != null) {
+                    hdnWebUrl.value(uploadingProgress.fileUrl);
+                }
+                var errorPrompt = $("#error" + suffix);
+                if (errorPrompt != null) {
+                    errorPrompt.class("prompt");
+                    $("#error" + suffix).html("");
+                }
             };
             $.file.uploadDelegate(key, editor);
         };

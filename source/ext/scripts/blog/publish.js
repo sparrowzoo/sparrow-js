@@ -35,7 +35,7 @@ document.ready(function () {
         } else {
             $("btnSubmit").disabled = true;
             threadInfo.hdnTags=null;
-            return v.getValidateResult(threadInfo,false);
+            return $.v.getValidateResult(threadInfo,false);
         }
     };
     threadEditor.initImageUploadEvent();

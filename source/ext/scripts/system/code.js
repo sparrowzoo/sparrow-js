@@ -9,8 +9,8 @@ var codeController = {
     },
     codeTree: null,
     selectingCodeTree: null,
-    load: function (upload_path) {
-        $.file.initImageUploadEvent(upload_path,'code_logo',"CodeLogo")
+    load: function () {
+        $.file.initImageUploadEvent('code_logo',"CodeLogo")
 
         $.dispatcher.eventRegistry = [
             {
