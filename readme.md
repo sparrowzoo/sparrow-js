@@ -53,4 +53,6 @@ entered FATAL state, too many start retries too quickly
 # chown -R tomcat /root/tomcat-sparrow
 # chown -R tomcat /var/log/supervisor
 # chown -R tomcat /var/log/sparrow
+# chown -R tomcat /workspace/upload
+# chown -R www:www /workspace/upload
 ```
