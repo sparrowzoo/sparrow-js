@@ -48,11 +48,15 @@ entered FATAL state, too many start retries too quickly
 ```
 - 为 supervisor 创建新用户 否则启动后无法监控其状态 导致重试
 ```
-# groupadd webuser
-# useradd -g webuser tomcat
-# chown -R tomcat /root/tomcat-sparrow
-# chown -R tomcat /var/log/supervisor
-# chown -R tomcat /var/log/sparrow
-# chown -R tomcat /workspace/upload
-# chown -R www:www /workspace/upload
+chown -R www:www /root/tomcat-sparrow
+chown -R www:www /var/log/supervisor
+chown -R www:www /var/log/sparrow
+chown -R www:www /workspace/upload
+sudo chmod -R 750 /workspace/upload
+
+750 表示文件所有者有读、写、执行权限，文件组有读、执行权限，其他用户没有权限
+
+属主：rwx=4+2+1=7。
+属组：r-x=4+0+1=5。
+其他：---=0+0+0=0
 ```
