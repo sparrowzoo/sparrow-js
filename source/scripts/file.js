@@ -178,9 +178,9 @@ Sparrow.file = {
             // 设置状态跟踪
             if (typeof (editor) === "undefined" || editor === null) {
                 // 非编辑器控件
-                this.wit = window.setInterval("$.file.getStatus()", 1000);
+                this.wit = window.setInterval(function (){$.file.getStatus()}, 1000);
             } else {
-                this.wit = window.setInterval("$.file.getStatus()", 1000);
+                this.wit = window.setInterval(function (){$.file.getStatus()}, 1000);
             }
         }
         // 提交
@@ -247,7 +247,7 @@ Sparrow.file = {
         }
         document.domain = $.browser.cookie.root_domain;
         if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
-        fileFrame.src = $.url.upload + "/file-upload?path-key=" + key;
+        fileFrame.src = $.url.upload + "/file-upload?path-key=" + key+"&t="+ Math.random();
         //第一次加载初始化
         $.file.uploadCallBack = function (fileInfo, editor, size) {
             console.info(size);
@@ -279,7 +279,7 @@ Sparrow.file = {
                 var errorPrompt = $("#error" + suffix);
                 if (errorPrompt != null) {
                     errorPrompt.class("prompt");
-                    $("#error" + suffix).html("");
+                    errorPrompt.html("");
                 }
             };
             $.file.uploadDelegate(key, editor);
