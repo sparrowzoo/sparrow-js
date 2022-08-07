@@ -2505,7 +2505,7 @@ Sparrow.table.prototype = {
 //document.domain=$.browser.cookie.root_domain; 解决跨域
 Sparrow.file = {
     // 是否显示上传进度
-    isShowProgress: false,
+    isShowProgress: true,
     // 等待
     wit: null,
     // 客户端文件名
@@ -2520,11 +2520,13 @@ Sparrow.file = {
     },
     // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
     clearStatus: function () {
-        var divStatus = $('divStatus');
-        if (this.isShowProgress && divStatus != null) {
-            document.body.removeChild(divStatus);
-        }
         window.clearInterval(this.wit);
+        window.setTimeout(function () {
+            var divStatus = $('divStatus');
+            if ($.file.isShowProgress && divStatus != null) {
+                document.body.removeChild(divStatus);
+            }
+        },1000);
     },
     // 文件序列号
     fileSerialNumber: null,
@@ -2725,9 +2727,7 @@ Sparrow.file = {
         statusString.push("上传进度:" + status);
         $("#divStatus", false).html(statusString.toString());
         if (status === "100%") {
-            window.setTimeout(function () {
-                $.file.clearStatus();
-            }, 1000);
+            $.file.clearStatus();
         }
     },
     getStatus: function () {
@@ -2781,7 +2781,7 @@ Sparrow.file = {
                     hdnWebUrl.value(uploadingProgress.fileUrl);
                 }
                 var errorPrompt = $("#error" + suffix);
-                if (errorPrompt != null) {
+                if (errorPrompt != null&&errorPrompt.s!=null) {
                     errorPrompt.class("prompt");
                     errorPrompt.html("");
                 }
