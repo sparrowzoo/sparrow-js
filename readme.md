@@ -64,3 +64,16 @@ vi /usr/lib/systemd/system/supervisord.service
 
 groups www //show groups of www
 ```
+
+## 文件上传超时重试问题
+```aidl
+proxy_connect_timeout:600 
+#与后端/上游服务器建立连接的超时时间，默认为60s，此时间不超过75s。
+
+proxy_read_timeout:600 
+#设置从后端/上游服务器读取响应的超时时间，默认为60s，此超时时间指的是两次成功读操作间隔时间，而不是读取整个响应体的超时时间。如果在此超时时间内上，游服务器没有发送任何响应，则Nginx关闭此连接。
+
+proxy_send_timeout:600
+#设置往后端/上游服务器发送请求的超时时间，默认为60s，此超时时间指的是两次成功写操作间隔时间，而不是发送整个请求的超时时间。如果在此超时时间内上，游服务器没有接收任何响应，则Nginx关闭此连接。
+
+```
