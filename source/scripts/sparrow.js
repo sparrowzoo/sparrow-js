@@ -1916,6 +1916,14 @@ Int8Array.prototype.toString=function() {
     }
     return str;
 };
+
+var _hmt = _hmt || [];
+(function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?11daae2d559a82e0e8bd4872ad217164";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
 Sparrow.prototype.tabs = function (config) {
     if (!config) {
         config = {};
