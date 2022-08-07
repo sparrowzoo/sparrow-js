@@ -11,16 +11,16 @@
 
         <a class="pure-menu-heading" href="http://www.sparrowzoo.com">首页</a>
     </div>
-<%--    <div class="pure-menu">--%>
+    <%--    <div class="pure-menu">--%>
 
-<%--        <a class="pure-menu-heading" href="#">菜单</a>--%>
+    <%--        <a class="pure-menu-heading" href="#">菜单</a>--%>
 
-<%--        <ul class="pure-menu-list">--%>
-<%--            <li class="pure-menu-item"><a target="_blank" href="javascript:alert('hi i.m vertical menu');"--%>
-<%--                                          class="pure-menu-link">垂直</a></li>--%>
-<%--            &lt;%&ndash;<li class="pure-menu-item"><a target="_blank" href="menu/top.html" class="pure-menu-link">水平</a></li>&ndash;%&gt;--%>
-<%--        </ul>--%>
-<%--    </div>--%>
+    <%--        <ul class="pure-menu-list">--%>
+    <%--            <li class="pure-menu-item"><a target="_blank" href="javascript:alert('hi i.m vertical menu');"--%>
+    <%--                                          class="pure-menu-link">垂直</a></li>--%>
+    <%--            &lt;%&ndash;<li class="pure-menu-item"><a target="_blank" href="menu/top.html" class="pure-menu-link">水平</a></li>&ndash;%&gt;--%>
+    <%--        </ul>--%>
+    <%--    </div>--%>
 
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">动画</a>
@@ -86,7 +86,6 @@
             </li>
 
 
-
         </ul>
 
 
@@ -107,7 +106,10 @@
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">MVC</a>
         <ul class="pure-menu-list">
-            <li class="pure-menu-item"><a target="_blank" href="http://upload.sparrowzoo.com/upload" class="pure-menu-link">文件上传</a>
+            <li class="pure-menu-item"><a target="_blank" href="http://passport.sparrowzoo.com/login"
+                                          class="pure-menu-link">登录认证</a>
+            <li class="pure-menu-item"><a target="_blank" href="http://upload.sparrowzoo.com/upload"
+                                          class="pure-menu-link">文件上传</a>
             </li>
             <li class="pure-menu-item"><a target="_blank" href="${root_path}/hello-world" class="pure-menu-link">hello-world</a>
             </li>
@@ -117,14 +119,15 @@
 
             <li class="pure-menu-item"><a target="_blank" href="${root_path}/fly" class="pure-menu-link">重定向flash缓存</a>
             </li>
-            <li class="pure-menu-item"><a target="_blank" href="${root_path}/transit-test" class="pure-menu-link">中转提示</a>
+            <li class="pure-menu-item"><a target="_blank" href="${root_path}/transit-test"
+                                          class="pure-menu-link">中转提示</a>
             </li>
             <li class="pure-menu-item"><a target="_blank" href="${root_path}/thread-10000-1" class="pure-menu-link">url传参</a>
             <li class="pure-menu-item"><a target="_blank" href="${root_path}/json-test.json" class="pure-menu-link">返回json</a>
             <li class="pure-menu-item"><a target="_blank" href="${root_path}/exception.json" class="pure-menu-link">异常json</a>
 
-            <li class="pure-menu-item"><a target="_blank" href="${root_path}/exception" class="pure-menu-link">页面异常提示</a>
-            <li class="pure-menu-item"><a target="_blank" href="${root_path}/authorizing" class="pure-menu-link">登录认证</a>
+            <li class="pure-menu-item"><a target="_blank" href="${root_path}/exception"
+                                          class="pure-menu-link">页面异常提示</a>
         </ul>
     </div>
 </div>
