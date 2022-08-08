@@ -68,7 +68,7 @@ var cmsController = {
             $.v.isNull(cmsInfor, this);
         });
     },
-    load: function (upload_path, path_key, parentForum) {
+    load: function (path_key, parentForum) {
         $.gridView.id = "grvCms";
         $.gridView.resultCtrlId = "hdnGridResult";
         this.initEditor();
@@ -87,11 +87,10 @@ var cmsController = {
                         $.submit(cmsController.api.save_media);
                     });
                 }
-                // strategy: lang.command.save
             }
         ];
         $.dispatcher.bind();
-        $.file.initImageUploadEvent(upload_path, path_key);
+        $.file.initImageUploadEvent(path_key);
     }
 };
 define("cms", [], function () {
