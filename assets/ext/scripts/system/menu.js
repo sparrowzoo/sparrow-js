@@ -1,29 +1,29 @@
-var menuController = {
-    lang: {
-        command: {
-            openAll: "展开全部",
+var lang={
+    command: {
+        openAll: "展开全部",
             closeAll: "关闭全部"
-        },
-        message: {
-            accessDenied: "访问被拒绝"
-        }
     },
+    message: {
+        accessDenied: "访问被拒绝"
+    }
+};
+var menuController = {
     menuTree: null,
     load: function () {
         $.ajax.referWindow = window.parent;
         this.menuTree = new $.tree('menuTree');
         $("#divMenuTree").html(this.menuTree.config.loadingString);
         var btnOpen = $("#btnOpen");
-        btnOpen.value(this.lang.command.openAll);
+        btnOpen.value(lang.command.openAll);
 
         btnOpen.bind("onclick", function () {
-            if (this.value == menuController.lang.command.openAll) {
+            if (this.value == lang.command.openAll) {
                 menuController.menuTree.openAll();
-                this.value = menuController.lang.command.closeAll
+                this.value = lang.command.closeAll
             }
             else {
                 menuController.menuTree.closeAll();
-                this.value = menuController.lang.command.openAll;
+                this.value = lang.command.openAll;
             }
         });
         $.ajax.json($.url.root + "/privilege/menu.json", menuController.render);
@@ -33,7 +33,7 @@ var menuController = {
         if (json.length === 0) {
             var divMenu = $("#divMenuTree");
             divMenu.class("highlight");
-            divMenu.html(this.lang.message.accessDenied);
+            divMenu.html(lang.message.accessDenied);
             return;
         }
         var menuTree = menuController.menuTree;
