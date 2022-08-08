@@ -46,7 +46,8 @@ entered FATAL state, too many start retries too quickly
 ```
 /root/tomcat-sparrow/bin/catalina.sh run
 ```
-- 为 supervisor 创建新用户 否则启动后无法监控其状态 导致重试
+- 为 supervisor 创建新用户 否则启动后无法监控其状态 导致supervisor重试
+- 重启后要重新设置权限（否则读不到环境变量)
 ```
 chown -R www:www /root/tomcat-sparrow
 chown -R www:www /var/log/supervisor
