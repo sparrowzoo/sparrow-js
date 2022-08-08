@@ -1,7 +1,7 @@
-﻿var lang={
+﻿var lang = {
     command: {
         openAll: "展开全部",
-            closeAll: "关闭全部"
+        closeAll: "关闭全部"
     },
     message: {
         accessDenied: "访问被拒绝"
@@ -20,8 +20,7 @@ var menuController = {
             if (this.value == lang.command.openAll) {
                 menuController.menuTree.openAll();
                 this.value = lang.command.closeAll
-            }
-            else {
+            } else {
                 menuController.menuTree.closeAll();
                 this.value = lang.command.openAll;
             }
@@ -66,7 +65,7 @@ var menuController = {
         }
         $("#divMenuTree").html(menuTree);
         var height = document.documentElement.clientHeight;
-        document.getElementById('iframe-page-content').style.height = (height-100) + 'px';
+        document.getElementById('iframe-page-content').style.height = (height - 100) + 'px';
     }
 }
 
