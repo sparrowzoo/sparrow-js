@@ -63,7 +63,7 @@
     </filter-mapping>
     <session-config>
         <!-- session超时时间单位为分钟 -->
-        <session-timeout>120</session-timeout>
+        <session-timeout>600</session-timeout>
     </session-config>
     <welcome-file-list>
         <welcome-file>/template/index.jsp</welcome-file>

@@ -889,7 +889,7 @@ Sparrow.ajax = {
                             var config = objXMLHttp.responseText.json();
                             document.domain = $.browser.cookie.root_domain;
                             if (config.inFrame) {
-                                //window.parent.location.href = config.url;
+                                window.parent.location.href = config.url;
                             } else {
                                 $.window(config);
                             }
@@ -1916,6 +1916,14 @@ Int8Array.prototype.toString=function() {
     }
     return str;
 };
+
+var _hmt = _hmt || [];
+(function () {
+    var hm = document.createElement("script");
+    hm.src = "https://hm.baidu.com/hm.js?11daae2d559a82e0e8bd4872ad217164";
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(hm, s);
+})();
 Sparrow.prototype.tabs = function (config) {
     if (!config) {
         config = {};
@@ -2505,7 +2513,7 @@ Sparrow.table.prototype = {
 //document.domain=$.browser.cookie.root_domain; 解决跨域
 Sparrow.file = {
     // 是否显示上传进度
-    isShowProgress: false,
+    isShowProgress: true,
     // 等待
     wit: null,
     // 客户端文件名
@@ -2520,11 +2528,13 @@ Sparrow.file = {
     },
     // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
     clearStatus: function () {
-        var divStatus = $('divStatus');
-        if (this.isShowProgress && divStatus != null) {
-            document.body.removeChild(divStatus);
-        }
         window.clearInterval(this.wit);
+        window.setTimeout(function () {
+            var divStatus = $('divStatus');
+            if ($.file.isShowProgress && divStatus != null) {
+                document.body.removeChild(divStatus);
+            }
+        },1000);
     },
     // 文件序列号
     fileSerialNumber: null,
@@ -2725,9 +2735,7 @@ Sparrow.file = {
         statusString.push("上传进度:" + status);
         $("#divStatus", false).html(statusString.toString());
         if (status === "100%") {
-            window.setTimeout(function () {
-                $.file.clearStatus();
-            }, 1000);
+            $.file.clearStatus();
         }
     },
     getStatus: function () {
@@ -2781,7 +2789,7 @@ Sparrow.file = {
                     hdnWebUrl.value(uploadingProgress.fileUrl);
                 }
                 var errorPrompt = $("#error" + suffix);
-                if (errorPrompt != null) {
+                if (errorPrompt != null&&errorPrompt.s!=null) {
                     errorPrompt.class("prompt");
                     errorPrompt.html("");
                 }

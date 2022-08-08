@@ -20,23 +20,9 @@ var groupController = {
         }
     },
 
-    load: function (upload_path) {
+    load: function () {
         document.domain = $.browser.cookie.root_domain;
-
-        $("null.group").src = upload_path + "/file-upload?path-key=group";
-        $.file.validateUploadFile = function (obj, key) {
-            if ($.file.checkFileType($.file.getFileName(obj.value),
-                    ["jpg", "jpeg", "gif", "png"], "errorImgGroupIco")) {
-                $.file.uploadCallBack = function (uploadProgress) {
-                    if (!$.file.callbackValidate(uploadProgress)) {
-                        return;
-                    }
-                    $("#hdnGroupIco").value(uploadProgress.fileUrl);
-                    $("#divGroupIco").html("<img src='{0}'/>".format(uploadProgress.fileUrl));
-                };
-                $.file.uploadDelegate(false, key);
-            }
-        };
+        $.file.initImageUploadEvent('group', "GroupIco");
         $.dispatcher.eventRegistry = [
             {
                 id: "btnReturn",

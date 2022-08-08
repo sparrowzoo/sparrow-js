@@ -86,7 +86,7 @@ Sparrow.ajax = {
                             var config = objXMLHttp.responseText.json();
                             document.domain = $.browser.cookie.root_domain;
                             if (config.inFrame) {
-                                //window.parent.location.href = config.url;
+                                window.parent.location.href = config.url;
                             } else {
                                 $.window(config);
                             }
