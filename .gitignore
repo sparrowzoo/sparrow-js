@@ -6,9 +6,4 @@ logs
 .DS_Store
 node_modules
 target
-source/styles/pure-css
-source/styles/code-prettify
-source/scripts/code-prettify
-source/scripts/domReady.js
-source/scripts/echarts.js
 
