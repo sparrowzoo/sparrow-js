@@ -33,6 +33,16 @@ public class HelloController {
         this.servletContainer = servletContainer;
     }
 
+    @RequestParameters("key")
+    public HelloVO env(String key) throws BusinessException {
+        return new HelloVO(System.getenv(key));
+    }
+
+    @RequestParameters("key")
+    public HelloVO env2(String key) throws BusinessException {
+        return new HelloVO(key);
+    }
+
     public ViewWithModel hello() {
         logger.info("hello");
         return ViewWithModel.forward("hello", new HelloVO("我来自遥远的sparrow 星球,累死我了..."));
