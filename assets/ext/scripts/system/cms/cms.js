@@ -87,10 +87,11 @@ var cmsController = {
                         $.submit(cmsController.api.save_media);
                     });
                 }
+                // strategy: lang.command.save
             }
         ];
         $.dispatcher.bind();
-        $.file.initImageUploadEvent(path_key);
+        $.file.initImageUploadEvent(upload_path, path_key);
     }
 };
 define("cms", [], function () {
