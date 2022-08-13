@@ -82,8 +82,8 @@ var codeController = {
             var cn = codeTree.aNodes[codeTree.getSelectedAi()];
             for (var i = 0; i < codeTree.aNodes.length; i++) {
                 if (cn) {
-                    if (cn.pid == -1 || codeTree.aNodes[i].id != cn.id
-                        && codeTree.aNodes[i].pid != cn.id) {
+                    if (cn.pid === -1 || codeTree.aNodes[i].id !== cn.id
+                        && codeTree.aNodes[i].pid !== cn.id) {
                         selectingCodeTree.addBusinessEntity(codeTree.aNodes[i].id,
                             codeTree.aNodes[i].pid, codeTree.aNodes[i].name,
                             "javascript:codeController.nodeDetail();", codeTree.aNodes[i].title,
@@ -180,7 +180,7 @@ var codeController = {
         $("#txtUrl").value(cn.businessEntity.url);
 
         var logo=$.toString(cn.businessEntity.logo,"");
-        $("#imgCodeLogo").html("<img style='border:0;' src='" + logo + "'/>");
+        $("#divCodeLogo").html("<img style='border:0;' src='" + logo + "'/>");
         $("#hdnCodeLogo").value(logo);
 
 

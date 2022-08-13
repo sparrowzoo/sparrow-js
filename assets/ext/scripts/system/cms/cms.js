@@ -6,7 +6,7 @@ var cmsController = {
     },
     cmsEditor: null,
     forumTree: null,
-    initEditor: function () {
+    initEditor: function (pathKey) {
         if ($("divEditor") == null) {
             return;
         }
@@ -19,9 +19,11 @@ var cmsController = {
         // 设置附件的父控件
         cmsEditor.attach.setParentObject(cmsEditor);
         cmsEditor.config.attach.fileInfoId = "hdnFileInfo";
-        // cmsEditor.config.attach.key=$("hdnPathKey").value;
+        cmsEditor.config.attach.key=pathKey;
         // 编辑器上传的图片全部为cms作为key
-        cmsEditor.config.attach.key = "cms";
+        if(cmsEditor.config.attach.key===null) {
+            cmsEditor.config.attach.key = "cms";
+        }
         // 不显示图片信息
         cmsEditor.config.attach.showImageInfo = false;
         cmsEditor.initialize("divEditor");
@@ -71,7 +73,8 @@ var cmsController = {
     load: function (path_key, parentForum) {
         $.gridView.id = "grvCms";
         $.gridView.resultCtrlId = "hdnGridResult";
-        this.initEditor();
+
+        this.initEditor(path_key);
         this.initForums(parentForum);
         //this.bindForumNameEvent();
         $.dispatcher.eventRegistry = [
@@ -91,7 +94,9 @@ var cmsController = {
             }
         ];
         $.dispatcher.bind();
-        $.file.initImageUploadEvent(upload_path, path_key);
+        if(path_key) {
+            $.file.initImageUploadEvent('cms_cover', {'cms_cover': 'Cover'});
+        }
     }
 };
 define("cms", [], function () {

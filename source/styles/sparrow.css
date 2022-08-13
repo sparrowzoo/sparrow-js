@@ -138,6 +138,12 @@ hr {
 .page .disable{color: #ccc;}
 .page input{float: left;border: #ccc 1px solid;border-left-width: 0;color:#00648d;padding:5px 10px 5px 10px;margin:0;width:50px;line-height:17px;text-align: center;}
 .pure-table tr:hover{background:#36aef4;}
+.pure-table {width: 100%}
+.pure-table td,
+.pure-table th {
+    padding: 0.2em 0.2em !important; /* cell padding */
+}
+
 
 .file-frame {width: 250px;height: 42px;}
 .float-tree {overflow: scroll;display: none;}
