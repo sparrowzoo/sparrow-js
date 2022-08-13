@@ -797,10 +797,8 @@ Sparrow.css = {
 Sparrow.SIDE = "SIDE";
 Sparrow.HORIZONTAL = "HORIZONTAL";
 Sparrow.VERTICAL = "VERTICAL";
-Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/" + $.url.name
-    + "/images/user.png";
-Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/" + $.url.name/**/
-    + "/images/resource.gif";
+Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/images/user.png";
+Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/images/menu.png";
 Sparrow.ajax = {
     _objPool: [],
     referWindow: window,

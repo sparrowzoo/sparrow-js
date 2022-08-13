@@ -1,7 +1,7 @@
 var lang = {
     command: {
         openAll: "展开全部",
-            closeAll: "关闭全部"
+        closeAll: "关闭全部"
     },
     message: {
         accessDenied: "访问被拒绝"
