@@ -55,6 +55,7 @@ chown -R www:www /var/log/sparrow
 chown -R www:www /workspace/upload
 sudo chmod -R 750 /workspace/upload
 
+
 vi /usr/lib/systemd/system/supervisord.service
 
 750 表示文件所有者有读、写、执行权限，文件组有读、执行权限，其他用户没有权限
