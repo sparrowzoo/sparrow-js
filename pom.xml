@@ -47,7 +47,7 @@
         </dependency>
         <dependency>
             <groupId>com.sparrow</groupId>
-            <artifactId>sparrow-sharded-jedis</artifactId>
+            <artifactId>sparrow-jedis</artifactId>
         </dependency>
         <dependency>
             <groupId>com.sparrow</groupId>
