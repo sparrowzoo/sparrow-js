@@ -21,6 +21,8 @@
             <h2>高性能 零依赖的java WEB前后端全栈框架</h2>
             <h3>Sparrow Admin 后台管理系统 Demo上线</h3>
             <h4><a href="https://www.jianshu.com/u/2477662600e7" target="_blank">志哥博客</a></h4>
+            <h4><a href="https://t.zsxq.com/05i6eimiI" target="_blank">志哥星球</a></h4>
+            <h4><a href="/zsxq" target="_blank">志哥星球码</a></h4>
 
             <h4><a href="http://admin.sparrowzoo.com" target="_blank">admin.sparrowzoo.com</a> 持续更新中...</h4>
         </div>
@@ -42,7 +44,9 @@
 
             为此基于oop的基本思想，构建一层api,最大化的解耦。
         </div>
-
+<div class="content">
+    <img src="${resource}/images/wechat.jpg">
+</div>
         <div class="content">
             <h2>Github</h2>
             <ul>
