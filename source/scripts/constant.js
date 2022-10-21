@@ -31,7 +31,7 @@ Sparrow.url = {
 };
 Sparrow.url.resource = $.url._resource();
 Sparrow.url.passport = $(function () {
-    return "passport."+$.browser.cookie.root_domain;
+    return "http://passport."+$.browser.cookie.root_domain;
 });
 Sparrow.website = {
     name: $.browser.getCookie($.browser.cookie.website_name),
