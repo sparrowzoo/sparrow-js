@@ -137,7 +137,7 @@ Sparrow.ajax = {
                     if (callback) {
                         callback(result);
                     } else {
-                        $.message(result.data, $.ajax.srcElement);
+                        $.message(result.message, $.ajax.srcElement);
                     }
                 } else {
                     $.message(result.message, $.ajax.srcElement);
