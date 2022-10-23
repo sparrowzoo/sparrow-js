@@ -1,5 +1,9 @@
 ﻿Sparrow.passport = {
-    api: {},
+    api: {
+        login:"/shortcut-login.json",
+        register:"/register/email/shortcut",
+        activate:"/register/email/activate/send.json"
+    },
     initTabs: function () {
         var tabs = $("#tabs");
         if (tabs == null || tabs.s == null) {
@@ -25,6 +29,10 @@
             {
                 id: "btnLogin",
                 delegate: $.passport.login.shortcut
+            },
+            {
+                id:"btnResentActiveEmail",
+                delegate: $.passport.register.activate
             }
         ];
         $.dispatcher.bind();
@@ -100,9 +108,14 @@
                 return false;
             }
             $.ajax.json(
-                $.url.root + "/shortcut-register.json",
+                $.url.root + $.passport.api.register,
                 $.getFormData(regInfo),
                 $.passport.authenticationCallback);
+        },
+        activate:function(){
+                   var email=$('#hdnEmail').value();
+                   $.ajax.json($.url.passport+$.passport.api.activate,
+                                  'email='+email);
         }
     },
     login: {
@@ -119,7 +132,7 @@
                 postString += "&loginDays=" + loginDays;
             }
             $.ajax.json(
-                $.url.root + "/shortcut-login.json",
+                $.url.root + $.passport.api.login,
                 postString, $.passport.authenticationCallback
             );
         }
