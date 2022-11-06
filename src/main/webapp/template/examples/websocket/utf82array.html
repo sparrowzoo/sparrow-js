@@ -4,7 +4,6 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>Insert title here</title>
-
   <script type="text/javascript">
     String.prototype.toArrayBuffer=function(){
       var bytes = [];
@@ -36,6 +35,11 @@
     };
 
     Int8Array.prototype.toString=function() {
+      /**
+       * https://www.javascripture.com/DataView
+       * DataViews allow heterogeneous access to data stored in an ArrayBuffer. Values can be read and stored at any byte offset without alignment constraints.
+       * @type {DataView}
+       */
       var dataView = new DataView(this.buffer);
       var ints = new Uint8Array(this.buffer.byteLength);
       for (var i = 0; i < ints.length; i++) {
