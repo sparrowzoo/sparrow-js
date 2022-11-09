@@ -29,7 +29,7 @@ To restart nginx after an upgrade:
 Or, if you don't want/need a background service you can just run:
   /opt/homebrew/opt/nginx/bin/nginx -g daemon off;
 ```
-
+\
 TypeError: Cannot read property 'apply' of undefined issue
 ---
 https://github.com/gulpjs/gulp-cli/issues/84
