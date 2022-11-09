@@ -2,7 +2,7 @@ package com.sparrow.utils;
 
 import com.sparrow.protocol.ModuleSupport;
 
-public class SPARROW_MODULE extends com.sparrow.constant.SparrowModule {
+public class SPARROW_MODULE {
     public static final ModuleSupport DEMO = new ModuleSupport() {
         @Override
         public String code() {

@@ -143,6 +143,7 @@ Sparrow.getFormData = function (inputIdArray) {
     return data.join("&");
 };
 Sparrow.waitRedirect = function (timerId, period) {
+    var queryString=$("hdnQueryString").value();
     var timer = $("#" + timerId);
     if (timer == null || timer.s == null) return;
     if (!period) period = 1000;
@@ -150,7 +151,7 @@ Sparrow.waitRedirect = function (timerId, period) {
         var time = parseInt(timer.html(), 10);
         if (time-- === 0) {
             window.location.target = "_self";
-            window.location.href = timer.attr("url");
+            window.location.href =queryString;
             window.clearInterval(interval);
         }
         else {

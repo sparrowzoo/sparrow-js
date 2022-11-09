@@ -1,7 +1,6 @@
 package com.sparrow.demo;
 
 import com.sparrow.cache.exception.CacheNotFoundException;
-import com.sparrow.constant.SparrowError;
 import com.sparrow.constant.User;
 import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
@@ -9,6 +8,7 @@ import com.sparrow.mvc.result.ResultAssembler;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginToken;
 import com.sparrow.protocol.Result;
+import com.sparrow.protocol.constant.SparrowError;
 import com.sparrow.servlet.ServletContainer;
 import com.sparrow.support.Authenticator;
 import com.sparrow.support.web.ServletUtility;
