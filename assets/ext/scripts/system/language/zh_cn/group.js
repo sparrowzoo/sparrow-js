@@ -30,9 +30,9 @@ var groupInfo = {
 		maxLength : 20,
 		lengthError : '组名称长度不得多于20。'
 	},
-	txtDepartmentId : {
-		errorCtrlId : 'errorDepartmentId',
-		prompt : '请输入该组所在单位，默认为所有单位。',
+	txtParentGroupId : {
+		errorCtrlId : 'errorParentGroupId',
+		prompt : '所属组不能为空',
 		defaultValue : 0
 	},
 	txtGroupCent : {
