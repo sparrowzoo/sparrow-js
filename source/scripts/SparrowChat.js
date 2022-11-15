@@ -96,8 +96,8 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
                 const blob =data;
                 const buf = await blob.arrayBuffer();
                 if(buf.byteLength===1){
-                    this.offline=true;
-                    return this;
+                        console.log("对方不在线!!!!");
+                        return;
                 }
                 var dataView = new DataView(buf);
                 var offset=0;
