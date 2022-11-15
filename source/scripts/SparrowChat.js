@@ -95,6 +95,10 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
             (async () => {
                 const blob =data;
                 const buf = await blob.arrayBuffer();
+                if(buf.byteLength===1){
+                    this.offline=true;
+                    return;
+                }
                 var dataView = new DataView(buf);
                 var offset=0;
                 this.chatType= dataView.getUint8(offset);
