@@ -97,7 +97,7 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
                 const buf = await blob.arrayBuffer();
                 if(buf.byteLength===1){
                     this.offline=true;
-                    return;
+                    return this;
                 }
                 var dataView = new DataView(buf);
                 var offset=0;
@@ -107,11 +107,11 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
                 offset+=1;//msg type length=1
                 this.fromUserId=dataView.getInt32(offset);
                 offset+=4;//from user id length=4
-                if (this.chatType == CHAT_TYPE_1_2_1) {
+                if (this.chatType === CHAT_TYPE_1_2_1) {
                     this.currentUserId=dataView.getInt32(offset);
                     offset+=4;
                 }
-                if (this.chatType == CHAT_TYPE_1_2_N) {
+                if (this.chatType === CHAT_TYPE_1_2_N) {
                     this.sesessionKeyLength=dataView.getInt32(offset);
                     offset+=4;//session key length=4
                     const sessionKeyBuffer = buf.slice(offset,this.sesessionKeyLength+offset);
@@ -121,7 +121,7 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
 
                 offset+=4;//msg length =4
 
-                if(this.msgType==TEXT_MESSAGE) {
+                if(this.msgType===TEXT_MESSAGE) {
                     const msgBuffer = buf.slice(offset, buf.byteLength);
                     const chars = new Uint8Array(msgBuffer);
                     this.msg = chars.toString();
