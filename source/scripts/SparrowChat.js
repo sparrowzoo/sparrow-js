@@ -90,8 +90,8 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
 
     if(typeof(chatType)=="object"){
         data=chatType;
+        callback=msgType;
         //当客户端收到服务端发来的消息时，触发onmessage事件，参数e.data包含server传递过来的数据
-
             (async () => {
                 const blob =data;
                 const buf = await blob.arrayBuffer();
@@ -125,22 +125,23 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
                     const msgBuffer = buf.slice(offset, buf.byteLength);
                     const chars = new Uint8Array(msgBuffer);
                     this.msg = chars.toString();
-                    console.log(this.msg);
+                    //console.log(this.msg);
                 }
-
                 else {
-                    const img = document.getElementById('img');
+                    //const img = document.getElementById('img');
                     const msgBuffer = buf.slice(offset, buf.byteLength);
                     fileBlob = new Blob([msgBuffer]);
                     //本地直接读即可
                     //const url = window.URL.createObjectURL(file);
                     const url = window.URL.createObjectURL(fileBlob);
-                    img.src = url;
-                    img.onload = function () {
-                        // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
-                        window.URL.revokeObjectURL(url);
-                    }
+                    this.url=url;
+                    // img.src = url;
+                    // img.onload = function () {
+                    //     // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
+                    //     window.URL.revokeObjectURL(url);
+                    // }
                 }
+                callback(this);
             })();
     }
     if (typeof (chatType) == "number") {
