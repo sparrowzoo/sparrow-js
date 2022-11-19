@@ -135,11 +135,6 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
                     //const url = window.URL.createObjectURL(file);
                     const url = window.URL.createObjectURL(fileBlob);
                     this.url=url;
-                    // img.src = url;
-                    // img.onload = function () {
-                    //     // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
-                    //     window.URL.revokeObjectURL(url);
-                    // }
                 }
                 callback(this);
             })();
