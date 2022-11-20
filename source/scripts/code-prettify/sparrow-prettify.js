@@ -269,11 +269,12 @@ var IN_GLOBAL_SCOPE = false;
     }
 
     var skinUrls = [];
+    var cssBaseUrl=LOADER_BASE_URL.replace("scripts","styles");
     for (var i = 0, n = skins.length; i < n; ++i) {
-        skinUrls.push(LOADER_BASE_URL
+        skinUrls.push(cssBaseUrl
             + '/skins/' + encodeURIComponent(skins[i]) + '.css');
     }
-    skinUrls.push(LOADER_BASE_URL + '/prettify.css');
+    skinUrls.push(cssBaseUrl + '/prettify.css');
     loadStylesheetsFallingBack(skinUrls);
 
     var prettyPrint = (function () {
