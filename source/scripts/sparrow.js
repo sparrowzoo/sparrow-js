@@ -436,7 +436,6 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
     this.interval = [];
     return this;
 };
-
 window.$ = window.Sparrow = Sparrow;
 Sparrow.browser = {
     url: {
@@ -516,35 +515,35 @@ Sparrow.browser = {
             if (window.clipboardData) {
                 window.clipboardData.setData("Text", text);
                 alert(msg);
-            } else {
-                try {
-                    netscape.security.PrivilegeManager
-                        .enablePrivilege("UniversalXPConnect");
-                } catch (e) {
-                    alert("您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!");
-                    return false;
-                }
-                var clip = Components.classes['@mozilla.org/widget/clipboard;1']
-                    .createInstance(Components.interfaces.nsIClipboard);
-                if (!clip)
-                    return;
-                var trans = Components.classes['@mozilla.org/widget/transferable;1']
-                    .createInstance(Components.interfaces.nsITransferable);
-                if (!trans) {
-                    return;
-                }
-                trans.addDataFlavor('text/unicode');
-                var supportsString = Components.classes["@mozilla.org/supports-string;1"]
-                    .createInstance(Components.interfaces.nsISupportsString);
-                supportsString.data = text;
-                trans.setTransferData("text/unicode", supportsString, text
-                    .getByteLength());
-                var clipid = Components.interfaces.nsIClipboard;
-                if (!clip)
-                    return false;
-                clip.setData(trans, null, clipid.kGlobalClipboard);
-                alert(msg);
+                return
             }
+            try {
+                netscape.security.PrivilegeManager
+                    .enablePrivilege("UniversalXPConnect");
+            } catch (e) {
+                alert("您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!");
+                return false;
+            }
+            var clip = Components.classes['@mozilla.org/widget/clipboard;1']
+                .createInstance(Components.interfaces.nsIClipboard);
+            if (!clip)
+                return;
+            var trans = Components.classes['@mozilla.org/widget/transferable;1']
+                .createInstance(Components.interfaces.nsITransferable);
+            if (!trans) {
+                return;
+            }
+            trans.addDataFlavor('text/unicode');
+            var supportsString = Components.classes["@mozilla.org/supports-string;1"]
+                .createInstance(Components.interfaces.nsISupportsString);
+            supportsString.data = text;
+            trans.setTransferData("text/unicode", supportsString, text
+                .getByteLength());
+            var clipid = Components.interfaces.nsIClipboard;
+            if (!clip)
+                return false;
+            clip.setData(trans, null, clipid.kGlobalClipboard);
+            alert(msg);
         } catch (e) {
             alert("对不起！您的浏览器不支持该功能");
         }
@@ -805,6 +804,50 @@ Sparrow.ajax = {
     url: null,
     srcElement: null,
     SUCCESS: "0",
+    _bindReadyStateChange:function (objXMLHttp) {
+        objXMLHttp.onreadystatechange = function () {
+            if (objXMLHttp.readyState !== 4) {
+                return;
+            }
+            if (objXMLHttp.status === 200) {
+                if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
+                    console.log("login false");
+                    var config = objXMLHttp.responseText.json();
+                    document.domain = $.browser.cookie.root_domain;
+                    if (config.inFrame) {
+                        window.parent.location.href = config.url;
+                    } else {
+                        $.window(config);
+                    }
+                    return;
+                }
+                if (objXMLHttp.responseText
+                    .indexOf("Access Denied") !== -1) {
+                    if (!lang.message.accessDenied)
+                        lang.message.accessDenied = "Access Denied";
+                    $.alert(lang.message.accessDenied, "sad");
+                    return;
+                }
+                if (callback) {
+                    callback(objXMLHttp.responseText);
+                    return;
+                }
+            }
+            if (objXMLHttp.status === 404) {
+                console.log("资源未找到");
+                return;
+            }
+            if (objXMLHttp.status === 500) {
+                console.log("服务器错误");//
+                return;
+            }
+            if (objXMLHttp.status === 12031) {
+                console.log("服务器未启动");//
+                return;
+            }
+            console.log(objXMLHttp.status + ":未知错误");
+        };
+    },
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
             if (this._objPool[i].readyState === 0
@@ -822,19 +865,22 @@ Sparrow.ajax = {
             if (http_request.overrideMimeType) {
                 http_request.overrideMimeType("text/xml");
             }
-        } else {
-            if (window.ActiveXObject) {
+            return http_request;
+        }
+        if (window.ActiveXObject) {
+            try {
+                http_request = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
                 try {
-                    http_request = new ActiveXObject("Msxml2.XMLHTTP");
+                    http_request = new ActiveXObject("Microsoft.XMLHTTP");
                 } catch (e) {
-                    try {
-                        http_request = new ActiveXObject("Microsoft.XMLHTTP");
-                    } catch (e) {
-                    }
                 }
             }
         }
-        if (http_request === null) {
+        if(http_request!=null){
+            this._bindReadyStateChange(http_request);
+        }
+        else {
             console.log("浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器");
         }
         return http_request;
@@ -866,56 +912,18 @@ Sparrow.ajax = {
             objXMLHttp.open(getOrPost, url, true);
             objXMLHttp.setRequestHeader("pragma", "no-cache");
             objXMLHttp.setRequestHeader("cache-control", "no-cache");
-
             if (getOrPost === "GET") {
                 objXMLHttp.send(null);
-            } else {
-                if (postStr != null) {
-                    //warn: Parameters: Character decoding failed
-                    postStr = postStr.replace(/%/g, '%25');
-                    objXMLHttp
-                        .setRequestHeader("Content-Type",
-                            "application/x-www-form-urlencoded;charset=utf-8");
-                }
-                objXMLHttp.send(postStr);
+                return;
             }
-            objXMLHttp.onreadystatechange = function () {
-                if (objXMLHttp.readyState === 4) {
-                    if (objXMLHttp.status === 200) {
-                        if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
-                            console.log("login false");
-                            var config = objXMLHttp.responseText.json();
-                            document.domain = $.browser.cookie.root_domain;
-                            if (config.inFrame) {
-                                window.parent.location.href = config.url;
-                            } else {
-                                $.window(config);
-                            }
-                        } else if (objXMLHttp.responseText
-                            .indexOf("Access Denied") !== -1) {
-                            if (!lang.message.accessDenied)
-                                lang.message.accessDenied = "Access Denied";
-                            $.alert(lang.message.accessDenied, "sad");
-                        } else if (callback) {
-                            callback(objXMLHttp.responseText);
-                        }
-                    } else {
-                        if (objXMLHttp.status === 404) {
-                            console.log("资源未找到");//
-                        } else {
-                            if (objXMLHttp.status === 500) {
-                                console.log("服务器错误");//
-                            } else {
-                                if (objXMLHttp.status === 12031) {
-                                    console.log("服务器未启动");//
-                                } else {
-                                    console.log(objXMLHttp.status + ":未知错误");
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            if (postStr != null) {
+                //warn: Parameters: Character decoding failed
+                postStr = postStr.replace(/%/g, '%25');
+                objXMLHttp
+                    .setRequestHeader("Content-Type",
+                        "application/x-www-form-urlencoded;charset=utf-8");
+            }
+            objXMLHttp.send(postStr);
         } catch (e) {
             console.log(e);
         }
@@ -1851,13 +1859,14 @@ Sparrow.prototype.fresh = function (url) {
 Sparrow.prototype.enter = function (handle) {
     this.s.onkeydown = function (e) {
         e = window.event || e;
-        if (e.keyCode === 13) {
-            if (typeof(handle) === "string") {
-                $(handle).onclick(e);
-                return;
-            }
-            handle();
+        if (e.keyCode !== 13) {
+            return;
         }
+        if (typeof (handle) === "string") {
+            $(handle).onclick(e);
+            return;
+        }
+        handle();
     };
 };
 
@@ -2844,9 +2853,9 @@ Sparrow.event.prototype = {
                 - this.eventX;
             this.srcElement.style.top = this.srcRightPos + this.clientY
                 - this.eventY;
-        } else {
-            return true;
+            return;
         }
+        return true;
     },
     move_end: function () {
         this.dragapproved = false;
@@ -3116,28 +3125,28 @@ Sparrow.prototype.move = function (s) {
     var status = s.json();
     console.log("move status ", status);
     var _move = function (sparrowElement, start, end, percent, change) {
-        if (!$.isNullOrEmpty(end)) {
-            var distance = (parseInt(end, 10) - parseInt(start, 10));
-            var speed = distance * percent;
-            if (percent > 1) {
-                speed = distance > 0 ? percent : -percent;
-                if (Math.abs(distance) <= 1) {
-                    sparrowElement.css(change, status.start, false);
-                    return false;
-                }
-            } else {
-                speed = distance * percent;
-            }
-            if (typeof (change) === "function") {
-                change(sparrowElement.s, speed);
-            } else {
-                sparrowElement.css(change, speed, true);
-            }
-            if (Math.abs(distance) <= 1) {
-                return true;
-            }
+        if ($.isNullOrEmpty(end)) {
+            return false;
         }
-        return false;
+        var distance = (parseInt(end, 10) - parseInt(start, 10));
+        var speed = distance * percent;
+        if (percent > 1) {
+            speed = distance > 0 ? percent : -percent;
+            if (Math.abs(distance) <= 1) {
+                sparrowElement.css(change, status.start, false);
+                return false;
+            }
+        } else {
+            speed = distance * percent;
+        }
+        if (typeof (change) === "function") {
+            change(sparrowElement.s, speed);
+        } else {
+            sparrowElement.css(change, speed, true);
+        }
+        if (Math.abs(distance) <= 1) {
+            return true;
+        }
     };
     var percent = status.percent;
     if (!percent) {
@@ -3156,30 +3165,31 @@ Sparrow.prototype.move = function (s) {
     if (!end) {
         end = _move(this, this.opacity(), status.opacity, percent, "opacity");
     }
-    if (end) {
-        if (!$.isNullOrEmpty(status.width)) {
-            this.s.style.width = status.width;
-        }
-        if (!$.isNullOrEmpty(status.height)) {
-            this.s.style.height = status.height;
-        }
-        if (!$.isNullOrEmpty(status.left)) {
-            this.s.style.left = status.left;
-        }
-        if (!$.isNullOrEmpty(status.top)) {
-            this.s.style.top = status.top;
-        }
-        if (!$.isNullOrEmpty(status.opacity)) {
-            this.opacity(status.opacity);
-        }
-        if (parseInt(status.height, 10) === 0) {
-            this.s.style.display = "none";
-        }
-        this.stop();
-        this.move_end();
-        this.move_end = function () {
-        };
+    if (!end) {
+        return;
     }
+    if (!$.isNullOrEmpty(status.width)) {
+        this.s.style.width = status.width;
+    }
+    if (!$.isNullOrEmpty(status.height)) {
+        this.s.style.height = status.height;
+    }
+    if (!$.isNullOrEmpty(status.left)) {
+        this.s.style.left = status.left;
+    }
+    if (!$.isNullOrEmpty(status.top)) {
+        this.s.style.top = status.top;
+    }
+    if (!$.isNullOrEmpty(status.opacity)) {
+        this.opacity(status.opacity);
+    }
+    if (parseInt(status.height, 10) === 0) {
+        this.s.style.display = "none";
+    }
+    this.stop();
+    this.move_end();
+    this.move_end = function () {
+    };
 };
 Sparrow.prototype.move_end = function () {
 };
@@ -3239,26 +3249,29 @@ Sparrow.prototype.show = function () {
     // 设置超出隐藏
     this.s.style.overflow = "hidden";
     // 如果默认是不显示或者第二次高度为0
-    if (this.s.style.display === "none"
-        || this.s.offsetHeight === 0) {
-        // 记录当前被控控件的高度
-        if (this.height === undefined) {
-            this.s.style.display = "block";
-            this.height = this.s.offsetHeight + "px";
-            this.s.style.height = "0";
-        }
-        this.animation("{height:'" + this.height + "'}", 5);
+    var isHidden = this.s.style.display === "none"
+        || this.s.offsetHeight === 0;
+    if (!isHidden) {
+        return;
     }
+    // 记录当前被控控件的高度
+    if (this.height === undefined) {
+        this.s.style.display = "block";
+        this.height = this.s.offsetHeight + "px";
+        this.s.style.height = "0";
+    }
+    this.animation("{height:'" + this.height + "'}", 5);
 };
 Sparrow.prototype.hidden = function () {
-    if (this.s) {
-        if (!this.height) {
-            this.height = this.s.offsetHeight + "px";
-            this.s.style.height = this.height;
-        }
-        if (this.s.offsetHeight > 0) {
-            this.animation("{height:'0px'}", 5);
-        }
+    if (!this.s) {
+        return;
+    }
+    if (!this.height) {
+        this.height = this.s.offsetHeight + "px";
+        this.s.style.height = this.height;
+    }
+    if (this.s.offsetHeight > 0) {
+        this.animation("{height:'0px'}", 5);
     }
 };
 Sparrow.prototype.showHidden = function (descElement, config, all) {
@@ -3284,26 +3297,28 @@ Sparrow.prototype.showHidden = function (descElement, config, all) {
     // 如果默认是不显示或者第二次高度为0
     if (descElement.style.display === "none"
         || descElement.style.height === 0) {
-        if (all.show) {
-            // 记录当前被控控件的高度
-            if (this.s.tagName.toUpperCase() === "IMG") {
-                this.s.src = config.hiddenIco;
-                this.s.alt = config.hiddenText;
-            } else {
-                this.s.innerHTML = config.hiddenText;
-            }
-            $(descElement).show();
+        if (!all.show) {
+            return;
         }
+        // 记录当前被控控件的高度
+        if (this.s.tagName.toUpperCase() === "IMG") {
+            this.s.src = config.hiddenIco;
+            this.s.alt = config.hiddenText;
+        } else {
+            this.s.innerHTML = config.hiddenText;
+        }
+        $(descElement).show();
+        return;
+    }
+    if (!all.hidden) {
+        return;
+    }
+    $(descElement).hidden();
+    if (this.s.tagName === "img") {
+        this.s.src = config.showIco;
+        this.s.alt = config.showText;
     } else {
-        if (all.hidden) {
-            $(descElement).hidden();
-            if (this.s.tagName === "img") {
-                this.s.src = config.showIco;
-                this.s.alt = config.showText;
-            } else {
-                this.s.innerHTML = config.showText;
-            }
-        }
+        this.s.innerHTML = config.showText;
     }
 };
 
@@ -3501,24 +3516,26 @@ Sparrow.menu.prototype.dispose = function () {
 };
 Sparrow.menu.prototype.hidden = function () {
     if (this.position === $.SIDE) {
-        if (this.config.frameDiv) {
-            this.config.frameDiv.style.display = "none";
-            // 隐藏其子菜单
-            for (var i = 0; i < this.config.children.length; i++) {
-                this.config.children[i].hidden();
-            }
+        if (!this.config.frameDiv) {
+            return;
+        }
+        this.config.frameDiv.style.display = "none";
+        // 隐藏其子菜单
+        for (var i = 0; i < this.config.children.length; i++) {
+            this.config.children[i].hidden();
         }
     }
-    else if (this.position === $.HORIZONTAL) {
+    if (this.position === $.HORIZONTAL) {
         var menu = this;
-        if (this.config.current_menu != null) {
-            $(this.config.current_menu.parentNode).stop();
-            $(this.config.current_menu.parentNode).move_end = function () {
-                menu.config.current_menu = null;
-            };
-            $(this.config.current_menu.parentNode).animation("{height:'0px'}",
-                this.config.period);
+        if (this.config.current_menu == null) {
+            return;
         }
+        $(this.config.current_menu.parentNode).stop();
+        $(this.config.current_menu.parentNode).move_end = function () {
+            menu.config.current_menu = null;
+        };
+        $(this.config.current_menu.parentNode).animation("{height:'0px'}",
+            this.config.period);
     }
 };
 
@@ -3639,351 +3656,353 @@ Sparrow.menu.prototype.init = function () {
        this.horizontal();
     }
 };
-Sparrow.datePicker=function(pickerId) {
-	var dateFormat = Object();
-	dateFormat["yyyy年MM月dd日"] = new RegExp("^(\\d{4})年(\\d{2})月(\\d{2})日$",
-			"ig");
-	dateFormat["yyyy-MM-dd"] = new RegExp("^(\\d{4})-(\\d{2})-(\\d{2})$", "ig");
-	dateFormat["yyyy年MM月"] = new RegExp("^\\d{4}年\\d{2}月$", "ig");
-	dateFormat["yyyy-MM"] = new RegExp("^\\d{4}-\\d{2}$", "ig");
-	this.obj = pickerId;
-	this.currentDate = new Date();// 上一次验证通过的时间 文本框中则是当前选中的时间
-	this.pickerDiv = null;
-	this.config = {
-		format : dateFormat,
-		srcElement : null,
-		currentFMT : "yyyy-MM-dd",
-		maxDaysOfMonth :[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30,
-				31],
-		weekDay : ['日', '一', '二', '三', '四', '五', '六'],
-		month :['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月',
-				'10月', '11月', '12月'],
-		minDate : null,
-		allowNull : false
-	};
+Sparrow.datePicker = function (pickerId) {
+    var dateFormat = Object();
+    dateFormat["yyyy年MM月dd日"] = new RegExp("^(\\d{4})年(\\d{2})月(\\d{2})日$",
+        "ig");
+    dateFormat["yyyy-MM-dd"] = new RegExp("^(\\d{4})-(\\d{2})-(\\d{2})$", "ig");
+    dateFormat["yyyy年MM月"] = new RegExp("^\\d{4}年\\d{2}月$", "ig");
+    dateFormat["yyyy-MM"] = new RegExp("^\\d{4}-\\d{2}$", "ig");
+    this.obj = pickerId;
+    this.currentDate = new Date();// 上一次验证通过的时间 文本框中则是当前选中的时间
+    this.pickerDiv = null;
+    this.config = {
+        format: dateFormat,
+        srcElement: null,
+        currentFMT: "yyyy-MM-dd",
+        maxDaysOfMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30,
+            31],
+        weekDay: ['日', '一', '二', '三', '四', '五', '六'],
+        month: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月',
+            '10月', '11月', '12月'],
+        minDate: null,
+        allowNull: false
+    };
 }
 // 判断是否为闰年年
-Sparrow.datePicker.prototype.isLeapYear = function(year) {
-	if (0 === year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
-		return true;
-	}
-	return false;
+Sparrow.datePicker.prototype.isLeapYear = function (year) {
+    if (0 === year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
+        return true;
+    }
+    return false;
 };
 // 闰年二月为29天
-Sparrow.datePicker.prototype.getMaxDaysOfMonth = function(year, month) {
-	if (month === -1) {
-		month = 11;
-	}
-	var maxDaysOfMonth = this.config.maxDaysOfMonth[month];
-	if ((month === 1) && this.isLeapYear(year)) {
-		maxDaysOfMonth += 1;
-	}
-	return maxDaysOfMonth;
+Sparrow.datePicker.prototype.getMaxDaysOfMonth = function (year, month) {
+    if (month === -1) {
+        month = 11;
+    }
+    var maxDaysOfMonth = this.config.maxDaysOfMonth[month];
+    if ((month === 1) && this.isLeapYear(year)) {
+        maxDaysOfMonth += 1;
+    }
+    return maxDaysOfMonth;
 };
-Sparrow.datePicker.prototype.getFormatDate = function(yyyy, MM, dd) {
-	if (typeof(MM)=='undefined'||typeof(dd)=='undefined') {
-		var dateRegExp = this.config.format[this.config.currentFMT];
-		// 因为会出现1次错误一次正常情况
-		var dateGroup = dateRegExp.exec(this.config.srcElement.value);
-		if (dateGroup == null) {
-			dateGroup = dateRegExp.exec(this.config.srcElement.value);
-		}
-		if (dateGroup != null) {
-			var cMM = dateGroup[2];
-			var cdd = dateGroup[3];
+Sparrow.datePicker.prototype.getFormatDate = function (yyyy, MM, dd) {
+    if (typeof (MM) == 'undefined' || typeof (dd) == 'undefined') {
+        var dateRegExp = this.config.format[this.config.currentFMT];
+        // 因为会出现1次错误一次正常情况
+        var dateGroup = dateRegExp.exec(this.config.srcElement.value);
+        if (dateGroup == null) {
+            dateGroup = dateRegExp.exec(this.config.srcElement.value);
+        }
+        if (dateGroup != null) {
+            var cMM = dateGroup[2];
+            var cdd = dateGroup[3];
 
-			if (!MM) {
-				MM = cMM-1;
-			}
-			if (!dd) {
-				dd = cdd;
-			}
-		}
-	}
-	MM = parseInt(MM,10);
-	dd = parseInt(dd,10);
-	MM = MM + 1;
-	if (MM < 10)
-		MM = "0" + MM;
-	if (dd < 10)
-		dd = "0" + dd;
-	return this.config.currentFMT.replace("yyyy", yyyy).replace("MM", MM)
-			.replace("dd", dd);
+            if (!MM) {
+                MM = cMM - 1;
+            }
+            if (!dd) {
+                dd = cdd;
+            }
+        }
+    }
+    MM = parseInt(MM, 10);
+    dd = parseInt(dd, 10);
+    MM = MM + 1;
+    if (MM < 10)
+        MM = "0" + MM;
+    if (dd < 10)
+        dd = "0" + dd;
+    return this.config.currentFMT.replace("yyyy", yyyy).replace("MM", MM)
+        .replace("dd", dd);
 };
 
 // 初始化日期
-Sparrow.datePicker.prototype.init = function(yyyy, MM, dd) {
-	if (!yyyy) {
-		var currentDateTime = this.currentDate;
-		yyyy = currentDateTime.getFullYear();
-		MM = currentDateTime.getMonth();
-		dd = currentDateTime.getDate();
-	}
-	// 第一次加载时 如果yyyy-MM-dd不为空则设置当前时间
-	if (!this.pickerDiv) {
-		var sparrowElement=$(this.config.srcElement);
-		this.currentDate = new Date(yyyy, MM, dd);
-		this.pickerDiv = $("+div");
-		this.pickerDiv.s.id = this.obj;
-		this.pickerDiv.s.style.cssText = "position:absolute;display:none;text-align:center";
-		this.pickerDiv.s.style.left =sparrowElement.getAbsoluteLeft()+"px";
-		this.pickerDiv.s.style.top =(sparrowElement.getAbsoluteTop()
-				+ this.config.srcElement.clientHeight)+"px";
-		this.pickerDiv.opacity(100);
-		document.body.appendChild(this.pickerDiv.s);
-		this.pickerDiv.s.onclick = function(e) {
-			$.event(e).cancelBubble();
-		};
-		this.config.srcElement.readOnly="readonly";
-		var events =this.obj
-				+ ".config.srcElement.onclick=function(e){$.event(e).cancelBubble();"
-				+ this.obj + ".show();};" + this.obj
-				+ ".config.srcElement.onchange=function(){" + this.obj
-				+ ".validate();" + this.obj + ".init();};";
+Sparrow.datePicker.prototype.init = function (yyyy, MM, dd) {
+    if (!yyyy) {
+        var currentDateTime = this.currentDate;
+        yyyy = currentDateTime.getFullYear();
+        MM = currentDateTime.getMonth();
+        dd = currentDateTime.getDate();
+    }
+    // 第一次加载时 如果yyyy-MM-dd不为空则设置当前时间
+    if (!this.pickerDiv) {
+        var sparrowElement = $(this.config.srcElement);
+        this.currentDate = new Date(yyyy, MM, dd);
+        this.pickerDiv = $("+div");
+        this.pickerDiv.s.id = this.obj;
+        this.pickerDiv.s.style.cssText = "position:absolute;display:none;text-align:center";
+        this.pickerDiv.s.style.left = sparrowElement.getAbsoluteLeft() + "px";
+        this.pickerDiv.s.style.top = (sparrowElement.getAbsoluteTop()
+            + this.config.srcElement.clientHeight) + "px";
+        this.pickerDiv.opacity(100);
+        document.body.appendChild(this.pickerDiv.s);
+        this.pickerDiv.s.onclick = function (e) {
+            $.event(e).cancelBubble();
+        };
+        this.config.srcElement.readOnly = "readonly";
+        var events = this.obj
+            + ".config.srcElement.onclick=function(e){$.event(e).cancelBubble();"
+            + this.obj + ".show();};" + this.obj
+            + ".config.srcElement.onchange=function(){" + this.obj
+            + ".validate();" + this.obj + ".init();};";
 
-		window.setTimeout(events, 0);
-	}
+        window.setTimeout(events, 0);
+    }
 
-	var maxDaysOfPreMonth = this.getMaxDaysOfMonth(yyyy, MM - 1);
-	var maxDaysOfMonth = this.getMaxDaysOfMonth(yyyy, MM);
+    var maxDaysOfPreMonth = this.getMaxDaysOfMonth(yyyy, MM - 1);
+    var maxDaysOfMonth = this.getMaxDaysOfMonth(yyyy, MM);
 
-	var startDayOfMonth = new Date(yyyy, MM, 1).getDay();
-	var startDayOfPreMonth = maxDaysOfPreMonth
-			- (startDayOfMonth === 0 ? 7 : startDayOfMonth) + 1;
-	var datePickerHTML =[];
-	datePickerHTML
-			.push('<table class="pure-table pure-table-bordered">');
-	datePickerHTML.push('<tr>');
-	datePickerHTML
-			.push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(-1)">&lt;<a></td>'
-					.format(this.obj));
-	datePickerHTML
-			.push('<td colspan="3"><a onclick="{0}.initYear({1});" href="javascript:void(0)">{1}</a>年</td>'
-					.format(this.obj, yyyy));
-	datePickerHTML
-			.push('<td colspan="2"><a onclick="{0}.initMonth({2},{3});" href="javascript:void(0);">{1}</a></td>'
-					.format(this.obj, this.config.month[MM], yyyy,MM));
-	datePickerHTML
-			.push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(1)">&gt;<a></td>'
-					.format(this.obj));
-	datePickerHTML.push('</tr>');
-	datePickerHTML.push('<tr>');
-	for ( var i = 0; i < 7; i += 1) {
-		datePickerHTML.push('<td>{0}</td>'.format(this.config.weekDay[i]));
-	}
-	datePickerHTML.push('</tr>');
-	var tdIndex = 0;
-	datePickerHTML.push('<tr>');
-	for ( var dayIndexOfPreMonth = startDayOfPreMonth; dayIndexOfPreMonth <= maxDaysOfPreMonth; dayIndexOfPreMonth += 1) {
-		datePickerHTML.push('<td><a  style="color:#ccc;">{0}</a></td>'
-				.format(dayIndexOfPreMonth));
-		tdIndex += 1;
-		if (tdIndex % 7 === 0) {
-			datePickerHTML.push('</tr>');
-			datePickerHTML.push('<tr>');
-		}
-	}
-	for (var dayIndexOfMonth = 1; dayIndexOfMonth <= maxDaysOfMonth; dayIndexOfMonth += 1) {
-		datePickerHTML
-				.push('<td><a href="javascript:void(0);" onclick="{0}.changeDate({1},{2},{3});">{3}</a></td>'
-						.format(this.obj, yyyy, MM, dayIndexOfMonth));
-		tdIndex += 1;
-		if (tdIndex % 7 === 0) {
-			datePickerHTML.push('</tr>');
-			datePickerHTML.push('<tr>');
-		}
-	}
-	var daysOfNextMonth = 7 - tdIndex % 7;
-	for ( var dayIndexOfNextMonth = 1; dayIndexOfNextMonth <= daysOfNextMonth; dayIndexOfNextMonth += 1) {
-		datePickerHTML.push('<td><a  style="color:#ccc;">{0}</a></td>'
-				.format(dayIndexOfNextMonth));
-		tdIndex += 1;
-		if (tdIndex % 7 === 0) {
-			datePickerHTML.push('</tr>');
-			datePickerHTML.push('<tr>');
-		}
-	}
-	datePickerHTML.push('</tr>');
-	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-		this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
+    var startDayOfMonth = new Date(yyyy, MM, 1).getDay();
+    var startDayOfPreMonth = maxDaysOfPreMonth
+        - (startDayOfMonth === 0 ? 7 : startDayOfMonth) + 1;
+    var datePickerHTML = [];
+    datePickerHTML
+        .push('<table class="pure-table pure-table-bordered">');
+    datePickerHTML.push('<tr>');
+    datePickerHTML
+        .push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(-1)">&lt;<a></td>'
+            .format(this.obj));
+    datePickerHTML
+        .push('<td colspan="3"><a onclick="{0}.initYear({1});" href="javascript:void(0)">{1}</a>年</td>'
+            .format(this.obj, yyyy));
+    datePickerHTML
+        .push('<td colspan="2"><a onclick="{0}.initMonth({2},{3});" href="javascript:void(0);">{1}</a></td>'
+            .format(this.obj, this.config.month[MM], yyyy, MM));
+    datePickerHTML
+        .push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(1)">&gt;<a></td>'
+            .format(this.obj));
+    datePickerHTML.push('</tr>');
+    datePickerHTML.push('<tr>');
+    for (var i = 0; i < 7; i += 1) {
+        datePickerHTML.push('<td>{0}</td>'.format(this.config.weekDay[i]));
+    }
+    datePickerHTML.push('</tr>');
+    var tdIndex = 0;
+    datePickerHTML.push('<tr>');
+    for (var dayIndexOfPreMonth = startDayOfPreMonth; dayIndexOfPreMonth <= maxDaysOfPreMonth; dayIndexOfPreMonth += 1) {
+        datePickerHTML.push('<td><a  style="color:#ccc;">{0}</a></td>'
+            .format(dayIndexOfPreMonth));
+        tdIndex += 1;
+        if (tdIndex % 7 === 0) {
+            datePickerHTML.push('</tr>');
+            datePickerHTML.push('<tr>');
+        }
+    }
+    for (var dayIndexOfMonth = 1; dayIndexOfMonth <= maxDaysOfMonth; dayIndexOfMonth += 1) {
+        datePickerHTML
+            .push('<td><a href="javascript:void(0);" onclick="{0}.changeDate({1},{2},{3});">{3}</a></td>'
+                .format(this.obj, yyyy, MM, dayIndexOfMonth));
+        tdIndex += 1;
+        if (tdIndex % 7 === 0) {
+            datePickerHTML.push('</tr>');
+            datePickerHTML.push('<tr>');
+        }
+    }
+    var daysOfNextMonth = 7 - tdIndex % 7;
+    for (var dayIndexOfNextMonth = 1; dayIndexOfNextMonth <= daysOfNextMonth; dayIndexOfNextMonth += 1) {
+        datePickerHTML.push('<td><a  style="color:#ccc;">{0}</a></td>'
+            .format(dayIndexOfNextMonth));
+        tdIndex += 1;
+        if (tdIndex % 7 === 0) {
+            datePickerHTML.push('</tr>');
+            datePickerHTML.push('<tr>');
+        }
+    }
+    datePickerHTML.push('</tr>');
+    this.pickerDiv.s.innerHTML = datePickerHTML.join("");
+    this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
 };
-Sparrow.datePicker.prototype.show = function() {
-	this.pickerDiv.s.style.display = "block";
+Sparrow.datePicker.prototype.show = function () {
+    this.pickerDiv.s.style.display = "block";
 };
-Sparrow.datePicker.prototype.hidden = function() {
-	yyyy = this.currentDate.getFullYear();
-	MM = this.currentDate.getMonth();
-	dd = this.currentDate.getDate();
-	if (!this.config.allowNull&&this.config.srcElement.value === "") {
-		this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
-	}
-	this.pickerDiv.s.style.display = "none";
+Sparrow.datePicker.prototype.hidden = function () {
+    yyyy = this.currentDate.getFullYear();
+    MM = this.currentDate.getMonth();
+    dd = this.currentDate.getDate();
+    if (!this.config.allowNull && this.config.srcElement.value === "") {
+        this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
+    }
+    this.pickerDiv.s.style.display = "none";
 };
 // 初始化 年
-Sparrow.datePicker.prototype.initYear = function(yyyy) {
-	var startYear = yyyy - yyyy % 10;
-	if (startYear < 1900) {
-		startYear = 1900;
-	}
+Sparrow.datePicker.prototype.initYear = function (yyyy) {
+    var startYear = yyyy - yyyy % 10;
+    if (startYear < 1900) {
+        startYear = 1900;
+    }
 
-	var endYear = startYear + 10;
-	var datePickerHTML =[];
-	datePickerHTML
-			.push('<table class="pure-table pure-table-bordered">');
-	datePickerHTML.push('<tr>');
-	datePickerHTML
-			.push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&lt;<a></td>'
-					.format(this.obj, yyyy - 10));
-	datePickerHTML.push('<td colspan="2">{0}-{1}</td>'.format(startYear,
-			endYear - 1));
-	datePickerHTML
-			.push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&gt;<a></td>'
-					.format(this.obj, yyyy<1900?1910:yyyy + 10));
-	datePickerHTML.push('</tr>');
-	datePickerHTML.push('<tr>');
-	var index = 0;
-	for ( var i = startYear - 1; i < endYear; i += 1) {
-		if (i === startYear - 1 || i === endYear) {
-			datePickerHTML.push('<td style="color:#ccc">{0}</td>'.format(i));
-		} else {
-			datePickerHTML
-					.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1})">{1}</a></td>'
-							.format(this.obj, i));
-		}
-		index++;
-		if (index % 4 === 0) {
-			datePickerHTML.push("</tr><tr>");
-		}
-	}
-	datePickerHTML.push('<td style="color:#ccc">{0}</td>'.format(endYear));
-	datePickerHTML.push('</tr>');
-	datePickerHTML.push('</table>');
-	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
+    var endYear = startYear + 10;
+    var datePickerHTML = [];
+    datePickerHTML
+        .push('<table class="pure-table pure-table-bordered">');
+    datePickerHTML.push('<tr>');
+    datePickerHTML
+        .push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&lt;<a></td>'
+            .format(this.obj, yyyy - 10));
+    datePickerHTML.push('<td colspan="2">{0}-{1}</td>'.format(startYear,
+        endYear - 1));
+    datePickerHTML
+        .push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&gt;<a></td>'
+            .format(this.obj, yyyy < 1900 ? 1910 : yyyy + 10));
+    datePickerHTML.push('</tr>');
+    datePickerHTML.push('<tr>');
+    var index = 0;
+    for (var i = startYear - 1; i < endYear; i += 1) {
+        if (i === startYear - 1 || i === endYear) {
+            datePickerHTML.push('<td style="color:#ccc">{0}</td>'.format(i));
+        } else {
+            datePickerHTML
+                .push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1})">{1}</a></td>'
+                    .format(this.obj, i));
+        }
+        index++;
+        if (index % 4 === 0) {
+            datePickerHTML.push("</tr><tr>");
+        }
+    }
+    datePickerHTML.push('<td style="color:#ccc">{0}</td>'.format(endYear));
+    datePickerHTML.push('</tr>');
+    datePickerHTML.push('</table>');
+    this.pickerDiv.s.innerHTML = datePickerHTML.join("");
 };
 // 初始化月
-Sparrow.datePicker.prototype.initMonth = function(yyyy,MM) {
-	if(!MM){
-		MM=this.getCurrentDate().getMonth();
-	}
-	var datePickerHTML =[];
-	datePickerHTML
-			.push('<table  class="pure-table pure-table-bordered">');
-	datePickerHTML.push('<tr>');
-	datePickerHTML
-			.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&lt;<a></td>'
-					.format(this.obj, yyyy - 1,MM));
-	datePickerHTML
-			.push('<td style="text-align:center;" colspan="2"><a href="javascript:void(0);" onclick="{0}.initYear({1})">{1}</a></td>'
-					.format(this.obj, yyyy));
-	datePickerHTML
-			.push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&gt;<a></td>'
-					.format(this.obj, yyyy + 1,MM));
-	datePickerHTML.push('</tr>');
-	datePickerHTML.push('<tr>');
-	var index = 0;
-	for ( var i = 0; i < 12; i += 1) {
-		datePickerHTML
-				.push('<td><a href="javascript:void(0);" onclick="{0}.init({1},{2},{3})">{4}</a></td>'
-						.format(this.obj, yyyy, i, this.currentDate.getDate(),
-								this.config.month[i]));
-		index++;
-		if (index % 4 === 0) {
-			datePickerHTML.push("</tr><tr>");
-		}
-	}
-	datePickerHTML.push('</tr>');
-	datePickerHTML.push('</table>');
-	this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-	this.config.srcElement.value = this.getFormatDate(yyyy,MM);
+Sparrow.datePicker.prototype.initMonth = function (yyyy, MM) {
+    if (!MM) {
+        MM = this.getCurrentDate().getMonth();
+    }
+    var datePickerHTML = [];
+    datePickerHTML
+        .push('<table  class="pure-table pure-table-bordered">');
+    datePickerHTML.push('<tr>');
+    datePickerHTML
+        .push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&lt;<a></td>'
+            .format(this.obj, yyyy - 1, MM));
+    datePickerHTML
+        .push('<td style="text-align:center;" colspan="2"><a href="javascript:void(0);" onclick="{0}.initYear({1})">{1}</a></td>'
+            .format(this.obj, yyyy));
+    datePickerHTML
+        .push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&gt;<a></td>'
+            .format(this.obj, yyyy + 1, MM));
+    datePickerHTML.push('</tr>');
+    datePickerHTML.push('<tr>');
+    var index = 0;
+    for (var i = 0; i < 12; i += 1) {
+        datePickerHTML
+            .push('<td><a href="javascript:void(0);" onclick="{0}.init({1},{2},{3})">{4}</a></td>'
+                .format(this.obj, yyyy, i, this.currentDate.getDate(),
+                    this.config.month[i]));
+        index++;
+        if (index % 4 === 0) {
+            datePickerHTML.push("</tr><tr>");
+        }
+    }
+    datePickerHTML.push('</tr>');
+    datePickerHTML.push('</table>');
+    this.pickerDiv.s.innerHTML = datePickerHTML.join("");
+    this.config.srcElement.value = this.getFormatDate(yyyy, MM);
 };
-Sparrow.datePicker.prototype.changeMonth = function(direction) {
-	var d=this.getCurrentDate();
-	var currentMonth =parseInt(d.getMonth(),10)+direction;
-	var currentYear =parseInt(d.getFullYear(),10);
-	var currentDay = parseInt(d.getDate(),10);
-	if (direction === 1 && currentMonth === 12) {
-		currentMonth = 0;
-		currentYear = currentYear + 1;
-	} else if (direction === -1 && currentMonth === -1) {
-		currentMonth = 11;
-		currentYear = currentYear - 1;
-	}
-	this.config.srcElement.value=this.getFormatDate(currentYear,currentMonth,currentDay);
-	this.init(currentYear, currentMonth, currentDay);
+Sparrow.datePicker.prototype.changeMonth = function (direction) {
+    var d = this.getCurrentDate();
+    var currentMonth = parseInt(d.getMonth(), 10) + direction;
+    var currentYear = parseInt(d.getFullYear(), 10);
+    var currentDay = parseInt(d.getDate(), 10);
+    if (direction === 1 && currentMonth === 12) {
+        currentMonth = 0;
+        currentYear = currentYear + 1;
+    } else if (direction === -1 && currentMonth === -1) {
+        currentMonth = 11;
+        currentYear = currentYear - 1;
+    }
+    this.config.srcElement.value = this.getFormatDate(currentYear, currentMonth, currentDay);
+    this.init(currentYear, currentMonth, currentDay);
 };
-Sparrow.datePicker.prototype.changeDate = function(yyyy, MM, dd) {
-	this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
-	if (this.validate(yyyy, MM, dd)) {
-		this.currentDate = new Date(yyyy, MM, dd);
-	}
-	this.hidden();
+Sparrow.datePicker.prototype.changeDate = function (yyyy, MM, dd) {
+    this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
+    if (this.validate(yyyy, MM, dd)) {
+        this.currentDate = new Date(yyyy, MM, dd);
+    }
+    this.hidden();
 };
 Sparrow.datePicker.prototype.userValidate = null;
 
-Sparrow.datePicker.prototype.getCurrentDate=function () {
-	var dateRegExp = this.config.format[this.config.currentFMT];
-	// 因为会出现1次错误一次正常情况
-	var dateGroup = dateRegExp.exec(this.config.srcElement.value);
-	if (dateGroup == null) {
-		dateGroup = dateRegExp.exec(this.config.srcElement.value);
-	}
-	return new Date(dateGroup[1],parseInt(dateGroup[2],10) - 1,dateGroup[3]);
+Sparrow.datePicker.prototype.getCurrentDate = function () {
+    var dateRegExp = this.config.format[this.config.currentFMT];
+    // 因为会出现1次错误一次正常情况
+    var dateGroup = dateRegExp.exec(this.config.srcElement.value);
+    if (dateGroup == null) {
+        dateGroup = dateRegExp.exec(this.config.srcElement.value);
+    }
+    return new Date(dateGroup[1], parseInt(dateGroup[2], 10) - 1, dateGroup[3]);
 };
 
-Sparrow.datePicker.prototype.validate = function(yyyy, MM, dd) {
-	var result = true;
-	var selectedDate = null;
-	if (this.config.srcElement.value
-			.search(this.config.format[this.config.currentFMT]) === -1) {
-		if (this.config.srcElement.value.trim() === "") {
-			if (this.config.allowNull) {
-				return true;
-			}
-		}
-		$.message("请按【" + this.config.currentFMT + "】格式输入",this.config.srcElement);
-		result = false;
-	} else {
-		if (!yyyy) {
-			var date=this.getCurrentDate();
-			yyyy = date.getFullYear();
-			MM = date.getMonth();
-			dd =date.getDate();
-		}
+Sparrow.datePicker.prototype.validate = function (yyyy, MM, dd) {
+    var result = true;
+    var selectedDate = null;
 
-		if (yyyy < 1900 || yyyy > 2099) {
-			$.m.show("年份超出范围！\n正确年份范围1900-2099",this.config.srcElement);
-			result = false;
-		} else if (MM < 0 || MM > 12) {
-			$.m.show("月份超出范围!",this.config.srcElement);
-			result = false;
-		} else if (dd < 0
-				|| dd > this.getMaxDaysOfMonth(yyyy, MM)) {
-			$.m.show("日期范围超出!",this.config.srcElement);
-			result = false;
-		} else {
-			selectedDate = new Date(yyyy, MM, dd);
-			if (this.config.minDate != null) {
-				var minDate = new Date(this.config.minDate.getFullYear(),
-						this.config.minDate.getMonth(), this.config.minDate
-								.getDate());
-				if (selectedDate < minDate) {
-					m.show("不允许小于"
-							+ this.getFormatDate(minDate.getFullYear(), minDate
-									.getMonth(), minDate.getDate()),this.config.srcElement);
-					result = false;
-				}
-			}
-			if (this.userValidate) {
-				if (!this.userValidate()) {
-					result = false;
-				}
-			}
-		}
-	}
-	if (result) {
-		this.currentDate = selectedDate;
-	}
-	return result;
+    if (this.config.srcElement.value.trim() === "") {
+        if (this.config.allowNull) {
+            return true;
+        }
+        return false;
+    }
+
+    if (this.config.srcElement.value
+        .search(this.config.format[this.config.currentFMT]) === -1) {
+        $.message("请按【" + this.config.currentFMT + "】格式输入", this.config.srcElement);
+        return false;
+    }
+
+    if (!yyyy) {
+        var date = this.getCurrentDate();
+        yyyy = date.getFullYear();
+        MM = date.getMonth();
+        dd = date.getDate();
+    }
+
+    if (yyyy < 1900 || yyyy > 2099) {
+        $.m.show("年份超出范围！\n正确年份范围1900-2099", this.config.srcElement);
+        return false;
+    }
+    if (MM < 0 || MM > 12) {
+        $.m.show("月份超出范围!", this.config.srcElement);
+        return false;
+    }
+    if (dd < 0
+        || dd > this.getMaxDaysOfMonth(yyyy, MM)) {
+        $.m.show("日期范围超出!", this.config.srcElement);
+        return false;
+    }
+    selectedDate = new Date(yyyy, MM, dd);
+    if (this.config.minDate != null) {
+        var minDate = new Date(this.config.minDate.getFullYear(),
+            this.config.minDate.getMonth(), this.config.minDate
+                .getDate());
+        if (selectedDate < minDate) {
+            m.show("不允许小于"
+                + this.getFormatDate(minDate.getFullYear(), minDate
+                    .getMonth(), minDate.getDate()), this.config.srcElement);
+            return false;
+        }
+    }
+    if (this.userValidate) {
+        if (!this.userValidate()) {
+            return false;
+        }
+    }
+    this.currentDate = selectedDate;
+    return result;
 };
 ﻿// 构造函数 objName:对象ID与对象同名；
 Sparrow.editor = function (objName, parentName) {
@@ -6792,10 +6811,25 @@ Sparrow.dispatcher = {
     commandAdapter: {},
     ctrlIdEventMap: {},
     eventRegistry: [],
+    /**
+     *
+     * @param eventConfig
+     * {
+                id: "btn1",//控件标签 id
+                delegate: function (e, srcElement) {
+                    alert(srcElement.value);
+                    srcElement.value = "update";
+                },//事件委托
+                //api: "api",//ajax请求的api
+                strategy: "insert",//策略对应控件的Value
+       }
+     */
     register: function (eventConfig) {
         this.eventRegistry.push(eventConfig);
     },
     dispatcher: function (e, srcElement) {
+        //btnInsert+"新增"
+        //btnInsert+"更新"
         var commandKey = srcElement.id + "_" + srcElement.value;
         var builder = this.commandAdapter[commandKey];
 
@@ -6803,20 +6837,21 @@ Sparrow.dispatcher = {
         if (builder != null) {
             delegate = builder.delegate;
         }
-
         if (delegate == null) {
             builder = this.commandAdapter[srcElement.id];
             if (builder != null) {
                 delegate = builder.delegate;
             }
         }
-        if (builder != null && delegate != null) {
-            if (builder.api) {
-                $.ajax.json(builder.api, builder.parameter, delegate, srcElement);
-            } else {
-                delegate(e, srcElement);
-            }
+
+        if (builder == null || delegate == null) {
+            return
         }
+        if (builder.api) {
+            $.ajax.json(builder.api, builder.parameter, delegate, srcElement);
+            return;
+        }
+        delegate(e, srcElement);
     },
     bind: function () {
         for (var i = 0; i < this.eventRegistry.length; i++) {
@@ -6828,6 +6863,7 @@ Sparrow.dispatcher = {
             this.ctrlIdEventMap[builder.id] = eventName ? eventName : "onclick";
         }
         for (ctrlId in this.ctrlIdEventMap) {
+            //bind(event,function(e){});
             $("#" + ctrlId).bind(this.ctrlIdEventMap[ctrlId], function (e) {
                 Sparrow.dispatcher.dispatcher(e, $.event(e).srcElement)
             });

@@ -9,10 +9,25 @@ Sparrow.dispatcher = {
     commandAdapter: {},
     ctrlIdEventMap: {},
     eventRegistry: [],
+    /**
+     *
+     * @param eventConfig
+     * {
+                id: "btn1",//控件标签 id
+                delegate: function (e, srcElement) {
+                    alert(srcElement.value);
+                    srcElement.value = "update";
+                },//事件委托
+                //api: "api",//ajax请求的api
+                strategy: "insert",//策略对应控件的Value
+       }
+     */
     register: function (eventConfig) {
         this.eventRegistry.push(eventConfig);
     },
     dispatcher: function (e, srcElement) {
+        //btnInsert+"新增"
+        //btnInsert+"更新"
         var commandKey = srcElement.id + "_" + srcElement.value;
         var builder = this.commandAdapter[commandKey];
 
@@ -20,20 +35,21 @@ Sparrow.dispatcher = {
         if (builder != null) {
             delegate = builder.delegate;
         }
-
         if (delegate == null) {
             builder = this.commandAdapter[srcElement.id];
             if (builder != null) {
                 delegate = builder.delegate;
             }
         }
-        if (builder != null && delegate != null) {
-            if (builder.api) {
-                $.ajax.json(builder.api, builder.parameter, delegate, srcElement);
-            } else {
-                delegate(e, srcElement);
-            }
+
+        if (builder == null || delegate == null) {
+            return
         }
+        if (builder.api) {
+            $.ajax.json(builder.api, builder.parameter, delegate, srcElement);
+            return;
+        }
+        delegate(e, srcElement);
     },
     bind: function () {
         for (var i = 0; i < this.eventRegistry.length; i++) {
@@ -45,6 +61,7 @@ Sparrow.dispatcher = {
             this.ctrlIdEventMap[builder.id] = eventName ? eventName : "onclick";
         }
         for (ctrlId in this.ctrlIdEventMap) {
+            //bind(event,function(e){});
             $("#" + ctrlId).bind(this.ctrlIdEventMap[ctrlId], function (e) {
                 Sparrow.dispatcher.dispatcher(e, $.event(e).srcElement)
             });
