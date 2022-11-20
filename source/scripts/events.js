@@ -45,9 +45,9 @@ Sparrow.event.prototype = {
                 - this.eventX;
             this.srcElement.style.top = this.srcRightPos + this.clientY
                 - this.eventY;
-        } else {
-            return true;
+            return;
         }
+        return true;
     },
     move_end: function () {
         this.dragapproved = false;

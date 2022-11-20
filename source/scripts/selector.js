@@ -207,5 +207,4 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
     this.interval = [];
     return this;
 };
-
 window.$ = window.Sparrow = Sparrow;

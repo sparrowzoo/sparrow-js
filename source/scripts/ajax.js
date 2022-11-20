@@ -4,6 +4,50 @@ Sparrow.ajax = {
     url: null,
     srcElement: null,
     SUCCESS: "0",
+    _bindReadyStateChange:function (objXMLHttp) {
+        objXMLHttp.onreadystatechange = function () {
+            if (objXMLHttp.readyState !== 4) {
+                return;
+            }
+            if (objXMLHttp.status === 200) {
+                if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
+                    console.log("login false");
+                    var config = objXMLHttp.responseText.json();
+                    document.domain = $.browser.cookie.root_domain;
+                    if (config.inFrame) {
+                        window.parent.location.href = config.url;
+                    } else {
+                        $.window(config);
+                    }
+                    return;
+                }
+                if (objXMLHttp.responseText
+                    .indexOf("Access Denied") !== -1) {
+                    if (!lang.message.accessDenied)
+                        lang.message.accessDenied = "Access Denied";
+                    $.alert(lang.message.accessDenied, "sad");
+                    return;
+                }
+                if (callback) {
+                    callback(objXMLHttp.responseText);
+                    return;
+                }
+            }
+            if (objXMLHttp.status === 404) {
+                console.log("资源未找到");
+                return;
+            }
+            if (objXMLHttp.status === 500) {
+                console.log("服务器错误");//
+                return;
+            }
+            if (objXMLHttp.status === 12031) {
+                console.log("服务器未启动");//
+                return;
+            }
+            console.log(objXMLHttp.status + ":未知错误");
+        };
+    },
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
             if (this._objPool[i].readyState === 0
@@ -21,19 +65,22 @@ Sparrow.ajax = {
             if (http_request.overrideMimeType) {
                 http_request.overrideMimeType("text/xml");
             }
-        } else {
-            if (window.ActiveXObject) {
+            return http_request;
+        }
+        if (window.ActiveXObject) {
+            try {
+                http_request = new ActiveXObject("Msxml2.XMLHTTP");
+            } catch (e) {
                 try {
-                    http_request = new ActiveXObject("Msxml2.XMLHTTP");
+                    http_request = new ActiveXObject("Microsoft.XMLHTTP");
                 } catch (e) {
-                    try {
-                        http_request = new ActiveXObject("Microsoft.XMLHTTP");
-                    } catch (e) {
-                    }
                 }
             }
         }
-        if (http_request === null) {
+        if(http_request!=null){
+            this._bindReadyStateChange(http_request);
+        }
+        else {
             console.log("浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器");
         }
         return http_request;
@@ -65,56 +112,18 @@ Sparrow.ajax = {
             objXMLHttp.open(getOrPost, url, true);
             objXMLHttp.setRequestHeader("pragma", "no-cache");
             objXMLHttp.setRequestHeader("cache-control", "no-cache");
-
             if (getOrPost === "GET") {
                 objXMLHttp.send(null);
-            } else {
-                if (postStr != null) {
-                    //warn: Parameters: Character decoding failed
-                    postStr = postStr.replace(/%/g, '%25');
-                    objXMLHttp
-                        .setRequestHeader("Content-Type",
-                            "application/x-www-form-urlencoded;charset=utf-8");
-                }
-                objXMLHttp.send(postStr);
+                return;
             }
-            objXMLHttp.onreadystatechange = function () {
-                if (objXMLHttp.readyState === 4) {
-                    if (objXMLHttp.status === 200) {
-                        if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
-                            console.log("login false");
-                            var config = objXMLHttp.responseText.json();
-                            document.domain = $.browser.cookie.root_domain;
-                            if (config.inFrame) {
-                                window.parent.location.href = config.url;
-                            } else {
-                                $.window(config);
-                            }
-                        } else if (objXMLHttp.responseText
-                            .indexOf("Access Denied") !== -1) {
-                            if (!lang.message.accessDenied)
-                                lang.message.accessDenied = "Access Denied";
-                            $.alert(lang.message.accessDenied, "sad");
-                        } else if (callback) {
-                            callback(objXMLHttp.responseText);
-                        }
-                    } else {
-                        if (objXMLHttp.status === 404) {
-                            console.log("资源未找到");//
-                        } else {
-                            if (objXMLHttp.status === 500) {
-                                console.log("服务器错误");//
-                            } else {
-                                if (objXMLHttp.status === 12031) {
-                                    console.log("服务器未启动");//
-                                } else {
-                                    console.log(objXMLHttp.status + ":未知错误");
-                                }
-                            }
-                        }
-                    }
-                }
-            };
+            if (postStr != null) {
+                //warn: Parameters: Character decoding failed
+                postStr = postStr.replace(/%/g, '%25');
+                objXMLHttp
+                    .setRequestHeader("Content-Type",
+                        "application/x-www-form-urlencoded;charset=utf-8");
+            }
+            objXMLHttp.send(postStr);
         } catch (e) {
             console.log(e);
         }

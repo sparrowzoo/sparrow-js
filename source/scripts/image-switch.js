@@ -148,13 +148,14 @@ ImageSwitch.prototype = {
             this.config.period);
     },
     playInterval: function () {
-        if (this.isPlay) {
-            if (this.index === this.numButton.length) {
-                this.index = 0;
-            }
-            this.numButton[this.index].onmouseover();
-            this.index++;
+        if (!this.isPlay) {
+            return;
         }
+        if (this.index === this.numButton.length) {
+            this.index = 0;
+        }
+        this.numButton[this.index].onmouseover();
+        this.index++;
     }, play: function () {
         this.playInterval();
         window.setInterval(this.obj + ".playInterval()",

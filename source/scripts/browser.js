@@ -76,35 +76,35 @@ Sparrow.browser = {
             if (window.clipboardData) {
                 window.clipboardData.setData("Text", text);
                 alert(msg);
-            } else {
-                try {
-                    netscape.security.PrivilegeManager
-                        .enablePrivilege("UniversalXPConnect");
-                } catch (e) {
-                    alert("您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!");
-                    return false;
-                }
-                var clip = Components.classes['@mozilla.org/widget/clipboard;1']
-                    .createInstance(Components.interfaces.nsIClipboard);
-                if (!clip)
-                    return;
-                var trans = Components.classes['@mozilla.org/widget/transferable;1']
-                    .createInstance(Components.interfaces.nsITransferable);
-                if (!trans) {
-                    return;
-                }
-                trans.addDataFlavor('text/unicode');
-                var supportsString = Components.classes["@mozilla.org/supports-string;1"]
-                    .createInstance(Components.interfaces.nsISupportsString);
-                supportsString.data = text;
-                trans.setTransferData("text/unicode", supportsString, text
-                    .getByteLength());
-                var clipid = Components.interfaces.nsIClipboard;
-                if (!clip)
-                    return false;
-                clip.setData(trans, null, clipid.kGlobalClipboard);
-                alert(msg);
+                return
             }
+            try {
+                netscape.security.PrivilegeManager
+                    .enablePrivilege("UniversalXPConnect");
+            } catch (e) {
+                alert("您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!");
+                return false;
+            }
+            var clip = Components.classes['@mozilla.org/widget/clipboard;1']
+                .createInstance(Components.interfaces.nsIClipboard);
+            if (!clip)
+                return;
+            var trans = Components.classes['@mozilla.org/widget/transferable;1']
+                .createInstance(Components.interfaces.nsITransferable);
+            if (!trans) {
+                return;
+            }
+            trans.addDataFlavor('text/unicode');
+            var supportsString = Components.classes["@mozilla.org/supports-string;1"]
+                .createInstance(Components.interfaces.nsISupportsString);
+            supportsString.data = text;
+            trans.setTransferData("text/unicode", supportsString, text
+                .getByteLength());
+            var clipid = Components.interfaces.nsIClipboard;
+            if (!clip)
+                return false;
+            clip.setData(trans, null, clipid.kGlobalClipboard);
+            alert(msg);
         } catch (e) {
             alert("对不起！您的浏览器不支持该功能");
         }
