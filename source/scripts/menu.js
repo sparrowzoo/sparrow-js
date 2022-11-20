@@ -126,24 +126,26 @@ Sparrow.menu.prototype.dispose = function () {
 };
 Sparrow.menu.prototype.hidden = function () {
     if (this.position === $.SIDE) {
-        if (this.config.frameDiv) {
-            this.config.frameDiv.style.display = "none";
-            // 隐藏其子菜单
-            for (var i = 0; i < this.config.children.length; i++) {
-                this.config.children[i].hidden();
-            }
+        if (!this.config.frameDiv) {
+            return;
+        }
+        this.config.frameDiv.style.display = "none";
+        // 隐藏其子菜单
+        for (var i = 0; i < this.config.children.length; i++) {
+            this.config.children[i].hidden();
         }
     }
-    else if (this.position === $.HORIZONTAL) {
+    if (this.position === $.HORIZONTAL) {
         var menu = this;
-        if (this.config.current_menu != null) {
-            $(this.config.current_menu.parentNode).stop();
-            $(this.config.current_menu.parentNode).move_end = function () {
-                menu.config.current_menu = null;
-            };
-            $(this.config.current_menu.parentNode).animation("{height:'0px'}",
-                this.config.period);
+        if (this.config.current_menu == null) {
+            return;
         }
+        $(this.config.current_menu.parentNode).stop();
+        $(this.config.current_menu.parentNode).move_end = function () {
+            menu.config.current_menu = null;
+        };
+        $(this.config.current_menu.parentNode).animation("{height:'0px'}",
+            this.config.period);
     }
 };
 

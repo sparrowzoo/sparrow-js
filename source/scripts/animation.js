@@ -2,28 +2,28 @@ Sparrow.prototype.move = function (s) {
     var status = s.json();
     console.log("move status ", status);
     var _move = function (sparrowElement, start, end, percent, change) {
-        if (!$.isNullOrEmpty(end)) {
-            var distance = (parseInt(end, 10) - parseInt(start, 10));
-            var speed = distance * percent;
-            if (percent > 1) {
-                speed = distance > 0 ? percent : -percent;
-                if (Math.abs(distance) <= 1) {
-                    sparrowElement.css(change, status.start, false);
-                    return false;
-                }
-            } else {
-                speed = distance * percent;
-            }
-            if (typeof (change) === "function") {
-                change(sparrowElement.s, speed);
-            } else {
-                sparrowElement.css(change, speed, true);
-            }
-            if (Math.abs(distance) <= 1) {
-                return true;
-            }
+        if ($.isNullOrEmpty(end)) {
+            return false;
         }
-        return false;
+        var distance = (parseInt(end, 10) - parseInt(start, 10));
+        var speed = distance * percent;
+        if (percent > 1) {
+            speed = distance > 0 ? percent : -percent;
+            if (Math.abs(distance) <= 1) {
+                sparrowElement.css(change, status.start, false);
+                return false;
+            }
+        } else {
+            speed = distance * percent;
+        }
+        if (typeof (change) === "function") {
+            change(sparrowElement.s, speed);
+        } else {
+            sparrowElement.css(change, speed, true);
+        }
+        if (Math.abs(distance) <= 1) {
+            return true;
+        }
     };
     var percent = status.percent;
     if (!percent) {
@@ -42,30 +42,31 @@ Sparrow.prototype.move = function (s) {
     if (!end) {
         end = _move(this, this.opacity(), status.opacity, percent, "opacity");
     }
-    if (end) {
-        if (!$.isNullOrEmpty(status.width)) {
-            this.s.style.width = status.width;
-        }
-        if (!$.isNullOrEmpty(status.height)) {
-            this.s.style.height = status.height;
-        }
-        if (!$.isNullOrEmpty(status.left)) {
-            this.s.style.left = status.left;
-        }
-        if (!$.isNullOrEmpty(status.top)) {
-            this.s.style.top = status.top;
-        }
-        if (!$.isNullOrEmpty(status.opacity)) {
-            this.opacity(status.opacity);
-        }
-        if (parseInt(status.height, 10) === 0) {
-            this.s.style.display = "none";
-        }
-        this.stop();
-        this.move_end();
-        this.move_end = function () {
-        };
+    if (!end) {
+        return;
     }
+    if (!$.isNullOrEmpty(status.width)) {
+        this.s.style.width = status.width;
+    }
+    if (!$.isNullOrEmpty(status.height)) {
+        this.s.style.height = status.height;
+    }
+    if (!$.isNullOrEmpty(status.left)) {
+        this.s.style.left = status.left;
+    }
+    if (!$.isNullOrEmpty(status.top)) {
+        this.s.style.top = status.top;
+    }
+    if (!$.isNullOrEmpty(status.opacity)) {
+        this.opacity(status.opacity);
+    }
+    if (parseInt(status.height, 10) === 0) {
+        this.s.style.display = "none";
+    }
+    this.stop();
+    this.move_end();
+    this.move_end = function () {
+    };
 };
 Sparrow.prototype.move_end = function () {
 };
@@ -125,26 +126,29 @@ Sparrow.prototype.show = function () {
     // 设置超出隐藏
     this.s.style.overflow = "hidden";
     // 如果默认是不显示或者第二次高度为0
-    if (this.s.style.display === "none"
-        || this.s.offsetHeight === 0) {
-        // 记录当前被控控件的高度
-        if (this.height === undefined) {
-            this.s.style.display = "block";
-            this.height = this.s.offsetHeight + "px";
-            this.s.style.height = "0";
-        }
-        this.animation("{height:'" + this.height + "'}", 5);
+    var isHidden = this.s.style.display === "none"
+        || this.s.offsetHeight === 0;
+    if (!isHidden) {
+        return;
     }
+    // 记录当前被控控件的高度
+    if (this.height === undefined) {
+        this.s.style.display = "block";
+        this.height = this.s.offsetHeight + "px";
+        this.s.style.height = "0";
+    }
+    this.animation("{height:'" + this.height + "'}", 5);
 };
 Sparrow.prototype.hidden = function () {
-    if (this.s) {
-        if (!this.height) {
-            this.height = this.s.offsetHeight + "px";
-            this.s.style.height = this.height;
-        }
-        if (this.s.offsetHeight > 0) {
-            this.animation("{height:'0px'}", 5);
-        }
+    if (!this.s) {
+        return;
+    }
+    if (!this.height) {
+        this.height = this.s.offsetHeight + "px";
+        this.s.style.height = this.height;
+    }
+    if (this.s.offsetHeight > 0) {
+        this.animation("{height:'0px'}", 5);
     }
 };
 Sparrow.prototype.showHidden = function (descElement, config, all) {
@@ -170,26 +174,28 @@ Sparrow.prototype.showHidden = function (descElement, config, all) {
     // 如果默认是不显示或者第二次高度为0
     if (descElement.style.display === "none"
         || descElement.style.height === 0) {
-        if (all.show) {
-            // 记录当前被控控件的高度
-            if (this.s.tagName.toUpperCase() === "IMG") {
-                this.s.src = config.hiddenIco;
-                this.s.alt = config.hiddenText;
-            } else {
-                this.s.innerHTML = config.hiddenText;
-            }
-            $(descElement).show();
+        if (!all.show) {
+            return;
         }
+        // 记录当前被控控件的高度
+        if (this.s.tagName.toUpperCase() === "IMG") {
+            this.s.src = config.hiddenIco;
+            this.s.alt = config.hiddenText;
+        } else {
+            this.s.innerHTML = config.hiddenText;
+        }
+        $(descElement).show();
+        return;
+    }
+    if (!all.hidden) {
+        return;
+    }
+    $(descElement).hidden();
+    if (this.s.tagName === "img") {
+        this.s.src = config.showIco;
+        this.s.alt = config.showText;
     } else {
-        if (all.hidden) {
-            $(descElement).hidden();
-            if (this.s.tagName === "img") {
-                this.s.src = config.showIco;
-                this.s.alt = config.showText;
-            } else {
-                this.s.innerHTML = config.showText;
-            }
-        }
+        this.s.innerHTML = config.showText;
     }
 };
 

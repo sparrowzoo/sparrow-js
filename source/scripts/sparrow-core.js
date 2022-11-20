@@ -487,13 +487,14 @@ Sparrow.prototype.fresh = function (url) {
 Sparrow.prototype.enter = function (handle) {
     this.s.onkeydown = function (e) {
         e = window.event || e;
-        if (e.keyCode === 13) {
-            if (typeof(handle) === "string") {
-                $(handle).onclick(e);
-                return;
-            }
-            handle();
+        if (e.keyCode !== 13) {
+            return;
         }
+        if (typeof (handle) === "string") {
+            $(handle).onclick(e);
+            return;
+        }
+        handle();
     };
 };
 

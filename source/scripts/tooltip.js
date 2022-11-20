@@ -70,19 +70,20 @@ Sparrow.tooltip.prototype = {
                     + (this.config.width - 4) + "px;\">");
             this.listCount = this.listArray.length;
             for (var i = 0; i < this.listArray.length; i++) {
-                if (this.listArray[i]) {
-                    content
-                        .push("<li  title='"
-                            + this.listArray[i][2]
-                            + "' id=\"item"
-                            + i
-                            + "\"style=\"cursor:pointer;padding:5px;width:"
-                            + (this.config.width - 10)
-                            + "px;line-height:30px;border-bottom:#ccc 1px dotted;\" onclick=\""
-                            + this.obj + ".showItem(" + i + ");\">");
-                    content.push(this.listArray[i][2]);
-                    content.push("</li>");
+                if (!this.listArray[i]) {
+                    continue
                 }
+                content
+                    .push("<li  title='"
+                        + this.listArray[i][2]
+                        + "' id=\"item"
+                        + i
+                        + "\"style=\"cursor:pointer;padding:5px;width:"
+                        + (this.config.width - 10)
+                        + "px;line-height:30px;border-bottom:#ccc 1px dotted;\" onclick=\""
+                        + this.obj + ".showItem(" + i + ");\">");
+                content.push(this.listArray[i][2]);
+                content.push("</li>");
             }
             content.push("</ul>");
             this.config.toolipDiv.innerHTML = content.join("");
@@ -92,39 +93,45 @@ Sparrow.tooltip.prototype = {
     show: function (e) {
         e = e || window.event;
         this.keyCode = e.keyCode;
-        if (this.config.srcElement.value.trim().length > 0) {
-            if (this.keyCode === 13) {
-                this.appendToItemList();
-                this.config.toolipDiv.style.display = "none";
-                this.currentIndex = -1;
-                this.listCount = 0;
-                if (this.config.descIdHidden.value.trim() === "") {
-                    var currentLi = $("item0");
-                    if (currentLi) {
-                        var currentItem = this.listArray[0];
-                        this.config.descIdHidden.value = currentItem[0];
-                        this.config.srcElement.value = this.config.showFullName == true ? currentItem[2]
-                            : currentItem[1];
-                        if (this.selectedCallBack) {
-                            this.selectedCallBack(currentItem);
-                        }
-                    }
-                }
-            } else if (this.keyCode == 38 || this.keyCode == 40) {
-                this.upAndDown();
-            } else if ((this.keyCode == 8 || this.keyCode == 46)
-                && this.config.srcElement.value.length > this.config.maxLength) {
-                this.config.srcElement.value = "";
-                this.config.descIdHidden.value = "";
-            } else {
-                this.prepare();
-            }
-        } else {
+
+        if (this.config.srcElement.value.trim().length <= 0) {
             this.config.toolipDiv.style.display = "none";
             this.currentIndex = -1;
             this.listCount = 0;
             this.config.descIdHidden.value = "";
+            return;
         }
+        if (this.keyCode === 13) {
+            this.appendToItemList();
+            this.config.toolipDiv.style.display = "none";
+            this.currentIndex = -1;
+            this.listCount = 0;
+            if (this.config.descIdHidden.value.trim() !== "") {
+                return;
+            }
+            var currentLi = $("item0");
+            if (currentLi) {
+                var currentItem = this.listArray[0];
+                this.config.descIdHidden.value = currentItem[0];
+                this.config.srcElement.value = this.config.showFullName == true ? currentItem[2]
+                    : currentItem[1];
+                if (this.selectedCallBack) {
+                    this.selectedCallBack(currentItem);
+                }
+            }
+            return;
+        }
+        if (this.keyCode === 38 || this.keyCode === 40) {
+            this.upAndDown();
+            return;
+        }
+        if ((this.keyCode === 8 || this.keyCode === 46)
+            && this.config.srcElement.value.length > this.config.maxLength) {
+            this.config.srcElement.value = "";
+            this.config.descIdHidden.value = "";
+            return;
+        }
+        this.prepare();
     },
     showItem: function (itemIndex) {
         var item = this.listArray[itemIndex];
