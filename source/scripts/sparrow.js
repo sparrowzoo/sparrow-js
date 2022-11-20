@@ -804,7 +804,7 @@ Sparrow.ajax = {
     url: null,
     srcElement: null,
     SUCCESS: "0",
-    _bindReadyStateChange:function (objXMLHttp) {
+    _bindReadyStateChange:function (objXMLHttp,callback) {
         objXMLHttp.onreadystatechange = function () {
             if (objXMLHttp.readyState !== 4) {
                 return;
@@ -865,7 +865,6 @@ Sparrow.ajax = {
             if (http_request.overrideMimeType) {
                 http_request.overrideMimeType("text/xml");
             }
-            this._bindReadyStateChange(http_request);
             return http_request;
         }
         if (window.ActiveXObject) {
@@ -877,9 +876,6 @@ Sparrow.ajax = {
                 } catch (e) {
                 }
             }
-        }
-        if(http_request!=null){
-            this._bindReadyStateChange(http_request);
         }
         else {
             console.log("浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器");
@@ -904,6 +900,9 @@ Sparrow.ajax = {
             url = $.url.root + url;
         }
         var objXMLHttp = this._getInstance();
+        if(objXMLHttp!=null){
+            this._bindReadyStateChange(objXMLHttp,callback);
+        }
         if (srcElement) {
             this.srcElement = srcElement;
         }
