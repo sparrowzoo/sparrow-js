@@ -1,0 +1,15 @@
+th {width: 130px;text-align:right;}
+
+td {width: 190px;border:none;border-bottom:#ccc 1px dotted;}
+
+.td-input {
+    width:200px;
+    border:none;
+    border-bottom:#ccc 1px dotted;
+}
+
+.td-message {
+    width:200px;
+    border:none;
+    border-bottom:#ccc 1px dotted;
+}
