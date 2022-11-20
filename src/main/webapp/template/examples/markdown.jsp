@@ -15,8 +15,7 @@
     <!--<![endif]-->
     <j:script src="$resource/scripts/sparrow.js"/>
 
-    <script language="javascript" type="text/javascript"
-            src="/scripts/code-prettify/sparrow-prettify.js?lang=css&skin=sunburst"></script>
+    <j:script src="$resource/scripts/code-prettify/sparrow-prettify.js?lang=css&skin=sunburst.js"/>
 
     <style type="text/css">
         hr {
