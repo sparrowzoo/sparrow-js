@@ -865,6 +865,7 @@ Sparrow.ajax = {
             if (http_request.overrideMimeType) {
                 http_request.overrideMimeType("text/xml");
             }
+            this._bindReadyStateChange(http_request);
             return http_request;
         }
         if (window.ActiveXObject) {
