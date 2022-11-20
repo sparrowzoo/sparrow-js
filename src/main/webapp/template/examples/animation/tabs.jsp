@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <title>Sparrow tab切换 &ndash; Sparrow JS Framework</title>
     <jsp:include page="/template/examples/head.jsp"/>
-    <j:style href="$resource/assets/styles/sparrow.css"/>
+    <j:style href="$resource/styles/sparrow.css"/>
     <script type="text/javascript" language="JavaScript">
 
 
