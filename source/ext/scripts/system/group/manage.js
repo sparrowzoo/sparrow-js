@@ -9,7 +9,7 @@ var groupController = {
 
     load: function () {
         $.gridView.id="grvGroupList";
-        document.forms[0].action=this.api.manage;
+        document.forms[0].action=this.api.search;
 
         $.dispatcher.eventRegistry = [
             {
