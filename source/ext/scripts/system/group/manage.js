@@ -1,11 +1,10 @@
 var groupController = {
     api: {
         add: "new",
-        manage: "manage",
+        search: "search.do",
         enable:"enable",
         disable:"disable",
-        delete:"delete",
-        search:"search"
+        delete:"delete"
     },
 
     load: function () {
@@ -16,7 +15,7 @@ var groupController = {
             {
                 id: "btnSearch",
                 delegate: function (e, srcElement) {
-                    $.submit(groupController.api.manage);
+                    $.submit(groupController.api.search);
                 }
             },
             {
