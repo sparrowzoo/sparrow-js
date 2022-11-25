@@ -12,12 +12,13 @@ var menuController = {
     load: function () {
         $.ajax.referWindow = window.parent;
         this.menuTree = new $.tree('menuTree');
+        this.refreshHeight();
         $("#divMenuTree").html(this.menuTree.config.loadingString);
         var btnOpen = $("#btnOpen");
         btnOpen.value(lang.command.openAll);
 
         btnOpen.bind("onclick", function () {
-            if (this.value == lang.command.openAll) {
+            if (this.value === lang.command.openAll) {
                 menuController.menuTree.openAll();
                 this.value = lang.command.closeAll
             } else {
@@ -26,6 +27,10 @@ var menuController = {
             }
         });
         $.ajax.json($.url.root + "/privilege/menu.json", menuController.render);
+    },
+    refreshHeight:function (){
+        var height = document.documentElement.clientHeight;
+        document.getElementById('iframe-page-content').style.height = (height - 100) + 'px';
     },
     render: function (result) {
         var json = result.data;
@@ -64,8 +69,7 @@ var menuController = {
                 menuList[i].icoUrl);
         }
         $("#divMenuTree").html(menuTree);
-        var height = document.documentElement.clientHeight;
-        document.getElementById('iframe-page-content').style.height = (height - 100) + 'px';
+        this.refreshHeight();
     }
 }
 
