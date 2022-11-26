@@ -49,6 +49,7 @@ var groupInfo = {
 		errorCtrlId : 'errorMaxAllowCount',
 		prompt : '请输入最大允许用户数 默认为0：不限,最大用户数在100之内',
 		lengthError : '宽度限提提示文字。',
+		digitalError:'最大用户数在100之内',
 		minValue : 0,
 		maxValue : 100,
 		defaultValue : 0
