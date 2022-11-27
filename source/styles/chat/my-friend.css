@@ -1,0 +1,134 @@
+h5 {
+  color: #282d3b;
+}
+.content-wraper {
+  width: 90%;
+  position: relative;
+}
+.content-wraper .select-btn {
+  background-color: #f7f7f7;
+  display: flex;
+  padding: 18px 0;
+  border-bottom: 8px solid #fff;
+}
+.content-wraper .select-btn .select-item {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+}
+.content-wraper .select-btn .select-item .iconfont {
+  vertical-align: text-top;
+  font-size: 24px;
+}
+.content-wraper .select-btn .select-item:nth-child(2) {
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+}
+.content-wraper .dialog {
+  position: absolute;
+  top: 75px;
+  left: 40px;
+  width: 30%;
+  min-width: 200px;
+  background-color: #fff;
+  padding: 0 30px;
+}
+.content-wraper .dialog p {
+  text-align: center;
+  color: #282d3b;
+  font-size: 18px;
+  padding-top: 10px;
+}
+.content-wraper .dialog input {
+  text-align: center;
+  margin: 0 auto;
+  width: 100%;
+  outline: none;
+  border: none;
+  color: #848484;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  padding: 10px 0;
+}
+.content-wraper .dialog .operate {
+  margin: 35px 0;
+  display: flex;
+  justify-content: center;
+}
+.content-wraper .dialog .operate button {
+  min-width: 80px;
+  width: 15%;
+  padding: 6px 0;
+  background-color: #f7f7f7;
+  border: 2px solid #282d3b;
+  color: #282d3b;
+  cursor: pointer;
+  font-size: 14px;
+}
+.content-wraper .dialog .operate .chat {
+  margin-left: 10px;
+  background-color: #282d3b;
+  color: #fff;
+}
+.content-wraper .content {
+  height: 570px;
+  padding: 0 60px;
+  background-color: #f7f7f7;
+  overflow: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+.content-wraper .content::-webkit-scrollbar {
+  display: none;
+  /* Chrome Safari */
+}
+.content-wraper .content-item {
+  width: 100%;
+  height: 100px;
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.content-wraper .content-item .user-info {
+  width: 200px;
+  display: flex;
+  align-items: center;
+}
+.content-wraper .content-item .user-info .avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.content-wraper .content-item .user-info .avatar img {
+  width: 100%;
+  height: 100%;
+}
+.content-wraper .content-item .user-info .username {
+  margin-left: 10px;
+  display: flex;
+  flex-direction: column;
+}
+.content-wraper .content-item .operate {
+  width: 70%;
+  text-align: end;
+}
+.content-wraper .content-item .operate button {
+  min-width: 80px;
+  width: 15%;
+  padding: 10px 0;
+  background-color: #f7f7f7;
+  border: 2px solid #282d3b;
+  color: #282d3b;
+  cursor: pointer;
+  font-size: 14px;
+}
+.content-wraper .content-item .operate .chat {
+  margin-left: 5px;
+  background-color: #282d3b;
+  color: #fff;
+}
