@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="../../../../../source/styles/chat/index.css">
+</head>
+
+<body>
+  <div class="wraper">
+    <nav>
+      <span>首页</span>
+      <span>&lt </span>
+      <span>消息</span>
+      <span>&lt </span>
+      <span>我的群聊</span>
+
+    </nav>
+    <div class="container">
+      <!-- 左侧菜单 -->
+      <div class="menu">
+        <div class="menu-item" data-menu="0">我的好友</div>
+        <div class="menu-item" data-menu="1">聊天消息</div>
+        <div class="menu-item" data-menu="2">系统通知</div>
+        <div class="menu-item" data-menu="3">联系客服</div>
+      </div>
+      <!-- 右侧主体内容  主要分为四个模块 -->
+      <div class="main">
+
+        <!-- 我的好友 -->
+        <div class="content-wraper">
+          <div class="select-btn">
+            <div class="select-item" data-type="add-friend">
+              <i class="iconfont icon-zengjia"></i>
+              <span>添加朋友</span>
+            </div>
+            <div class="select-item" data-type="new-friend">
+              <i class="iconfont icon-user"></i>
+              <span>新的朋友</span>
+            </div>
+            <div class="select-item" data-type="my-friends">
+              <i class="iconfont icon-yonghuqun"></i>
+              <span>我的群聊</span>
+            </div>
+
+            <!-- 弹层 -->
+            <div style="display:none;" class="dialog add-friend">
+              <p>添加好友</p>
+              <input type="text" placeholder="请输入微信号/手机号">
+              <div class="operate">
+                <button data-type="remove">取消</button>
+                <button data-type="chat" class="chat">申请</button>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="content">
+            <!-- 这里展示朋友以及群聊列表  通过模板填充 -->
+            <div style="display:none">
+              列表为空
+            </div>
+          </div>
+        </div>
+
+        <!-- 聊天消息 -->
+        <div class="chat-msg">
+          <div class="chat-content">
+            <div class="msg-part">
+              <!-- 搜索框 -->
+              <div class="search-part">
+                <div class="search-icon">
+                  <i class="iconfont icon-sousuo"></i>
+                  <input type="text" placeholder="搜索">
+                </div>
+                <div class="search-add">+</div>
+                <!-- 添加用户弹层 模板填充 -->
+              </div>
+              <!-- 消息列表   模板填充 -->
+              <div class="msg-list">
+              </div>
+            </div>
+            <!-- 聊天框区域  使用template填充-->
+          </div>
+
+        </div>
+
+        <!-- 系统通知 -->
+        <div class="inform">
+          <div class="inform-item">
+            <div class="setting-icon"></div>
+            <div class="inform-content">
+              <span>系统通知</span>
+              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
+              <div class="inform-message">
+                <span class="inform-time">2022-11-17 16:15:20</span>
+                <span class="inform-operate">展开全部</span>
+              </div>
+            </div>
+          </div>
+          <div class="inform-item">
+            <div class="setting-icon"></div>
+            <div class="inform-content">
+              <span>系统通知</span>
+              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
+              <div class="inform-message">
+                <span class="inform-time">2022-11-17 16:15:20</span>
+                <span class="inform-operate">展开全部</span>
+              </div>
+            </div>
+          </div>
+          <div class="inform-item">
+            <div class="setting-icon"></div>
+            <div class="inform-content">
+              <span>系统通知</span>
+              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
+              <div class="inform-message">
+                <span class="inform-time">2022-11-17 16:15:20</span>
+                <span class="inform-operate">展开全部</span>
+              </div>
+            </div>
+          </div>
+          <div class="inform-item">
+            <div class="setting-icon"></div>
+            <div class="inform-content">
+              <span>系统通知</span>
+              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
+              <div class="inform-message">
+                <span class="inform-time">2022-11-17 16:15:20</span>
+                <span class="inform-operate">展开全部</span>
+              </div>
+            </div>
+          </div>
+          <div class="inform-item">
+            <div class="setting-icon"></div>
+            <div class="inform-content">
+              <span>系统通知</span>
+              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
+              <div class="inform-message">
+                <span class="inform-time">2022-11-17 16:15:20</span>
+                <span class="inform-operate">展开全部</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 联系客服 -->
+        <div class="service">
+          <!-- 具体内容 由模板填充 -->
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 模板文件 -->
+    <!-- 好友列表 -->
+    <template id="user-list">
+      <div class="content-item">
+        <div class="user-info">
+          <div class="avatar">
+            <img src="https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg" alt="">
+          </div>
+          <div class="username">
+            <span>好友名字</span>
+            <span>粉丝 2565</span>
+          </div>
+        </div>
+        <div class="operate">
+          <button data-type="remove">删除好友</button>
+          <button data-type="chat" class="chat">聊一下</button>
+        </div>
+      </div>
+    </template>
+
+    <!-- 消息列表 -->
+    <template id="msg-list-part">
+      <div class="msg-item" style="background-color: #f3f0f0;">
+        <div class="avatar">
+          <img src="https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg" class="avatar-img" alt="用户头像">
+          <img src="https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg" class="nation" alt="国籍">
+          <span>5</span>
+        </div>
+        <div class="msg-user-time">
+          <div class="msg-user">
+            <span class="username">鲨鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼辣椒</span>
+            <span class="msg-time">22/11/20</span>
+          </div>
+          <span class="msg-last">未读未读未读未读读未读未读读未读未读未读消息</span>
+
+        </div>
+
+      </div>
+    </template>
+
+    <!-- 添加朋友弹层 -->
+    <template id="add-friend-dialog">
+      <div style="display:none" class="dialog-add-friend-wrap">
+        <div class="dialog-add-friend">
+          <!-- 选择列表 -->
+          <div class="dialog-user-list">
+            <div class="dialog-search">
+              <i class="iconfont icon-sousuo"></i>
+              <input type="text" placeholder="搜索">
+            </div>
+            <div class="user-list">
+              <p>A</p>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item ">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿乐</span>
+                  <div class="check-box">
+                    <i class="iconfont icon-duigou1"></i>
+                  </div>
+                </div>
+              </div>
+              <p>B</p>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">冰冰</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">冰冰</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">冰冰</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">冰冰</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+          <!-- 已经选择的用户 -->
+          <div class="dialog-choose-list">
+            <div class="dialog-choose-title">
+              已选择<span>1</span>个联系人
+            </div>
+            <i class="iconfont icon-cuowukongxin"></i>
+            <div class="choose-user">
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+              <div class="user-item">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <div class="dialog-info">
+                  <span class="username">阿飞</span>
+                  <div class="check-box"></div>
+                </div>
+              </div>
+            </div>
+            <div class="dialog-operate">
+              <button class="sure-btn">确认</button>
+              <button class="cancel-btn">取消</button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </template>
+
+    <!-- 聊天框 -->
+    <template id="chat-part">
+      <div class="msg-content">
+        <div class="title">
+          <span class="user">名字</span>
+          <i class="iconfont icon-yonghuming show-more-icon"></i>
+        </div>
+        <div class="msg-detail">
+          <!-- 聊天信息 之后通过模板填充 -->
+        </div>
+        <div class="input-part">
+          <div class="conver-button">
+            <span>英</span>
+            <span class="active-lang">中</span>
+            <!-- <i class="iconfont icon-tupian upload-img"></i> -->
+            <input type="file" name="" id="" class="upload-img">
+          </div>
+          <div class="input-message">
+            <div class="text">
+              <textarea autofocus class="input-content" name=""></textarea>
+            </div>
+            <button class="send-btn">发送</button>
+          </div>
+        </div>
+        <div style="display:none" class="more-message">
+          <!-- 区分在联系人点击  还是 在群聊天点击 -->
+          <div style="display:none" class="user-more-part">
+            <div class="user-more-part-wapper">
+              <div class="more-user">
+                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <span>用户名户名户名</span>
+              </div>
+              <div class="more-icon">
+                <div class="search-add">+</div>
+                <span>添加</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:none" class="group-more-part">
+            <div class="more-search">
+              <i class="iconfont icon-sousuo"></i>
+              <input type="text" placeholder="搜索">
+            </div>
+            <div class="group-more-content">
+              <div class="user-list">
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用户名户名户名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用户名户名户名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用户名户名户名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用户名户名户名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用户名户名户名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-user">
+                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <span>用名</span>
+                </div>
+                <div class="more-icon">
+                  <div class="search-add">+</div>
+                  <span>添加</span>
+                </div>
+
+              </div>
+              <div class="look-more-user">
+                <span>查看更多</span>
+                <i class="iconfont icon-xiala"></i>
+              </div>
+              <div class="more-common">
+                <p>群聊名称</p>
+                <span>前端学习群</span>
+                <p>群公告</p>
+                <span>这是一个群公告</span>
+                <p>群备注</p>
+                <span>这是一个群公告</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+
+    <!-- 聊天信息 -->
+    <template id="message-detail-part">
+      <div class="message">
+        <div class="time">2022-06-03</div>
+        <div class="user-msg">
+          <img class="avatar-user" src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+          <!-- 文本信息和图片信息 动态显示 -->
+          <div style="display:none" class="message-detail">
+            <span class="block"></span>
+            <span class="message-text">这里是聊天内容</span>
+          </div>
+          <img style="display:none" src="" class="msg-picture" alt="">
+        </div>
+      </div>
+    </template>
+
+
+
+  </div>
+</body>
+<script>
+
+</script>
+<!-- <script type="text/javascript" src="http://r.sparrowzoo.net/scripts/SparrowChat.js"></script> -->
+<script src="../../../../../source/scripts/sparrow.js"></script>
+<script src="../../../../../source/scripts/SparrowChat.js"></script>
+<script src="../../../../../source/scripts/base64.js"></script>
+<script src="../../../../../source/scripts/chat/lib/sea.js"></script>
+<script src="../../../../../source/scripts/chat/lib/dayjs.js"></script>
+<script>
+  seajs.use('../../../../../source/scripts/chat/index.js');
+  // seajs.use('../../../../../source/scripts/chat/main.js');
+</script>
+
+
+</html>
