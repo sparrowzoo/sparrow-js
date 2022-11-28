@@ -206,7 +206,7 @@ var resourceController = {
                 resource.code + "|" + resource.name, "javascript:resourceController.nodeDetail();",
                 resource.code + ":" + resourceTree.config.RESOURCE_TYPE[resource.type], undefined,
                 undefined, undefined, resource);
-            if (flag == lang.command.save) {
+            if (flag === lang.command.save) {
                 resourceTree.appendNode(newNode);
                 $.message(lang.message.save.format(resource.name));
                 return;
