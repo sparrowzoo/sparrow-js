@@ -79,13 +79,7 @@ var resourceController = {
 
         $.tree.prototype.dbs = function (nodeId) {
             var cn = resourceTree.aNodes[nodeId];
-            var listUrl = $.toString(cn.businessEntity.listUrl);
-            if (listUrl !== "") {
-                listUrl = $.url.root + listUrl + "?code=" + cn.businessEntity.code;
-                alert(listUrl);
-            } else {
-                $.message(lang.message.list_url_not_set, this);
-            }
+            $.message(cn.permission);
         };
 
         document.onclick = function () {
@@ -116,8 +110,8 @@ var resourceController = {
             for (var i = 0; i < jsonList.length; i++) {
                 resourceEntity = jsonList[i];
                 resourceTree.addBusinessEntity(resourceEntity.id, resourceEntity.parentId,
-                    resourceEntity.code + "|" + resourceEntity.name,
-                    "javascript:resourceController.nodeDetail();", resourceEntity.code + ":"
+                    resourceEntity.permission + "|" + resourceEntity.name,
+                    "javascript:resourceController.nodeDetail();", resourceEntity.permission + ":"
                     + resourceTree.config.RESOURCE_TYPE[resourceEntity.resourceType],
                     resourceEntity);
             }
@@ -135,7 +129,7 @@ var resourceController = {
         }
         $("#txtParentResourceName").value(cn.name);
         $("#hdnParentId").value(cn.id);
-        $("#txtResourceCode").value(cn.businessEntity ? cn.businessEntity.code : "");
+        $("#txtPermission").value(cn.businessEntity ? cn.businessEntity.permission : "");
     },
     // 版块点击事件
     nodeDetail: function () {
@@ -146,12 +140,8 @@ var resourceController = {
             var txtParentResourceName = $("#txtParentResourceName");
             txtParentResourceName.value(cn.name);
             $("#hdnParentId").value(cn.id);
-            var currentNodeIndex = (cn.childCount + 1) + "";
             if (cn.businessEntity) {
-                $("#txtResourceCode").value(cn.businessEntity.code
-                    + currentNodeIndex.leftAlignWithChar());
-            } else {
-                $("#txtResourceCode").value(currentNodeIndex.leftAlignWithChar());
+                $("#txtPermission").value(cn.businessEntity.permission);
             }
             resourceTree.clearFloatFrame();
             $.v.isNull(resourceInfo, txtParentResourceName.s);
@@ -171,7 +161,7 @@ var resourceController = {
         }
         $("#txtParentResourceName").value($.toString(cn._parentNode.name));
         $("#hdnParentId").value(cn._parentNode.id);
-        $("#txtResourceCode").value(cn.businessEntity.code);
+        $("#txtPermission").value(cn.businessEntity.permission);
         $("#txtResourceType").value($.toString(cn.businessEntity.resourceType, 2));
         $("#txtOpenType").value($.toString(cn.businessEntity.openType));
         $("#divIco").html("<img style='border:0px;' src='"
@@ -203,8 +193,8 @@ var resourceController = {
         $.ajax.json(actionUrl, data, function (result) {
             var resource = result.data;
             var newNode = new $.treeNode(resource.id, resource.parentId,
-                resource.code + "|" + resource.name, "javascript:resourceController.nodeDetail();",
-                resource.code + ":" + resourceTree.config.RESOURCE_TYPE[resource.type], undefined,
+                resource.permission + "|" + resource.name, "javascript:resourceController.nodeDetail();",
+                resource.permission + ":" + resourceTree.config.RESOURCE_TYPE[resource.type], undefined,
                 undefined, undefined, resource);
             if (flag === lang.command.save) {
                 resourceTree.appendNode(newNode);
