@@ -109,10 +109,12 @@ var resourceController = {
             var jsonList = result.data;
             for (var i = 0; i < jsonList.length; i++) {
                 resourceEntity = jsonList[i];
-                resourceTree.addBusinessEntity(resourceEntity.id, resourceEntity.parentId,
-                    resourceEntity.permission + "|" + resourceEntity.name,
-                    "javascript:resourceController.nodeDetail();", resourceEntity.permission + ":"
-                    + resourceTree.config.RESOURCE_TYPE[resourceEntity.resourceType],
+                resourceTree.addBusinessEntity(
+                    resourceEntity.id,
+                    resourceEntity.parentId,
+                    resourceEntity.name,
+                    "javascript:resourceController.nodeDetail();",
+                    resourceTree.config.RESOURCE_TYPE[resourceEntity.resourceType]+"|"+resourceEntity.permission,
                     resourceEntity);
             }
             $("#divResourceTree").html(resourceTree);
@@ -121,7 +123,6 @@ var resourceController = {
     },
     // 重置版块输入项
     resetForm: function () {
-
         $.clearForm(resourceInfo);
         var cn = resourceController.resourceTree.aNodes[resourceTree.getSelectedAi()];
         if (!cn) {
