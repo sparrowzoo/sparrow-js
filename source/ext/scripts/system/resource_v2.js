@@ -193,8 +193,8 @@ var resourceController = {
         $.ajax.json(actionUrl, data, function (result) {
             var resource = result.data;
             var newNode = new $.treeNode(resource.id, resource.parentId,
-                resource.permission + "|" + resource.name, "javascript:resourceController.nodeDetail();",
-                resource.permission + ":" + resourceTree.config.RESOURCE_TYPE[resource.type], undefined,
+                resource.name, "javascript:resourceController.nodeDetail();",
+                resourceTree.config.RESOURCE_TYPE[resource.type]+"|"+resource.permission, undefined,
                 undefined, undefined, resource);
             if (flag === lang.command.save) {
                 resourceTree.appendNode(newNode);
