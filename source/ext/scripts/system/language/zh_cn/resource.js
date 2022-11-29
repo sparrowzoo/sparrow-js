@@ -82,13 +82,13 @@ var resourceInfo =
     txtOpenType: {
         errorCtrlId: "errorOpenType",
         prompt: "打开方式 _blank _self _parent 默认为_self",
-        option:["_blank","_self","_parent"],
+        option:["_blank","_self","_parent","manage"],
         defaultValue:"_self"
     },
     txtStatus: {
         errorCtrlId: "errorStatus",
-        prompt: "0无效 1 有效 2 只有admin有管理权限",
-        options: [0, 1, 2, 3],
+        prompt: "0无效 1 有效",
+        options: [0, 1],
         defaultValue:1
     },
     hdnCover: {
