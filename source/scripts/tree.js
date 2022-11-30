@@ -1,4 +1,3 @@
-//config.treeFrameId与显示列表框无关只有管理时的增删改有关
 Sparrow.treeNode = function (id,
                              pid,
                              name,
@@ -33,38 +32,36 @@ Sparrow.treeNode = function (id,
 Sparrow.tree = function (objName, parentName) {
     this.config = {
         target: "_self",
-        useFolderLinks: true,
-        useSelection: true,
-        useCookies: true,
-        useLines: true,
-        useIcons: true,
-        useRootIcon: true,
-        usePlusMinusIcons: true,
-        useMouseover: true,
+        useFolderLinks: true,//是否显示文件夹
+        useSelection: true,//是否支持选中
+        useCookies: true,//是否支持cookie 记忆
+        useLines: true,//是否使用链接线
+        useIcons: true,//是否使用icon 图标
+        useRootIcon: true, //是否显示root 图标
+        usePlusMinusIcons: true,//是否使用+-号图标
         //class name 包含tree-id
         useTreeIdInNodeClass: false,
         useLevelInNodeClass: false,
         useRadio: false,
-        useCheckbox: false,
-        treeNodeClass: null,
+        useCheckbox: false,//是否显示复选框
+        treeNodeClass: null,//节点class
         //根据旧权构建
-        reBuildTree: null,
+        reBuildTree: null,//是否支持旧树重建
         //重新查库构建
-        loadFloatTree: null,
-        floatTreeId: null,
-        descHiddenId: null,
-        descTextBoxId: null,
-        validate: null,
-        validateConfig: null,
-        isValue: false,
+        loadFloatTree: null,//是否支持浮动树构建
+        floatTreeId: null,//浮云树id
+        descHiddenId: null,//选中后ID显示对象
+        descTextBoxId: null,//选中后文本显示对象
+        validate: null,//自定义验证事件
+        validateConfig: null,//自定义验证config
         isdelay: false,
         isclientDelay: false,
-        closeSameLevel: false,
-        inOrder: false,
-        showRootIco: true,
-        showOrder: false,
-        orderURL: null,
-        treeFrameId: null,
+        closeSameLevel: false,//自动关闭同级节点
+        inOrder: false,//
+        showRootIco: true,//是否显示根icon
+        showOrder: false,//是否显示排序
+        orderURL: null,//排序url
+        treeFrameId: null,//树显示的div
         loadingString: "londing .....",
         imageDir: $.url.resource + "/images/treeimg",
         // prompt:"1系统菜单 2系统页面 3控件"
@@ -141,11 +138,13 @@ Sparrow.tree.prototype = {
     toString: function () {
         var str = '<div class="sparrow-tree">';
         if (document.getElementById) {
-            if (this.config.useCookies)
+            if (this.config.useCookies) {
                 this.selectedNodeIndex = this.getSelectedAi();
+            }
             str += this.addNode(this.root);
-        } else
+        } else {
             str += 'Browser not supported.</div>';
+        }
         if (!this.selectedFound)
             this.selectedNodeIndex = null;
         this.completed = true;
@@ -272,36 +271,42 @@ Sparrow.tree.prototype = {
     }, addNode: function (pNode) {
         var str = '';
         var n = 0;
-        if (this.config.inOrder)
+        //如果数据有序，则不需要从头遍历
+        if (this.config.inOrder) {
             n = pNode._addressIndex;
+        }
         for (n; n < this.aNodes.length; n++) {
-            if (this.aNodes[n] != null && this.aNodes[n].pid === pNode.id) {
-                var cn = this.aNodes[n];
-                cn._parentNode = pNode;
-                pNode.childCount++;
-                cn._addressIndex = n;
-                this.setCS(cn);
-                if (!cn.target && this.config.target)
-                    cn.target = this.config.target;
-                if (cn._hasChild && !cn._io && this.config.useCookies)
-                    cn._isOpened = this.isOpen(cn.id);
-                if (!this.config.useFolderLinks && cn._hasChild)
-                    cn.url = null;
-                if (this.config.useSelection && cn.id === this.getSelectedId()) {
-                    cn._isSelected = true;
-                    this.selectedNodeIndex = n;
-                    this.selectedFound = true;
-                }
-                // 因node中调用addNode()函数则为递归。
-                if (this.config.showRootIco) {
-                    str += this.node(cn, n);
-                } else {
-                    this.node(cn, n);
-                }
-                // 如果当前节点是当前父节点的最后一个儿子节点则退出遁环
-                if (cn._lastOfSameLevel)
-                    break;
+            var cn = this.aNodes[n];
+            if (!cn || cn.pid !== pNode.id) {
+                continue;
             }
+            cn._parentNode = pNode;
+            pNode.childCount++;
+            cn._addressIndex = n;
+            this.setCS(cn);
+            if (!cn.target && this.config.target) {
+                cn.target = this.config.target;
+            }
+            if (cn._hasChild && !cn._io && this.config.useCookies) {
+                cn._isOpened = this.isOpen(cn.id);
+            }
+            if (!this.config.useFolderLinks && cn._hasChild) {
+                cn.url = null;
+            }
+            if (this.config.useSelection && cn.id === this.getSelectedId()) {
+                cn._isSelected = true;
+                this.selectedNodeIndex = n;
+                this.selectedFound = true;
+            }
+            // 因node中调用addNode()函数则为递归。
+            if (this.config.showRootIco) {
+                str += this.node(cn, n);
+            } else {
+                this.node(cn, n);
+            }
+            // 如果当前节点是当前父节点的最后一个儿子节点则退出遁环
+            if (cn._lastOfSameLevel)
+                break;
         }
         return str;
     }, select: function (srcElement, className) {
@@ -314,16 +319,20 @@ Sparrow.tree.prototype = {
     }, node: function (node, nodeId) {
         // 获得缩进字符串
         var classNum = "";
-        if (this.config.treeNodeClass)
+        if (this.config.treeNodeClass) {
             classNum += this.config.treeNodeClass;
-        else if (this.config.useTreeIdInNodeClass)
+        }
+        else if (this.config.useTreeIdInNodeClass) {
             classNum += this.obj.substring(0, 1).toUpperCase()
                 + this.obj.substring(1);
-        if (this.config.useLevelInNodeClass)
+        }
+        if (this.config.useLevelInNodeClass) {
             classNum += (this.aIndent.length > 1 ? 3 : (this.aIndent.length + 1));
+        }
         var str = '<div onclick="' + this.fullObjName + '.select(this,\'' + classNum + '\');"';
-        if (this.config.useRootIcon || node.pid != this.root.id)
+        if (this.config.useRootIcon || node.pid != this.root.id) {
             str += ' class="iTreeNode' + classNum + '"';
+        }
         str += 'id="node' + this.obj + nodeId + '"  >' + this.indent(node, nodeId);
         if (this.config.useIcons) {
             if (this.config.useLines) {
@@ -387,8 +396,9 @@ Sparrow.tree.prototype = {
         str += '<span id="ntext' + this.obj + nodeId + '">' + node.name + '</span>';
 
         if (node.url
-            || ((!this.config.useFolderLinks || !node.url) && node._hasChild))
+            || ((!this.config.useFolderLinks || !node.url) && node._hasChild)) {
             str += '</a>';
+        }
         str += '</div>';
         if (node._hasChild) {
 
