@@ -27,11 +27,21 @@ var resourceInfo =
         prompt: "请选择所属应用",
         nullError: "请选择所属应用"
     },
+    txtUrl: {
+        errorCtrlId: "errorUrl",
+        prompt: "请输入资源请求的url",
+        nullError: "请输入资源请求的url"
+    },
+    txtMethod: {
+        errorCtrlId: "errorMethod",
+        prompt: "请输入资源请求的Method",
+        nullError: "请输入资源请求的Method"
+    },
     hdnParentId:{},
-    txtResourceCode: {
-        errorCtrlId: "errorResourceCode",
-        prompt: "资源编码要继承自上级资源编码",
-        nullError: "资源编码不能为空，且要继承自上级资源编码"
+    txtPermission: {
+        errorCtrlId: "errorPermission",
+        prompt: "权限不能为空",
+        nullError: "权限不能为空"
     },
     txtResourceName: {
         errorCtrlId: "errorResourceName",
