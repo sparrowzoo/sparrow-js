@@ -27,6 +27,7 @@ var resourceInfo =
         prompt: "请选择所属应用",
         nullError: "请选择所属应用"
     },
+    hdnAppId:{},
     txtUrl: {
         errorCtrlId: "errorUrl",
         prompt: "请输入资源请求的url",
