@@ -58,7 +58,6 @@ var resourceController = {
             }];
         $.dispatcher.bind();
 
-
         resourceController.resourceTree = new $.tree("resourceTree");
         var resourceTree = resourceController.resourceTree;
         resourceTree.config.reBuildTree = function () {
@@ -68,9 +67,13 @@ var resourceController = {
             for (var i = 0; i < resourceTree.aNodes.length; i++) {
                 var resourceNode = resourceTree.aNodes[i];
                 var resourceType = resourceNode.businessEntity ? resourceNode.businessEntity.resourceType : 1;
-                selectingResourceTree.addBusinessEntity(resourceNode.id, resourceNode.pid,
-                    resourceNode.name, "javascript:resourceController.nodeDetail();",
-                    resourceTree.config.RESOURCE_TYPE[resourceType], resourceNode.businessEntity);
+                selectingResourceTree.addBusinessEntity(
+                    resourceNode.id,
+                    resourceNode.pid,
+                    resourceNode.name,
+                    "javascript:resourceController.nodeDetail();",
+                    resourceTree.config.RESOURCE_TYPE[resourceType],
+                    resourceNode.businessEntity);
             }
             var selectingTree = $("+div." + resourceTree.config.floatTreeId);
             selectingTree.html(selectingResourceTree);
@@ -114,7 +117,7 @@ var resourceController = {
                     resourceEntity.parentId,
                     resourceEntity.name,
                     "javascript:resourceController.nodeDetail();",
-                    resourceTree.config.RESOURCE_TYPE[resourceEntity.resourceType]+"|"+resourceEntity.permission,
+                    resourceTree.config.RESOURCE_TYPE[resourceEntity.resourceType] + "|" + resourceEntity.permission,
                     resourceEntity);
             }
             $("#divResourceTree").html(resourceTree);
@@ -169,13 +172,10 @@ var resourceController = {
             + $.toString(cn.businessEntity.icoUrl, $.DEFAULT_RESOURCE_ICO_URL) + "'/>");
         $("#divCover").html("<img style='border:0px;' src='"
             + $.toString(cn.businessEntity.cover, $.DEFAULT_RESOURCE_ICO_URL) + "'/>");
-
         $("#hdnIco").value($.toString(cn.businessEntity.icoUrl, $.DEFAULT_RESOURCE_ICO_URL));
         $("#hdnCover").value($.toString(cn.businessEntity.cover, $.DEFAULT_RESOURCE_ICO_URL));
-
         $("#txtRemark").value($.toString(cn.businessEntity.remark));
         $("#spanTxtCount").html(500 - $.toString(cn.businessEntity.remark).getByteLength());
-
         $("#txtStatus").value($.toString(cn.businessEntity.status, 1));
         $("#txtResourceName").value($.toString(cn.businessEntity.name));
         $("#btnCancel").value(lang.command.update);
@@ -193,10 +193,16 @@ var resourceController = {
         }
         $.ajax.json(actionUrl, data, function (result) {
             var resource = result.data;
-            var newNode = new $.treeNode(resource.id, resource.parentId,
-                resource.name, "javascript:resourceController.nodeDetail();",
-                resourceTree.config.RESOURCE_TYPE[resource.type]+"|"+resource.permission, undefined,
-                undefined, undefined, resource);
+            var newNode = new $.treeNode(
+                resource.id,
+                resource.parentId,
+                resource.name,
+                "javascript:resourceController.nodeDetail();",
+                resourceTree.config.RESOURCE_TYPE[resource.type] + "|" + resource.permission,
+                undefined,
+                undefined,
+                undefined,
+                resource);
             if (flag === lang.command.save) {
                 resourceTree.appendNode(newNode);
                 $.message(lang.message.save.format(resource.name));
