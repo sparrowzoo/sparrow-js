@@ -19,8 +19,13 @@ var resourceInfo =
 {
     txtParentResourceName: {
         errorCtrlId: "errorParentResourceName",
-        prompt: "新资源的所属资源",
-        nullError: "请选择新资源的所属资源"
+        prompt: "请选择的所属资源",
+        nullError: "请选择的所属资源"
+    },
+    txtAppName: {
+        errorCtrlId: "errorAppName",
+        prompt: "请选择所属应用",
+        nullError: "请选择所属应用"
     },
     hdnParentId:{},
     txtResourceCode: {
