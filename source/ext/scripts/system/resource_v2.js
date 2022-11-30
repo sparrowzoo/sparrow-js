@@ -103,7 +103,11 @@ var resourceController = {
         resourceTree.config.closeSameLevel = true;
         resourceTree.delete_click = resourceController.deleteClick;
         resourceTree.resetIcon();
-        resourceTree.add(0, -1, $.browser.getCookie($.browser.cookie.website_name),
+        var websiteName=$.browser.getCookie($.browser.cookie.website_name);
+        if(!websiteName){
+            websiteName="ROOT";
+        }
+        resourceTree.add(0, -1,websiteName ,
             "javascript:resourceController.nodeDetail(0);");
 
         $("#divResourceTree").html(resourceTree.config.loadingString);
