@@ -151,7 +151,7 @@ var resourceController = {
             if (cn.businessEntity) {
                 $("#txtPermission").value(cn.businessEntity.permission);
             }
-            resourceTree.clearFloatFrame();
+            //resourceTree.clearFloatFrame();
             $.v.isNull(resourceInfo, txtParentResourceName.s);
             return
         }
