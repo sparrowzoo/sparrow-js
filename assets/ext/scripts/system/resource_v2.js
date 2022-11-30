@@ -63,7 +63,6 @@ var resourceController = {
         resourceTree.config.reBuildTree = function () {
             resourceController.selectingResourceTree = new $.tree("selectingResourceTree");
             selectingResourceTree = resourceController.selectingResourceTree;
-            selectingResourceTree.config.usePlusMinusIcons = false;
             selectingResourceTree.resetIcon();
             for (var i = 0; i < resourceTree.aNodes.length; i++) {
                 var resourceNode = resourceTree.aNodes[i];
@@ -98,7 +97,7 @@ var resourceController = {
         resourceTree.config.treeFrameId = "divResourceTree";
         resourceTree.config.floatTreeId = "divSelectingResourceTree";
         resourceTree.config.treeNodeClass = "Menu";
-        resourceTree.config.usePlusMinusIcons = false;
+        // resourceTree.config.usePlusMinusIcons = false;
         resourceTree.config.useTreeIdInNodeClass = true;
         resourceTree.config.useLevelInNodeClass = true;
         resourceTree.config.closeSameLevel = true;
