@@ -5903,7 +5903,7 @@ Sparrow.tree.prototype = {
                 && ((node._hasChild && this.config.useFolderLinks) || !node._hasChild)) {
                 str += ' onclick="javascript: ' + this.fullObjName + '.s(' + nodeId + ');';
             }
-            str += (this.config.usePlusMinusIcons ? ''
+            str += (!this.config.usePlusMinusIcons ? ''
                 : (node._hasChild && node._parentNode.id != -1 ? (this.fullObjName
                     + '.o(' + nodeId + ')') : ''))
                 + '">';
