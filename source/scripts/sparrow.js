@@ -5957,7 +5957,7 @@ Sparrow.tree.prototype = {
         // 因为是递归填加节点，所以用堆栈。先将节点的缩进状态压入栈，等节点填加完成后再弹出栈。
         // 所以当树的层次为多层时，栈中也同样有相同层次的状态信息。如果为是普通节点则画|如果是同父节点的最小兄弟节点则画空格
         node._lastOfSameLevel ? this.aIndent.push(0) : this.aIndent.push(1);
-        if (this.config.usePlusMinusIcons) {
+        if (!this.config.usePlusMinusIcons) {
             str += '<img style="width:0;height:0;" id="j' + this.obj
                 + nodeId + '"/>';
             return str;
