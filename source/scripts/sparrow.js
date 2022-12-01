@@ -5554,6 +5554,7 @@ Sparrow.treeNode = function (id,
     this._lastOfSameLevel = false;
     this._addressIndex = 0;
     this._parentNode;
+    //延迟加载时，由后台提供
     this._hasChild = childCount > 0;
 };
 
@@ -6005,7 +6006,7 @@ Sparrow.tree.prototype = {
         node._hasChild = false;
         node._lastOfSameLevel = false;
         for (var n = 0; n < this.aNodes.length; n++) {
-            // 如果不是动态的则判断是否有子节点
+            // 如果不是动态的则判断是否有子节点,如果是延迟加载由后台提供s
             if (this.config.isdelay === false) {
                 if (this.aNodes[n] != null && this.aNodes[n].pid == node.id) {
                     node._hasChild = true;
@@ -6117,45 +6118,46 @@ Sparrow.tree.prototype = {
         var cn = node;
         var id = node._addressIndex;
         // 延迟加载折叠状态节点的子节点
-        if (cn._isOpened === false) {
-            // 获取展示子节点的div
-            var childrenDIV = document.getElementById('d' + this.obj + id);
-            // 该结点从未展开过
-            if (childrenDIV != null && childrenDIV.innerHTML == "") {
-                var postStr = "ay=true&nodeId=" + cn.id;
-                if ($("exceptid").value) {
-                    postStr += "&exceptid=" + $("exceptid").value;
-                }
-                $.ajax.json(this.config.ajaxURL, postStr,
-                    function (result) {
-                        alert(result);
-                        // alert(xmlHttpRequest.responseText);
-                        var nodeListJson = xmlHttpRequest.responseText
-                            .json();
-                        openNodeCallBack(nodeListJson);
-                        // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
-                        var nodeTemp = cn;
-                        var indentArray = [];
-                        // 循环到次级根节点之前
-                        while (nodeTemp.pid != -1) {
-                            indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
-                                : 1;
-                            nodeTemp = nodeTemp._parentNode;
-                        }
-                        // 反向压栈
-                        for (var i = indentArray.length - 1; i >= 0; i--) {
-                            currentTree.aIndent
-                                .push(indentArray[i]);
-                        }
-                        // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
-                        childrenDIV.innerHTML = currentTree
-                            .addNode(cn);
-                        // 清除临时深度
-                        for (var i = 0; i < indentArray.length; i++) {
-                            currentTree.aIndent.pop();
-                        }
-                    });
+        if (cn._isOpened) {
+            return;
+        }
+        // 获取展示子节点的div
+        var childrenDIV = document.getElementById('d' + this.obj + id);
+        // 该结点从未展开过
+        if (childrenDIV != null && childrenDIV.innerHTML == "") {
+            var postStr = "ay=true&nodeId=" + cn.id;
+            if ($("exceptid").value) {
+                postStr += "&exceptid=" + $("exceptid").value;
             }
+            $.ajax.json(this.config.ajaxURL, postStr,
+                function (result) {
+                    alert(result);
+                    // alert(xmlHttpRequest.responseText);
+                    var nodeListJson = xmlHttpRequest.responseText
+                        .json();
+                    openNodeCallBack(nodeListJson);
+                    // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
+                    var nodeTemp = cn;
+                    var indentArray = [];
+                    // 循环到次级根节点之前
+                    while (nodeTemp.pid != -1) {
+                        indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
+                            : 1;
+                        nodeTemp = nodeTemp._parentNode;
+                    }
+                    // 反向压栈
+                    for (var i = indentArray.length - 1; i >= 0; i--) {
+                        currentTree.aIndent
+                            .push(indentArray[i]);
+                    }
+                    // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
+                    childrenDIV.innerHTML = currentTree
+                        .addNode(cn);
+                    // 清除临时深度
+                    for (var i = 0; i < indentArray.length; i++) {
+                        currentTree.aIndent.pop();
+                    }
+                });
         }
     },
     clientDelayOpen: function (node, isFresh) {
