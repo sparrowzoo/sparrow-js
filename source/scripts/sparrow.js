@@ -5938,7 +5938,7 @@ Sparrow.tree.prototype = {
                 + this.obj
                 + nodeId
                 + '" class="clip" style="display:'
-                + ((this.root.id == node.pid || node._isOpened) ? 'block'
+                + ((this.root.id === node.pid || node._isOpened) ? 'block'
                     : 'none') + ';">';
             // 如果不是动态加载
             if (!this.config.isdelay && !this.config.isclientDelay) {
@@ -5946,7 +5946,7 @@ Sparrow.tree.prototype = {
             }
             // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
             // 是否打开在缓存中取
-            else if ((node._isOpened && node.pid != -1) || (node.pid == -1)) {
+            else if ((node._isOpened && node.pid !== -1) || (node.pid === -1)) {
                 str += this.addNode(node);
             }
             str += '</div>';
@@ -5978,24 +5978,25 @@ Sparrow.tree.prototype = {
         if (node._hasChild) {
             str += '<a href="javascript: ' + this.fullObjName + '.o(' + nodeId
                 + ');"><img id="j' + this.obj + nodeId + '" src="';
-            if (!this.config.useLines)
+            if (!this.config.useLines) {
                 str += (node._isOpened) ? this.icon.nlMinus
                     : this.icon.nlPlus;
-            else
+            } else {
                 str += ((node._isOpened) ? ((node._lastOfSameLevel && this.config.useLines) ? this.icon.minusBottom
                     : this.icon.minus)
                     : ((node._lastOfSameLevel && this.config.useLines) ? this.icon.plusBottom
                         : this.icon.plus));
+            }
             str += '"/></a>';
-        } else {
-            str += '<img id="j'
-                + this.obj
-                + nodeId
-                + '" src="'
-                + ((this.config.useLines) ? ((node._lastOfSameLevel) ? this.icon.joinBottom
-                    : this.icon.join)
-                    : this.icon.empty) + '" alt="" />';
+            return str;
         }
+        str += '<img id="j'
+            + this.obj
+            + nodeId
+            + '" src="'
+            + ((this.config.useLines) ? ((node._lastOfSameLevel) ? this.icon.joinBottom
+                : this.icon.join)
+                : this.icon.empty) + '" alt="" />';
         return str;
     },
 // 设置当前节点状态_hc和ls
@@ -6006,25 +6007,25 @@ Sparrow.tree.prototype = {
         for (var n = 0; n < this.aNodes.length; n++) {
             // 如果不是动态的则判断是否有子节点
             if (this.config.isdelay === false) {
-                if (this.aNodes[n] != null && this.aNodes[n].pid == node.id) {
+                if (this.aNodes[n] != null && this.aNodes[n].pid === node.id) {
                     node._hasChild = true;
                 }
             }
-            if (this.aNodes[n] != null && this.aNodes[n].pid == node.pid)
+            if (this.aNodes[n] != null && this.aNodes[n].pid === node.pid) {
                 lastId = this.aNodes[n].id;
-
+            }
         }
-        if (lastId === node.id)
+        if (lastId === node.id) {
             node._lastOfSameLevel = true;
-
+        }
     },
     getAllNameOfNode: function (cn, splitChar) {
         if (!cn) {
             cn = this.aNodes[this.getSelectedAi()];
         }
         var nameArray = [];
-        while (cn.id != -1 && !$.isNullOrEmpty(cn.name)) {
-            if (cn.name.indexOf(':') != -1) {
+        while (cn.id !== -1 && !$.isNullOrEmpty(cn.name)) {
+            if (cn.name.indexOf(':') !== -1) {
                 nameArray.push(cn.name.split(':')[1]);
             } else {
                 nameArray.push(cn.name);
@@ -6046,7 +6047,7 @@ Sparrow.tree.prototype = {
 // 获取当前选中的节点ID只有一个
     getSelectedId: function () {
         var sn;
-        if (this.config.useCookies == true) {
+        if (this.config.useCookies === true) {
             sn = this.getCookie('currentSelect' + this.obj);
         } else {
             sn = this.currentSelectId["currentSelect" + this.obj];
@@ -6056,11 +6057,8 @@ Sparrow.tree.prototype = {
 // 清除当前选中节点
     clearSelectedNode: function () {
         var now = new Date();
-
         var yesterday = new Date(now.getTime() - 1000 * 60 * 60 * 24);
-
         this.setCookie('cs' + this.obj, 'cookieValue', yesterday);
-
         this.currentSelectId["currentSelect" + this.obj] = null;
     },
 // 设置当前选中的节点
@@ -6073,19 +6071,19 @@ Sparrow.tree.prototype = {
     },
 // 选择事件
     s: function (id) {
-        if (!this.config.useSelection)
+        if (!this.config.useSelection) {
             return;
+        }
         var cn = this.aNodes[id];
-        if (cn._hasChild && !this.config.useFolderLinks)
+        if (cn._hasChild && !this.config.useFolderLinks) {
             return;
-        if (this.selectedNodeIndex != id) {
-            if (this.selectedNodeIndex || this.selectedNodeIndex == 0) {
+        }
+        if (this.selectedNodeIndex !== id) {
+            if (this.selectedNodeIndex || this.selectedNodeIndex === 0) {
                 // 将之前的选中节点置为普通结点状态
                 eOld = document.getElementById("s" + this.obj
                     + this.selectedNodeIndex);
-
                 this.aNodes[this.selectedNodeIndex]._isSelected = false;
-
                 if (eOld) {
                     eOld.className = "node";
                 }
@@ -6105,8 +6103,9 @@ Sparrow.tree.prototype = {
             currentcbk.checked = !currentcbk.checked;
             this.selectCheckbox(id);
         }
-        if (this.config.closeSameLevel)
+        if (this.config.closeSameLevel) {
             this.closeLevel(cn);
+        }
     },
     /**
      * 把折叠状态节点的子节点加载到子节点面板中<br>
@@ -6119,63 +6118,62 @@ Sparrow.tree.prototype = {
         var cn = node;
         var id = node._addressIndex;
         // 延迟加载折叠状态节点的子节点
-        if (cn._isOpened === false) {
-            // 获取展示子节点的div
-            var childrenDIV = document.getElementById('d' + this.obj + id);
-            // 该结点从未展开过
-            if (childrenDIV != null && childrenDIV.innerHTML == "") {
-                var postStr = "ay=true&nodeId=" + cn.id;
-                if ($("exceptid").value) {
-                    postStr += "&exceptid=" + $("exceptid").value;
-                }
-                $.ajax.json(this.config.ajaxURL, postStr,
-                    function (result) {
-                        alert(result);
-                        // alert(xmlHttpRequest.responseText);
-                        var nodeListJson = xmlHttpRequest.responseText
-                            .json();
-                        openNodeCallBack(nodeListJson);
-                        // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
-                        var nodeTemp = cn;
-                        var indentArray = [];
-                        // 循环到次级根节点之前
-                        while (nodeTemp.pid != -1) {
-                            indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
-                                : 1;
-                            nodeTemp = nodeTemp._parentNode;
-                        }
-                        // 反向压栈
-                        for (var i = indentArray.length - 1; i >= 0; i--) {
-                            currentTree.aIndent
-                                .push(indentArray[i]);
-                        }
-                        // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
-                        childrenDIV.innerHTML = currentTree
-                            .addNode(cn);
-                        // 清除临时深度
-                        for (var i = 0; i < indentArray.length; i++) {
-                            currentTree.aIndent.pop();
-                        }
-                    });
+        if (cn._isOpened === true) {
+            return;
+        }
+        // 获取展示子节点的div
+        var childrenDIV = document.getElementById('d' + this.obj + id);
+        // 该结点从未展开过
+        if (childrenDIV != null && childrenDIV.innerHTML == "") {
+            var postStr = "ay=true&nodeId=" + cn.id;
+            if ($("exceptid").value) {
+                postStr += "&exceptid=" + $("exceptid").value;
             }
+            $.ajax.json(this.config.ajaxURL, postStr,
+                function (result) {
+                    alert(result);
+                    // alert(xmlHttpRequest.responseText);
+                    var nodeListJson = xmlHttpRequest.responseText
+                        .json();
+                    openNodeCallBack(nodeListJson);
+                    // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
+                    var nodeTemp = cn;
+                    var indentArray = [];
+                    // 循环到次级根节点之前
+                    while (nodeTemp.pid != -1) {
+                        indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
+                            : 1;
+                        nodeTemp = nodeTemp._parentNode;
+                    }
+                    // 反向压栈
+                    for (var i = indentArray.length - 1; i >= 0; i--) {
+                        currentTree.aIndent
+                            .push(indentArray[i]);
+                    }
+                    // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
+                    childrenDIV.innerHTML = currentTree
+                        .addNode(cn);
+                    // 清除临时深度
+                    for (var i = 0; i < indentArray.length; i++) {
+                        currentTree.aIndent.pop();
+                    }
+                });
         }
     },
     clientDelayOpen: function (node, isFresh) {
         var cn = node;
         var id = node._addressIndex;
         // 延迟加载折叠状态节点的子节点
-        if (cn._isOpened == false || isFresh) {
+        if (cn._isOpened === false || isFresh) {
             // 获取展示子节点的div
             var childrenDIV = document.getElementById('d' + this.obj + id);
-
             // 该结点从未展开过
             if (childrenDIV != null && childrenDIV.innerHTML == "" || isFresh) {
                 // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
                 var nodeTemp = cn;
                 var indentArray = [];
-
                 // 循环到次级根节点之前
-                while (nodeTemp._parentNode.id != this.root.id) {
+                while (nodeTemp._parentNode.id !== this.root.id) {
                     indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
                         : 1;
                     nodeTemp = nodeTemp._parentNode;
@@ -6186,7 +6184,6 @@ Sparrow.tree.prototype = {
                 }
                 // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
                 childrenDIV.innerHTML = this.addNode(cn);
-
                 // 清除临时深度
                 for (var i = 0; i < indentArray.length; i++) {
                     this.aIndent.pop();
@@ -6215,7 +6212,7 @@ Sparrow.tree.prototype = {
     oAll: function (status) {
         for (var n = 0; n < this.aNodes.length; n++) {
             if (this.aNodes[n] != null && this.aNodes[n]._hasChild
-                && this.aNodes[n].pid != this.root.id) {
+                && this.aNodes[n].pid !== this.root.id) {
                 this.nodeStatus(status, n, this.aNodes[n]._lastOfSameLevel);
                 this.aNodes[n]._isOpened = status;
             }
@@ -6251,8 +6248,9 @@ Sparrow.tree.prototype = {
         if (cn.pid == this.root.id || !cn._parentNode)
             return;
         cn._isOpened = true;
-        if (this.completed && cn._hasChild)
+        if (this.completed && cn._hasChild) {
             this.nodeStatus(true, cn._addressIndex, cn._lastOfSameLevel);
+        }
         this.openTo(cn._parentNode._addressIndex, true);
     },
 // 相同父节点中的所有子节点中，关闭除node节点之外的所有兄弟节点
