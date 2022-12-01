@@ -5674,8 +5674,9 @@ Sparrow.tree.prototype = {
         } else {
             str += 'Browser not supported.</div>';
         }
-        if (!this.selectedFound)
+        if (!this.selectedFound) {
             this.selectedNodeIndex = null;
+        }
         this.completed = true;
         return str;
     },
@@ -5721,7 +5722,7 @@ Sparrow.tree.prototype = {
         var sparrowElement = $(srcObject, false);
         var addressIndex = srcObject.id.substring(this.obj.length + 1);
         var currentNode = this.aNodes[addressIndex];
-        if (currentNode.pid == -1) {
+        if (currentNode.pid === -1) {
             this.clearFloatFrame();
             return;
         }
@@ -5770,10 +5771,10 @@ Sparrow.tree.prototype = {
     },
     order: function (srcAddressIndex, sort) {
         var srcNode = this.aNodes[srcAddressIndex];
-        var postString = "id=" + srcNode.id + "&target=" + sort;
+        var data = "id=" + srcNode.id + "&target=" + sort;
         var tree = this;
         var nodes = this.aNodes;
-        $.ajax.json(this.config.orderURL, postString, function (json) {
+        $.ajax.json(this.config.orderURL, data, function (json) {
             srcNode = nodes[srcAddressIndex];
             var destNode = null;
             var srcParentNode = srcNode._parentNode;
@@ -5781,13 +5782,14 @@ Sparrow.tree.prototype = {
             var destIndex = 0;
             //find dest node
             for (var i = 0; i < nodes.length; i++) {
-                if (nodes[i].pid === srcParentNode.id) {
-                    childNo++;
-                    if (childNo === sort) {
-                        destIndex = i;
-                        destNode = nodes[i];
-                        break;
-                    }
+                if (nodes[i].pid !== srcParentNode.id) {
+                    continue;
+                }
+                childNo++;
+                if (childNo === sort) {
+                    destIndex = i;
+                    destNode = nodes[i];
+                    break;
                 }
             }
             //delete src index
@@ -5859,21 +5861,21 @@ Sparrow.tree.prototype = {
             classNum += (this.aIndent.length > 1 ? 3 : (this.aIndent.length + 1));
         }
         var str = '<div onclick="' + this.fullObjName + '.select(this,\'' + classNum + '\');"';
-        if (this.config.useRootIcon || node.pid != this.root.id) {
+        if (this.config.useRootIcon || node.pid !== this.root.id) {
             str += ' class="iTreeNode' + classNum + '"';
         }
         str += 'id="node' + this.obj + nodeId + '"  >' + this.indent(node, nodeId);
         if (this.config.useIcons) {
             if (this.config.useLines) {
-                node.icon = (this.root.id == node.pid) ? this.icon.root
+                node.icon = (this.root.id === node.pid) ? this.icon.root
                     : ((node._hasChild) ? this.icon.folder : this.icon.node);
-                node.iconOpen = (this.root.id == node.pid) ? this.icon.root
+                node.iconOpen = (this.root.id === node.pid) ? this.icon.root
                     : (node._hasChild) ? this.icon.folderOpen : this.icon.node;
             } else if (!node.icon) {
                 node.iconOpen = node.icon = node._hasChild ? this.icon.nolinefolder
                     : this.icon.nolinenode;
             }
-            if (this.config.useRootIcon || node.pid != this.root.id) {
+            if (this.config.useRootIcon || node.pid !== this.root.id) {
                 str += '<img '
                     + (this.config.showOrder ? ' onmouseover="' + this.fullObjName
                         + '.showOrder(event)"' : '') + ' id="i' + this.obj
@@ -5881,12 +5883,12 @@ Sparrow.tree.prototype = {
                     + ((node._isOpened) ? node.iconOpen : node.icon)
                     + '" alt="" align="absMiddle"/>';
             }
-            if ((node.showCtrl && node.pid != -1)
-                || (node.pid == -1 && this.userRootIcon == true)) {
+            if ((node.showCtrl && node.pid !== -1)
+                || (node.pid === -1 && this.userRootIcon === true)) {
                 if (this.config.useRadio) {
                     str += '<input style="line-height:15px;height:15px;border:0;" type="radio" name="iTreerdb" id="r{1}{0}" onclick="{1}.getRadioSelected({0});{1}.s({0});" value="{2}"/>'.format(nodeId, this.fullObjName, node.id);
                 }
-                if (this.config.useCheckbox == true) {
+                if (this.config.useCheckbox === true) {
                     str += '<input style="line-height:15px;height:15px;border:0;" type="checkbox" name="iTreecbx" id="c{1}{0}" onclick="{1}.selectCheckbox({0});" value="{2}"/>'.format(nodeId, this.fullObjName, node.id);
                 }
             }
@@ -5903,24 +5905,26 @@ Sparrow.tree.prototype = {
                 + ((this.config.useSelection) ? ((node._isSelected ? 'nodeSel'
                     : 'node')) : 'node') + '" href="' + node.url + '"';
 
-            if (node.title)
+            if (node.title) {
                 str += ' title="' + node.title + '"';
-            if (node.target)
+            }
+            if (node.target) {
                 str += ' target="' + node.target + '"';
+            }
 
             if (this.config.useSelection
                 && ((node._hasChild && this.config.useFolderLinks) || !node._hasChild)) {
                 str += ' onclick="javascript: ' + this.fullObjName + '.s(' + nodeId + ');';
             }
             str += (this.config.usePlusMinusIcons ? ''
-                : (node._hasChild && node._parentNode.id != -1 ? (this.fullObjName
+                : (node._hasChild && node._parentNode.id !== -1 ? (this.fullObjName
                     + '.o(' + nodeId + ')') : ''))
                 + '">';
         } else if ((!this.config.useFolderLinks || !node.url) && node._hasChild
-            && node.pid != this.root.id)
-
+            && node.pid !== this.root.id) {
             str += '<a href="javascript: ' + this.fullObjName + '.o(' + nodeId
                 + ');" class="node">';
+        }
 
         str += '<span id="ntext' + this.obj + nodeId + '">' + node.name + '</span>';
 
@@ -5930,7 +5934,6 @@ Sparrow.tree.prototype = {
         }
         str += '</div>';
         if (node._hasChild) {
-
             str += '<div id="d'
                 + this.obj
                 + nodeId
@@ -5941,12 +5944,11 @@ Sparrow.tree.prototype = {
             if (!this.config.isdelay && !this.config.isclientDelay) {
                 str += this.addNode(node);
             }
-                // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
+            // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
             // 是否打开在缓存中取
             else if ((node._isOpened && node.pid != -1) || (node.pid == -1)) {
                 str += this.addNode(node);
             }
-
             str += '</div>';
         }
         this.aIndent.pop();
