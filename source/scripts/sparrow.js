@@ -6140,7 +6140,7 @@ Sparrow.tree.prototype = {
                     var nodeTemp = cn;
                     var indentArray = [];
                     // 循环到次级根节点之前
-                    while (nodeTemp.pid != -1) {
+                    while (nodeTemp.pid !== -1) {
                         indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
                             : 1;
                         nodeTemp = nodeTemp._parentNode;
