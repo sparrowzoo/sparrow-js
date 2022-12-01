@@ -5554,6 +5554,7 @@ Sparrow.treeNode = function (id,
     this._lastOfSameLevel = false;
     this._addressIndex = 0;
     this._parentNode;
+    //后台延迟加载时，会使用
     this._hasChild = childCount > 0;
 };
 
@@ -5852,8 +5853,7 @@ Sparrow.tree.prototype = {
         var classNum = "";
         if (this.config.treeNodeClass) {
             classNum += this.config.treeNodeClass;
-        }
-        else if (this.config.useTreeIdInNodeClass) {
+        } else if (this.config.useTreeIdInNodeClass) {
             classNum += this.obj.substring(0, 1).toUpperCase()
                 + this.obj.substring(1);
         }
@@ -5944,7 +5944,7 @@ Sparrow.tree.prototype = {
             if (!this.config.isdelay && !this.config.isclientDelay) {
                 str += this.addNode(node);
             }
-            // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
+                // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
             // 是否打开在缓存中取
             else if ((node._isOpened && node.pid !== -1) || (node.pid === -1)) {
                 str += this.addNode(node);
@@ -6006,6 +6006,7 @@ Sparrow.tree.prototype = {
         node._lastOfSameLevel = false;
         for (var n = 0; n < this.aNodes.length; n++) {
             // 如果不是动态的则判断是否有子节点
+            // 动态加载则由后台判断
             if (this.config.isdelay === false) {
                 if (this.aNodes[n] != null && this.aNodes[n].pid === node.id) {
                     node._hasChild = true;
@@ -6322,10 +6323,10 @@ Sparrow.tree.prototype = {
     getCookie: function (cookieName) {
         var cookieValue = '';
         var posName = document.cookie.indexOf(escape(cookieName) + '=');
-        if (posName != -1) {
+        if (posName !== -1) {
             var posValue = posName + (escape(cookieName) + '=').length;
             var endPos = document.cookie.indexOf(';', posValue);
-            if (endPos != -1)
+            if (endPos !== -1)
                 cookieValue = unescape(document.cookie.substring(posValue, endPos));
             else
                 cookieValue = unescape(document.cookie.substring(posValue));
@@ -6350,8 +6351,9 @@ Sparrow.tree.prototype = {
     isOpen: function (id) {
         var aOpen = this.getCookie('currentOpen' + this.obj).split('.');
         for (var n = 0; n < aOpen.length; n++)
-            if (aOpen[n] == id)
+            if (aOpen[n] === id) {
                 return true;
+            }
         return false;
     },
     getAllId: function () {
@@ -6365,7 +6367,7 @@ Sparrow.tree.prototype = {
         var cn = this.aNodes[this.getSelectedAi()];
         var parentNodeIdArray = [];
         if (cn) {
-            while (cn.id != -1) {
+            while (cn.id !== -1) {
                 parentNodeIdArray.push(cn.id);
                 cn = cn._parentNode;
             }
@@ -6377,8 +6379,8 @@ Sparrow.tree.prototype = {
     selectChilds: function (parentIds, currentSelected, length) {
         pids = [];
         for (var n = 0; n < length; n++) {
-            if (parentIds.indexOf(this.aNodes[n].pid) != -1) {
-                if (this.aNodes[n].showCtrl != false) {
+            if (parentIds.indexOf(this.aNodes[n].pid) !== -1) {
+                if (this.aNodes[n].showCtrl !== false) {
                     document.getElementById("c" + this.obj + n).checked = currentSelected;
                     pids.push(this.aNodes[n].id);
                 }
@@ -6394,12 +6396,12 @@ Sparrow.tree.prototype = {
     selectCheckbox: function (nodeId) {
         var node = this.aNodes[nodeId];
         var currentSelected = null;
-        if (node.selectChild == undefined || node.selectChild == true) {
+        if (node.selectChild === undefined || node.selectChild === true) {
             currentSelected = document.getElementById("c" + this.obj + nodeId).checked;
             if (currentSelected) {
                 var cn = node;
                 var c;
-                while (cn.id != -1) {
+                while (cn.id !== -1) {
                     c = document.getElementById("c" + this.obj + cn._addressIndex);
                     if (c)
                         c.checked = true;
@@ -6409,15 +6411,15 @@ Sparrow.tree.prototype = {
             var len = this.aNodes.length;
             var parentIds = [];
             for (var n = 0; n < len; n++) {
-                if ((n != nodeId)
-                    && (this.aNodes[n] != null && this.aNodes[n].pid == node.id)) {
-                    if (this.aNodes[n].showCtrl != false) {
+                if ((n !== nodeId)
+                    && (this.aNodes[n] != null && this.aNodes[n].pid === node.id)) {
+                    if (this.aNodes[n].showCtrl !== false) {
                         document.getElementById("c" + this.obj + n).checked = currentSelected;
                         parentIds.push(this.aNodes[n].id);
                     }
                 }
             }
-            if (parentIds.length != 0) {
+            if (parentIds.length !== 0) {
                 this.selectChilds(parentIds, currentSelected, len);
             }
         }
@@ -6434,7 +6436,7 @@ Sparrow.tree.prototype = {
         }
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var n = 0; n < checkBoxList.length; n++) {
-            if (checkedId.indexOf(checkBoxList[n].value) != -1) {
+            if (checkedId.indexOf(checkBoxList[n].value) !== -1) {
                 checkBoxList[n].checked = true;
             }
         }
@@ -6443,7 +6445,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked == true) {
+            if (checkBoxList[i].checked === true) {
                 arrayIndex = checkBoxList[i].id.replace('c' + this.obj, '');
                 nodes.push(this.aNodes[arrayIndex].title);
             }
@@ -6454,7 +6456,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked == true) {
+            if (checkBoxList[i].checked === true) {
                 arrayIndex = checkBoxList[i].id.replace('c' + this.obj, '');
                 nodes.push(this.aNodes[arrayIndex]);
             }
@@ -6465,7 +6467,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked == true) {
+            if (checkBoxList[i].checked === true) {
                 nodes.push(checkBoxList[i].value);
             }
         }
@@ -6479,7 +6481,7 @@ Sparrow.tree.prototype = {
         if (this.config.reBuildTree)
             this.config.reBuildTree();
         // 通过方法loadFloatTree方法建新树
-        if ($(this.config.floatTreeId).innerHTML.trim() == ""
+        if ($(this.config.floatTreeId).innerHTML.trim() === ""
             && typeof (this.config.loadFloatTree) != "undefined") {
             this.config.loadFloatTree();
         }
@@ -6509,16 +6511,16 @@ Sparrow.tree.prototype = {
         if (divHeight >= maxHeight) {
             this.floatTreeFrameId = FrameId;
             if ($(this.config.floatTreeId)
-                && $(this.config.floatTreeId).innerHTML != "") {
+                && $(this.config.floatTreeId).innerHTML !== "") {
                 var treeDiv = $(this.config.floatTreeId);
                 $(FrameId).innerHTML = "";
                 treeDiv.style.display = "block";
                 $(FrameId).appendChild(treeDiv);
                 window.clearInterval(this.interval);
             }
-        } else {
-            $(FrameId).style.height = (divHeight) + "px";
+            return;
         }
+        $(FrameId).style.height = (divHeight) + "px";
     },
     clearFloatFrame: function () {
         if (this.floatTreeFrameId) {
@@ -6586,8 +6588,9 @@ Sparrow.tree.prototype = {
             floatTree.className = "floatTree";
             document.body.appendChild(floatTree);
         }
-        if (!ajaxUrl)
+        if (!ajaxUrl) {
             ajaxUrl = $.url.root + "/code/load";
+        }
         this.dbs = function (nodeIndex) {
             var businessEntity = this.aNodes[nodeIndex].businessEntity;
             if (this.config.descHiddenId != null) {
@@ -6628,7 +6631,9 @@ Sparrow.tree.prototype = {
                         "javascript:" + treeObject.fullObjName
                         + ".codeNodeClick(" + (i + 1) + ");",
                         jsonList[i].code + "|" + jsonList[i].name,
-                        undefined, undefined, undefined, jsonList[i]);
+                        undefined,
+                        undefined,
+                        undefined, jsonList[i]);
                 }
                 $(treeObject.config.floatTreeId).innerHTML = treeObject;
             });
