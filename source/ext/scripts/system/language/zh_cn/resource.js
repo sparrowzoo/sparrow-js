@@ -35,8 +35,10 @@ var resourceInfo =
     },
     txtMethod: {
         errorCtrlId: "errorMethod",
-        prompt: "请输入资源请求的Method",
-        nullError: "请输入资源请求的Method"
+        prompt: "请输入资源请求的Method <br/>GET POST PUT【三选一】",
+        nullError: "请输入资源请求的Method",
+        options:['GET','POST','PUT'],
+        defaultValue:'POST'
     },
     hdnParentId:{},
     txtPermission: {
