@@ -2,7 +2,7 @@
 var resourceController = {
     api: {
         load_all: "/resource/manage",
-        order: "/resource/order",
+        order: "/resource/sort",
         delete: "/resource/delete",
         save: "/resource/save",
         resource_upload: "/file-upload?path-key=resource",
@@ -170,8 +170,14 @@ var resourceController = {
         $("#txtParentResourceName").value($.toString(cn._parentNode.name));
         $("#hdnParentId").value(cn._parentNode.id);
         $("#txtPermission").value(cn.businessEntity.permission);
+        $("#txtMethod").value($.toString(cn.businessEntity.method,"POST"));
+        $("#txtUrl").value(cn.businessEntity.url);
+        $("#txtAppId").value(cn.businessEntity.appId);
+        $("#hdnAppId").value(cn.businessEntity.appId);
+
+
         $("#txtResourceType").value($.toString(cn.businessEntity.resourceType, 2));
-        $("#txtOpenType").value($.toString(cn.businessEntity.openType));
+        $("#txtOpenType").value($.toString(cn.businessEntity.openType,"manage"));
         $("#divIco").html("<img style='border:0px;' src='"
             + $.toString(cn.businessEntity.icoUrl, $.DEFAULT_RESOURCE_ICO_URL) + "'/>");
         $("#divCover").html("<img style='border:0px;' src='"
