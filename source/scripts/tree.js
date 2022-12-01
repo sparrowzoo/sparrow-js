@@ -822,9 +822,11 @@ Sparrow.tree.prototype = {
 // 判断节点是否为打开状态
     isOpen: function (id) {
         var aOpen = this.getCookie('currentOpen' + this.obj).split('.');
-        for (var n = 0; n < aOpen.length; n++)
-            if (aOpen[n] == id)
+        for (var n = 0; n < aOpen.length; n++) {
+            if (aOpen[n] === id) {
                 return true;
+            }
+        }
         return false;
     },
     getAllId: function () {
