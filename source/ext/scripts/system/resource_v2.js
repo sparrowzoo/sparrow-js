@@ -100,7 +100,7 @@ var resourceController = {
         resourceTree.config.usePlusMinusIcons = false;
         resourceTree.config.useTreeIdInNodeClass = true;
         resourceTree.config.useLevelInNodeClass = true;
-        resourceTree.config.closeSameLevel = true;
+        resourceTree.config.closeSameLevel = false;
         resourceTree.delete_click = resourceController.deleteClick;
         resourceTree.resetIcon();
         var websiteName=$.browser.getCookie($.browser.cookie.website_name);
