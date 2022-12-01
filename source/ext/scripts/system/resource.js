@@ -181,7 +181,6 @@ var resourceController = {
             + $.toString(cn.businessEntity.cover, $.DEFAULT_RESOURCE_ICO_URL) + "'/>");
 
         $("#hdnIco").value($.toString(cn.businessEntity.icoUrl, $.DEFAULT_RESOURCE_ICO_URL));
-        $("#hdnCover").value($.toString(cn.businessEntity.cover, $.DEFAULT_RESOURCE_ICO_URL));
 
         $("#txtManager").value($.toString(cn.businessEntity.manager));
         $("#txtRemark").value($.toString(cn.businessEntity.remark));

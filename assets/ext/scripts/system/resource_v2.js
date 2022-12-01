@@ -6,14 +6,12 @@ var resourceController = {
         delete: "/resource/delete",
         save: "/resource/save",
         resource_upload: "/file-upload?path-key=resource",
-        resource_cover_upload: "/file-upload?path-key=resource_cover"
     },
     resourceTree: null,
     selectingResourceTree: null,
     load: function () {
-        var pathKeySuffixPair = {'resource': 'Ico', 'resource_cover': 'Cover'};
+        var pathKeySuffixPair = {'resource': 'Ico'};
         $.file.initImageUploadEvent('resource', pathKeySuffixPair);
-        $.file.initImageUploadEvent('resource_cover', pathKeySuffixPair);
         $.dispatcher.eventRegistry = [
             {
                 id: "btnCancel",
@@ -180,10 +178,7 @@ var resourceController = {
         $("#txtOpenType").value($.toString(cn.businessEntity.openType,"manage"));
         $("#divIco").html("<img style='border:0px;' src='"
             + $.toString(cn.businessEntity.icoUrl, $.DEFAULT_RESOURCE_ICO_URL) + "'/>");
-        $("#divCover").html("<img style='border:0px;' src='"
-            + $.toString(cn.businessEntity.cover, $.DEFAULT_RESOURCE_ICO_URL) + "'/>");
         $("#hdnIco").value($.toString(cn.businessEntity.icoUrl, $.DEFAULT_RESOURCE_ICO_URL));
-        $("#hdnCover").value($.toString(cn.businessEntity.cover, $.DEFAULT_RESOURCE_ICO_URL));
         $("#txtRemark").value($.toString(cn.businessEntity.remark));
         $("#spanTxtCount").html(500 - $.toString(cn.businessEntity.remark).getByteLength());
         $("#txtStatus").value($.toString(cn.businessEntity.status, 1));
