@@ -5554,7 +5554,6 @@ Sparrow.treeNode = function (id,
     this._lastOfSameLevel = false;
     this._addressIndex = 0;
     this._parentNode;
-    //后台延迟加载时，会使用
     this._hasChild = childCount > 0;
 };
 
@@ -5853,7 +5852,8 @@ Sparrow.tree.prototype = {
         var classNum = "";
         if (this.config.treeNodeClass) {
             classNum += this.config.treeNodeClass;
-        } else if (this.config.useTreeIdInNodeClass) {
+        }
+        else if (this.config.useTreeIdInNodeClass) {
             classNum += this.obj.substring(0, 1).toUpperCase()
                 + this.obj.substring(1);
         }
@@ -5944,9 +5944,9 @@ Sparrow.tree.prototype = {
             if (!this.config.isdelay && !this.config.isclientDelay) {
                 str += this.addNode(node);
             }
-                // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
+            // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
             // 是否打开在缓存中取
-            else if ((node._isOpened && node.pid !== -1) || (node.pid === -1)) {
+            else if ((node._isOpened && node.pid != -1) || (node.pid == -1)) {
                 str += this.addNode(node);
             }
             str += '</div>';
@@ -6006,15 +6006,13 @@ Sparrow.tree.prototype = {
         node._lastOfSameLevel = false;
         for (var n = 0; n < this.aNodes.length; n++) {
             // 如果不是动态的则判断是否有子节点
-            // 动态加载则由后台判断
             if (this.config.isdelay === false) {
-                if (this.aNodes[n] != null && this.aNodes[n].pid === node.id) {
+                if (this.aNodes[n] != null && this.aNodes[n].pid == node.id) {
                     node._hasChild = true;
                 }
             }
-            if (this.aNodes[n] != null && this.aNodes[n].pid === node.pid) {
+            if (this.aNodes[n] != null && this.aNodes[n].pid == node.pid)
                 lastId = this.aNodes[n].id;
-            }
         }
         if (lastId === node.id) {
             node._lastOfSameLevel = true;
@@ -6085,6 +6083,7 @@ Sparrow.tree.prototype = {
                 eOld = document.getElementById("s" + this.obj
                     + this.selectedNodeIndex);
                 this.aNodes[this.selectedNodeIndex]._isSelected = false;
+
                 if (eOld) {
                     eOld.className = "node";
                 }
@@ -6104,9 +6103,8 @@ Sparrow.tree.prototype = {
             currentcbk.checked = !currentcbk.checked;
             this.selectCheckbox(id);
         }
-        if (this.config.closeSameLevel) {
+        if (this.config.closeSameLevel)
             this.closeLevel(cn);
-        }
     },
     /**
      * 把折叠状态节点的子节点加载到子节点面板中<br>
@@ -6119,62 +6117,63 @@ Sparrow.tree.prototype = {
         var cn = node;
         var id = node._addressIndex;
         // 延迟加载折叠状态节点的子节点
-        if (cn._isOpened === true) {
-            return;
-        }
-        // 获取展示子节点的div
-        var childrenDIV = document.getElementById('d' + this.obj + id);
-        // 该结点从未展开过
-        if (childrenDIV != null && childrenDIV.innerHTML == "") {
-            var postStr = "ay=true&nodeId=" + cn.id;
-            if ($("exceptid").value) {
-                postStr += "&exceptid=" + $("exceptid").value;
+        if (cn._isOpened === false) {
+            // 获取展示子节点的div
+            var childrenDIV = document.getElementById('d' + this.obj + id);
+            // 该结点从未展开过
+            if (childrenDIV != null && childrenDIV.innerHTML == "") {
+                var postStr = "ay=true&nodeId=" + cn.id;
+                if ($("exceptid").value) {
+                    postStr += "&exceptid=" + $("exceptid").value;
+                }
+                $.ajax.json(this.config.ajaxURL, postStr,
+                    function (result) {
+                        alert(result);
+                        // alert(xmlHttpRequest.responseText);
+                        var nodeListJson = xmlHttpRequest.responseText
+                            .json();
+                        openNodeCallBack(nodeListJson);
+                        // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
+                        var nodeTemp = cn;
+                        var indentArray = [];
+                        // 循环到次级根节点之前
+                        while (nodeTemp.pid != -1) {
+                            indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
+                                : 1;
+                            nodeTemp = nodeTemp._parentNode;
+                        }
+                        // 反向压栈
+                        for (var i = indentArray.length - 1; i >= 0; i--) {
+                            currentTree.aIndent
+                                .push(indentArray[i]);
+                        }
+                        // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
+                        childrenDIV.innerHTML = currentTree
+                            .addNode(cn);
+                        // 清除临时深度
+                        for (var i = 0; i < indentArray.length; i++) {
+                            currentTree.aIndent.pop();
+                        }
+                    });
             }
-            $.ajax.json(this.config.ajaxURL, postStr,
-                function (result) {
-                    alert(result);
-                    // alert(xmlHttpRequest.responseText);
-                    var nodeListJson = xmlHttpRequest.responseText
-                        .json();
-                    openNodeCallBack(nodeListJson);
-                    // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
-                    var nodeTemp = cn;
-                    var indentArray = [];
-                    // 循环到次级根节点之前
-                    while (nodeTemp.pid != -1) {
-                        indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
-                            : 1;
-                        nodeTemp = nodeTemp._parentNode;
-                    }
-                    // 反向压栈
-                    for (var i = indentArray.length - 1; i >= 0; i--) {
-                        currentTree.aIndent
-                            .push(indentArray[i]);
-                    }
-                    // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
-                    childrenDIV.innerHTML = currentTree
-                        .addNode(cn);
-                    // 清除临时深度
-                    for (var i = 0; i < indentArray.length; i++) {
-                        currentTree.aIndent.pop();
-                    }
-                });
         }
     },
     clientDelayOpen: function (node, isFresh) {
         var cn = node;
         var id = node._addressIndex;
         // 延迟加载折叠状态节点的子节点
-        if (cn._isOpened === false || isFresh) {
+        if (cn._isOpened == false || isFresh) {
             // 获取展示子节点的div
             var childrenDIV = document.getElementById('d' + this.obj + id);
+
             // 该结点从未展开过
             if (childrenDIV != null && childrenDIV.innerHTML == "" || isFresh) {
                 // 将从当前节点到次级根节点之前所有父节点是否是同级节点的最后一个的标志压栈
                 var nodeTemp = cn;
                 var indentArray = [];
+
                 // 循环到次级根节点之前
-                while (nodeTemp._parentNode.id !== this.root.id) {
+                while (nodeTemp._parentNode.id != this.root.id) {
                     indentArray[indentArray.length] = (nodeTemp._lastOfSameLevel) ? 0
                         : 1;
                     nodeTemp = nodeTemp._parentNode;
@@ -6185,6 +6184,7 @@ Sparrow.tree.prototype = {
                 }
                 // 初始化下下级所有结点，并得到所有下一级子节点的html字符串，并将一层孩子写入到页面中
                 childrenDIV.innerHTML = this.addNode(cn);
+
                 // 清除临时深度
                 for (var i = 0; i < indentArray.length; i++) {
                     this.aIndent.pop();
@@ -6213,7 +6213,7 @@ Sparrow.tree.prototype = {
     oAll: function (status) {
         for (var n = 0; n < this.aNodes.length; n++) {
             if (this.aNodes[n] != null && this.aNodes[n]._hasChild
-                && this.aNodes[n].pid !== this.root.id) {
+                && this.aNodes[n].pid != this.root.id) {
                 this.nodeStatus(status, n, this.aNodes[n]._lastOfSameLevel);
                 this.aNodes[n]._isOpened = status;
             }
@@ -6249,9 +6249,8 @@ Sparrow.tree.prototype = {
         if (cn.pid == this.root.id || !cn._parentNode)
             return;
         cn._isOpened = true;
-        if (this.completed && cn._hasChild) {
+        if (this.completed && cn._hasChild)
             this.nodeStatus(true, cn._addressIndex, cn._lastOfSameLevel);
-        }
         this.openTo(cn._parentNode._addressIndex, true);
     },
 // 相同父节点中的所有子节点中，关闭除node节点之外的所有兄弟节点
@@ -6323,10 +6322,10 @@ Sparrow.tree.prototype = {
     getCookie: function (cookieName) {
         var cookieValue = '';
         var posName = document.cookie.indexOf(escape(cookieName) + '=');
-        if (posName !== -1) {
+        if (posName != -1) {
             var posValue = posName + (escape(cookieName) + '=').length;
             var endPos = document.cookie.indexOf(';', posValue);
-            if (endPos !== -1)
+            if (endPos != -1)
                 cookieValue = unescape(document.cookie.substring(posValue, endPos));
             else
                 cookieValue = unescape(document.cookie.substring(posValue));
@@ -6351,9 +6350,8 @@ Sparrow.tree.prototype = {
     isOpen: function (id) {
         var aOpen = this.getCookie('currentOpen' + this.obj).split('.');
         for (var n = 0; n < aOpen.length; n++)
-            if (aOpen[n] === id) {
+            if (aOpen[n] == id)
                 return true;
-            }
         return false;
     },
     getAllId: function () {
@@ -6367,7 +6365,7 @@ Sparrow.tree.prototype = {
         var cn = this.aNodes[this.getSelectedAi()];
         var parentNodeIdArray = [];
         if (cn) {
-            while (cn.id !== -1) {
+            while (cn.id != -1) {
                 parentNodeIdArray.push(cn.id);
                 cn = cn._parentNode;
             }
@@ -6379,8 +6377,8 @@ Sparrow.tree.prototype = {
     selectChilds: function (parentIds, currentSelected, length) {
         pids = [];
         for (var n = 0; n < length; n++) {
-            if (parentIds.indexOf(this.aNodes[n].pid) !== -1) {
-                if (this.aNodes[n].showCtrl !== false) {
+            if (parentIds.indexOf(this.aNodes[n].pid) != -1) {
+                if (this.aNodes[n].showCtrl != false) {
                     document.getElementById("c" + this.obj + n).checked = currentSelected;
                     pids.push(this.aNodes[n].id);
                 }
@@ -6396,12 +6394,12 @@ Sparrow.tree.prototype = {
     selectCheckbox: function (nodeId) {
         var node = this.aNodes[nodeId];
         var currentSelected = null;
-        if (node.selectChild === undefined || node.selectChild === true) {
+        if (node.selectChild == undefined || node.selectChild == true) {
             currentSelected = document.getElementById("c" + this.obj + nodeId).checked;
             if (currentSelected) {
                 var cn = node;
                 var c;
-                while (cn.id !== -1) {
+                while (cn.id != -1) {
                     c = document.getElementById("c" + this.obj + cn._addressIndex);
                     if (c)
                         c.checked = true;
@@ -6411,15 +6409,15 @@ Sparrow.tree.prototype = {
             var len = this.aNodes.length;
             var parentIds = [];
             for (var n = 0; n < len; n++) {
-                if ((n !== nodeId)
-                    && (this.aNodes[n] != null && this.aNodes[n].pid === node.id)) {
-                    if (this.aNodes[n].showCtrl !== false) {
+                if ((n != nodeId)
+                    && (this.aNodes[n] != null && this.aNodes[n].pid == node.id)) {
+                    if (this.aNodes[n].showCtrl != false) {
                         document.getElementById("c" + this.obj + n).checked = currentSelected;
                         parentIds.push(this.aNodes[n].id);
                     }
                 }
             }
-            if (parentIds.length !== 0) {
+            if (parentIds.length != 0) {
                 this.selectChilds(parentIds, currentSelected, len);
             }
         }
@@ -6436,7 +6434,7 @@ Sparrow.tree.prototype = {
         }
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var n = 0; n < checkBoxList.length; n++) {
-            if (checkedId.indexOf(checkBoxList[n].value) !== -1) {
+            if (checkedId.indexOf(checkBoxList[n].value) != -1) {
                 checkBoxList[n].checked = true;
             }
         }
@@ -6445,7 +6443,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked === true) {
+            if (checkBoxList[i].checked == true) {
                 arrayIndex = checkBoxList[i].id.replace('c' + this.obj, '');
                 nodes.push(this.aNodes[arrayIndex].title);
             }
@@ -6456,7 +6454,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked === true) {
+            if (checkBoxList[i].checked == true) {
                 arrayIndex = checkBoxList[i].id.replace('c' + this.obj, '');
                 nodes.push(this.aNodes[arrayIndex]);
             }
@@ -6467,7 +6465,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked === true) {
+            if (checkBoxList[i].checked == true) {
                 nodes.push(checkBoxList[i].value);
             }
         }
@@ -6481,7 +6479,7 @@ Sparrow.tree.prototype = {
         if (this.config.reBuildTree)
             this.config.reBuildTree();
         // 通过方法loadFloatTree方法建新树
-        if ($(this.config.floatTreeId).innerHTML.trim() === ""
+        if ($(this.config.floatTreeId).innerHTML.trim() == ""
             && typeof (this.config.loadFloatTree) != "undefined") {
             this.config.loadFloatTree();
         }
@@ -6511,16 +6509,16 @@ Sparrow.tree.prototype = {
         if (divHeight >= maxHeight) {
             this.floatTreeFrameId = FrameId;
             if ($(this.config.floatTreeId)
-                && $(this.config.floatTreeId).innerHTML !== "") {
+                && $(this.config.floatTreeId).innerHTML != "") {
                 var treeDiv = $(this.config.floatTreeId);
                 $(FrameId).innerHTML = "";
                 treeDiv.style.display = "block";
                 $(FrameId).appendChild(treeDiv);
                 window.clearInterval(this.interval);
             }
-            return;
+        } else {
+            $(FrameId).style.height = (divHeight) + "px";
         }
-        $(FrameId).style.height = (divHeight) + "px";
     },
     clearFloatFrame: function () {
         if (this.floatTreeFrameId) {
@@ -6588,9 +6586,8 @@ Sparrow.tree.prototype = {
             floatTree.className = "floatTree";
             document.body.appendChild(floatTree);
         }
-        if (!ajaxUrl) {
+        if (!ajaxUrl)
             ajaxUrl = $.url.root + "/code/load";
-        }
         this.dbs = function (nodeIndex) {
             var businessEntity = this.aNodes[nodeIndex].businessEntity;
             if (this.config.descHiddenId != null) {
@@ -6631,9 +6628,7 @@ Sparrow.tree.prototype = {
                         "javascript:" + treeObject.fullObjName
                         + ".codeNodeClick(" + (i + 1) + ");",
                         jsonList[i].code + "|" + jsonList[i].name,
-                        undefined,
-                        undefined,
-                        undefined, jsonList[i]);
+                        undefined, undefined, undefined, jsonList[i]);
                 }
                 $(treeObject.config.floatTreeId).innerHTML = treeObject;
             });
