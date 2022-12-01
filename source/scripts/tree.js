@@ -324,8 +324,7 @@ Sparrow.tree.prototype = {
         var classNum = "";
         if (this.config.treeNodeClass) {
             classNum += this.config.treeNodeClass;
-        }
-        else if (this.config.useTreeIdInNodeClass) {
+        } else if (this.config.useTreeIdInNodeClass) {
             classNum += this.obj.substring(0, 1).toUpperCase()
                 + this.obj.substring(1);
         }
@@ -416,7 +415,7 @@ Sparrow.tree.prototype = {
             if (!this.config.isdelay && !this.config.isclientDelay) {
                 str += this.addNode(node);
             }
-            // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
+                // 延迟加载子节点(前一条件针对打开的所有非顶级节点，后一条件针对根节点)
             // 是否打开在缓存中取
             else if ((node._isOpened && node.pid != -1) || (node.pid == -1)) {
                 str += this.addNode(node);
@@ -721,11 +720,13 @@ Sparrow.tree.prototype = {
             }
             return;
         }
-        if (cn.pid == this.root.id || !cn._parentNode)
+        if (cn.pid == this.root.id || !cn._parentNode) {
             return;
+        }
         cn._isOpened = true;
-        if (this.completed && cn._hasChild)
+        if (this.completed && cn._hasChild) {
             this.nodeStatus(true, cn._addressIndex, cn._lastOfSameLevel);
+        }
         this.openTo(cn._parentNode._addressIndex, true);
     },
 // 相同父节点中的所有子节点中，关闭除node节点之外的所有兄弟节点
@@ -825,8 +826,9 @@ Sparrow.tree.prototype = {
     isOpen: function (id) {
         var aOpen = this.getCookie('currentOpen' + this.obj).split('.');
         for (var n = 0; n < aOpen.length; n++)
-            if (aOpen[n] == id)
+            if (aOpen[n] == id) {
                 return true;
+            }
         return false;
     },
     getAllId: function () {
