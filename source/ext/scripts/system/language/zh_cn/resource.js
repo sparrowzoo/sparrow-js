@@ -100,7 +100,7 @@ var resourceInfo =
     txtOpenType: {
         errorCtrlId: "errorOpenType",
         prompt: "打开方式 _blank _self _parent 默认为_self",
-        option:["_blank","_self","_parent","manage"],
+        options:["_blank","_self","_parent","manage"],
         defaultValue:"_self"
     },
     txtStatus: {
