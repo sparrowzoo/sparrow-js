@@ -35,16 +35,16 @@ var resourceInfo =
     },
     txtMethod: {
         errorCtrlId: "errorMethod",
-        prompt: "请输入资源请求的Method <br/>GET POST PUT【三选一】",
+        prompt: "请输入资源请求的Method get post put【三选一,默认为post】",
         nullError: "请输入资源请求的Method",
-        options:['GET','POST','PUT'],
-        defaultValue:'POST'
+        options:['get','post','put'],
+        defaultValue:'post'
     },
     hdnParentId:{},
     txtPermission: {
         errorCtrlId: "errorPermission",
-        prompt: "权限不能为空",
-        nullError: "权限不能为空"
+        prompt: "请输入权限标识",
+        allowNull:true
     },
     txtResourceName: {
         errorCtrlId: "errorResourceName",
@@ -99,9 +99,9 @@ var resourceInfo =
     },
     txtOpenType: {
         errorCtrlId: "errorOpenType",
-        prompt: "打开方式 _blank _self _parent 默认为_self",
+        prompt: "打开方式 _blank _self _parent 默认为manage",
         options:["_blank","_self","_parent","manage"],
-        defaultValue:"_self"
+        defaultValue:"manage"
     },
     txtStatus: {
         errorCtrlId: "errorStatus",

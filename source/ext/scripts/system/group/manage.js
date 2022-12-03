@@ -15,7 +15,7 @@ var groupController = {
             {
                 id: "btnSearch",
                 delegate: function (e, srcElement) {
-                    $("#currentPageIndex").value(1);
+                    $("#hdnCurrentPageIndex").value(1);
                     $.submit(groupController.api.search);
                 }
             },
