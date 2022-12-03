@@ -80,7 +80,7 @@ var resourceController = {
 
         $.tree.prototype.dbs = function (nodeId) {
             var cn = resourceTree.aNodes[nodeId];
-            $.message(cn.permission);
+            $.message("权限标识："+cn.businessEntity.permission);
         };
 
         document.onclick = function () {
@@ -135,7 +135,6 @@ var resourceController = {
         }
         $("#txtParentResourceName").value(cn.name);
         $("#hdnParentId").value(cn.id);
-        $("#txtPermission").value(cn.businessEntity ? cn.businessEntity.permission : "");
     },
     // 版块点击事件
     nodeDetail: function () {
@@ -233,7 +232,7 @@ var resourceController = {
         }
         if (window.confirm(lang.message.delete_confirm)) {
             var deletePostString = "resourceId=" + cn.id;
-            $.ajax.json($.url.root + this.api.delete, deletePostString,
+            $.ajax.json($.url.root + resourceController.api.delete, deletePostString,
                 function (result) {
                     resourceController.resourceTree.removeNode(cn);
                     resourceController.resetForm();
