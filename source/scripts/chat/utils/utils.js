@@ -1,4 +1,5 @@
 define(function (require, exports, module) {
+  const { CHAT_TYPE_1_2_1, CHAT_TYPE_1_2_N } = require("../store/store");
   // 根据传来的class  滚动到底部
   const getScrollBottom = function (className) {
     const scrollDom = document.querySelector(className);
@@ -37,9 +38,37 @@ define(function (require, exports, module) {
     }
     return dayjs(temp).format("YY/MM/DD HH:mm");
   }
+
+  // 自动获取焦点
+  function getFocus(ele) {
+    if (typeof ele === "string") {
+      return document.querySelector(ele);
+    }
+    function select(dom, sesecter) {
+      return dom.querySelector(sesecter);
+    }
+    let res = document;
+    ele.forEach((item) => {
+      res = select(res, item);
+    });
+    return res;
+  }
+
+  // 生成sessionKey
+  function getSessionKey(chatType, selfId, targetId) {
+    if (chatType === CHAT_TYPE_1_2_N) {
+      return targetId;
+    }
+    if (selfId < targetId) {
+      return selfId + "_" + targetId;
+    }
+    return targetId + "_" + selfId;
+  }
   module.exports = {
     getScrollBottom,
     currentSendTime,
     historyMsgTime,
+    getFocus,
+    getSessionKey,
   };
 });

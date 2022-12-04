@@ -122,7 +122,7 @@ h5 {
   justify-content: space-between;
 }
 .chat-msg .msg-part .msg-list .msg-item .msg-user-time .msg-user .username {
-  max-width: 80px;
+  max-width: 90px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -161,7 +161,7 @@ h5 {
   font-weight: 500;
 }
 .chat-msg .msg-content .title .iconfont {
-  font-size: 20px;
+  font-size: 30px;
   cursor: pointer;
 }
 .chat-msg .msg-content .msg-detail {
@@ -260,8 +260,11 @@ h5 {
   background-color: #fff;
   cursor: pointer;
 }
-.chat-msg .msg-content .input-part .conver-button .iconfont {
-  font-size: 30px;
+.chat-msg .msg-content .input-part .conver-button .upload-part {
+  height: 100%;
+}
+.chat-msg .msg-content .input-part .conver-button .upload-part .iconfont {
+  font-size: 28px;
   margin-left: 10px;
   cursor: pointer;
 }
@@ -307,7 +310,6 @@ h5 {
   width: 230px;
   padding: 15px;
   box-sizing: border-box;
-  transform: translateX(100%);
   background-color: #f7f7f7;
   border: 1px solid #e6e6e7;
 }
