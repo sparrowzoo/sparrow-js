@@ -26,6 +26,10 @@
     color: #fff;
   }
 }
+html {
+  width: 100%;
+  height: 100%;
+}
 
 body {
   margin: 0;
@@ -33,9 +37,19 @@ body {
   background-color: #fff;
 }
 
+.global-mask {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 .wraper {
   width: 1100px;
   margin: 100px auto 0;
+  position: relative;
 
   nav {
     color: #999;
@@ -73,6 +87,56 @@ body {
 .main {
   width: 100%;
   margin-left: 20px;
+}
+
+// 遮罩层
+.loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .mask {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .mask-icon {
+      width: 30px;
+      height: 30px;
+      background-image: url("../../images/chat/loading.png");
+      background-size: cover;
+      animation: myloading 1.5s infinite;
+      -webkit-animation: myloading 1.5s infinite;
+    }
+
+    @keyframes myloading {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @-webkit-keyframes myloading {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    p {
+      font-size: 18px;
+    }
+  }
 }
 
 @media (max-width: 1100px) {

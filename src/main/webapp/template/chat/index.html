@@ -33,15 +33,15 @@
         <!-- 我的好友 -->
         <div class="content-wraper">
           <div class="select-btn">
-            <div class="select-item" data-type="add-friend">
+            <div class="select-item" data-type="0">
               <i class="iconfont icon-zengjia"></i>
               <span>添加朋友</span>
             </div>
-            <div class="select-item" data-type="new-friend">
+            <div class="select-item" data-type="1">
               <i class="iconfont icon-user"></i>
               <span>新的朋友</span>
             </div>
-            <div class="select-item" data-type="my-friends">
+            <div class="select-item" data-type="2">
               <i class="iconfont icon-yonghuqun"></i>
               <span>我的群聊</span>
             </div>
@@ -55,13 +55,21 @@
                 <button data-type="chat" class="chat">申请</button>
               </div>
             </div>
-
-
           </div>
           <div class="content">
             <!-- 这里展示朋友以及群聊列表  通过模板填充 -->
-            <div style="display:none">
-              列表为空
+            <div style="display:block" class="my-friend"></div>
+            <div style="display:none" class="new-friend"></div>
+            <div style="display:none" class="my-group">
+            </div>
+          </div>
+          <!-- 删除好友 / 群聊弹层 -->
+          <div style="display:none" class="dialog del-friend">
+            <p>删除好友</p>
+            <span>确认删除此好友吗</span>
+            <div class="operate">
+              <button data-type="remove">取消</button>
+              <button data-type="chat" class="chat">确认</button>
             </div>
           </div>
         </div>
@@ -101,50 +109,6 @@
               </div>
             </div>
           </div>
-          <div class="inform-item">
-            <div class="setting-icon"></div>
-            <div class="inform-content">
-              <span>系统通知</span>
-              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
-              <div class="inform-message">
-                <span class="inform-time">2022-11-17 16:15:20</span>
-                <span class="inform-operate">展开全部</span>
-              </div>
-            </div>
-          </div>
-          <div class="inform-item">
-            <div class="setting-icon"></div>
-            <div class="inform-content">
-              <span>系统通知</span>
-              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
-              <div class="inform-message">
-                <span class="inform-time">2022-11-17 16:15:20</span>
-                <span class="inform-operate">展开全部</span>
-              </div>
-            </div>
-          </div>
-          <div class="inform-item">
-            <div class="setting-icon"></div>
-            <div class="inform-content">
-              <span>系统通知</span>
-              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
-              <div class="inform-message">
-                <span class="inform-time">2022-11-17 16:15:20</span>
-                <span class="inform-operate">展开全部</span>
-              </div>
-            </div>
-          </div>
-          <div class="inform-item">
-            <div class="setting-icon"></div>
-            <div class="inform-content">
-              <span>系统通知</span>
-              <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
-              <div class="inform-message">
-                <span class="inform-time">2022-11-17 16:15:20</span>
-                <span class="inform-operate">展开全部</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- 联系客服 -->
@@ -154,18 +118,24 @@
 
       </div>
     </div>
+    <div style="display:none" class="loading">
+      <div class="mask">
+        <div class="mask-icon"></div>
+        <p>加载中...</p>
+      </div>
+    </div>
 
     <!-- 模板文件 -->
     <!-- 好友列表 -->
     <template id="user-list">
-      <div class="content-item">
+      <div class="user-item">
         <div class="user-info">
           <div class="avatar">
             <img src="https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg" alt="">
           </div>
           <div class="username">
-            <span>好友名字</span>
-            <span>粉丝 2565</span>
+            <span></span>
+            <span></span>
           </div>
         </div>
         <div class="operate">
@@ -173,25 +143,24 @@
           <button data-type="chat" class="chat">聊一下</button>
         </div>
       </div>
+
     </template>
 
     <!-- 消息列表 -->
     <template id="msg-list-part">
-      <div class="msg-item" style="background-color: #f3f0f0;">
+      <div class="msg-item">
         <div class="avatar">
           <img src="https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg" class="avatar-img" alt="用户头像">
           <img src="https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg" class="nation" alt="国籍">
-          <span>5</span>
+          <span class="unread">5</span>
         </div>
         <div class="msg-user-time">
           <div class="msg-user">
-            <span class="username">鲨鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼鱼辣椒</span>
-            <span class="msg-time">22/11/20</span>
+            <span class="username"></span>
+            <span class="msg-time"></span>
           </div>
-          <span class="msg-last">未读未读未读未读读未读未读读未读未读未读消息</span>
-
+          <span class="msg-last"></span>
         </div>
-
       </div>
     </template>
 
@@ -336,7 +305,7 @@
       <div class="msg-content">
         <div class="title">
           <span class="user">名字</span>
-          <i class="iconfont icon-yonghuming show-more-icon"></i>
+          <i class="iconfont icon-gengduo show-more-icon"></i>
         </div>
         <div class="msg-detail">
           <!-- 聊天信息 之后通过模板填充 -->
@@ -345,12 +314,19 @@
           <div class="conver-button">
             <span>英</span>
             <span class="active-lang">中</span>
+            <div class="upload-part">
+              <label for="upload">
+                <i class="iconfont icon-tupian"></i>
+              </label>
+              <input style="display:none" type="file" class="upload-img" id="upload">
+
+            </div>
             <!-- <i class="iconfont icon-tupian upload-img"></i> -->
-            <input type="file" name="" id="" class="upload-img">
+            <!-- <input type="file" class="upload-img"> -->
           </div>
           <div class="input-message">
             <div class="text">
-              <textarea autofocus class="input-content" name=""></textarea>
+              <textarea class="input-content"></textarea>
             </div>
             <button class="send-btn">发送</button>
           </div>
@@ -511,6 +487,7 @@
 
 
   </div>
+  <div style="display:none" class="global-mask"></div>
 </body>
 <script>
 
