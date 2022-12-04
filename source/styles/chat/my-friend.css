@@ -24,14 +24,22 @@ h5 {
   border-left: 1px solid #999;
   border-right: 1px solid #999;
 }
-.content-wraper .dialog {
-  position: absolute;
+.content-wraper .select-btn .dialog {
   top: 75px;
   left: 40px;
+  transform: translate(0, 0);
+}
+.content-wraper .dialog {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 30%;
   min-width: 200px;
   background-color: #fff;
   padding: 0 30px;
+  z-index: 10;
+  text-align: center;
 }
 .content-wraper .dialog p {
   text-align: center;
@@ -49,6 +57,10 @@ h5 {
   font-size: 14px;
   background-color: #f7f7f7;
   padding: 10px 0;
+}
+.content-wraper .dialog span {
+  color: #848484;
+  text-align: center;
 }
 .content-wraper .dialog .operate {
   margin: 35px 0;
@@ -71,6 +83,7 @@ h5 {
   color: #fff;
 }
 .content-wraper .content {
+  position: relative;
   height: 570px;
   padding: 0 60px;
   background-color: #f7f7f7;
@@ -84,7 +97,7 @@ h5 {
   display: none;
   /* Chrome Safari */
 }
-.content-wraper .content-item {
+.content-wraper .user-item {
   width: 100%;
   height: 100px;
   padding: 5px 0;
@@ -93,31 +106,46 @@ h5 {
   justify-content: space-between;
   align-items: center;
 }
-.content-wraper .content-item .user-info {
+.content-wraper .user-item .user-info {
   width: 200px;
   display: flex;
   align-items: center;
 }
-.content-wraper .content-item .user-info .avatar {
+.content-wraper .user-item .user-info .avatar {
   width: 60px;
   height: 60px;
-  border-radius: 5px;
-  overflow: hidden;
+  position: relative;
 }
-.content-wraper .content-item .user-info .avatar img {
+.content-wraper .user-item .user-info .avatar img {
+  border-radius: 5px;
   width: 100%;
   height: 100%;
 }
-.content-wraper .content-item .user-info .username {
+.content-wraper .user-item .user-info .avatar .img-flag {
+  position: absolute;
+  bottom: -3px;
+  left: -3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1px solid #fff;
+}
+.content-wraper .user-item .user-info .username {
   margin-left: 10px;
   display: flex;
   flex-direction: column;
+  justify-content: start;
 }
-.content-wraper .content-item .operate {
+.content-wraper .user-item .user-info .username span:last-child {
+  color: #848484;
+  font-size: 14px;
+  padding-top: 5px;
+}
+.content-wraper .user-item .operate {
   width: 70%;
   text-align: end;
 }
-.content-wraper .content-item .operate button {
+.content-wraper .user-item .operate button {
   min-width: 80px;
   width: 15%;
   padding: 10px 0;
@@ -127,7 +155,7 @@ h5 {
   cursor: pointer;
   font-size: 14px;
 }
-.content-wraper .content-item .operate .chat {
+.content-wraper .user-item .operate .chat {
   margin-left: 5px;
   background-color: #282d3b;
   color: #fff;

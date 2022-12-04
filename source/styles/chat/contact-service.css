@@ -116,6 +116,14 @@ h5 {
   color: #282d3b;
   background-color: #fff;
 }
+.service .msg-content .input-part .conver-button .upload-part {
+  height: 100%;
+}
+.service .msg-content .input-part .conver-button .upload-part .iconfont {
+  font-size: 28px;
+  margin-left: 10px;
+  cursor: pointer;
+}
 .service .msg-content .input-part .input-message {
   background-color: #f7f7f7;
   padding-left: 15px;
