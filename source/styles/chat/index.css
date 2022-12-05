@@ -1,0 +1,105 @@
+@import "font.css";
+@import "my-friend.css";
+@import "chat-msg.css";
+@import "system-inform.css";
+@import "contact-service.css";
+html {
+  width: 100%;
+  height: 100%;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #fff;
+}
+.global-mask {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.wraper {
+  width: 1100px;
+  margin: 100px auto 0;
+  position: relative;
+}
+.wraper nav {
+  color: #999;
+  margin-bottom: 15px;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+}
+.menu {
+  width: 180px;
+  min-width: 90px;
+  height: 0;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.menu-item {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  margin-bottom: 5px;
+  padding: 10px 0;
+  background-color: #f7f7f7;
+  cursor: pointer;
+}
+.main {
+  width: 100%;
+  margin-left: 20px;
+}
+.loading {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.loading .mask {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.loading .mask .mask-icon {
+  width: 30px;
+  height: 30px;
+  background-image: url("../../images/chat/loading.png");
+  background-size: cover;
+  animation: myloading 1.5s infinite;
+  -webkit-animation: myloading 1.5s infinite;
+}
+@keyframes myloading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes myloading {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.loading .mask p {
+  font-size: 18px;
+}
+@media (max-width: 1100px) {
+  .wraper {
+    width: 100%;
+  }
+}
