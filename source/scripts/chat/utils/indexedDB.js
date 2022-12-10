@@ -3,7 +3,6 @@ define(function (require, exports, module) {
     DB_NAME,
     DB_VERSION,
     DB_STORE_NAME,
-    DB_STORE_NAME_MSG,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     SELFID,
@@ -28,9 +27,8 @@ define(function (require, exports, module) {
       };
       this.request.onupgradeneeded = (event) => {
         const db = event.target.result;
-        // 创建存储仓库  以 session 作为查找的主键
+        // 创建存储仓库
         db.createObjectStore(DB_STORE_NAME, { keyPath: "session" });
-        db.createObjectStore(DB_STORE_NAME_MSG, { keyPath: "session" });
         db.createObjectStore(DB_STORE_NAME_USER, { keyPath: "userId" });
         db.createObjectStore(DB_STORE_NAME_QUN, { keyPath: "qunId" });
       };
@@ -52,7 +50,6 @@ define(function (require, exports, module) {
 
     // 添加单条数据 也就是修改数据库中的数据
     addSession(key, session, storeName = DB_STORE_NAME) {
-      console.log(key, session);
       const updateStore = this.db
         .transaction(storeName, "readwrite")
         .objectStore(storeName);
@@ -61,7 +58,7 @@ define(function (require, exports, module) {
       request.onsuccess = (event) => {
         const sessionItem = event.target.result;
         if (!sessionItem) {
-          // 当前没有保存当前用户的session_key 需要添加
+          // 当前没有保存session_key 需要创建一个会话记录
           this.createSessionByKey(key, session, storeName);
           return;
         }
