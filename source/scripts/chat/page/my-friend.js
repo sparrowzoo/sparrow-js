@@ -2,11 +2,7 @@ define(function (require, exports, module) {
   const { getMsgList, showSessionList, getDefaultChat } = require("./chat-msg");
 
   const ajaxObj = require("../utils/api.js");
-  const {
-    getScrollBottom,
-    getFocus,
-    getSessionKey,
-  } = require("../utils/utils.js");
+  const { getFocus, getSessionKey } = require("../utils/utils.js");
   const { initIndexedDB } = require("../utils/indexedDB");
   const dbInstance = initIndexedDB();
 
@@ -24,7 +20,7 @@ define(function (require, exports, module) {
     setTargetId,
   } = require("../store/store.js");
   // const { initContack } = require("../store/contacts.js");
-  const { contackstore } = require("../store/contacts.js");
+  const { contactStore } = require("../store/contacts.js");
 
   // 获取左侧菜单，准备添加点击事件
   const menu = document.querySelector(".menu");
@@ -101,11 +97,12 @@ define(function (require, exports, module) {
       // 没有传入参数 从数据库中获取
       contacterObj = await getUses_Quns();
     }
-    if (contacterObj.users.length === 0) {
-      // 没有好友，显示文字 / 图片...
-    } else {
+
+    // 渲染好友 / 群
+    if (contacterObj.users.length !== 0) {
       createListDom(CHAT_TYPE_1_2_1, contacterObj.users, ".my-friend");
     }
+
     if (contacterObj.quns.length !== 0) {
       createListDom(CHAT_TYPE_1_2_N, contacterObj.quns, ".my-group");
     }
@@ -120,64 +117,6 @@ define(function (require, exports, module) {
       quns: qunArr,
     };
     return obj;
-  }
-
-  // 拿到好友 / 群列表 生成会话列表
-  async function initSessionData(users, quns) {
-    const u = await Promise.all(
-      users.map(async (item) => {
-        const sessinKey = getSessionKey(CHAT_TYPE_1_2_1, SELFID, item.userId);
-        return compareMsg(sessinKey, item);
-      })
-    );
-    const q = await Promise.all(
-      quns.map((item) => {
-        const sessinKey = getSessionKey(CHAT_TYPE_1_2_N, SELFID, item.qunId);
-        return compareMsg(sessinKey, item);
-      })
-    );
-    // 先对会话列表做保存
-    contackstore.initContack([...u, ...q]);
-    // 渲染dom
-    getSessionList([...u, ...q]);
-  }
-  // 和localStorage中的保存的最后一条数据做比对
-  async function compareMsg(keyPath, contacter) {
-    const lastMsg = window.localStorage.getItem(keyPath);
-    const sessionItem = await dbInstance.getData(keyPath, DB_STORE_NAME);
-    // 未读数量 / 最新信息
-    let unReadCount = -1;
-    let lastMessage = "";
-
-    if (sessionItem) {
-      // 与当前用户有聊天记录  才会有未读和 最新信息
-      if (lastMsg) {
-        // 比较最后一条数据
-        const count = sessionItem.messages.length - 1;
-        for (let i = count; i > 0; i--) {
-          if (sessionItem.messages[i] === lastMsg) {
-            unReadCount = count - i;
-            break;
-          }
-        }
-        if (unReadCount === -1) {
-          unReadCount = count + 1;
-        }
-      } else {
-        // 直接返回
-        unReadCount = sessionItem.messages?.length;
-      }
-      lastMessage = sessionItem.messages[sessionItem.messages.length - 1];
-      contacter.unReadCount = unReadCount;
-      contacter.lastMessage = lastMessage;
-      return contacter;
-    } else {
-    }
-  }
-
-  // 生成会话列表
-  function getSessionList(list) {
-    showSessionList(list);
   }
 
   // 好友列表 / 群 创建DOM 并渲染列表
@@ -239,6 +178,59 @@ define(function (require, exports, module) {
     });
   }
 
+  // 首次进入 拿到好友 / 群列表 生成会话列表
+  async function initSessionData(users, quns) {
+    const u = await Promise.all(
+      users.map(async (item) => {
+        const sessinKey = getSessionKey(CHAT_TYPE_1_2_1, SELFID, item.userId);
+        return compareMsg(sessinKey, item);
+      })
+    );
+    const q = await Promise.all(
+      quns.map((item) => {
+        const sessinKey = getSessionKey(CHAT_TYPE_1_2_N, SELFID, item.qunId);
+        return compareMsg(sessinKey, item);
+      })
+    );
+    // 先对会话列表做保存
+    contactStore.initContack([...u, ...q]);
+    // 渲染 聊天消息的列表
+    showSessionList([...u, ...q]);
+  }
+  // 和localStorage中的保存的最后一条数据做比对
+  async function compareMsg(keyPath, contacter) {
+    const lastMsg = window.localStorage.getItem(keyPath);
+    const sessionItem = await dbInstance.getData(keyPath, DB_STORE_NAME);
+    // 未读数量 / 最新信息
+    let unReadCount = -1;
+    let lastMessage = "";
+
+    if (sessionItem) {
+      // 与当前用户有聊天记录  才会有未读和 最新信息
+      if (lastMsg) {
+        // 比较最后一条数据
+        const count = sessionItem.messages.length - 1;
+        for (let i = count; i > 0; i--) {
+          if (sessionItem.messages[i] === lastMsg) {
+            unReadCount = count - i;
+            break;
+          }
+        }
+        if (unReadCount === -1) {
+          unReadCount = count + 1;
+        }
+      } else {
+        // 直接返回历史记录的数量
+        unReadCount = sessionItem.messages?.length;
+      }
+      lastMessage = sessionItem.messages[sessionItem.messages.length - 1];
+      contacter.unReadCount = unReadCount;
+      contacter.lastMessage = lastMessage;
+      return contacter;
+    } else {
+    }
+  }
+
   // 新的朋友 渲染DOM
   async function createNewFriend() {
     const res = await ajaxObj.getFrinedList("contacts", SELFID);
@@ -246,15 +238,13 @@ define(function (require, exports, module) {
   }
 
   function chatBy(user_id, username, chatType) {
-    // 聊天之前 把id 传出去
+    // 聊天之前 设置全局的聊天对象
     setTargetId(user_id, username, chatType);
     // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
     activeMenu = "1";
     showContentByMenu("1");
     // 渲染聊天列表
     getMsgList(user_id, username, chatType);
-    // 默认展示聊天区域的底部
-    getScrollBottom(".msg-detail");
 
     // 获取焦点
     const dom = getFocus([".chat-msg", ".input-content"]);
@@ -293,6 +283,19 @@ define(function (require, exports, module) {
       });
     }
   }
+
+  // 根据点击的索引 展示群 / 新朋友
+  function showCardByIndex(index) {
+    const divCards = document.querySelector(".content").children;
+    for (let i = 0; i < divCards.length; i++) {
+      if (i == index) {
+        divCards[i].style.display = "block";
+      } else {
+        divCards[i].style.display = "none";
+      }
+    }
+  }
+
   addFriendDialog();
   // 添加朋友弹层的申请 取消事件
   function addFriendDialog() {
@@ -313,7 +316,7 @@ define(function (require, exports, module) {
     });
   }
 
-  // 弹层的取消 / 确认事件
+  // 删除弹层的取消 / 确认事件
   const btnContainer = document
     .querySelector(".del-friend")
     .querySelector(".operate");
@@ -326,16 +329,6 @@ define(function (require, exports, module) {
     document.querySelector(".del-friend").style.display = "none";
     document.querySelector(".global-mask").style.display = "none";
   });
-  function showCardByIndex(index) {
-    const divCards = document.querySelector(".content").children;
-    for (let i = 0; i < divCards.length; i++) {
-      if (i == index) {
-        divCards[i].style.display = "block";
-      } else {
-        divCards[i].style.display = "none";
-      }
-    }
-  }
 
   module.exports = {
     getItemList,

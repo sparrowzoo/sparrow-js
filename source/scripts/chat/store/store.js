@@ -1,9 +1,8 @@
 define(function (require, exports, module) {
-  // indexedDB 仓库名
+  // indexedDB 仓库
   const DB_NAME = "chat-history";
   const DB_VERSION = 1;
   const DB_STORE_NAME = "session";
-  const DB_STORE_NAME_MSG = "last-msg";
   const DB_STORE_NAME_USER = "contact-users";
   const DB_STORE_NAME_QUN = "contact-quns";
 
@@ -22,7 +21,6 @@ define(function (require, exports, module) {
     DB_NAME,
     DB_VERSION,
     DB_STORE_NAME,
-    DB_STORE_NAME_MSG,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     TEXT_MESSAGE,

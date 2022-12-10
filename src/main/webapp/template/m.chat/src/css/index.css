@@ -1,0 +1,405 @@
+@import "normalize.css";
+@import "font.css";
+.session-list-part .tool {
+  width: 100vw;
+  height: 25.3333vw;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+  box-sizing: border-box;
+}
+.session-list-part .tool .search {
+  flex: 1;
+  position: relative;
+  height: 9.3333vw;
+}
+.session-list-part .tool .search .iconfont {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translateY(-42%);
+  font-size: 4.8vw;
+}
+.session-list-part .tool .search .search-input {
+  text-align: center;
+  height: 9.3333vw;
+  width: 100%;
+  outline: none;
+  border: none;
+  background-color: #f3f0f0;
+  border-radius: 1.3333vw;
+  box-sizing: border-box;
+  padding-left: 6.6667vw;
+}
+.session-list-part .tool div {
+  width: 9.3333vw;
+  height: 9.3333vw;
+  background-color: #f3f0f0;
+  border-radius: 1.3333vw;
+  color: #848484;
+}
+.session-list-part .tool .add-user {
+  margin: 0 2vw;
+  text-align: center;
+  line-height: 9.3333vw;
+  font-size: 5.3333vw;
+}
+.session-list-part .tool .user-icon {
+  background-image: url(../img/users.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+}
+.session-list-part .session-list {
+  width: 100vw;
+  height: calc(100vh - 25.3333vw);
+  background-color: #f7f7f7;
+  overflow: auto;
+}
+.session-list-part .session-list .session-item {
+  height: 18.6667vw;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+.session-list-part .session-list .session-item .avatar {
+  position: relative;
+  width: 13.3333vw;
+  height: 13.3333vw;
+  padding-left: 8vw;
+  margin-right: 4vw;
+}
+.session-list-part .session-list .session-item .avatar .session-tip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2.1333vw;
+  width: 2.1333vw;
+  transform: translate(40%, -40%);
+  border-radius: 50%;
+  background-color: #ed4135;
+}
+.session-list-part .session-list .session-item .avatar .count {
+  width: 4.6667vw;
+  height: 4.6667vw;
+  line-height: 4.6667vw;
+  text-align: center;
+  color: #fff;
+  font-size: 2.9333vw;
+}
+.session-list-part .session-list .session-item .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.6667vw;
+}
+.session-list-part .session-list .session-item .session-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-right: 6.6667vw;
+  border-bottom: 1px solid #dcdada;
+}
+.session-list-part .session-list .session-item .session-detail .session-user {
+  display: flex;
+  justify-content: space-between;
+  font-size: 3.4667vw;
+  color: #282d3b;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-name {
+  margin-bottom: 2.6667vw;
+  max-width: 29.3333vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-name .nation-flag {
+  width: 4vw;
+  height: 4vw;
+  border-radius: 50%;
+  margin-right: 0.6667vw;
+  vertical-align: middle;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-name span {
+  vertical-align: middle;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-time {
+  color: #848484;
+  font-size: 3.2vw;
+}
+.session-list-part .session-list .session-item .session-detail .session-msg {
+  color: #848484;
+  font-size: 3.2vw;
+  max-width: 40vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.session-detail-part {
+  position: relative;
+}
+.session-detail-part .tool {
+  width: 100vw;
+  height: 12vw;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4vw;
+  box-sizing: border-box;
+  position: relative;
+}
+.session-detail-part .tool .arrows-l {
+  position: absolute;
+  left: 4vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6.6667vw;
+  height: 5.3333vw;
+  background-image: url("../img/arrows-l.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.session-detail-part .tool p {
+  text-align: center;
+  font-size: 4.8vw;
+  font-weight: 600;
+}
+.session-detail-part .tool .icon-more {
+  position: absolute;
+  right: 4vw;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  font-size: 7.8vw;
+}
+.session-detail-part .session-content {
+  width: 100vw;
+  height: calc(100vh - 12vw);
+  box-sizing: border-box;
+  background-color: #f7f7f7;
+  overflow: auto;
+  padding-bottom: 24vw;
+}
+.session-detail-part .session-content .message {
+  margin: 2vw 4.6667vw 4vw 4.6667vw;
+}
+.session-detail-part .session-content .message .time {
+  color: #b1b1b1;
+  font-size: 3.4667vw;
+  text-align: center;
+  padding: 2.5vw 0;
+}
+.session-detail-part .session-content .message .user-msg {
+  display: flex;
+  padding: 1.3333vw 0;
+}
+.session-detail-part .session-content .message .user-msg .avatar-user {
+  width: 10.6667vw;
+  height: 10.6667vw;
+  border-radius: 1.3333vw;
+}
+.session-detail-part .session-content .message .user-msg .userinfo {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  transform: translateY(-110%);
+  left: 0;
+  height: 4vw;
+  line-height: 4vw;
+}
+.session-detail-part .session-content .message .user-msg .userinfo img {
+  width: 3.4667vw;
+  height: 3.4667vw;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+.session-detail-part .session-content .message .user-msg .userinfo span {
+  vertical-align: middle;
+  color: #b1b1b1;
+  font-size: 3.4667vw;
+}
+.session-detail-part .session-content .message .user-msg .message-detail {
+  position: relative;
+  max-width: 50%;
+  line-height: 10.6667vw;
+  margin: 0 4.8vw 0 4.8vw;
+  padding: 0 4vw 0 4vw;
+  border-radius: 1.0667vw;
+}
+.session-detail-part .session-content .message .user-msg .message-detail .message-text {
+  white-space: pre-wrap;
+  font-size: 3.4667vw;
+}
+.session-detail-part .session-content .message .user-msg .img-text {
+  position: relative;
+  margin: 0 5.3333vw;
+}
+.session-detail-part .session-content .message .user-msg .img-text .userinfo {
+  transform: translateY(-150%);
+}
+.session-detail-part .session-content .message .user-msg .img-text .msg-picture {
+  border-radius: 1.3333vw;
+  max-width: 30.6667vw;
+}
+.session-detail-part .session-content .left .user-msg {
+  flex-direction: row;
+}
+.session-detail-part .session-content .left .user-msg .message-detail {
+  background-color: #fff;
+  color: #000;
+  position: relative;
+  padding-left: 2.6667vw;
+}
+.session-detail-part .session-content .left .user-msg .message-detail .block {
+  border: 2.6667vw solid transparent;
+  border-right-color: #fff;
+  position: absolute;
+  top: 2.4vw;
+  left: -5.3333vw;
+}
+.session-detail-part .session-content .right .user-msg {
+  flex-direction: row-reverse;
+}
+.session-detail-part .session-content .right .user-msg .message-detail {
+  background-color: #282d3b;
+  color: #eee;
+  position: relative;
+  padding-right: 2.6667vw;
+}
+.session-detail-part .session-content .right .user-msg .message-detail .block {
+  border: 2.6667vw solid transparent;
+  border-left-color: #282d3b;
+  position: absolute;
+  top: 2.4vw;
+  right: -5.3333vw;
+}
+.session-detail-part .session-input {
+  position: absolute;
+  z-index: 10;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+.session-detail-part .session-input .input {
+  height: 24vw;
+  display: flex;
+  align-items: center;
+  padding: 0 6vw;
+}
+.session-detail-part .session-input .input .icon {
+  width: 6.6667vw;
+  height: 6.6667vw;
+  background-size: 100%;
+}
+.session-detail-part .session-input .input .icon-left {
+  background-image: url("../img/icon.png");
+}
+.session-detail-part .session-input .input .icon-right {
+  background-image: url("../img/icon-add.png");
+}
+.session-detail-part .session-input .input input {
+  flex: 1;
+  height: 10.6667vw;
+  border-radius: 5.3333vw;
+  outline: none;
+  border: none;
+  margin: 0 2.6667vw;
+  background-color: #f3f0f0;
+  padding-left: 6vw;
+  color: #848484;
+  font-size: 3.4667vw;
+}
+.session-detail-part .session-input .translate {
+  height: 13.3333vw;
+  background-color: #f7f7f7;
+  border-top: 1px solid #b1b1b1;
+  display: flex;
+  align-items: center;
+  padding: 0 6vw;
+}
+.session-detail-part .session-input .translate button,
+.session-detail-part .session-input .translate div {
+  border: 2px solid #282d3b;
+  border-radius: 1.3333vw;
+  padding: 1.8667vw;
+  font-size: 3.2vw;
+  font-weight: 600;
+  color: #282d3b;
+  margin-right: 1.3333vw;
+}
+.session-detail-part .session-input .translate button:first-child,
+.session-detail-part .session-input .translate div:first-child {
+  width: 13vw;
+}
+.session-detail-part .session-input .translate button:last-child,
+.session-detail-part .session-input .translate div:last-child {
+  width: 7.4667vw;
+}
+.session-detail-part .session-input .translate div {
+  flex: 1;
+  margin: 0 0.6667vw;
+  position: relative;
+}
+.session-detail-part .session-input .translate div i {
+  position: absolute;
+  top: 50%;
+  right: 2.6667vw;
+  transform: translateY(-50%);
+  width: 5.0667vw;
+  height: 5.0667vw;
+  background-color: #bebdc1;
+  border-radius: 50%;
+  background-image: url("../img/x.png");
+  background-size: 45%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.session-detail-part .session-input .translate span {
+  margin-left: 1.6vw;
+  width: 8vw;
+  text-align: end;
+  font-size: 3.2vw;
+  font-weight: 600;
+  color: #282d3b;
+}
+.group-detail-part {
+  position: relative;
+}
+.group-detail-part .tool {
+  width: 100vw;
+  height: 12vw;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4vw;
+  box-sizing: border-box;
+  position: relative;
+}
+.group-detail-part .tool .arrows-l {
+  position: absolute;
+  left: 4vw;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6.6667vw;
+  height: 5.3333vw;
+  background-image: url("../img/arrows-l.png");
+  background-size: 100%;
+  background-repeat: no-repeat;
+}
+.group-detail-part .tool p {
+  text-align: center;
+  font-size: 4.8vw;
+  font-weight: 600;
+}
+.group-detail-part .tool .icon-more {
+  position: absolute;
+  right: 4vw;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  font-size: 7.8vw;
+}
