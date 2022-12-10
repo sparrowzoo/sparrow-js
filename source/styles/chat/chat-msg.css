@@ -122,7 +122,7 @@ h5 {
   justify-content: space-between;
 }
 .chat-msg .msg-part .msg-list .msg-item .msg-user-time .msg-user .username {
-  max-width: 90px;
+  max-width: 85px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -201,6 +201,9 @@ h5 {
   margin: 0 20px 0 25px;
   padding: 12px 10px;
   border-radius: 5px;
+}
+.chat-msg .msg-content .msg-detail .message .user-msg .message-detail .message-text {
+  white-space: pre-wrap;
 }
 .chat-msg .msg-content .msg-detail .message .user-msg .msg-picture {
   margin: 0 20px;

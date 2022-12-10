@@ -7,7 +7,7 @@ define(function (require, exports, module) {
     SELFID,
     targetId,
   } = require("../store/store.js");
-  const { contackstore } = require("../store/contacts.js");
+  const { contactStore } = require("../store/contacts.js");
   const { initIndexedDB } = require("../utils/indexedDB.js");
   const { getSessionKey } = require("../utils/utils");
   const instanceDB = initIndexedDB();
@@ -49,7 +49,6 @@ define(function (require, exports, module) {
 
     onMsg() {
       this.ws.onmessage = (e) => {
-        console.log("监听了onmessage");
         new SparrowProtocol(e.data, (protocol) => {
           // 接收来信息 先将信息保存到数据库
           if (protocol.msgType === TEXT_MESSAGE) {
@@ -70,7 +69,7 @@ define(function (require, exports, module) {
             });
           }
 
-          // 渲染到页面中  只渲染当前激活的聊天框
+          // 根据fromUserId 判断是否需要渲染DOM
           if (protocol.fromUserId === targetId.value) {
             this.onMsgCallback.message &&
               this.onMsgCallback.message(
@@ -101,7 +100,7 @@ define(function (require, exports, module) {
       };
     }
 
-    sendMsg(chatType, msgType, targetId, msg) {
+    async sendMsg(chatType, msgType, targetId, msg) {
       // 首先判断当前是否为连接状态 不是连接状态 延迟发送
       if (this.isConnected) {
         if (msgType === TEXT_MESSAGE) {
@@ -110,7 +109,10 @@ define(function (require, exports, module) {
           this.sendContent(chatType, msgType, SELFID, targetId, msg);
         } else {
           // 保存一个副本 把数据保存到数据库中
-          const msgCopy = msg;
+          let compressImg = await handleImageUpload(msg);
+          // console.log(msg);
+          // console.log(res);
+          const msgCopy = compressImg;
           const reader = new FileReader();
           reader.readAsDataURL(msgCopy);
           reader.onload = function (e) {
@@ -121,8 +123,8 @@ define(function (require, exports, module) {
           const fileReader = new FileReader();
           fileReader.onload = () => {
             const result = fileReader.result;
-            msg = new Uint8Array(result);
-            this.sendContent(chatType, msgType, SELFID, targetId, msg);
+            compressImg = new Uint8Array(result);
+            this.sendContent(chatType, msgType, SELFID, targetId, compressImg);
           };
           fileReader.readAsArrayBuffer(msg);
         }
@@ -152,6 +154,38 @@ define(function (require, exports, module) {
     }
   }
 
+  // 压缩图片
+  async function handleImageUpload(file) {
+    console.log(imageCompression);
+    const imageFile = file;
+    console.log(imageFile);
+
+    console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
+    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+
+    const options = {
+      maxSizeMB: 0.1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true,
+    };
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      console.log(
+        "compressedFile instanceof Blob",
+        compressedFile instanceof Blob
+      ); // true
+      console.log(
+        `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+      ); // smaller than maxSizeMB
+      console.log(compressedFile);
+      // img.src = window.URL.createObjectURL(compressedFile);
+      // await uploadToServer(compressedFile); // write your own logic
+      return compressedFile;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   // 将文本信息 保存到数据库
   function saveText(value, chatType, targetUserId, fromUserId) {
     const content = BASE64.bytesToString(BASE64.encodeBase64(value));
@@ -162,9 +196,9 @@ define(function (require, exports, module) {
     // 通知session 列表更新
     if (targetUserId == SELFID) {
       // 当前是接收信息
-      contackstore.update(value, TEXT_MESSAGE, key, "receiveMsg");
+      contactStore.update(value, TEXT_MESSAGE, key, "receiveMsg", fromUserId);
     } else {
-      contackstore.update(value, TEXT_MESSAGE, key, "sendLastMsg");
+      contactStore.update(value, TEXT_MESSAGE, key, "sendLastMsg");
     }
 
     addMsg(content, TEXT_MESSAGE, chatType, key, targetUserId, fromUserId);
@@ -177,14 +211,14 @@ define(function (require, exports, module) {
     // 通知session 列表更新
     if (targetUserId == SELFID) {
       // 当前是接收信息
-      contackstore.update(value, IMAGE_MESSAGE, key, "receiveMsg");
+      contactStore.update(value, IMAGE_MESSAGE, key, "receiveMsg", fromUserId);
     } else {
-      contackstore.update(value, IMAGE_MESSAGE, key, "sendLastMsg");
+      contactStore.update(value, IMAGE_MESSAGE, key, "sendLastMsg");
     }
     addMsg(value, IMAGE_MESSAGE, chatType, key, targetUserId, fromUserId);
   }
 
-  // 保存文本到数据库
+  // 向本地数据中添加消息
   function addMsg(value, messageType, chatType, key, targetUserId, fromUserId) {
     const sendTime = +new Date();
     const sessionItem = {
