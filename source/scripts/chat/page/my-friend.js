@@ -1,9 +1,16 @@
-define(function (require, exports, module) {
-  const { getMsgList, showSessionList, getDefaultChat } = require("./chat-msg");
+define([
+  "chat-msg",
+  "api",
+  "utils",
+  "indexedDB",
+  "store",
+  "contacts",
+], function (chatMsg, api, utils, indexedDB, store, contacts) {
+  const { getMsgList, showSessionList, getDefaultChat } = chatMsg;
 
-  const ajaxObj = require("../utils/api.js");
-  const { getFocus, getSessionKey } = require("../utils/utils.js");
-  const { initIndexedDB } = require("../utils/indexedDB");
+  const ajaxObj = api;
+  const { getFocus, getSessionKey } = utils;
+  const { initIndexedDB } = indexedDB;
   const dbInstance = initIndexedDB();
 
   const {
@@ -19,9 +26,9 @@ define(function (require, exports, module) {
     DB_STORE_NAME_QUN,
     setTargetId,
     changeSelfId,
-  } = require("../store/store.js");
+  } = store;
   // const { initContack } = require("../store/contacts.js");
-  const { contactStore } = require("../store/contacts.js");
+  const { contactStore } = contacts;
 
   // 获取左侧菜单，准备添加点击事件
   const menu = document.querySelector(".menu");
@@ -339,7 +346,7 @@ define(function (require, exports, module) {
     document.querySelector(".global-mask").style.display = "none";
   });
 
-  module.exports = {
+  return {
     getItemList,
   };
 });

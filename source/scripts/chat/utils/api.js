@@ -20,7 +20,7 @@ define(function (require, exports, module) {
       });
     });
   }
-  module.exports = {
+  return {
     getSession,
     getFrinedList,
   };

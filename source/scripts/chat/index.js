@@ -1,20 +1,36 @@
-define(function (require, exports, module) {
-  // 导入页面组件
-  const myFriend = require("./page/my-friend.js");
-  const chatMsg = require("./page/chat-msg.js");
-  const systemInform = require("./page/system-inform.js");
-  const contactService = require("./page/contact-service.js");
-
-  // 导入工具
+define([
+  "base64",
+  "sparrow",
+  "sparrowChat",
+  "my-friend",
+  "chat-msg",
+  "system-inform",
+  "contact-service",
+  "store",
+  "api",
+  "indexedDB",
+], function (
+  base64,
+  sparrow,
+  sparrowChat,
+  myFriend,
+  chatMsg,
+  systemInform,
+  contactService,
+  store,
+  api,
+  indexedDB
+) {
   const {
     selfId,
     DB_STORE_NAME,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     changeSelfId,
-  } = require("./store/store.js");
-  const { getSession, getFrinedList } = require("./utils/api.js");
-  const { initIndexedDB } = require("./utils/indexedDB.js");
+  } = store;
+
+  const { getSession, getFrinedList } = api;
+  const { initIndexedDB } = indexedDB;
   const dbInstance = initIndexedDB();
 
   window.onload = function () {
