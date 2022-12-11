@@ -491,15 +491,40 @@
 
 </script>
 <!-- <script type="text/javascript" src="http://r.sparrowzoo.net/scripts/SparrowChat.js"></script> -->
-<script src="../../../../../source/scripts/sparrow.js"></script>
+<!-- <script src="../../../../../source/scripts/sparrow.js"></script>
 <script src="../../../../../source/scripts/SparrowChat.js"></script>
 <script src="../../../../../source/scripts/base64.js"></script>
 <script src="../../../../../source/scripts/chat/lib/sea.js"></script>
 <script src="../../../../../source/scripts/chat/lib/dayjs.js"></script>
-<script src="../../../../../source/scripts/chat/lib/imgCompression.js"></script>
+<script src="../../../../../source/scripts/chat/lib/imgCompression.js"></script> -->
+<script src="../../../../../source/scripts/require.js"></script>
 <script>
-  seajs.use('../../../../../source/scripts/chat/index.js');
-  // seajs.use('../../../../../source/scripts/chat/main.js');
+  // seajs.use('../../../../../source/scripts/chat/index.js');
+  // 配置
+  require.config({
+    baseUrl: '../../../../../source',
+    paths: {
+      "index": "scripts/chat/index",
+      "day": "scripts/chat/lib/dayjs",
+      "imgCom": "scripts/chat/lib/imgCompression",
+      "chat-msg": 'scripts/chat/page/chat-msg',
+      "contact-service": "scripts/chat/page/contact-service",
+      "my-friend": "scripts/chat/page/my-friend",
+      "system-inform": "scripts/chat/page/system-inform",
+      "contacts": "scripts/chat/store/contacts",
+      "store": "scripts/chat/store/store",
+      "api": "scripts/chat/utils/api",
+      "indexedDB": "scripts/chat/utils/indexedDB",
+      "utils": "scripts/chat/utils/utils",
+      "websocket": "scripts/chat/utils/websocket",
+      "base64": "scripts/base64",
+      "sparrow": 'scripts/sparrow',
+      "sparrowChat": "scripts/sparrowChat"
+    },
+    shim: {}
+  })
+
+  require(['index']);
 </script>
 
 

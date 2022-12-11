@@ -1,5 +1,5 @@
-define(function (require, exports, module) {
-  const { CHAT_TYPE_1_2_1, CHAT_TYPE_1_2_N } = require("../store/store");
+define(["store", "day"], function (store, dayjs) {
+  const { CHAT_TYPE_1_2_1, CHAT_TYPE_1_2_N } = store;
   // 根据传来的class  滚动到底部
   const getScrollBottom = function (className) {
     const scrollDom = document.querySelector(className);
@@ -92,7 +92,7 @@ define(function (require, exports, module) {
     }
     return targetId + "_" + selfId;
   }
-  module.exports = {
+  return {
     getScrollBottom,
     currentSendTime,
     historyMsgTime,

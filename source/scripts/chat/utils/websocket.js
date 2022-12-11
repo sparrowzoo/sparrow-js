@@ -1,4 +1,9 @@
-define(function (require, exports, module) {
+define(["store", "contacts", "indexedDB", "utils"], function (
+  store,
+  contacts,
+  indexedDB,
+  utils
+) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
@@ -6,10 +11,10 @@ define(function (require, exports, module) {
     CHAT_TYPE_1_2_N,
     selfId,
     targetId,
-  } = require("../store/store.js");
-  const { contactStore } = require("../store/contacts.js");
-  const { initIndexedDB } = require("../utils/indexedDB.js");
-  const { getSessionKey } = require("../utils/utils");
+  } = store;
+  const { contactStore } = contacts;
+  const { initIndexedDB } = indexedDB;
+  const { getSessionKey } = utils;
   const instanceDB = initIndexedDB();
   class WSinstance {
     // 当前是否为连接状态
@@ -257,7 +262,7 @@ define(function (require, exports, module) {
     img.src = url;
   }
 
-  module.exports = {
+  return {
     WSinstance,
   };
 });

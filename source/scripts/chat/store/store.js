@@ -1,4 +1,4 @@
-define(function (require, exports, module) {
+define(function () {
   // indexedDB 仓库
   const DB_NAME = "chat-history";
   const DB_VERSION = 1;
@@ -20,7 +20,7 @@ define(function (require, exports, module) {
   function changeSelfId(id) {
     selfId.value = id;
   }
-  module.exports = {
+  return {
     DB_NAME,
     DB_VERSION,
     DB_STORE_NAME,
