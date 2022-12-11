@@ -7,11 +7,11 @@ define(function (require, exports, module) {
 
   // 导入工具
   const {
-    SELFID,
+    selfId,
     DB_STORE_NAME,
-    DB_STORE_NAME_MSG,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
+    changeSelfId,
   } = require("./store/store.js");
   const { getSession, getFrinedList } = require("./utils/api.js");
   const { initIndexedDB } = require("./utils/indexedDB.js");
@@ -34,23 +34,36 @@ define(function (require, exports, module) {
 
   // 获取当前用户的历史记录
   async function getSessionHistory() {
-    const sessionArr = await getSession("sessions", SELFID);
-    sessionArr.forEach((item) => {
-      item.session = item.chatSession.sessionKey;
-      dbInstance.initSession(item);
-    });
+    const sessionArr = await getSession("sessions", selfId.value);
+    if (sessionArr) {
+      sessionArr.forEach((item) => {
+        item.session = item.chatSession.sessionKey;
+        dbInstance.initSession(item);
+      });
+    }
   }
 
   // 获取好友 / 群列表
   async function getContacts() {
-    const contacts = await getFrinedList("contacts", SELFID);
+    const contacts = await getFrinedList("contacts", selfId.value);
     // 拿到列表后 渲染dom
     myFriend.getItemList(contacts);
     contacts.users.forEach((user) => {
       dbInstance.initSession(user, DB_STORE_NAME_USER);
     });
+
     contacts.quns.forEach((qun) => {
       dbInstance.initSession(qun, DB_STORE_NAME_QUN);
     });
   }
+
+  // 临时功能
+  const inputTargetId = document.querySelector(".ws-input");
+  // 切换当前用户
+  const btnTargetId = document.querySelector(".connect-btn");
+  btnTargetId.addEventListener("click", function () {
+    // console.log(inputTargetId.value);
+    changeSelfId(inputTargetId.value);
+    getContacts();
+  });
 });

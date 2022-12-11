@@ -5,7 +5,7 @@ define(function (require, exports, module) {
   // 请求历史聊天信息
   function getSession(url, userId) {
     const data = "token=" + userId;
-    return new Promise((resolve, reject) => {
+    new Promise((resolve, reject) => {
       $.ajax.json(BASE_URL + url, data, function (result) {
         resolve(result.data);
       });
