@@ -1,5 +1,5 @@
-define(function (require, exports, module) {
-  const { targetId } = require("./store");
+define(["store"], function (store) {
+  const { targetId } = store;
   //  维护 session 列表，收发消息后主动回调相关函数 实现 sessionDOM列表自动更新
   class ContactStore {
     constructor() {
@@ -58,7 +58,7 @@ define(function (require, exports, module) {
 
   const contactStore = new ContactStore();
 
-  module.exports = {
+  return {
     contactStore,
   };
 });

@@ -1,4 +1,4 @@
-define(function (require, exports, module) {
+define(["store"], function (store) {
   const {
     DB_NAME,
     DB_VERSION,
@@ -6,7 +6,7 @@ define(function (require, exports, module) {
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     selfId,
-  } = require("../store/store.js");
+  } = store;
   if (!window.indexedDB) {
     window.alert(
       "Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available."
@@ -131,5 +131,5 @@ define(function (require, exports, module) {
     };
   })();
 
-  module.exports = { initIndexedDB };
+  return { initIndexedDB };
 });

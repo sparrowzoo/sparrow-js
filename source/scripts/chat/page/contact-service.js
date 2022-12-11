@@ -1,6 +1,6 @@
-define(function (require, exports, module) {
+define(["utils"], function (utils) {
   /** 联系客服区域 */
-  const { getFocus } = require("../utils/utils");
+  const { getFocus } = utils;
   function initContactPage() {
     const chatContainerDiv = document.querySelector(".service");
     const chatTemplate = document.querySelector("#chat-part");
@@ -24,7 +24,7 @@ define(function (require, exports, module) {
   //   document.querySelector(".service").querySelector(".input-content").focus();
   // }
 
-  module.exports = {
+  return {
     initContactPage,
   };
 });

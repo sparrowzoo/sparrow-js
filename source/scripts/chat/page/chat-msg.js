@@ -1,4 +1,10 @@
-define(function (require, exports, module) {
+define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
+  store,
+  contacts,
+  utils,
+  indexedDB,
+  websocket
+) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
@@ -8,8 +14,8 @@ define(function (require, exports, module) {
     selfId,
     targetId,
     setTargetId,
-  } = require("../store/store.js");
-  const { contactStore } = require("../store/contacts");
+  } = store;
+  const { contactStore } = contacts;
 
   const {
     getScrollBottom,
@@ -17,10 +23,10 @@ define(function (require, exports, module) {
     getSessionKey,
     sessionTime,
     currentSendTime,
-  } = require("../utils/utils.js");
-  const { initIndexedDB } = require("../utils/indexedDB.js");
-  const ajaxObj = require("../utils/api.js");
-  const { WSinstance } = require("../utils/websocket.js");
+  } = utils;
+  const { initIndexedDB } = indexedDB;
+  // const ajaxObj = require("../utils/api.js");
+  const { WSinstance } = websocket;
   const currentWSInstance = new WSinstance(selfId.value);
   const dbInstance = initIndexedDB();
 
@@ -551,7 +557,7 @@ define(function (require, exports, module) {
     }
   }
 
-  module.exports = {
+  return {
     initChatPage,
     getMsgList,
     showSessionList,
