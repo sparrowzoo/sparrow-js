@@ -10,7 +10,7 @@ define(function () {
   const IMAGE_MESSAGE = 1;
   const CHAT_TYPE_1_2_1 = 0;
   const CHAT_TYPE_1_2_N = 1;
-  const selfId = { value: "100" };
+  const selfId = { value: 0 };
   let targetId = { value: "-1", type: CHAT_TYPE_1_2_1, username: "" };
   function setTargetId(id, username, chatType) {
     targetId.value = id;

@@ -1,16 +1,19 @@
-define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
-  store,
-  contacts,
-  utils,
-  indexedDB,
-  websocket
-) {
+define([
+  "store",
+  "contacts",
+  "utils",
+  "indexedDB",
+  "websocket",
+  "api",
+], function (store, contacts, utils, indexedDB, websocket, api) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
     CHAT_TYPE_1_2_1,
     CHAT_TYPE_1_2_N,
-    DB_STORE_NAME_MSG,
+    DB_STORE_NAME,
+    DB_STORE_NAME_USER,
+    DB_STORE_NAME_QUN,
     selfId,
     targetId,
     setTargetId,
@@ -26,8 +29,13 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
   } = utils;
   const { initIndexedDB } = indexedDB;
   // const ajaxObj = require("../utils/api.js");
-  const { WSinstance } = websocket;
-  const currentWSInstance = new WSinstance(selfId.value);
+  // const { wsInstance } = websocket; // wsInstance
+  // console.log(wsInstance);
+  let wsInstance;
+  function getWsInstance(ws) {
+    wsInstance = ws;
+  }
+  // const wsInstance = createWS(selfId.value);
   const dbInstance = initIndexedDB();
 
   let localMessageTemplate;
@@ -71,6 +79,7 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
     contactStore.registerCallback(changeUnreadCount, "changeUnreadCount");
     contactStore.registerCallback(sendLastMsg, "sendLastMsg");
     contactStore.registerCallback(receiveMsg, "receiveMsg");
+    contactStore.registerCallback(addSessionItem, "addSessionItem");
     contactStore.registerCallback(reSort, "reSort");
     // 填充消息列表
     const msgListContainerDiv = document.querySelector(".msg-list");
@@ -86,19 +95,7 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
 
     for (let i = 0; i < list.length; i++) {
       const divList = templateSessionItem.cloneNode(true);
-      // 将当前session 的标识 保存到 dom 元素中
-      const sessionObj = {};
-      if (list[i].qunId) {
-        sessionObj.user_id = list[i].qunId;
-        sessionObj.username = list[i].qunName;
-        sessionObj.chatType = CHAT_TYPE_1_2_N;
-      } else {
-        sessionObj.user_id = list[i].userId;
-        sessionObj.username = list[i].userName;
-        sessionObj.chatType = CHAT_TYPE_1_2_1;
-      }
-      sessionObj.session = list[i].lastMessage.session;
-      divList.info = sessionObj;
+      divList.info = list[i];
       // 未读数量
       const spanUnReadCount = divList.querySelector(".unread");
       if (list[i].unReadCount == 0) {
@@ -137,18 +134,30 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
       .querySelector(".msg-list")
       .querySelectorAll(".msg-item");
     divMsgs.forEach((el) => {
-      el.addEventListener("click", function (e) {
-        const { user_id, username, chatType } = this.info;
-        // 每次点击 动态切换右侧的聊天框区域
-        getMsgList(user_id, username, chatType);
-        // 修改当前聊天 id
-        setTargetId(user_id, username, chatType);
-      });
+      el.onclick = function () {
+        // const { user_id, username, chatType } = this.info;
+        let targetId, username, chatType;
+
+        if (el.info.userName) {
+          // 当前是用户
+          // 每次点击 动态切换右侧的聊天框区域
+          // 修改当前聊天 id
+          targetId = el.info.userId;
+          username = el.info.userName;
+          chatType = CHAT_TYPE_1_2_1;
+        } else {
+          targetId = el.info.qunId;
+          username = el.info.qunName;
+          chatType = CHAT_TYPE_1_2_N;
+        }
+        getMsgList(targetId, username, chatType);
+        setTargetId(targetId, username, chatType);
+      };
     });
   }
 
   // 点击查看未读信息
-  function changeUnreadCount(index, lastMsg, keyPath) {
+  function changeUnreadCount(index, item) {
     // sessionItem
     const divMsgArr = document
       .querySelector(".msg-list")
@@ -157,7 +166,13 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
     // 设置样式
     spanUnReadCount.style.display = "none";
     // 将最新的消息 保存到本地
-    window.localStorage.setItem(keyPath, lastMsg);
+    const params = {
+      chatType: item.lastMessage.chatType,
+      sessionKey: item.lastMessage.session,
+      userId: selfId.value,
+    };
+    // 每次发送信息都要 更新已读
+    api.setRead(params);
   }
 
   // 发送最新信息 列表变化的逻辑
@@ -177,9 +192,39 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
     spanMsgTime.innerText = historyMsgTime(msgTime);
   }
 
+  // 增加 session item
+  function addSessionItem(item) {
+    const msgListContainerDiv = document.querySelector(".msg-list");
+    const divList = msgListContainerDiv.querySelector(".msg-item");
+
+    const msgListTemplate = document.querySelector("#msg-list-part");
+    // 先填充,获取到真实的DOM元素
+    const divSessionItem = msgListTemplate.content.cloneNode(true);
+    // 未读数量
+    const spanUnReadCount = divSessionItem.querySelector(".unread");
+    spanUnReadCount.style.display = "none";
+
+    // 用户名
+    const spanUsername = divSessionItem.querySelector(".username");
+    spanUsername.innerText = item.userName || item.qunName;
+
+    // 向 session list 中添加item
+    if (divList) {
+      // 之前有session ,所以要使用 insertBefore 插入到最前面
+      msgListContainerDiv.insertBefore(divSessionItem, divList);
+    } else {
+      // 添加之前没有session 直接添加就行
+      msgListContainerDiv.appendChild(divSessionItem);
+    }
+
+    // 插入到文档后 再添加info属性 新插入的info 属性 是用户 / 群的信息 里面没有sessin
+    msgListContainerDiv.querySelector(".msg-item").info = item;
+    // 列表渲染完毕，注册sessionItem 的点击事件
+    clickSessions();
+  }
+
   // 接收最新信息 列表变化的逻辑
   function receiveMsg(index, msgValue, msgTime, msgType, count) {
-    console.log(count, "count");
     const divMsgArr = document
       .querySelector(".msg-list")
       .querySelectorAll(".msg-item");
@@ -270,10 +315,14 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
   let lastTime = null;
   async function getMsgList(user_id, username, chatType) {
     // 根据聊天框 动态修改sessionItem 样式
-    switchStyle(user_id);
+    await switchStyle(user_id, chatType);
     // 显示传来的username
-    document.querySelector(".msg-content").querySelector(".user").innerText =
-      username;
+
+    if (username) {
+      document.querySelector(".msg-content").querySelector(".user").innerText =
+        username;
+    }
+
     // 控制icon 显示 只有群显示icon
     controlIcon(chatType);
     // 每次在渲染列表之前 先删除上一次的节点 再渲染新的节点
@@ -311,12 +360,7 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
       if (msg.messageType === TEXT_MESSAGE) {
         msgValue = BASE64.bytesToString(BASE64.decodeBase64(msg.content));
       } else {
-        const reg = /^data:image/;
-        if (reg.test(msg.content)) {
-          msgValue = msg.content;
-        } else {
-          msgValue = "data:image/jpeg;base64," + msg.content;
-        }
+        msgValue = msg.content;
       }
       // 渲染聊天记录
       initMsgRecord(
@@ -336,77 +380,54 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
     // 滚动到底部
     getScrollBottom(".msg-detail");
     // 渲染完毕注册websocket onmessage 事件
-    currentWSInstance.registerCallback(receiveMessage);
+    wsInstance.registerCallback(receiveMessage);
   }
 
   // 没有明确user_id 获取默认的聊天框，就是session列表的第一个用户 / 群
   function getDefaultChat() {
     if (targetId.value == "-1") {
-      const { user_id, username, chatType } = getFirst();
-      getMsgList(user_id, username, chatType);
+      // 没有任何聊天记录
+      // getMsgList();
     } else {
       const { value: user_id, username, type: chatType } = targetId;
       getMsgList(user_id, username, chatType);
     }
   }
   // 根据聊天框 对消息列表的样式做切换
-  function switchStyle(user_id) {
+  async function switchStyle(targetId, chatType) {
     // 有明确的聊天对象 根据user_id设置
     const itemArr = document
       .querySelector(".msg-list")
       .querySelectorAll(".msg-item");
-    itemArr.forEach((item, index) => {
-      if (item.info.user_id == user_id) {
-        item.style.background = "#f3f0f0";
-        // 每次点击 都需要重置未读数
-        const lastText = item.querySelector(".msg-last").innerText;
-        const content = BASE64.bytesToString(BASE64.encodeBase64(lastText));
-        const keyPath = item.info.session;
-        // 仅仅同步最新的消息 和未读数量
-        // contactStore.notify("changeUnreadCount", [0, index, content, keyPath]);
-        contactStore.update(
-          content,
-          TEXT_MESSAGE,
-          keyPath,
-          "changeUnreadCount"
-        );
-      } else {
-        item.style.background = "none";
-      }
-    });
-  }
-
-  // 获取第一个聊天用户 / 群
-  function getFirst() {
-    const session = contactStore.contactList[0];
-    const sessionObj = {};
-    if (session.qunId) {
-      sessionObj.user_id = session.qunId;
-      sessionObj.username = session.qunName;
-      sessionObj.chatType = CHAT_TYPE_1_2_N;
-      targetId;
+    if (itemArr.length) {
+      // 当前有session list
+      const idType = chatType === CHAT_TYPE_1_2_1 ? "userId" : "qunId";
+      itemArr.forEach((item, index) => {
+        if (item.info[idType] == targetId) {
+          item.style.background = "#f3f0f0";
+          // 每次点击 都需要重置未读数
+          const keyPath = item.info.lastMessage.session;
+          // 仅仅同步最新未读数量
+          contactStore.setUnread(keyPath, "changeUnreadCount");
+        } else {
+          item.style.background = "none";
+        }
+      });
     } else {
-      sessionObj.user_id = session.userId;
-      sessionObj.username = session.userName;
-      sessionObj.chatType = CHAT_TYPE_1_2_1;
+      // 没有session list 就需要添加 一个session item 先根据chatType 确定查什么表
+      // console.log(user_id);
+      // const storeName =
+      //   chatType == CHAT_TYPE_1_2_1 ? DB_STORE_NAME_USER : DB_STORE_NAME_USER;
+      // const sessionItem = await dbInstance.getData(user_id * 1, storeName);
+      // addSessionItem(sessionItem);
+      // // 同步到contacts 中
+      // const newsessionItem = {
+      //   lastMessage: {
+      //     session: getSessionKey(chatType, selfId.value, user_id),
+      //   },
+      // };
+      // contactStore.addContactItem(newsessionItem);
     }
-
-    // 修改当前聊天id
-    setTargetId(sessionObj.user_id, sessionObj.username, sessionObj.chatType);
-
-    // 设置样式
-    const divItems = document
-      .querySelector(".msg-list")
-      .querySelectorAll(".msg-item");
-    divItems.forEach((item, index) => {
-      if (index === 0) {
-        item.style.background = "#f3f0f0";
-        item.querySelector(".unread").style.display = "none";
-      } else {
-        item.style.background = "none";
-      }
-    });
-    return sessionObj;
   }
 
   // 点击按钮 / 回车发送消息
@@ -414,7 +435,7 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
     const textDom = document.querySelector(".input-content");
     sendMessage(textDom.value, TEXT_MESSAGE);
     // websocket 发送数据
-    currentWSInstance.sendMsg(
+    wsInstance.sendMsg(
       targetId.type,
       TEXT_MESSAGE,
       targetId.value,
@@ -456,12 +477,7 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
       const file = this.files[0];
       const url = window.URL.createObjectURL(file);
       sendMessage(url, IMAGE_MESSAGE);
-      currentWSInstance.sendMsg(
-        targetId.type,
-        IMAGE_MESSAGE,
-        targetId.value,
-        file
-      );
+      wsInstance.sendMsg(targetId.type, IMAGE_MESSAGE, targetId.value, file);
     });
   }
 
@@ -549,11 +565,11 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
       const img = copyMessageTemplate.querySelector(".msg-picture");
       img.style.display = "block";
       img.src = value;
-      img.onload = function () {
-        // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
-        window.URL.revokeObjectURL(value);
-        getScrollBottom(".msg-detail");
-      };
+      // img.onload = function () {
+      //   // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
+      //   window.URL.revokeObjectURL(value);
+      // };
+      getScrollBottom(".msg-detail");
     }
   }
 
@@ -562,5 +578,7 @@ define(["store", "contacts", "utils", "indexedDB", "websocket"], function (
     getMsgList,
     showSessionList,
     getDefaultChat,
+    getWsInstance,
+    addSessionItem,
   };
 });
