@@ -33,6 +33,12 @@ define(["store"], function (store) {
       this.notify("addSessionItem", [sessionItem]);
     }
 
+    // 判断当前接收的消息 是否为第一次发送来
+    firstReceiverMsg(session) {
+      console.log(session);
+      console.log(this.contactList);
+    }
+
     registerCallback(fn, key) {
       this[key] = fn;
     }
@@ -52,10 +58,6 @@ define(["store"], function (store) {
         (item) => item.lastMessage.session === session
       );
 
-      // if (fnName === "changeUnreadCount") {
-      //   this.setUnread(index, fnName);
-      //   return;
-      // }
       const msgTime = +new Date();
       const params = [index, lastMsg, msgTime, msgType];
       if (fnName === "receiveMsg" && fromUserId != targetId.value) {
@@ -63,6 +65,7 @@ define(["store"], function (store) {
         const count = this.contactList[index].unReadCount;
         this.contactList[index].unReadCount++;
         params.push([count + 1]);
+        firstReceiverMsg(session);
       }
 
       this.notify(fnName, params);
