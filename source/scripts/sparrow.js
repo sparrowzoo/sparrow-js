@@ -953,8 +953,9 @@ Sparrow.ajax = {
                 }
             }, data, srcElement);
     },
-    get: function (url) {
-        $.ajax.req("GET", url, $.ajax._callback);
+    get: function (url,callback) {
+        callback=callback?callback:$.ajax._callback;
+        $.ajax.req("GET", url, callback);
     },
     post: function (url, data) {
         $.ajax.req("POST", url, $.ajax._callback, data);
