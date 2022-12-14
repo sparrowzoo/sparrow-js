@@ -9,6 +9,7 @@ define([
   "store",
   "api",
   "indexedDB",
+  "websocket",
 ], function (
   base64,
   sparrow,
@@ -19,7 +20,8 @@ define([
   contactService,
   store,
   api,
-  indexedDB
+  indexedDB,
+  websocket
 ) {
   const {
     selfId,
@@ -28,25 +30,24 @@ define([
     DB_STORE_NAME_QUN,
     changeSelfId,
   } = store;
-
+  const { createWS } = websocket;
   const { getSession, getFrinedList } = api;
   const { initIndexedDB } = indexedDB;
   const dbInstance = initIndexedDB();
 
-  window.onload = function () {
-    // 请求 当前用户好友
-    // myFriend.getItemList();
+  // window.onload = function () {
+  // 请求 当前用户好友
+  // myFriend.getRelationList();
+  // 初始化聊天信息页面
+  chatMsg.initChatPage();
 
-    // 初始化聊天信息页面
-    chatMsg.initChatPage();
-
-    // 初始化联系客服页面
-    contactService.initContactPage();
-  };
+  // 初始化联系客服页面
+  contactService.initContactPage();
+  // };
   // 请求历史记录
-  getSessionHistory();
+  // getSessionHistory();
   // 请求好友
-  getContacts();
+  // getContacts();
 
   // 获取当前用户的历史记录
   async function getSessionHistory() {
@@ -62,8 +63,9 @@ define([
   // 获取好友 / 群列表
   async function getContacts() {
     const contacts = await getFrinedList("contacts", selfId.value);
+    console.log(contacts);
     // 拿到列表后 渲染dom
-    myFriend.getItemList(contacts);
+    myFriend.getRelationList(contacts);
     contacts.users.forEach((user) => {
       dbInstance.initSession(user, DB_STORE_NAME_USER);
     });
@@ -79,7 +81,10 @@ define([
   const btnTargetId = document.querySelector(".connect-btn");
   btnTargetId.addEventListener("click", function () {
     // console.log(inputTargetId.value);
-    changeSelfId(inputTargetId.value);
+    const ws = createWS(inputTargetId.value);
+    changeSelfId(inputTargetId.value * 1);
     getContacts();
+    getSessionHistory();
+    chatMsg.getWsInstance(ws);
   });
 });
