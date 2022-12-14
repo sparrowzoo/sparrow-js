@@ -118,7 +118,7 @@ var SparrowProtocol = function (chatType, msgType, currentUserId, sessionKey, ms
                     offset+=4;//session key length=4
                     const sessionKeyBuffer = buf.slice(offset,this.sesessionKeyLength+offset);
                     offset+=this.sesessionKeyLength;
-                    this.sessionKey=new Uint8Array(sessionKeyBuffer);
+                    this.sessionKey=new Uint8Array(sessionKeyBuffer).toString();
                 }
 
                 offset+=4;//msg length =4
