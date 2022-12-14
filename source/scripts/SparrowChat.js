@@ -1,8 +1,8 @@
 //小端模式
 //number 要转换的整形数值
 //length 要转成什么byte数组，规定数组的长度
-//如uint16，则lenght=2表示两个字节，转成的byte数组长度是length=2
-//如uint32，则lenght=2表示两个字节，转成的byte数组长度是length=4
+//如uint16，则length=2表示两个字节，转成的byte数组长度是length=2
+//如uint32，则length=2表示两个字节，转成的byte数组长度是length=4
 Number.prototype.toBytes = function () {
   number = this;
   var bytes = [];
@@ -65,7 +65,7 @@ Uint8Array.prototype.toString = function () {
   for (var i = 0; i < _arr.length; i++) {
     var one = _arr[i].toString(2),
       v = one.match(/^1+?(?=0)/);
-    if (v && one.length == 8) {
+    if (v && one.length === 8) {
       var bytesLength = v[0].length;
       var store = _arr[i].toString(2).slice(7 - bytesLength);
       for (var st = 1; st < bytesLength; st++) {
@@ -101,9 +101,11 @@ var SparrowProtocol = function (
     );
   }
 
+  //收到推送的消息
+  //SparrowProtocol(data,function callback(){});
   if (typeof chatType == "object") {
     data = chatType;
-    callback = msgType;
+    callback = msgType; //回调函数
     //当客户端收到服务端发来的消息时，触发onmessage事件，参数e.data包含server传递过来的数据
     (async () => {
       const blob = data;
@@ -158,19 +160,20 @@ var SparrowProtocol = function (
     this.chatType = chatType;
     this.chatTypeLength = 1;
     this.msgType = msgType;
-    this.msgTypeLegnth = 1;
+    this.msgTypeLength = 1;
     this.currentUserId = parseInt(currentUserId, 10);
     this.currentUserIdBytes = this.currentUserId.toBytes();
     this.currentUserIdLength = this.currentUserIdBytes.length;
     if (chatType === CHAT_TYPE_1_2_N) {
       this.sessionKey = sessionKey;
+      //session key 自己的字节
       this.sessionKeyBytes = sessionKey.toArray();
-      //session key length
-      this.sesessionKeyBytesLength = this.sessionKeyBytes.length;
+      //session key length 比如 10 qun_1000000
+      this.sessionKeyBytesLength = this.sessionKeyBytes.length;
       //session key length's bytes
-      this.sesessionKeyLengthBytes = this.sesessionKeyBytesLength.toBytes();
+      this.sessionKeyLengthBytes = this.sessionKeyBytesLength.toBytes();
       //session key length's bytes length
-      this.sesessionKeyLengthLength = this.sesessionKeyLengthBytes.length;
+      this.sesessionKeyLengthLength = this.sessionKeyLengthBytes.length; //4
     } else {
       this.targetUserId = parseInt(sessionKey, 10);
       this.targetUserIdBytes = this.targetUserId.toBytes();
@@ -190,16 +193,16 @@ SparrowProtocol.prototype.toBytes = function () {
   if (this.chatType === CHAT_TYPE_1_2_N) {
     totalLength =
       this.chatTypeLength +
-      this.msgTypeLegnth +
+      this.msgTypeLength +
       this.currentUserIdLength + //4
       this.sesessionKeyLengthLength + //4
-      this.sesessionKeyBytesLength +
+      this.sessionKeyBytesLength +
       this.msgLengthLength + //4
       this.msgLength;
   } else {
     totalLength =
       this.chatTypeLength +
-      this.msgTypeLegnth +
+      this.msgTypeLength +
       this.currentUserIdLength + //4
       this.targetUserIdLength + //4
       this.msgLengthLength + //4
@@ -208,14 +211,14 @@ SparrowProtocol.prototype.toBytes = function () {
   let result = new Uint8Array(totalLength);
   offset = 0;
   result.set([this.chatType, this.msgType], offset);
-  offset += this.msgTypeLegnth + this.chatTypeLength;
+  offset += this.msgTypeLength + this.chatTypeLength;
   result.set(this.currentUserIdBytes, offset);
   offset += this.currentUserIdLength;
   if (this.chatType === CHAT_TYPE_1_2_N) {
-    result.set(this.sesessionKeyLengthBytes, offset);
+    result.set(this.sessionKeyLengthBytes, offset);
     offset += this.sesessionKeyLengthLength;
     result.set(this.sessionKeyBytes, offset);
-    offset += this.sesessionKeyBytesLength;
+    offset += this.sessionKeyBytesLength;
   } else {
     result.set(this.targetUserIdBytes, offset);
     offset += this.targetUserIdLength;

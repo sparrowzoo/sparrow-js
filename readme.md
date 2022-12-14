@@ -53,6 +53,8 @@ chown -R www:www /root/tomcat-sparrow
 chown -R www:www /var/log/supervisor
 chown -R www:www /var/log/sparrow
 chown -R www:www /var/log/sparrow-chat
+chown -R www:www /var/image
+sudo chmod -R 750 /var/image
 chown -R www:www /workspace/upload
 sudo chmod -R 750 /workspace/upload
 
