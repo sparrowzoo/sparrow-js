@@ -1,9 +1,11 @@
-define(["store", "contacts", "indexedDB", "utils"], function (
-  store,
-  contacts,
-  indexedDB,
-  utils
-) {
+define([
+  "store",
+  "contacts",
+  "indexedDB",
+  "utils",
+  "imageCompression",
+  "api",
+], function (store, contacts, indexedDB, utils, imageCompression, api) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
@@ -46,7 +48,6 @@ define(["store", "contacts", "indexedDB", "utils"], function (
 
     onOpen() {
       this.ws.onopen = (e) => {
-        console.log("建立连接 onopen");
         this.isConnected = true;
         this.reConnectTime = 1;
       };
@@ -56,22 +57,23 @@ define(["store", "contacts", "indexedDB", "utils"], function (
       this.ws.onmessage = (e) => {
         new SparrowProtocol(e.data, (protocol) => {
           // 接收来信息 先将信息保存到数据库
+          console.log(protocol, "接收信息");
           if (protocol.msgType === TEXT_MESSAGE) {
-            saveText(
-              protocol.msg,
-              protocol.chatType,
-              protocol.currentUserId,
-              protocol.fromUserId
-            );
-          } else {
-            convertImgToBase64(protocol.url, function (res) {
-              saveImg(
-                res,
+            if (protocol.currentUserId) {
+              saveText(
+                protocol.msg,
                 protocol.chatType,
                 protocol.currentUserId,
                 protocol.fromUserId
               );
-            });
+            }
+          } else {
+            saveImg(
+              protocol.url,
+              protocol.chatType,
+              protocol.currentUserId,
+              protocol.fromUserId
+            );
           }
 
           // 根据fromUserId 判断是否需要渲染DOM
@@ -115,8 +117,6 @@ define(["store", "contacts", "indexedDB", "utils"], function (
         } else {
           // 保存一个副本 把数据保存到数据库中
           let compressImg = await handleImageUpload(msg);
-          // console.log(msg);
-          // console.log(res);
           const msgCopy = compressImg;
           const reader = new FileReader();
           reader.readAsDataURL(msgCopy);
@@ -148,9 +148,16 @@ define(["store", "contacts", "indexedDB", "utils"], function (
     }
 
     // 向服务器发送消息
-    sendContent(...rest) {
+    async sendContent(...rest) {
       const res = new SparrowProtocol(...rest);
       this.ws.send(res.toBytes());
+      const params = {
+        chatType: res.chatType,
+        sessionKey: getSessionKey(res.chatType, selfId.value, res.targetUserId),
+        userId: selfId.value,
+      };
+      // 每次发送信息都要 更新已读
+      api.setRead(params);
     }
 
     // 注册事件 接收到消息后 要执行的事件
@@ -167,10 +174,7 @@ define(["store", "contacts", "indexedDB", "utils"], function (
 
   // 压缩图片
   async function handleImageUpload(file) {
-    console.log(imageCompression);
     const imageFile = file;
-    console.log(imageFile);
-
     console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
     console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
 
@@ -188,7 +192,6 @@ define(["store", "contacts", "indexedDB", "utils"], function (
       console.log(
         `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
       ); // smaller than maxSizeMB
-      console.log(compressedFile);
       // img.src = window.URL.createObjectURL(compressedFile);
       // await uploadToServer(compressedFile); // write your own logic
       return compressedFile;
@@ -203,7 +206,7 @@ define(["store", "contacts", "indexedDB", "utils"], function (
     let key = getSessionKey(chatType, fromUserId, targetUserId);
 
     // 同步最新的msg到localStorage
-    localStorage.setItem(key, content);
+    // localStorage.setItem(key, content);
     // 通知session 列表更新
     if (targetUserId == selfId.value) {
       // 当前是接收信息
@@ -218,7 +221,7 @@ define(["store", "contacts", "indexedDB", "utils"], function (
   function saveImg(value, chatType, targetUserId, fromUserId) {
     let key = getSessionKey(chatType, fromUserId, targetUserId);
     // 同步最新的msg到localStorage
-    localStorage.setItem(key, "img");
+    // localStorage.setItem(key, "img");
     // 通知session 列表更新
     if (targetUserId == selfId.value) {
       // 当前是接收信息
@@ -246,23 +249,29 @@ define(["store", "contacts", "indexedDB", "utils"], function (
   }
 
   // 将图片转 base64
-  function convertImgToBase64(url, callback, outputFormat) {
-    var canvas = document.createElement("CANVAS"),
-      ctx = canvas.getContext("2d"),
-      img = new Image();
-    img.crossOrigin = "Anonymous";
-    img.onload = function () {
-      canvas.height = img.height;
-      canvas.width = img.width;
-      ctx.drawImage(img, 0, 0);
-      var dataURL = canvas.toDataURL(outputFormat || "image/png");
-      callback.call(this, dataURL);
-      canvas = null;
-    };
-    img.src = url;
+  // function convertImgToBase64(url, callback, outputFormat) {
+  //   var canvas = document.createElement("CANVAS"),
+  //     ctx = canvas.getContext("2d"),
+  //     img = new Image();
+  //   img.crossOrigin = "Anonymous";
+  //   img.onload = function () {
+  //     canvas.height = img.height;
+  //     canvas.width = img.width;
+  //     ctx.drawImage(img, 0, 0);
+  //     var dataURL = canvas.toDataURL(outputFormat || "image/png");
+  //     callback.call(this, dataURL);
+  //     canvas = null;
+  //   };
+  //   img.src = url;
+  // }
+  // const ws = new WSinstance(selfId.value);
+  // let wsInstance = {};
+  function createWS(id) {
+    //  wsInstance = new WSinstance(id);
+    return new WSinstance(id);
   }
-
   return {
-    WSinstance,
+    createWS,
+    // wsInstance,
   };
 });

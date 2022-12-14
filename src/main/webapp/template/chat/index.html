@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="../../../../../source/styles/chat/index.css">
+  <link rel="stylesheet" href="http://r.sparrowzoo.net/styles/chat/index.css">
 </head>
 
 <body>
@@ -153,7 +153,7 @@
         <div class="avatar">
           <img src="https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg" class="avatar-img" alt="用户头像">
           <img src="https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg" class="nation" alt="国籍">
-          <span class="unread">5</span>
+          <span class="unread"></span>
         </div>
         <div class="msg-user-time">
           <div class="msg-user">
@@ -305,7 +305,7 @@
     <template id="chat-part">
       <div class="msg-content">
         <div class="title">
-          <span class="user">名字</span>
+          <span class="user"></span>
           <i class="iconfont icon-gengduo show-more-icon"></i>
         </div>
         <div class="msg-detail">
@@ -495,18 +495,18 @@
 <script src="../../../../../source/scripts/SparrowChat.js"></script>
 <script src="../../../../../source/scripts/base64.js"></script>
 <script src="../../../../../source/scripts/chat/lib/sea.js"></script>
-<script src="../../../../../source/scripts/chat/lib/dayjs.js"></script>
+<script src="../../../../../source/scripts/chat/lib/dayjs.js"></script> nginx -s stop
 <script src="../../../../../source/scripts/chat/lib/imgCompression.js"></script> -->
-<script src="../../../../../source/scripts/require.js"></script>
+<script src="http://r.sparrowzoo.net/scripts/require.js" data-main=""></script>
 <script>
   // seajs.use('../../../../../source/scripts/chat/index.js');
   // 配置
   require.config({
-    baseUrl: '../../../../../source',
+    baseUrl: 'http://r.sparrowzoo.net/',
     paths: {
       "index": "scripts/chat/index",
       "day": "scripts/chat/lib/dayjs",
-      "imgCom": "scripts/chat/lib/imgCompression",
+      "imageCompression": "scripts/chat/lib/imgCompression",
       "chat-msg": 'scripts/chat/page/chat-msg',
       "contact-service": "scripts/chat/page/contact-service",
       "my-friend": "scripts/chat/page/my-friend",
@@ -524,7 +524,7 @@
     shim: {}
   })
 
-  require(['index']);
+  const ee = require(['index']);
 </script>
 
 

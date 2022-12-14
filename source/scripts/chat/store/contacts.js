@@ -1,5 +1,5 @@
 define(["store"], function (store) {
-  const { targetId } = store;
+  const { targetId, setTargetId, CHAT_TYPE_1_2_1 } = store;
   //  维护 session 列表，收发消息后主动回调相关函数 实现 sessionDOM列表自动更新
   class ContactStore {
     constructor() {
@@ -10,19 +10,41 @@ define(["store"], function (store) {
       this.contactList = arr
         .filter((item) => item)
         .sort((a, b) => b.lastMessage.sendTime - a.lastMessage.sendTime);
+
+      // 初始化后默认将第一个会话列表的targetid保存
+      if (this.contactList[0]) {
+        const chatType = this.contactList[0].lastMessage.chatType;
+        let id, username;
+        if (chatType === CHAT_TYPE_1_2_1) {
+          id = this.contactList[0].userId;
+          username = this.contactList[0].userName;
+        } else {
+          id = this.contactList[0].qunId;
+          username = this.contactList[0].qunName;
+        }
+        setTargetId(id, username, chatType);
+      }
+    }
+
+    // 增加session item
+    addContactItem(sessionItem) {
+      this.contactList.unshift(sessionItem);
+      // 添加完毕后，需要更新DOM
+      this.notify("addSessionItem", [sessionItem]);
     }
 
     registerCallback(fn, key) {
       this[key] = fn;
     }
     // 修改未读数量
-    setUnread(index, fnName) {
-      this.contactList[index].unReadCount = 0;
-      this.notify(fnName, [
-        index,
-        this.contactList[index].lastMessage.content,
-        this.contactList[index].lastMessage.session,
-      ]);
+    setUnread(session, fnName) {
+      const index = this.contactList.findIndex(
+        (item) => item.lastMessage.session === session
+      );
+      if (index !== -1) {
+        this.contactList[index].unReadCount = 0;
+        this.notify(fnName, [index, this.contactList[index]]);
+      }
     }
     // 收发信息后，需要修改
     update(lastMsg, msgType, session, fnName, fromUserId) {
@@ -30,10 +52,10 @@ define(["store"], function (store) {
         (item) => item.lastMessage.session === session
       );
 
-      if (fnName === "changeUnreadCount") {
-        this.setUnread(index, fnName);
-        return;
-      }
+      // if (fnName === "changeUnreadCount") {
+      //   this.setUnread(index, fnName);
+      //   return;
+      // }
       const msgTime = +new Date();
       const params = [index, lastMsg, msgTime, msgType];
       if (fnName === "receiveMsg" && fromUserId != targetId.value) {
@@ -51,7 +73,6 @@ define(["store"], function (store) {
       this.contactList.unshift(...sessionItem);
     }
     notify(fnName, params) {
-      console.log(fnName);
       this[fnName](...params);
     }
   }
