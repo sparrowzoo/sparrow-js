@@ -20,6 +20,7 @@ Sparrow.dispatcher = {
                 },//事件委托
                 //api: "api",//ajax请求的api
                 strategy: "insert",//策略对应控件的Value
+                eventName:"onclick"
        }
      */
     register: function (eventConfig) {

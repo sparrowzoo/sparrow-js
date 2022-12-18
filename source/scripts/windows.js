@@ -286,7 +286,7 @@ Sparrow.window = function (config) {
     // 如果本页中存在div对话框。则先将对话框删除
     url = config.url;
     $.win.closeClick();
-    if (config.cache != false) {
+    if (config.cache !== false) {
         url = $.randomUrl(url);
     }
     if (url.indexOf("http://") < 0) {
