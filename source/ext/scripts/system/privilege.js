@@ -1,89 +1,26 @@
 ﻿var privilegeController = {
     api: {
-        enable_group_list: "/group/enable-list.json",
-        init: "/privilege/init.json",
-        set: "/privilege/set.json"
+        init: "/role/privilege",
+        set: "/privilege/set"
     },
-//用户组树
-    groupTree: null,
-// 资源树
+    // 资源树
     resourceTree: null,
-
-    urlIdPair:{},
-
-// 加载角色树
+    // 加载角色树
     load: function () {
-        resourceTree = new $.tree('resourceTree'),
-            groupTree = new $.tree("groupTree");
-        groupTree.config.floatTreeId = "divGroupTree";
-        groupTree.config.useIcons = true;
-        groupTree.config.useLines = false;
-        groupTree.config.useRootIcon = false;
-        groupTree.config.usePlusMinusIcons = false;
-        groupTree.config.useTreeIdInNodeClass = true;
-        groupTree.config.useLevelInNodeClass = true;
-        groupTree.resetIcon();
-        privilegeController.initGroup();
-
-        $("#txtGroupName").bind("onclick", function () {
-            groupTree.show(event, 325, 400);
-        });
-
-        $("#txtGroupName").bind("onfocus", function () {
-            this.value = '';
-        });
-
-        $("#btnSubmit").bind("onclick", function () {
+        resourceTree = new $.tree('resourceTree');
+        if ($.request("roleId")) {
+            $.ajax.json($.url.root + privilegeController.api.init,
+                "roleId=" + $.request("roleId"),
+                privilegeController.initPrivilege);
+        }
+        $("#btnSave").bind("onclick", function () {
             privilegeController.submit();
         });
-
-        if ($.request("groupId")) {
-            $("hdnGroupId").value = $.request("groupId");
-        }
-        document.onclick = function () {
-            groupTree.clearFloatFrame();
-        };
     },
-
-// 角色、用户组初始化
-    initGroup: function () {
-        $.ajax.json($.url.root + privilegeController.api.enable_group_list, function (data) {
-            groupTree.aNodes = [];
-            groupTree.add(0, -1, "");
-
-            if (data.code == 0) {
-                groupList = data.data;
-
-                for (i = 0; i < groupList.length; i++) {
-                    var group = groupList[i];
-                    groupTree.add(group.groupId, 0,
-                        group.groupName, "javascript:privilegeController.nodeDetail();",
-                        group.groupName);
-                }
-
-                $(groupTree.config.floatTreeId).innerHTML = groupTree;
-                if ($.request("groupId")) {
-                    privilegeController.nodeDetail(groupTree.aNodes[groupTree.getAiById($.request("groupId"))]);
-                }
-            }
-        })
-    },
-
-// 角色 点击事件
-    nodeDetail: function (cn) {
-        if (!cn) {
-            cn = groupTree.aNodes[groupTree.getSelectedAi()];
-        }
-        $("#txtGroupName").value(cn.name);
-        $("#hdnGroupId").value(cn.id);
-        $.ajax.json($.url.root + privilegeController.api.init, "groupId=" + cn.id, privilegeController.initPrivilege);
-        groupTree.clearFloatFrame();
-    },
-
     initPrivilege: function (result) {
-        var resourceStrategy = result.data;
-        privilegeController.writeResource(resourceStrategy.allResourceList, resourceStrategy.resourceList);
-        privilegeController.writeStrategy(resourceStrategy.allStrategyList, resourceStrategy.strategyList);
+        var privilegeWrap = result.data;
+        privilegeController.writeResource(privilegeWrap.allResources, privilegeWrap.selectedResourceIds);
+        //privilegeController.writeStrategy(privilegeWrap.allStrategyList, privilegeWrap.strategyList);
     },
 
     writeResource: function (allResource, selectedResource) {
@@ -98,35 +35,30 @@
             resourceTree.config.useCheckbox = true;
             resourceTree.resetIcon();
             resourceTree.add(0, -1, "");
-            var selectedResourceId = [];
             // id, pid, name, url, title, target, childCount,showCtrl, businessEntity, icon
             // title=manageURL
             for (var i = 0; i < allResource.length; i++) {
                 var resource = allResource[i];
-                this.urlIdPair[resource.manageUrl]=resource.id+"";
                 resourceTree.add(
                     resource.id,
                     resource.parentId,
                     resource.name,
                     "javascript:void(0)",
-                    resource.manageUrl,
+                    resource.url + "|" + resource.permission,
                     undefined, undefined, true, resource,
                     resourceTree.config.imageDir + "/base.gif");
-            }
-            for (var i = 0; i < selectedResource.length; i++) {
-                selectedResourceId.push(this.urlIdPair[selectedResource[i].resource]);
             }
 
             $("divResource").innerHTML = resourceTree;
             resourceTree.openAll();
-            resourceTree.setChecked(selectedResourceId);
+            resourceTree.setChecked(selectedResource);
         }
     },
 
     writeStrategy: function (allStrategy, selectedStrategy) {
         var strategyHTML = [];
         var selectedStrategyId = [];
-        if(selectedStrategy) {
+        if (selectedStrategy) {
             for (var i = 0; i < selectedStrategy.length; i++) {
                 selectedStrategyId.push(selectedStrategy[i].resourceStrategy);
             }
@@ -135,8 +67,7 @@
         for (var i = 0; i < allStrategy.length; i++) {
             var strategy = allStrategy[i];
             if (strategy.value.trim() === "Type") {
-                strategyHTML
-                    .push('<legend>' + strategy.name + '</legend>');
+                strategyHTML.push('<legend>' + strategy.name + '</legend>');
                 continue;
             }
 
@@ -165,24 +96,23 @@
 
     submit: function () {
         //不用缓存
-        var strategyArray = $("&strategy",false);
-        var selectedStrategy = [];
-        for (var i = 0; i < strategyArray.length; i++) {
-            if (strategyArray[i].type === "text") {
-                selectedStrategy.push(strategyArray[i].id + ": "
-                    + strategyArray[i].value);
-            } else if (strategyArray[i].checked) {
-                selectedStrategy.push(strategyArray[i].id + ": true");
-            }
-        }
-        var data = "selectedStrategies=" + selectedStrategy.join()
-            + "&selectedResources=" + resourceTree.getAllCheckedTitle()
-            + "&groupId=" + $("hdnGroupId").value;
+        // var strategyArray = $("&strategy", false);
+        // var selectedStrategy = [];
+        // for (var i = 0; i < strategyArray.length; i++) {
+        //     if (strategyArray[i].type === "text") {
+        //         selectedStrategy.push(strategyArray[i].id + ": "
+        //             + strategyArray[i].value);
+        //     } else if (strategyArray[i].checked) {
+        //         selectedStrategy.push(strategyArray[i].id + ": true");
+        //     }
+        // }
+        //resourceTree.getAllCheckedTitle()
+        var data = "resourceIds=" + resourceTree.getAllCheckedId()
+            + "&roleId=" + $.request("roleId");
 
         $.ajax.json($.url.root + privilegeController.api.set,
             data, function (result) {
-                alert(result);
-                $.alert(lang.message.setPrivilegeSuccessMessage.format($("txtGroupName").value), "smile");
+                $.alert("权限设置成功", "smile");
             });
     }
 }

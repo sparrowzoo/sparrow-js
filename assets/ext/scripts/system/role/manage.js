@@ -2,15 +2,17 @@ var roleController = {
     api: {
         add: "new",
         search: "search.do",
-        enable:"enable",
-        disable:"disable",
-        delete:"delete"
+        enable: "enable",
+        disable: "disable",
+        delete: "delete",
+        set_privilege:'/role/set-privilege'
     },
-
+    showPrivilege: function (roleId) {
+        $.window({url: $.url.root+this.api.set_privilege+'?roleId='+roleId})
+    },
     load: function () {
-        $.gridView.id="grvRoleList";
-        document.forms[0].action=this.api.search;
-
+        $.gridView.id = "grvRoleList";
+        document.forms[0].action = this.api.search;
         $.dispatcher.eventRegistry = [
             {
                 id: "btnSearch",
@@ -28,19 +30,19 @@ var roleController = {
             {
                 id: "btnEnable",
                 delegate: function (e, srcElement) {
-                    $.gridView.submit(roleController.api.enable,lang.message.enable);
+                    $.gridView.submit(roleController.api.enable, lang.message.enable);
                 }
             },
             {
                 id: "btnDisable",
                 delegate: function (e, srcElement) {
-                    $.gridView.submit(roleController.api.disable,lang.message.disable);
+                    $.gridView.submit(roleController.api.disable, lang.message.disable);
                 }
             },
             {
                 id: "btnDelete",
                 delegate: function (e, srcElement) {
-                        $.gridView.submit(roleController.api.delete, lang.message.delete);
+                    $.gridView.submit(roleController.api.delete, lang.message.delete);
                 }
             }
         ];
