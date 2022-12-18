@@ -6,10 +6,19 @@ var resourceController = {
         delete: "/resource/delete",
         save: "/resource/save",
         resource_upload: "/file-upload?path-key=resource",
+        app_tooltip: "/app/tooltip.json"
     },
     resourceTree: null,
     selectingResourceTree: null,
+    appTooltipTree:null,
+    loadAppTooltip: function () {
+        resourceController.appTooltipTree = new $.tree("appTooltipTree");
+        resourceController.appTooltipTree.config.floatTreeId = "divAppTooltip";
+        resourceController.appTooltipTree.config.descHiddenId = "hdnAppId";
+        resourceController.appTooltipTree.config.descTextBoxId = "txtAppName";
+    },
     load: function () {
+        this.loadAppTooltip();
         var pathKeySuffixPair = {'resource': 'Ico'};
         $.file.initImageUploadEvent('resource', pathKeySuffixPair);
         $.dispatcher.eventRegistry = [
@@ -53,7 +62,15 @@ var resourceController = {
                 delegate: function (e, srcElement) {
                     resourceController.deleteClick();
                 }
-            }];
+            },
+            {
+                id: "txtAppName",
+                delegate: function (e, srcElement) {
+                    resourceController.appTooltipTree.initCodeTooltip('', $.url.root + resourceController.api.app_tooltip);
+                    resourceController.appTooltipTree.show(e, 200, 250);
+                }
+            }
+        ];
         $.dispatcher.bind();
 
         resourceController.resourceTree = new $.tree("resourceTree");

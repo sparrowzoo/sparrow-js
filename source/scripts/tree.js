@@ -50,7 +50,7 @@ Sparrow.tree = function (objName, parentName) {
         reBuildTree: null,//是否支持旧树重建
         //重新查库构建
         loadFloatTree: null,//是否支持浮动树构建
-        floatTreeId: null,//浮云树id
+        floatTreeId: null,//浮动树id
         descHiddenId: null,//选中后ID显示对象
         descTextBoxId: null,//选中后文本显示对象
         validate: null,//自定义验证事件
@@ -911,7 +911,8 @@ Sparrow.tree.prototype = {
         }
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var n = 0; n < checkBoxList.length; n++) {
-            if (checkedId.indexOf(checkBoxList[n].value) != -1) {
+            var currentId= parseInt(checkBoxList[n].value,10)
+            if (checkedId.indexOf(currentId) !== -1) {
                 checkBoxList[n].checked = true;
             }
         }
@@ -920,7 +921,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked == true) {
+            if (checkBoxList[i].checked === true) {
                 arrayIndex = checkBoxList[i].id.replace('c' + this.obj, '');
                 nodes.push(this.aNodes[arrayIndex].title);
             }
@@ -931,7 +932,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked == true) {
+            if (checkBoxList[i].checked === true) {
                 arrayIndex = checkBoxList[i].id.replace('c' + this.obj, '');
                 nodes.push(this.aNodes[arrayIndex]);
             }
@@ -942,7 +943,7 @@ Sparrow.tree.prototype = {
         var nodes = [];
         var checkBoxList = document.getElementsByName("iTreecbx");
         for (var i = 0; i < checkBoxList.length; i++) {
-            if (checkBoxList[i].checked == true) {
+            if (checkBoxList[i].checked === true) {
                 nodes.push(checkBoxList[i].value);
             }
         }
@@ -1017,7 +1018,6 @@ Sparrow.tree.prototype = {
     //定义 config.loadFloatTree  树初始化方法
     initResourceTree: function (resourcePrefix, ajaxUrl) {
         if (!ajaxUrl) ajaxUrl = $.url.root + "/resource/load-all";
-        this.initCodeToolip(resourcePrefix, ajaxUrl);
         var treeObject = this;
         this.config.loadFloatTree = function () {
             $.ajax.json(ajaxUrl, resourcePrefix, function (result) {
@@ -1049,7 +1049,7 @@ Sparrow.tree.prototype = {
         };
     },
     // 定义this.config.loadFloatTree 码表初始化方法
-    initCodeToolip: function (codePrefix, ajaxUrl) {
+    initCodeTooltip: function (codePrefix, ajaxUrl) {
         var htmlEvents = ("$('#'+{0}.config.descTextBoxId).bind('onchange',function(){" +
             "if($({0}.config.descTextBoxId).value==''){" +
             "$({0}.config.descHiddenId).value='';" +
@@ -1063,12 +1063,13 @@ Sparrow.tree.prototype = {
             floatTree.className = "floatTree";
             document.body.appendChild(floatTree);
         }
-        if (!ajaxUrl)
+        if (!ajaxUrl) {
             ajaxUrl = $.url.root + "/code/load";
+        }
         this.dbs = function (nodeIndex) {
             var businessEntity = this.aNodes[nodeIndex].businessEntity;
             if (this.config.descHiddenId != null) {
-                $(this.config.descHiddenId).value = businessEntity.code;
+                $(this.config.descHiddenId).value = businessEntity.id;
             }
             if (this.config.descTextBoxId != null) {
                 var descCtrl = $(this.config.descTextBoxId);
@@ -1092,7 +1093,7 @@ Sparrow.tree.prototype = {
             }
         };
         treeObject.config.loadFloatTree = function () {
-            ajax.json(ajaxUrl, "loadOption=" + codePrefix, function (result) {
+            $.ajax.json(ajaxUrl, "prefix=" + codePrefix, function (result) {
                 var jsonList = result.data || result.message;
                 treeObject.aNodes = [];
                 treeObject.resetIcon();
@@ -1111,7 +1112,7 @@ Sparrow.tree.prototype = {
             });
         };
     },
-    //codeNodeClient--> dbs -->codeNodeCallBack
+    //codeNodeClick--> dbs -->codeNodeCallBack
     codeNodeClick: function (nodeIndex) {
         if (this.aNodes[nodeIndex].childCount === 0) {
             this.dbs(nodeIndex);

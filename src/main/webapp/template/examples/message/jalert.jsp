@@ -28,7 +28,6 @@
 
 
         <div class="content">
-
             <input type="button" value="alert"
                    onclick="$.alert('恭喜!操作成功!','smile','title');">
             <input type="button" value="ASK"
