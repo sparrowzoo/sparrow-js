@@ -16,7 +16,6 @@ var menuController = {
         $("#divMenuTree").html(this.menuTree.config.loadingString);
         var btnOpen = $("#btnOpen");
         btnOpen.value(lang.command.openAll);
-
         btnOpen.bind("onclick", function () {
             if (this.value === lang.command.openAll) {
                 menuController.menuTree.openAll();
