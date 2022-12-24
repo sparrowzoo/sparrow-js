@@ -20,7 +20,6 @@
     initPrivilege: function (result) {
         var privilegeWrap = result.data;
         privilegeController.writeResource(privilegeWrap.allResources, privilegeWrap.selectedResourceIds);
-        //privilegeController.writeStrategy(privilegeWrap.allStrategyList, privilegeWrap.strategyList);
     },
 
     writeResource: function (allResource, selectedResource) {
@@ -55,58 +54,7 @@
         }
     },
 
-    writeStrategy: function (allStrategy, selectedStrategy) {
-        var strategyHTML = [];
-        var selectedStrategyId = [];
-        if (selectedStrategy) {
-            for (var i = 0; i < selectedStrategy.length; i++) {
-                selectedStrategyId.push(selectedStrategy[i].resourceStrategy);
-            }
-        }
-        strategyHTML.push('<div class="pure-form pure-form-aligned"><fieldset>');
-        for (var i = 0; i < allStrategy.length; i++) {
-            var strategy = allStrategy[i];
-            if (strategy.value.trim() === "Type") {
-                strategyHTML.push('<legend>' + strategy.name + '</legend>');
-                continue;
-            }
-
-            strategyHTML.push('<div class="pure-control-group">');
-            strategyHTML.push('<label>' + strategy.name + '</label>');
-            if (strategy.value.trim() === "CheckBox") {
-                strategyHTML.push('<input id="' + strategy.strategy
-                    + '" name="strategy" value="true" type="checkbox"');
-                if (selectedStrategyId.indexOf(strategy.strategy) >= 0) {
-                    strategyHTML.push(' checked="true"');
-                }
-                strategyHTML.push(' /></div>');
-                continue;
-            }
-            strategyHTML.push('<input id="' + strategy.strategy
-                + '" name="strategy" type="text" ');
-            if (selectedStrategyId.indexOf(strategy.strategy) > -0) {
-                strategyHTML.push(' value="' + selectedStrategy[index].value + '"');
-            }
-            strategyHTML.push(' /></div>');
-        }
-        strategyHTML.push("</fieldset></div>");
-        $("divStrategy").innerHTML = strategyHTML.join("");
-    },
-
-
     submit: function () {
-        //不用缓存
-        // var strategyArray = $("&strategy", false);
-        // var selectedStrategy = [];
-        // for (var i = 0; i < strategyArray.length; i++) {
-        //     if (strategyArray[i].type === "text") {
-        //         selectedStrategy.push(strategyArray[i].id + ": "
-        //             + strategyArray[i].value);
-        //     } else if (strategyArray[i].checked) {
-        //         selectedStrategy.push(strategyArray[i].id + ": true");
-        //     }
-        // }
-        //resourceTree.getAllCheckedTitle()
         var data = "resourceIds=" + resourceTree.getAllCheckedId()
             + "&roleId=" + $.request("roleId");
 
