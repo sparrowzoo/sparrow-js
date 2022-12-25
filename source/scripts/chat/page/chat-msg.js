@@ -11,12 +11,13 @@ define([
     IMAGE_MESSAGE,
     CHAT_TYPE_1_2_1,
     CHAT_TYPE_1_2_N,
-    DB_STORE_NAME,
+    DB_STORE_NAME_SESSION,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     selfId,
     targetId,
     setTargetId,
+    qunNumberMap,
   } = store;
   const { contactStore } = contacts;
 
@@ -106,6 +107,15 @@ define([
       // 用户名
       const spanUsername = divList.querySelector(".username");
       spanUsername.innerText = list[i].userName || list[i].qunName;
+      // 用户头像
+      const imgUser = divList.querySelector(".avatar-img");
+      // imgUser.src =
+      //   list[i].avatar || "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
+      imgUser.src = "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
+      // 用户国籍
+      const imgNation = divList.querySelector(".nation");
+      // imgNation.src = list[i].flagUrl;
+      imgNation.src = "https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg";
       // 最新消息的发送时间
       const spanMsgTime = divList.querySelector(".msg-time");
       spanMsgTime.innerText = sessionTime(list[i].lastMessage.sendTime);
@@ -176,14 +186,53 @@ define([
   }
 
   // 发送最新信息 列表变化的逻辑
-  function sendLastMsg(index, msgValue, msgTime, msgType) {
+  function sendLastMsg(sessionItem) {
+    updateSessionCom(sessionItem);
+    // const divMsgArr = document
+    //   .querySelector(".msg-list")
+    //   .querySelectorAll(".msg-item");
+    // const spanLastMsg = divMsgArr[index].querySelector(".msg-last");
+    // if (msgType === TEXT_MESSAGE) {
+    //   // 最新信息是文本
+    //   spanLastMsg.innerHTML = msgValue;
+    // } else {
+    //   spanLastMsg.innerText = "[图片]";
+    // }
+    // const spanMsgTime = divMsgArr[index].querySelector(".msg-time");
+    // spanMsgTime.innerText = historyMsgTime(msgTime);
+  }
+  // 接收最新信息 列表变化的逻辑
+  function receiveMsg(item) {
+    const divMsgArr = document
+      .querySelector(".msg-list")
+      .querySelectorAll(".msg-item");
+    // 首先 更新未读数量
+    if (item.count) {
+      // 只有在 count 存在 才更新  当前会话 发送来的信息 不增加未读数
+      const spanUnReadCount = divMsgArr[item.index].querySelector(".unread");
+      spanUnReadCount.style.display = "block";
+      spanUnReadCount.textContent = item.count;
+    }
+    updateSessionCom(item);
+    // 更新 文本 和时间
+    // const spanLastMsg = divMsgArr[index].querySelector(".msg-last");
+    // if (msgType === TEXT_MESSAGE) {
+    //   // 最新信息是文本
+    //   spanLastMsg.innerHTML = msgValue;
+    // } else {
+    //   spanLastMsg.innerText = "[图片]";
+    // }
+    // const spanMsgTime = divMsgArr[index].querySelector(".msg-time");
+    // spanMsgTime.innerText = historyMsgTime(msgTime);
+  }
+  function updateSessionCom(sessionItem) {
+    const { index, msgValue, msgTime, msgType } = sessionItem;
     const divMsgArr = document
       .querySelector(".msg-list")
       .querySelectorAll(".msg-item");
     const spanLastMsg = divMsgArr[index].querySelector(".msg-last");
     if (msgType === TEXT_MESSAGE) {
       // 最新信息是文本
-      // const lastValue = BASE64.bytesToString(BASE64.decodeBase64(msgValue));
       spanLastMsg.innerHTML = msgValue;
     } else {
       spanLastMsg.innerText = "[图片]";
@@ -208,6 +257,17 @@ define([
     const spanUsername = divSessionItem.querySelector(".username");
     spanUsername.innerText = item.userName || item.qunName;
 
+    // 用户头像 / 国籍
+    // 用户头像
+    const imgUser = divSessionItem.querySelector(".avatar-img");
+    // imgUser.src =
+    //   list[i].avatar || "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
+    imgUser.src = "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
+    // 用户国籍
+    const imgNation = divSessionItem.querySelector(".nation");
+    // imgNation.src = list[i].flagUrl;
+    imgNation.src = "https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg";
+
     // 向 session list 中添加item
     if (divList) {
       // 之前有session ,所以要使用 insertBefore 插入到最前面
@@ -223,34 +283,9 @@ define([
     clickSessions();
   }
 
-  // 接收最新信息 列表变化的逻辑
-  function receiveMsg(index, msgValue, msgTime, msgType, count) {
-    const divMsgArr = document
-      .querySelector(".msg-list")
-      .querySelectorAll(".msg-item");
-    // 首先 更新未读数量
-    if (count) {
-      // 只有在 count 存在 才更新  当前会话 发送来的信息 不增加未读数
-      const spanUnReadCount = divMsgArr[index].querySelector(".unread");
-      spanUnReadCount.style.display = "block";
-      spanUnReadCount.textContent = count;
-    }
-
-    // 更新 文本 和时间
-    const spanLastMsg = divMsgArr[index].querySelector(".msg-last");
-    if (msgType === TEXT_MESSAGE) {
-      // 最新信息是文本
-      // const lastValue = BASE64.bytesToString(BASE64.decodeBase64(msgValue));
-      spanLastMsg.innerHTML = msgValue;
-    } else {
-      spanLastMsg.innerText = "[图片]";
-    }
-    const spanMsgTime = divMsgArr[index].querySelector(".msg-time");
-    spanMsgTime.innerText = historyMsgTime(msgTime);
-  }
-
   // 发送/接收后的列表重新排序
   function reSort(index) {
+    // 将 index 位置的session 放到最前面
     const divSessionParent = document.querySelector(".msg-list");
     const divMsgArr = divSessionParent.querySelectorAll(".msg-item");
     divSessionParent.insertBefore(divMsgArr[index], divMsgArr[0]);
@@ -323,6 +358,12 @@ define([
         username;
     }
 
+    // 如果是群 需要保存当前的群成员
+    if (chatType === CHAT_TYPE_1_2_N) {
+      const membersArr = await dbInstance.getData(user_id, DB_STORE_NAME_QUN);
+      qunNumberMap.initQunMap(membersArr.members);
+    }
+
     // 控制icon 显示 只有群显示icon
     controlIcon(chatType);
     // 每次在渲染列表之前 先删除上一次的节点 再渲染新的节点
@@ -348,7 +389,7 @@ define([
 
     // indexedDB 数据库中 得到与当前用户/群的历史记录 先得到keyPath => 1v1 100_101  1vN qunId
     const key = getSessionKey(chatType, selfId.value, user_id);
-    const res = await dbInstance.getData(key);
+    const res = await dbInstance.getData(key, DB_STORE_NAME_SESSION);
     lastTime = +new Date();
     referenceNode = null;
     // 将要插在这个节点之前  倒叙插入
@@ -369,7 +410,8 @@ define([
         msg.messageType,
         msgTime,
         msgListFragment,
-        referenceNode
+        referenceNode,
+        msg.fromUserId
       );
     });
 
@@ -386,11 +428,20 @@ define([
   // 没有明确user_id 获取默认的聊天框，就是session列表的第一个用户 / 群
   function getDefaultChat() {
     if (targetId.value == "-1") {
-      // 没有任何聊天记录
+      // 没有任何聊天记录,就不需要渲染任何元素
       // getMsgList();
     } else {
       const { value: user_id, username, type: chatType } = targetId;
       getMsgList(user_id, username, chatType);
+      // 在跳到第一个session 用户后，发送请求设置已读
+      // 将最新的消息 保存到本地
+      const params = {
+        chatType,
+        sessionKey: user_id,
+        userId: selfId.value,
+      };
+      // 每次发送信息都要 更新已读
+      api.setRead(params);
     }
   }
   // 根据聊天框 对消息列表的样式做切换
@@ -482,7 +533,15 @@ define([
   }
 
   // 倒叙插入node节点
-  function initMsgRecord(value, isSelf, type, msgTime, parentNode, oldnode) {
+  function initMsgRecord(
+    value,
+    isSelf,
+    type,
+    msgTime,
+    parentNode,
+    oldnode,
+    memberId
+  ) {
     const copyMessageTemplate = localMessageTemplate.cloneNode(true);
     if (isSelf) {
       copyMessageTemplate.classList.add("right");
@@ -499,7 +558,9 @@ define([
     const avatarImg = copyMessageTemplate.querySelector(".avatar-user");
     // 将信息 渲染到页面上
     avatarImg.src = "https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg";
-    showMessageDetail(type, copyMessageTemplate, value);
+    // const divUsername = copyMessageTemplate.querySelector(".username");
+    // divUsername.style.display = "block";
+    showMessageDetail(type, copyMessageTemplate, value, memberId);
     referenceNode = parentNode.insertBefore(copyMessageTemplate, oldnode);
   }
 
@@ -508,7 +569,6 @@ define([
    * @param lastTemp  最新的间隔时间戳
    * @param msgTime  聊天信息的时间戳
    */
-
   function relaxTime(lastTemp, msgTime) {
     if (lastTemp - msgTime > 1000 * 60 * 10) {
       lastTime = msgTime;
@@ -519,21 +579,22 @@ define([
   }
 
   // 接收消息
-  function receiveMessage(value, type) {
+  function receiveMessage(value, type, memberId) {
     const copyMessageTemplate = localMessageTemplate.cloneNode(true);
     copyMessageTemplate.classList.add("left");
-    commonMessage(copyMessageTemplate, value, type);
+    commonMessage(copyMessageTemplate, value, type, memberId);
   }
 
   // 往聊天区域新增信息的方法
   function sendMessage(value, type) {
     const copyMessageTemplate = localMessageTemplate.cloneNode(true);
     copyMessageTemplate.classList.add("right");
+    // 发送方 在任何情况下都不需要显示 用户名，所以不需要传入 memberId
     commonMessage(copyMessageTemplate, value, type);
   }
 
   // 收发消息共有的操作
-  function commonMessage(copyMessageTemplate, value, type) {
+  function commonMessage(copyMessageTemplate, value, type, memberId) {
     // 设置时间
     const currentTemp = Date.now();
     if (currentTemp - lastTime > 1000 * 60 * 10) {
@@ -547,29 +608,43 @@ define([
     // 设置头像
     const avatarImg = copyMessageTemplate.querySelector(".avatar-user");
     avatarImg.src = "https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg";
+
     // 将信息展示到页面上
-    showMessageDetail(type, copyMessageTemplate, value);
+    showMessageDetail(type, copyMessageTemplate, value, memberId);
     const msgParentDiv = document.querySelector(".msg-detail");
     msgParentDiv.appendChild(copyMessageTemplate);
     getScrollBottom(".msg-detail");
   }
 
   // 显示聊天信息
-  function showMessageDetail(type, copyMessageTemplate, value) {
+  function showMessageDetail(type, copyMessageTemplate, value, memberId) {
+    // 根据聊天类型 设置用户名
+    if (targetId.type === CHAT_TYPE_1_2_N) {
+      const divsUsername = copyMessageTemplate.querySelectorAll(".username");
+      for (let i = 0; i < divsUsername.length; i++) {
+        divsUsername[i].style.display = "block";
+        if (memberId || memberId === 0) {
+          divsUsername[i].textContent = qunNumberMap.map[memberId];
+        }
+      }
+    }
     // 设置聊天信息
     if (type === TEXT_MESSAGE) {
       copyMessageTemplate.querySelector(".message-text").innerHTML = value;
       const textDom = copyMessageTemplate.querySelector(".message-detail");
       textDom.style.display = "block";
     } else {
+      const divImgContainer = copyMessageTemplate.querySelector(
+        ".msg-picture-detail"
+      );
       const img = copyMessageTemplate.querySelector(".msg-picture");
-      img.style.display = "block";
+      divImgContainer.style.display = "block";
       img.src = value;
-      // img.onload = function () {
-      //   // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
-      //   window.URL.revokeObjectURL(value);
-      // };
-      getScrollBottom(".msg-detail");
+      img.onload = function () {
+        // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
+        window.URL.revokeObjectURL(value);
+        getScrollBottom(".msg-detail");
+      };
     }
   }
 
@@ -579,6 +654,5 @@ define([
     showSessionList,
     getDefaultChat,
     getWsInstance,
-    addSessionItem,
   };
 });
