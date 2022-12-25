@@ -1,0 +1,249 @@
+@import "./common.less";
+@text-gray: #b1b1b1;
+@bgc-color: #f7f7f7;
+.session-detail-part {
+  position: relative;
+  .tool {
+    width: 100vw;
+    height: 12vw;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4vw;
+    box-sizing: border-box;
+    position: relative;
+    .arrows-l {
+      position: absolute;
+      left: 4vw;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 6.6667vw;
+      height: 5.3333vw;
+      background-image: url("../img/arrows-l.png");
+      background-size: 100%;
+      background-repeat: no-repeat;
+    }
+    p {
+      text-align: center;
+      font-size: 4.8vw;
+      font-weight: 600;
+    }
+    .icon-more {
+      position: absolute;
+      right: 4vw;
+      background-size: 100%;
+      background-repeat: no-repeat;
+      font-size: 7.8vw;
+    }
+  }
+
+  .session-content {
+    width: 100vw;
+    height: calc(100vh - 12vw); // 100 - 25.3333
+    box-sizing: border-box;
+    background-color: @bgc-color;
+    overflow: auto;
+    padding-bottom: 24vw;
+
+    .message {
+      margin: 2vw 4.6667vw 4vw 4.6667vw;
+
+      .time {
+        color: @text-gray;
+        font-size: 3.4667vw;
+        text-align: center;
+        padding: 2.5vw 0;
+      }
+      .user-msg {
+        display: flex;
+        padding: 1.3333vw 0;
+        .avatar-user {
+          width: 10.6667vw;
+          height: 10.6667vw;
+          border-radius: 1.3333vw;
+        }
+        .userinfo {
+          position: absolute;
+          z-index: 1;
+          top: 0;
+          transform: translateY(-110%);
+          left: 0;
+          height: 4vw;
+          line-height: 4vw;
+
+          img {
+            width: 3.4667vw;
+            height: 3.4667vw;
+            border-radius: 50%;
+            vertical-align: middle;
+          }
+          span {
+            vertical-align: middle;
+            color: @text-gray;
+            font-size: 3.4667vw;
+          }
+        }
+        .message-detail {
+          position: relative;
+          max-width: 50%;
+          line-height: 10.6667vw;
+          margin: 0 4.8vw 0 4.8vw;
+          padding: 0 4vw 0 4vw;
+          border-radius: 1.0667vw;
+
+          .message-text {
+            white-space: pre-wrap;
+            font-size: 3.4667vw;
+          }
+        }
+
+        .img-text {
+          position: relative;
+          margin: 0 5.3333vw;
+          .userinfo {
+            transform: translateY(-150%);
+          }
+          .msg-picture {
+            border-radius: 1.3333vw;
+            max-width: 30.6667vw;
+          }
+        }
+      }
+    }
+
+    .left {
+      .user-msg {
+        flex-direction: row;
+
+        .message-detail {
+          background-color: #fff;
+          color: #000;
+          position: relative;
+          padding-left: 2.6667vw;
+
+          .block {
+            // display: inline-block;
+            border: 2.6667vw solid transparent;
+            border-right-color: #fff;
+            position: absolute;
+            top: 2.4vw;
+            left: -5.3333vw;
+          }
+        }
+      }
+    }
+    .right {
+      .user-msg {
+        flex-direction: row-reverse;
+        .message-detail {
+          background-color: @text-color;
+          color: #eee;
+          position: relative;
+          padding-right: 2.6667vw;
+
+          .block {
+            border: 2.6667vw solid transparent;
+            border-left-color: @text-color;
+            position: absolute;
+            top: 2.4vw;
+            right: -5.3333vw;
+          }
+        }
+      }
+    }
+  }
+  .session-input {
+    position: absolute;
+    z-index: 10;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    background-color: #fff;
+    box-sizing: border-box;
+    .input {
+      height: 24vw;
+      display: flex;
+      align-items: center;
+      padding: 0 6vw;
+      .icon {
+        width: 6.6667vw;
+        height: 6.6667vw;
+        background-size: 100%;
+      }
+      .icon-left {
+        background-image: url("../img/icon.png");
+      }
+      .icon-right {
+        background-image: url("../img/icon-add.png");
+      }
+      input {
+        flex: 1;
+        height: 10.6667vw;
+        border-radius: 5.3333vw;
+        outline: none;
+        border: none;
+        margin: 0 2.6667vw;
+        background-color: @theme-color;
+        padding-left: 6vw;
+        color: @shallow-color;
+        font-size: 3.4667vw;
+      }
+    }
+
+    .translate {
+      height: 13.3333vw;
+      background-color: @bgc-color;
+      border-top: 1px solid @text-gray;
+      display: flex;
+      align-items: center;
+      padding: 0 6vw;
+
+      button,
+      div {
+        border: 2px solid @text-color;
+        border-radius: 1.3333vw;
+        padding: 1.8667vw;
+        font-size: 3.2vw;
+        font-weight: 600;
+        color: @text-color;
+        margin-right: 1.3333vw;
+
+        &:first-child {
+          width: 13vw;
+        }
+
+        &:last-child {
+          width: 7.4667vw;
+        }
+      }
+      div {
+        flex: 1;
+        margin: 0 0.6667vw;
+        position: relative;
+        i {
+          position: absolute;
+          top: 50%;
+          right: 2.6667vw;
+          transform: translateY(-50%);
+          width: 5.0667vw;
+          height: 5.0667vw;
+          background-color: #bebdc1;
+          border-radius: 50%;
+          background-image: url("../img/x.png");
+          background-size: 45%;
+          background-repeat: no-repeat;
+          background-position: center;
+        }
+      }
+      span {
+        margin-left: 1.6vw;
+        width: 8vw;
+        text-align: end;
+        font-size: 3.2vw;
+        font-weight: 600;
+        color: @text-color;
+      }
+    }
+  }
+}
