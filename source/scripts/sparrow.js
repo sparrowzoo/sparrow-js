@@ -910,6 +910,7 @@ Sparrow.ajax = {
         //with (objXMLHttp) {
         try {
             objXMLHttp.open(getOrPost, url, true);
+            objXMLHttp.setRequestHeader("ajax", "true");
             objXMLHttp.setRequestHeader("pragma", "no-cache");
             objXMLHttp.setRequestHeader("cache-control", "no-cache");
             if (getOrPost === "GET") {
