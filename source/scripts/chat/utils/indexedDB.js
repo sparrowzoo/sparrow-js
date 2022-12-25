@@ -2,7 +2,7 @@ define(["store"], function (store) {
   const {
     DB_NAME,
     DB_VERSION,
-    DB_STORE_NAME,
+    DB_STORE_NAME_SESSION,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     selfId,
@@ -28,7 +28,7 @@ define(["store"], function (store) {
       this.request.onupgradeneeded = (event) => {
         const db = event.target.result;
         // 创建存储仓库
-        db.createObjectStore(DB_STORE_NAME, { keyPath: "session" });
+        db.createObjectStore(DB_STORE_NAME_SESSION, { keyPath: "session" });
         db.createObjectStore(DB_STORE_NAME_USER, { keyPath: "userId" });
         db.createObjectStore(DB_STORE_NAME_QUN, { keyPath: "qunId" });
       };
@@ -38,18 +38,18 @@ define(["store"], function (store) {
     }
 
     // 初始化整个store 也就是向数据库中添加数据
-    initSession(sessionItem, store = DB_STORE_NAME) {
+    putStoreItem(item, storeName) {
       const req = this.db
-        .transaction(store, "readwrite")
-        .objectStore(store)
-        .put(sessionItem);
+        .transaction(storeName, "readwrite")
+        .objectStore(storeName)
+        .put(item);
       req.onsuccess = function () {
         console.log("添加成功~");
       };
     }
 
     // 添加单条数据 也就是修改数据库中的数据
-    addSession(key, session, storeName = DB_STORE_NAME) {
+    updateStoreItem(key, session, storeName) {
       const updateStore = this.db
         .transaction(storeName, "readwrite")
         .objectStore(storeName);
@@ -59,7 +59,7 @@ define(["store"], function (store) {
         const sessionItem = event.target.result;
         if (!sessionItem) {
           // 当前没有保存session_key 需要创建一个会话记录
-          this.createSessionByKey(key, session, storeName);
+          this.createItemByKey(key, session, storeName);
           return;
         }
         // 添加数据  也就是更新store
@@ -80,7 +80,7 @@ define(["store"], function (store) {
     }
 
     // 根据session_key 创建
-    createSessionByKey(key, session, storeName) {
+    createItemByKey(key, session, storeName) {
       const sessionItem = {
         session: key,
         chatSession: {
@@ -95,7 +95,7 @@ define(["store"], function (store) {
     }
 
     // 查询数据
-    getData(key, storeName = DB_STORE_NAME) {
+    getData(key, storeName) {
       return new Promise((resolve, reject) => {
         const getStore = this.db
           .transaction(storeName, "readonly")

@@ -134,7 +134,7 @@ var SparrowProtocol = function (
           this.sesessionKeyLength + offset
         );
         offset += this.sesessionKeyLength;
-        this.sessionKey = new Uint8Array(sessionKeyBuffer);
+        this.sessionKey = new Uint8Array(sessionKeyBuffer).toString();
       }
 
       offset += 4; //msg length =4
