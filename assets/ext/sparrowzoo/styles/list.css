@@ -1,0 +1,5 @@
+.top-right{width:750px;}
+.cms_line{width:750px;height:180px;display:inline-block;border:#ccc 1px solid;margin:0;margin-bottom:10px;padding:0;}
+.cms_line .left{width:470px;height:180px;float:left;margin:0;padding:10px;text-align:left;}
+.cms_line .right{width:260px;height:180px;float:right;margin:0;padding:0;}
+.cms_line .right img{width:240px;height:160px;margin:10px;}
