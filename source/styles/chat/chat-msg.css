@@ -179,7 +179,7 @@ h5 {
   /* Chrome Safari */
 }
 .chat-msg .msg-content .msg-detail .message {
-  margin: 0 20px;
+  margin: 20px;
 }
 .chat-msg .msg-content .msg-detail .message .time {
   color: #666;
@@ -205,13 +205,27 @@ h5 {
 .chat-msg .msg-content .msg-detail .message .user-msg .message-detail .message-text {
   white-space: pre-wrap;
 }
-.chat-msg .msg-content .msg-detail .message .user-msg .msg-picture {
+.chat-msg .msg-content .msg-detail .message .user-msg .msg-picture-detail {
+  position: relative;
   margin: 0 20px;
+}
+.chat-msg .msg-content .msg-detail .message .user-msg .msg-picture-detail .msg-picture {
   border-radius: 5px;
   max-width: 150px;
 }
 .chat-msg .msg-content .msg-detail .left .user-msg {
   flex-direction: row;
+}
+.chat-msg .msg-content .msg-detail .left .user-msg .username {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-110%);
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #999;
 }
 .chat-msg .msg-content .msg-detail .left .user-msg .message-detail {
   background-color: #fff;
@@ -227,6 +241,9 @@ h5 {
 }
 .chat-msg .msg-content .msg-detail .right .user-msg {
   flex-direction: row-reverse;
+}
+.chat-msg .msg-content .msg-detail .right .user-msg .username {
+  display: none !important;
 }
 .chat-msg .msg-content .msg-detail .right .user-msg .message-detail {
   background-color: #282d3b;
