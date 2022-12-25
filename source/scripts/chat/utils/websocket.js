@@ -13,6 +13,7 @@ define([
     CHAT_TYPE_1_2_N,
     selfId,
     targetId,
+    DB_STORE_NAME_SESSION,
   } = store;
   const { contactStore } = contacts;
   const { initIndexedDB } = indexedDB;
@@ -58,8 +59,17 @@ define([
         new SparrowProtocol(e.data, (protocol) => {
           // 接收来信息 先将信息保存到数据库
           console.log(protocol, "接收信息");
+
           if (protocol.msgType === TEXT_MESSAGE) {
-            if (protocol.currentUserId) {
+            if (protocol.sessionKey) {
+              // 当前是群聊信息
+              saveTextQun(
+                protocol.msg,
+                protocol.sessionKey,
+                protocol.fromUserId
+              );
+            } else {
+              // 当前是用户消息
               saveText(
                 protocol.msg,
                 protocol.chatType,
@@ -68,21 +78,42 @@ define([
               );
             }
           } else {
-            saveImg(
-              protocol.url,
-              protocol.chatType,
-              protocol.currentUserId,
-              protocol.fromUserId
-            );
+            if (protocol.sessionKey) {
+              saveImgQun(
+                protocol.url,
+                protocol.sessionKey,
+                protocol.fromUserId
+              );
+            } else {
+              saveImg(
+                protocol.url,
+                protocol.chatType,
+                protocol.currentUserId,
+                protocol.fromUserId
+              );
+            }
           }
 
-          // 根据fromUserId 判断是否需要渲染DOM
-          if (protocol.fromUserId === targetId.value) {
-            this.onMsgCallback.message &&
-              this.onMsgCallback.message(
-                protocol.msg || protocol.url,
-                protocol.msgType
-              );
+          // 根据fromUserId 和聊天类型 判断是否需要在聊天框中渲染聊天信息
+          if (protocol.sessionKey) {
+            // 群来的信息 判断是否需要渲染信息
+            if (protocol.sessionKey == targetId.value) {
+              this.onMsgCallback.message &&
+                this.onMsgCallback.message(
+                  protocol.msg || protocol.url,
+                  protocol.msgType,
+                  protocol.fromUserId
+                );
+            }
+          } else {
+            // 不是群来的信息，判断是否需要渲染信息
+            if (protocol.fromUserId == targetId.value) {
+              this.onMsgCallback.message &&
+                this.onMsgCallback.message(
+                  protocol.msg || protocol.url,
+                  protocol.msgType
+                );
+            }
           }
         });
       };
@@ -200,36 +231,55 @@ define([
     }
   }
 
-  // 将文本信息 保存到数据库
+  // 将用户文本信息 保存到数据库
   function saveText(value, chatType, targetUserId, fromUserId) {
     const content = BASE64.bytesToString(BASE64.encodeBase64(value));
     let key = getSessionKey(chatType, fromUserId, targetUserId);
 
-    // 同步最新的msg到localStorage
-    // localStorage.setItem(key, content);
     // 通知session 列表更新
     if (targetUserId == selfId.value) {
       // 当前是接收信息
-      contactStore.update(value, TEXT_MESSAGE, key, "receiveMsg", fromUserId);
+      contactStore.receive(value, TEXT_MESSAGE, key, fromUserId);
     } else {
-      contactStore.update(value, TEXT_MESSAGE, key, "sendLastMsg");
+      contactStore.send(value, TEXT_MESSAGE, key);
     }
 
     addMsg(content, TEXT_MESSAGE, chatType, key, targetUserId, fromUserId);
   }
-  // 图片信息保存数据库
+  // 将群文本信息 保存数据库  --针对接收信息
+  function saveTextQun(value, session, fromUserId) {
+    const content = BASE64.bytesToString(BASE64.encodeBase64(value));
+    if (fromUserId != selfId.value) {
+      contactStore.receive(value, TEXT_MESSAGE, session, session);
+    }
+    addMsg(
+      content,
+      TEXT_MESSAGE,
+      CHAT_TYPE_1_2_N,
+      session,
+      session,
+      fromUserId
+    );
+  }
+  // 用户图片信息保存数据库
   function saveImg(value, chatType, targetUserId, fromUserId) {
     let key = getSessionKey(chatType, fromUserId, targetUserId);
-    // 同步最新的msg到localStorage
-    // localStorage.setItem(key, "img");
     // 通知session 列表更新
     if (targetUserId == selfId.value) {
       // 当前是接收信息
-      contactStore.update(value, IMAGE_MESSAGE, key, "receiveMsg", fromUserId);
+      contactStore.receive(value, IMAGE_MESSAGE, key, fromUserId);
     } else {
-      contactStore.update(value, IMAGE_MESSAGE, key, "sendLastMsg");
+      contactStore.send(value, IMAGE_MESSAGE, key);
     }
     addMsg(value, IMAGE_MESSAGE, chatType, key, targetUserId, fromUserId);
+  }
+
+  // 群 图片保存数据库  -- 针对接收信息
+  function saveImgQun(value, session, fromUserId) {
+    if (fromUserId != selfId.value) {
+      contactStore.receive(value, IMAGE_MESSAGE, session, session);
+    }
+    addMsg(value, IMAGE_MESSAGE, CHAT_TYPE_1_2_N, session, session, fromUserId);
   }
 
   // 向本地数据中添加消息
@@ -245,25 +295,9 @@ define([
       targetUserId,
     };
 
-    instanceDB.addSession(key, sessionItem);
+    instanceDB.updateStoreItem(key, sessionItem, DB_STORE_NAME_SESSION);
   }
 
-  // 将图片转 base64
-  // function convertImgToBase64(url, callback, outputFormat) {
-  //   var canvas = document.createElement("CANVAS"),
-  //     ctx = canvas.getContext("2d"),
-  //     img = new Image();
-  //   img.crossOrigin = "Anonymous";
-  //   img.onload = function () {
-  //     canvas.height = img.height;
-  //     canvas.width = img.width;
-  //     ctx.drawImage(img, 0, 0);
-  //     var dataURL = canvas.toDataURL(outputFormat || "image/png");
-  //     callback.call(this, dataURL);
-  //     canvas = null;
-  //   };
-  //   img.src = url;
-  // }
   // const ws = new WSinstance(selfId.value);
   // let wsInstance = {};
   function createWS(id) {

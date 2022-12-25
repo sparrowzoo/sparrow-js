@@ -14,18 +14,13 @@ define([
   const dbInstance = initIndexedDB();
 
   const {
-    TEXT_MESSAGE,
-    IMAGE_MESSAGE,
     CHAT_TYPE_1_2_1,
     CHAT_TYPE_1_2_N,
     selfId,
-    targetId,
-    DB_STORE_NAME_MSG,
-    DB_STORE_NAME,
+    DB_STORE_NAME_SESSION,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     setTargetId,
-    changeSelfId,
   } = store;
   // const { initContack } = require("../store/contacts.js");
   const { contactStore } = contacts;
@@ -209,14 +204,17 @@ define([
       })
     );
     // 先对会话列表做保存
-    contactStore.initContack([...u, ...q]);
+    contactStore.initContact([...u, ...q]);
     // 渲染 聊天消息的列表
     showSessionList();
   }
   // 和localStorage中的保存的最后一条数据做比对
   async function compareMsg(keyPath, contacter) {
     // 向数据库中查询与当前用户的历史记录
-    const sessionItem = await dbInstance.getData(keyPath, DB_STORE_NAME);
+    const sessionItem = await dbInstance.getData(
+      keyPath,
+      DB_STORE_NAME_SESSION
+    );
     // 未读数量 / 最新信息
     let unReadCount = -1;
     let lastMessage = "";
@@ -255,6 +253,7 @@ define([
   }
 
   async function chatBy(user_id, username, chatType) {
+    0;
     // 聊天之前 设置全局的聊天对象
     setTargetId(user_id, username, chatType);
     // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
@@ -270,11 +269,10 @@ define([
     });
     if (flag) {
       // 有session 记录 可以直接渲染聊天记录
-      // 渲染聊天列表
       // getMsgList(user_id, username, chatType);
     } else {
       // 没有session 记录，需要在跳到消息页面之前 向 contactStore.contactList 添加这个记录，并且添加到第一条
-      // 根据 聊天类型 选择查询的表 以及生成主键名
+      // 根据 聊天类型 群 / 用户 选择查询的表 以及生成主键名
       const storeName =
         chatType == CHAT_TYPE_1_2_1 ? DB_STORE_NAME_USER : DB_STORE_NAME_QUN;
       const keyPath = chatType == CHAT_TYPE_1_2_1 ? user_id * 1 : user_id;
@@ -284,11 +282,6 @@ define([
       sessionItem.lastMessage = {
         session: getSessionKey(chatType, selfId.value, user_id),
       };
-      // const newsessionItem = {
-      //   lastMessage: {
-      //     session: getSessionKey(chatType, selfId.value, user_id),
-      //   },
-      // };
       // 添加到contactList
       contactStore.addContactItem(sessionItem);
     }

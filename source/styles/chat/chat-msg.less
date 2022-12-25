@@ -208,7 +208,7 @@
       }
 
       .message {
-        margin: 0 20px;
+        margin: 20px;
         .time {
           color: #666;
           font-size: 14px;
@@ -234,10 +234,13 @@
               white-space: pre-wrap;
             }
           }
-          .msg-picture {
+          .msg-picture-detail {
+            position: relative;
             margin: 0 20px;
-            border-radius: 5px;
-            max-width: 150px;
+            .msg-picture {
+              border-radius: 5px;
+              max-width: 150px;
+            }
           }
         }
       }
@@ -245,7 +248,17 @@
       .left {
         .user-msg {
           flex-direction: row;
-
+          .username {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateY(-110%);
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #999;
+          }
           .message-detail {
             background-color: #fff;
             color: #000;
@@ -265,6 +278,9 @@
       .right {
         .user-msg {
           flex-direction: row-reverse;
+          .username {
+            display: none !important;
+          }
           .message-detail {
             background-color: @text-color;
             color: #eee;

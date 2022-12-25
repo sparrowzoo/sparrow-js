@@ -25,7 +25,7 @@ define([
 ) {
   const {
     selfId,
-    DB_STORE_NAME,
+    DB_STORE_NAME_SESSION,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     changeSelfId,
@@ -55,25 +55,40 @@ define([
     if (sessionArr) {
       sessionArr.forEach((item) => {
         item.session = item.chatSession.sessionKey;
-        dbInstance.initSession(item);
+        dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
       });
     }
   }
 
   // 获取好友 / 群列表
   async function getContacts() {
+    controlLoading("flex");
     const contacts = await getFrinedList("contacts", selfId.value);
     console.log(contacts);
     // 拿到列表后 渲染dom
     myFriend.getRelationList(contacts);
     contacts.users.forEach((user) => {
-      dbInstance.initSession(user, DB_STORE_NAME_USER);
+      dbInstance.putStoreItem(user, DB_STORE_NAME_USER);
     });
 
     contacts.quns.forEach((qun) => {
-      dbInstance.initSession(qun, DB_STORE_NAME_QUN);
+      dbInstance.putStoreItem(qun, DB_STORE_NAME_QUN);
     });
+
+    // 解除loading...'
+    controlLoading("none");
   }
+
+  // 控制loading 的显示
+  function controlLoading(isShow) {
+    document.querySelector(".loading").style.display = isShow;
+  }
+
+  // const ws = createWS(0);
+  // changeSelfId(0);
+  // getContacts();
+  // getSessionHistory();
+  // chatMsg.getWsInstance(ws);
 
   // 临时功能
   const inputTargetId = document.querySelector(".ws-input");
