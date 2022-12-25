@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="../../../../../source/styles/chat/index.css">
+  <link rel="stylesheet" href="http://r.sparrowzoo.net/styles/chat/index.css">
 </head>
 
 <body>
@@ -17,7 +17,8 @@
       <span>消息</span>
       <span>&lt </span>
       <span>我的群聊</span>
-
+      <input class="ws-input" type="text">
+      <button class="connect-btn">连接</button>
     </nav>
     <div class="container">
       <!-- 左侧菜单 -->
@@ -131,7 +132,7 @@
       <div class="user-item">
         <div class="user-info">
           <div class="avatar">
-            <img src="https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg" alt="">
+            <img src="" alt="">
           </div>
           <div class="username">
             <span></span>
@@ -150,9 +151,9 @@
     <template id="msg-list-part">
       <div class="msg-item">
         <div class="avatar">
-          <img src="https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg" class="avatar-img" alt="用户头像">
-          <img src="https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg" class="nation" alt="国籍">
-          <span class="unread">5</span>
+          <img src="" class="avatar-img" alt="用户头像">
+          <img src="" class="nation" alt="国籍">
+          <span class="unread"></span>
         </div>
         <div class="msg-user-time">
           <div class="msg-user">
@@ -262,7 +263,7 @@
     <template id="chat-part">
       <div class="msg-content">
         <div class="title">
-          <span class="user">名字</span>
+          <span class="user"></span>
           <i class="iconfont icon-gengduo show-more-icon"></i>
         </div>
         <div class="msg-detail">
@@ -294,7 +295,7 @@
           <div style="display:none" class="user-more-part">
             <div class="user-more-part-wapper">
               <div class="more-user">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="" alt="">
                 <span>用户名户名户名</span>
               </div>
               <div class="more-icon">
@@ -431,13 +432,18 @@
       <div class="message">
         <div class="time">2022-06-03</div>
         <div class="user-msg">
-          <img class="avatar-user" src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+          <img class="avatar-user" src="" alt="">
           <!-- 文本信息和图片信息 动态显示 -->
           <div style="display:none" class="message-detail">
+            <div style="display:none" class="username">用户名</div>
             <span class="block"></span>
-            <span class="message-text">这里是聊天内容</span>
+            <span class="message-text"></span>
           </div>
-          <img style="display:none" src="" class="msg-picture" alt="">
+          <div style="display:none" class="msg-picture-detail">
+            <div style="display:none" class="username">用户名</div>
+            <img src="" class="msg-picture" alt="">
+          </div>
+
         </div>
       </div>
     </template>
@@ -448,15 +454,40 @@
 
 </script>
 <!-- <script type="text/javascript" src="http://r.sparrowzoo.net/scripts/SparrowChat.js"></script> -->
-<script src="../../../../../source/scripts/sparrow.js"></script>
+<!-- <script src="../../../../../source/scripts/sparrow.js"></script>
 <script src="../../../../../source/scripts/SparrowChat.js"></script>
 <script src="../../../../../source/scripts/base64.js"></script>
 <script src="../../../../../source/scripts/chat/lib/sea.js"></script>
-<script src="../../../../../source/scripts/chat/lib/dayjs.js"></script>
-<script src="../../../../../source/scripts/chat/lib/imgCompression.js"></script>
+<script src="../../../../../source/scripts/chat/lib/dayjs.js"></script> nginx -s stop
+<script src="../../../../../source/scripts/chat/lib/imgCompression.js"></script> -->
+<script src="http://r.sparrowzoo.net/scripts/require.js" data-main=""></script>
 <script>
-  seajs.use('../../../../../source/scripts/chat/index.js');
-  // seajs.use('../../../../../source/scripts/chat/main.js');
+  // seajs.use('../../../../../source/scripts/chat/index.js');
+  // 配置
+  require.config({
+    baseUrl: 'http://r.sparrowzoo.net/',
+    paths: {
+      "index": "scripts/chat/index",
+      "day": "scripts/chat/lib/dayjs",
+      "imageCompression": "scripts/chat/lib/imgCompression",
+      "chat-msg": 'scripts/chat/page/chat-msg',
+      "contact-service": "scripts/chat/page/contact-service",
+      "my-friend": "scripts/chat/page/my-friend",
+      "system-inform": "scripts/chat/page/system-inform",
+      "contacts": "scripts/chat/store/contacts",
+      "store": "scripts/chat/store/store",
+      "api": "scripts/chat/utils/api",
+      "indexedDB": "scripts/chat/utils/indexedDB",
+      "utils": "scripts/chat/utils/utils",
+      "websocket": "scripts/chat/utils/websocket",
+      "base64": "scripts/base64",
+      "sparrow": 'scripts/sparrow',
+      "sparrowChat": "scripts/sparrowChat"
+    },
+    shim: {}
+  })
+
+  const ee = require(['index']);
 </script>
 
 

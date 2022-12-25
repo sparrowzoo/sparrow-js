@@ -1,26 +1,29 @@
-define(function (require, exports, module) {
-  const { getMsgList, showSessionList, getDefaultChat } = require("./chat-msg");
+define([
+  "chat-msg",
+  "api",
+  "utils",
+  "indexedDB",
+  "store",
+  "contacts",
+], function (chatMsg, api, utils, indexedDB, store, contacts) {
+  const { getMsgList, showSessionList, getDefaultChat } = chatMsg;
 
-  const ajaxObj = require("../utils/api.js");
-  const { getFocus, getSessionKey } = require("../utils/utils.js");
-  const { initIndexedDB } = require("../utils/indexedDB");
+  const ajaxObj = api;
+  const { getFocus, getSessionKey } = utils;
+  const { initIndexedDB } = indexedDB;
   const dbInstance = initIndexedDB();
 
   const {
-    TEXT_MESSAGE,
-    IMAGE_MESSAGE,
     CHAT_TYPE_1_2_1,
     CHAT_TYPE_1_2_N,
-    SELFID,
-    targetId,
-    DB_STORE_NAME_MSG,
-    DB_STORE_NAME,
+    selfId,
+    DB_STORE_NAME_SESSION,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
     setTargetId,
-  } = require("../store/store.js");
+  } = store;
   // const { initContack } = require("../store/contacts.js");
-  const { contactStore } = require("../store/contacts.js");
+  const { contactStore } = contacts;
 
   // 获取左侧菜单，准备添加点击事件
   const menu = document.querySelector(".menu");
@@ -84,11 +87,11 @@ define(function (require, exports, module) {
   function showFriendsList() {
     // 发送请求后 默认展示的 就是好友列表
     showCardByIndex(0);
-    getItemList();
+    getRelationList();
   }
 
-  // 好友列表
-  async function getItemList(originContact) {
+  // 好友列表 联系人
+  async function getRelationList(originContact) {
     let contacterObj = originContact || {};
     if (originContact) {
       // 参数存在 是第一次加载的过程,生成消息列表
@@ -181,46 +184,58 @@ define(function (require, exports, module) {
   // 首次进入 拿到好友 / 群列表 生成会话列表
   async function initSessionData(users, quns) {
     const u = await Promise.all(
-      users.map(async (item) => {
-        const sessinKey = getSessionKey(CHAT_TYPE_1_2_1, SELFID, item.userId);
-        return compareMsg(sessinKey, item);
+      users.map(async (user) => {
+        const sessinKey = getSessionKey(
+          CHAT_TYPE_1_2_1,
+          selfId.value,
+          user.userId
+        );
+        return compareMsg(sessinKey, user);
       })
     );
     const q = await Promise.all(
       quns.map((item) => {
-        const sessinKey = getSessionKey(CHAT_TYPE_1_2_N, SELFID, item.qunId);
+        const sessinKey = getSessionKey(
+          CHAT_TYPE_1_2_N,
+          selfId.value,
+          item.qunId
+        );
         return compareMsg(sessinKey, item);
       })
     );
     // 先对会话列表做保存
-    contactStore.initContack([...u, ...q]);
+    contactStore.initContact([...u, ...q]);
     // 渲染 聊天消息的列表
-    showSessionList([...u, ...q]);
+    showSessionList();
   }
   // 和localStorage中的保存的最后一条数据做比对
   async function compareMsg(keyPath, contacter) {
-    const lastMsg = window.localStorage.getItem(keyPath);
-    const sessionItem = await dbInstance.getData(keyPath, DB_STORE_NAME);
+    // 向数据库中查询与当前用户的历史记录
+    const sessionItem = await dbInstance.getData(
+      keyPath,
+      DB_STORE_NAME_SESSION
+    );
     // 未读数量 / 最新信息
     let unReadCount = -1;
     let lastMessage = "";
 
+    // 与当前用户有聊天记录  才会有未读和 最新信息
     if (sessionItem) {
-      // 与当前用户有聊天记录  才会有未读和 最新信息
-      if (lastMsg) {
-        // 比较最后一条数据
+      // 如果有最新消息的记录时间 => lastReadTime 倒叙遍历 历史记录
+      if (sessionItem.lastReadTime) {
         const count = sessionItem.messages.length - 1;
         for (let i = count; i > 0; i--) {
-          if (sessionItem.messages[i] === lastMsg) {
+          if (sessionItem.messages[i].sendTime < sessionItem.lastReadTime) {
             unReadCount = count - i;
             break;
           }
         }
+        // 依然是 -1 说明当前未读记录 已经超过历史记录的最大存储,未读数设置为历史记录总数
         if (unReadCount === -1) {
           unReadCount = count + 1;
         }
       } else {
-        // 直接返回历史记录的数量
+        // 没有lastReadTime 未读数直接返回历史记录的数量
         unReadCount = sessionItem.messages?.length;
       }
       lastMessage = sessionItem.messages[sessionItem.messages.length - 1];
@@ -233,24 +248,49 @@ define(function (require, exports, module) {
 
   // 新的朋友 渲染DOM
   async function createNewFriend() {
-    const res = await ajaxObj.getFrinedList("contacts", SELFID);
+    const res = await ajaxObj.getFrinedList("contacts", selfId.value);
     createListDom(CHAT_TYPE_1_2_1, res.users, ".new-friend");
   }
 
-  function chatBy(user_id, username, chatType) {
+  async function chatBy(user_id, username, chatType) {
+    0;
     // 聊天之前 设置全局的聊天对象
     setTargetId(user_id, username, chatType);
     // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
     activeMenu = "1";
     showContentByMenu("1");
-    // 渲染聊天列表
+    // 判断 是否和当前用户有session 记录，没有记录 需要新增一个session
+    const flag = contactStore.contactList.some((item) => {
+      if (chatType == CHAT_TYPE_1_2_1) {
+        return item.userId == user_id;
+      } else {
+        return item.qunId == user_id;
+      }
+    });
+    if (flag) {
+      // 有session 记录 可以直接渲染聊天记录
+      // getMsgList(user_id, username, chatType);
+    } else {
+      // 没有session 记录，需要在跳到消息页面之前 向 contactStore.contactList 添加这个记录，并且添加到第一条
+      // 根据 聊天类型 群 / 用户 选择查询的表 以及生成主键名
+      const storeName =
+        chatType == CHAT_TYPE_1_2_1 ? DB_STORE_NAME_USER : DB_STORE_NAME_QUN;
+      const keyPath = chatType == CHAT_TYPE_1_2_1 ? user_id * 1 : user_id;
+      const sessionItem = await dbInstance.getData(keyPath, storeName);
+      // chatMsg.addSessionItem(sessionItem);
+      // 同步到contacts 中
+      sessionItem.lastMessage = {
+        session: getSessionKey(chatType, selfId.value, user_id),
+      };
+      // 添加到contactList
+      contactStore.addContactItem(sessionItem);
+    }
     getMsgList(user_id, username, chatType);
 
     // 获取焦点
     const dom = getFocus([".chat-msg", ".input-content"]);
     dom.focus();
   }
-
   function removeUser(id) {
     console.log("remove");
     document.querySelector(".del-friend").style.display = "block";
@@ -330,7 +370,7 @@ define(function (require, exports, module) {
     document.querySelector(".global-mask").style.display = "none";
   });
 
-  module.exports = {
-    getItemList,
+  return {
+    getRelationList,
   };
 });
