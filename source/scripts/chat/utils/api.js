@@ -20,8 +20,19 @@ define(function (require, exports, module) {
       });
     });
   }
-  module.exports = {
+
+  // 已读消息
+  function setRead(data) {
+    return new Promise((resolve, reject) => {
+      const url = "session/read";
+      $.ajax.json(BASE_URL + url, data, function (result) {
+        resolve(result.data);
+      });
+    });
+  }
+  return {
     getSession,
     getFrinedList,
+    setRead,
   };
 });
