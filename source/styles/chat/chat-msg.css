@@ -201,6 +201,7 @@ h5 {
   margin: 0 20px 0 25px;
   padding: 12px 10px;
   border-radius: 5px;
+  overflow-wrap: break-word;
 }
 .chat-msg .msg-content .msg-detail .message .user-msg .message-detail .message-text {
   white-space: pre-wrap;

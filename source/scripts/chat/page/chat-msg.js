@@ -437,10 +437,11 @@ define([
       // 将最新的消息 保存到本地
       const params = {
         chatType,
-        sessionKey: user_id,
+        sessionKey: getSessionKey(chatType, selfId.value, user_id),
         userId: selfId.value,
       };
       // 每次发送信息都要 更新已读
+
       api.setRead(params);
     }
   }
@@ -484,6 +485,7 @@ define([
   // 点击按钮 / 回车发送消息
   function sendMsgByBtn() {
     const textDom = document.querySelector(".input-content");
+    if (textDom.value.length === 0) return;
     sendMessage(textDom.value, TEXT_MESSAGE);
     // websocket 发送数据
     wsInstance.sendMsg(

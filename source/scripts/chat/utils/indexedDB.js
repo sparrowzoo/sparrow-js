@@ -91,7 +91,7 @@ define(["store"], function (store) {
         },
         messages: [session],
       };
-      this.initSession(sessionItem, storeName);
+      this.putStoreItem(sessionItem, storeName);
     }
 
     // 查询数据
