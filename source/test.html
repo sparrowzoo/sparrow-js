@@ -135,7 +135,7 @@
                     var messages=sessionList[i].messages;
                     if(messages!=null&&messages.length>0){
                         for(var j=0;j<messages.length;j++){
-                            divDialog.innerHTML+="<br/>来自:"+messages[j].fromUserId+",发送时间："+messages[j].sendTime;
+                            divDialog.innerHTML+="<br/>来自:"+messages[j].fromUserId+",发送时间："+messages[j].serverTime;
                             if(messages[j].messageType===0) {
                                 //文本
                                 divDialog.innerHTML +=BASE64.bytesToString(BASE64.decodeBase64(messages[j].content));
