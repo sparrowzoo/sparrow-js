@@ -17,7 +17,7 @@ define(["store", "indexedDB"], function (store, indexedDB) {
     initContact(arr) {
       this.contactList = arr
         .filter((item) => item)
-        .sort((a, b) => b.lastMessage.sendTime - a.lastMessage.sendTime);
+        .sort((a, b) => b.lastMessage.serverTime - a.lastMessage.serverTime);
 
       // 初始化后默认将第一个会话列表的targetid保存
       if (this.contactList[0]) {
