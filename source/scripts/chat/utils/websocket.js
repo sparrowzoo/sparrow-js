@@ -49,6 +49,7 @@ define([
 
     onOpen() {
       this.ws.onopen = (e) => {
+        console.log("连接事件");
         this.isConnected = true;
         this.reConnectTime = 1;
       };
