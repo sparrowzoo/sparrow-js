@@ -157,7 +157,7 @@ var SparrowProtocol = function (
         this.url = url;
       }
       offset+=this.msgLength;
-      this.sendTime=new Uint8Array(buf.slice(offset,buf.byteLength)).toString();
+      this.sendClientTime=new Uint8Array(buf.slice(offset,buf.byteLength)).toString();
       callback(this);
     })();
   }
@@ -189,8 +189,8 @@ var SparrowProtocol = function (
     this.msgLength = msgLength;
     this.msgLengthBytes = msgLength.toBytes();
     this.msgLengthLength = this.msgLengthBytes.length;
-    this.sendTime=Date.now();
-    this.sendTimeBytes=(this.sendTime+"").toArray();
+    this.sendClientTime=Date.now();
+    this.sendTimeBytes=(this.sendClientTime+"").toArray();
     this.sendTimeLength=this.sendTimeBytes.length;
     return this;
   }
