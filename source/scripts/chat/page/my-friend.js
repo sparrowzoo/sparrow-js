@@ -225,7 +225,7 @@ define([
       if (sessionItem.lastReadTime) {
         const count = sessionItem.messages.length - 1;
         for (let i = count; i > 0; i--) {
-          if (sessionItem.messages[i].sendTime < sessionItem.lastReadTime) {
+          if (sessionItem.messages[i].serverTime < sessionItem.lastReadTime) {
             unReadCount = count - i;
             break;
           }

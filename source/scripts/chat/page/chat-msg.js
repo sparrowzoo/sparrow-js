@@ -118,7 +118,7 @@ define([
       imgNation.src = "https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg";
       // 最新消息的发送时间
       const spanMsgTime = divList.querySelector(".msg-time");
-      spanMsgTime.innerText = sessionTime(list[i].lastMessage.sendTime);
+      spanMsgTime.innerText = sessionTime(list[i].lastMessage.serverTime);
       // 最新消息
       const spanLastMsg = divList.querySelector(".msg-last");
       if (list[i].lastMessage.messageType === TEXT_MESSAGE) {
@@ -396,7 +396,7 @@ define([
     res?.messages.reverse().forEach((msg) => {
       const isSelf = msg.fromUserId === selfId.value ? true : false;
       // 稀释时间 每个十分钟显示一次聊天时间
-      const msgTime = relaxTime(lastTime, msg.sendTime);
+      const msgTime = relaxTime(lastTime, msg.serverTime);
       let msgValue;
       if (msg.messageType === TEXT_MESSAGE) {
         msgValue = BASE64.bytesToString(BASE64.decodeBase64(msg.content));
