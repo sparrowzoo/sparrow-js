@@ -44,7 +44,7 @@ define([
       this.onOpen();
       this.onMsg();
       this.onClose();
-      this.onErroe();
+      this.onError();
     }
 
     onOpen() {
@@ -123,16 +123,16 @@ define([
     onClose() {
       this.ws.onclose = (e) => {
         console.log("close 事件");
-        this.isConnected = false;
-        // 当监听到关闭事件后 需要发起重连
-        setTimeout(() => {
-          this.reConnectTime++;
-          this.connected(this.userId);
-        }, this.reConnectTime * 200); // 重连时间 200  400 ...
+        // this.isConnected = false;
+        // // 当监听到关闭事件后 需要发起重连
+        // setTimeout(() => {
+        //   this.reConnectTime++;
+        //   this.connected(this.userId);
+        // }, this.reConnectTime * 200); // 重连时间 200  400 ...
       };
     }
 
-    onErroe() {
+    onError() {
       this.ws.onerror = function (e) {
         //如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
         console.log("连接出错");
