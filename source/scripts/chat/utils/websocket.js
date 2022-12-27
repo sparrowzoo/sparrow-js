@@ -16,9 +16,9 @@ define([
     DB_STORE_NAME_SESSION,
   } = store;
   const { contactStore } = contacts;
-  const { initIndexedDB } = indexedDB;
+  const DBObject = indexedDB;
   const { getSessionKey } = utils;
-  const instanceDB = initIndexedDB();
+  // const dbInstance = initIndexedDB();
   class WSinstance {
     // 当前是否为连接状态
     isConnected = false;
@@ -123,12 +123,12 @@ define([
     onClose() {
       this.ws.onclose = (e) => {
         console.log("close 事件");
-        // this.isConnected = false;
+        this.isConnected = false;
         // // 当监听到关闭事件后 需要发起重连
-        // setTimeout(() => {
-        //   this.reConnectTime++;
-        //   this.connected(this.userId);
-        // }, this.reConnectTime * 200); // 重连时间 200  400 ...
+        setTimeout(() => {
+          this.reConnectTime++;
+          this.connected(this.userId);
+        }, this.reConnectTime * 200); // 重连时间 200  400 ...
       };
     }
 
@@ -175,7 +175,7 @@ define([
         setTimeout(() => {
           this.sendWaitTime++;
           this.sendMsg(chatType, msgType, targetId, msg);
-        }, this.sendWaitTime * 300);
+        }, this.sendWaitTime * 400);
       }
     }
 
@@ -296,11 +296,15 @@ define([
       targetUserId,
     };
 
-    instanceDB.updateStoreItem(key, sessionItem, DB_STORE_NAME_SESSION);
+    DBObject.dbInstance.updateStoreItem(
+      key,
+      sessionItem,
+      DB_STORE_NAME_SESSION
+    );
   }
 
   // const ws = new WSinstance(selfId.value);
-  // let wsInstance = {};
+  // let wsInstance = {};  初始化 ws
   function createWS(id) {
     //  wsInstance = new WSinstance(id);
     return new WSinstance(id);

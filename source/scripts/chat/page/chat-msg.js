@@ -28,7 +28,7 @@ define([
     sessionTime,
     currentSendTime,
   } = utils;
-  const { initIndexedDB } = indexedDB;
+  const DBObject = indexedDB;
   // const ajaxObj = require("../utils/api.js");
   // const { wsInstance } = websocket; // wsInstance
   // console.log(wsInstance);
@@ -37,7 +37,7 @@ define([
     wsInstance = ws;
   }
   // const wsInstance = createWS(selfId.value);
-  const dbInstance = initIndexedDB();
+  // const dbInstance = initIndexedDB();
 
   let localMessageTemplate;
 
@@ -109,13 +109,18 @@ define([
       spanUsername.innerText = list[i].userName || list[i].qunName;
       // 用户头像
       const imgUser = divList.querySelector(".avatar-img");
-      // imgUser.src =
-      //   list[i].avatar || "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
-      imgUser.src = "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
       // 用户国籍
       const imgNation = divList.querySelector(".nation");
-      // imgNation.src = list[i].flagUrl;
-      imgNation.src = "https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg";
+      if (list[i].qunId) {
+        // 当前是群
+        imgUser.src = list[i].unitIcon;
+        imgNation.style.display = "none";
+      } else {
+        // 当前是 用户
+        imgUser.src = list[i].avatar;
+        imgNation.src = list[i].flagUrl;
+      }
+
       // 最新消息的发送时间
       const spanMsgTime = divList.querySelector(".msg-time");
       spanMsgTime.innerText = sessionTime(list[i].lastMessage.serverTime);
@@ -146,7 +151,7 @@ define([
     divMsgs.forEach((el) => {
       el.onclick = function () {
         // const { user_id, username, chatType } = this.info;
-        let targetId, username, chatType;
+        let targetId, username, chatType, avatar;
 
         if (el.info.userName) {
           // 当前是用户
@@ -154,6 +159,7 @@ define([
           // 修改当前聊天 id
           targetId = el.info.userId;
           username = el.info.userName;
+          avatar = el.info.avatar;
           chatType = CHAT_TYPE_1_2_1;
         } else {
           targetId = el.info.qunId;
@@ -161,7 +167,7 @@ define([
           chatType = CHAT_TYPE_1_2_N;
         }
         getMsgList(targetId, username, chatType);
-        setTargetId(targetId, username, chatType);
+        setTargetId(targetId, username, chatType, avatar);
       };
     });
   }
@@ -261,12 +267,12 @@ define([
     // 用户头像
     const imgUser = divSessionItem.querySelector(".avatar-img");
     // imgUser.src =
-    //   list[i].avatar || "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
-    imgUser.src = "https://img1.imgtp.com/2022/11/06/A5PVFCKQ.jpg";
+    imgUser.src = item.avatar;
     // 用户国籍
     const imgNation = divSessionItem.querySelector(".nation");
-    // imgNation.src = list[i].flagUrl;
-    imgNation.src = "https://img1.imgtp.com/2022/11/20/ZLWvFwJZ.jpg";
+    if (item.userName) {
+      imgNation.src = item.flagUrl;
+    }
 
     // 向 session list 中添加item
     if (divList) {
@@ -360,7 +366,10 @@ define([
 
     // 如果是群 需要保存当前的群成员
     if (chatType === CHAT_TYPE_1_2_N) {
-      const membersArr = await dbInstance.getData(user_id, DB_STORE_NAME_QUN);
+      const membersArr = await DBObject.dbInstance.getData(
+        user_id,
+        DB_STORE_NAME_QUN
+      );
       qunNumberMap.initQunMap(membersArr.members);
     }
 
@@ -389,7 +398,7 @@ define([
 
     // indexedDB 数据库中 得到与当前用户/群的历史记录 先得到keyPath => 1v1 100_101  1vN qunId
     const key = getSessionKey(chatType, selfId.value, user_id);
-    const res = await dbInstance.getData(key, DB_STORE_NAME_SESSION);
+    const res = await DBObject.dbInstance.getData(key, DB_STORE_NAME_SESSION);
     lastTime = +new Date();
     referenceNode = null;
     // 将要插在这个节点之前  倒叙插入
@@ -545,11 +554,7 @@ define([
     memberId
   ) {
     const copyMessageTemplate = localMessageTemplate.cloneNode(true);
-    if (isSelf) {
-      copyMessageTemplate.classList.add("right");
-    } else {
-      copyMessageTemplate.classList.add("left");
-    }
+
     // 设置聊天时间
     if (msgTime) {
       copyMessageTemplate.querySelector(".time").innerText = msgTime;
@@ -558,10 +563,21 @@ define([
     }
     // 设置头像
     const avatarImg = copyMessageTemplate.querySelector(".avatar-user");
+    if (isSelf) {
+      // 自己
+      copyMessageTemplate.classList.add("right");
+      avatarImg.src = selfId.avatar;
+    } else {
+      copyMessageTemplate.classList.add("left");
+      if (targetId.avatar) {
+        // 目标聊天对象的avatar 存在  说明是  用户
+        avatarImg.src = targetId.avatar;
+      } else {
+        // 当前是群聊 需要通过id 查询 用户头像
+        avatarImg.src = qunNumberMap.map[memberId].avatar;
+      }
+    }
     // 将信息 渲染到页面上
-    avatarImg.src = "https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg";
-    // const divUsername = copyMessageTemplate.querySelector(".username");
-    // divUsername.style.display = "block";
     showMessageDetail(type, copyMessageTemplate, value, memberId);
     referenceNode = parentNode.insertBefore(copyMessageTemplate, oldnode);
   }
@@ -609,8 +625,20 @@ define([
 
     // 设置头像
     const avatarImg = copyMessageTemplate.querySelector(".avatar-user");
-    avatarImg.src = "https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg";
-
+    console.log(copyMessageTemplate.className);
+    if (copyMessageTemplate.className.includes("right")) {
+      // 当前是自己发送的信息
+      avatarImg.src = selfId.avatar;
+    } else {
+      // 当前是 其他人发送来的信息
+      if (memberId) {
+        // 这里代表的是 群 需要通过memberId 获取avatar
+        avatarImg.src = qunNumberMap.map[memberId].avatar;
+      } else {
+        // 当前聊天对象是用户
+        avatarImg.src = targetId.avatar;
+      }
+    }
     // 将信息展示到页面上
     showMessageDetail(type, copyMessageTemplate, value, memberId);
     const msgParentDiv = document.querySelector(".msg-detail");
@@ -626,7 +654,7 @@ define([
       for (let i = 0; i < divsUsername.length; i++) {
         divsUsername[i].style.display = "block";
         if (memberId || memberId === 0) {
-          divsUsername[i].textContent = qunNumberMap.map[memberId];
+          divsUsername[i].textContent = qunNumberMap.map[memberId].userName;
         }
       }
     }

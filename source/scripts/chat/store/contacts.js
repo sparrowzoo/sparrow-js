@@ -6,8 +6,8 @@ define(["store", "indexedDB"], function (store, indexedDB) {
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
   } = store;
-  const { initIndexedDB } = indexedDB;
-  const dbInstance = initIndexedDB();
+  const DBObject = indexedDB;
+  // const dbInstance = initIndexedDB();
   //  维护 session 列表，收发消息后主动回调相关函数 实现 sessionDOM列表自动更新
   class ContactStore {
     constructor() {
@@ -30,7 +30,7 @@ define(["store", "indexedDB"], function (store, indexedDB) {
           id = this.contactList[0].qunId;
           username = this.contactList[0].qunName;
         }
-        setTargetId(id, username, chatType);
+        setTargetId(id, username, chatType, this.contactList[0].avatar);
       }
     }
 
@@ -51,7 +51,10 @@ define(["store", "indexedDB"], function (store, indexedDB) {
         // 查询 当前session 的实体 是用户还是群
         let storeName =
           session === fromUserId ? DB_STORE_NAME_QUN : DB_STORE_NAME_USER;
-        const sessionItem = await dbInstance.getData(fromUserId, storeName);
+        const sessionItem = await DBObject.dbInstance.getData(
+          fromUserId,
+          storeName
+        );
         if (sessionItem) {
           // 当前用户 / 群 是好友的情况
           sessionItem.lastMessage = {
