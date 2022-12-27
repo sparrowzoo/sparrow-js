@@ -10,25 +10,32 @@ define(function () {
   const IMAGE_MESSAGE = 1;
   const CHAT_TYPE_1_2_1 = 0;
   const CHAT_TYPE_1_2_N = 1;
-  const selfId = { value: 0 };
+  const selfId = { value: 0, avatar: "" };
 
   const qunNumberMap = {
     map: {},
     initQunMap(arr) {
       this.map = {};
       for (const item of arr) {
-        this.map[item.userId] = item.userName;
+        this.map[item.userId] = item;
       }
     },
   };
-  let targetId = { value: "-1", type: CHAT_TYPE_1_2_1, username: "" };
-  function setTargetId(id, username, chatType) {
+  let targetId = {
+    value: "-1",
+    type: CHAT_TYPE_1_2_1,
+    username: "",
+    avatar: null,
+  };
+  function setTargetId(id, username, chatType, avatar) {
     targetId.value = id;
     targetId.type = chatType;
     targetId.username = username;
+    targetId.avatar = avatar;
   }
-  function changeSelfId(id) {
+  function changeSelfId(id, avatar) {
     selfId.value = id;
+    selfId.avatar = avatar;
   }
   return {
     DB_NAME,

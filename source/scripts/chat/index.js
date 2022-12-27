@@ -32,8 +32,9 @@ define([
   } = store;
   const { createWS } = websocket;
   const { getSession, getFrinedList } = api;
-  const { initIndexedDB } = indexedDB;
-  const dbInstance = initIndexedDB();
+  // const { createIndexedDB, dbInstance } = indexedDB;
+  const DBObject = indexedDB;
+  // const dbInstance = initIndexedDB();
 
   // window.onload = function () {
   // 请求 当前用户好友
@@ -55,7 +56,7 @@ define([
     if (sessionArr) {
       sessionArr.forEach((item) => {
         item.session = item.chatSession.sessionKey;
-        dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
+        DBObject.dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
       });
     }
   }
@@ -68,11 +69,11 @@ define([
     // 拿到列表后 渲染dom
     myFriend.getRelationList(contacts);
     contacts.users.forEach((user) => {
-      dbInstance.putStoreItem(user, DB_STORE_NAME_USER);
+      DBObject.dbInstance.putStoreItem(user, DB_STORE_NAME_USER);
     });
 
     contacts.quns.forEach((qun) => {
-      dbInstance.putStoreItem(qun, DB_STORE_NAME_QUN);
+      DBObject.dbInstance.putStoreItem(qun, DB_STORE_NAME_QUN);
     });
 
     // 解除loading...'
@@ -94,10 +95,18 @@ define([
   const inputTargetId = document.querySelector(".ws-input");
   // 切换当前用户
   const btnTargetId = document.querySelector(".connect-btn");
-  btnTargetId.addEventListener("click", function () {
+  btnTargetId.addEventListener("click", async function () {
     // console.log(inputTargetId.value);
+    const res = await DBObject.createIndexedDB(inputTargetId.value, "1");
+    console.log(res);
+    // console.log(db);
+    // console.log(dbInstance);
     const ws = createWS(inputTargetId.value);
-    changeSelfId(inputTargetId.value * 1);
+    // 设置当前用户信息
+    changeSelfId(
+      inputTargetId.value * 1,
+      "https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg"
+    );
     getContacts();
     getSessionHistory();
     chatMsg.getWsInstance(ws);

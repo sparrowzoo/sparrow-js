@@ -10,8 +10,8 @@ define([
 
   const ajaxObj = api;
   const { getFocus, getSessionKey } = utils;
-  const { initIndexedDB } = indexedDB;
-  const dbInstance = initIndexedDB();
+  const DBObject = indexedDB;
+  // const dbInstance = initIndexedDB();
 
   const {
     CHAT_TYPE_1_2_1,
@@ -113,8 +113,8 @@ define([
 
   // 向数据库中拿用户 / 群
   async function getUses_Quns() {
-    const userArr = await dbInstance.getAll(DB_STORE_NAME_USER);
-    const qunArr = await dbInstance.getAll(DB_STORE_NAME_QUN);
+    const userArr = await DBObject.dbInstance.getAll(DB_STORE_NAME_USER);
+    const qunArr = await DBObject.dbInstance.getAll(DB_STORE_NAME_QUN);
     const obj = {
       users: userArr,
       quns: qunArr,
@@ -135,15 +135,23 @@ define([
     list.forEach((item) => {
       // 复制一份 准备根据list 渲染数据
       const copyConItemDiv = contentItemDiv.cloneNode(true);
+      // 用户 / 群头像
       const imgDiv = copyConItemDiv.querySelector("img");
-      imgDiv.src = "http://r.sparrowzoo.net/images/user.png";
+      imgDiv.src = item.avatar || item.unitIcon;
+      // 国籍 图片
+      const imgFlag = copyConItemDiv.querySelector(".img-flag");
+      imgFlag.src = item.flagUrl;
+      // 用户 / 详细信息
       const userDiv = copyConItemDiv.querySelectorAll("span");
       userDiv[0].innerText = item[itemName];
+      // 操作按钮
       const divOperate = copyConItemDiv.querySelector(".operate");
       divOperate.setAttribute("data-user_id", item[itemId]);
       divOperate.setAttribute("data-user_name", item[itemName]);
+      divOperate.item = item;
       // 群聊需要改变模板
       if (type === CHAT_TYPE_1_2_N) {
+        imgFlag.style.display = "none";
         userDiv[1].innerText = "群公告" + item.announcement;
         const buttonRemove = divOperate.querySelector("button");
         buttonRemove.innerText = "删除群聊";
@@ -174,7 +182,8 @@ define([
           chatBy(
             e.currentTarget.getAttribute("data-user_id"),
             e.currentTarget.getAttribute("data-user_name"),
-            type
+            type,
+            this.item.avatar
           );
         }
       });
@@ -211,7 +220,7 @@ define([
   // 和localStorage中的保存的最后一条数据做比对
   async function compareMsg(keyPath, contacter) {
     // 向数据库中查询与当前用户的历史记录
-    const sessionItem = await dbInstance.getData(
+    const sessionItem = await DBObject.dbInstance.getData(
       keyPath,
       DB_STORE_NAME_SESSION
     );
@@ -224,7 +233,7 @@ define([
       // 如果有最新消息的记录时间 => lastReadTime 倒叙遍历 历史记录
       if (sessionItem.lastReadTime) {
         const count = sessionItem.messages.length - 1;
-        for (let i = count; i > 0; i--) {
+        for (let i = count; i >= 0; i--) {
           if (sessionItem.messages[i].serverTime < sessionItem.lastReadTime) {
             unReadCount = count - i;
             break;
@@ -252,10 +261,9 @@ define([
     createListDom(CHAT_TYPE_1_2_1, res.users, ".new-friend");
   }
 
-  async function chatBy(user_id, username, chatType) {
-    0;
+  async function chatBy(user_id, username, chatType, avatar) {
     // 聊天之前 设置全局的聊天对象
-    setTargetId(user_id, username, chatType);
+    setTargetId(user_id, username, chatType, avatar);
     // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
     activeMenu = "1";
     showContentByMenu("1");
@@ -276,7 +284,7 @@ define([
       const storeName =
         chatType == CHAT_TYPE_1_2_1 ? DB_STORE_NAME_USER : DB_STORE_NAME_QUN;
       const keyPath = chatType == CHAT_TYPE_1_2_1 ? user_id * 1 : user_id;
-      const sessionItem = await dbInstance.getData(keyPath, storeName);
+      const sessionItem = await DBObject.dbInstance.getData(keyPath, storeName);
       // chatMsg.addSessionItem(sessionItem);
       // 同步到contacts 中
       sessionItem.lastMessage = {
