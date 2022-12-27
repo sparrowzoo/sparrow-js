@@ -243,7 +243,7 @@ define(function (require, exports, module) {
     sessionArr[0].messages.forEach((msg) => {
       // const msgValue = BASE64.bytesToString(BASE64.decodeBase64(msg.content));
       const isSelf = msg.fromUserId === SEFLID ? true : false;
-      const msgTime = historyMsgTime(msg.sendTime);
+      const msgTime = historyMsgTime(msg.serverTime);
       let msgValue;
       if (msg.messageType === TEXT_MESSAGE) {
         msgValue = BASE64.bytesToString(BASE64.decodeBase64(msg.content));
