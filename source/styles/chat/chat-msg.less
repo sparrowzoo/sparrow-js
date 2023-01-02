@@ -457,11 +457,18 @@
           .user-list {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            // justify-content: space-between;
             margin: 5px 0;
 
             & > div {
               margin-bottom: 15px;
+              &:nth-child(4n + 2) {
+                margin-left: 12px;
+                margin-right: 12px;
+              }
+              &:nth-child(4n + 3) {
+                margin-right: 12px;
+              }
             }
 
             span {

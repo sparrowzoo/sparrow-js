@@ -159,7 +159,7 @@ eval("\n\n/* istanbul ignore next  */\nfunction styleTagTransform(css, styleElem
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_index_less__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./css/index.less */ \"./src/css/index.less\");\n/* harmony import */ var _js_group_detail_part_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./js/group-detail-part.js */ \"./src/js/group-detail-part.js\");\n/* harmony import */ var _js_group_detail_part_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_js_group_detail_part_js__WEBPACK_IMPORTED_MODULE_1__);\n\r\n// import \"./css/index.less\";\r\n\r\nwindow.onload = function () {\r\n  console.log(\"onload\");\r\n};\r\n\n\n//# sourceURL=webpack://m.chat/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css_index_less__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./css/index.less */ \"./src/css/index.less\");\n/* harmony import */ var _js_group_detail_part_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./js/group-detail-part.js */ \"./src/js/group-detail-part.js\");\n/* harmony import */ var _js_group_detail_part_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_js_group_detail_part_js__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _js_session_list_part_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./js/session-list-part.js */ \"./src/js/session-list-part.js\");\n/* harmony import */ var _js_session_list_part_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_js_session_list_part_js__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _js_session_detail_part__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./js/session-detail-part */ \"./src/js/session-detail-part.js\");\n/* harmony import */ var _js_session_detail_part__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_js_session_detail_part__WEBPACK_IMPORTED_MODULE_3__);\n\n\n\n\n\n// hash 和页面之间的映射关系\nconst urlMap = {\n  \"\": 0,\n  \"session-detail-part\": 1,\n  \"group-detail-part\": 2,\n};\n\n// 回退事件\nconst iconBack = document.querySelectorAll(\".arrows-l\");\n\niconBack.forEach((item) => {\n  item.addEventListener(\"click\", (e) => {\n    history.back();\n  });\n});\nconst container = document.querySelector(\".wrapper\");\n// 根据hash 动态切换页面的显示\nfunction changPageByHash() {\n  let queryType = \"\";\n  if (location.hash) {\n    queryType = location.hash.slice(1);\n  }\n  for (let i = 0; i < container.children.length; i++) {\n    if (i == urlMap[queryType]) {\n      container.children[i].style.display = \"block\";\n    } else {\n      container.children[i].style.display = \"none\";\n    }\n  }\n}\nwindow.onload = function () {\n  changPageByHash();\n};\n\nwindow.addEventListener(\"hashchange\", function (e) {\n  changPageByHash();\n});\n\n\n//# sourceURL=webpack://m.chat/./src/index.js?");
 
 /***/ }),
 
@@ -169,7 +169,27 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _css
   \*************************************/
 /***/ (function(__unused_webpack_module, __unused_webpack_exports, __webpack_require__) {
 
-eval("const imgAdd = __webpack_require__(/*! ../img/add.png */ \"./src/img/add.png\");\r\nconsole.log(imgAdd);\r\nconst divUsersList = document\r\n  .querySelector(\".group-detail-part\")\r\n  .querySelector(\".add-user\");\r\ndivUsersList.querySelector(\"img\").src = imgAdd;\r\n\n\n//# sourceURL=webpack://m.chat/./src/js/group-detail-part.js?");
+eval("const imgAdd = __webpack_require__(/*! ../img/add.png */ \"./src/img/add.png\");\nconst divCurrentPage = document.querySelector(\".group-detail-part\");\nconst divUsersList = document\n  .querySelector(\".group-detail-part\")\n  .querySelector(\".add-user\");\ndivUsersList.querySelector(\"img\").src = imgAdd;\n\n\n//# sourceURL=webpack://m.chat/./src/js/group-detail-part.js?");
+
+/***/ }),
+
+/***/ "./src/js/session-detail-part.js":
+/*!***************************************!*\
+  !*** ./src/js/session-detail-part.js ***!
+  \***************************************/
+/***/ (function() {
+
+eval("const divCurrentPage = document.querySelector(\".session-detail-part\");\n\n// 查看群信息\nfunction registerIconMore() {\n  divCurrentPage\n    .querySelector(\".icon-more\")\n    .addEventListener(\"click\", function () {\n      location.hash = \"group-detail-part\";\n    });\n}\nregisterIconMore();\n\n\n//# sourceURL=webpack://m.chat/./src/js/session-detail-part.js?");
+
+/***/ }),
+
+/***/ "./src/js/session-list-part.js":
+/*!*************************************!*\
+  !*** ./src/js/session-list-part.js ***!
+  \*************************************/
+/***/ (function() {
+
+eval("const divSessionList = document\n  .querySelector(\".session-list-part\")\n  .querySelector(\".session-list\");\n\ndivSessionList.addEventListener(\"click\", function (e) {\n  location.hash = \"session-detail-part\";\n});\n\n\n//# sourceURL=webpack://m.chat/./src/js/session-list-part.js?");
 
 /***/ }),
 
@@ -180,7 +200,7 @@ eval("const imgAdd = __webpack_require__(/*! ../img/add.png */ \"./src/img/add.p
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
 "use strict";
-eval("module.exports = __webpack_require__.p + \"833dd6df1f02cd86206b.png\";\n\n//# sourceURL=webpack://m.chat/./src/img/add.png?");
+eval("module.exports = __webpack_require__.p + \"bc2b67703262f4bb151f.png\";\n\n//# sourceURL=webpack://m.chat/./src/img/add.png?");
 
 /***/ }),
 
