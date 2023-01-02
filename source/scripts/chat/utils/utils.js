@@ -15,7 +15,7 @@ define(["store", "day"], function (store, dayjs) {
   function historyMsgTime(temp) {
     const currentTemp = +new Date();
     // 显示的时间格式:
-    // 如果是当前的历史记录  15:02
+    // 如果是当天的历史记录  15:02
     // 如果是昨天的历史记录  昨天 15:02
     // 早于昨天的历史        22/11/20 15:02
 

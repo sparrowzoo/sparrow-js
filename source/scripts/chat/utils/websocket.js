@@ -5,7 +5,8 @@ define([
   "utils",
   "imageCompression",
   "api",
-], function (store, contacts, indexedDB, utils, imageCompression, api) {
+  "ws",
+], function (store, contacts, indexedDB, utils, imageCompression, api, ws) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
@@ -40,7 +41,7 @@ define([
         return;
       }
       this.userId = userId;
-      this.ws = new WebSocket("ws://chat.sparrowzoo.com/websocket", [userId]);
+      this.ws = new ws("ws://chat.sparrowzoo.com/websocket", [userId]);
       this.onOpen();
       this.onMsg();
       this.onClose();
@@ -123,12 +124,12 @@ define([
     onClose() {
       this.ws.onclose = (e) => {
         console.log("close 事件");
-        this.isConnected = false;
-        // // 当监听到关闭事件后 需要发起重连
-        setTimeout(() => {
-          this.reConnectTime++;
-          this.connected(this.userId);
-        }, this.reConnectTime * 200); // 重连时间 200  400 ...
+        // this.isConnected = false;
+        // 当监听到关闭事件后 需要发起重连
+        // setTimeout(() => {
+        //   this.reConnectTime++;
+        //   this.connected(this.userId);
+        // }, this.reConnectTime * 200); // 重连时间 200  400 ...
       };
     }
 
@@ -137,6 +138,10 @@ define([
         //如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
         console.log("连接出错");
       };
+    }
+
+    close() {
+      this.ws.close();
     }
 
     async sendMsg(chatType, msgType, targetId, msg) {
@@ -182,7 +187,9 @@ define([
     // 向服务器发送消息
     async sendContent(...rest) {
       const res = new SparrowProtocol(...rest);
+      // 发送到服务器
       this.ws.send(res.toBytes());
+
       const params = {
         chatType: res.chatType,
         sessionKey: getSessionKey(res.chatType, selfId.value, res.targetUserId),
@@ -251,6 +258,7 @@ define([
   function saveTextQun(value, session, fromUserId) {
     const content = BASE64.bytesToString(BASE64.encodeBase64(value));
     if (fromUserId != selfId.value) {
+      // 群  不考虑发送的情况
       contactStore.receive(value, TEXT_MESSAGE, session, session);
     }
     addMsg(

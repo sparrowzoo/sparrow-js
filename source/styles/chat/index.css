@@ -26,8 +26,12 @@ body {
   position: relative;
 }
 .wraper nav {
-  color: #999;
+  color: #848484;
   margin-bottom: 15px;
+  font-size: 14px;
+}
+.wraper nav .active-nav {
+  color: #282d3b;
 }
 .container {
   display: flex;

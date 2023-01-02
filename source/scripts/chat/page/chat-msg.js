@@ -364,13 +364,14 @@ define([
         username;
     }
 
-    // 如果是群 需要保存当前的群成员
+    // 如果是群 需要保存当前的群成员,同时设置群的信息
     if (chatType === CHAT_TYPE_1_2_N) {
       const membersArr = await DBObject.dbInstance.getData(
         user_id,
         DB_STORE_NAME_QUN
       );
       qunNumberMap.initQunMap(membersArr.members);
+      showGroupDetail(membersArr);
     }
 
     // 控制icon 显示 只有群显示icon
@@ -490,6 +491,66 @@ define([
       // contactStore.addContactItem(newsessionItem);
     }
   }
+  // 渲染群的详细信息
+  function showGroupDetail(groupObj) {
+    let isFold = true;
+    const divGroup = document.querySelector(".group-more-part");
+    if (groupObj.members.length > 11) {
+      getmemberList(groupObj.members.slice(0, 11), divGroup);
+    } else {
+      getmemberList(groupObj.members, divGroup);
+    }
+    divGroup.querySelector(".qun-name").innerText = groupObj.qunName;
+    divGroup.querySelector(".qun-announcement").innerText =
+      groupObj.announcement;
+
+    // 查看更多的点击事件
+    divGroup.querySelector(".look-more-user").onclick = function (e) {
+      console.log("click");
+      isFold = !isFold;
+      if (isFold) {
+        if (groupObj.members.length > 11) {
+          getmemberList(groupObj.members.slice(0, 11), divGroup);
+        } else {
+          getmemberList(groupObj.members, divGroup);
+        }
+      } else {
+        getmemberList(groupObj.members, divGroup);
+      }
+      switchMore(isFold);
+    };
+  }
+  // 渲染群成员
+  function getmemberList(userList, divGroup) {
+    const templateContainer = new DocumentFragment();
+    const divUserList = divGroup.querySelector(".user-list");
+    const moreIconTemplate = divGroup.querySelector(".more-icon");
+    const userTemplate = divGroup.querySelector(".more-user");
+    userList.forEach((item) => {
+      const divMember = userTemplate.cloneNode(true);
+      divMember.querySelector("img").src = item.avatar;
+      divMember.querySelector("span").innerText = item.userName;
+      templateContainer.appendChild(divMember);
+    });
+    templateContainer.appendChild(moreIconTemplate);
+    divUserList.innerHTML = "";
+    divUserList.appendChild(templateContainer);
+  }
+  // 渲切换更多 / 收起
+  function switchMore(isFold) {
+    const divLookMore = document.querySelector(".look-more-user");
+    if (isFold) {
+      divLookMore.querySelector("span").innerText = "查看更多";
+      divLookMore
+        .querySelector("i")
+        .classList.replace("icon-shangla", "icon-xiala");
+    } else {
+      divLookMore.querySelector("span").innerText = "收起";
+      divLookMore
+        .querySelector("i")
+        .classList.replace("icon-xiala", "icon-shangla");
+    }
+  }
 
   // 点击按钮 / 回车发送消息
   function sendMsgByBtn() {
@@ -537,6 +598,8 @@ define([
     const uploadFile = document.querySelector(".upload-img");
     uploadFile.addEventListener("change", function (e) {
       const file = this.files[0];
+      // 获取到文件后 清空值 防止重复上传图片的bug
+      uploadFile.value = "";
       const url = window.URL.createObjectURL(file);
       sendMessage(url, IMAGE_MESSAGE);
       wsInstance.sendMsg(targetId.type, IMAGE_MESSAGE, targetId.value, file);
@@ -631,7 +694,7 @@ define([
       avatarImg.src = selfId.avatar;
     } else {
       // 当前是 其他人发送来的信息
-      if (memberId) {
+      if (memberId || memberId === 0) {
         // 这里代表的是 群 需要通过memberId 获取avatar
         avatarImg.src = qunNumberMap.map[memberId].avatar;
       } else {

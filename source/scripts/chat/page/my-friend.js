@@ -35,6 +35,9 @@ define([
   menu.addEventListener("click", (e) => {
     activeMenu = e.target.getAttribute("data-menu");
     showContentByMenu(activeMenu);
+    // 只要点击了左侧菜单 面包屑就重置
+    showCrumbsByIndex(0);
+
     if (activeMenu == 0) {
       // 点击我的好友 会发送请求好友和群聊的请求
       showFriendsList();
@@ -217,7 +220,7 @@ define([
     // 渲染 聊天消息的列表
     showSessionList();
   }
-  // 和localStorage中的保存的最后一条数据做比对
+  // 和保存的最后一条数据做比对
   async function compareMsg(keyPath, contacter) {
     // 向数据库中查询与当前用户的历史记录
     const sessionItem = await DBObject.dbInstance.getData(
@@ -341,6 +344,29 @@ define([
       } else {
         divCards[i].style.display = "none";
       }
+    }
+    showCrumbsByIndex(index);
+  }
+
+  // 根据索引 动态显示面包屑的提示文字
+  function showCrumbsByIndex(index) {
+    const spanCrumbs = document.querySelector(".change-step");
+    const spanSecondCrumb = document.querySelector(".nav-msg");
+    if (index == "0") {
+      spanSecondCrumb.classList.add("active-nav");
+      spanCrumbs.style.display = "none";
+      return;
+    }
+    const spanCrumbText = spanCrumbs.querySelector(".active-nav");
+    if (index === "1") {
+      spanCrumbText.innerText = "新的朋友";
+      spanCrumbs.style.display = "inline";
+      spanSecondCrumb.classList.remove("active-nav");
+    }
+    if (index === "2") {
+      spanSecondCrumb.classList.remove("active-nav");
+      spanCrumbText.innerText = "我的群聊";
+      spanCrumbs.style.display = "inline";
     }
   }
 
