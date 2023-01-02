@@ -406,11 +406,17 @@ h5 {
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   margin: 5px 0;
 }
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list > div {
   margin-bottom: 15px;
+}
+.chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list > div:nth-child(4n + 2) {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list > div:nth-child(4n + 3) {
+  margin-right: 12px;
 }
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list span {
   width: 100%;

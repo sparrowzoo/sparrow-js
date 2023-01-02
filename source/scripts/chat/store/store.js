@@ -21,6 +21,7 @@ define(function () {
       }
     },
   };
+  // 当前的聊天对象
   let targetId = {
     value: "-1",
     type: CHAT_TYPE_1_2_1,

@@ -32,9 +32,8 @@ define([
   } = store;
   const { createWS } = websocket;
   const { getSession, getFrinedList } = api;
-  // const { createIndexedDB, dbInstance } = indexedDB;
   const DBObject = indexedDB;
-  // const dbInstance = initIndexedDB();
+  let ws;
 
   // window.onload = function () {
   // 请求 当前用户好友
@@ -101,7 +100,12 @@ define([
     console.log(res);
     // console.log(db);
     // console.log(dbInstance);
-    const ws = createWS(inputTargetId.value);
+    console.log(ws);
+    if (ws) {
+      // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
+      ws.close();
+    }
+    ws = createWS(inputTargetId.value);
     // 设置当前用户信息
     changeSelfId(
       inputTargetId.value * 1,
@@ -110,5 +114,11 @@ define([
     getContacts();
     getSessionHistory();
     chatMsg.getWsInstance(ws);
+  });
+
+  // 关闭websocket
+  const btnCloseWs = document.querySelector(".close-ws");
+  btnCloseWs.addEventListener("click", () => {
+    ws.close();
   });
 });

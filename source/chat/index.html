@@ -14,11 +14,14 @@
     <nav>
       <span>首页</span>
       <span>&lt </span>
-      <span>消息</span>
-      <span>&lt </span>
-      <span>我的群聊</span>
+      <span class="active-nav nav-msg">消息</span>
+      <span style="display:none" class="change-step">
+        <span>&lt </span>
+        <span class="active-nav">我的群聊</span>
+      </span>
       <input class="ws-input" type="text">
       <button class="connect-btn">连接</button>
+      <button class="close-ws">关闭websocket</button>
     </nav>
     <div class="container">
       <!-- 左侧菜单 -->
@@ -311,95 +314,8 @@
               <input type="text" placeholder="搜索">
             </div>
             <div class="group-more-content">
-              <div class="user-list">
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
+              <!-- 仅仅是一个模板，永远不会渲染到界面上 -->
+              <div style="display:none">
                 <div class="more-user">
                   <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
                   <span>用名</span>
@@ -408,7 +324,8 @@
                   <div class="search-add">+</div>
                   <span>添加</span>
                 </div>
-
+              </div>
+              <div class="user-list">
               </div>
               <div class="look-more-user">
                 <span>查看更多</span>
@@ -416,11 +333,11 @@
               </div>
               <div class="more-common">
                 <p>群聊名称</p>
-                <span>前端学习群</span>
+                <span class="qun-name">前端学习群</span>
                 <p>群公告</p>
-                <span>这是一个群公告</span>
+                <span class="qun-announcement">这是一个群公告</span>
                 <p>群备注</p>
-                <span>这是一个群公告</span>
+                <span class="qun-remark">这是一个备注</span>
               </div>
             </div>
           </div>
@@ -483,7 +400,8 @@
       "websocket": "scripts/chat/utils/websocket",
       "base64": "scripts/base64",
       "sparrow": 'scripts/sparrow',
-      "sparrowChat": "scripts/sparrowChat"
+      "sparrowChat": "scripts/sparrowChat",
+      "ws": "scripts/chat/lib/ws"
     },
     shim: {}
   })
