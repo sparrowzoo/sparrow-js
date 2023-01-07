@@ -1,0 +1,16 @@
+.header {
+
+}
+.content {
+
+}
+
+.footer {
+    display: flex;
+    width: 5.208vw;
+    height: 3.125vw;
+    background-color: #d9d9d9;
+}
+.footer>div {
+    flex-grow: 1;
+}
