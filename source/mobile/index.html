@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>寰球校展APP</title>
+    <link rel="stylesheet" href="http://r.sparrowzoo.net/styles/chat/index.css">
+    <link href="css/index1.css">
+
+</head>
+<body>
+<div class="header">
+    <i class="iconfont icon-sousuo"></i>
+    <input class="search-input" type="text" placeholder="" style="background-color: #eee">
+    <img src="../mobile/img/addFriend.png" style="margin-left: 0.78125vw; height: 2vw">
+    <img src="../mobile/img/friend.png" style="margin-left: 0.78125vw;height: 2vw">
+</div>
+<div class="content">
+
+</div>
+<div class="footer">
+
+</div>
+
+</body>
+<script src="http://r.sparrowzoo.net/scripts/require.js" data-main=""></script>
+<script>
+    // 配置
+    require.config({
+        baseUrl: 'http://r.sparrowzoo.net/',
+        paths: {
+            "index": "mobile/scripts/index",
+            "day": "mobile/scripts/lib/dayjs",
+            "imageCompression": "mobile/scripts/lib/imgCompression",
+            "contacts": "mobile/scripts/store/contacts",
+            "store": "mobile/scripts/store/store",
+            "api": "mobile/scripts/utils/api",
+            "indexedDB": "mobile/scripts/utils/indexedDB",
+            "utils": "mobile/scripts/utils/utils",
+            "websocket": "mobile/scripts/utils/websocket",
+            "base64": "scripts/base64",
+            "sparrow": 'scripts/sparrow',
+            "sparrowChat": "scripts/sparrowChat"
+        },
+        shim: {}
+    });
+    const ee = require(['index']);
+</script>
+
+
+</html>
