@@ -131,7 +131,7 @@ define([
         const msgValue = BASE64.bytesToString(
           BASE64.decodeBase64(list[i].lastMessage.content)
         );
-        spanLastMsg.innerHTML = msgValue;
+        spanLastMsg.textContent = msgValue;
       } else {
         spanLastMsg.innerText = "[图片]";
       }
@@ -239,7 +239,7 @@ define([
     const spanLastMsg = divMsgArr[index].querySelector(".msg-last");
     if (msgType === TEXT_MESSAGE) {
       // 最新信息是文本
-      spanLastMsg.innerHTML = msgValue;
+      spanLastMsg.textContent = msgValue;
     } else {
       spanLastMsg.innerText = "[图片]";
     }
@@ -723,7 +723,7 @@ define([
     }
     // 设置聊天信息
     if (type === TEXT_MESSAGE) {
-      copyMessageTemplate.querySelector(".message-text").innerHTML = value;
+      copyMessageTemplate.querySelector(".message-text").textContent = value;
       const textDom = copyMessageTemplate.querySelector(".message-detail");
       textDom.style.display = "block";
     } else {

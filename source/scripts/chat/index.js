@@ -97,10 +97,10 @@ define([
   btnTargetId.addEventListener("click", async function () {
     // console.log(inputTargetId.value);
     const res = await DBObject.createIndexedDB(inputTargetId.value, "1");
-    console.log(res);
+    // console.log(res);
     // console.log(db);
     // console.log(dbInstance);
-    console.log(ws);
+    // console.log(ws);
     if (ws) {
       // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
       ws.close();
