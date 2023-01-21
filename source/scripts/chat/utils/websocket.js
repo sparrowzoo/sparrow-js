@@ -81,8 +81,8 @@ define([
         // this.isConnected = true;
         // this.reConnectTime = 1;
         // 启动心跳
-        this.closeHeartBeat();
-        this.startHeartBeat();
+        // this.closeHeartBeat();
+        // this.startHeartBeat();
       };
     }
 
@@ -91,6 +91,9 @@ define([
         // 有任何信息传入 当前的ws 没有断，重启心跳
         this.closeHeartBeat();
         this.startHeartBeat();
+        console.log(e, "接收的信息");
+        // 加个判断
+
         new SparrowProtocol(e.data, (protocol) => {
           // 接收来信息 先将信息保存到数据库
           if (protocol.msgType === TEXT_MESSAGE) {
@@ -111,6 +114,7 @@ define([
               );
             }
           } else {
+            console.log("图片信息", protocol);
             if (protocol.sessionKey) {
               saveImgQun(
                 protocol.url,
@@ -156,6 +160,7 @@ define([
       this.ws.onclose = (e) => {
         console.log(e);
         console.log("close 事件");
+        this.closeHeartBeat();
         if (e.wasClean) {
           // 干净的关闭，客户端主动关闭 不需要发起重连,关闭上一个心跳
           console.log("不重连");
@@ -170,6 +175,7 @@ define([
       this.ws.onerror = (e) => {
         // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
         console.log("连接出错");
+        this.closeHeartBeat();
         this.reconnectWebSocket();
       };
     }
@@ -184,8 +190,8 @@ define([
       if (!this.lockReconnect) {
         if (msgType === TEXT_MESSAGE) {
           saveText(msg, chatType, targetId, selfId.value);
-          msg = msg.toArray().toUint8Array();
-          this.sendContent(chatType, msgType, selfId.value, targetId, msg);
+          const newMsg = msg.toArray().toUint8Array();
+          this.sendContent(chatType, msgType, selfId.value, targetId, newMsg);
         } else {
           // 保存一个副本 把数据保存到数据库中
           let compressImg = await handleImageUpload(msg);
@@ -255,10 +261,10 @@ define([
         // 检测心跳超时
         this.serverTimeoutTimer = setTimeout(() => {
           // 这里表示 已经超时，服务器没有响应需要重连
-          this.ws.close();
+          // this.ws.close();
           this.reconnectWebSocket();
         }, this.heartTimeout);
-      }, this.heartTimt);
+      }, this.heartTimt); // 10
     }
 
     // 关闭心跳
