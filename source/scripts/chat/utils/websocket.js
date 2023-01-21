@@ -22,46 +22,77 @@ define([
   // const dbInstance = initIndexedDB();
   class WSinstance {
     // 当前是否为连接状态
-    isConnected = false;
+    // isConnected = false;
+    // 重连标志
+    lockReconnect = false;
     // 重连时间
-    reConnectTime = 1;
+    // reConnectTime = 1;
     // 发送等待时间
     sendWaitTime = 1;
     // websocket 连接的id
     userId = null;
     // 接收到信息后需要执行的事件
     onMsgCallback = {};
+    // 心跳间隔时间 10s
+    heartTimt = 10000;
+    // 心跳超时时间 1s
+    heartTimeout = 1000;
+    // 重连时间 0.5s
+    reconnectTime = 500;
+    //
+    timeoutTimer = null;
+    serverTimeoutTimer = null;
     constructor(userId) {
       this.connected(userId);
     }
 
     connected(userId) {
-      if (!window.WebSocket) {
-        console.log("您的浏览器不支持 webSocket");
-        return;
-      }
       this.userId = userId;
-      this.ws = new ws("ws://chat.sparrowzoo.com/websocket", [userId]);
-      this.onOpen();
-      this.onMsg();
-      this.onClose();
-      this.onError();
+      try {
+        if ("WebSocket" in window) {
+          this.ws = new WebSocket("ws://chat.sparrowzoo.com/websocket", [
+            userId,
+          ]);
+          this.onOpen();
+          this.onMsg();
+          this.onClose();
+          this.onError();
+        }
+      } catch (e) {
+        this.reconnectWebSocket();
+        console.log(e);
+      }
+
+      // if (!window.WebSocket) {
+      //   console.log("您的浏览器不支持 webSocket");
+      //   return;
+      // }
+      // this.userId = userId;
+      // this.ws = new WebSocket("ws://chat.sparrowzoo.com/websocket", [userId]);
+      // this.onOpen();
+      // this.onMsg();
+      // this.onClose();
+      // this.onError();
     }
 
     onOpen() {
       this.ws.onopen = (e) => {
         console.log("连接事件");
-        this.isConnected = true;
-        this.reConnectTime = 1;
+        // this.isConnected = true;
+        // this.reConnectTime = 1;
+        // 启动心跳
+        this.closeHeartBeat();
+        this.startHeartBeat();
       };
     }
 
     onMsg() {
       this.ws.onmessage = (e) => {
+        // 有任何信息传入 当前的ws 没有断，重启心跳
+        this.closeHeartBeat();
+        this.startHeartBeat();
         new SparrowProtocol(e.data, (protocol) => {
           // 接收来信息 先将信息保存到数据库
-          console.log(protocol, "接收信息");
-
           if (protocol.msgType === TEXT_MESSAGE) {
             if (protocol.sessionKey) {
               // 当前是群聊信息
@@ -123,30 +154,34 @@ define([
 
     onClose() {
       this.ws.onclose = (e) => {
+        console.log(e);
         console.log("close 事件");
-        // this.isConnected = false;
-        // 当监听到关闭事件后 需要发起重连
-        // setTimeout(() => {
-        //   this.reConnectTime++;
-        //   this.connected(this.userId);
-        // }, this.reConnectTime * 200); // 重连时间 200  400 ...
+        if (e.wasClean) {
+          // 干净的关闭，客户端主动关闭 不需要发起重连,关闭上一个心跳
+          console.log("不重连");
+        } else {
+          // 异常关闭 需要发起重连
+          this.reconnectWebSocket();
+        }
       };
     }
 
     onError() {
-      this.ws.onerror = function (e) {
-        //如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
+      this.ws.onerror = (e) => {
+        // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
         console.log("连接出错");
+        this.reconnectWebSocket();
       };
     }
 
+    // 关闭连接
     close() {
       this.ws.close();
     }
 
     async sendMsg(chatType, msgType, targetId, msg) {
-      // 首先判断当前是否为连接状态 不是连接状态 延迟发送
-      if (this.isConnected) {
+      // 首先判断当前是否为重连状态
+      if (!this.lockReconnect) {
         if (msgType === TEXT_MESSAGE) {
           saveText(msg, chatType, targetId, selfId.value);
           msg = msg.toArray().toUint8Array();
@@ -178,9 +213,8 @@ define([
         }
       } else {
         setTimeout(() => {
-          this.sendWaitTime++;
           this.sendMsg(chatType, msgType, targetId, msg);
-        }, this.sendWaitTime * 400);
+        }, 2000);
       }
     }
 
@@ -197,6 +231,40 @@ define([
       };
       // 每次发送信息都要 更新已读
       api.setRead(params);
+    }
+
+    // 重连操作
+    reconnectWebSocket() {
+      // 当前正在重连  直接返回 不再开启延时
+      if (this.lockReconnect) return;
+      this.lockReconnect = true;
+      // 发起重连后，取消之前的心跳
+      this.closeHeartBeat();
+      setTimeout(() => {
+        this.connected(this.userId);
+        this.lockReconnect = false;
+      }, this.reconnectTime);
+    }
+
+    // 心跳机制 --启动心跳
+    startHeartBeat() {
+      this.timeoutTimer = setTimeout(() => {
+        // 开启一个心跳
+        this.ws.send("PING");
+        console.log("心跳开启", new Date().getSeconds());
+        // 检测心跳超时
+        this.serverTimeoutTimer = setTimeout(() => {
+          // 这里表示 已经超时，服务器没有响应需要重连
+          this.ws.close();
+          this.reconnectWebSocket();
+        }, this.heartTimeout);
+      }, this.heartTimt);
+    }
+
+    // 关闭心跳
+    closeHeartBeat() {
+      clearTimeout(this.timeoutTimer);
+      clearTimeout(this.serverTimeoutTimer);
     }
 
     // 注册事件 接收到消息后 要执行的事件
