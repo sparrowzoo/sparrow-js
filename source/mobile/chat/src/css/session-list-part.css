@@ -1,0 +1,137 @@
+.session-list-part .tool {
+  width: 100vw;
+  height: 25.3333vw;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 0 4vw;
+  box-sizing: border-box;
+}
+.session-list-part .tool .search {
+  flex: 1;
+  position: relative;
+  height: 9.3333vw;
+}
+.session-list-part .tool .search .iconfont {
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translateY(-42%);
+  font-size: 4.8vw;
+}
+.session-list-part .tool .search .search-input {
+  text-align: center;
+  height: 9.3333vw;
+  width: 100%;
+  outline: none;
+  border: none;
+  background-color: #f3f0f0;
+  border-radius: 1.3333vw;
+  box-sizing: border-box;
+  padding-left: 6.6667vw;
+}
+.session-list-part .tool div {
+  width: 9.3333vw;
+  height: 9.3333vw;
+  background-color: #f3f0f0;
+  border-radius: 1.3333vw;
+  color: #848484;
+}
+.session-list-part .tool .add-user {
+  margin: 0 2vw;
+  text-align: center;
+  line-height: 9.3333vw;
+  font-size: 5.3333vw;
+}
+.session-list-part .tool .user-icon {
+  background-image: url(../img/users.png);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+}
+.session-list-part .session-list {
+  width: 100vw;
+  height: calc(100vh - 25.3333vw);
+  background-color: #f7f7f7;
+  overflow: auto;
+}
+.session-list-part .session-list .session-item {
+  height: 18.6667vw;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+.session-list-part .session-list .session-item .avatar {
+  position: relative;
+  width: 13.3333vw;
+  height: 13.3333vw;
+  padding-left: 8vw;
+  margin-right: 4vw;
+}
+.session-list-part .session-list .session-item .avatar .session-tip {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 2.1333vw;
+  width: 2.1333vw;
+  transform: translate(40%, -40%);
+  border-radius: 50%;
+  background-color: #ed4135;
+}
+.session-list-part .session-list .session-item .avatar .count {
+  width: 4.6667vw;
+  height: 4.6667vw;
+  line-height: 4.6667vw;
+  text-align: center;
+  color: #fff;
+  font-size: 2.9333vw;
+}
+.session-list-part .session-list .session-item .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.6667vw;
+}
+.session-list-part .session-list .session-item .session-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  padding-right: 6.6667vw;
+  border-bottom: 1px solid #dcdada;
+}
+.session-list-part .session-list .session-item .session-detail .session-user {
+  display: flex;
+  justify-content: space-between;
+  font-size: 3.4667vw;
+  color: #282d3b;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-name {
+  margin-bottom: 2.6667vw;
+  max-width: 29.3333vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-name .nation-flag {
+  width: 4vw;
+  height: 4vw;
+  border-radius: 50%;
+  margin-right: 0.6667vw;
+  vertical-align: middle;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-name span {
+  vertical-align: middle;
+}
+.session-list-part .session-list .session-item .session-detail .session-user .session-time {
+  color: #848484;
+  font-size: 3.2vw;
+}
+.session-list-part .session-list .session-item .session-detail .session-msg {
+  color: #848484;
+  font-size: 3.2vw;
+  max-width: 40vw;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
