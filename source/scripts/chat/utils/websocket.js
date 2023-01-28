@@ -5,8 +5,8 @@ define([
   "utils",
   "imageCompression",
   "api",
-  "ws",
-], function (store, contacts, indexedDB, utils, imageCompression, api, ws) {
+  "chat-msg",
+], function (store, contacts, indexedDB, utils, imageCompression, api) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
@@ -15,18 +15,17 @@ define([
     selfId,
     targetId,
     DB_STORE_NAME_SESSION,
+    ACCEPT_RECALL,
+    SEND_TYPE,
+    RECEIVE_TYPE,
   } = store;
   const { contactStore } = contacts;
   const DBObject = indexedDB;
-  const { getSessionKey } = utils;
+  const { getSessionKey, delLocalMsg } = utils;
   // const dbInstance = initIndexedDB();
   class WSinstance {
-    // 当前是否为连接状态
-    // isConnected = false;
     // 重连标志
     lockReconnect = false;
-    // 重连时间
-    // reConnectTime = 1;
     // 发送等待时间
     sendWaitTime = 1;
     // websocket 连接的id
@@ -35,11 +34,10 @@ define([
     onMsgCallback = {};
     // 心跳间隔时间 10s
     heartTimt = 10000;
-    // 心跳超时时间 1s
-    heartTimeout = 1000;
+    // 心跳超时时间 12s
+    heartTimeout = 12000;
     // 重连时间 0.5s
     reconnectTime = 500;
-    //
     timeoutTimer = null;
     serverTimeoutTimer = null;
     constructor(userId) {
@@ -60,29 +58,15 @@ define([
         }
       } catch (e) {
         this.reconnectWebSocket();
-        console.log(e);
       }
-
-      // if (!window.WebSocket) {
-      //   console.log("您的浏览器不支持 webSocket");
-      //   return;
-      // }
-      // this.userId = userId;
-      // this.ws = new WebSocket("ws://chat.sparrowzoo.com/websocket", [userId]);
-      // this.onOpen();
-      // this.onMsg();
-      // this.onClose();
-      // this.onError();
     }
 
     onOpen() {
       this.ws.onopen = (e) => {
         console.log("连接事件");
-        // this.isConnected = true;
-        // this.reConnectTime = 1;
         // 启动心跳
-        // this.closeHeartBeat();
-        // this.startHeartBeat();
+        this.closeHeartBeat();
+        this.startHeartBeat();
       };
     }
 
@@ -91,45 +75,35 @@ define([
         // 有任何信息传入 当前的ws 没有断，重启心跳
         this.closeHeartBeat();
         this.startHeartBeat();
-        console.log(e, "接收的信息");
-        // 加个判断
-
+        // 加个判断,如果是PONG 停止下面的代码执行
+        if (e.data === "PONG") return;
         new SparrowProtocol(e.data, (protocol) => {
-          // 接收来信息 先将信息保存到数据库
-          if (protocol.msgType === TEXT_MESSAGE) {
-            if (protocol.sessionKey) {
-              // 当前是群聊信息
-              saveTextQun(
-                protocol.msg,
-                protocol.sessionKey,
-                protocol.fromUserId
-              );
-            } else {
-              // 当前是用户消息
-              saveText(
-                protocol.msg,
-                protocol.chatType,
-                protocol.currentUserId,
-                protocol.fromUserId
-              );
-            }
-          } else {
-            console.log("图片信息", protocol);
-            if (protocol.sessionKey) {
-              saveImgQun(
-                protocol.url,
-                protocol.sessionKey,
-                protocol.fromUserId
-              );
-            } else {
-              saveImg(
-                protocol.url,
-                protocol.chatType,
-                protocol.currentUserId,
-                protocol.fromUserId
-              );
-            }
+          // 判断是否为 撤回的信息
+          if (protocol.chatType === 2) {
+            delLocalMsg(
+              protocol.clientSendTime,
+              protocol.sessionKey,
+              ACCEPT_RECALL
+            );
+            return;
           }
+          // 接收到信息 先将信息保存到数据库
+          const targetInfo =
+            protocol.chatType === CHAT_TYPE_1_2_1
+              ? protocol.currentUserId
+              : protocol.sessionKey;
+          const msgValue =
+            protocol.msgType === TEXT_MESSAGE ? protocol.msg : protocol.url;
+
+          saveText(
+            protocol.msgType,
+            msgValue,
+            protocol.chatType,
+            targetInfo,
+            protocol.fromUserId,
+            protocol.clientSendTime,
+            RECEIVE_TYPE
+          );
 
           // 根据fromUserId 和聊天类型 判断是否需要在聊天框中渲染聊天信息
           if (protocol.sessionKey) {
@@ -139,6 +113,7 @@ define([
                 this.onMsgCallback.message(
                   protocol.msg || protocol.url,
                   protocol.msgType,
+                  protocol.clientSendTime,
                   protocol.fromUserId
                 );
             }
@@ -148,7 +123,8 @@ define([
               this.onMsgCallback.message &&
                 this.onMsgCallback.message(
                   protocol.msg || protocol.url,
-                  protocol.msgType
+                  protocol.msgType,
+                  protocol.clientSendTime
                 );
             }
           }
@@ -185,13 +161,28 @@ define([
       this.ws.close();
     }
 
-    async sendMsg(chatType, msgType, targetId, msg) {
+    async sendMsg(chatType, msgType, targetId, msg, clientSendTime) {
       // 首先判断当前是否为重连状态
       if (!this.lockReconnect) {
         if (msgType === TEXT_MESSAGE) {
-          saveText(msg, chatType, targetId, selfId.value);
+          saveText(
+            msgType,
+            msg,
+            chatType,
+            targetId,
+            selfId.value,
+            clientSendTime,
+            SEND_TYPE
+          );
           const newMsg = msg.toArray().toUint8Array();
-          this.sendContent(chatType, msgType, selfId.value, targetId, newMsg);
+          this.sendContent(
+            chatType,
+            msgType,
+            selfId.value,
+            targetId,
+            newMsg,
+            clientSendTime
+          );
         } else {
           // 保存一个副本 把数据保存到数据库中
           let compressImg = await handleImageUpload(msg);
@@ -199,7 +190,15 @@ define([
           const reader = new FileReader();
           reader.readAsDataURL(msgCopy);
           reader.onload = function (e) {
-            saveImg(e.target.result, chatType, targetId, selfId.value);
+            saveText(
+              msgType,
+              e.target.result,
+              chatType,
+              targetId,
+              selfId.value,
+              clientSendTime,
+              SEND_TYPE
+            );
           };
 
           // 向服务器发送数据
@@ -212,14 +211,15 @@ define([
               msgType,
               selfId.value,
               targetId,
-              compressImg
+              compressImg,
+              clientSendTime
             );
           };
           fileReader.readAsArrayBuffer(msg);
         }
       } else {
         setTimeout(() => {
-          this.sendMsg(chatType, msgType, targetId, msg);
+          this.sendMsg(chatType, msgType, targetId, msg, clientSendTime);
         }, 2000);
       }
     }
@@ -313,74 +313,68 @@ define([
     }
   }
 
-  // 将用户文本信息 保存到数据库
-  function saveText(value, chatType, targetUserId, fromUserId) {
-    const content = BASE64.bytesToString(BASE64.encodeBase64(value));
-    let key = getSessionKey(chatType, fromUserId, targetUserId);
-
-    // 通知session 列表更新
-    if (targetUserId == selfId.value) {
-      // 当前是接收信息
-      contactStore.receive(value, TEXT_MESSAGE, key, fromUserId);
+  // 将用户信息保存到数据库
+  function saveText(
+    value,
+    msgType,
+    chatType,
+    targetUserId,
+    fromUserId,
+    clientSendTime,
+    textType
+  ) {
+    let content;
+    if (msgType === TEXT_MESSAGE) {
+      content = BASE64.bytesToString(BASE64.encodeBase64(value));
     } else {
-      contactStore.send(value, TEXT_MESSAGE, key);
+      content = value;
     }
+    const session =
+      chatType === CHAT_TYPE_1_2_1
+        ? getSessionKey(chatType, fromUserId, targetUserId)
+        : targetUserId;
 
-    addMsg(content, TEXT_MESSAGE, chatType, key, targetUserId, fromUserId);
-  }
-  // 将群文本信息 保存数据库  --针对接收信息
-  function saveTextQun(value, session, fromUserId) {
-    const content = BASE64.bytesToString(BASE64.encodeBase64(value));
-    if (fromUserId != selfId.value) {
-      // 群  不考虑发送的情况
-      contactStore.receive(value, TEXT_MESSAGE, session, session);
+    if (textType === SEND_TYPE) {
+      // 发送信息，同步session 列表
+      contactStore.send(value, TEXT_MESSAGE, session);
+    } else {
+      // 接收信息
+      contactStore.receive(value, TEXT_MESSAGE, session, fromUserId, chatType);
     }
     addMsg(
       content,
-      TEXT_MESSAGE,
-      CHAT_TYPE_1_2_N,
+      msgType,
+      chatType,
       session,
-      session,
-      fromUserId
+      targetUserId,
+      fromUserId,
+      clientSendTime
     );
   }
-  // 用户图片信息保存数据库
-  function saveImg(value, chatType, targetUserId, fromUserId) {
-    let key = getSessionKey(chatType, fromUserId, targetUserId);
-    // 通知session 列表更新
-    if (targetUserId == selfId.value) {
-      // 当前是接收信息
-      contactStore.receive(value, IMAGE_MESSAGE, key, fromUserId);
-    } else {
-      contactStore.send(value, IMAGE_MESSAGE, key);
-    }
-    addMsg(value, IMAGE_MESSAGE, chatType, key, targetUserId, fromUserId);
-  }
-
-  // 群 图片保存数据库  -- 针对接收信息
-  function saveImgQun(value, session, fromUserId) {
-    if (fromUserId != selfId.value) {
-      contactStore.receive(value, IMAGE_MESSAGE, session, session);
-    }
-    addMsg(value, IMAGE_MESSAGE, CHAT_TYPE_1_2_N, session, session, fromUserId);
-  }
-
   // 向本地数据中添加消息
-  function addMsg(value, messageType, chatType, key, targetUserId, fromUserId) {
-    const sendTime = +new Date();
-    const sessionItem = {
+  function addMsg(
+    value,
+    messageType,
+    chatType,
+    session,
+    targetUserId,
+    fromUserId,
+    clientSendTime
+  ) {
+    // const serverTime = +new Date();
+    const messageItem = {
       chatType,
       content: value,
       fromUserId,
       messageType,
-      sendTime,
-      session: key,
+      clientSendTime,
+      session,
       targetUserId,
     };
 
     DBObject.dbInstance.updateStoreItem(
-      key,
-      sessionItem,
+      session,
+      messageItem,
       DB_STORE_NAME_SESSION
     );
   }
