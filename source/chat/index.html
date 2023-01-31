@@ -151,7 +151,7 @@
 
     </template>
 
-    <!-- 消息列表 -->
+    <!-- session list 消息列表 -->
     <template id="msg-list-part">
       <div class="msg-item">
         <div class="avatar">
@@ -182,14 +182,14 @@
             <div class="user-list">
               <p>A</p>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿飞</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item ">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿乐</span>
                   <div class="check-box">
@@ -199,28 +199,28 @@
               </div>
               <p>B</p>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
@@ -238,14 +238,14 @@
             <i class="iconfont icon-cuowukongxin"></i>
             <div class="choose-user">
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿飞</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿飞</span>
                   <div class="check-box"></div>
@@ -317,7 +317,7 @@
               <!-- 仅仅是一个模板，永远不会渲染到界面上 -->
               <div style="display:none">
                 <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                   <span>用名</span>
                 </div>
                 <div class="more-icon">
@@ -363,10 +363,23 @@
           </div>
 
         </div>
+        <div style="display:none" class="show-recall-mime recall">
+          <p>你撤回了一条消息<span class="reset"> 重新编辑</span></p>
+        </div>
+        <div style="display:none" class="show-recall-other recall">
+          <p><span class="recall-user">用户</span>撤回了一条消息</p>
+        </div>
       </div>
     </template>
   </div>
+  <!-- 全局的遮罩层 -->
   <div style="display:none" class="global-mask"></div>
+  <!-- 消息撤回的控件 -->
+  <div style="display:none" class="msg-recall">
+    <ul>
+      <li class="recall">撤回</li>
+    </ul>
+  </div>
 </body>
 <script>
 

@@ -30,9 +30,20 @@ define(function (require, exports, module) {
       });
     });
   }
+
+  // 撤回信息
+  function cancelMsg(data) {
+    return new Promise((resolve, reject) => {
+      const url = BASE_URL + "cancel";
+      $.ajax.json(url, data, function (result) {
+        resolve(result.data);
+      });
+    });
+  }
   return {
     getSession,
     getFrinedList,
     setRead,
+    cancelMsg,
   };
 });
