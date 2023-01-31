@@ -234,6 +234,10 @@
             .message-text {
               white-space: pre-wrap;
             }
+
+            &:hover {
+              cursor: pointer;
+            }
           }
           .msg-picture-detail {
             position: relative;
@@ -241,7 +245,16 @@
             .msg-picture {
               border-radius: 5px;
               max-width: 150px;
+              cursor: pointer;
             }
+          }
+        }
+        .recall {
+          text-align: center;
+          color: #666;
+          .reset {
+            color: #607298;
+            cursor: pointer;
           }
         }
       }
