@@ -321,7 +321,7 @@ define(function (require, exports, module) {
 
     // 设置头像
     const avatarImg = copyMessageTemplate.querySelector(".avatar-user");
-    avatarImg.src = "https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg";
+    avatarImg.src = "https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg";
     // 设置聊天信息
     if (type === TEXT_MESSAGE) {
       copyMessageTemplate.querySelector(".message-text").innerHTML = value;

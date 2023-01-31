@@ -90,7 +90,8 @@ var SparrowProtocol = function (
   msgType,
   currentUserId,
   sessionKey,
-  msg
+  msg,
+  clientSendTime
 ) {
   if (window === this) {
     return new SparrowProtocol(
@@ -98,7 +99,8 @@ var SparrowProtocol = function (
       msgType,
       currentUserId,
       sessionKey,
-      msg
+      msg,
+      clientSendTime
     );
   }
 
@@ -118,6 +120,31 @@ var SparrowProtocol = function (
       var dataView = new DataView(buf);
       var offset = 0;
       this.chatType = dataView.getUint8(offset);
+      // 新增的 撤销部分
+      if (this.chatType === 2) {
+        console.log("撤销协议");
+        offset += 1;
+        const sesessionKeyLength = dataView.getInt32(offset);
+        offset += 4; //session key length=4
+        const sessionKeyBuffer = buf.slice(offset, sesessionKeyLength + offset);
+        offset += sesessionKeyLength;
+        const sessionKey = new Uint8Array(sessionKeyBuffer).toString();
+        const clientSendTimeLength = dataView.getInt32(offset);
+        offset += 4; //session key length=4
+        const clientSendTimeBuffer = buf.slice(
+          offset,
+          clientSendTimeLength + offset
+        );
+        offset += clientSendTimeLength;
+        const clientSendTime = +new Uint8Array(clientSendTimeBuffer).toString();
+        console.log(sesessionKeyLength, sessionKey, clientSendTime);
+        callback({
+          chatType: this.chatType,
+          clientSendTime: clientSendTime,
+          sessionKey: sessionKey,
+        });
+        return;
+      }
       offset += 1; //chat type length=1
       this.msgType = dataView.getUint8(offset);
       offset += 1; //msg type length=1
@@ -190,7 +217,7 @@ var SparrowProtocol = function (
     this.msgLength = msgLength;
     this.msgLengthBytes = msgLength.toBytes();
     this.msgLengthLength = this.msgLengthBytes.length;
-    this.clientSendTime = Date.now();
+    this.clientSendTime = clientSendTime;
     this.sendTimeBytes = (this.clientSendTime + "").toArray();
     this.sendTimeLength = this.sendTimeBytes.length;
     return this;
