@@ -3,30 +3,30 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.sparrow</groupId>
-        <version>1.0</version>
+        <groupId>com.sparrowzoo</groupId>
         <artifactId>sparrow-bom</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
     <dependencies>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-container</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-loader</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-json</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-markdown</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-mvc</artifactId>
         </dependency>
         <dependency>
@@ -46,11 +46,11 @@
             <artifactId>snakeyaml</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-jedis</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-data-source</artifactId>
         </dependency>
         <dependency>
@@ -58,7 +58,7 @@
             <artifactId>logback-classic</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.sparrow</groupId>
+            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-protocol</artifactId>
         </dependency>
     </dependencies>

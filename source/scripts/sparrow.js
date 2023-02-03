@@ -916,7 +916,6 @@ Sparrow.ajax = {
         objXMLHttp.send(null);
         return;
       }
-      if (postStr != null) {
         //warn: Parameters: Character decoding failed
         if (typeof postStr === "object") {
           objXMLHttp.setRequestHeader("Content-Type", "application/json");
@@ -929,7 +928,6 @@ Sparrow.ajax = {
           );
           objXMLHttp.send(postStr);
         }
-      }
     } catch (e) {
       console.log(e);
     }
