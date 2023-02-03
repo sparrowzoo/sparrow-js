@@ -229,9 +229,14 @@
             margin: 0 20px 0 25px;
             padding: 12px 10px;
             border-radius: 5px;
+            overflow-wrap: break-word;
 
             .message-text {
               white-space: pre-wrap;
+            }
+
+            &:hover {
+              cursor: pointer;
             }
           }
           .msg-picture-detail {
@@ -240,7 +245,16 @@
             .msg-picture {
               border-radius: 5px;
               max-width: 150px;
+              cursor: pointer;
             }
+          }
+        }
+        .recall {
+          text-align: center;
+          color: #666;
+          .reset {
+            color: #607298;
+            cursor: pointer;
           }
         }
       }
@@ -456,11 +470,18 @@
           .user-list {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            // justify-content: space-between;
             margin: 5px 0;
 
             & > div {
               margin-bottom: 15px;
+              &:nth-child(4n + 2) {
+                margin-left: 12px;
+                margin-right: 12px;
+              }
+              &:nth-child(4n + 3) {
+                margin-right: 12px;
+              }
             }
 
             span {
