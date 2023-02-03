@@ -10,25 +10,39 @@ define(function () {
   const IMAGE_MESSAGE = 1;
   const CHAT_TYPE_1_2_1 = 0;
   const CHAT_TYPE_1_2_N = 1;
-  const selfId = { value: 0 };
+  const selfId = { value: 0, avatar: "" };
+  const ACCORD_RECALL = "ACCORD_RECALL";
+  const ACCEPT_RECALL = "ACCEPT_RECALL";
+  const SEND_TYPE = "SEND_TYPE";
+  const RECEIVE_TYPE = "RECEIVE_TYPE";
 
   const qunNumberMap = {
     map: {},
     initQunMap(arr) {
       this.map = {};
       for (const item of arr) {
-        this.map[item.userId] = item.userName;
+        this.map[item.userId] = item;
       }
     },
   };
-  let targetId = { value: "-1", type: CHAT_TYPE_1_2_1, username: "" };
-  function setTargetId(id, username, chatType) {
+  // 当前的聊天对象
+  let targetId = {
+    value: "-1",
+    type: CHAT_TYPE_1_2_1,
+    username: "",
+    avatar: null,
+    sessionKey: "",
+  };
+  function setTargetId(id, username, chatType, avatar, sessionKey) {
     targetId.value = id;
     targetId.type = chatType;
     targetId.username = username;
+    targetId.avatar = avatar;
+    targetId.sessionKey = sessionKey;
   }
-  function changeSelfId(id) {
+  function changeSelfId(id, avatar) {
     selfId.value = id;
+    selfId.avatar = avatar;
   }
   return {
     DB_NAME,
@@ -45,5 +59,9 @@ define(function () {
     setTargetId,
     changeSelfId,
     qunNumberMap,
+    ACCORD_RECALL,
+    ACCEPT_RECALL,
+    SEND_TYPE,
+    RECEIVE_TYPE,
   };
 });

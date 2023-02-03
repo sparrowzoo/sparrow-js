@@ -201,9 +201,13 @@ h5 {
   margin: 0 20px 0 25px;
   padding: 12px 10px;
   border-radius: 5px;
+  overflow-wrap: break-word;
 }
 .chat-msg .msg-content .msg-detail .message .user-msg .message-detail .message-text {
   white-space: pre-wrap;
+}
+.chat-msg .msg-content .msg-detail .message .user-msg .message-detail:hover {
+  cursor: pointer;
 }
 .chat-msg .msg-content .msg-detail .message .user-msg .msg-picture-detail {
   position: relative;
@@ -212,6 +216,15 @@ h5 {
 .chat-msg .msg-content .msg-detail .message .user-msg .msg-picture-detail .msg-picture {
   border-radius: 5px;
   max-width: 150px;
+  cursor: pointer;
+}
+.chat-msg .msg-content .msg-detail .message .recall {
+  text-align: center;
+  color: #666;
+}
+.chat-msg .msg-content .msg-detail .message .recall .reset {
+  color: #607298;
+  cursor: pointer;
 }
 .chat-msg .msg-content .msg-detail .left .user-msg {
   flex-direction: row;
@@ -405,11 +418,17 @@ h5 {
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
   margin: 5px 0;
 }
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list > div {
   margin-bottom: 15px;
+}
+.chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list > div:nth-child(4n + 2) {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list > div:nth-child(4n + 3) {
+  margin-right: 12px;
 }
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .user-list span {
   width: 100%;
