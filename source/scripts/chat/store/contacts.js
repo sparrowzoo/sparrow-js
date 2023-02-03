@@ -1,13 +1,14 @@
-define(["store", "indexedDB"], function (store, indexedDB) {
+define(["store", "indexedDB"], function (store, indexedDB, utils) {
   const {
     targetId,
+    selfId,
     setTargetId,
     CHAT_TYPE_1_2_1,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
   } = store;
-  const { initIndexedDB } = indexedDB;
-  const dbInstance = initIndexedDB();
+  const DBObject = indexedDB;
+  // const dbInstance = initIndexedDB();
   //  维护 session 列表，收发消息后主动回调相关函数 实现 sessionDOM列表自动更新
   class ContactStore {
     constructor() {
@@ -16,7 +17,7 @@ define(["store", "indexedDB"], function (store, indexedDB) {
     // 首次加载，自动初始化 session 列表
     initContact(arr) {
       this.contactList = arr
-        .filter((item) => item)
+        .filter((item) => item && item.lastMessage)
         .sort((a, b) => b.lastMessage.serverTime - a.lastMessage.serverTime);
 
       // 初始化后默认将第一个会话列表的targetid保存
@@ -30,7 +31,15 @@ define(["store", "indexedDB"], function (store, indexedDB) {
           id = this.contactList[0].qunId;
           username = this.contactList[0].qunName;
         }
-        setTargetId(id, username, chatType);
+        const currentSession = this.contactList[0].lastMessage.session;
+
+        setTargetId(
+          id,
+          username,
+          chatType,
+          this.contactList[0].avatar,
+          currentSession
+        );
       }
     }
 
@@ -42,16 +51,20 @@ define(["store", "indexedDB"], function (store, indexedDB) {
     }
 
     // 判断当前接收的消息 是否为第一次发送来
-    async firstReceiverMsg(session, fromUserId) {
+    async firstReceiverMsg(session, fromUserId, chatType) {
       const flag = this.contactList.some(
         (item) => item.lastMessage.session === session
       );
       if (!flag) {
         // 没有聊天记录，需要先新增一个 session
         // 查询 当前session 的实体 是用户还是群
-        let storeName =
-          session === fromUserId ? DB_STORE_NAME_QUN : DB_STORE_NAME_USER;
-        const sessionItem = await dbInstance.getData(fromUserId, storeName);
+        const storeName =
+          chatType === CHAT_TYPE_1_2_1 ? DB_STORE_NAME_USER : DB_STORE_NAME_QUN;
+        const keyPath = chatType === CHAT_TYPE_1_2_1 ? fromUserId : session;
+        const sessionItem = await DBObject.dbInstance.getData(
+          keyPath,
+          storeName
+        );
         if (sessionItem) {
           // 当前用户 / 群 是好友的情况
           sessionItem.lastMessage = {
@@ -78,33 +91,7 @@ define(["store", "indexedDB"], function (store, indexedDB) {
         this.notify(fnName, [index, this.contactList[index]]);
       }
     }
-    // 收发信息后，需要修改
-    // async update(lastMsg, msgType, session, fnName, fromUserId) {
-    //   let index = this.contactList.findIndex(
-    //     (item) => item.lastMessage.session === session
-    //   );
-    //   const msgTime = +new Date();
-    //   const params = { index, msgValue: lastMsg, msgTime, msgType };
-    //   if (fnName === "receiveMsg" && fromUserId != targetId.value) {
-    //     // 接收到 不是当前聊天对象的信息 未读数量 +1
-    //     await this.firstReceiverMsg(session, fromUserId);
-    //     if (index !== -1) {
-    //       // 当前不是新的session
-    //       const count = this.contactList[index].unReadCount;
-    //       this.contactList[index].unReadCount++;
-    //       params.push([count + 1]);
-    //     } else {
-    //       // 这里是没有session 记录 已经将新的session 添加到contactList中的首位
-    //       index = 0; // -1  => 0
-    //       this.contactList[index].unReadCount = 1;
-    //       params[0] = 0;
-    //       params.push(1);
-    //     }
-    //   }
 
-    //   this.notify(fnName, params);
-    //   this.sort(index);
-    // }
     send(lastMsg, msgType, session) {
       let index = this.contactList.findIndex(
         (item) => item.lastMessage.session === session
@@ -114,15 +101,15 @@ define(["store", "indexedDB"], function (store, indexedDB) {
       this.notify("sendLastMsg", params);
       this.sort(index);
     }
-    async receive(lastMsg, msgType, session, fromUserId) {
+    async receive(lastMsg, msgType, session, fromUserId, chatType) {
       let index = this.contactList.findIndex(
         (item) => item.lastMessage.session === session
       );
       const msgTime = +new Date();
       const params = { index, msgValue: lastMsg, msgTime, msgType };
-      if (fromUserId != targetId.value) {
+      if (targetId.sessionKey !== session) {
         // 接收到 不是当前聊天对象的信息,需要设置未读数量
-        await this.firstReceiverMsg(session, fromUserId);
+        await this.firstReceiverMsg(session, fromUserId, chatType);
         if (index !== -1) {
           // 当前不是新的session，未读数量直接 +1
           const count = this.contactList[index].unReadCount;
@@ -136,8 +123,39 @@ define(["store", "indexedDB"], function (store, indexedDB) {
           params.count = 1;
         }
       }
+      // if (fromUserId != targetId.value) {
+      //   // 接收到 不是当前聊天对象的信息,需要设置未读数量
+      //   await this.firstReceiverMsg(session, fromUserId, chatType);
+      //   if (index !== -1) {
+      //     // 当前不是新的session，未读数量直接 +1
+      //     const count = this.contactList[index].unReadCount;
+      //     this.contactList[index].unReadCount++;
+      //     params.count = count + 1;
+      //   } else {
+      //     // 这里是没有session 记录 已经将新的session 添加到contactList中的首位
+      //     index = 0; // -1  => 0
+      //     this.contactList[index].unReadCount = 1;
+      //     params.index = 0;
+      //     params.count = 1;
+      //   }
+      // }
       this.notify("receiveMsg", params);
       this.sort(index);
+    }
+    // 撤回事件,改变未读数量 & 消息部分，不排序
+    recall(msgInfo) {
+      const index = this.contactList.findIndex(
+        (item) => item.lastMessage.session === msgInfo.sessionKey
+      );
+      const params = {
+        ...msgInfo,
+        index,
+      };
+      if (this.contactList[index].unReadCount) {
+        this.contactList[index].unReadCount--;
+        params.count = this.contactList[index].unReadCount;
+      }
+      this.notify("receiveMsg", params);
     }
     notify(fnName, params) {
       if (Array.isArray(params)) {

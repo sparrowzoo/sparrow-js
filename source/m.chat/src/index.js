@@ -10,6 +10,14 @@ const urlMap = {
   "group-detail-part": 2,
 };
 
+// 回退事件
+const iconBack = document.querySelectorAll(".arrows-l");
+
+iconBack.forEach((item) => {
+  item.addEventListener("click", (e) => {
+    history.back();
+  });
+});
 const container = document.querySelector(".wrapper");
 // 根据hash 动态切换页面的显示
 function changPageByHash() {

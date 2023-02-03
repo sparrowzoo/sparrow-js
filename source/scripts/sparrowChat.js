@@ -4,7 +4,7 @@
 //如uint16，则length=2表示两个字节，转成的byte数组长度是length=2
 //如uint32，则length=2表示两个字节，转成的byte数组长度是length=4
 Number.prototype.toBytes = function () {
-  length=4;//只支持32位以下数字，32位以上会有精度问题
+  length = 4; //只支持32位以下数字，32位以上会有精度问题
   number = this;
   var bytes = [];
   var i = length;
@@ -18,7 +18,7 @@ Number.prototype.toBytes = function () {
 
 Array.prototype.toUint8Array = function () {
   bytes = this;
-  var array = new Uint8Array(bytes.length + 1);
+  var array = new Uint8Array(bytes.length);
   for (i = 0; i < array.length; i++) {
     array[i] = bytes[i];
   }
@@ -90,7 +90,8 @@ var SparrowProtocol = function (
   msgType,
   currentUserId,
   sessionKey,
-  msg
+  msg,
+  clientSendTime
 ) {
   if (window === this) {
     return new SparrowProtocol(
@@ -98,7 +99,8 @@ var SparrowProtocol = function (
       msgType,
       currentUserId,
       sessionKey,
-      msg
+      msg,
+      clientSendTime
     );
   }
 
@@ -118,6 +120,31 @@ var SparrowProtocol = function (
       var dataView = new DataView(buf);
       var offset = 0;
       this.chatType = dataView.getUint8(offset);
+      // 新增的 撤销部分
+      if (this.chatType === 2) {
+        console.log("撤销协议");
+        offset += 1;
+        const sesessionKeyLength = dataView.getInt32(offset);
+        offset += 4; //session key length=4
+        const sessionKeyBuffer = buf.slice(offset, sesessionKeyLength + offset);
+        offset += sesessionKeyLength;
+        const sessionKey = new Uint8Array(sessionKeyBuffer).toString();
+        const clientSendTimeLength = dataView.getInt32(offset);
+        offset += 4; //session key length=4
+        const clientSendTimeBuffer = buf.slice(
+          offset,
+          clientSendTimeLength + offset
+        );
+        offset += clientSendTimeLength;
+        const clientSendTime = +new Uint8Array(clientSendTimeBuffer).toString();
+        console.log(sesessionKeyLength, sessionKey, clientSendTime);
+        callback({
+          chatType: this.chatType,
+          clientSendTime: clientSendTime,
+          sessionKey: sessionKey,
+        });
+        return;
+      }
       offset += 1; //chat type length=1
       this.msgType = dataView.getUint8(offset);
       offset += 1; //msg type length=1
@@ -141,23 +168,24 @@ var SparrowProtocol = function (
       this.msgLength = dataView.getInt32(offset);
       offset += 4; //msg length =4
 
-
       if (this.msgType === TEXT_MESSAGE) {
-        const msgBuffer = buf.slice(offset, offset+this.msgLength);
+        const msgBuffer = buf.slice(offset, offset + this.msgLength);
         const chars = new Uint8Array(msgBuffer);
         this.msg = chars.toString();
         //console.log(this.msg);
       } else {
         //const img = document.getElementById('img');
-        const msgBuffer = buf.slice(offset, offset+this.msgLength);
+        const msgBuffer = buf.slice(offset, offset + this.msgLength);
         fileBlob = new Blob([msgBuffer]);
         //本地直接读即可
         //const url = window.URL.createObjectURL(file);
         const url = window.URL.createObjectURL(fileBlob);
         this.url = url;
       }
-      offset+=this.msgLength;
-      this.clientSendTime=new Uint8Array(buf.slice(offset,buf.byteLength)).toString();
+      offset += this.msgLength;
+      this.clientSendTime = new Uint8Array(
+        buf.slice(offset, buf.byteLength)
+      ).toString();
       callback(this);
     })();
   }
@@ -189,9 +217,9 @@ var SparrowProtocol = function (
     this.msgLength = msgLength;
     this.msgLengthBytes = msgLength.toBytes();
     this.msgLengthLength = this.msgLengthBytes.length;
-    this.clientSendTime=Date.now();
-    this.sendTimeBytes=(this.clientSendTime+"").toArray();
-    this.sendTimeLength=this.sendTimeBytes.length;
+    this.clientSendTime = clientSendTime;
+    this.sendTimeBytes = (this.clientSendTime + "").toArray();
+    this.sendTimeLength = this.sendTimeBytes.length;
     return this;
   }
 };
@@ -206,8 +234,8 @@ SparrowProtocol.prototype.toBytes = function () {
       this.sesessionKeyLengthLength + //4
       this.sessionKeyBytesLength +
       this.msgLengthLength + //4
-      this.msgLength+
-        this.sendTimeLength;
+      this.msgLength +
+      this.sendTimeLength;
   } else {
     totalLength =
       this.chatTypeLength +
@@ -215,8 +243,8 @@ SparrowProtocol.prototype.toBytes = function () {
       this.currentUserIdLength + //4
       this.targetUserIdLength + //4
       this.msgLengthLength + //4
-      this.msgLength+
-        this.sendTimeLength;
+      this.msgLength +
+      this.sendTimeLength;
   }
   let result = new Uint8Array(totalLength);
   offset = 0;
@@ -236,7 +264,7 @@ SparrowProtocol.prototype.toBytes = function () {
   result.set(this.msgLengthBytes, offset);
   offset += this.msgLengthLength;
   result.set(this.msg, offset);
-  offset+=this.msgLength;
-  result.set(this.sendTimeBytes,offset);
+  offset += this.msgLength;
+  result.set(this.sendTimeBytes, offset);
   return result;
 };

@@ -233,32 +233,3 @@ var resourceController = {
             $.message(lang.message.update.format(resource.name));
         });
     },
-
-    // 版块删除事件
-    deleteClick: function (ai) {
-        var resourceTree = resourceController.resourceTree;
-        var cn;
-        if (!ai) {
-            cn = resourceTree.aNodes[resourceTree.getSelectedAi()];
-        } else {
-            cn = resourceTree.aNodes[ai];
-        }
-        if (cn._hasChild) {
-            $.message(lang.message.delete_has_child);
-            return;
-        }
-        if (window.confirm(lang.message.delete_confirm)) {
-            var deletePostString = "resourceId=" + cn.id;
-            $.ajax.json($.url.root + resourceController.api.delete, deletePostString,
-                function (result) {
-                    resourceController.resourceTree.removeNode(cn);
-                    resourceController.resetForm();
-                    $.message(lang.message.del);
-                });
-        }
-    }
-};
-
-define("resource", [], function () {
-    return resourceController;
-});

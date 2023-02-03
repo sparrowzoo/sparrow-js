@@ -14,11 +14,14 @@
     <nav>
       <span>首页</span>
       <span>&lt </span>
-      <span>消息</span>
-      <span>&lt </span>
-      <span>我的群聊</span>
+      <span class="active-nav nav-msg">消息</span>
+      <span style="display:none" class="change-step">
+        <span>&lt </span>
+        <span class="active-nav">我的群聊</span>
+      </span>
       <input class="ws-input" type="text">
       <button class="connect-btn">连接</button>
+      <!-- <button class="close-ws">关闭websocket</button> -->
     </nav>
     <div class="container">
       <!-- 左侧菜单 -->
@@ -133,6 +136,7 @@
         <div class="user-info">
           <div class="avatar">
             <img src="" alt="">
+            <img class="img-flag" src="" alt="">
           </div>
           <div class="username">
             <span></span>
@@ -147,7 +151,7 @@
 
     </template>
 
-    <!-- 消息列表 -->
+    <!-- session list 消息列表 -->
     <template id="msg-list-part">
       <div class="msg-item">
         <div class="avatar">
@@ -178,14 +182,14 @@
             <div class="user-list">
               <p>A</p>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿飞</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item ">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿乐</span>
                   <div class="check-box">
@@ -195,28 +199,28 @@
               </div>
               <p>B</p>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">冰冰</span>
                   <div class="check-box"></div>
@@ -234,14 +238,14 @@
             <i class="iconfont icon-cuowukongxin"></i>
             <div class="choose-user">
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿飞</span>
                   <div class="check-box"></div>
                 </div>
               </div>
               <div class="user-item">
-                <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                 <div class="dialog-info">
                   <span class="username">阿飞</span>
                   <div class="check-box"></div>
@@ -310,104 +314,18 @@
               <input type="text" placeholder="搜索">
             </div>
             <div class="group-more-content">
-              <div class="user-list">
+              <!-- 仅仅是一个模板，永远不会渲染到界面上 -->
+              <div style="display:none">
                 <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用户名户名户名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
-                  <span>用名</span>
-                </div>
-                <div class="more-user">
-                  <img src="https://img1.imgtp.com/2022/11/06/cFyHps3H.jpg" alt="">
+                  <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
                   <span>用名</span>
                 </div>
                 <div class="more-icon">
                   <div class="search-add">+</div>
                   <span>添加</span>
                 </div>
-
+              </div>
+              <div class="user-list">
               </div>
               <div class="look-more-user">
                 <span>查看更多</span>
@@ -415,11 +333,11 @@
               </div>
               <div class="more-common">
                 <p>群聊名称</p>
-                <span>前端学习群</span>
+                <span class="qun-name">前端学习群</span>
                 <p>群公告</p>
-                <span>这是一个群公告</span>
+                <span class="qun-announcement">这是一个群公告</span>
                 <p>群备注</p>
-                <span>这是一个群公告</span>
+                <span class="qun-remark">这是一个备注</span>
               </div>
             </div>
           </div>
@@ -445,10 +363,23 @@
           </div>
 
         </div>
+        <div style="display:none" class="show-recall-mime recall">
+          <p>你撤回了一条消息<span class="reset"> 重新编辑</span></p>
+        </div>
+        <div style="display:none" class="show-recall-other recall">
+          <p><span class="recall-user">用户</span>撤回了一条消息</p>
+        </div>
       </div>
     </template>
   </div>
+  <!-- 全局的遮罩层 -->
   <div style="display:none" class="global-mask"></div>
+  <!-- 消息撤回的控件 -->
+  <div style="display:none" class="msg-recall">
+    <ul>
+      <li class="recall">撤回</li>
+    </ul>
+  </div>
 </body>
 <script>
 
@@ -482,7 +413,8 @@
       "websocket": "scripts/chat/utils/websocket",
       "base64": "scripts/base64",
       "sparrow": 'scripts/sparrow',
-      "sparrowChat": "scripts/sparrowChat"
+      "sparrowChat": "scripts/sparrowChat",
+      "ws": "scripts/chat/lib/ws"
     },
     shim: {}
   })
