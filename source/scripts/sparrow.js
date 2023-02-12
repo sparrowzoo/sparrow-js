@@ -1177,14 +1177,14 @@ Sparrow.v = {
         }
         return this.ok(validate,srcElement);
     },
-    isWord: function (validate,srcElement) {
+    isChineseCharacters: function (validate,srcElement) {
         validate=validate[srcElement.id];
         var result = this._validate(validate,srcElement);
         if (result !== true) {
             return result;
         }
         if (srcElement.value.search(/^[\u4e00-\u9fa5]$/) === -1) {
-            return this.fail(validate, validate.wordError);
+            return this.fail(validate, validate.chineseCharactersError);
         }
         return this.ok(validate,srcElement);
     },
@@ -1253,15 +1253,19 @@ Sparrow.v = {
             } else {
                 srcElement.value = defaultValue;
             }
-        } else if (srcElement.value.toUpperCase().indexOf("K") !== -1) {
+            return;
+        }
+        if (srcElement.value.toUpperCase().indexOf("K") !== -1) {
             if (srcElement.value.toUpperCase().split('K')[0]
                 .search(/^[0-9]+.?[0-9]$/) !== -1) {
                 srcElement.value = srcElement.value.toUpperCase().split('K')[0] + "KB";
             }
-            srcElement.value = defaultValue;
-        } else {
-            srcElement.value = defaultValue;
+            else{
+                srcElement.value = defaultValue;
+            }
+            return;
         }
+        srcElement.value = defaultValue;
     },
     updateTxtCount: function (srcElement, showCtrl, maxLength, e) {
         var ctrl = $(showCtrl);
