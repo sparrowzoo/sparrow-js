@@ -1,0 +1,10 @@
+.tag-frame {height: 700px;width: 100%;}
+.new-tag {width:30%;overflow: hidden;height: 550px;float: left;}
+.tag-list {width:68%;overflow: hidden;height: 550px;float: right;}
+.type{float:left;width:40%;}
+.manage{float:right;width:58%;}
+.list-content {overflow: scroll;width: 100%;	height: 480px;}
+.disable-tag { background: #000000; color: #ca151d; margin: 3px; display: inline-block;overflow: hidden; }
+.command { width: 300px; line-height: 30px; overflow: hidden; }
+.command .input { width: 80px; height: 30px; float: left;}
+
