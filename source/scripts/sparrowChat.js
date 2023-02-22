@@ -206,7 +206,7 @@ var SparrowProtocol = function (
       //session key length's bytes
       this.sessionKeyLengthBytes = this.sessionKeyBytesLength.toBytes();
       //session key length's bytes length
-      this.sesessionKeyLengthLength = this.sessionKeyLengthBytes.length; //4
+      this.sessionKeyLengthLength = this.sessionKeyLengthBytes.length; //4
     } else {
       this.targetUserId = parseInt(sessionKey, 10);
       this.targetUserIdBytes = this.targetUserId.toBytes();
@@ -231,7 +231,7 @@ SparrowProtocol.prototype.toBytes = function () {
       this.chatTypeLength +
       this.msgTypeLength +
       this.currentUserIdLength + //4
-      this.sesessionKeyLengthLength + //4
+      this.sessionKeyLengthLength + //4
       this.sessionKeyBytesLength +
       this.msgLengthLength + //4
       this.msgLength +
@@ -254,7 +254,7 @@ SparrowProtocol.prototype.toBytes = function () {
   offset += this.currentUserIdLength;
   if (this.chatType === CHAT_TYPE_1_2_N) {
     result.set(this.sessionKeyLengthBytes, offset);
-    offset += this.sesessionKeyLengthLength;
+    offset += this.sessionKeyLengthLength;
     result.set(this.sessionKeyBytes, offset);
     offset += this.sessionKeyBytesLength;
   } else {

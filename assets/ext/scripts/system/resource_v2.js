@@ -1,7 +1,11 @@
 ﻿//版块管理的tree对象
 var resourceController = {
     api: {
+<<<<<<< HEAD
         load_all: "/resource/manage",
+=======
+        load_all: "/resource/load-all.json",
+>>>>>>> b755504f88dab632ac1f59c5ca0bce317930ccdf
         order: "/resource/sort",
         delete: "/resource/delete",
         save: "/resource/save",
