@@ -95,7 +95,7 @@ define([
           const msgValue =
             protocol.msgType === TEXT_MESSAGE ? protocol.msg : protocol.url;
 
-          saveText(
+          saveMessage(
             protocol.msgType,
             msgValue,
             protocol.chatType,
@@ -165,7 +165,7 @@ define([
       // 首先判断当前是否为重连状态
       if (!this.lockReconnect) {
         if (msgType === TEXT_MESSAGE) {
-          saveText(
+          saveMessage(
             msgType,
             msg,
             chatType,
@@ -190,7 +190,7 @@ define([
           const reader = new FileReader();
           reader.readAsDataURL(msgCopy);
           reader.onload = function (e) {
-            saveText(
+            saveMessage(
               msgType,
               e.target.result,
               chatType,
@@ -232,7 +232,7 @@ define([
 
       const params = {
         chatType: res.chatType,
-        sessionKey: getSessionKey(res.chatType, selfId.value, res.targetUserId),
+        sessionKey: targetId.sessionKey,
         userId: selfId.value,
       };
       // 每次发送信息都要 更新已读
@@ -313,10 +313,10 @@ define([
     }
   }
 
-  // 将用户信息保存到数据库
-  function saveText(
-    value,
+  // 将通信的信息保存到数据库
+  function saveMessage(
     msgType,
+    value,
     chatType,
     targetUserId,
     fromUserId,
@@ -336,10 +336,10 @@ define([
 
     if (textType === SEND_TYPE) {
       // 发送信息，同步session 列表
-      contactStore.send(value, TEXT_MESSAGE, session);
+      contactStore.send(value, msgType, session);
     } else {
       // 接收信息
-      contactStore.receive(value, TEXT_MESSAGE, session, fromUserId, chatType);
+      contactStore.receive(value, msgType, session, fromUserId, chatType);
     }
     addMsg(
       content,

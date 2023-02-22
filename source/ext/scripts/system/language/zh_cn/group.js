@@ -22,7 +22,6 @@ lang = {
 };
 var groupInfo = {
 	txtGroupName : {
-		ctrlId : 'txtGroupName',
 		errorCtrlId : 'errorGroupName',
 		prompt : '请输入20位以下组名称',
 		nullError : '组名称为必添项。',
