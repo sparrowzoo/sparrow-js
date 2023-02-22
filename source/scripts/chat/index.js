@@ -1,15 +1,16 @@
 define([
-  "base64",
-  "sparrow",
-  "sparrowChat",
-  "my-friend",
-  "chat-msg",
-  "system-inform",
-  "contact-service",
-  "store",
-  "api",
-  "indexedDB",
-  "websocket",
+  'base64',
+  'sparrow',
+  'sparrowChat',
+  'my-friend',
+  'chat-msg',
+  'system-inform',
+  'contact-service',
+  'store',
+  'api',
+  'indexedDB',
+  'websocket',
+  'axios',
 ], function (
   base64,
   sparrow,
@@ -21,7 +22,8 @@ define([
   store,
   api,
   indexedDB,
-  websocket
+  websocket,
+  axios
 ) {
   const {
     selfId,
@@ -31,7 +33,7 @@ define([
     changeSelfId,
   } = store;
   const { createWS } = websocket;
-  const { getSession, getFrinedList } = api;
+  const { getSession, getFrinedList, login } = api;
   const DBObject = indexedDB;
   let ws;
 
@@ -51,7 +53,7 @@ define([
 
   // 获取当前用户的历史记录
   async function getSessionHistory() {
-    const sessionArr = await getSession("sessions", selfId.value);
+    const sessionArr = await getSession('sessions', selfId.value);
     console.log(sessionArr);
     if (sessionArr) {
       sessionArr.forEach((item) => {
@@ -63,14 +65,8 @@ define([
 
   // 获取好友 / 群列表
   async function getContacts(userId) {
-    controlLoading("flex");
-    const contacts = await getFrinedList("contacts", selfId.value);
-
-    // 获取当前登录用户的信息 并 设置当前用户信息
-    const selfInfo = contacts.users.find((item) => item.userId == userId);
-    changeSelfId(selfInfo.userId, selfInfo.avatar);
-
-    console.log(contacts);
+    controlLoading('flex');
+    const contacts = await getFrinedList('contacts', selfId.value);
     // 拿到列表后 渲染dom
     myFriend.getRelationList(contacts);
     contacts.users.forEach((user) => {
@@ -81,36 +77,51 @@ define([
       DBObject.dbInstance.putStoreItem(qun, DB_STORE_NAME_QUN);
     });
     // 解除loading...'
-    controlLoading("none");
+    controlLoading('none');
   }
 
   // 控制loading 的显示
   function controlLoading(isShow) {
-    document.querySelector(".loading").style.display = isShow;
+    document.querySelector('.loading').style.display = isShow;
   }
-
-  // 临时功能
-  const inputTargetId = document.querySelector(".ws-input");
-  // 切换当前用户
-  const btnTargetId = document.querySelector(".connect-btn");
-  btnTargetId.addEventListener("click", async function () {
-    // console.log(inputTargetId.value);
-    const res = await DBObject.createIndexedDB(inputTargetId.value, "1");
+  // 登录
+  document.querySelector('.login').addEventListener('click', async () => {
+    const mobile = document.querySelector('.ws-input').value;
+    const params = {
+      code: '8888',
+      mobile,
+      password: '1234',
+    };
+    const { data } = await login(params);
+    console.log(data, '登录');
+    // 设置token 以及用户名
+    localStorage.setItem('token', data.token); // memberInfo
+    changeSelfId(
+      data.memberInfo.id,
+      data.memberInfo.portrait ||
+        'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
+    );
+    // 建立数据库
+    await DBObject.createIndexedDB(data.memberInfo.id, '1');
     if (ws) {
       // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
       ws.close();
     }
-    ws = createWS(inputTargetId.value);
-    changeSelfId(inputTargetId.value);
+    // 建立ws 连接
+    ws = createWS(data.memberInfo.id);
 
-    getContacts(inputTargetId.value);
+    // 获取好友列表和聊天记录
+    getContacts(data.memberInfo.id);
     getSessionHistory();
     chatMsg.getWsInstance(ws);
-  });
 
-  // 关闭websocket
-  const btnCloseWs = document.querySelector(".close-ws");
-  btnCloseWs.addEventListener("click", () => {
-    ws.close();
+    const res = await api.myFriend();
+    console.log(res, '我的好友');
+    // const r = await api.myGroup();
+    // console.log(r, '我的群');
+    const r2 = await api.newFriend();
+    console.log(r2, '新朋友');
+    // const r3 = await api.systemNotice();
+    // console.log(r3, '系统');
   });
 });

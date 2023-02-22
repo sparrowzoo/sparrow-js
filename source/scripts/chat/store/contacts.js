@@ -1,4 +1,4 @@
-define(["store", "indexedDB"], function (store, indexedDB, utils) {
+define(['store', 'indexedDB'], function (store, indexedDB, utils) {
   const {
     targetId,
     selfId,
@@ -47,7 +47,18 @@ define(["store", "indexedDB"], function (store, indexedDB, utils) {
     addContactItem(sessionItem) {
       this.contactList.unshift(sessionItem);
       // 添加完毕后，需要更新DOM
-      this.notify("addSessionItem", [sessionItem]);
+      this.notify('addSessionItem', [sessionItem]);
+    }
+
+    // 删除session item
+    delItem(sessionKey) {
+      const index = this.contactList.findIndex((item) => {
+        return item.lastMessage.session === sessionKey;
+      });
+      if (index !== -1) {
+        this.contactList.splice(index, 1);
+        this.notify('delSessionItem', index);
+      }
     }
 
     // 判断当前接收的消息 是否为第一次发送来
@@ -98,7 +109,7 @@ define(["store", "indexedDB"], function (store, indexedDB, utils) {
       );
       const msgTime = +new Date();
       const params = { index, msgValue: lastMsg, msgTime, msgType };
-      this.notify("sendLastMsg", params);
+      this.notify('sendLastMsg', params);
       this.sort(index);
     }
     async receive(lastMsg, msgType, session, fromUserId, chatType) {
@@ -139,7 +150,7 @@ define(["store", "indexedDB"], function (store, indexedDB, utils) {
       //     params.count = 1;
       //   }
       // }
-      this.notify("receiveMsg", params);
+      this.notify('receiveMsg', params);
       this.sort(index);
     }
     // 撤回事件,改变未读数量 & 消息部分，不排序
@@ -155,7 +166,7 @@ define(["store", "indexedDB"], function (store, indexedDB, utils) {
         this.contactList[index].unReadCount--;
         params.count = this.contactList[index].unReadCount;
       }
-      this.notify("receiveMsg", params);
+      this.notify('receiveMsg', params);
     }
     notify(fnName, params) {
       if (Array.isArray(params)) {

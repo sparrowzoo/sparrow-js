@@ -1,4 +1,4 @@
-@import "./common.less";
+@import './common.less';
 .test() {
   button {
     min-width: 80px;
@@ -53,42 +53,92 @@
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 30%;
+    width: 32%;
     min-width: 200px;
     background-color: #fff;
-    padding: 0 30px;
+    padding: 0 20px 40px 20px;
     z-index: 10;
     text-align: center;
+    .add-input {
+      // display: none;
+      p {
+        text-align: center;
+        color: @text-color;
+        font-size: 18px;
+        padding: 20px 0;
+      }
 
-    p {
-      text-align: center;
-      color: @text-color;
-      font-size: 18px;
-      padding-top: 10px;
+      input {
+        text-align: center;
+        margin: 0 auto;
+        width: 100%;
+        outline: none;
+        border: none;
+        color: @text-gray-color;
+        font-size: 14px;
+        background-color: @theme-color;
+        padding: 10px 0;
+      }
+
+      span {
+        color: @text-gray-color;
+        text-align: center;
+      }
+      .operate {
+        margin-top: 35px;
+        .test();
+        display: flex;
+        justify-content: center;
+        button {
+          height: 43px;
+        }
+      }
     }
 
-    input {
-      text-align: center;
-      margin: 0 auto;
-      width: 100%;
-      outline: none;
-      border: none;
-      color: @text-gray-color;
-      font-size: 14px;
-      background-color: @theme-color;
-      padding: 10px 0;
-    }
+    .search-user-detail {
+      display: none;
+      .title {
+        p {
+          text-align: center;
+          color: @text-color;
+          font-size: 18px;
+          padding: 20px 0;
+        }
+        .iconfont {
+          position: absolute;
+          top: 20px;
+          right: 20px;
+          width: 20px;
+          height: 20px;
+          font-size: 20px;
+          cursor: pointer;
+          color: #999;
+        }
+      }
+      .userinfo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-    span {
-      color: @text-gray-color;
-      text-align: center;
-    }
-    .operate {
-      margin: 35px 0;
-      .test();
-      display: flex;
-      justify-content: center;
-      button {
+        .user {
+          display: flex;
+          align-items: center;
+          img {
+            width: 48px;
+            height: 48px;
+            margin-right: 5px;
+          }
+          span {
+            color: @text-color;
+          }
+        }
+        button {
+          width: 80px;
+          height: 40px;
+          border-radius: 2px;
+          background-color: @text-color;
+          color: #fff;
+        }
       }
     }
   }
@@ -178,6 +228,10 @@
         background-color: @text-color;
         color: #fff;
       }
+    }
+
+    .operate-res {
+      color: @text-gray-color;
     }
   }
 }
