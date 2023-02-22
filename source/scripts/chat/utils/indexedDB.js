@@ -1,4 +1,4 @@
-define(["store"], function (store) {
+define(['store'], function (store) {
   const {
     DB_NAME,
     DB_VERSION,
@@ -15,7 +15,7 @@ define(["store"], function (store) {
   class IndexedDb {
     db = null;
     constructor(userId, version) {
-      this.request = window.indexedDB.open(DB_NAME + "-" + userId, version);
+      this.request = window.indexedDB.open(DB_NAME + '-' + userId, version);
       return this.initDB();
     }
 
@@ -24,19 +24,19 @@ define(["store"], function (store) {
       return new Promise((resolve, reject) => {
         this.request.onsuccess = (event) => {
           this.db = event.target.result;
-          console.log("数据库连接成功");
+          console.log('数据库连接成功');
           resolve(this);
         };
         this.request.onupgradeneeded = (event) => {
           const db = event.target.result;
           // 创建存储仓库
-          db.createObjectStore(DB_STORE_NAME_SESSION, { keyPath: "session" });
-          db.createObjectStore(DB_STORE_NAME_USER, { keyPath: "userId" });
-          db.createObjectStore(DB_STORE_NAME_QUN, { keyPath: "qunId" });
+          db.createObjectStore(DB_STORE_NAME_SESSION, { keyPath: 'session' });
+          db.createObjectStore(DB_STORE_NAME_USER, { keyPath: 'userId' });
+          db.createObjectStore(DB_STORE_NAME_QUN, { keyPath: 'qunId' });
         };
         this.request.onerror = () => {
-          console.log("数据库发生错误");
-          reject("连接indexedDB出错");
+          console.log('数据库发生错误');
+          reject('连接indexedDB出错');
         };
       });
     }
@@ -44,18 +44,18 @@ define(["store"], function (store) {
     // 初始化整个store 也就是向数据库中添加数据
     putStoreItem(item, storeName) {
       const req = this.db
-        .transaction(storeName, "readwrite")
+        .transaction(storeName, 'readwrite')
         .objectStore(storeName)
         .put(item);
       req.onsuccess = function () {
-        console.log("添加成功~");
+        console.log('添加成功~');
       };
     }
 
     // 添加单条数据 也就是修改数据库中的数据
     updateStoreItem(sessionKey, messageItem, storeName) {
       const updateStore = this.db
-        .transaction(storeName, "readwrite")
+        .transaction(storeName, 'readwrite')
         .objectStore(storeName);
       const request = updateStore.get(sessionKey);
       // 查询成功后的回调
@@ -78,7 +78,7 @@ define(["store"], function (store) {
 
         const updateRequest = updateStore.put(sessionItem);
         updateRequest.onsuccess = function () {
-          console.log("数据更新成功");
+          console.log('数据更新成功');
         };
       };
     }
@@ -98,11 +98,24 @@ define(["store"], function (store) {
       this.putStoreItem(sessionItem, storeName);
     }
 
+    // 根据session_key 删除数据
+    deleteData(sessionKey, storeName) {
+      return new Promise((resolve, reject) => {
+        const request = this.db
+          .transaction(storeName, 'readwrite')
+          .objectStore(storeName)
+          .delete(sessionKey);
+        request.onsuccess = function (event) {
+          resolve('ok');
+        };
+      });
+    }
+
     // 查询数据
     getData(key, storeName) {
       return new Promise((resolve, reject) => {
         const getStore = this.db
-          .transaction(storeName, "readonly")
+          .transaction(storeName, 'readonly')
           .objectStore(storeName);
         const request = getStore.get(key);
         request.onsuccess = (event) => {
@@ -113,7 +126,7 @@ define(["store"], function (store) {
     // 撤回 msg
     recallMsg(key, storeName, messageArr) {
       const updateStore = this.db
-        .transaction(storeName, "readwrite")
+        .transaction(storeName, 'readwrite')
         .objectStore(storeName);
       const request = updateStore.get(key);
       // 查询成功后的回调
@@ -126,7 +139,7 @@ define(["store"], function (store) {
         sessionItem.messages = messageArr;
         const updateRequest = updateStore.put(sessionItem);
         updateRequest.onsuccess = function () {
-          console.log("撤回成功");
+          console.log('撤回成功');
         };
       };
     }
@@ -135,7 +148,7 @@ define(["store"], function (store) {
     getAll(storeName) {
       return new Promise((resolve, reject) => {
         const getStore = this.db
-          .transaction(storeName, "readonly")
+          .transaction(storeName, 'readonly')
           .objectStore(storeName);
         const request = getStore.getAll();
         request.onsuccess = (event) => {
@@ -144,16 +157,6 @@ define(["store"], function (store) {
       });
     }
   }
-
-  // const initIndexedDB = (function () {
-  //   let dbInstance;
-  //   return function () {
-  //     if (!dbInstance) {
-  //       dbInstance = new IndexedDb();
-  //     }
-  //     return dbInstance;
-  //   };
-  // })();
   let dbInstance = null;
   // 根据当前用户id 初始化 indexedDb
   async function createIndexedDB(userId, version) {

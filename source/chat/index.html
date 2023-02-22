@@ -19,9 +19,10 @@
         <span>&lt </span>
         <span class="active-nav">我的群聊</span>
       </span>
-      <input class="ws-input" type="text">
-      <button class="connect-btn">连接</button>
+      <input class="ws-input" value="" type="text" placeholder="请输入手机号">
+      <!-- <button class="connect-btn">连接</button> -->
       <!-- <button class="close-ws">关闭websocket</button> -->
+      <button class="login">登录</button>
     </nav>
     <div class="container">
       <!-- 左侧菜单 -->
@@ -52,12 +53,30 @@
 
             <!-- 弹层 -->
             <div style="display:none;" class="dialog add-friend">
-              <p>添加好友</p>
-              <input type="text" placeholder="请输入微信号/手机号">
-              <div class="operate">
-                <button data-type="remove">取消</button>
-                <button data-type="chat" class="chat">申请</button>
+              <div class="add-input">
+                <p>添加好友</p>
+                <div>
+                  <input type="text" placeholder="请输入微信号/手机号">
+                  <div class="operate">
+                    <button data-type="remove">取消</button>
+                    <button data-type="chat" class="chat">申请</button>
+                  </div>
+                </div>
               </div>
+              <div class="search-user-detail">
+                <div class="title">
+                  <p>添加好友</p>
+                  <i class="iconfont icon-cuowukongxin"></i>
+                </div>
+                <div class="userinfo">
+                  <div class="user">
+                    <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
+                    <span class="username"></span>
+                  </div>
+                  <button>确定申请</button>
+                </div>
+              </div>
+
             </div>
           </div>
           <div class="content">
@@ -147,6 +166,7 @@
           <button data-type="remove">删除好友</button>
           <button data-type="chat" class="chat">聊一下</button>
         </div>
+        <div style="display:none" class="operate-res">已通过</div>
       </div>
 
     </template>
@@ -414,7 +434,9 @@
       "base64": "scripts/base64",
       "sparrow": 'scripts/sparrow',
       "sparrowChat": "scripts/sparrowChat",
-      "ws": "scripts/chat/lib/ws"
+      "ws": "scripts/chat/lib/ws",
+      "axios": 'scripts/chat/lib/axios',
+      "request": "scripts/chat/utils/request"
     },
     shim: {}
   })

@@ -1,1 +1,3 @@
-define(function (require, exports, module) {});
+define(['api'], function (api) {
+  console.log('系统');
+});

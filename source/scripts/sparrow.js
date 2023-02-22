@@ -803,7 +803,7 @@ Sparrow.ajax = {
   referWindow: window,
   url: null,
   srcElement: null,
-  SUCCESS: "0",
+  SUCCESS: '0',
   _bindReadyStateChange: function (objXMLHttp, callback) {
     objXMLHttp.onreadystatechange = function () {
       if (objXMLHttp.readyState !== 4) {
@@ -811,7 +811,7 @@ Sparrow.ajax = {
       }
       if (objXMLHttp.status === 200) {
         if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
-          console.log("login false");
+          console.log('login false');
           var config = objXMLHttp.responseText.json();
           document.domain = $.browser.cookie.root_domain;
           if (config.inFrame) {
@@ -821,10 +821,10 @@ Sparrow.ajax = {
           }
           return;
         }
-        if (objXMLHttp.responseText.indexOf("Access Denied") !== -1) {
+        if (objXMLHttp.responseText.indexOf('Access Denied') !== -1) {
           if (!lang.message.accessDenied)
-            lang.message.accessDenied = "Access Denied";
-          $.alert(lang.message.accessDenied, "sad");
+            lang.message.accessDenied = 'Access Denied';
+          $.alert(lang.message.accessDenied, 'sad');
           return;
         }
         if (callback) {
@@ -833,18 +833,18 @@ Sparrow.ajax = {
         }
       }
       if (objXMLHttp.status === 404) {
-        console.log("资源未找到");
+        console.log('资源未找到');
         return;
       }
       if (objXMLHttp.status === 500) {
-        console.log("服务器错误"); //
+        console.log('服务器错误'); //
         return;
       }
       if (objXMLHttp.status === 12031) {
-        console.log("服务器未启动"); //
+        console.log('服务器未启动'); //
         return;
       }
-      console.log(objXMLHttp.status + ":未知错误");
+      console.log(objXMLHttp.status + ':未知错误');
     };
   },
   _getInstance: function () {
@@ -864,27 +864,27 @@ Sparrow.ajax = {
     if (window.XMLHttpRequest) {
       http_request = new XMLHttpRequest();
       if (http_request.overrideMimeType) {
-        http_request.overrideMimeType("text/xml");
+        http_request.overrideMimeType('text/xml');
       }
       return http_request;
     }
     if (window.ActiveXObject) {
       try {
-        http_request = new ActiveXObject("Msxml2.XMLHTTP");
+        http_request = new ActiveXObject('Msxml2.XMLHTTP');
       } catch (e) {
         try {
-          http_request = new ActiveXObject("Microsoft.XMLHTTP");
+          http_request = new ActiveXObject('Microsoft.XMLHTTP');
         } catch (e) {}
       }
     } else {
-      console.log("浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器");
+      console.log('浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器');
     }
     return http_request;
   },
   _callback: function (xmlHttpRequest) {
     var result = xmlHttpRequest.responseText.json();
     if (result == null) {
-      $.message("json parse error " + xmlHttpRequest.responseText);
+      $.message('json parse error ' + xmlHttpRequest.responseText);
       return;
     }
     if (result.code !== this.ajax.SUCCESS) {
@@ -895,7 +895,7 @@ Sparrow.ajax = {
     this.ajax.referWindow.location.href = url;
   },
   req: function (getOrPost, url, callback, postStr, srcElement) {
-    if (url.indexOf("http://") === -1) {
+    if (url.indexOf('http://') === -1) {
       url = $.url.root + url;
     }
     var objXMLHttp = this._getInstance();
@@ -909,23 +909,23 @@ Sparrow.ajax = {
     //with (objXMLHttp) {
     try {
       objXMLHttp.open(getOrPost, url, true);
-      objXMLHttp.setRequestHeader("ajax", "true");
-      objXMLHttp.setRequestHeader("pragma", "no-cache");
-      objXMLHttp.setRequestHeader("cache-control", "no-cache");
-      if (getOrPost === "GET") {
+      objXMLHttp.setRequestHeader('ajax', 'true');
+      objXMLHttp.setRequestHeader('pragma', 'no-cache');
+      objXMLHttp.setRequestHeader('cache-control', 'no-cache');
+      if (getOrPost === 'GET') {
         objXMLHttp.send(null);
         return;
       }
       if (postStr != null) {
         //warn: Parameters: Character decoding failed
-        if (typeof postStr === "object") {
-          objXMLHttp.setRequestHeader("Content-Type", "application/json");
+        if (typeof postStr === 'object') {
+          objXMLHttp.setRequestHeader('Content-Type', 'application/json');
           objXMLHttp.send(JSON.stringify(postStr));
         } else {
-          postStr = postStr.replace(/%/g, "%25");
+          postStr = postStr.replace(/%/g, '%25');
           objXMLHttp.setRequestHeader(
-            "Content-Type",
-            "application/x-www-form-urlencoded;charset=utf-8"
+            'Content-Type',
+            'application/x-www-form-urlencoded;charset=utf-8'
           );
           objXMLHttp.send(postStr);
         }
@@ -935,18 +935,18 @@ Sparrow.ajax = {
     }
   },
   json: function (url, data, callback, srcElement) {
-    if (typeof data === "function") {
+    if (typeof data === 'function') {
       callback = data;
       data = null;
     }
 
     $.ajax.req(
-      "POST",
+      'POST',
       url,
       function (responseText) {
         var result = responseText.json();
         if (result == null) {
-          $.message("json parse error " + responseText);
+          $.message('json parse error ' + responseText);
           return;
         }
 
@@ -966,10 +966,10 @@ Sparrow.ajax = {
   },
   get: function (url, callback) {
     callback = callback ? callback : $.ajax._callback;
-    $.ajax.req("GET", url, callback);
+    $.ajax.req('GET', url, callback);
   },
   post: function (url, data) {
-    $.ajax.req("POST", url, $.ajax._callback, data);
+    $.ajax.req('POST', url, $.ajax._callback, data);
   },
 };
 
