@@ -22,7 +22,6 @@ lang = {
 };
 var appInfo = {
 	txtAppName : {
-		ctrlId : 'txtAppName',
 		errorCtrlId : 'errorAppName',
 		prompt : '请输入20位以下APP名称',
 		nullError : 'APP名称为必添项。',
@@ -32,7 +31,6 @@ var appInfo = {
 	},
 
 	txtAppCode : {
-		ctrlId : 'txtAppCode',
 		errorCtrlId : 'errorAppCode',
 		prompt : '请输入20位以下APP编码',
 		nullError : 'APP编码为必添项。',
@@ -41,7 +39,6 @@ var appInfo = {
 		lengthError : 'APP名称长度不得多于20。'
 	},
 	txtAppSort : {
-		ctrlId : 'txtAppSort',
 		errorCtrlId : 'errorAppSort',
 		prompt : '请输入20位以下APP编码',
 		nullError : 'APP编码为必添项。',

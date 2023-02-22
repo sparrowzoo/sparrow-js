@@ -22,7 +22,10 @@ lang = {
 };
 var appInfo = {
 	txtAppName : {
+<<<<<<< HEAD
 		ctrlId : 'txtAppName',
+=======
+>>>>>>> b755504f88dab632ac1f59c5ca0bce317930ccdf
 		errorCtrlId : 'errorAppName',
 		prompt : '请输入20位以下APP名称',
 		nullError : 'APP名称为必添项。',
@@ -32,7 +35,10 @@ var appInfo = {
 	},
 
 	txtAppCode : {
+<<<<<<< HEAD
 		ctrlId : 'txtAppCode',
+=======
+>>>>>>> b755504f88dab632ac1f59c5ca0bce317930ccdf
 		errorCtrlId : 'errorAppCode',
 		prompt : '请输入20位以下APP编码',
 		nullError : 'APP编码为必添项。',
@@ -41,7 +47,10 @@ var appInfo = {
 		lengthError : 'APP名称长度不得多于20。'
 	},
 	txtAppSort : {
+<<<<<<< HEAD
 		ctrlId : 'txtAppSort',
+=======
+>>>>>>> b755504f88dab632ac1f59c5ca0bce317930ccdf
 		errorCtrlId : 'errorAppSort',
 		prompt : '请输入20位以下APP编码',
 		nullError : 'APP编码为必添项。',
