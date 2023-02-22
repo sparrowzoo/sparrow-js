@@ -18,6 +18,7 @@ define([
     targetId,
     setTargetId,
     qunNumberMap,
+    ACCORD_RECALL,
   } = store;
   const { contactStore } = contacts;
 
@@ -27,17 +28,13 @@ define([
     getSessionKey,
     sessionTime,
     currentSendTime,
+    delLocalMsg,
   } = utils;
   const DBObject = indexedDB;
-  // const ajaxObj = require("../utils/api.js");
-  // const { wsInstance } = websocket; // wsInstance
-  // console.log(wsInstance);
   let wsInstance;
   function getWsInstance(ws) {
     wsInstance = ws;
   }
-  // const wsInstance = createWS(selfId.value);
-  // const dbInstance = initIndexedDB();
 
   let localMessageTemplate;
 
@@ -135,7 +132,6 @@ define([
       } else {
         spanLastMsg.innerText = "[图片]";
       }
-
       fragmentListContainer.appendChild(divList);
     }
     msgListContainerDiv.appendChild(fragmentListContainer);
@@ -167,7 +163,8 @@ define([
           chatType = CHAT_TYPE_1_2_N;
         }
         getMsgList(targetId, username, chatType);
-        setTargetId(targetId, username, chatType, avatar);
+        const currentSession = getSessionKey(chatType, selfId.value, targetId);
+        setTargetId(targetId, username, chatType, avatar, currentSession);
       };
     });
   }
@@ -220,16 +217,6 @@ define([
       spanUnReadCount.textContent = item.count;
     }
     updateSessionCom(item);
-    // 更新 文本 和时间
-    // const spanLastMsg = divMsgArr[index].querySelector(".msg-last");
-    // if (msgType === TEXT_MESSAGE) {
-    //   // 最新信息是文本
-    //   spanLastMsg.innerHTML = msgValue;
-    // } else {
-    //   spanLastMsg.innerText = "[图片]";
-    // }
-    // const spanMsgTime = divMsgArr[index].querySelector(".msg-time");
-    // spanMsgTime.innerText = historyMsgTime(msgTime);
   }
   function updateSessionCom(sessionItem) {
     const { index, msgValue, msgTime, msgType } = sessionItem;
@@ -318,24 +305,38 @@ define([
       // 阻止冒泡 不会执行window 的click事件
       e.stopPropagation();
     });
-    moreIcon.addEventListener("click", (e) => {
-      // 阻止冒泡，不会触发window 注册的点击事件
-      e.stopPropagation();
-      // 控制侧边栏的显示
-      divMoreMsg.style.display =
-        divMoreMsg.style.display === "none" ? "block" : "none";
-      document.querySelector(".group-more-part").style.display = "block";
-      // 点击更多icon 后 注册window 点击事件，用于隐藏侧边栏
-      window.addEventListener("click", backMoreIcon);
-    });
+    moreIcon.addEventListener(
+      "click",
+      (e) => {
+        // 阻止冒泡，不会触发window 注册的点击事件
+        e.stopPropagation();
+        // 控制侧边栏的显示
+        divMoreMsg.style.display =
+          divMoreMsg.style.display === "none" ? "block" : "none";
+        document.querySelector(".group-more-part").style.display = "block";
+        // 关闭撤回框
+        if (document.querySelector(".msg-recall").style.display === "block") {
+          document.querySelector(".msg-recall").style.display = "none";
+        }
+        // 点击更多icon 后 注册window 点击事件，用于隐藏侧边栏
+        window.addEventListener("click", windowClick(true));
+      },
+      true
+    );
   }
 
-  // 右侧弹框的回弹事件
-  function backMoreIcon() {
+  // 右侧弹框的回弹事件 移除 加在window 上的点击事件
+  function windowClick(isIcon) {
     // 用于再次显示icon 图标
-    document.querySelector(".more-message").style.display = "none";
-    // 隐藏后 取消window 事件
-    window.removeEventListener("click", backMoreIcon);
+    return function winClick(e) {
+      if (isIcon) {
+        document.querySelector(".more-message").style.display = "none";
+      } else {
+        document.querySelector(".msg-recall").style.display = "none";
+      }
+      // 隐藏后 取消window 事件
+      window.removeEventListener("click", winClick);
+    };
   }
 
   // 控制图标的显示与隐藏 个人聊天框没有icon
@@ -421,7 +422,8 @@ define([
         msgTime,
         msgListFragment,
         referenceNode,
-        msg.fromUserId
+        msg.fromUserId,
+        msg.clientSendTime
       );
     });
 
@@ -506,7 +508,6 @@ define([
 
     // 查看更多的点击事件
     divGroup.querySelector(".look-more-user").onclick = function (e) {
-      console.log("click");
       isFold = !isFold;
       if (isFold) {
         if (groupObj.members.length > 11) {
@@ -556,13 +557,15 @@ define([
   function sendMsgByBtn() {
     const textDom = document.querySelector(".input-content");
     if (textDom.value.length === 0) return;
-    sendMessage(textDom.value, TEXT_MESSAGE);
+    const clientSendTime = new Date().getTime();
+    sendMessage(textDom.value, TEXT_MESSAGE, clientSendTime);
     // websocket 发送数据
     wsInstance.sendMsg(
       targetId.type,
       TEXT_MESSAGE,
       targetId.value,
-      textDom.value
+      textDom.value,
+      clientSendTime
     ); // userid
     textDom.value = "";
     textDom.autofocus = true;
@@ -601,9 +604,64 @@ define([
       // 获取到文件后 清空值 防止重复上传图片的bug
       uploadFile.value = "";
       const url = window.URL.createObjectURL(file);
-      sendMessage(url, IMAGE_MESSAGE);
-      wsInstance.sendMsg(targetId.type, IMAGE_MESSAGE, targetId.value, file);
+      const clientSendTime = new Date().getTime();
+      sendMessage(url, IMAGE_MESSAGE, clientSendTime);
+      wsInstance.sendMsg(
+        targetId.type,
+        IMAGE_MESSAGE,
+        targetId.value,
+        file,
+        clientSendTime
+      );
     });
+  }
+
+  // 信息 监听鼠标右击事件
+  function clickRight(copyMessageTemplate, messageType) {
+    let sourceDom = null;
+    if (messageType === TEXT_MESSAGE) {
+      sourceDom = copyMessageTemplate.querySelector(".message-detail");
+    } else {
+      sourceDom = copyMessageTemplate.querySelector(".msg-picture-detail");
+    }
+    // const divMsg = document.querySelector(".message-detail");
+    const recallDialog = document.querySelector(".msg-recall");
+    sourceDom.addEventListener("contextmenu", function (e) {
+      recallDialog.style.display = "block";
+      recallDialog.style.top = e.pageY + "px";
+      recallDialog.style.left = e.pageX + 5 + "px";
+      // 阻止默认的菜单弹出事件
+      e.preventDefault();
+      window.addEventListener("click", windowClick(false));
+      // 关闭 更多信息的侧边栏
+      if (document.querySelector(".more-message").style.display === "block") {
+        document.querySelector(".more-message").style.display = "none";
+      }
+
+      recallMsg(sourceDom);
+    });
+  }
+  // 撤回点击事件
+  function recallMsg(sourceDom) {
+    const recallDialog = document.querySelector(".msg-recall");
+    recallDialog.querySelector(".recall").onclick = async function (e) {
+      // 发送请求 广播这个撤回信息
+      const sessionKey = getSessionKey(
+        targetId.type,
+        selfId.value,
+        targetId.value
+      );
+      const params = {
+        fromUserId: selfId.value + "",
+        clientSendTime: sourceDom.clientSendTime + "",
+        sessionKey,
+        chatType: targetId.type,
+      };
+      const res = await api.cancelMsg(params);
+      console.log(res, "api 撤回 ok");
+      // 删除本地 session 记录
+      delLocalMsg(sourceDom.clientSendTime, sessionKey, ACCORD_RECALL);
+    };
   }
 
   // 倒叙插入node节点
@@ -614,7 +672,8 @@ define([
     msgTime,
     parentNode,
     oldnode,
-    memberId
+    memberId,
+    clientSendTime
   ) {
     const copyMessageTemplate = localMessageTemplate.cloneNode(true);
 
@@ -641,7 +700,13 @@ define([
       }
     }
     // 将信息 渲染到页面上
-    showMessageDetail(type, copyMessageTemplate, value, memberId);
+    showMessageDetail(
+      type,
+      copyMessageTemplate,
+      value,
+      memberId,
+      clientSendTime
+    );
     referenceNode = parentNode.insertBefore(copyMessageTemplate, oldnode);
   }
 
@@ -660,22 +725,29 @@ define([
   }
 
   // 接收消息
-  function receiveMessage(value, type, memberId) {
+  function receiveMessage(value, type, clientSendTime, memberId) {
+    // memberId 只有 接收到群消息 才会有值
     const copyMessageTemplate = localMessageTemplate.cloneNode(true);
     copyMessageTemplate.classList.add("left");
-    commonMessage(copyMessageTemplate, value, type, memberId);
+    commonMessage(copyMessageTemplate, value, type, clientSendTime, memberId);
   }
 
   // 往聊天区域新增信息的方法
-  function sendMessage(value, type) {
+  function sendMessage(value, type, clientSendTime) {
     const copyMessageTemplate = localMessageTemplate.cloneNode(true);
     copyMessageTemplate.classList.add("right");
     // 发送方 在任何情况下都不需要显示 用户名，所以不需要传入 memberId
-    commonMessage(copyMessageTemplate, value, type);
+    commonMessage(copyMessageTemplate, value, type, clientSendTime);
   }
 
   // 收发消息共有的操作
-  function commonMessage(copyMessageTemplate, value, type, memberId) {
+  function commonMessage(
+    copyMessageTemplate,
+    value,
+    type,
+    clientSendTime,
+    memberId
+  ) {
     // 设置时间
     const currentTemp = Date.now();
     if (currentTemp - lastTime > 1000 * 60 * 10) {
@@ -688,12 +760,11 @@ define([
 
     // 设置头像
     const avatarImg = copyMessageTemplate.querySelector(".avatar-user");
-    console.log(copyMessageTemplate.className);
     if (copyMessageTemplate.className.includes("right")) {
       // 当前是自己发送的信息
       avatarImg.src = selfId.avatar;
     } else {
-      // 当前是 其他人发送来的信息
+      // 当前是 其他人发送来的信息, 区分人 / 群
       if (memberId || memberId === 0) {
         // 这里代表的是 群 需要通过memberId 获取avatar
         avatarImg.src = qunNumberMap.map[memberId].avatar;
@@ -703,14 +774,26 @@ define([
       }
     }
     // 将信息展示到页面上
-    showMessageDetail(type, copyMessageTemplate, value, memberId);
+    showMessageDetail(
+      type,
+      copyMessageTemplate,
+      value,
+      memberId,
+      clientSendTime
+    );
     const msgParentDiv = document.querySelector(".msg-detail");
     msgParentDiv.appendChild(copyMessageTemplate);
     getScrollBottom(".msg-detail");
   }
 
   // 显示聊天信息
-  function showMessageDetail(type, copyMessageTemplate, value, memberId) {
+  function showMessageDetail(
+    type,
+    copyMessageTemplate,
+    value,
+    memberId,
+    clientSendTime
+  ) {
     // 根据聊天类型 设置用户名
     if (targetId.type === CHAT_TYPE_1_2_N) {
       const divsUsername = copyMessageTemplate.querySelectorAll(".username");
@@ -726,6 +809,12 @@ define([
       copyMessageTemplate.querySelector(".message-text").textContent = value;
       const textDom = copyMessageTemplate.querySelector(".message-detail");
       textDom.style.display = "block";
+      // 将每条信息的唯一标识，保存到对象上
+      textDom.clientSendTime = clientSendTime;
+      // 给自己的每一个消息 添加一个右键的点击事件
+      if (copyMessageTemplate.className.includes("right")) {
+        clickRight(copyMessageTemplate, TEXT_MESSAGE);
+      }
     } else {
       const divImgContainer = copyMessageTemplate.querySelector(
         ".msg-picture-detail"
@@ -733,6 +822,10 @@ define([
       const img = copyMessageTemplate.querySelector(".msg-picture");
       divImgContainer.style.display = "block";
       img.src = value;
+      divImgContainer.clientSendTime = clientSendTime;
+      if (copyMessageTemplate.className.includes("right")) {
+        clickRight(copyMessageTemplate, IMAGE_MESSAGE);
+      }
       img.onload = function () {
         // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
         window.URL.revokeObjectURL(value);

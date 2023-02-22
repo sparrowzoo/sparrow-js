@@ -53,27 +53,27 @@ define(["store"], function (store) {
     }
 
     // 添加单条数据 也就是修改数据库中的数据
-    updateStoreItem(key, session, storeName) {
+    updateStoreItem(sessionKey, messageItem, storeName) {
       const updateStore = this.db
         .transaction(storeName, "readwrite")
         .objectStore(storeName);
-      const request = updateStore.get(key);
+      const request = updateStore.get(sessionKey);
       // 查询成功后的回调
       request.onsuccess = (event) => {
         const sessionItem = event.target.result;
         if (!sessionItem) {
           // 当前没有保存session_key 需要创建一个会话记录
-          this.createItemByKey(key, session, storeName);
+          this.createItemByKey(sessionKey, messageItem, storeName);
           return;
         }
         // 添加数据  也就是更新store
         if (sessionItem.messages) {
           // 当前聊天对象 有历史记录 直接push
-          sessionItem.messages.push(session);
+          sessionItem.messages.push(messageItem);
         } else {
           // 没有messages 会话列表 那么先创建一个
           sessionItem.messages = [];
-          sessionItem.messages.push(session);
+          sessionItem.messages.push(messageItem);
         }
 
         const updateRequest = updateStore.put(sessionItem);
@@ -109,6 +109,26 @@ define(["store"], function (store) {
           resolve(event.target.result);
         };
       });
+    }
+    // 撤回 msg
+    recallMsg(key, storeName, messageArr) {
+      const updateStore = this.db
+        .transaction(storeName, "readwrite")
+        .objectStore(storeName);
+      const request = updateStore.get(key);
+      // 查询成功后的回调
+      request.onsuccess = (event) => {
+        const sessionItem = event.target.result;
+        if (!sessionItem) {
+          return;
+        }
+        // 更新message
+        sessionItem.messages = messageArr;
+        const updateRequest = updateStore.put(sessionItem);
+        updateRequest.onsuccess = function () {
+          console.log("撤回成功");
+        };
+      };
     }
 
     // 查询所有数据

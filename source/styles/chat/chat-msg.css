@@ -206,6 +206,9 @@ h5 {
 .chat-msg .msg-content .msg-detail .message .user-msg .message-detail .message-text {
   white-space: pre-wrap;
 }
+.chat-msg .msg-content .msg-detail .message .user-msg .message-detail:hover {
+  cursor: pointer;
+}
 .chat-msg .msg-content .msg-detail .message .user-msg .msg-picture-detail {
   position: relative;
   margin: 0 20px;
@@ -213,6 +216,15 @@ h5 {
 .chat-msg .msg-content .msg-detail .message .user-msg .msg-picture-detail .msg-picture {
   border-radius: 5px;
   max-width: 150px;
+  cursor: pointer;
+}
+.chat-msg .msg-content .msg-detail .message .recall {
+  text-align: center;
+  color: #666;
+}
+.chat-msg .msg-content .msg-detail .message .recall .reset {
+  color: #607298;
+  cursor: pointer;
 }
 .chat-msg .msg-content .msg-detail .left .user-msg {
   flex-direction: row;

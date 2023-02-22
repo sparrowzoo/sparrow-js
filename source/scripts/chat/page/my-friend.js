@@ -266,7 +266,8 @@ define([
 
   async function chatBy(user_id, username, chatType, avatar) {
     // 聊天之前 设置全局的聊天对象
-    setTargetId(user_id, username, chatType, avatar);
+    const currentSession = getSessionKey(chatType, selfId.value, user_id);
+    setTargetId(user_id, username, chatType, avatar, currentSession);
     // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
     activeMenu = "1";
     showContentByMenu("1");

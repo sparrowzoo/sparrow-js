@@ -1,0 +1,10 @@
+/*------------站内聚焦-图片幻灯片效果*/
+/*.list 部分在global里*/
+.photo-tab .count {overflow:hidden;height:80px;position:relative;}
+.photo-tab .count ul{position: absolute;top: 0px;left:0px;list-style:none;padding:0px;margin:0px;board:#000 1px solid;}
+.photo-tab .count li {color: #fff;float: left;width:60px;height:80px;cursor: pointer;margin-right:8px;overflow: hidden;opacity: 0.7;filter: alpha(opacity =70);text-align: center;padding:0px;display:inline;}
+.photo-tab .count li img{width:60px;height:40px;cursor: pointer;}
+.photo-tab .count li.current {color: #fff;opacity: 1;filter: alpha(opacity=100);font-weight: 700;}
+.comment-line{width:750px;margin:0px 0px 10px 0px;overflow:hidden;}
+.comment-line img{width:120px;height:120px;float:left;}
+.comment-line div{width:620px;height:120px;float:right;}

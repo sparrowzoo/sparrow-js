@@ -2,14 +2,15 @@ package com.sparrow.yaml.controller;
 
 import com.sparrow.mvc.RequestParameters;
 import com.sparrow.utility.StringUtility;
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Stack;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
 public class YamlController {
 
