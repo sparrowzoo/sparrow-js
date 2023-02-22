@@ -11,6 +11,10 @@ define(function () {
   const CHAT_TYPE_1_2_1 = 0;
   const CHAT_TYPE_1_2_N = 1;
   const selfId = { value: 0, avatar: "" };
+  const ACCORD_RECALL = "ACCORD_RECALL";
+  const ACCEPT_RECALL = "ACCEPT_RECALL";
+  const SEND_TYPE = "SEND_TYPE";
+  const RECEIVE_TYPE = "RECEIVE_TYPE";
 
   const qunNumberMap = {
     map: {},
@@ -27,12 +31,14 @@ define(function () {
     type: CHAT_TYPE_1_2_1,
     username: "",
     avatar: null,
+    sessionKey: "",
   };
-  function setTargetId(id, username, chatType, avatar) {
+  function setTargetId(id, username, chatType, avatar, sessionKey) {
     targetId.value = id;
     targetId.type = chatType;
     targetId.username = username;
     targetId.avatar = avatar;
+    targetId.sessionKey = sessionKey;
   }
   function changeSelfId(id, avatar) {
     selfId.value = id;
@@ -53,5 +59,9 @@ define(function () {
     setTargetId,
     changeSelfId,
     qunNumberMap,
+    ACCORD_RECALL,
+    ACCEPT_RECALL,
+    SEND_TYPE,
+    RECEIVE_TYPE,
   };
 });

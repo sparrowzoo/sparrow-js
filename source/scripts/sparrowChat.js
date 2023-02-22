@@ -90,7 +90,8 @@ var SparrowProtocol = function (
   msgType,
   currentUserId,
   sessionKey,
-  msg
+  msg,
+  clientSendTime
 ) {
   if (window === this) {
     return new SparrowProtocol(
@@ -98,7 +99,8 @@ var SparrowProtocol = function (
       msgType,
       currentUserId,
       sessionKey,
-      msg
+      msg,
+      clientSendTime
     );
   }
 
@@ -118,6 +120,31 @@ var SparrowProtocol = function (
       var dataView = new DataView(buf);
       var offset = 0;
       this.chatType = dataView.getUint8(offset);
+      // 新增的 撤销部分
+      if (this.chatType === 2) {
+        console.log("撤销协议");
+        offset += 1;
+        const sesessionKeyLength = dataView.getInt32(offset);
+        offset += 4; //session key length=4
+        const sessionKeyBuffer = buf.slice(offset, sesessionKeyLength + offset);
+        offset += sesessionKeyLength;
+        const sessionKey = new Uint8Array(sessionKeyBuffer).toString();
+        const clientSendTimeLength = dataView.getInt32(offset);
+        offset += 4; //session key length=4
+        const clientSendTimeBuffer = buf.slice(
+          offset,
+          clientSendTimeLength + offset
+        );
+        offset += clientSendTimeLength;
+        const clientSendTime = +new Uint8Array(clientSendTimeBuffer).toString();
+        console.log(sesessionKeyLength, sessionKey, clientSendTime);
+        callback({
+          chatType: this.chatType,
+          clientSendTime: clientSendTime,
+          sessionKey: sessionKey,
+        });
+        return;
+      }
       offset += 1; //chat type length=1
       this.msgType = dataView.getUint8(offset);
       offset += 1; //msg type length=1
@@ -179,7 +206,7 @@ var SparrowProtocol = function (
       //session key length's bytes
       this.sessionKeyLengthBytes = this.sessionKeyBytesLength.toBytes();
       //session key length's bytes length
-      this.sesessionKeyLengthLength = this.sessionKeyLengthBytes.length; //4
+      this.sessionKeyLengthLength = this.sessionKeyLengthBytes.length; //4
     } else {
       this.targetUserId = parseInt(sessionKey, 10);
       this.targetUserIdBytes = this.targetUserId.toBytes();
@@ -190,7 +217,7 @@ var SparrowProtocol = function (
     this.msgLength = msgLength;
     this.msgLengthBytes = msgLength.toBytes();
     this.msgLengthLength = this.msgLengthBytes.length;
-    this.clientSendTime = Date.now();
+    this.clientSendTime = clientSendTime;
     this.sendTimeBytes = (this.clientSendTime + "").toArray();
     this.sendTimeLength = this.sendTimeBytes.length;
     return this;
@@ -204,7 +231,7 @@ SparrowProtocol.prototype.toBytes = function () {
       this.chatTypeLength +
       this.msgTypeLength +
       this.currentUserIdLength + //4
-      this.sesessionKeyLengthLength + //4
+      this.sessionKeyLengthLength + //4
       this.sessionKeyBytesLength +
       this.msgLengthLength + //4
       this.msgLength +
@@ -227,7 +254,7 @@ SparrowProtocol.prototype.toBytes = function () {
   offset += this.currentUserIdLength;
   if (this.chatType === CHAT_TYPE_1_2_N) {
     result.set(this.sessionKeyLengthBytes, offset);
-    offset += this.sesessionKeyLengthLength;
+    offset += this.sessionKeyLengthLength;
     result.set(this.sessionKeyBytes, offset);
     offset += this.sessionKeyBytesLength;
   } else {
