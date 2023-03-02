@@ -48,6 +48,12 @@ public class HelloController {
         return ViewWithModel.forward("hello", new HelloVO("我来自遥远的sparrow 星球,累死我了..."));
     }
 
+    public ViewWithModel sparrowJspTest() {
+        logger.info("sparrow jsp");
+        HelloVO hello = new HelloVO("我来自遥远的sparrow 星球,累死我了...");
+        return ViewWithModel.forward("sparrow_jsp", hello);
+    }
+
     public ViewWithModel exception() throws BusinessException {
         throw new BusinessException(SparrowError.SYSTEM_SERVER_ERROR);
     }

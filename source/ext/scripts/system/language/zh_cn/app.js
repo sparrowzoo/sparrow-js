@@ -1,15 +1,12 @@
 lang = {
 	message: {
 		delete: "APP删除后将无法恢复，您确认要删除吗?",
-		deleteFile: "确定后此APP将被彻底删除，您确认要继续本次操作吗？",
 		update: "APP更新成功",
 		noSelectRecord: "请选择APP",
 		enable: "您确认启用该APP吗？",
 		disable: "您确认禁用该APP吗?",
 		error: "网络繁忙，请稍侯再试。",
-		resourceName: "资源版块",
 		accessDenied:"访问被拒绝",
-		setPrivilegeSuccessMessage : "恭喜：组[{0}]权限设置成功!"
 	},
 	command:{
         return:"返回",
