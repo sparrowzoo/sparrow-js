@@ -55,8 +55,9 @@ Sparrow.v = {
         }
         if (!color) color = $.v.background_color;
         var parentLevel = validate.parentLevel;
-        if (typeof (parentLevel) == "undefined")
+        if (typeof (parentLevel) == "undefined") {
             parentLevel = 1;
+        }
         if (parentLevel > 0) {
             var background = srcElement;
             if (background == null) return;

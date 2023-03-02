@@ -36,8 +36,8 @@ lang = {
 }
 ,txtAge:{
 "errorCtrlId" : 'errorAge',
-"minValue" : 1,
 "digitalError" : '年龄必须>0并且<100',
+"minValue" : 1,
 "maxValue" : 100,
 "allowNull" : true,
 "prompt" : '请输入年龄',
@@ -131,8 +131,8 @@ lang = {
 "allowCharLengthShowControlId" : 'spanAllowCharLength',
 "allowNull" : true,
 "prompt" : '',
-"maxCharLengthControlId" : 'spanMaxCharLength',
 "maxAllowCharLength" : 512,
+"maxCharLengthControlId" : 'spanMaxCharLength',
 "event" : 'AllowInputCharLengthValidator'
 }
 }
