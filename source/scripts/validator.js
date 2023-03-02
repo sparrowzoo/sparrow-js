@@ -210,7 +210,7 @@ Sparrow.v = {
         if (result !== true) {
             return result;
         }
-        if (srcElement.value.search(/^[\u4e00-\u9fa5]$/) === -1) {
+        if (!validate.allowNull&&srcElement.value.search(/^[\u4e00-\u9fa5]+/) === -1) {
             return this.fail(validate, validate.chineseCharactersError);
         }
         return this.ok(validate,srcElement);
@@ -369,5 +369,77 @@ Sparrow.v = {
             }
         }
         return true;
+    },
+    init:function (config){
+        for (var o in config) {
+           var ctrl=$("#"+o);
+           var validation=config[o];
+           var event= validation.event;
+           ctrl.bind("onfocus",function (){
+                $.v.showMessage(config,this);
+           });
+           switch (event){
+               case "UserNameRuleValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isUserNameRule(config,this)
+                   });
+                   break;
+               case "AllowOptionsValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isNull(config,this);
+                   });
+                   break;
+               case "DigitalValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isDigital(config,this);
+                   });
+                   break;
+               case "EmailValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isEmail(config,this);
+                   });
+                   break;
+               case "NullValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isNull(config,this);
+                   });
+                   break;
+               case "EqualValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isEqual(config,this);
+                   });
+                   break;
+               case "IdCardValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isIdCard(config,this);
+                   });
+                   break;
+               case "MobileValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isMobile(config,this);
+                   });
+                   break;
+               case "TelValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isTel(config,this);
+                   });
+                   break;
+               case "ChineseCharactersValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isChineseCharacters(config,this);
+                   });
+                   break;
+               case "AllowInputCharLengthValidator":
+                   var innerInfo=validation
+                   $("#"+innerInfo.maxCharLengthControlId).html(innerInfo.maxAllowCharLength);
+                   ctrl.bind("onblur",function (){
+                       $.v.allowInputOption(config,this);
+                   });
+
+                   ctrl.bind("onkeyup",function (){
+                       $.v.updateTxtCount(this,innerInfo.allowCharLengthShowControlId,500);
+                   });
+           }
+        }
     }
 };
