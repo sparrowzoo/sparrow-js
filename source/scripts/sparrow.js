@@ -1028,8 +1028,9 @@ Sparrow.v = {
         }
         if (!color) color = $.v.background_color;
         var parentLevel = validate.parentLevel;
-        if (typeof (parentLevel) == "undefined")
+        if (typeof (parentLevel) == "undefined") {
             parentLevel = 1;
+        }
         if (parentLevel > 0) {
             var background = srcElement;
             if (background == null) return;
@@ -1403,7 +1404,7 @@ Sparrow.v = {
                    });
                    break;
                case "AllowInputCharLengthValidator":
-                   innerInfo=validation
+                   var innerInfo=validation
                    $("#"+innerInfo.maxCharLengthControlId).html(innerInfo.maxAllowCharLength);
                    ctrl.bind("onblur",function (){
                        $.v.allowInputOption(config,this);
