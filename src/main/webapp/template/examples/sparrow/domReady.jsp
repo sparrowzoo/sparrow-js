@@ -13,15 +13,15 @@
     <!--test document ready-->
     <script language="JavaScript" type="text/javascript">
         require(['sparrow','domReady'], function ($, dom) {
-            console.log("require ready");
-            console.log("dom ready -"+dom);
-            console.log("helle {0}".format(" sparrow !"));
-        });
-
-        document.ready(function () {
-            console.log("document ready");
+            console.log("requirejs require ready");
+            console.log("requirejs dom ready -"+dom);
+            console.log("requirejs helle {0}".format(" sparrow !"));
         });
         window.onload=function (ev) { console.log("window onload")}
+
+        // document.ready(function () {
+        //     console.log("requirejs document ready");
+        // });
 
     </script>
 </head>
@@ -38,7 +38,13 @@
         </div>
 
         <div class="content">
-            <img src="http://test-timeout" alt="测试超时"><br/>
+<%--            <img src="/errorTimeout?t=1" alt="测试超时"><br/>--%>
+<%--            <img src="/errorTimeout?t=2" alt="测试超时"><br/>--%>
+<%--            <img src="/errorTimeout?t=3" alt="测试超时"><br/>--%>
+
+            <img src="http://passport.sparrowzoo.com/sparrow/1" alt="测试超时"><br/>
+            <img src="http://passport.sparrowzoo.com/sparrow/2" alt="测试超时"><br/>
+            <img src="http://passport.sparrowzoo.com/sparrow/3" alt="测试超时"><br/>
 
             <ul>
             <li>jquery document ready vs requirejs domready<br/>https://stackoverflow.com/questions/15332628/requirejs-domready-plugin-vs-jquery-document-ready</li>
