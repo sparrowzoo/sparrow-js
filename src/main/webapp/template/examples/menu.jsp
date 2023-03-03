@@ -60,6 +60,9 @@
     <div class="pure-menu">
         <a class="pure-menu-heading" href="#">sparrow</a>
         <ul class="pure-menu-list">
+
+            <li class="pure-menu-item"><a href="${root_path}/examples/sparrow/domReady" class="pure-menu-link">Dom Ready 测试</a>
+            </li>
             <li class="pure-menu-item"><a href="${root_path}/examples/selector/selector" class="pure-menu-link">选择器</a>
             </li>
 
