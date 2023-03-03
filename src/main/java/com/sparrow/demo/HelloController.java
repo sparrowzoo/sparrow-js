@@ -33,6 +33,11 @@ public class HelloController {
         this.servletContainer = servletContainer;
     }
 
+    public void errorTimeout() throws Exception {
+        Thread.sleep(2000);
+        throw new Exception("");
+    }
+
     @RequestParameters("key")
     public HelloVO env(String key) throws BusinessException {
         return new HelloVO(System.getenv(key));

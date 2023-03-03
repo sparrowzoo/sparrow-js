@@ -5,6 +5,7 @@
     <!--在bean context中定义-->
     <controller id="helloController">
         <!--/template/index.jsp 兼容欢迎页-->
+        <action name="/errorTimeout" method="errorTimeout"/>
         <action name="/sparrow-jsp" method="sparrowJspTest"/>
         <action name="/template/welcome.jsp" method="welcome"/>
         <action name="/env.json" method="env" login="NO_AUTHENTICATE"/>
