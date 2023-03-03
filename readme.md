@@ -82,3 +82,13 @@ proxy_send_timeout:600
 #设置往后端/上游服务器发送请求的超时时间，默认为60s，此超时时间指的是两次成功写操作间隔时间，而不是发送整个请求的超时时间。如果在此超时时间内上，游服务器没有接收任何响应，则Nginx关闭此连接。
 
 ```
+
+# 部署运行脚本
+[部署脚本](deploy/deploy.md)
+
+[nginx 配置](deploy/nginx.conf)
+
+[server.xml 配置](deploy/server.xml)
+
+[supervisor 配置](deploy/supervisor.md)
+
