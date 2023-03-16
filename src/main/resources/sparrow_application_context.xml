@@ -2,9 +2,10 @@
 <!DOCTYPE beans PUBLIC "-//sparrow Framework//DTD ioc Configuration//EN"
     "beans.dtd">
 <beans>
-<!--    <import resource="sparrow-default-beans.xml"/>-->
+    <!--    <import resource="sparrow-default-beans.xml"/>-->
     <component-scan>com.sparrow</component-scan>
     <!---当前进程的所有datasource实例-->
+    <bean name="sparrowServletUtility" class="com.sparrow.utility.web.SparrowServletUtility"/>
     <bean name="authorizingService" class="com.sparrow.authorizing.AuthorizingDemo"/>
     <bean name="helloController" class="com.sparrow.demo.HelloController" controller="true">
         <property name="authenticator" ref="authorizingService"/>

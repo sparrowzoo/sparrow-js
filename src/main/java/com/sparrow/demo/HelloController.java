@@ -6,6 +6,7 @@ import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginUser;
+import com.sparrow.protocol.NotTryException;
 import com.sparrow.protocol.Result;
 import com.sparrow.protocol.constant.SparrowError;
 import com.sparrow.servlet.ServletContainer;
@@ -33,9 +34,17 @@ public class HelloController {
         this.servletContainer = servletContainer;
     }
 
-    public void errorTimeout() throws Exception {
-        Thread.sleep(2000);
-        throw new Exception("");
+    @RequestParameters("seconds")
+    public void timeout(Integer seconds) throws Exception {
+        Thread.sleep(seconds * 1000);
+    }
+
+    @RequestParameters("seconds")
+    public ViewWithModel error(Integer seconds) throws Throwable {
+        if (seconds!=null&&seconds > 0) {
+            Thread.sleep(seconds * 1000);
+        }
+        throw new NotTryException("error");
     }
 
     @RequestParameters("key")
