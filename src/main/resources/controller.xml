@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE mvc PUBLIC "-//sparrow Framework//DTD mvc Configuration//EN"
-        "http://www.sparrowzoo.com/dtds/mvc.dtd">
+    "http://www.sparrowzoo.com/dtds/mvc.dtd">
 <mvc>
     <!--在bean context中定义-->
     <controller id="helloController">
         <!--/template/index.jsp 兼容欢迎页-->
+        <action name="/error" method="error" login="NO_AUTHENTICATE"/>
+        <action name="/timeout" method="timeout" login="NO_AUTHENTICATE"/>
+        <action name="/sparrow-jsp" method="sparrowJspTest"/>
         <action name="/template/welcome.jsp" method="welcome"/>
         <action name="/env.json" method="env" login="NO_AUTHENTICATE"/>
         <action name="/env2.json" method="env2" login="NO_AUTHENTICATE"/>

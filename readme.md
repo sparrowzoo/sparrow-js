@@ -16,8 +16,8 @@ build
 
 nginx
 ---
-```aidl
-Docroot is: /opt/homebrew/var/www
+```
+root is: /opt/homebrew/var/www
 
 The default port has been set in /opt/homebrew/etc/nginx/nginx.conf to 8080 so that
 nginx can run without sudo.
@@ -29,7 +29,7 @@ To restart nginx after an upgrade:
 Or, if you don't want/need a background service you can just run:
   /opt/homebrew/opt/nginx/bin/nginx -g daemon off;
 ```
-\
+
 TypeError: Cannot read property 'apply' of undefined issue
 ---
 https://github.com/gulpjs/gulp-cli/issues/84
@@ -42,7 +42,7 @@ entered FATAL state, too many start retries too quickly
 ```
 
 ## 解决方案
-- tomcat 启动用run 非start start 为守护进程无法监控
+- tomcat 启动用run 非start (start 为守护进程无法监控)
 ```
 /root/tomcat-sparrow/bin/catalina.sh run
 ```
@@ -71,7 +71,7 @@ groups www //show groups of www
 ```
 
 ## 文件上传超时重试问题
-```aidl
+```
 proxy_connect_timeout:600 
 #与后端/上游服务器建立连接的超时时间，默认为60s，此时间不超过75s。
 
@@ -82,3 +82,9 @@ proxy_send_timeout:600
 #设置往后端/上游服务器发送请求的超时时间，默认为60s，此超时时间指的是两次成功写操作间隔时间，而不是发送整个请求的超时时间。如果在此超时时间内上，游服务器没有接收任何响应，则Nginx关闭此连接。
 
 ```
+# 部署运行脚本
+[部署脚本](deploy/deploy.md)
+[nginx 配置](deploy/nginx.conf)
+[server.xml 配置](deploy/server.xml)
+[supervisor 配置](deploy/supervisor.md)
+
