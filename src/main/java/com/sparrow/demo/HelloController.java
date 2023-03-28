@@ -6,6 +6,7 @@ import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginUser;
+import com.sparrow.protocol.NotTryException;
 import com.sparrow.protocol.Result;
 import com.sparrow.protocol.constant.SparrowError;
 import com.sparrow.servlet.ServletContainer;
@@ -33,6 +34,19 @@ public class HelloController {
         this.servletContainer = servletContainer;
     }
 
+    @RequestParameters("seconds")
+    public void timeout(Integer seconds) throws Exception {
+        Thread.sleep(seconds * 1000);
+    }
+
+    @RequestParameters("seconds")
+    public ViewWithModel error(Integer seconds) throws Throwable {
+        if (seconds!=null&&seconds > 0) {
+            Thread.sleep(seconds * 1000);
+        }
+        throw new NotTryException("error");
+    }
+
     @RequestParameters("key")
     public HelloVO env(String key) throws BusinessException {
         return new HelloVO(System.getenv(key));
@@ -46,6 +60,12 @@ public class HelloController {
     public ViewWithModel hello() {
         logger.info("hello");
         return ViewWithModel.forward("hello", new HelloVO("我来自遥远的sparrow 星球,累死我了..."));
+    }
+
+    public ViewWithModel sparrowJspTest() {
+        logger.info("sparrow jsp");
+        HelloVO hello = new HelloVO("我来自遥远的sparrow 星球,累死我了...");
+        return ViewWithModel.forward("sparrow_jsp", hello);
     }
 
     public ViewWithModel exception() throws BusinessException {
