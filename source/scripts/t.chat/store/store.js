@@ -15,30 +15,7 @@ define(function () {
   const ACCEPT_RECALL = 'ACCEPT_RECALL';
   const SEND_TYPE = 'SEND_TYPE';
   const RECEIVE_TYPE = 'RECEIVE_TYPE';
-  // 我的消息页面
-  const MSGCHART = 'MSGCHART';
-  // 联系客服页面
-  const SERVICECHART = 'SERVICECHART';
-  // 保存当前页面模块 用于区分 聊天框
-  const currentPage = {
-    page: MSGCHART,
-    changePage(params) {
-      this.page = params;
-    },
-  };
-  // 默认国旗
-  const DEFAULTFLAG = 'http://r.sparrowzoo.net/images/flag.jpg';
-  // 默认头像
-  const DEFAULTAVATAR = 'http://r.sparrowzoo.net/images/user.png';
-  // 客服列表
-  const serviceStore = {
-    list: null,
-    init(arr) {
-      this.list = arr;
-      console.log(this.list, '客服列表');
-    },
-  };
-  // 群成员
+
   const qunNumberMap = {
     map: {},
     initQunMap(arr) {
@@ -48,16 +25,8 @@ define(function () {
       }
     },
   };
-  // 当前的聊天对象  -- 我的消息模块
+  // 当前的聊天对象
   let targetId = {
-    value: '-1',
-    type: CHAT_TYPE_1_2_1,
-    username: '',
-    avatar: null,
-    sessionKey: '',
-  };
-  // 当前聊天对象  --联系客服模块
-  let serviceId = {
     value: '-1',
     type: CHAT_TYPE_1_2_1,
     username: '',
@@ -71,14 +40,6 @@ define(function () {
     targetId.avatar = avatar;
     targetId.sessionKey = sessionKey;
   }
-  function setServiceId(id, username, chatType, avatar, sessionKey) {
-    serviceId.value = id;
-    serviceId.type = chatType;
-    serviceId.username = username;
-    serviceId.avatar = avatar;
-    serviceId.sessionKey = sessionKey;
-  }
-  // 设置当前用户信息
   function changeSelfId(id, avatar) {
     selfId.value = id;
     selfId.avatar = avatar;
@@ -102,13 +63,5 @@ define(function () {
     ACCEPT_RECALL,
     SEND_TYPE,
     RECEIVE_TYPE,
-    DEFAULTFLAG,
-    DEFAULTAVATAR,
-    serviceStore,
-    setServiceId,
-    serviceId,
-    MSGCHART,
-    SERVICECHART,
-    currentPage,
   };
 });

@@ -1,5 +1,5 @@
 // 封装 ajax 请求
-define(['request', 'axios'], function (request, axios) {
+define(['request'], function (request) {
   const { service } = request;
   const BASE_URL = 'http://chat.sparrowzoo.com/chat/';
   /** ws 有关的接口 */
@@ -12,7 +12,6 @@ define(['request', 'axios'], function (request, axios) {
       });
     });
   }
-
   // 好友列表
   function getFrinedList(url, userId) {
     return new Promise((resolve, reject) => {
@@ -22,16 +21,6 @@ define(['request', 'axios'], function (request, axios) {
       });
     });
   }
-
-  // function getSession(url, userId) {
-  //   const data = 'token=' + userId;
-  //   return axios.post(BASE_URL + url, data);
-  // }
-
-  // function getFrinedList(url, userId) {
-  //   const data = 'token=' + userId;
-  //   return axios.post(BASE_URL + url, data);
-  // }
 
   // 已读消息
   function setRead(data) {
@@ -83,21 +72,14 @@ define(['request', 'axios'], function (request, axios) {
   }
 
   // 根据id 查询用户详情
-  function getDetailById(params) {
+  function getDetailById(params, token) {
     return service({
       method: 'get',
+      headers: {
+        'X-Sugar-Token': token,
+      },
       url: '/app/message/findById',
       params,
-    });
-  }
-
-  // 根据id数组列表 查询用户详情
-  function getDetailByIdArr(data) {
-    // /app/message/userDetailList
-    return service({
-      method: 'post',
-      url: '/app/message/userDetailList',
-      data,
     });
   }
 
@@ -177,14 +159,6 @@ define(['request', 'axios'], function (request, axios) {
     });
   }
 
-  // 获取客服列表
-  function serviceList() {
-    return service({
-      method: 'get',
-      url: '/app/message/customList',
-    });
-  }
-
   return {
     getSession,
     getFrinedList,
@@ -202,7 +176,5 @@ define(['request', 'axios'], function (request, axios) {
     addFriendById,
     auditFriend,
     changeGroup,
-    serviceList,
-    getDetailByIdArr,
   };
 });

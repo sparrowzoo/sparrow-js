@@ -1,10 +1,5 @@
-define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
-  store,
-  dayjs,
-  chatMsg,
-  indexedDB,
-  contacts
-) {
+// delLocalMsg
+define(['store', 'day'], function (store, dayjs) {
   const {
     CHAT_TYPE_1_2_1,
     CHAT_TYPE_1_2_N,
@@ -13,10 +8,7 @@ define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
     targetId,
     qunNumberMap,
     ACCORD_RECALL,
-    serviceStore,
   } = store;
-  const DBObject = indexedDB;
-  const { contactStore } = contacts;
 
   // 根据传来的class  滚动到底部
   const getScrollBottom = function (className) {
@@ -112,41 +104,41 @@ define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
   }
 
   async function delLocalMsg(cliTime, sessionKey, type) {
-    const msgObj = await DBObject.dbInstance.getData(
-      sessionKey,
-      DB_STORE_NAME_SESSION
-    );
-    const msgArrs = msgObj.messages;
-    // 遍历 删除 信息
-    const index = msgArrs.findIndex((item) => item.clientSendTime == cliTime);
-    if (index !== -1) {
-      const delMsg = msgArrs.splice(index, 1);
-      changeDom(delMsg[0], type);
-      // 如果撤回的是最后一项，需要通知session 列表更新 最新的信息
-      if (index === msgArrs.length) {
-        console.log(msgArrs[msgArrs.length - 1]);
-        const { messageType, serverTime, session, content, clientSendTime } =
-          msgArrs[msgArrs.length - 1];
-        let msgValue = '';
-        // 判断信息的类型
-        if (messageType === TEXT_MESSAGE) {
-          msgValue = BASE64.bytesToString(BASE64.decodeBase64(content));
-        } else {
-          msgValue = content;
-        }
-        contactStore.recall({
-          msgValue,
-          msgTime: serverTime || clientSendTime,
-          msgType: messageType,
-          sessionKey: session,
-        });
-      }
-      await DBObject.dbInstance.recallMsg(
-        sessionKey,
-        DB_STORE_NAME_SESSION,
-        msgArrs
-      );
-    }
+    // const msgObj = await DBObject.dbInstance.getData(
+    //   sessionKey,
+    //   DB_STORE_NAME_SESSION
+    // );
+    // const msgArrs = msgObj.messages;
+    // // 遍历 删除 信息
+    // const index = msgArrs.findIndex((item) => item.clientSendTime == cliTime);
+    // if (index !== -1) {
+    //   const delMsg = msgArrs.splice(index, 1);
+    //   changeDom(delMsg[0], type);
+    //   // 如果撤回的是最后一项，需要通知session 列表更新 最新的信息
+    //   // if (index === msgArrs.length) {
+    //   //   console.log(msgArrs[msgArrs.length - 1]);
+    //   //   const { messageType, serverTime, session, content, clientSendTime } =
+    //   //     msgArrs[msgArrs.length - 1];
+    //   //   let msgValue = '';
+    //   //   // 判断信息的类型
+    //   //   if (messageType === TEXT_MESSAGE) {
+    //   //     msgValue = BASE64.bytesToString(BASE64.decodeBase64(content));
+    //   //   } else {
+    //   //     msgValue = content;
+    //   //   }
+    //   //   contactStore.recall({
+    //   //     msgValue,
+    //   //     msgTime: serverTime || clientSendTime,
+    //   //     msgType: messageType,
+    //   //     sessionKey: session,
+    //   //   });
+    //   // }
+    //   await DBObject.dbInstance.recallMsg(
+    //     sessionKey,
+    //     DB_STORE_NAME_SESSION,
+    //     msgArrs
+    //   );
+    // }
   }
 
   // 修改dom
@@ -220,18 +212,6 @@ define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
     });
   }
 
-  // 根据聊天类型 和 targetid 返回 当前接收的信息 应该是 我的消息 还是 联系客服
-  function isMsgChart(chatType, targetId) {
-    if (chatType === CHAT_TYPE_1_2_N) return true;
-    // 如果是群聊  肯定是 我的消息 否则遍历 客服列表
-    const flag = serviceStore.list.some((item) => item.userId == targetId);
-    if (flag) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   return {
     getScrollBottom,
     currentSendTime,
@@ -241,6 +221,5 @@ define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
     sessionTime,
     delLocalMsg,
     showResponseMsg,
-    isMsgChart,
   };
 });

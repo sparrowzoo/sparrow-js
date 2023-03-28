@@ -19,10 +19,13 @@
         <span>&lt </span>
         <span class="active-nav">我的群聊</span>
       </span>
-      <input class="ws-input" value="" type="text" placeholder="请输入手机号">
-      <!-- <button class="connect-btn">连接</button> -->
-      <!-- <button class="close-ws">关闭websocket</button> -->
+      <input class="ws-input" value="15661100439" type="text" placeholder="请输入手机号">
+      <input type="text" class="t-selfId" value="1234" placeholder="pwa">
       <button class="login">登录</button>
+
+      <button class="temporary">临时会话</button>
+      <input type="text" class="t-targetId" placeholder="targetId">
+      <input type="text" class="t-token" placeholder="token">
     </nav>
     <div class="container">
       <!-- 左侧菜单 -->
@@ -105,9 +108,9 @@
               <div class="search-part">
                 <div class="search-icon">
                   <i class="iconfont icon-sousuo"></i>
-                  <input type="text" placeholder="搜索">
+                  <input class="search-input" type="text" placeholder="搜索">
                 </div>
-                <div class="search-add">+</div>
+                <!-- <div class="search-add">+</div> -->
                 <!-- 添加用户弹层 模板填充 -->
               </div>
               <!-- 消息列表   模板填充 -->
@@ -121,7 +124,8 @@
 
         <!-- 系统通知 -->
         <div class="inform">
-          <div class="inform-item">
+          <!-- n内容由模板填充 system-inform -->
+          <!-- <div class="inform-item">
             <div class="setting-icon"></div>
             <div class="inform-content">
               <span>系统通知</span>
@@ -131,12 +135,28 @@
                 <span class="inform-operate">展开全部</span>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <!-- 联系客服 -->
         <div class="service">
-          <!-- 具体内容 由模板填充 -->
+          <div class="service-content">
+            <div class="msg-part">
+              <!-- 搜索框 -->
+              <div class="search-part">
+                <div class="search-icon">
+                  <i class="iconfont icon-sousuo"></i>
+                  <input class="search-input" type="text" placeholder="搜索">
+                </div>
+                <!-- <div class="search-add">+</div> -->
+                <!-- 添加用户弹层 模板填充 -->
+              </div>
+              <!-- 消息列表   模板填充 -->
+              <div class="msg-list">
+              </div>
+            </div>
+            <!-- 聊天框区域  使用template填充-->
+          </div>
         </div>
 
       </div>
@@ -246,8 +266,6 @@
                   <div class="check-box"></div>
                 </div>
               </div>
-
-
             </div>
           </div>
           <!-- 已经选择的用户 -->
@@ -257,20 +275,6 @@
             </div>
             <i class="iconfont icon-cuowukongxin"></i>
             <div class="choose-user">
-              <div class="user-item">
-                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
-                <div class="dialog-info">
-                  <span class="username">阿飞</span>
-                  <div class="check-box"></div>
-                </div>
-              </div>
-              <div class="user-item">
-                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
-                <div class="dialog-info">
-                  <span class="username">阿飞</span>
-                  <div class="check-box"></div>
-                </div>
-              </div>
             </div>
             <div class="dialog-operate">
               <button class="sure-btn">确认</button>
@@ -279,6 +283,19 @@
 
           </div>
 
+        </div>
+      </div>
+    </template>
+
+    <!-- 添加朋友弹层中，每个用户的模板 -->
+    <template id="add-firend-user">
+      <div class="user-item">
+        <img src="" alt="">
+        <div class="dialog-info">
+          <span class="username">阿飞</span>
+          <div class="check-box">
+            <i style="display:none" class="iconfont icon-duigou1"></i>
+          </div>
         </div>
       </div>
     </template>
@@ -315,23 +332,24 @@
           </div>
         </div>
         <div style="display:none" class="more-message">
-          <!-- 区分在联系人点击  还是 在群聊天点击 -->
-          <div style="display:none" class="user-more-part">
-            <div class="user-more-part-wapper">
-              <div class="more-user">
-                <img src="" alt="">
-                <span>用户名户名户名</span>
-              </div>
-              <div class="more-icon">
-                <div class="search-add">+</div>
-                <span>添加</span>
-              </div>
-            </div>
-          </div>
           <div style="display:none" class="group-more-part">
             <div class="more-search">
               <i class="iconfont icon-sousuo"></i>
-              <input type="text" placeholder="搜索">
+              <input type="text" class="search-member" placeholder="搜索">
+            </div>
+            <div style="display:none" class="filter-member">
+              <!-- <div class="more-user">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
+                <span>用名</span>
+              </div> -->
+              <div class="more-user">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
+                <span>用名</span>
+              </div>
+              <div class="more-user">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
+                <span>用名</span>
+              </div>
             </div>
             <div class="group-more-content">
               <!-- 仅仅是一个模板，永远不会渲染到界面上 -->
@@ -345,6 +363,7 @@
                   <span>添加</span>
                 </div>
               </div>
+              <!-- 群成员 -->
               <div class="user-list">
               </div>
               <div class="look-more-user">
@@ -353,11 +372,11 @@
               </div>
               <div class="more-common">
                 <p>群聊名称</p>
-                <span class="qun-name">前端学习群</span>
+                <span class="qun-name"></span>
                 <p>群公告</p>
-                <span class="qun-announcement">这是一个群公告</span>
-                <p>群备注</p>
-                <span class="qun-remark">这是一个备注</span>
+                <span class="qun-announcement"></span>
+                <!-- <p>群备注</p>
+                <span class="qun-remark">这是一个备注</span> -->
               </div>
             </div>
           </div>
@@ -391,6 +410,21 @@
         </div>
       </div>
     </template>
+
+    <!-- 系统通知模板 -->
+    <template id="system-inform">
+      <div class="inform-item">
+        <div class="setting-icon"></div>
+        <div class="inform-content">
+          <span>系统通知</span>
+          <p>关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...</p>
+          <div class="inform-message">
+            <span class="inform-time">2022-11-17 16:15:20</span>
+            <span class="inform-operate">展开全部</span>
+          </div>
+        </div>
+      </div>
+    </template>
   </div>
   <!-- 全局的遮罩层 -->
   <div style="display:none" class="global-mask"></div>
@@ -399,6 +433,10 @@
     <ul>
       <li class="recall">撤回</li>
     </ul>
+  </div>
+  <!-- 全局网络请求的弹层，用于展示 后端返回的msg -->
+  <div class="global-msg">
+    <p class="response-msg">这是后端返回的提示文字</p>
   </div>
 </body>
 <script>
@@ -422,10 +460,12 @@
       "day": "scripts/chat/lib/dayjs",
       "imageCompression": "scripts/chat/lib/imgCompression",
       "chat-msg": 'scripts/chat/page/chat-msg',
+      "chat-msg-api": 'scripts/chat/page/chat-msg-api',
       "contact-service": "scripts/chat/page/contact-service",
       "my-friend": "scripts/chat/page/my-friend",
       "system-inform": "scripts/chat/page/system-inform",
       "contacts": "scripts/chat/store/contacts",
+      "service-list": "scripts/chat/store/serviceList",
       "store": "scripts/chat/store/store",
       "api": "scripts/chat/utils/api",
       "indexedDB": "scripts/chat/utils/indexedDB",

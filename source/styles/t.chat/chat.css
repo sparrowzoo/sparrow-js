@@ -1,149 +1,25 @@
-h5 {
-  color: #282d3b;
+@import 'font.css';
+* {
+  margin: 0;
+  padding: 0;
+}
+.t-chat {
+  display: flex;
+  justify-content: center;
+  padding-top: 100px;
 }
 .chat-msg {
-  width: 95%;
+  width: 50%;
   height: 700px;
 }
 .chat-msg .chat-content {
   width: 100%;
   display: flex;
 }
-.chat-msg .msg-part {
-  width: 32%;
-  min-width: 250px;
-  background-color: #f7f7f7;
-  border: 1px solid #e6e6e7;
-}
-.chat-msg .msg-part .search-part {
-  height: 75px;
-  padding: 0 15px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  background-color: #f3f0f0;
-  border-bottom: 1px solid #fff;
-  position: relative;
-}
-.chat-msg .msg-part .search-part .search-icon {
-  position: relative;
-  margin-right: 15px;
-  flex: 1;
-}
-.chat-msg .msg-part .search-part .search-icon input {
-  box-sizing: border-box;
-  width: 100%;
-  height: 35px;
-  border: none;
-  outline: none;
-  padding-left: 27px;
-}
-.chat-msg .msg-part .search-part .search-icon .iconfont {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 5px;
-  color: #a3a3a3;
-  font-size: 18px;
-}
-.chat-msg .msg-part .search-part .search-add {
-  width: 35px;
-  height: 35px;
-  line-height: 35px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #848484;
-  text-align: center;
-  background-color: #fff;
-  cursor: pointer;
-}
-.chat-msg .msg-part .msg-list {
-  overflow: auto;
-  height: 657px;
-  scrollbar-width: none;
-  /* Firefox */
-  -ms-overflow-style: none;
-  /* IE 10+ */
-}
-.chat-msg .msg-part .msg-list::-webkit-scrollbar {
-  display: none;
-  /* Chrome Safari */
-}
-.chat-msg .msg-part .msg-list .msg-item {
-  width: 100%;
-  padding: 20px 15px;
-  box-sizing: border-box;
-  display: flex;
-  background-color: #f7f7f7;
-  cursor: pointer;
-}
-.chat-msg .msg-part .msg-list .msg-item .avatar {
-  width: 60px;
-  height: 60px;
-  position: relative;
-  border-radius: 5px;
-  margin-right: 10px;
-}
-.chat-msg .msg-part .msg-list .msg-item .avatar .nation {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  position: absolute;
-  bottom: -5px;
-  left: -1px;
-}
-.chat-msg .msg-part .msg-list .msg-item .avatar .avatar-img {
-  width: 100%;
-  height: 100%;
-  border-radius: 5px;
-}
-.chat-msg .msg-part .msg-list .msg-item .avatar span {
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(40%, -40%);
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-color: red;
-  border-radius: 50%;
-  text-align: center;
-  line-height: 20px;
-  color: #fff;
-}
-.chat-msg .msg-part .msg-list .msg-item .msg-user-time {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
-.chat-msg .msg-part .msg-list .msg-item .msg-user-time .msg-user {
-  display: flex;
-  justify-content: space-between;
-}
-.chat-msg .msg-part .msg-list .msg-item .msg-user-time .msg-user .username {
-  max-width: 85px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.chat-msg .msg-part .msg-list .msg-item .msg-user-time .msg-user .msg-time {
-  color: #8c8c8c;
-  font-size: 14px;
-}
-.chat-msg .msg-part .msg-list .msg-item .msg-user-time .msg-last {
-  color: #8c8c8c;
-  font-size: 14px;
-  max-width: 130px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
 .chat-msg .msg-content {
-  width: 68%;
+  width: 100%;
   min-width: 400px;
   border: 1px solid #e6e6e7;
-  border-left: none;
   position: relative;
 }
 .chat-msg .msg-content .title {
@@ -484,55 +360,6 @@ h5 {
 }
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .more-common span {
   color: #848484;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 5px 0;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member > div {
-  margin-bottom: 15px;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member > div:nth-child(4n + 2) {
-  margin-left: 12px;
-  margin-right: 12px;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member > div:nth-child(4n + 3) {
-  margin-right: 12px;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member span {
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 14px;
-  text-align: center;
-  margin-top: 6px;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member .more-user {
-  display: flex;
-  flex-direction: column;
-  width: 40px;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member .more-user img {
-  width: 100%;
-  height: 40px;
-  border-radius: 2px;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member .more-icon {
-  text-align: center;
-}
-.chat-msg .msg-content .more-message .group-more-part .filter-member .more-icon .search-add {
-  box-sizing: border-box;
-  width: 40px;
-  height: 40px;
-  line-height: 35px;
-  font-size: 18px;
-  font-weight: 600;
-  color: #848484;
-  text-align: center;
-  border: 1px solid #e7e7e8;
-  cursor: pointer;
 }
 .dialog-add-friend {
   width: 520px;
