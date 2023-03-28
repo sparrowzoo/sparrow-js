@@ -6,45 +6,92 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link rel="stylesheet" href="./test.css">
+  <link rel="stylesheet" href="http://r.sparrowzoo.net/styles/t.chat/chat.css">
+
 </head>
 
 <body>
-  <button class="addUrl">添加路径</button>
-  <div class="tem-wrapper">
+  <div class="t-chat">
     <div class="chat-msg">
-      <div class="msg-content">
-        <div class="title">
-          <span class="user"></span>
-          <i class="iconfont icon-gengduo show-more-icon"></i>
-        </div>
-        <div class="msg-detail">
-          <!-- 聊天信息 之后通过模板填充 -->
-        </div>
-        <div class="input-part">
-          <div class="conver-button">
-            <span>英</span>
-            <span class="active-lang">中</span>
-            <div class="upload-part">
-              <label for="upload">
-                <i class="iconfont icon-tupian"></i>
-              </label>
-              <input style="display:none" type="file" class="upload-img" id="upload">
+      <div class="chat-content">
+        <!-- 聊天框区域  使用template填充-->
+      </div>
 
-            </div>
-            <!-- <i class="iconfont icon-tupian upload-img"></i> -->
-            <!-- <input type="file" class="upload-img"> -->
+    </div>
+  </div>
+  <!-- 模板文件 -->
+
+  <!-- 聊天框 -->
+  <template id="chat-part">
+    <div class="msg-content">
+      <div class="title">
+        <span class="user">联系客服</span>
+        <i class="iconfont icon-gengduo show-more-icon"></i>
+      </div>
+      <div class="msg-detail">
+        <!-- 聊天信息 之后通过模板填充 -->
+      </div>
+      <div class="input-part">
+        <div class="conver-button">
+          <span>英</span>
+          <span class="active-lang">中</span>
+          <div class="upload-part">
+            <label for="upload">
+              <i class="iconfont icon-tupian"></i>
+            </label>
+            <input style="display:none" type="file" class="upload-img" id="upload">
+
           </div>
-          <div class="input-message">
-            <div class="text">
-              <textarea class="input-content"></textarea>
+          <!-- <i class="iconfont icon-tupian upload-img"></i> -->
+          <!-- <input type="file" class="upload-img"> -->
+        </div>
+        <div class="input-message">
+          <div class="text">
+            <textarea class="input-content"></textarea>
+          </div>
+          <button class="send-btn">发送</button>
+        </div>
+      </div>
+      <div style="display:none" class="more-message">
+        <div style="display:none" class="group-more-part">
+          <div class="more-search">
+            <i class="iconfont icon-sousuo"></i>
+            <input type="text" placeholder="搜索">
+          </div>
+          <div class="filter-member"></div>
+          <div class="group-more-content">
+            <!-- 仅仅是一个模板，永远不会渲染到界面上 -->
+            <div style="display:none">
+              <div class="more-user">
+                <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="">
+                <span>用名</span>
+              </div>
+              <div class="more-icon">
+                <div class="search-add">+</div>
+                <span>添加</span>
+              </div>
             </div>
-            <button class="send-btn">发送</button>
+            <!-- 群成员 -->
+            <div class="user-list">
+            </div>
+            <div class="look-more-user">
+              <span>查看更多</span>
+              <i class="iconfont icon-xiala"></i>
+            </div>
+            <div class="more-common">
+              <p>群聊名称</p>
+              <span class="qun-name"></span>
+              <p>群公告</p>
+              <span class="qun-announcement"></span>
+              <!-- <p>群备注</p>
+                <span class="qun-remark">这是一个备注</span> -->
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </template>
+
   <!-- 聊天信息 -->
   <template id="message-detail-part">
     <div class="message">
@@ -63,36 +110,42 @@
         </div>
 
       </div>
+      <div style="display:none" class="show-recall-mime recall">
+        <p>你撤回了一条消息<span class="reset"> 重新编辑</span></p>
+      </div>
+      <div style="display:none" class="show-recall-other recall">
+        <p><span class="recall-user">用户</span>撤回了一条消息</p>
+      </div>
     </div>
   </template>
 
 </body>
-<script src="http://r.sparrowzoo.net/scripts/require.js" data-main=""></script>
+<script src="http://r.sparrowzoo.net/scripts/require.js"></script>
 <script>
   // seajs.use('../../../../../source/scripts/chat/index.js');
   // 配置
   require.config({
     baseUrl: 'http://r.sparrowzoo.net/',
     paths: {
-      "t-index": "scripts/chat/t.index",
-      "day": "scripts/chat/lib/dayjs",
-      "imageCompression": "scripts/chat/lib/imgCompression",
-      "chat-msg": 'scripts/chat/t.page/t.chat-msg',
-      "contacts": "scripts/chat/store/contacts",
-      "store": "scripts/chat/store/store",
-      "api": "scripts/chat/utils/api",
-      "indexedDB": "scripts/chat/utils/indexedDB",
-      "utils": "scripts/chat/utils/utils",
-      "websocket": "scripts/chat/utils/websocket",
+      "index": "scripts/t.chat/index",
+      "day": "scripts/t.chat/lib/dayjs",
+      "imageCompression": "scripts/t.chat/lib/imgCompression",
+      "chat-msg": 'scripts/t.chat/page/chat-msg',
+      "store": "scripts/t.chat/store/store",
+      "api": "scripts/t.chat/utils/api",
+      "utils": "scripts/t.chat/utils/utils",
+      "websocket": "scripts/t.chat/utils/websocket",
+      "axios": 'scripts/t.chat/lib/axios',
+      "request": "scripts/t.chat/utils/request",
       "base64": "scripts/base64",
       "sparrow": 'scripts/sparrow',
       "sparrowChat": "scripts/sparrowChat",
-      "ws": "scripts/chat/lib/ws"
+
     },
     shim: {}
   })
 
-  const ee = require(['t-index']);
+  const ee = require(["sparrowChat", 'sparrow', 'base64', 'index']);
 </script>
 
 </html>

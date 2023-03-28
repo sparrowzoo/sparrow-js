@@ -2,7 +2,7 @@ define(['store', 'indexedDB', 'api'], function (store, indexedDB, api) {
   const {
     targetId,
     selfId,
-    setTargetId,
+    setServiceId,
     CHAT_TYPE_1_2_1,
     DB_STORE_NAME_USER,
     DB_STORE_NAME_QUN,
@@ -33,7 +33,7 @@ define(['store', 'indexedDB', 'api'], function (store, indexedDB, api) {
         }
         const currentSession = this.contactList[0].lastMessage.session;
 
-        setTargetId(
+        setServiceId(
           id,
           username,
           chatType,

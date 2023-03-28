@@ -1,39 +1,10 @@
-define([
-  'store',
-  'contacts',
-  'indexedDB',
-  'utils',
-  'imageCompression',
-  'api',
-  'service-list',
-], function (
+define(['store', 'utils', 'imageCompression'], function (
   store,
-  contacts,
-  indexedDB,
   utils,
-  imageCompression,
-  api,
-  serviceList
+  imageCompression
 ) {
-  const {
-    TEXT_MESSAGE,
-    IMAGE_MESSAGE,
-    CHAT_TYPE_1_2_1,
-    CHAT_TYPE_1_2_N,
-    selfId,
-    targetId,
-    serviceId,
-    DB_STORE_NAME_SESSION,
-    ACCEPT_RECALL,
-    SEND_TYPE,
-    RECEIVE_TYPE,
-    currentPage,
-    MSGCHART,
-    SERVICECHART,
-  } = store;
-  const { contactStore } = contacts;
-  const DBObject = indexedDB;
-  const { getSessionKey, delLocalMsg, isMsgChart } = utils;
+  const { TEXT_MESSAGE, selfId, ACCEPT_RECALL } = store;
+  const { delLocalMsg } = utils;
   // const dbInstance = initIndexedDB();
   class WSinstance {
     // 重连标志
@@ -99,75 +70,13 @@ define([
             );
             return;
           }
-          // 接收到信息 先将信息保存到数据库
-          const targetInfo =
-            protocol.chatType === CHAT_TYPE_1_2_1
-              ? protocol.currentUserId
-              : protocol.sessionKey;
-          const msgValue =
-            protocol.msgType === TEXT_MESSAGE ? protocol.msg : protocol.url;
-
-          saveMessage(
-            protocol.msgType,
-            msgValue,
-            protocol.chatType,
-            targetInfo,
-            protocol.fromUserId,
-            protocol.clientSendTime,
-            RECEIVE_TYPE
-          );
-
-          // 根据fromUserId 和聊天类型 判断是否需要在聊天框中渲染聊天信息
-          if (protocol.sessionKey) {
-            // 群来的信息 判断是否需要渲染信息
-            if (protocol.sessionKey == targetId.value) {
-              this.onMsgCallback.message &&
-                this.onMsgCallback.message(
-                  protocol.msg || protocol.url,
-                  protocol.msgType,
-                  protocol.clientSendTime,
-                  protocol.fromUserId
-                );
-            }
-          } else {
-            // 不是群来的信息，判断是否需要渲染信息
-            // 用户消息   可能是我的消息  /   联系客服
-            const callbackName =
-              currentPage.page === MSGCHART ? MSGCHART : SERVICECHART;
-            const targetPageId =
-              currentPage.page === MSGCHART ? targetId.value : serviceId.value;
-
-            if (protocol.fromUserId == targetPageId) {
-              this.onMsgCallback[callbackName] &&
-                this.onMsgCallback[callbackName](
-                  protocol.msg || protocol.url,
-                  protocol.msgType,
-                  protocol.clientSendTime
-                );
-            }
-
-            // if (currentPage.page === MSGCHART) {
-            //   // 我的消息页面
-            //   if (protocol.fromUserId == targetId.value) {
-            //     this.onMsgCallback[MSGCHART] &&
-            //       this.onMsgCallback[MSGCHART](
-            //         protocol.msg || protocol.url,
-            //         protocol.msgType,
-            //         protocol.clientSendTime
-            //       );
-            //   }
-            // } else {
-            //   // 客服页面
-            //   if (protocol.fromUserId == serviceId.value) {
-            //     this.onMsgCallback[SERVICECHART] &&
-            //       this.onMsgCallback[SERVICECHART](
-            //         protocol.msg || protocol.url,
-            //         protocol.msgType,
-            //         protocol.clientSendTime
-            //       );
-            //   }
-            // }
-          }
+          // 接收到信息 渲染到页面上上
+          this.onMsgCallback.message &&
+            this.onMsgCallback.message(
+              protocol.msg || protocol.url,
+              protocol.msgType,
+              protocol.clientSendTime
+            );
         });
       };
     }
@@ -205,15 +114,6 @@ define([
       // 首先判断当前是否为重连状态
       if (!this.lockReconnect) {
         if (msgType === TEXT_MESSAGE) {
-          saveMessage(
-            msgType,
-            msg,
-            chatType,
-            targetId,
-            selfId.value,
-            clientSendTime,
-            SEND_TYPE
-          );
           const newMsg = msg.toArray().toUint8Array();
           this.sendContent(
             chatType,
@@ -224,23 +124,7 @@ define([
             clientSendTime
           );
         } else {
-          // 保存一个副本 把数据保存到数据库中
           let compressImg = await handleImageUpload(msg);
-          const msgCopy = compressImg;
-          const reader = new FileReader();
-          reader.readAsDataURL(msgCopy);
-          reader.onload = function (e) {
-            saveMessage(
-              msgType,
-              e.target.result,
-              chatType,
-              targetId,
-              selfId.value,
-              clientSendTime,
-              SEND_TYPE
-            );
-          };
-
           // 向服务器发送数据
           const fileReader = new FileReader();
           fileReader.onload = () => {
@@ -269,14 +153,6 @@ define([
       const res = new SparrowProtocol(...rest);
       // 发送到服务器
       this.ws.send(res.toBytes());
-
-      const params = {
-        chatType: res.chatType,
-        sessionKey: targetId.sessionKey,
-        userId: selfId.value,
-      };
-      // 每次发送信息都要 更新已读
-      api.setRead(params);
     }
 
     // 重连操作
@@ -314,9 +190,9 @@ define([
     }
 
     // 注册事件 接收到消息后 要执行的事件
-    registerCallback(fn, callbackName) {
+    registerCallback(fn) {
       // 消息列表的websocket 事件
-      this.onMsgCallback[callbackName] = fn;
+      this.onMsgCallback['message'] = fn;
     }
 
     // 销毁事件
@@ -351,88 +227,6 @@ define([
     } catch (error) {
       console.log(error);
     }
-  }
-
-  // 将通信的信息保存到数据库
-  function saveMessage(
-    msgType,
-    value,
-    chatType,
-    targetUserId,
-    fromUserId,
-    clientSendTime,
-    textType
-  ) {
-    let content;
-    if (msgType === TEXT_MESSAGE) {
-      content = BASE64.bytesToString(BASE64.encodeBase64(value));
-    } else {
-      content = value;
-    }
-    const session =
-      chatType === CHAT_TYPE_1_2_1
-        ? getSessionKey(chatType, fromUserId, targetUserId)
-        : targetUserId;
-
-    if (textType === SEND_TYPE) {
-      // 发送信息，同步session 列表
-      // 判断当前page
-      if (currentPage.page === MSGCHART) {
-        contactStore.send(value, msgType, session);
-      } else {
-        serviceList.contactStore.send(value, msgType, session);
-      }
-    } else {
-      // 接收信息
-      // 判断是好友 / 客服
-      if (isMsgChart(chatType, fromUserId)) {
-        contactStore.receive(value, msgType, session, fromUserId, chatType);
-      } else {
-        serviceList.contactStore.receive(
-          value,
-          msgType,
-          session,
-          fromUserId,
-          chatType
-        );
-      }
-    }
-    addMsg(
-      content,
-      msgType,
-      chatType,
-      session,
-      targetUserId,
-      fromUserId,
-      clientSendTime
-    );
-  }
-  // 向本地数据中添加消息
-  function addMsg(
-    value,
-    messageType,
-    chatType,
-    session,
-    targetUserId,
-    fromUserId,
-    clientSendTime
-  ) {
-    // const serverTime = +new Date();
-    const messageItem = {
-      chatType,
-      content: value,
-      fromUserId,
-      messageType,
-      clientSendTime,
-      session,
-      targetUserId,
-    };
-
-    DBObject.dbInstance.updateStoreItem(
-      session,
-      messageItem,
-      DB_STORE_NAME_SESSION
-    );
   }
 
   // const ws = new WSinstance(selfId.value);
