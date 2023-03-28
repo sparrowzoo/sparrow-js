@@ -4,13 +4,10 @@ var appController = {
         search: "search.do",
         enable:"enable",
         disable:"disable",
-        delete:"delete"
-    },
-
-    load: function () {
+            delete:"delete"
+    },load: function () {
         $.gridView.id="grvAppList";
         document.forms[0].action=this.api.search;
-
         $.dispatcher.eventRegistry = [
             {
                 id: "btnSearch",
@@ -45,7 +42,7 @@ var appController = {
             }
         ];
         $.dispatcher.bind();
-    }
+  }
 };
 define("app", [], function () {
     return appController;

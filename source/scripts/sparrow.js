@@ -1028,8 +1028,9 @@ Sparrow.v = {
         }
         if (!color) color = $.v.background_color;
         var parentLevel = validate.parentLevel;
-        if (typeof (parentLevel) == "undefined")
+        if (typeof (parentLevel) == "undefined") {
             parentLevel = 1;
+        }
         if (parentLevel > 0) {
             var background = srcElement;
             if (background == null) return;
@@ -1183,7 +1184,7 @@ Sparrow.v = {
         if (result !== true) {
             return result;
         }
-        if (srcElement.value.search(/^[\u4e00-\u9fa5]$/) === -1) {
+        if (!validate.allowNull&&srcElement.value.search(/^[\u4e00-\u9fa5]+/) === -1) {
             return this.fail(validate, validate.chineseCharactersError);
         }
         return this.ok(validate,srcElement);
@@ -1342,48 +1343,120 @@ Sparrow.v = {
             }
         }
         return true;
+    },
+    init:function (config){
+        for (var o in config) {
+           var ctrl=$("#"+o);
+           var validation=config[o];
+           var event= validation.event;
+           ctrl.bind("onfocus",function (){
+                $.v.showMessage(config,this);
+           });
+           switch (event){
+               case "UserNameRuleValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isUserNameRule(config,this)
+                   });
+                   break;
+               case "AllowOptionsValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isNull(config,this);
+                   });
+                   break;
+               case "DigitalValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isDigital(config,this);
+                   });
+                   break;
+               case "EmailValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isEmail(config,this);
+                   });
+                   break;
+               case "NullValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isNull(config,this);
+                   });
+                   break;
+               case "EqualValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isEqual(config,this);
+                   });
+                   break;
+               case "IdCardValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isIdCard(config,this);
+                   });
+                   break;
+               case "MobileValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isMobile(config,this);
+                   });
+                   break;
+               case "TelValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isTel(config,this);
+                   });
+                   break;
+               case "ChineseCharactersValidator":
+                   ctrl.bind("onblur",function (){
+                       $.v.isChineseCharacters(config,this);
+                   });
+                   break;
+               case "AllowInputCharLengthValidator":
+                   var innerInfo=validation
+                   $("#"+innerInfo.maxCharLengthControlId).html(innerInfo.maxAllowCharLength);
+                   ctrl.bind("onblur",function (){
+                       $.v.allowInputOption(config,this);
+                   });
+
+                   ctrl.bind("onkeyup",function (){
+                       $.v.updateTxtCount(this,innerInfo.allowCharLengthShowControlId,500);
+                   });
+           }
+        }
     }
 };
 Sparrow.page = {
-    toTargetPage: function (pageCount, pageFormat, srcElement) {
-        var consumerPageIndex = parseInt($('consumerPageIndex').value);
-        var currentPageIndex = parseInt($('spanCurrentPageIndex').innerHTML
-            .trim());
-        if (consumerPageIndex <= 0 || consumerPageIndex > pageCount) {
-            $.message('超出页码范围', srcElement);
-            return;
-        }
-        if (consumerPageIndex === currentPageIndex) {
-            $.message('当前页即是目标页', srcElement);
-            return;
-        }
-        window.location.href = pageFormat.replace("$pageIndex", consumerPageIndex);
-    },
-    consumerAction: null,
-    submit: function (pageIndex, formIndex) {
-        $("currentPageIndex").value = pageIndex;
-        window.location.href = "#top";
-        if (this.consumerAction != null) {
-            this.consumerAction(pageIndex);
-            return;
-        }
-        $.submit(null, formIndex);
-    },
-    next: function () {
-        var elementArray = $("divPage").getElementsByTagName("a");
-        var nextLink = null;
-        for (var i = 0; i < elementArray.length; i++) {
-            if (elementArray[i].innerHTML === "下一页") {
-                nextLink = elementArray[i].href;
-                break;
-            }
-        }
-        if ($.isNullOrEmpty(nextLink)) {
-            alert("亲，您已经翻到最后了哟");
-            return
-        }
-        window.location.href = nextLink;
-    }
+	toTargetPage: function (pageCount, pageFormat, srcElement) {
+		var consumerPageIndex = parseInt($('consumerPageIndex').value);
+		var currentPageIndex = parseInt($('spanCurrentPageIndex').innerHTML
+			.trim());
+		if (consumerPageIndex <= 0 || consumerPageIndex > pageCount) {
+			$.message('超出页码范围', srcElement);
+			return;
+		}
+		if (consumerPageIndex === currentPageIndex) {
+			$.message('当前页即是目标页', srcElement);
+			return;
+		}
+		window.location.href = pageFormat.replace("$pageIndex", consumerPageIndex);
+	},
+	consumerAction: null,
+	submit: function (pageIndex, formIndex) {
+		$("currentPageIndex").value = pageIndex;
+		window.location.href = "#top";
+		if (this.consumerAction != null) {
+			this.consumerAction(pageIndex);
+			return;
+		}
+		$.submit(null, formIndex);
+	},
+	next: function () {
+		var elementArray = $("divPage").getElementsByTagName("a");
+		var nextLink = null;
+		for (var i = 0; i < elementArray.length; i++) {
+			if (elementArray[i].innerHTML === "下一页") {
+				nextLink = elementArray[i].href;
+				break;
+			}
+		}
+		if ($.isNullOrEmpty(nextLink)) {
+			alert("亲，您已经翻到最后了哟");
+			return
+		}
+		window.location.href = nextLink;
+	}
 };
 Sparrow.random = function () {
     return (Math.random() + "").substring(2);
