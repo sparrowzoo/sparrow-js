@@ -1,10 +1,180 @@
-@import "./common.less";
-.service {
-  border: 1px solid @border-color;
-  width: 80%;
-  .msg-content {
-    min-width: 400px;
+@import './common.less';
+.input() {
+  input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 35px;
+    border: none;
+    outline: none;
+    padding-left: 27px;
+  }
+}
 
+.hidden-scroll() {
+  // 隐藏滚动条
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  &::-webkit-scrollbar {
+    display: none; /* Chrome Safari */
+  }
+}
+
+.service {
+  width: 95%;
+  height: 700px;
+
+  .service-content {
+    width: 100%;
+    display: flex;
+  }
+
+  .msg-part {
+    width: 32%;
+    min-width: 250px;
+    background-color: @theme-color;
+    border: 1px solid @border-color;
+    .search-part {
+      height: 75px;
+      padding: 0 15px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background-color: #f3f0f0;
+      border-bottom: 1px solid #fff;
+      position: relative;
+
+      .search-icon {
+        position: relative;
+        margin-right: 15px;
+        flex: 1;
+
+        input {
+          box-sizing: border-box;
+          width: 100%;
+          height: 35px;
+          border: none;
+          outline: none;
+          padding-left: 27px;
+        }
+
+        .iconfont {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          left: 5px;
+          color: #a3a3a3;
+          font-size: 18px;
+        }
+      }
+
+      .search-add {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 18px;
+        font-weight: 600;
+        color: @text-gray-color;
+        text-align: center;
+        background-color: #fff;
+        cursor: pointer;
+      }
+    }
+
+    .msg-list {
+      overflow: auto;
+      height: 657px;
+      // 隐藏滚动条
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE 10+ */
+      &::-webkit-scrollbar {
+        display: none; /* Chrome Safari */
+      }
+      .msg-item {
+        width: 100%;
+        padding: 20px 15px;
+        box-sizing: border-box;
+        display: flex;
+        background-color: @theme-color;
+        cursor: pointer;
+
+        .avatar {
+          width: 60px;
+          height: 60px;
+          position: relative;
+          border-radius: 5px;
+          margin-right: 10px;
+
+          .nation {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            position: absolute;
+            bottom: -5px;
+            left: -1px;
+          }
+          .avatar-img {
+            width: 100%;
+            height: 100%;
+            border-radius: 5px;
+          }
+
+          span {
+            position: absolute;
+            top: 0;
+            right: 0;
+            transform: translate(40%, -40%);
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 20px;
+            color: #fff;
+          }
+        }
+
+        .msg-user-time {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+
+          .msg-user {
+            display: flex;
+            justify-content: space-between;
+            .username {
+              max-width: 85px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            .msg-time {
+              color: #8c8c8c;
+              font-size: 14px;
+            }
+          }
+
+          .msg-last {
+            color: #8c8c8c;
+            font-size: 14px;
+            max-width: 130px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+  }
+
+  .msg-content {
+    // float: right;
+    width: 68%;
+    min-width: 400px;
+    border: 1px solid @border-color;
+    border-left: none;
+    position: relative;
     .title {
       height: 75px;
       display: flex;
@@ -20,7 +190,8 @@
         font-weight: 500;
       }
       .iconfont {
-        font-size: 20px;
+        font-size: 30px;
+        cursor: pointer;
       }
     }
 
@@ -38,7 +209,7 @@
       }
 
       .message {
-        margin: 0 20px;
+        margin: 20px;
         .time {
           color: #666;
           font-size: 14px;
@@ -49,16 +220,42 @@
           display: flex;
           padding: 10px 0;
 
-          img {
+          .avatar-user {
             width: 35px;
             height: 35px;
-            border-radius: 50%;
+            border-radius: 5px;
           }
           .message-detail {
             max-width: 50%;
             margin: 0 20px 0 25px;
             padding: 12px 10px;
             border-radius: 5px;
+            overflow-wrap: break-word;
+
+            .message-text {
+              white-space: pre-wrap;
+            }
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+          .msg-picture-detail {
+            position: relative;
+            margin: 0 20px;
+            .msg-picture {
+              border-radius: 5px;
+              max-width: 150px;
+              cursor: pointer;
+            }
+          }
+        }
+        .recall {
+          text-align: center;
+          color: #666;
+          .reset {
+            color: #607298;
+            cursor: pointer;
           }
         }
       }
@@ -66,7 +263,17 @@
       .left {
         .user-msg {
           flex-direction: row;
-
+          .username {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateY(-110%);
+            width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #999;
+          }
           .message-detail {
             background-color: #fff;
             color: #000;
@@ -86,6 +293,9 @@
       .right {
         .user-msg {
           flex-direction: row-reverse;
+          .username {
+            display: none !important;
+          }
           .message-detail {
             background-color: @text-color;
             color: #eee;
@@ -116,7 +326,6 @@
         align-items: center;
         background-color: #f5f3f3;
         padding-left: 15px;
-        cursor: pointer;
 
         span {
           text-align: center;
@@ -126,7 +335,9 @@
           border: 2px solid @text-color;
           color: @text-color;
           background-color: #fff;
+          cursor: pointer;
         }
+
         .upload-part {
           height: 100%;
           .iconfont {
@@ -173,6 +384,222 @@
     .active-lang {
       color: #fff !important;
       background-color: @text-color !important;
+    }
+
+    .more-message {
+      position: absolute;
+      top: -1px;
+      bottom: -1px;
+      right: 0;
+      width: 230px;
+      padding: 15px;
+      box-sizing: border-box;
+      // transform: translateX(100%);
+      background-color: @theme-color;
+      border: 1px solid @border-color;
+
+      .user-more-part {
+        .user-more-part-wapper {
+          display: flex;
+          box-sizing: border-box;
+          & > div {
+            width: 50px;
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            align-items: center;
+
+            span {
+              margin-top: 5px;
+              white-space: nowrap;
+              width: 100%;
+              text-align: center;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+          }
+
+          .more-user {
+            img {
+              width: 35px;
+              height: 35px;
+              border-radius: 5px;
+            }
+          }
+
+          .more-icon {
+            margin-left: 10px;
+            .search-add {
+              box-sizing: border-box;
+              width: 35px;
+              height: 35px;
+              line-height: 35px;
+              font-size: 18px;
+              font-weight: 600;
+              color: @text-gray-color;
+              text-align: center;
+              border: 1px solid #e7e7e8;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .group-more-part {
+        .more-search {
+          position: relative;
+          margin-bottom: 25px;
+          .input();
+          .iconfont {
+            position: absolute;
+            top: 8px;
+            left: 5px;
+            font-size: 18px;
+          }
+        }
+
+        .group-more-content {
+          overflow-y: auto;
+          height: 650px;
+
+          // 隐藏滚动条
+          scrollbar-width: none; /* Firefox */
+          -ms-overflow-style: none; /* IE 10+ */
+          &::-webkit-scrollbar {
+            display: none; /* Chrome Safari */
+          }
+          .user-list {
+            display: flex;
+            flex-wrap: wrap;
+            // justify-content: space-between;
+            margin: 5px 0;
+
+            & > div {
+              margin-bottom: 15px;
+              &:nth-child(4n + 2) {
+                margin-left: 12px;
+                margin-right: 12px;
+              }
+              &:nth-child(4n + 3) {
+                margin-right: 12px;
+              }
+            }
+
+            span {
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              font-size: 14px;
+              text-align: center;
+              margin-top: 6px;
+            }
+            .more-user {
+              display: flex;
+              flex-direction: column;
+              width: 40px;
+              img {
+                width: 100%;
+                height: 40px;
+                border-radius: 2px;
+              }
+            }
+            .more-icon {
+              text-align: center;
+              .search-add {
+                box-sizing: border-box;
+                width: 40px;
+                height: 40px;
+                line-height: 35px;
+                font-size: 18px;
+                font-weight: 600;
+                color: @text-gray-color;
+                text-align: center;
+                border: 1px solid #e7e7e8;
+                cursor: pointer;
+              }
+            }
+          }
+
+          .look-more-user {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: @text-gray-color;
+            cursor: pointer;
+          }
+
+          .more-common {
+            margin-top: 20px;
+            border-top: 1px solid @border-color;
+            font-size: 14px;
+
+            p {
+              margin-top: 20px;
+              margin-bottom: 0;
+              color: @text-color;
+            }
+            span {
+              color: @text-gray-color;
+            }
+          }
+        }
+
+        // 展示搜索用户的列表
+        .filter-member {
+          display: flex;
+          flex-wrap: wrap;
+          // justify-content: space-between;
+          margin: 5px 0;
+
+          & > div {
+            margin-bottom: 15px;
+            &:nth-child(4n + 2) {
+              margin-left: 12px;
+              margin-right: 12px;
+            }
+            &:nth-child(4n + 3) {
+              margin-right: 12px;
+            }
+          }
+
+          span {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 6px;
+          }
+          .more-user {
+            display: flex;
+            flex-direction: column;
+            width: 40px;
+            img {
+              width: 100%;
+              height: 40px;
+              border-radius: 2px;
+            }
+          }
+          .more-icon {
+            text-align: center;
+            .search-add {
+              box-sizing: border-box;
+              width: 40px;
+              height: 40px;
+              line-height: 35px;
+              font-size: 18px;
+              font-weight: 600;
+              color: @text-gray-color;
+              text-align: center;
+              border: 1px solid #e7e7e8;
+              cursor: pointer;
+            }
+          }
+        }
+      }
     }
   }
 }
