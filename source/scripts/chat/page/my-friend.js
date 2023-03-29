@@ -864,5 +864,6 @@ define([
     getRelationList,
     diffSessionList,
     hideService,
+    chatBy,
   };
 });
