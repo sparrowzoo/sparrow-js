@@ -23,16 +23,6 @@ define(['request', 'axios'], function (request, axios) {
     });
   }
 
-  // function getSession(url, userId) {
-  //   const data = 'token=' + userId;
-  //   return axios.post(BASE_URL + url, data);
-  // }
-
-  // function getFrinedList(url, userId) {
-  //   const data = 'token=' + userId;
-  //   return axios.post(BASE_URL + url, data);
-  // }
-
   // 已读消息
   function setRead(data) {
     return new Promise((resolve, reject) => {

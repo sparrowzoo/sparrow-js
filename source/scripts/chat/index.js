@@ -30,11 +30,59 @@ define([
     DB_STORE_NAME_QUN,
     changeSelfId,
     serviceStore,
+    CHAT_TYPE_1_2_1,
   } = store;
   const { createWS } = websocket;
   const { getSession, getFrinedList, login, serviceList } = api;
   const DBObject = indexedDB;
   let ws;
+
+  // 判断当前是否为临时会话
+  let isTemporary = false;
+  let targetId;
+
+  // 根据 url 解析 userId token targetId
+  function parseURL() {
+    const query = location.search.substring(1); // 获取 ? 后的参数
+    if (query) {
+      // 如果 query 存在 说明当前使用 iframe 嵌套
+      // console.log('有参数');
+      const queryArr = query.split('&');
+      const token = queryArr[0].split('=')[1];
+      const selfId = queryArr[1].split('=')[1];
+      localStorage.setItem('token', token);
+      getSelfInfoById(selfId);
+      if (queryArr.length === 3) {
+        // 当前是临时会话
+        isTemporary = true;
+        targetId = queryArr[2].split('=')[1];
+      }
+    } else {
+      // 没有 query 参数 需要手动登录
+      console.log('没有参数');
+    }
+    console.log(query);
+  }
+  parseURL();
+
+  // 根据 传入的id 获取当前用户详细信息
+  async function getSelfInfoById(id) {
+    const { data } = await api.getDetailById({ id });
+    console.log(data, '当前用户');
+    changeSelfId(
+      data.userId,
+      data.avatar || 'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
+    );
+    // url 登录操作
+    initIM();
+  }
+
+  // 根据 传入的id 获取目标用户详细信息
+  async function getTargetInfoById() {
+    const { data } = await api.getDetailById({ id: targetId });
+    console.log(data, '目标用户');
+    temporaryChat(data.userId, data.userName, data.avatar);
+  }
 
   // 初始化聊天信息页面
   chatMsg.initChatPage();
@@ -55,6 +103,11 @@ define([
     // 历史记录请求后 初始化客服列表
     if (!isServicer) {
       contactService.createSessionList();
+    }
+
+    // 如果是临时会话
+    if (isTemporary) {
+      getTargetInfoById();
     }
   }
 
@@ -123,17 +176,51 @@ define([
         'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
     );
 
+    initIM();
+
+    // // 建立数据库
+    // await DBObject.createIndexedDB(data.memberInfo.id, '1');
+
+    // // 建立 ws 连接
+    // if (ws) {
+    //   // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
+    //   ws.close();
+    // }
+    // ws = createWS(data.memberInfo.id);
+
+    // const isServicer = data.memberInfo.isCustomer === 1;
+    // loadResource(isServicer);
+    // if (isServicer) {
+    //   // 当前登录的是客服人员
+    //   myFriend.hideService();
+    // } else {
+    //   contactService.getWsInstance(ws);
+    // }
+    // chatMsg.getWsInstance(ws);
+
+    // const res = await api.myFriend();
+    // console.log(res, '我的好友');
+    // const r = await api.myGroup();
+    // console.log(r, '我的群');
+    // const r2 = await api.newFriend();
+    // console.log(r2, '新朋友');
+    // const r3 = await api.systemNotice();
+    // console.log(r3, '系统');
+  });
+
+  // 初始化 IM
+  async function initIM(isServicer) {
     // 建立数据库
-    await DBObject.createIndexedDB(data.memberInfo.id, '1');
+    await DBObject.createIndexedDB(selfId.value, '1');
 
     // 建立 ws 连接
     if (ws) {
       // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
       ws.close();
     }
-    ws = createWS(data.memberInfo.id);
+    ws = createWS(selfId.value);
 
-    const isServicer = data.memberInfo.isCustomer === 1;
+    //  const isServicer = data.memberInfo.isCustomer === 1;
     loadResource(isServicer);
     if (isServicer) {
       // 当前登录的是客服人员
@@ -142,25 +229,25 @@ define([
       contactService.getWsInstance(ws);
     }
     chatMsg.getWsInstance(ws);
+  }
 
-    const res = await api.myFriend();
-    console.log(res, '我的好友');
-    const r = await api.myGroup();
-    console.log(r, '我的群');
-    // const r2 = await api.newFriend();
-    // console.log(r2, '新朋友');
-    // const r3 = await api.systemNotice();
-    // console.log(r3, '系统');
-  });
+  // 临时会话的操作
+  function temporaryChat(
+    userId,
+    username,
+    avatar = 'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
+  ) {
+    myFriend.chatBy(userId, username, CHAT_TYPE_1_2_1, avatar);
+  }
 
   // 临时按钮
-  document.querySelector('.temporary').onclick = function () {
-    console.log('temporary');
-    const selfId = document.querySelector('.t-selfId').value;
-    const targetId = document.querySelector('.t-targetId').value;
-    const token = document.querySelector('.t-token').value;
-    // window.open(
-    //   `http://r.sparrowzoo.net/chat/t.index.html?token=${token}&selfId=${selfId}&targetId=${targetId}`
-    // );
-  };
+  // document.querySelector('.temporary').onclick = function () {
+  //   console.log('temporary');
+  //   const selfId = document.querySelector('.t-selfId').value;
+  //   const targetId = document.querySelector('.t-targetId').value;
+  //   const token = document.querySelector('.t-token').value;
+  // window.open(
+  //   `http://r.sparrowzoo.net/chat/t.index.html?token=${token}&selfId=${selfId}&targetId=${targetId}`
+  // );
+  // };
 });
