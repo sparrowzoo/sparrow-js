@@ -43,7 +43,6 @@ define([
 
   // 根据客服列表 生成 session List
   async function createSessionList() {
-    serviceStore.list;
     const u = await Promise.all(
       serviceStore.list.map(async (user) => {
         const sessinKey = getSessionKey(
@@ -72,6 +71,14 @@ define([
     let unReadCount = -1;
     let lastMessage = null;
 
+    // 给没有历史记录的客服构造默认格式
+    const msg = {
+      serverTime: 0,
+      chatType: CHAT_TYPE_1_2_1,
+      session: keyPath,
+      messageType: TEXT_MESSAGE,
+    };
+
     // 与客服有聊天记录
     if (sessionItem) {
       // 如果有最新消息的记录时间 => lastReadTime 倒叙遍历 历史记录
@@ -93,15 +100,8 @@ define([
       }
       lastMessage = sessionItem.messages[sessionItem.messages.length - 1];
       contacter.unReadCount = unReadCount;
-      contacter.lastMessage = lastMessage;
+      contacter.lastMessage = lastMessage || msg;
     } else {
-      // 给没有历史记录的客服构造默认格式
-      const msg = {
-        serverTime: 0,
-        chatType: CHAT_TYPE_1_2_1,
-        session: keyPath,
-        messageType: TEXT_MESSAGE,
-      };
       contacter.unReadCount = 0;
       contacter.lastMessage = msg;
     }
@@ -121,6 +121,8 @@ define([
     const chatDive = chatTemplate.content.cloneNode(true);
     chatContainerDiv.appendChild(chatDive);
     // 聊天框渲染完毕 注册相关事件
+    // 注册搜索 session 事件
+    registerSearch();
     // 发送按钮事件
     onBtnClick();
     // 回车发送信息事件
@@ -279,6 +281,9 @@ define([
       spanLastMsg.innerText = '[图片]';
     }
     const spanMsgTime = divMsgArr[index].querySelector('.msg-time');
+    if (spanMsgTime.style.display === 'none') {
+      spanMsgTime.style.display = 'block';
+    }
     spanMsgTime.innerText = historyMsgTime(msgTime);
   }
 
@@ -370,6 +375,17 @@ define([
     inpSearch.addEventListener('input', function (e) {
       filterSessionList(this.value);
     });
+  }
+
+  // 右侧弹框的回弹事件 移除 加在window 上的点击事件
+  function windowClick() {
+    // 用于再次显示icon 图标
+    return function winClick(e) {
+      console.log('window click');
+      document.querySelector('.msg-recall').style.display = 'none';
+      // 隐藏后 取消window 事件
+      window.removeEventListener('click', winClick);
+    };
   }
 
   // 聊天页面部分 渲染聊天信息
