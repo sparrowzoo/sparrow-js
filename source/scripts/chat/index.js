@@ -61,7 +61,6 @@ define([
       // 没有 query 参数 需要手动登录
       console.log('没有参数');
     }
-    console.log(query);
   }
   parseURL();
 
@@ -73,8 +72,9 @@ define([
       data.userId,
       data.avatar || 'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
     );
+    const isServicer = data.isCustomer === 1;
     // url 登录操作
-    initIM();
+    initIM(isServicer);
   }
 
   // 根据 传入的id 获取目标用户详细信息
@@ -175,8 +175,8 @@ define([
       data.memberInfo.portrait ||
         'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
     );
-
-    initIM();
+    const isServicer = data.memberInfo.isCustomer === 1;
+    initIM(isServicer);
 
     // // 建立数据库
     // await DBObject.createIndexedDB(data.memberInfo.id, '1');
