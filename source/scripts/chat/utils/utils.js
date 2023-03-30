@@ -1,10 +1,11 @@
-define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
-  store,
-  dayjs,
-  chatMsg,
-  indexedDB,
-  contacts
-) {
+define([
+  'store',
+  'day',
+  'chat-msg',
+  'indexedDB',
+  'contacts',
+  'service-list',
+], function (store, dayjs, chatMsg, indexedDB, contacts, serviceList) {
   const {
     CHAT_TYPE_1_2_1,
     CHAT_TYPE_1_2_N,
@@ -14,6 +15,8 @@ define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
     qunNumberMap,
     ACCORD_RECALL,
     serviceStore,
+    currentPage,
+    MSGCHART,
   } = store;
   const DBObject = indexedDB;
   const { contactStore } = contacts;
@@ -124,7 +127,7 @@ define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
       changeDom(delMsg[0], type);
       // 如果撤回的是最后一项，需要通知session 列表更新 最新的信息
       if (index === msgArrs.length) {
-        console.log(msgArrs[msgArrs.length - 1]);
+        // console.log(msgArrs[msgArrs.length - 1]);
         const { messageType, serverTime, session, content, clientSendTime } =
           msgArrs[msgArrs.length - 1];
         let msgValue = '';
@@ -134,12 +137,22 @@ define(['store', 'day', 'chat-msg', 'indexedDB', 'contacts'], function (
         } else {
           msgValue = content;
         }
-        contactStore.recall({
-          msgValue,
-          msgTime: serverTime || clientSendTime,
-          msgType: messageType,
-          sessionKey: session,
-        });
+        // 更新 session list
+        if (currentPage.page === MSGCHART) {
+          contactStore.recall({
+            msgValue,
+            msgTime: serverTime || clientSendTime,
+            msgType: messageType,
+            sessionKey: session,
+          });
+        } else {
+          serviceList.contactStore.recall({
+            msgValue,
+            msgTime: serverTime || clientSendTime,
+            msgType: messageType,
+            sessionKey: session,
+          });
+        }
       }
       await DBObject.dbInstance.recallMsg(
         sessionKey,

@@ -73,6 +73,7 @@ define([
     const addFriendContainer = document.querySelector('.search-part');
     const addFriend = addFriendTemplate.content.cloneNode(true);
     addFriendContainer.appendChild(addFriend);
+    // 注册搜索 session 事件
     registerSearch();
     // 注册弹层的相关事件
     chatMsgApi.registerDialogEvent();
@@ -298,6 +299,32 @@ define([
     const parentDom = document.querySelector('.msg-list');
     const DomList = parentDom.querySelectorAll('.msg-item');
     parentDom.removeChild(DomList[index]);
+
+    // 删除首个聊天对象
+    if (index === 0) {
+      // 获取到第一个 session item
+      const divMsgs = document
+        .querySelector('.msg-list')
+        .querySelector('.msg-item');
+      let targetId, username, chatType, avatar;
+
+      if (divMsgs.info.userName) {
+        // 当前是用户
+        // 每次点击 动态切换右侧的聊天框区域
+        // 修改当前聊天 id
+        targetId = divMsgs.info.userId;
+        username = divMsgs.info.userName;
+        avatar = divMsgs.info.avatar;
+        chatType = CHAT_TYPE_1_2_1;
+      } else {
+        targetId = divMsgs.info.qunId;
+        username = divMsgs.info.qunName;
+        chatType = CHAT_TYPE_1_2_N;
+      }
+      const currentSession = getSessionKey(chatType, selfId.value, targetId);
+      setTargetId(targetId, username, chatType, avatar, currentSession);
+      getDefaultChat();
+    }
   }
 
   // 发送/接收后的列表重新排序
