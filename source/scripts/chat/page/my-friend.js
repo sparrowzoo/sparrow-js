@@ -138,6 +138,7 @@ define([
       contacterObj = originContact;
     } else {
       // 没有传入参数 从数据库中获取
+      if (!DBObject.dbInstance) return;
       contacterObj = await getUses_Quns();
     }
 
