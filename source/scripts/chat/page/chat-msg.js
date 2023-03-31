@@ -5,7 +5,8 @@ define([
   'indexedDB',
   'websocket',
   'api',
-], function (store, contacts, utils, indexedDB, websocket, api) {
+  'chat-msg-api',
+], function (store, contacts, utils, indexedDB, websocket, api, chatMsgApi) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
@@ -19,6 +20,9 @@ define([
     setTargetId,
     qunNumberMap,
     ACCORD_RECALL,
+    DEFAULTFLAG,
+    DEFAULTAVATAR,
+    MSGCHART,
   } = store;
   const { contactStore } = contacts;
 
@@ -59,15 +63,20 @@ define([
     sendPicture();
     // 更多图标的点击事件
     registerIconMore();
+    // 搜索群成员事件
+    registerSearchMember();
   }
-  // 根据模板 渲染添加朋友的弹层
+  // 根据模板 渲染添加朋友的弹层  => 注册搜索事件
   function initAddDialog() {
     // 填充 弹层
     const addFriendTemplate = document.querySelector('#add-friend-dialog');
     const addFriendContainer = document.querySelector('.search-part');
     const addFriend = addFriendTemplate.content.cloneNode(true);
     addFriendContainer.appendChild(addFriend);
+    // 注册搜索 session 事件
     registerSearch();
+    // 注册弹层的相关事件
+    chatMsgApi.registerDialogEvent();
   }
   // 根据模板 渲染 消息列表, 这个列表在 拿到好友就已经确定了
   function showSessionList() {
@@ -116,8 +125,8 @@ define([
         imgNation.style.display = 'none';
       } else {
         // 当前是 用户
-        imgUser.src = list[i].avatar;
-        imgNation.src = list[i].flagUrl;
+        imgUser.src = list[i].avatar || DEFAULTAVATAR;
+        imgNation.src = list[i].flagUrl || DEFAULTFLAG;
       }
 
       // 最新消息的发送时间
@@ -197,7 +206,6 @@ define([
     // 每次发送信息都要 更新已读
     api.setRead(params);
   }
-
   // 发送最新信息 列表变化的逻辑
   function sendLastMsg(sessionItem) {
     updateSessionCom(sessionItem);
@@ -264,11 +272,11 @@ define([
     // 用户头像
     const imgUser = divSessionItem.querySelector('.avatar-img');
     // imgUser.src =
-    imgUser.src = item.avatar;
+    imgUser.src = item.avatar || DEFAULTAVATAR;
     // 用户国籍
     const imgNation = divSessionItem.querySelector('.nation');
     if (item.userName) {
-      imgNation.src = item.flagUrl;
+      imgNation.src = item.flagUrl || DEFAULTFLAG;
     }
 
     // 向 session list 中添加item
@@ -291,6 +299,32 @@ define([
     const parentDom = document.querySelector('.msg-list');
     const DomList = parentDom.querySelectorAll('.msg-item');
     parentDom.removeChild(DomList[index]);
+
+    // 删除首个聊天对象
+    if (index === 0) {
+      // 获取到第一个 session item
+      const divMsgs = document
+        .querySelector('.msg-list')
+        .querySelector('.msg-item');
+      let targetId, username, chatType, avatar;
+
+      if (divMsgs.info.userName) {
+        // 当前是用户
+        // 每次点击 动态切换右侧的聊天框区域
+        // 修改当前聊天 id
+        targetId = divMsgs.info.userId;
+        username = divMsgs.info.userName;
+        avatar = divMsgs.info.avatar;
+        chatType = CHAT_TYPE_1_2_1;
+      } else {
+        targetId = divMsgs.info.qunId;
+        username = divMsgs.info.qunName;
+        chatType = CHAT_TYPE_1_2_N;
+      }
+      const currentSession = getSessionKey(chatType, selfId.value, targetId);
+      setTargetId(targetId, username, chatType, avatar, currentSession);
+      getDefaultChat();
+    }
   }
 
   // 发送/接收后的列表重新排序
@@ -300,19 +334,33 @@ define([
     const divMsgArr = divSessionParent.querySelectorAll('.msg-item');
     divSessionParent.insertBefore(divMsgArr[index], divMsgArr[0]);
   }
+  // 对session list 进行过滤显示  通过判断keyword 是否被包含在用户名里面
+  function filterSessionList(keyword) {
+    const divMsgList = document.querySelector('.msg-list');
+    const msgItemArr = divMsgList.childNodes;
+    console.log(msgItemArr);
+    for (let i = 0; i < msgItemArr.length; i++) {
+      const key = msgItemArr[i].info.userName || msgItemArr[i].info.qunName;
+      // 如果当前的用户名 / 群名 不包含keyword 设置样式为none
+      if (!key.includes(keyword)) {
+        msgItemArr[i].style.display = 'none';
+      } else {
+        msgItemArr[i].style.display = 'flex';
+      }
+    }
+  }
 
   // 注册搜索框 搜索&点击事件
   function registerSearch() {
-    const addFriend = document
-      .querySelector('.search-part')
-      .querySelector('.search-add');
-    addFriend.addEventListener('click', function (e) {
-      const addFriendDialog = document.querySelector('.dialog-add-friend-wrap');
-      addFriendDialog.style.display =
-        addFriendDialog.style.display === 'none' ? 'block' : 'none';
+    const inpSearch = document
+      .querySelector('.chat-msg')
+      .querySelector('.search-input');
+    inpSearch.addEventListener('input', function (e) {
+      filterSessionList(this.value);
     });
   }
 
+  /** 群侧边栏的事件注册 START */
   // 注册点击更多图标事件
   function registerIconMore() {
     const moreIcon = document.querySelector('.show-more-icon');
@@ -336,18 +384,25 @@ define([
           document.querySelector('.msg-recall').style.display = 'none';
         }
         // 点击更多icon 后 注册window 点击事件，用于隐藏侧边栏
-        window.addEventListener('click', windowClick(true));
+        window.addEventListener('click', windowClick());
       },
       true
     );
   }
-
   // 右侧弹框的回弹事件 移除 加在window 上的点击事件
-  function windowClick(isIcon) {
+  function windowClick(isMoreIcon = true) {
     // 用于再次显示icon 图标
     return function winClick(e) {
-      if (isIcon) {
+      if (isMoreIcon) {
+        // 侧边栏关闭
         document.querySelector('.more-message').style.display = 'none';
+
+        // 将过滤搜索群成员的样式关闭,并将搜索框置空
+        document.querySelector('.group-more-content').style.display = 'block';
+        document.querySelector('.filter-member').style.display = 'none';
+        document
+          .querySelector('.more-message')
+          .querySelector('.search-member').value = '';
       } else {
         document.querySelector('.msg-recall').style.display = 'none';
       }
@@ -355,7 +410,6 @@ define([
       window.removeEventListener('click', winClick);
     };
   }
-
   // 控制图标的显示与隐藏 个人聊天框没有icon
   function controlIcon(chatType) {
     const divIcon = document
@@ -367,6 +421,27 @@ define([
       divIcon.style.display = 'block';
     }
   }
+  // 注册搜索群成员事件
+  function registerSearchMember() {
+    const inputSearch = document
+      .querySelector('.more-message')
+      .querySelector('.search-member');
+    inputSearch.oninput = function (e) {
+      const moreContent = document.querySelector('.group-more-content');
+      const filterDom = document.querySelector('.filter-member');
+      if (e.target.value.length !== 0) {
+        moreContent.style.display = 'none';
+        filterDom.style.display = 'flex';
+      } else {
+        moreContent.style.display = 'block';
+        filterDom.style.display = 'none';
+      }
+      // 根据输入内容 过滤成员
+      filterGroupMember(e.target.value);
+    };
+  }
+
+  /** 群侧边栏的事件注册 END */
 
   // 聊天页面部分 渲染聊天信息
   // 将要插在这个节点之前,这里使用倒叙插入
@@ -376,7 +451,6 @@ define([
     // 根据聊天框 动态修改sessionItem 样式
     await switchStyle(user_id, chatType);
     // 显示传来的username
-
     if (username) {
       document.querySelector('.msg-content').querySelector('.user').innerText =
         username;
@@ -451,7 +525,7 @@ define([
     // 滚动到底部
     getScrollBottom('.msg-detail');
     // 渲染完毕注册websocket onmessage 事件
-    wsInstance.registerCallback(receiveMessage);
+    wsInstance.registerCallback(receiveMessage, MSGCHART);
   }
 
   // 没有明确user_id 获取默认的聊天框，就是session列表的第一个用户 / 群
@@ -537,6 +611,9 @@ define([
       }
       switchMore(isFold);
     };
+
+    // 添加群成员
+    chatMsgApi.addMoreFriend();
   }
   // 渲染群成员
   function getmemberList(userList, divGroup) {
@@ -550,7 +627,33 @@ define([
       divMember.querySelector('span').innerText = item.userName;
       templateContainer.appendChild(divMember);
     });
+    // 将添加按钮添加到成员的末尾
     templateContainer.appendChild(moreIconTemplate);
+    divUserList.innerHTML = '';
+    divUserList.appendChild(templateContainer);
+  }
+
+  // 过滤群成员
+  function filterGroupMember(keyword) {
+    const filterMember = [];
+    // 拿到群成员比对
+    for (const key in qunNumberMap.map) {
+      if (qunNumberMap.map[key].userName.includes(keyword)) {
+        filterMember.push(qunNumberMap.map[key]);
+      }
+    }
+
+    // 将搜索到的群成员渲染到页面上
+    const divGroup = document.querySelector('.group-more-part');
+    const templateContainer = new DocumentFragment();
+    const divUserList = divGroup.querySelector('.filter-member');
+    const userTemplate = divGroup.querySelector('.more-user');
+    filterMember.forEach((item) => {
+      const divMember = userTemplate.cloneNode(true);
+      divMember.querySelector('img').src = item.avatar;
+      divMember.querySelector('span').innerText = item.userName;
+      templateContainer.appendChild(divMember);
+    });
     divUserList.innerHTML = '';
     divUserList.appendChild(templateContainer);
   }
@@ -732,6 +835,7 @@ define([
    * @param lastTemp  最新的间隔时间戳
    * @param msgTime  聊天信息的时间戳
    */
+
   function relaxTime(lastTemp, msgTime) {
     if (lastTemp - msgTime > 1000 * 60 * 10) {
       lastTime = msgTime;
@@ -857,5 +961,6 @@ define([
     showSessionList,
     getDefaultChat,
     getWsInstance,
+    windowClick,
   };
 });

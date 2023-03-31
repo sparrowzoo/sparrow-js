@@ -485,6 +485,55 @@ h5 {
 .chat-msg .msg-content .more-message .group-more-part .group-more-content .more-common span {
   color: #848484;
 }
+.chat-msg .msg-content .more-message .group-more-part .filter-member {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member > div {
+  margin-bottom: 15px;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member > div:nth-child(4n + 2) {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member > div:nth-child(4n + 3) {
+  margin-right: 12px;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member span {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 6px;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member .more-user {
+  display: flex;
+  flex-direction: column;
+  width: 40px;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member .more-user img {
+  width: 100%;
+  height: 40px;
+  border-radius: 2px;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member .more-icon {
+  text-align: center;
+}
+.chat-msg .msg-content .more-message .group-more-part .filter-member .more-icon .search-add {
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  line-height: 35px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #848484;
+  text-align: center;
+  border: 1px solid #e7e7e8;
+  cursor: pointer;
+}
 .dialog-add-friend {
   width: 520px;
   height: 400px;
@@ -496,6 +545,7 @@ h5 {
   display: flex;
   z-index: 10;
   box-sizing: border-box;
+  user-select: none;
 }
 .dialog-add-friend .dialog-user-list {
   width: 50%;
@@ -542,7 +592,7 @@ h5 {
 }
 .dialog-add-friend .dialog-user-list .user-list .user-item {
   display: flex;
-  margin-top: 10px;
+  margin-top: 15px;
   align-items: center;
 }
 .dialog-add-friend .dialog-user-list .user-list .user-item img {
@@ -581,7 +631,7 @@ h5 {
   font-size: 14px;
   margin-bottom: 20px;
 }
-.dialog-add-friend .dialog-choose-list .iconfont {
+.dialog-add-friend .dialog-choose-list .icon-cuowukongxin {
   position: absolute;
   right: 10px;
   top: 10px;
@@ -629,9 +679,14 @@ h5 {
   border: 1px solid #e6e6e7;
   border-radius: 50%;
   cursor: pointer;
+  background-color: #eee9e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .dialog-add-friend .dialog-choose-list .choose-user .user-item .dialog-info .check-box .iconfont {
-  font-size: 18px;
+  font-size: 14px;
+  color: #fff;
 }
 .dialog-add-friend .dialog-choose-list .dialog-operate {
   display: flex;

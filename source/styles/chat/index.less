@@ -1,8 +1,8 @@
-@import "./font.css";
-@import "./my-friend.css";
-@import "./chat-msg.css";
-@import "./system-inform.css";
-@import "./contact-service.css";
+@import './font.css';
+@import './my-friend.css';
+@import './chat-msg.css';
+@import './system-inform.css';
+@import './contact-service.css';
 
 @theme-color: #f7f7f7;
 @text-color: #282d3b;
@@ -46,7 +46,6 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
 }
 // 全局 消息撤回
-
 .msg-recall {
   position: absolute;
   left: 0;
@@ -68,6 +67,51 @@ body {
     }
   }
 }
+
+// 全局消息弹层
+.global-msg {
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100%);
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  border-radius: 5px;
+  padding: 10px;
+
+  .response-msg {
+    color: #fff;
+  }
+}
+
+.animation-class {
+  animation: 2.5s linear 1 alternate slidein;
+}
+
+@keyframes slidein {
+  0% {
+    top: 40%;
+    opacity: 0;
+  }
+
+  20% {
+    top: 40%;
+    opacity: 1;
+  }
+
+  80% {
+    top: 40%;
+    opacity: 1;
+  }
+
+  100% {
+    top: 40%;
+    opacity: 0;
+  }
+}
+
+// 页面主体
 .wraper {
   width: 1100px;
   margin: 100px auto 0;
@@ -136,7 +180,7 @@ body {
     .mask-icon {
       width: 30px;
       height: 30px;
-      background-image: url("../../images/chat/loading.png");
+      background-image: url('../../images/chat/loading.png');
       background-size: cover;
       animation: myloading 1.5s infinite;
       -webkit-animation: myloading 1.5s infinite;

@@ -2,11 +2,149 @@ h5 {
   color: #282d3b;
 }
 .service {
+  width: 95%;
+  height: 700px;
+}
+.service .service-content {
+  width: 100%;
+  display: flex;
+}
+.service .msg-part {
+  width: 32%;
+  min-width: 250px;
+  background-color: #f7f7f7;
   border: 1px solid #e6e6e7;
-  width: 80%;
+}
+.service .msg-part .search-part {
+  height: 75px;
+  padding: 0 15px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #f3f0f0;
+  border-bottom: 1px solid #fff;
+  position: relative;
+}
+.service .msg-part .search-part .search-icon {
+  position: relative;
+  margin-right: 15px;
+  flex: 1;
+}
+.service .msg-part .search-part .search-icon input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 35px;
+  border: none;
+  outline: none;
+  padding-left: 27px;
+}
+.service .msg-part .search-part .search-icon .iconfont {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 5px;
+  color: #a3a3a3;
+  font-size: 18px;
+}
+.service .msg-part .search-part .search-add {
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #848484;
+  text-align: center;
+  background-color: #fff;
+  cursor: pointer;
+}
+.service .msg-part .msg-list {
+  overflow: auto;
+  height: 657px;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+.service .msg-part .msg-list::-webkit-scrollbar {
+  display: none;
+  /* Chrome Safari */
+}
+.service .msg-part .msg-list .msg-item {
+  width: 100%;
+  padding: 20px 15px;
+  box-sizing: border-box;
+  display: flex;
+  background-color: #f7f7f7;
+  cursor: pointer;
+}
+.service .msg-part .msg-list .msg-item .avatar {
+  width: 60px;
+  height: 60px;
+  position: relative;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+.service .msg-part .msg-list .msg-item .avatar .nation {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  bottom: -5px;
+  left: -1px;
+}
+.service .msg-part .msg-list .msg-item .avatar .avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+}
+.service .msg-part .msg-list .msg-item .avatar span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(40%, -40%);
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background-color: red;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  color: #fff;
+}
+.service .msg-part .msg-list .msg-item .msg-user-time {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+.service .msg-part .msg-list .msg-item .msg-user-time .msg-user {
+  display: flex;
+  justify-content: space-between;
+}
+.service .msg-part .msg-list .msg-item .msg-user-time .msg-user .username {
+  max-width: 85px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.service .msg-part .msg-list .msg-item .msg-user-time .msg-user .msg-time {
+  color: #8c8c8c;
+  font-size: 14px;
+}
+.service .msg-part .msg-list .msg-item .msg-user-time .msg-last {
+  color: #8c8c8c;
+  font-size: 14px;
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .service .msg-content {
+  width: 68%;
   min-width: 400px;
+  border: 1px solid #e6e6e7;
+  border-left: none;
+  position: relative;
 }
 .service .msg-content .title {
   height: 75px;
@@ -23,7 +161,8 @@ h5 {
   font-weight: 500;
 }
 .service .msg-content .title .iconfont {
-  font-size: 20px;
+  font-size: 30px;
+  cursor: pointer;
 }
 .service .msg-content .msg-detail {
   width: 100%;
@@ -40,7 +179,7 @@ h5 {
   /* Chrome Safari */
 }
 .service .msg-content .msg-detail .message {
-  margin: 0 20px;
+  margin: 20px;
 }
 .service .msg-content .msg-detail .message .time {
   color: #666;
@@ -52,19 +191,54 @@ h5 {
   display: flex;
   padding: 10px 0;
 }
-.service .msg-content .msg-detail .message .user-msg img {
+.service .msg-content .msg-detail .message .user-msg .avatar-user {
   width: 35px;
   height: 35px;
-  border-radius: 50%;
+  border-radius: 5px;
 }
 .service .msg-content .msg-detail .message .user-msg .message-detail {
   max-width: 50%;
   margin: 0 20px 0 25px;
   padding: 12px 10px;
   border-radius: 5px;
+  overflow-wrap: break-word;
+}
+.service .msg-content .msg-detail .message .user-msg .message-detail .message-text {
+  white-space: pre-wrap;
+}
+.service .msg-content .msg-detail .message .user-msg .message-detail:hover {
+  cursor: pointer;
+}
+.service .msg-content .msg-detail .message .user-msg .msg-picture-detail {
+  position: relative;
+  margin: 0 20px;
+}
+.service .msg-content .msg-detail .message .user-msg .msg-picture-detail .msg-picture {
+  border-radius: 5px;
+  max-width: 150px;
+  cursor: pointer;
+}
+.service .msg-content .msg-detail .message .recall {
+  text-align: center;
+  color: #666;
+}
+.service .msg-content .msg-detail .message .recall .reset {
+  color: #607298;
+  cursor: pointer;
 }
 .service .msg-content .msg-detail .left .user-msg {
   flex-direction: row;
+}
+.service .msg-content .msg-detail .left .user-msg .username {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-110%);
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #999;
 }
 .service .msg-content .msg-detail .left .user-msg .message-detail {
   background-color: #fff;
@@ -80,6 +254,9 @@ h5 {
 }
 .service .msg-content .msg-detail .right .user-msg {
   flex-direction: row-reverse;
+}
+.service .msg-content .msg-detail .right .user-msg .username {
+  display: none !important;
 }
 .service .msg-content .msg-detail .right .user-msg .message-detail {
   background-color: #282d3b;
@@ -105,7 +282,6 @@ h5 {
   align-items: center;
   background-color: #f5f3f3;
   padding-left: 15px;
-  cursor: pointer;
 }
 .service .msg-content .input-part .conver-button span {
   text-align: center;
@@ -115,6 +291,7 @@ h5 {
   border: 2px solid #282d3b;
   color: #282d3b;
   background-color: #fff;
+  cursor: pointer;
 }
 .service .msg-content .input-part .conver-button .upload-part {
   height: 100%;
@@ -157,4 +334,203 @@ h5 {
 .service .msg-content .active-lang {
   color: #fff !important;
   background-color: #282d3b !important;
+}
+.service .msg-content .more-message {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  right: 0;
+  width: 230px;
+  padding: 15px;
+  box-sizing: border-box;
+  background-color: #f7f7f7;
+  border: 1px solid #e6e6e7;
+}
+.service .msg-content .more-message .user-more-part .user-more-part-wapper {
+  display: flex;
+  box-sizing: border-box;
+}
+.service .msg-content .more-message .user-more-part .user-more-part-wapper > div {
+  width: 50px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  align-items: center;
+}
+.service .msg-content .more-message .user-more-part .user-more-part-wapper > div span {
+  margin-top: 5px;
+  white-space: nowrap;
+  width: 100%;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.service .msg-content .more-message .user-more-part .user-more-part-wapper .more-user img {
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+}
+.service .msg-content .more-message .user-more-part .user-more-part-wapper .more-icon {
+  margin-left: 10px;
+}
+.service .msg-content .more-message .user-more-part .user-more-part-wapper .more-icon .search-add {
+  box-sizing: border-box;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #848484;
+  text-align: center;
+  border: 1px solid #e7e7e8;
+  cursor: pointer;
+}
+.service .msg-content .more-message .group-more-part .more-search {
+  position: relative;
+  margin-bottom: 25px;
+}
+.service .msg-content .more-message .group-more-part .more-search input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 35px;
+  border: none;
+  outline: none;
+  padding-left: 27px;
+}
+.service .msg-content .more-message .group-more-part .more-search .iconfont {
+  position: absolute;
+  top: 8px;
+  left: 5px;
+  font-size: 18px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content {
+  overflow-y: auto;
+  height: 650px;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+.service .msg-content .more-message .group-more-part .group-more-content::-webkit-scrollbar {
+  display: none;
+  /* Chrome Safari */
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list > div {
+  margin-bottom: 15px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list > div:nth-child(4n + 2) {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list > div:nth-child(4n + 3) {
+  margin-right: 12px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list span {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 6px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list .more-user {
+  display: flex;
+  flex-direction: column;
+  width: 40px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list .more-user img {
+  width: 100%;
+  height: 40px;
+  border-radius: 2px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list .more-icon {
+  text-align: center;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .user-list .more-icon .search-add {
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  line-height: 35px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #848484;
+  text-align: center;
+  border: 1px solid #e7e7e8;
+  cursor: pointer;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .look-more-user {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #848484;
+  cursor: pointer;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .more-common {
+  margin-top: 20px;
+  border-top: 1px solid #e6e6e7;
+  font-size: 14px;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .more-common p {
+  margin-top: 20px;
+  margin-bottom: 0;
+  color: #282d3b;
+}
+.service .msg-content .more-message .group-more-part .group-more-content .more-common span {
+  color: #848484;
+}
+.service .msg-content .more-message .group-more-part .filter-member {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 5px 0;
+}
+.service .msg-content .more-message .group-more-part .filter-member > div {
+  margin-bottom: 15px;
+}
+.service .msg-content .more-message .group-more-part .filter-member > div:nth-child(4n + 2) {
+  margin-left: 12px;
+  margin-right: 12px;
+}
+.service .msg-content .more-message .group-more-part .filter-member > div:nth-child(4n + 3) {
+  margin-right: 12px;
+}
+.service .msg-content .more-message .group-more-part .filter-member span {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  text-align: center;
+  margin-top: 6px;
+}
+.service .msg-content .more-message .group-more-part .filter-member .more-user {
+  display: flex;
+  flex-direction: column;
+  width: 40px;
+}
+.service .msg-content .more-message .group-more-part .filter-member .more-user img {
+  width: 100%;
+  height: 40px;
+  border-radius: 2px;
+}
+.service .msg-content .more-message .group-more-part .filter-member .more-icon {
+  text-align: center;
+}
+.service .msg-content .more-message .group-more-part .filter-member .more-icon .search-add {
+  box-sizing: border-box;
+  width: 40px;
+  height: 40px;
+  line-height: 35px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #848484;
+  text-align: center;
+  border: 1px solid #e7e7e8;
+  cursor: pointer;
 }

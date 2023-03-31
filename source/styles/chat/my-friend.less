@@ -60,14 +60,6 @@
     z-index: 10;
     text-align: center;
     .add-input {
-      // display: none;
-      p {
-        text-align: center;
-        color: @text-color;
-        font-size: 18px;
-        padding: 20px 0;
-      }
-
       input {
         text-align: center;
         margin: 0 auto;
@@ -79,19 +71,24 @@
         background-color: @theme-color;
         padding: 10px 0;
       }
-
-      span {
-        color: @text-gray-color;
-        text-align: center;
-      }
-      .operate {
-        margin-top: 35px;
-        .test();
-        display: flex;
-        justify-content: center;
-        button {
-          height: 43px;
-        }
+    }
+    p {
+      text-align: center;
+      color: @text-color;
+      font-size: 18px;
+      padding: 20px 0;
+    }
+    span {
+      color: @text-gray-color;
+      text-align: center;
+    }
+    .operate {
+      margin-top: 35px;
+      .test();
+      display: flex;
+      justify-content: center;
+      button {
+        height: 43px;
       }
     }
 
@@ -138,6 +135,7 @@
           border-radius: 2px;
           background-color: @text-color;
           color: #fff;
+          cursor: pointer;
         }
       }
     }

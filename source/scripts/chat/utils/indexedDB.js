@@ -25,9 +25,19 @@ define(['store'], function (store) {
         this.request.onsuccess = (event) => {
           this.db = event.target.result;
           console.log('数据库连接成功');
-          resolve(this);
+
+          // 清空之前保存的内容
+          this.clearStore([
+            DB_STORE_NAME_SESSION,
+            DB_STORE_NAME_USER,
+            DB_STORE_NAME_QUN,
+          ]).then((res) => {
+            console.log(res);
+            resolve(this);
+          });
         };
         this.request.onupgradeneeded = (event) => {
+          console.log('首次创建数据库');
           const db = event.target.result;
           // 创建存储仓库
           db.createObjectStore(DB_STORE_NAME_SESSION, { keyPath: 'session' });
@@ -43,13 +53,15 @@ define(['store'], function (store) {
 
     // 初始化整个store 也就是向数据库中添加数据
     putStoreItem(item, storeName) {
-      const req = this.db
-        .transaction(storeName, 'readwrite')
-        .objectStore(storeName)
-        .put(item);
-      req.onsuccess = function () {
-        console.log('添加成功~');
-      };
+      return new Promise((resolve, reject) => {
+        const req = this.db
+          .transaction(storeName, 'readwrite')
+          .objectStore(storeName)
+          .put(item);
+        req.onsuccess = function () {
+          resolve('添加成功');
+        };
+      });
     }
 
     // 添加单条数据 也就是修改数据库中的数据
@@ -154,6 +166,31 @@ define(['store'], function (store) {
         request.onsuccess = (event) => {
           resolve(event.target.result);
         };
+      });
+    }
+
+    // 清空store,有多个store 参数是要清空store的名字组成的数组
+    clearStore(storeNameArr) {
+      // 每次初始化之前，需要清空之前保存在indexedb中的数据
+      return new Promise((resolve, reject) => {
+        let count = 0;
+        storeNameArr.forEach((store) => {
+          const res = this.db
+            .transaction(store, 'readwrite')
+            .objectStore(store)
+            .clear();
+          res.onsuccess = callBack;
+          res.onerror = (e) => {
+            reject('未能删除旧数据');
+          };
+        });
+
+        function callBack(e) {
+          count++;
+          if (count === storeNameArr.length) {
+            resolve('删除旧数据成功');
+          }
+        }
       });
     }
   }

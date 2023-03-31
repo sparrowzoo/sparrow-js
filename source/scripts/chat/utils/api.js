@@ -1,5 +1,5 @@
 // 封装 ajax 请求
-define(['request'], function (request) {
+define(['request', 'axios'], function (request, axios) {
   const { service } = request;
   const BASE_URL = 'http://chat.sparrowzoo.com/chat/';
   /** ws 有关的接口 */
@@ -12,6 +12,7 @@ define(['request'], function (request) {
       });
     });
   }
+
   // 好友列表
   function getFrinedList(url, userId) {
     return new Promise((resolve, reject) => {
@@ -63,10 +64,30 @@ define(['request'], function (request) {
 
   // 根据手机号查询用户详情
   function getDetailByPhone(params) {
+    console.log('查询user');
     return service({
       method: 'get',
       url: '/app/message/userDetail',
       params,
+    });
+  }
+
+  // 根据id 查询用户详情
+  function getDetailById(params) {
+    return service({
+      method: 'get',
+      url: '/app/message/findById',
+      params,
+    });
+  }
+
+  // 根据id数组列表 查询用户详情
+  function getDetailByIdArr(data) {
+    // /app/message/userDetailList
+    return service({
+      method: 'post',
+      url: '/app/message/userDetailList',
+      data,
     });
   }
 
@@ -128,11 +149,29 @@ define(['request'], function (request) {
     });
   }
 
+  // 修改群信息
+  function changeGroup(data) {
+    // /app/message/updateGroup
+    return service({
+      method: 'post',
+      url: '/app/message/updateGroup',
+      data,
+    });
+  }
+
   // 系统通知 /app/message/systemInform
   function systemNotice() {
     return service({
       method: 'get',
       url: '/app/message/systemInform',
+    });
+  }
+
+  // 获取客服列表
+  function serviceList() {
+    return service({
+      method: 'get',
+      url: '/app/message/customList',
     });
   }
 
@@ -149,7 +188,11 @@ define(['request'], function (request) {
     removeFriend,
     removeGroup,
     getDetailByPhone,
+    getDetailById,
     addFriendById,
     auditFriend,
+    changeGroup,
+    serviceList,
+    getDetailByIdArr,
   };
 });

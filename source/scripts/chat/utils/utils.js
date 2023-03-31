@@ -1,10 +1,11 @@
-define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
-  store,
-  dayjs,
-  chatMsg,
-  indexedDB,
-  contacts
-) {
+define([
+  'store',
+  'day',
+  'chat-msg',
+  'indexedDB',
+  'contacts',
+  'service-list',
+], function (store, dayjs, chatMsg, indexedDB, contacts, serviceList) {
   const {
     CHAT_TYPE_1_2_1,
     CHAT_TYPE_1_2_N,
@@ -13,6 +14,9 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
     targetId,
     qunNumberMap,
     ACCORD_RECALL,
+    serviceStore,
+    currentPage,
+    MSGCHART,
   } = store;
   const DBObject = indexedDB;
   const { contactStore } = contacts;
@@ -25,7 +29,7 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
 
   // 当前发送消息的时间
   function currentSendTime() {
-    return dayjs().format("HH:mm");
+    return dayjs().format('HH:mm');
   }
 
   // 历史记录的时间格式
@@ -36,11 +40,11 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
     // 如果是昨天的历史记录  昨天 15:02
     // 早于昨天的历史        22/11/20 15:02
 
-    const currentY = dayjs(currentTemp).format("YYYY");
-    const currentM = dayjs(currentTemp).format("MM");
-    const currentD = dayjs(currentTemp).format("DD");
+    const currentY = dayjs(currentTemp).format('YYYY');
+    const currentM = dayjs(currentTemp).format('MM');
+    const currentD = dayjs(currentTemp).format('DD');
     const currentDayTemp = dayjs(
-      currentY + "-" + currentM + "-" + currentD
+      currentY + '-' + currentM + '-' + currentD
     ).valueOf();
     // 今天过了的时间
     const duringTime = currentTemp - currentDayTemp;
@@ -48,12 +52,12 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
     const oneDayTime = 86400000;
     if (currentTemp - temp < duringTime) {
       // 今天的信息
-      return dayjs(temp).format("HH:mm");
+      return dayjs(temp).format('HH:mm');
     }
     if (currentTemp - temp < duringTime + oneDayTime) {
-      return "昨天" + dayjs(temp).format("HH:mm");
+      return '昨天' + dayjs(temp).format('HH:mm');
     }
-    return dayjs(temp).format("YY/MM/DD HH:mm");
+    return dayjs(temp).format('YY/MM/DD HH:mm');
   }
 
   // session列表 时间格式
@@ -64,11 +68,11 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
     // 如果是昨天的历史记录  昨天
     // 早于昨天的历史        22/11/20
 
-    const currentY = dayjs(currentTemp).format("YYYY");
-    const currentM = dayjs(currentTemp).format("MM");
-    const currentD = dayjs(currentTemp).format("DD");
+    const currentY = dayjs(currentTemp).format('YYYY');
+    const currentM = dayjs(currentTemp).format('MM');
+    const currentD = dayjs(currentTemp).format('DD');
     const currentDayTemp = dayjs(
-      currentY + "-" + currentM + "-" + currentD
+      currentY + '-' + currentM + '-' + currentD
     ).valueOf();
     // 今天过了的时间
     const duringTime = currentTemp - currentDayTemp;
@@ -76,17 +80,17 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
     const oneDayTime = 86400000;
     if (currentTemp - temp < duringTime) {
       // 今天的信息
-      return dayjs(temp).format("HH:mm");
+      return dayjs(temp).format('HH:mm');
     }
     if (currentTemp - temp < duringTime + oneDayTime) {
-      return "昨天";
+      return '昨天';
     }
-    return dayjs(temp).format("YY/MM/DD");
+    return dayjs(temp).format('YY/MM/DD');
   }
 
   // 自动获取焦点
   function getFocus(ele) {
-    if (typeof ele === "string") {
+    if (typeof ele === 'string') {
       return document.querySelector(ele);
     }
     function select(dom, sesecter) {
@@ -105,9 +109,9 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
       return targetId;
     }
     if (selfId < targetId) {
-      return selfId + "_" + targetId;
+      return selfId + '_' + targetId;
     }
-    return targetId + "_" + selfId;
+    return targetId + '_' + selfId;
   }
 
   async function delLocalMsg(cliTime, sessionKey, type) {
@@ -123,22 +127,32 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
       changeDom(delMsg[0], type);
       // 如果撤回的是最后一项，需要通知session 列表更新 最新的信息
       if (index === msgArrs.length) {
-        console.log(msgArrs[msgArrs.length - 1]);
+        // console.log(msgArrs[msgArrs.length - 1]);
         const { messageType, serverTime, session, content, clientSendTime } =
           msgArrs[msgArrs.length - 1];
-        let msgValue = "";
+        let msgValue = '';
         // 判断信息的类型
         if (messageType === TEXT_MESSAGE) {
           msgValue = BASE64.bytesToString(BASE64.decodeBase64(content));
         } else {
           msgValue = content;
         }
-        contactStore.recall({
-          msgValue,
-          msgTime: serverTime || clientSendTime,
-          msgType: messageType,
-          sessionKey: session,
-        });
+        // 更新 session list
+        if (currentPage.page === MSGCHART) {
+          contactStore.recall({
+            msgValue,
+            msgTime: serverTime || clientSendTime,
+            msgType: messageType,
+            sessionKey: session,
+          });
+        } else {
+          serviceList.contactStore.recall({
+            msgValue,
+            msgTime: serverTime || clientSendTime,
+            msgType: messageType,
+            sessionKey: session,
+          });
+        }
       }
       await DBObject.dbInstance.recallMsg(
         sessionKey,
@@ -155,9 +169,9 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
   ) {
     let divMsgs = null;
     if (messageType === TEXT_MESSAGE) {
-      divMsgs = document.querySelectorAll(".message-detail");
+      divMsgs = document.querySelectorAll('.message-detail');
     } else {
-      divMsgs = document.querySelectorAll(".msg-picture-detail");
+      divMsgs = document.querySelectorAll('.msg-picture-detail');
     }
 
     // 倒叙遍历
@@ -165,20 +179,20 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
       if (divMsgs[i].clientSendTime == clientSendTime) {
         // 隐藏当前父节点
         const divParent = divMsgs[i].parentNode;
-        divParent.style.display = "none";
+        divParent.style.display = 'none';
         if (type === ACCORD_RECALL) {
           // 自己撤销的  可以编辑
-          divParent.nextElementSibling.style = "block";
+          divParent.nextElementSibling.style = 'block';
           reEdit(divParent.nextElementSibling, messageType, content);
         } else {
           // 其他人撤销的 显示撤销的用户名
           const divOther = divParent.nextElementSibling.nextElementSibling;
-          divOther.style = "block";
+          divOther.style = 'block';
           if (chatType === CHAT_TYPE_1_2_1) {
-            divOther.querySelector(".recall-user").textContent =
+            divOther.querySelector('.recall-user').textContent =
               targetId.username;
           } else {
-            divOther.querySelector(".recall-user").textContent =
+            divOther.querySelector('.recall-user').textContent =
               qunNumberMap.map[fromUserId].userName;
           }
         }
@@ -197,14 +211,37 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
   function reEdit(domEdit, msgType, value) {
     // 根据msg 类型 判断是否显示 重新编辑
     if (msgType === TEXT_MESSAGE) {
-      domEdit.querySelector(".reset").addEventListener("click", (e) => {
+      domEdit.querySelector('.reset').addEventListener('click', (e) => {
         // 点击重新编辑的按钮，将上一次写入的值 设置到输入框中
-        document.querySelector(".input-content").value = BASE64.bytesToString(
+        document.querySelector('.input-content').value = BASE64.bytesToString(
           BASE64.decodeBase64(value)
         );
       });
     } else {
-      domEdit.querySelector(".reset").style.display = "none";
+      domEdit.querySelector('.reset').style.display = 'none';
+    }
+  }
+
+  // 显示后端返回的msg
+  function showResponseMsg(responseMsg) {
+    const box = document.querySelector('.global-msg');
+    box.querySelector('.response-msg').textContent = responseMsg;
+    box.classList.add('animation-class');
+
+    box.addEventListener('animationend', function () {
+      box.classList.remove('animation-class');
+    });
+  }
+
+  // 根据聊天类型 和 targetid 返回 当前接收的信息 应该是 我的消息 还是 联系客服
+  function isMsgChart(chatType, targetId) {
+    if (chatType === CHAT_TYPE_1_2_N) return true;
+    // 如果是群聊  肯定是 我的消息 否则遍历 客服列表
+    const flag = serviceStore.list.some((item) => item.userId == targetId);
+    if (flag) {
+      return false;
+    } else {
+      return true;
     }
   }
 
@@ -216,5 +253,7 @@ define(["store", "day", "chat-msg", "indexedDB", "contacts"], function (
     getSessionKey,
     sessionTime,
     delLocalMsg,
+    showResponseMsg,
+    isMsgChart,
   };
 });
