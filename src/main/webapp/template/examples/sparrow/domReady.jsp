@@ -48,7 +48,7 @@
             <img src="/error?t=3" alt="测试超时"><br/>
 
 
-                        <img src="http://passport.sparrowzoo.com/error?t=1" alt="测试超时"><br/>
+            <img src="http://passport.sparrowzoo.com/error?t=1" alt="测试超时"><br/>
             <img src="http://passport.sparrowzoo.com/error?t=2" alt="测试超时"><br/>
             <img src="http://passport.sparrowzoo.com/error?t=3" alt="测试超时"><br/>
             <img src="http://passport.sparrowzoo.com/error?t=4" alt="测试超时"><br/>
