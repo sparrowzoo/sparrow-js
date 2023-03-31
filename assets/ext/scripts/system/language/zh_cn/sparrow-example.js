@@ -36,8 +36,8 @@ lang = {
 }
 ,txtAge:{
 "errorCtrlId" : 'errorAge',
-"digitalError" : '年龄必须>0并且<100',
 "minValue" : 1,
+"digitalError" : '年龄必须>0并且<100',
 "maxValue" : 100,
 "allowNull" : true,
 "prompt" : '请输入年龄',
