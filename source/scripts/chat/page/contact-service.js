@@ -55,7 +55,6 @@ define([
     );
 
     contactStore.initContact([...u]);
-    console.log(u);
     // 渲染客服列表
     showSessionList();
   }
@@ -120,6 +119,9 @@ define([
     const chatTemplate = document.querySelector('#chat-part');
     const chatDive = chatTemplate.content.cloneNode(true);
     chatContainerDiv.appendChild(chatDive);
+    // debugger;
+    //  客服没有更多按钮
+    chatContainerDiv.querySelector('.show-more-icon').style.display = 'none';
     // 聊天框渲染完毕 注册相关事件
     // 注册搜索 session 事件
     registerSearch();
@@ -460,7 +462,7 @@ define([
     parentNode.replaceChild(currentMsgContainer, oldtMsgContainer);
 
     // 滚动到底部
-    getScrollBottom('.msg-detail');
+    getScrollBottom(['.service-content', '.msg-detail']);
     // 渲染完毕注册websocket onmessage 事件
     wsInstance.registerCallback(receiveMessage, SERVICECHART);
   }
@@ -746,7 +748,7 @@ define([
       .querySelector('.service')
       .querySelector('.msg-detail');
     msgParentDiv.appendChild(copyMessageTemplate);
-    getScrollBottom('.msg-detail');
+    getScrollBottom(['.service-content', '.msg-detail']);
   }
 
   // 显示聊天信息
@@ -792,7 +794,7 @@ define([
       img.onload = function () {
         // 释放一个之前通过调用 URL.createObjectURL创建的 URL 对象
         window.URL.revokeObjectURL(value);
-        getScrollBottom('.msg-detail');
+        getScrollBottom(['.service-content', '.msg-detail']);
       };
     }
   }

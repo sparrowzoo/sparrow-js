@@ -31,6 +31,7 @@ define([
     changeSelfId,
     serviceStore,
     CHAT_TYPE_1_2_1,
+    DEFAULTAVATAR,
   } = store;
   const { createWS } = websocket;
   const { getSession, getFrinedList, login, serviceList } = api;
@@ -92,13 +93,11 @@ define([
   // 获取当前用户的历史记录
   async function getSessionHistory(isServicer) {
     const sessionArr = await getSession('sessions', selfId.value);
-    if (sessionArr.length > 0) {
-      myFriend.diffSessionList(sessionArr);
-      sessionArr.forEach((item) => {
-        item.session = item.chatSession.sessionKey;
-        DBObject.dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
-      });
-    }
+    myFriend.diffSessionList(sessionArr);
+    sessionArr.forEach((item) => {
+      item.session = item.chatSession.sessionKey;
+      DBObject.dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
+    });
 
     // 历史记录请求后 初始化客服列表
     if (!isServicer) {
@@ -155,7 +154,7 @@ define([
   function controlLoading(isShow) {
     document.querySelector('.loading').style.display = isShow;
   }
-  // 登录
+  // 手动登录
   document.querySelector('.login').addEventListener('click', async () => {
     // 构造请求参数
     const mobile = document.querySelector('.ws-input').value;
@@ -170,42 +169,9 @@ define([
 
     // 设置token 以及保存当前用户信息
     localStorage.setItem('token', data.token); // memberInfo
-    changeSelfId(
-      data.memberInfo.id,
-      data.memberInfo.portrait ||
-        'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
-    );
+    changeSelfId(data.memberInfo.id, data.memberInfo.portrait || DEFAULTAVATAR);
     const isServicer = data.memberInfo.isCustomer === 1;
     initIM(isServicer);
-
-    // // 建立数据库
-    // await DBObject.createIndexedDB(data.memberInfo.id, '1');
-
-    // // 建立 ws 连接
-    // if (ws) {
-    //   // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
-    //   ws.close();
-    // }
-    // ws = createWS(data.memberInfo.id);
-
-    // const isServicer = data.memberInfo.isCustomer === 1;
-    // loadResource(isServicer);
-    // if (isServicer) {
-    //   // 当前登录的是客服人员
-    //   myFriend.hideService();
-    // } else {
-    //   contactService.getWsInstance(ws);
-    // }
-    // chatMsg.getWsInstance(ws);
-
-    // const res = await api.myFriend();
-    // console.log(res, '我的好友');
-    // const r = await api.myGroup();
-    // console.log(r, '我的群');
-    // const r2 = await api.newFriend();
-    // console.log(r2, '新朋友');
-    // const r3 = await api.systemNotice();
-    // console.log(r3, '系统');
   });
 
   // 初始化 IM
@@ -218,7 +184,10 @@ define([
       // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
       ws.close();
     }
-    ws = createWS(selfId.value);
+
+    // 获取真实的token
+    const token = localStorage.getItem('token');
+    ws = createWS(token);
 
     //  const isServicer = data.memberInfo.isCustomer === 1;
     loadResource(isServicer);
@@ -232,11 +201,7 @@ define([
   }
 
   // 临时会话的操作
-  function temporaryChat(
-    userId,
-    username,
-    avatar = 'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
-  ) {
+  function temporaryChat(userId, username, avatar = DEFAULTAVATAR) {
     myFriend.chatBy(userId, username, CHAT_TYPE_1_2_1, avatar);
   }
 

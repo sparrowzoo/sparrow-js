@@ -40,8 +40,8 @@ define([
     lockReconnect = false;
     // 发送等待时间
     sendWaitTime = 1;
-    // websocket 连接的id
-    userId = null;
+    // websocket 连接的 token
+    token = null;
     // 接收到信息后需要执行的事件
     onMsgCallback = {};
     // 心跳间隔时间 10s
@@ -52,16 +52,16 @@ define([
     reconnectTime = 500;
     timeoutTimer = null;
     serverTimeoutTimer = null;
-    constructor(userId) {
-      this.connected(userId);
+    constructor(token) {
+      this.connected(token);
     }
 
-    connected(userId) {
-      this.userId = userId;
+    connected(token) {
+      this.token = token;
       try {
         if ('WebSocket' in window) {
           this.ws = new WebSocket('ws://chat.sparrowzoo.com/websocket', [
-            userId,
+            token,
           ]);
           this.onOpen();
           this.onMsg();
@@ -287,7 +287,7 @@ define([
       // 发起重连后，取消之前的心跳
       this.closeHeartBeat();
       setTimeout(() => {
-        this.connected(this.userId);
+        this.connected(this.token);
         this.lockReconnect = false;
       }, this.reconnectTime);
     }
@@ -437,9 +437,9 @@ define([
 
   // const ws = new WSinstance(selfId.value);
   // let wsInstance = {};  初始化 ws
-  function createWS(id) {
+  function createWS(token) {
     //  wsInstance = new WSinstance(id);
-    return new WSinstance(id);
+    return new WSinstance(token);
   }
   return {
     createWS,

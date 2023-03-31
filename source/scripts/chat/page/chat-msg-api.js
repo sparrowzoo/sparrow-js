@@ -1,5 +1,5 @@
 define(['indexedDB', 'store'], function (indexedDB, store) {
-  const { DB_STORE_NAME_USER, qunNumberMap } = store;
+  const { DB_STORE_NAME_USER, qunNumberMap, DEFAULTAVATAR } = store;
   const DBObject = indexedDB;
 
   function init() {
@@ -101,7 +101,7 @@ define(['indexedDB', 'store'], function (indexedDB, store) {
     const { operateDom, changNum } = changeChooseUser();
     firends.forEach((item, index) => {
       const users = userDiv.cloneNode(true);
-      users.querySelector('img').src = item.avatar;
+      users.querySelector('img').src = item.avatar || DEFAULTAVATAR;
       users.querySelector('.username').textContent = item.userName;
       // 不能在模板元素上添加，可以在子节点上添加
       users.querySelector('.check-box').item = item;

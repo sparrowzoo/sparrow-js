@@ -120,7 +120,7 @@ define([
       const imgNation = divList.querySelector('.nation');
       if (list[i].qunId) {
         // 当前是群
-        imgUser.src = list[i].unitIcon;
+        imgUser.src = list[i].unitIcon || DEFAULTAVATAR;
         // 群没有显示国籍
         imgNation.style.display = 'none';
       } else {
@@ -277,6 +277,8 @@ define([
     const imgNation = divSessionItem.querySelector('.nation');
     if (item.userName) {
       imgNation.src = item.flagUrl || DEFAULTFLAG;
+    } else {
+      imgNation.style.display = 'none';
     }
 
     // 向 session list 中添加item
@@ -623,7 +625,7 @@ define([
     const userTemplate = divGroup.querySelector('.more-user');
     userList.forEach((item) => {
       const divMember = userTemplate.cloneNode(true);
-      divMember.querySelector('img').src = item.avatar;
+      divMember.querySelector('img').src = item.avatar || DEFAULTAVATAR;
       divMember.querySelector('span').innerText = item.userName;
       templateContainer.appendChild(divMember);
     });
@@ -650,7 +652,7 @@ define([
     const userTemplate = divGroup.querySelector('.more-user');
     filterMember.forEach((item) => {
       const divMember = userTemplate.cloneNode(true);
-      divMember.querySelector('img').src = item.avatar;
+      divMember.querySelector('img').src = item.avatar || DEFAULTAVATAR;
       divMember.querySelector('span').innerText = item.userName;
       templateContainer.appendChild(divMember);
     });
