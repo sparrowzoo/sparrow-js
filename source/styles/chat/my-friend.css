@@ -41,12 +41,6 @@ h5 {
   z-index: 10;
   text-align: center;
 }
-.content-wraper .dialog .add-input p {
-  text-align: center;
-  color: #282d3b;
-  font-size: 18px;
-  padding: 20px 0;
-}
 .content-wraper .dialog .add-input input {
   text-align: center;
   margin: 0 auto;
@@ -58,16 +52,22 @@ h5 {
   background-color: #f7f7f7;
   padding: 10px 0;
 }
-.content-wraper .dialog .add-input span {
+.content-wraper .dialog p {
+  text-align: center;
+  color: #282d3b;
+  font-size: 18px;
+  padding: 20px 0;
+}
+.content-wraper .dialog span {
   color: #848484;
   text-align: center;
 }
-.content-wraper .dialog .add-input .operate {
+.content-wraper .dialog .operate {
   margin-top: 35px;
   display: flex;
   justify-content: center;
 }
-.content-wraper .dialog .add-input .operate button {
+.content-wraper .dialog .operate button {
   min-width: 80px;
   width: 15%;
   padding: 6px 0;
@@ -77,12 +77,12 @@ h5 {
   cursor: pointer;
   font-size: 14px;
 }
-.content-wraper .dialog .add-input .operate .chat {
+.content-wraper .dialog .operate .chat {
   margin-left: 10px;
   background-color: #282d3b;
   color: #fff;
 }
-.content-wraper .dialog .add-input .operate button {
+.content-wraper .dialog .operate button {
   height: 43px;
 }
 .content-wraper .dialog .search-user-detail {
@@ -127,6 +127,7 @@ h5 {
   border-radius: 2px;
   background-color: #282d3b;
   color: #fff;
+  cursor: pointer;
 }
 .content-wraper .content {
   position: relative;

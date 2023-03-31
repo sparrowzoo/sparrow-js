@@ -1,0 +1,19 @@
+.register-step {width: 1004px;height: 80px;border-bottom: #ca151d 1px solid;text-align:center;}
+.register-step ul {margin:auto;padding: 0;list-style: none;height: auto;}
+.register-step li {float: left;line-height: 80px;width: 30%;font-size: 14pt;font-weight: bold;margin: 0;color:#ccc;}
+.register-step li.current{color:#ff9900;}
+
+
+.register-frame {text-align: center;margin: auto;width:1004px;height:450px;padding-top:10px;}
+.register-body {width:604px;margin: auto;text-align:left;}
+.register-body .line{height:60px;margin:5px;border-bottom: #ccc 1px dotted;font-weight: normal;padding-top:5px;}
+.register-body .line span{height:25px;line-height: 25px;}
+.register-body .validate{height:60px;margin:5px;border-bottom: #ccc 1px dotted;font-weight: normal;padding-top:5px;}
+.register-body .line label,.validate label {width:140px;display:inline-block;text-align:right;}
+.validate input {width: 90px;}
+.register-body .line input {width: 200px;}
+
+
+.register-body .register{border-bottom: #ccc 1px dotted;height:80px;font-weight: normal;padding-left:80px;}
+
+.active {width: 180px;height: 50px;border:#ccc 1px solid;line-height:50px;display:inline-block;margin-top:50px;}
