@@ -711,7 +711,7 @@ define([
 
   // 删除好友
   async function removeFriendById() {
-    const res = await api.removeFriend({ id: removeID.id });
+    const res = await api.removeFriend({ userId: removeID.id });
     if (res.code === 200) {
       // 删除好友后,
       removeContactDom('.my-friend', 'userId');
@@ -721,7 +721,7 @@ define([
 
   // 删除群
   async function removeGroupById() {
-    const res = await api.removeGroup({ id: removeID.id });
+    const res = await api.removeGroup({ groupId: removeID.id });
     if (res.code === 200) {
       // 删除群后,
       removeContactDom('.my-group', 'qunId');
