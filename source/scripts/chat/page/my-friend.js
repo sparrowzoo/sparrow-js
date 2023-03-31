@@ -35,6 +35,8 @@ define([
     currentPage,
     MSGCHART,
     SERVICECHART,
+    DEFAULTFLAG,
+    DEFAULTAVATAR,
   } = store;
   // const { initContack } = require("../store/contacts.js");
   const { contactStore } = contacts;
@@ -53,7 +55,7 @@ define([
     activeMenu = e.target.getAttribute('data-menu');
     showContentByMenu(activeMenu);
     // 只要点击了左侧菜单 面包屑就重置
-    showCrumbsByIndex(0);
+    // showCrumbsByIndex(0);
 
     // 我的好友
     if (activeMenu == 0) {
@@ -178,10 +180,10 @@ define([
       const copyConItemDiv = contentItemDiv.cloneNode(true);
       // 用户 / 群头像
       const imgDiv = copyConItemDiv.querySelector('img');
-      imgDiv.src = item.avatar || item.unitIcon;
+      imgDiv.src = item.avatar || item.unitIcon || DEFAULTAVATAR;
       // 国籍 图片
       const imgFlag = copyConItemDiv.querySelector('.img-flag');
-      imgFlag.src = item.flagUrl;
+      imgFlag.src = item.flagUrl || DEFAULTFLAG;
       // 用户 / 详细信息
       const userDiv = copyConItemDiv.querySelectorAll('span');
       userDiv[0].innerText = item[itemName];
@@ -235,71 +237,6 @@ define([
       });
     });
   }
-
-  // 首次进入 拿到好友 / 群列表 生成会话列表
-  // async function initSessionData(users, quns) {
-  //   const u = await Promise.all(
-  //     users.map(async (user) => {
-  //       const sessinKey = getSessionKey(
-  //         CHAT_TYPE_1_2_1,
-  //         selfId.value,
-  //         user.userId
-  //       );
-  //       return compareMsg(sessinKey, user);
-  //     })
-  //   );
-  //   const q = await Promise.all(
-  //     quns.map((item) => {
-  //       const sessinKey = getSessionKey(
-  //         CHAT_TYPE_1_2_N,
-  //         selfId.value,
-  //         item.qunId
-  //       );
-  //       return compareMsg(sessinKey, item);
-  //     })
-  //   );
-  //   // 先对会话列表做保存
-  //   contactStore.initContact([...u, ...q]);
-  //   // 渲染 聊天消息的列表
-  //   showSessionList();
-  // }
-  // 和保存的最后一条数据做比对  将当前用户 以及添加一个 unReadCount lastMessage 属性  1 客服
-  // async function compareMsg(keyPath, contacter) {
-  //   // 向数据库中查询与当前用户的历史记录
-  //   const sessionItem = await DBObject.dbInstance.getData(
-  //     keyPath,
-  //     DB_STORE_NAME_SESSION
-  //   );
-  //   // 未读数量 / 最新信息
-  //   let unReadCount = -1;
-  //   let lastMessage = '';
-
-  //   // 与当前用户有聊天记录  才会有未读和 最新信息
-  //   if (sessionItem) {
-  //     // 如果有最新消息的记录时间 => lastReadTime 倒叙遍历 历史记录
-  //     if (sessionItem.lastReadTime) {
-  //       const count = sessionItem.messages.length - 1;
-  //       for (let i = count; i >= 0; i--) {
-  //         if (sessionItem.messages[i].serverTime < sessionItem.lastReadTime) {
-  //           unReadCount = count - i;
-  //           break;
-  //         }
-  //       }
-  //       // 依然是 -1 说明当前未读记录 已经超过历史记录的最大存储,未读数设置为历史记录总数
-  //       if (unReadCount === -1) {
-  //         unReadCount = count + 1;
-  //       }
-  //     } else {
-  //       // 没有lastReadTime 未读数直接返回历史记录的数量
-  //       unReadCount = sessionItem.messages?.length;
-  //     }
-  //     lastMessage = sessionItem.messages[sessionItem.messages.length - 1];
-  //     contacter.unReadCount = unReadCount;
-  //     contacter.lastMessage = lastMessage;
-  //     return contacter;
-  //   } else {
-  //   }
-  // }
 
   // 区分历史记录
   function diffSessionList(sessiionArr) {
@@ -467,11 +404,10 @@ define([
       const copyConItemDiv = contentItemDiv.cloneNode(true);
       // 用户头像
       const imgDiv = copyConItemDiv.querySelector('img');
-      imgDiv.src = item.vo.avatar || 'http://r.sparrowzoo.net/images/user.png';
+      imgDiv.src = item.vo.avatar || DEFAULTAVATAR;
       // 国籍 图片
       const imgFlag = copyConItemDiv.querySelector('.img-flag');
-      imgFlag.src =
-        item.vo.flagUrl || 'http://r.sparrowzoo.net/images/flag.jpg';
+      imgFlag.src = item.vo.flagUrl || DEFAULTFLAG;
       // 用户 / 详细信息
       const userDiv = copyConItemDiv.querySelectorAll('span');
       userDiv[0].innerText = item.vo.userName;
@@ -573,6 +509,8 @@ define([
       // 添加到contactList
       contactStore.addContactItem(sessionItem);
     }
+    // 设置当前page 为 我的消息页面
+    currentPage.changePage(MSGCHART);
     getMsgList(user_id, username, chatType);
 
     // 获取焦点
@@ -679,7 +617,7 @@ define([
       // 请求新的好友列表
       createNewFriend();
     }
-    showCrumbsByIndex(index);
+    // showCrumbsByIndex(index);
   }
 
   // 根据索引 动态显示面包屑的提示文字
@@ -743,8 +681,8 @@ define([
 
     divAddInput.style.display = 'none';
     divUserDetail.style.display = 'block';
-    divUserDetail.querySelector('img').src = res.data.portrait;
-    divUserDetail.querySelector('span').textContent = res.data.name;
+    divUserDetail.querySelector('img').src = res.data.avatar || DEFAULTAVATAR;
+    divUserDetail.querySelector('span').textContent = res.data.userName;
     applyFriendById(res.data.id);
   }
 
@@ -804,11 +742,8 @@ define([
     parent.removeChild(DomList[i]);
 
     // 删除session 列表
-    const sessionKey = getSessionKey(
-      CHAT_TYPE_1_2_1,
-      selfId.value,
-      removeID.id
-    );
+    const chatType = idType === 'qunId' ? CHAT_TYPE_1_2_N : CHAT_TYPE_1_2_1;
+    const sessionKey = getSessionKey(chatType, selfId.value, removeID.id);
     contactStore.delItem(sessionKey);
 
     // 删除indexDB联系人 deleteData
@@ -835,7 +770,7 @@ define([
       item.userId,
       item.userName,
       CHAT_TYPE_1_2_1,
-      item.avatar || item.portrait
+      item.avatar || item.portrait || DEFAULTAVATAR
     );
   }
 
