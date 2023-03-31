@@ -108,6 +108,9 @@ define(['request', 'axios'], function (request, axios) {
     return service({
       method: 'post',
       url: '/app/message/removeFriend',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
       data,
     });
   }
