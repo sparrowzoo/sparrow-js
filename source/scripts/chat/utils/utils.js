@@ -22,7 +22,18 @@ define([
   const { contactStore } = contacts;
 
   // 根据传来的class  滚动到底部
-  const getScrollBottom = function (className) {
+  const getScrollBottom = function (className, dom = document) {
+    if (typeof className === 'string') {
+      const scrollDom = dom.querySelector(className);
+      scrollDom.scrollTop = scrollDom.scrollHeight;
+    } else {
+      dom = dom.querySelector(className.splice(0, 1));
+      if (className.length === 1) {
+        getScrollBottom(className[0], dom);
+      } else {
+        getScrollBottom(className, dom);
+      }
+    }
     const scrollDom = document.querySelector(className);
     scrollDom.scrollTop = scrollDom.scrollHeight;
   };
