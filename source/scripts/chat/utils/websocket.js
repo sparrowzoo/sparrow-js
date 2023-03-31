@@ -1,12 +1,20 @@
 define([
-  "store",
-  "contacts",
-  "indexedDB",
-  "utils",
-  "imageCompression",
-  "api",
-  "chat-msg",
-], function (store, contacts, indexedDB, utils, imageCompression, api) {
+  'store',
+  'contacts',
+  'indexedDB',
+  'utils',
+  'imageCompression',
+  'api',
+  'service-list',
+], function (
+  store,
+  contacts,
+  indexedDB,
+  utils,
+  imageCompression,
+  api,
+  serviceList
+) {
   const {
     TEXT_MESSAGE,
     IMAGE_MESSAGE,
@@ -14,14 +22,18 @@ define([
     CHAT_TYPE_1_2_N,
     selfId,
     targetId,
+    serviceId,
     DB_STORE_NAME_SESSION,
     ACCEPT_RECALL,
     SEND_TYPE,
     RECEIVE_TYPE,
+    currentPage,
+    MSGCHART,
+    SERVICECHART,
   } = store;
   const { contactStore } = contacts;
   const DBObject = indexedDB;
-  const { getSessionKey, delLocalMsg } = utils;
+  const { getSessionKey, delLocalMsg, isMsgChart } = utils;
   // const dbInstance = initIndexedDB();
   class WSinstance {
     // 重连标志
@@ -47,8 +59,8 @@ define([
     connected(userId) {
       this.userId = userId;
       try {
-        if ("WebSocket" in window) {
-          this.ws = new WebSocket("ws://chat.sparrowzoo.com/websocket", [
+        if ('WebSocket' in window) {
+          this.ws = new WebSocket('ws://chat.sparrowzoo.com/websocket', [
             userId,
           ]);
           this.onOpen();
@@ -63,7 +75,7 @@ define([
 
     onOpen() {
       this.ws.onopen = (e) => {
-        console.log("连接事件");
+        console.log('连接事件');
         // 启动心跳
         this.closeHeartBeat();
         this.startHeartBeat();
@@ -75,8 +87,8 @@ define([
         // 有任何信息传入 当前的ws 没有断，重启心跳
         this.closeHeartBeat();
         this.startHeartBeat();
-        // 加个判断,如果是PONG 停止下面的代码执行
-        if (e.data === "PONG") return;
+        // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
+        if (e.data === 'PONG') return;
         new SparrowProtocol(e.data, (protocol) => {
           // 判断是否为 撤回的信息
           if (protocol.chatType === 2) {
@@ -119,14 +131,42 @@ define([
             }
           } else {
             // 不是群来的信息，判断是否需要渲染信息
-            if (protocol.fromUserId == targetId.value) {
-              this.onMsgCallback.message &&
-                this.onMsgCallback.message(
+            // 用户消息   可能是我的消息  /   联系客服
+            const callbackName =
+              currentPage.page === MSGCHART ? MSGCHART : SERVICECHART;
+            const targetPageId =
+              currentPage.page === MSGCHART ? targetId.value : serviceId.value;
+
+            if (protocol.fromUserId == targetPageId) {
+              this.onMsgCallback[callbackName] &&
+                this.onMsgCallback[callbackName](
                   protocol.msg || protocol.url,
                   protocol.msgType,
                   protocol.clientSendTime
                 );
             }
+
+            // if (currentPage.page === MSGCHART) {
+            //   // 我的消息页面
+            //   if (protocol.fromUserId == targetId.value) {
+            //     this.onMsgCallback[MSGCHART] &&
+            //       this.onMsgCallback[MSGCHART](
+            //         protocol.msg || protocol.url,
+            //         protocol.msgType,
+            //         protocol.clientSendTime
+            //       );
+            //   }
+            // } else {
+            //   // 客服页面
+            //   if (protocol.fromUserId == serviceId.value) {
+            //     this.onMsgCallback[SERVICECHART] &&
+            //       this.onMsgCallback[SERVICECHART](
+            //         protocol.msg || protocol.url,
+            //         protocol.msgType,
+            //         protocol.clientSendTime
+            //       );
+            //   }
+            // }
           }
         });
       };
@@ -135,11 +175,11 @@ define([
     onClose() {
       this.ws.onclose = (e) => {
         console.log(e);
-        console.log("close 事件");
+        console.log('close 事件');
         this.closeHeartBeat();
         if (e.wasClean) {
           // 干净的关闭，客户端主动关闭 不需要发起重连,关闭上一个心跳
-          console.log("不重连");
+          console.log('不重连');
         } else {
           // 异常关闭 需要发起重连
           this.reconnectWebSocket();
@@ -150,7 +190,7 @@ define([
     onError() {
       this.ws.onerror = (e) => {
         // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
-        console.log("连接出错");
+        console.log('连接出错');
         this.closeHeartBeat();
         this.reconnectWebSocket();
       };
@@ -256,15 +296,15 @@ define([
     startHeartBeat() {
       this.timeoutTimer = setTimeout(() => {
         // 开启一个心跳
-        this.ws.send("PING");
-        console.log("心跳开启", new Date().getSeconds());
-        // 检测心跳超时
+        this.ws.send('PING');
+        // console.log('心跳开启', new Date().getSeconds());
+        // 检测当前开启的这个心跳是否超时
         this.serverTimeoutTimer = setTimeout(() => {
           // 这里表示 已经超时，服务器没有响应需要重连
           // this.ws.close();
           this.reconnectWebSocket();
-        }, this.heartTimeout);
-      }, this.heartTimt); // 10
+        }, this.heartTimeout); // 12s
+      }, this.heartTimt); // 10s
     }
 
     // 关闭心跳
@@ -274,9 +314,9 @@ define([
     }
 
     // 注册事件 接收到消息后 要执行的事件
-    registerCallback(fn) {
+    registerCallback(fn, callbackName) {
       // 消息列表的websocket 事件
-      this.onMsgCallback["message"] = fn;
+      this.onMsgCallback[callbackName] = fn;
     }
 
     // 销毁事件
@@ -288,7 +328,7 @@ define([
   // 压缩图片
   async function handleImageUpload(file) {
     const imageFile = file;
-    console.log("originalFile instanceof Blob", imageFile instanceof Blob); // true
+    console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
     console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
 
     const options = {
@@ -299,7 +339,7 @@ define([
     try {
       const compressedFile = await imageCompression(imageFile, options);
       console.log(
-        "compressedFile instanceof Blob",
+        'compressedFile instanceof Blob',
         compressedFile instanceof Blob
       ); // true
       console.log(
@@ -336,10 +376,26 @@ define([
 
     if (textType === SEND_TYPE) {
       // 发送信息，同步session 列表
-      contactStore.send(value, msgType, session);
+      // 判断当前page
+      if (currentPage.page === MSGCHART) {
+        contactStore.send(value, msgType, session);
+      } else {
+        serviceList.contactStore.send(value, msgType, session);
+      }
     } else {
       // 接收信息
-      contactStore.receive(value, msgType, session, fromUserId, chatType);
+      // 判断是好友 / 客服
+      if (isMsgChart(chatType, fromUserId)) {
+        contactStore.receive(value, msgType, session, fromUserId, chatType);
+      } else {
+        serviceList.contactStore.receive(
+          value,
+          msgType,
+          session,
+          fromUserId,
+          chatType
+        );
+      }
     }
     addMsg(
       content,

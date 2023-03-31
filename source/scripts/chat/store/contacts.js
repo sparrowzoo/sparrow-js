@@ -1,4 +1,4 @@
-define(['store', 'indexedDB'], function (store, indexedDB, utils) {
+define(['store', 'indexedDB', 'api'], function (store, indexedDB, api) {
   const {
     targetId,
     selfId,
@@ -61,7 +61,7 @@ define(['store', 'indexedDB'], function (store, indexedDB, utils) {
       }
     }
 
-    // 判断当前接收的消息 是否为第一次发送来
+    // 判断当前接收的消息 是否为第一次发送来  -- 分为两种情况，一种是临时会话 一种是好友首次聊天
     async firstReceiverMsg(session, fromUserId, chatType) {
       const flag = this.contactList.some(
         (item) => item.lastMessage.session === session
@@ -84,7 +84,14 @@ define(['store', 'indexedDB'], function (store, indexedDB, utils) {
           // 添加到contactList
           this.addContactItem(sessionItem);
         } else {
-          // 不是好友 临时会话情况
+          // 不是好友 临时会话情况 需要发送网络请求获取用户详细信息
+          const { data } = await api.getDetailById({ id: fromUserId });
+          const userInfo = data;
+          userInfo.lastMessage = {
+            session,
+          };
+          // 添加到contactList
+          this.addContactItem(userInfo);
         }
       }
     }
@@ -134,22 +141,7 @@ define(['store', 'indexedDB'], function (store, indexedDB, utils) {
           params.count = 1;
         }
       }
-      // if (fromUserId != targetId.value) {
-      //   // 接收到 不是当前聊天对象的信息,需要设置未读数量
-      //   await this.firstReceiverMsg(session, fromUserId, chatType);
-      //   if (index !== -1) {
-      //     // 当前不是新的session，未读数量直接 +1
-      //     const count = this.contactList[index].unReadCount;
-      //     this.contactList[index].unReadCount++;
-      //     params.count = count + 1;
-      //   } else {
-      //     // 这里是没有session 记录 已经将新的session 添加到contactList中的首位
-      //     index = 0; // -1  => 0
-      //     this.contactList[index].unReadCount = 1;
-      //     params.index = 0;
-      //     params.count = 1;
-      //   }
-      // }
+
       this.notify('receiveMsg', params);
       this.sort(index);
     }

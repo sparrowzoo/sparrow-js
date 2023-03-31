@@ -1,4 +1,4 @@
-@import "./common.less";
+@import './common.less';
 .input() {
   input {
     box-sizing: border-box;
@@ -544,6 +544,60 @@
             }
           }
         }
+
+        // 展示搜索用户的列表
+        .filter-member {
+          display: flex;
+          flex-wrap: wrap;
+          // justify-content: space-between;
+          margin: 5px 0;
+
+          & > div {
+            margin-bottom: 15px;
+            &:nth-child(4n + 2) {
+              margin-left: 12px;
+              margin-right: 12px;
+            }
+            &:nth-child(4n + 3) {
+              margin-right: 12px;
+            }
+          }
+
+          span {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 14px;
+            text-align: center;
+            margin-top: 6px;
+          }
+          .more-user {
+            display: flex;
+            flex-direction: column;
+            width: 40px;
+            img {
+              width: 100%;
+              height: 40px;
+              border-radius: 2px;
+            }
+          }
+          .more-icon {
+            text-align: center;
+            .search-add {
+              box-sizing: border-box;
+              width: 40px;
+              height: 40px;
+              line-height: 35px;
+              font-size: 18px;
+              font-weight: 600;
+              color: @text-gray-color;
+              text-align: center;
+              border: 1px solid #e7e7e8;
+              cursor: pointer;
+            }
+          }
+        }
       }
     }
   }
@@ -560,6 +614,7 @@
   display: flex;
   z-index: 10;
   box-sizing: border-box;
+  user-select: none;
 
   .dialog-user-list {
     width: 50%;
@@ -594,7 +649,7 @@
 
       .user-item {
         display: flex;
-        margin-top: 10px;
+        margin-top: 15px;
         align-items: center;
 
         img {
@@ -642,7 +697,7 @@
       margin-bottom: 20px;
     }
 
-    .iconfont {
+    .icon-cuowukongxin {
       position: absolute;
       right: 10px;
       top: 10px;
@@ -685,9 +740,14 @@
             border: 1px solid @border-color;
             border-radius: 50%;
             cursor: pointer;
+            background-color: #eee9e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             .iconfont {
-              font-size: 18px;
+              font-size: 14px;
+              color: #fff;
             }
           }
         }
