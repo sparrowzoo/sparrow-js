@@ -256,6 +256,17 @@ define([
     }
   }
 
+  // qs 将对象转为 键值对
+  function converObj(obj) {
+    let query = '';
+    Object.keys(obj).forEach((item) => {
+      const str = item + '=' + obj[item];
+      query += str + '&';
+    });
+    query = query.substring(0, query.length - 1);
+    return query;
+  }
+
   return {
     getScrollBottom,
     currentSendTime,
@@ -266,5 +277,6 @@ define([
     delLocalMsg,
     showResponseMsg,
     isMsgChart,
+    converObj,
   };
 });
