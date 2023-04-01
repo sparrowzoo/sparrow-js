@@ -683,7 +683,7 @@ define([
     divUserDetail.style.display = 'block';
     divUserDetail.querySelector('img').src = res.data.avatar || DEFAULTAVATAR;
     divUserDetail.querySelector('span').textContent = res.data.userName;
-    applyFriendById(res.data.id);
+    applyFriendById(res.data.userId);
   }
 
   // 根据id 发送好友申请

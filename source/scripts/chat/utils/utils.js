@@ -137,31 +137,45 @@ define([
       const delMsg = msgArrs.splice(index, 1);
       changeDom(delMsg[0], type);
       // 如果撤回的是最后一项，需要通知session 列表更新 最新的信息
+      // 这里已经把 撤回的msg 从历史记录中删除 相当于 length -1 所以可以和上面的索引对应起来
       if (index === msgArrs.length) {
-        // console.log(msgArrs[msgArrs.length - 1]);
-        const { messageType, serverTime, session, content, clientSendTime } =
-          msgArrs[msgArrs.length - 1];
-        let msgValue = '';
-        // 判断信息的类型
-        if (messageType === TEXT_MESSAGE) {
-          msgValue = BASE64.bytesToString(BASE64.decodeBase64(content));
+        // 拿到上一条 msg 渲染到 session list
+        let messageType, clientSendTime, msgValue;
+        if (index === 0) {
+          // 撤回的是第一条  没有上一条数据 设置 ''
+          msgValue = '';
+          clientSendTime = 0;
+          messageType = TEXT_MESSAGE;
         } else {
-          msgValue = content;
+          const {
+            messageType: type,
+            content,
+            clientSendTime: time,
+          } = msgArrs[msgArrs.length - 1];
+          clientSendTime = time;
+          messageType = type;
+          // 判断信息的类型
+          if (type === TEXT_MESSAGE) {
+            msgValue = BASE64.bytesToString(BASE64.decodeBase64(content));
+          } else {
+            msgValue = content;
+          }
         }
+
         // 更新 session list
         if (currentPage.page === MSGCHART) {
           contactStore.recall({
             msgValue,
-            msgTime: serverTime || clientSendTime,
+            msgTime: clientSendTime,
             msgType: messageType,
-            sessionKey: session,
+            sessionKey,
           });
         } else {
           serviceList.contactStore.recall({
             msgValue,
-            msgTime: serverTime || clientSendTime,
+            msgTime: clientSendTime,
             msgType: messageType,
-            sessionKey: session,
+            sessionKey,
           });
         }
       }

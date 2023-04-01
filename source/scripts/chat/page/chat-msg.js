@@ -249,7 +249,14 @@ define([
       spanLastMsg.innerText = '[图片]';
     }
     const spanMsgTime = divMsgArr[index].querySelector('.msg-time');
-    spanMsgTime.innerText = historyMsgTime(msgTime);
+    if (spanMsgTime.style.display === 'none') {
+      spanMsgTime.style.display = 'block';
+    }
+    if (msgTime === 0) {
+      spanMsgTime.style.display = 'none';
+    } else {
+      spanMsgTime.innerText = historyMsgTime(msgTime);
+    }
   }
 
   // 增加 session item
@@ -720,7 +727,9 @@ define([
 
   // 监听上传图片的事件
   function sendPicture() {
-    const uploadFile = document.querySelector('.upload-img');
+    const uploadFile = document
+      .querySelector('.chat-msg')
+      .querySelector('.upload-img');
     uploadFile.addEventListener('change', function (e) {
       const file = this.files[0];
       // 获取到文件后 清空值 防止重复上传图片的bug
