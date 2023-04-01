@@ -1,5 +1,16 @@
+// qs 将对象转为 键值对
+function converObj(obj) {
+  let query = '';
+  Object.keys(obj).forEach((item) => {
+    const str = item + '=' + obj[item];
+    query += str + '&';
+  });
+  query = query.substring(0, query.length - 1);
+  return query;
+}
 // 封装 ajax 请求
 define(['request', 'axios'], function (request, axios) {
+  // const { converObj } = utils;
   const { service } = request;
   const BASE_URL = 'http://chat.sparrowzoo.com/chat/';
   /** ws 有关的接口 */
@@ -111,7 +122,7 @@ define(['request', 'axios'], function (request, axios) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       },
-      data,
+      data: converObj(data),
     });
   }
   // 新朋友列表
@@ -148,7 +159,10 @@ define(['request', 'axios'], function (request, axios) {
     return service({
       method: 'post',
       url: '/app/message/quitGroup',
-      data,
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+      },
+      data: converObj(data),
     });
   }
 
