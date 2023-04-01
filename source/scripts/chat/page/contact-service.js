@@ -286,7 +286,12 @@ define([
     if (spanMsgTime.style.display === 'none') {
       spanMsgTime.style.display = 'block';
     }
-    spanMsgTime.innerText = historyMsgTime(msgTime);
+
+    if (msgTime === 0) {
+      spanMsgTime.style.display = 'none';
+    } else {
+      spanMsgTime.innerText = historyMsgTime(msgTime);
+    }
   }
 
   // 增加 session item  在联系客服模块 应该不会出现这个情况
@@ -579,6 +584,12 @@ define([
     const uploadFile = document
       .querySelector('.service')
       .querySelector('.upload-img');
+    // 上传图片 label for 属性要修改
+
+    uploadFile.setAttribute('id', 'contect-upload'); // previousElementSibling
+    const labelDom = uploadFile.previousElementSibling;
+    labelDom.setAttribute('for', 'contect-upload');
+
     uploadFile.addEventListener('change', function (e) {
       const file = this.files[0];
       // 获取到文件后 清空值 防止重复上传图片的bug

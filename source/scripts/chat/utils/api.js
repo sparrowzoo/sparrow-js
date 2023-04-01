@@ -110,7 +110,7 @@ define(['request', 'axios'], function (request, axios) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       },
-      data,
+      data: converObj(data),
     });
   }
 
@@ -141,7 +141,7 @@ define(['request', 'axios'], function (request, axios) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
       },
-      data,
+      data: converObj(data),
     });
   }
 
