@@ -82,7 +82,7 @@ define([
   async function getTargetInfoById() {
     const { data } = await api.getDetailById({ id: targetId });
     console.log(data, '目标用户');
-    temporaryChat(data.userId, data.userName, data.avatar);
+    temporaryChat(data.userId, data.userName, data.avatar, data);
   }
 
   // 初始化聊天信息页面
@@ -93,11 +93,13 @@ define([
   // 获取当前用户的历史记录
   async function getSessionHistory(isServicer) {
     const sessionArr = await getSession('sessions', selfId.value);
-    myFriend.diffSessionList(sessionArr);
     sessionArr.forEach((item) => {
       item.session = item.chatSession.sessionKey;
       DBObject.dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
     });
+    console.log('临时会话1');
+
+    await myFriend.diffSessionList(sessionArr);
 
     // 历史记录请求后 初始化客服列表
     if (!isServicer) {
@@ -106,6 +108,7 @@ define([
 
     // 如果是临时会话
     if (isTemporary) {
+      console.log('临时会话2');
       getTargetInfoById();
     }
   }
@@ -146,7 +149,7 @@ define([
   async function loadResource(isServicer) {
     controlLoading('flex');
     await getContacts(isServicer);
-    getSessionHistory(isServicer);
+    await getSessionHistory(isServicer);
     controlLoading('none');
   }
 
@@ -201,18 +204,30 @@ define([
   }
 
   // 临时会话的操作
-  function temporaryChat(userId, username, avatar = DEFAULTAVATAR) {
-    myFriend.chatBy(userId, username, CHAT_TYPE_1_2_1, avatar);
+  function temporaryChat(userId, username, avatar, targetInfo) {
+    myFriend.chatTemporary(
+      userId,
+      username,
+      CHAT_TYPE_1_2_1,
+      avatar || DEFAULTAVATAR,
+      targetInfo
+    );
   }
 
-  // 临时按钮
-  // document.querySelector('.temporary').onclick = function () {
-  //   console.log('temporary');
-  //   const selfId = document.querySelector('.t-selfId').value;
-  //   const targetId = document.querySelector('.t-targetId').value;
-  //   const token = document.querySelector('.t-token').value;
-  // window.open(
-  //   `http://r.sparrowzoo.net/chat/t.index.html?token=${token}&selfId=${selfId}&targetId=${targetId}`
-  // );
-  // };
+  // 监听页面的显示 隐藏   有 bug 多个浏览器打开 没法监听
+  // document.addEventListener('visibilitychange', function () {
+  //   // console.log(document.visibilityState, 'page A');
+  //   if (document.visibilityState === 'hidden') {
+  //     // console.log('页面隐藏'); 关闭 ws 连接
+  //     if (ws) {
+  //       // 如果 ws 已经存在  需要先主动断开上一个连接 再触发新的连接
+  //       ws.close();
+  //     }
+  //   } else {
+  //     // console.log('页面显示');  建立 ws 连接
+  //     if (ws) {
+  //       ws.reconnectWebSocket();
+  //     }
+  //   }
+  // });
 });

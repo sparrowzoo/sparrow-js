@@ -174,7 +174,6 @@ define([
 
     onClose() {
       this.ws.onclose = (e) => {
-        console.log(e);
         console.log('close 事件');
         this.closeHeartBeat();
         if (e.wasClean) {
@@ -281,15 +280,17 @@ define([
 
     // 重连操作
     reconnectWebSocket() {
-      // 当前正在重连  直接返回 不再开启延时
-      if (this.lockReconnect) return;
-      this.lockReconnect = true;
-      // 发起重连后，取消之前的心跳
-      this.closeHeartBeat();
-      setTimeout(() => {
-        this.connected(this.token);
-        this.lockReconnect = false;
-      }, this.reconnectTime);
+      // console.log('发起重连');
+      // // 当前正在重连  直接返回 不再开启延时
+      // if (this.lockReconnect) return;
+      // this.lockReconnect = true;
+      // // 发起重连后，取消之前的心跳
+      // this.closeHeartBeat();
+      // setTimeout(() => {
+      //   this.connected(this.token);
+      //   this.lockReconnect = false;
+      // }, this.reconnectTime);
+      alert('连接断开，请刷新浏览器！');
     }
 
     // 心跳机制 --启动心跳
