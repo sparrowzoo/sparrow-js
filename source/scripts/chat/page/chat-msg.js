@@ -822,7 +822,7 @@ define([
       avatarImg.src = selfId.avatar;
     } else {
       copyMessageTemplate.classList.add('left');
-      if (targetId.avatar) {
+      if (targetId.type === CHAT_TYPE_1_2_1) {
         // 目标聊天对象的avatar 存在  说明是  用户
         avatarImg.src = targetId.avatar;
       } else {
