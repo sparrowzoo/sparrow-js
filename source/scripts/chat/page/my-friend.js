@@ -239,8 +239,8 @@ define([
   }
 
   // 区分历史记录
-  function diffSessionList(sessiionArr) {
-    // 历史记录分为三种 : 好友的 临时会话 客服
+  async function diffSessionList(sessiionArr) {
+    // 历史记录分为三种 : 好友的(包括群) 临时会话 客服
     const newSessionArr = getUnreadCount(sessiionArr);
     const serviceHistory = [];
     // 首先过滤出客服的
@@ -255,8 +255,9 @@ define([
       }
       return !flag;
     });
-    createMyMsgSessionList(msgHistory);
+    await createMyMsgSessionList(msgHistory);
     createServiceSessionList(serviceHistory);
+    return 'session list 已经初始化完毕';
   }
 
   // 获取未读数和最新的msg
@@ -315,6 +316,7 @@ define([
       return session;
     });
 
+    // listArr 中对于 不是临时会话的，会构造正确的格式，临时会话，直接是undefined 会被后续过滤掉
     const listArr = await Promise.all(firendSessionList);
 
     const temporarySessionList = await getTemporaryInfo(temporaryList);
@@ -322,6 +324,7 @@ define([
     contactStore.initContact([...listArr, ...temporarySessionList]);
     // 渲染 聊天消息的列表
     showSessionList();
+    return 'ok';
   }
 
   // 发送请求 获取临时会话的详细用户信息
@@ -501,7 +504,9 @@ define([
         chatType == CHAT_TYPE_1_2_1 ? DB_STORE_NAME_USER : DB_STORE_NAME_QUN;
       const keyPath = chatType == CHAT_TYPE_1_2_1 ? user_id * 1 : user_id;
       const sessionItem = await DBObject.dbInstance.getData(keyPath, storeName);
-      // chatMsg.addSessionItem(sessionItem);
+      if (!sessionItem) {
+        // 如果不存在 说明当前是临时会话， 而且是从没有聊过的
+      }
       // 同步到contacts 中
       sessionItem.lastMessage = {
         session: getSessionKey(chatType, selfId.value, user_id),
@@ -517,6 +522,40 @@ define([
     const dom = getFocus(['.chat-msg', '.input-content']);
     dom.focus();
   }
+
+  function chatTemporary(user_id, username, chatType, avatar, targetInfo) {
+    // 聊天之前 设置全局的聊天对象
+    const currentSession = getSessionKey(chatType, selfId.value, user_id);
+    setTargetId(user_id, username, chatType, avatar, currentSession);
+    // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
+    activeMenu = '1';
+    showContentByMenu('1');
+
+    // 先判断当前与临时聊天对象是否有session list 也就是是否存在历史记录
+    const isExist = contactStore.contactList.some(
+      (item) => item.userId === user_id
+    );
+    if (isExist) {
+      // 存在历史记录 设置当前page 为 我的消息页面
+      // currentPage.changePage(MSGCHART);
+      // getMsgList(user_id, username, chatType);
+    } else {
+      // 不存在历史记录,需要添加session list
+      const newSessionItem = { ...targetInfo };
+      newSessionItem.lastMessage = { session: currentSession }; // session
+      newSessionItem.unReadCount = 0;
+      // 添加到contactList
+      contactStore.addContactItem(newSessionItem);
+    }
+
+    currentPage.changePage(MSGCHART);
+    getMsgList(user_id, username, chatType);
+
+    // 获取焦点
+    const dom = getFocus(['.chat-msg', '.input-content']);
+    dom.focus();
+  }
+
   function removeUser(id) {
     console.log('remove', id);
     removeID = {
@@ -801,5 +840,6 @@ define([
     diffSessionList,
     hideService,
     chatBy,
+    chatTemporary,
   };
 });
