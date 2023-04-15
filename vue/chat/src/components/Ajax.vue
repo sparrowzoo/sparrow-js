@@ -1,16 +1,17 @@
 <template>
     <div class="ajax">
         <van-nav-bar title="AJAX 接口请求" left-arrow @click-left="onClickLeft"></van-nav-bar>
-        <van-button @click="onClickLeft">查询好友</van-button>
+        <van-button @click="exportTest">Export Test</van-button>
     </div>
 </template>
 
 <script>
-import { login, getContacts, getSession, getSystemInfos } from '../request'
+// import { login, getContacts, getSession, getSystemInfos } from '../request'
 
-import { searchUser, addFriend } from '../request'
+// import { searchUser, addFriend } from '../request'
 // import { mapState } from 'vuex'
 import { Toast } from 'vant';
+import { ExportDemo} from '../lib/ExportDemo.js';
 export default {
     name: "AjaxDemo",
     data() {
@@ -25,6 +26,10 @@ export default {
     methods: {
         onClickLeft() {
             this.$router.go(-1)
+        },
+        exportTest() {
+            alert(ExportDemo);
+            ExportDemo.change();
         },
         async sendAddFriend(user) {
             console.log(user);
