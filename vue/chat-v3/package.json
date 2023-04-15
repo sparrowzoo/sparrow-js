@@ -1,0 +1,14 @@
+{
+  "name": "im-chat",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "install-v2": "cd chat-v2 && npm i",
+    "start-v2": "cd chat-v2 && npm run serve",
+    "build-v2": "cd chat-v2 && npm run build",
+    "install-v3": "cd chat-v3 && npm i",
+    "start-v3": "cd chat-v3 && npm run dev",
+    "build-v3": "cd chat-v3 && npm run build"
+  }
+}

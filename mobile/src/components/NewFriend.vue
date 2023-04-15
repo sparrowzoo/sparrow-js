@@ -3,7 +3,7 @@
         <van-nav-bar title="新的朋友" left-arrow @click-left="onClickLeft"></van-nav-bar>
         <div>
             <div class="wrap" v-for="user in users">
-                <div class="wrap_name">id为{{ user.applyUserId }}的用户申请</div>
+                <div class="wrap_name">id为{{ user.user }}的用户申请</div>
                 <span class="gray" v-if="user.status !== 0">{{ user.status === 1 ? "已通过" : "已驳回" }}</span>
                 <van-button class="reject" type="default" size="small" v-if="user.status === 0"
                     @click="reject(user)">拒绝</van-button>
@@ -23,9 +23,6 @@ export default {
             phone: "",
             users: []
         };
-    },
-    computed: {
-        ...mapState(['userId']),
     },
     async mounted() {
         this.fresh()
