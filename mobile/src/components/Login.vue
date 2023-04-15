@@ -14,6 +14,7 @@
 import { login, getContacts, getSession, getSystemInfos } from '../request'
 import { mapActions, mapMutations } from 'vuex';
 export default {
+
     data() {
         return {
             phone: "",
