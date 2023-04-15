@@ -11,7 +11,7 @@
  * ...
  */
 var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
-    if (window === this) {
+    if (window === this||!(this instanceof Sparrow)) {
         //Array.prototype.slice 将arguments 转化成数组
         var args = Array.prototype.slice.call(arguments, 0);
         if (!selector) {
@@ -137,8 +137,8 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
                             elements[0]);
                     }
                 }
-                if(selectorArray.length>=4){
-                    elements[0].type=selectorArray[3];
+                if (selectorArray.length >= 4) {
+                    elements[0].type = selectorArray[3];
                 }
                 break;
             case "!":

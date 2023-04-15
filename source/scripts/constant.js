@@ -1,9 +1,9 @@
 Sparrow.url = {
     root: $(function () {
-        pathName = window.location.pathname === "/" ? ""
-            : ("/" + window.location.pathname.split('/')[1]);
-        return window.location.protocol + "//" + window.location.host;
-        //+ (false ? pathName : "");
+        // var pathName = window.location.pathname === "/" ? ""
+        //     : ("/" + window.location.pathname.split('/')[1]);
+        // return window.location.protocol + "//" + window.location.host
+        //     + ("");
     }),
     _resource: function (path) {
         var scripts = document.scripts;
@@ -11,14 +11,20 @@ Sparrow.url = {
         if (path) {
             sparrowPath = [path];
         }
+        if (scripts == null || scripts.length == 0) {
+            return null;
+        }
         var r = null;
         for (var i in scripts) {
             var brk = false;
-            sparrowPath.forEach(function (path) {
-                var startIndex = scripts[i].src.indexOf(path);
-                if (startIndex > -1) {
-                    r = scripts[i].src.substring(0, startIndex);
-                    brk = true;
+            sparrowPath.forEach(function () {
+                for(var i=0;i<sparrowPath.length;i++) {
+                    var p= sparrowPath[i];
+                    var startIndex = scripts[i].src.indexOf(p);
+                    if (startIndex > -1) {
+                        r = scripts[i].src.substring(0, startIndex);
+                        brk = true;
+                    }
                 }
             });
             if (brk) {
@@ -31,7 +37,7 @@ Sparrow.url = {
 };
 Sparrow.url.resource = $.url._resource();
 Sparrow.url.passport = $(function () {
-    return "http://passport."+$.browser.cookie.root_domain;
+    return "http://passport." + $.browser.cookie.root_domain;
 });
 Sparrow.website = {
     name: $.browser.getCookie($.browser.cookie.website_name),
