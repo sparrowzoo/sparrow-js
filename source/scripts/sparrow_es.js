@@ -1,3 +1,212 @@
+String.prototype.trim = function () {
+    return this.replace(/(^\s*)|(\s*$)/g, "");
+};
+String.prototype.ltrim = function () {
+    return this.replace(/(^\s*)/g, "");
+};
+String.prototype.rtrim = function () {
+    return this.replace(/(\s*$)/g, "");
+};
+// 如果为""或者是''则返回为null 所以在调用之前要做了null判断
+String.prototype.json = function () {
+    if (this === "" || this === "''" || this.length === 0) {
+        return null;
+    }
+    if (this.indexOf("error|") !== -1) {
+        console.log(this);
+    }
+    try {
+        var json = this;
+        json = json.decodeSplitKey();
+        return eval("("
+            + json.replace(/\r\n/g, "<br/>").replace(/\n/g, "<br/>")
+            + ")");
+    } catch (err) {
+        return console.log(err);
+    }
+};
+
+String.prototype.firstCharToAscii = function () {
+    return this.charCodeAt(0);
+};
+String.prototype.leftAlignWithChar = function (c, length) {
+    length = length ? length : 3;
+    c = c ? c : '0';
+    if (this.length >= length) {
+        return;
+    }
+    var charArray = [];
+    var charCount = length - this.length;
+    for (var i = 0; i < charCount; i++) {
+        charArray.push(c);
+    }
+    return charArray.join("") + this;
+};
+String.prototype.getCountByChar = function (c) {
+    return this.split(c).length - 1;
+};
+String.prototype.getByteLength = function () {
+    return this.replace(/[^\x00-\xff]/g, "**").length;
+};
+String.prototype.subString = function (len, hasDot) {
+    var newLength = 0;
+    var newStr = "";
+    var chineseRegex = /[^\x00-\xff]/g;
+    var singleChar = "";
+    var strLength = this.replace(chineseRegex, "**").length;
+    var i;
+    for (i = 0; i < strLength; i += 1) {
+        singleChar = this.charAt(i).toString();
+        if (singleChar.match(chineseRegex)) {
+            newLength += 2;
+        } else {
+            newLength += 1;
+        }
+        if (newLength > len) {
+            break;
+        }
+        newStr += singleChar;
+    }
+    if (hasDot && strLength > len) {
+        newStr += "..";
+    }
+    return newStr;
+};
+/*
+ * String.prototype.encodeSplitKey = function() { var str = this; str =
+ * str.replace(/#/g, "#limit"); str = str.replace(/:/g, "#colon#"); str =
+ * str.replace(/,/g, "#dot#"); str = str.replace(/"/g, "#ref#"); return str; };
+ */
+String.prototype.decodeSplitKey = function () {
+    var str = this;
+    str = str.replace(/#colon#/g, ":");
+    str = str.replace(/#dot#/g, ",");
+    str = str.replace(/#ref#/g, "\\\"");
+    str = str.replace(/#limit/g, "#");
+    return str;
+};
+String.prototype.decodeHtml = function () {
+    var html = this;
+    html = html.replace(/&amp;/g, "&");
+    html = html.replace(/&lt;/g, "<");
+    html = html.replace(/&gt;/g, ">");
+    html = html.replace(/&quot;/g, "\"");
+    html = html.replace(/&nbsp;/g, " ");
+    return html;
+};
+
+// 字符格式化方法
+String.prototype.format = function () {
+    var newStr = this;
+    if (arguments.length >=1 && typeof arguments[0] === "object") {
+        var re = /#{(.*?)}/ig;
+        while (r = re.exec(this)) {
+            var placeHolder = r[0];
+            var property=r[1];
+            var value = arguments[0].value(property);
+            if(arguments.length>1){
+                for(var i=1;i<arguments.length;i++){
+                    value=arguments[i].value(property);
+                    if(value){
+                        break;
+                    }
+                }
+            }
+            newStr = newStr.replace(placeHolder, $.isNullOrEmpty(value) ? "-" : value);
+        }
+        return newStr;
+    }
+    var reg = null;
+    for (var i = 0; i < arguments.length; i++) {
+        reg = new RegExp('\\{' + i + '\\}', 'gm');
+        newStr = newStr.replace(reg, $.isNullOrEmpty(arguments[i]) ? "-" : arguments[i]);
+    }
+    return newStr;
+};
+// 过滤闭合的html标签
+String.prototype.filterHTML = function () {
+    var newString = this;
+    while (newString.search(/<([a-z0-9]*?).*?>([\s\S]*?)<\/\1>/gi) > -1) {
+        newString = newString.replace(/<([a-z0-9]*?).*?>([\s\S]*?)<\/\1>/gi,
+            "$2");
+    }
+    if (newString.search(/<input.*>/)) {
+        newString = newString.replace(/<input.*>/gi, "");
+    }
+
+    if (newString.search(/<(script).*?>.*?<\/\1>/)) {
+        newString = newString.replace(/<(script).*?>.*?<\/\1>/gi, "");
+    }
+    if (newString.search(/<script.*>/)) {
+        newString = newString.replace(/<script.*>/gi, "");
+    }
+    return newString;
+};
+
+String.prototype.firstCharUpperCase = function () {
+    return this.substr(0, 1).toUpperCase() + this.substr(1);
+};
+
+String.prototype.join = function (str) {
+    if (!$.isNullOrEmpty(str)) {
+        return this + str;
+    }
+    return this + "";
+};
+
+Array.prototype.clear = function () {
+    for (var i = 0; i < this.length; i += 1) {
+        this.pop();
+    }
+};
+Array.prototype.indexOf = function (val) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] === val) {
+            return i;
+        }
+    }
+    return -1;
+};
+Array.prototype.remove = function (val) {
+    var index = this.indexOf(val);
+    if (index > -1) {
+        this.splice(index, 1);
+    }
+};
+
+// If Push and pop is not implemented by the browser
+
+if (!Array.prototype.push) {
+    Array.prototype.push = function array_push() {
+        for (var i = 0; i < arguments.length; i++)
+            this[this.length] = arguments[i];
+        return this.length;
+    };
+}
+
+if (!Array.prototype.pop) {
+    Array.prototype.pop = function array_pop() {
+        lastElement = this[this.length - 1];
+        this.length = Math.max(this.length - 1, 0);
+        return lastElement;
+    };
+}
+
+Date.prototype.format = function (fmt) {
+    var o = {
+        "M+": this.getMonth() + 1, //月份
+        "d+": this.getDate(), //日
+        "h+": this.getHours(), //小时
+        "m+": this.getMinutes(), //分
+        "s+": this.getSeconds(), //秒
+        "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+        "S": this.getMilliseconds() //毫秒
+    };
+    if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    for (var k in o)
+        if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+    return fmt;
+}
 /**
  * @return
  *
@@ -543,177 +752,408 @@ Sparrow.VERTICAL = "VERTICAL";
 Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/images/user.png";
 Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/images/menu.png";
 
-Sparrow.ajax = {
-  _objPool: [],
-  referWindow: window,
-  url: null,
-  srcElement: null,
-  SUCCESS: '0',
-  _bindReadyStateChange: function (objXMLHttp, callback) {
-    objXMLHttp.onreadystatechange = function () {
-      if (objXMLHttp.readyState !== 4) {
-        return;
-      }
-      if (objXMLHttp.status === 200) {
-        if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
-          console.log('login false');
-          var config = objXMLHttp.responseText.json();
-          document.domain = $.browser.cookie.root_domain;
-          if (config.inFrame) {
-            window.parent.location.href = config.url;
-          } else {
-            $.window(config);
-          }
-          return;
-        }
-        if (objXMLHttp.responseText.indexOf('Access Denied') !== -1) {
-          if (!lang.message.accessDenied)
-            lang.message.accessDenied = 'Access Denied';
-          $.alert(lang.message.accessDenied, 'sad');
-          return;
-        }
-        if (callback) {
-          callback(objXMLHttp.responseText);
-          return;
-        }
-      }
-      if (objXMLHttp.status === 404) {
-        console.log('资源未找到');
-        return;
-      }
-      if (objXMLHttp.status === 500) {
-        console.log('服务器错误'); //
-        return;
-      }
-      if (objXMLHttp.status === 12031) {
-        console.log('服务器未启动'); //
-        return;
-      }
-      console.log(objXMLHttp.status + ':未知错误');
-    };
-  },
-  _getInstance: function () {
-    for (var i = 0; i < this._objPool.length; i += 1) {
-      if (
-        this._objPool[i].readyState === 0 ||
-        this._objPool[i].readyState === 4
-      ) {
-        return this._objPool[i];
-      }
+if (!window.indexedDB) {
+    window.alert(
+        "Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available."
+    );
+}
+Sparrow.indexedDB = {
+    config: {
+        name: 'Sparrow',
+        version: "1.0",
+        tableNames: [{"name":"t1","key":"id"}]
     }
-    this._objPool[this._objPool.length] = this._createObj();
-    return this._objPool[this._objPool.length - 1];
-  },
-  _createObj: function () {
-    var http_request = null;
-    if (window.XMLHttpRequest) {
-      http_request = new XMLHttpRequest();
-      if (http_request.overrideMimeType) {
-        http_request.overrideMimeType('text/xml');
-      }
-      return http_request;
+};
+Sparrow.indexedDB = function (config) {
+    this.instance = null;
+    this.name = config.name;
+    this.config = config;
+};
+Sparrow.indexedDB.prototype = {
+    init: function () {
+        this.request = window.indexedDB.open(this.config.name, this.config.version);
+        return new Promise((resolve, reject) => {
+            this.request.onsuccess = (event) => {
+                //数据库实例
+                this.instance = event.target.result;
+                console.log('数据库连接成功');
+                this.flush().then(r => {
+                    console.log(r);
+                    resolve(this);
+                }, e => {
+                    console.log(e);
+                    reject(e);
+                });
+                resolve(this.instance);
+            };
+            this.request.onupgradeneeded = (event) => {
+                console.log('首次创建数据库');
+                this.instance = event.target.result;
+                this._initTables();
+                resolve(this.instance);
+            };
+            this.request.onerror = () => {
+                console.log('数据库发生错误');
+                reject('连接indexedDB出错');
+            };
+        });
+    },
+    _createTable: function (tableName, key) {
+        this.instance.createObjectStore(tableName, {keyPath: key});
+    },
+    _initTables: function () {
+        this.config.tableNames.forEach((tableName) => {
+            this._createTable(tableName.name, tableName.key);
+        });
+    },
+    _getTableInstance: function (tableName) {
+        return this.instance
+            .transaction(tableName, 'readwrite')
+            .objectStore(tableName);
+    },
+    put: function (tableName, item) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .put(item);
+            req.onsuccess = function () {
+                resolve('添加成功');
+            };
+            req.onerror = function () {
+                reject('添加失败');
+            }
+        });
+    },
+    get: function (tableName, key) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .get(key);
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    delete: function (tableName, key) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .delete(key);
+            req.onsuccess = function () {
+                resolve('删除成功');
+            };
+            req.onerror = function () {
+                reject('删除失败');
+            }
+        });
+    },
+    clear: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .clear();
+            req.onsuccess = function () {
+                resolve('清空成功');
+            };
+            req.onerror = function () {
+                reject('清空失败');
+            }
+        });
+    },
+    flush: function () {
+        return new Promise((resolve, reject) => {
+            this.config.tableNames.forEach((table) => {
+                this.clear(table.name).then(r => {
+                    console.log(r);
+                }).catch(e => {
+                    console.log(e);
+                });
+            }, this);
+        });
+    },
+    getAll: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .getAll();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    getAllKeys: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .getAllKeys();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    count: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .count();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    openCursor: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .openCursor();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    openKeyCursor: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .openKeyCursor();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
     }
-    if (window.ActiveXObject) {
-      try {
-        http_request = new ActiveXObject('Msxml2.XMLHTTP');
-      } catch (e) {
-        try {
-          http_request = new ActiveXObject('Microsoft.XMLHTTP');
-        } catch (e) {}
-      }
-    } else {
-      console.log('浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器');
-    }
-    return http_request;
-  },
-  _callback: function (xmlHttpRequest) {
-    var result = xmlHttpRequest.responseText.json();
-    if (result == null) {
-      $.message('json parse error ' + xmlHttpRequest.responseText);
-      return;
-    }
-    if (result.code !== this.ajax.SUCCESS) {
-      $.message(result.message);
-    }
-  },
-  gourl: function (url) {
-    this.ajax.referWindow.location.href = url;
-  },
-  req: function (getOrPost, url, callback, postStr, srcElement) {
-    if (url.indexOf('http://') === -1) {
-      url = $.url.root + url;
-    }
-    var objXMLHttp = this._getInstance();
-    if (objXMLHttp != null) {
-      this._bindReadyStateChange(objXMLHttp, callback);
-    }
-    if (srcElement) {
-      this.srcElement = srcElement;
-    }
-    //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with
-    //with (objXMLHttp) {
-    try {
-      objXMLHttp.open(getOrPost, url, true);
-      objXMLHttp.setRequestHeader('ajax', 'true');
-      objXMLHttp.setRequestHeader('pragma', 'no-cache');
-      objXMLHttp.setRequestHeader('cache-control', 'no-cache');
-      if (getOrPost === 'GET') {
-        objXMLHttp.send(null);
-        return;
-      }
-        //warn: Parameters: Character decoding failed
-        if (typeof postStr === 'object') {
-          objXMLHttp.setRequestHeader('Content-Type', 'application/json');
-          objXMLHttp.send(JSON.stringify(postStr));
-        } else {
-          postStr = postStr.replace(/%/g, '%25');
-          objXMLHttp.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded;charset=utf-8'
-          );
-          objXMLHttp.send(postStr);
-        }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  json: function (url, data, callback, srcElement) {
-    if (typeof data === 'function') {
-      callback = data;
-      data = null;
-    }
+};
 
-    $.ajax.req(
-      'POST',
-      url,
-      function (responseText) {
+Sparrow.ajax = {
+    tokenConfig: {},
+    _objPool: [],
+    referWindow: window,
+    url: null,
+    srcElement: null,
+    SUCCESS: '0',
+    _bindReadyStateChange: function (objXMLHttp, callback) {
+        objXMLHttp.onreadystatechange = function () {
+            if (objXMLHttp.readyState !== 4) {
+                return;
+            }
+            if (objXMLHttp.status === 200) {
+                if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
+                    console.log('login false');
+                    var config = objXMLHttp.responseText.json();
+                    document.domain = $.browser.cookie.root_domain;
+                    if (config.inFrame) {
+                        window.parent.location.href = config.url;
+                    } else {
+                        $.window(config);
+                    }
+                    return;
+                }
+                if (objXMLHttp.responseText.indexOf('Access Denied') !== -1) {
+                    if (!lang.message.accessDenied)
+                        lang.message.accessDenied = 'Access Denied';
+                    $.alert(lang.message.accessDenied, 'sad');
+                    return;
+                }
+                if (callback) {
+                    callback(objXMLHttp.responseText);
+                    return;
+                }
+            }
+            if (objXMLHttp.status === 404) {
+                console.log('资源未找到');
+                return;
+            }
+            if (objXMLHttp.status === 500) {
+                console.log('服务器错误'); //
+                return;
+            }
+            if (objXMLHttp.status === 12031) {
+                console.log('服务器未启动'); //
+                return;
+            }
+            console.log(objXMLHttp.status + ':未知错误');
+        };
+    },
+    _getInstance: function () {
+        for (var i = 0; i < this._objPool.length; i += 1) {
+            if (
+                this._objPool[i].readyState === 0 ||
+                this._objPool[i].readyState === 4
+            ) {
+                return this._objPool[i];
+            }
+        }
+        this._objPool[this._objPool.length] = this._createObj();
+        return this._objPool[this._objPool.length - 1];
+    },
+    _createObj: function () {
+        var http_request = null;
+        if (window.XMLHttpRequest) {
+            http_request = new XMLHttpRequest();
+            if (http_request.overrideMimeType) {
+                http_request.overrideMimeType('text/xml');
+            }
+            return http_request;
+        }
+        if (window.ActiveXObject) {
+            try {
+                http_request = new ActiveXObject('Msxml2.XMLHTTP');
+            } catch (e) {
+                try {
+                    http_request = new ActiveXObject('Microsoft.XMLHTTP');
+                } catch (e) {
+                }
+            }
+        } else {
+            console.log('浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器');
+        }
+        return http_request;
+    },
+    _callback: function (responseText) {
         var result = responseText.json();
         if (result == null) {
-          $.message('json parse error ' + responseText);
-          return;
+            $.message('json parse error ' + responseText);
+            return;
+        }
+        if (result.code !== this.ajax.SUCCESS) {
+            $.message(result.message);
+        }
+    },
+    gourl: function (url) {
+        this.ajax.referWindow.location.href = url;
+    },
+    _findToken: function (url) {
+        var token = null;
+        for (var baseUrl in this.tokenConfig) {
+            if (url.indexOf(baseUrl) === 0) {
+                token = this.tokenConfig[baseUrl];
+                break;
+            }
+        }
+        return token;
+    },
+    req: function (getOrPost, url, callback, postStr, srcElement) {
+        if (url.indexOf('http://') === -1) {
+            url = $.url.root + url;
         }
 
-        if (result.code === $.ajax.SUCCESS) {
-          if (callback) {
-            callback(result);
-          } else {
-            $.message(result.message, $.ajax.srcElement);
-          }
-        } else {
-          $.message(result.message, $.ajax.srcElement);
+        var objXMLHttp = this._getInstance();
+        if (objXMLHttp != null) {
+            this._bindReadyStateChange(objXMLHttp, callback);
         }
-      },
-      data,
-      srcElement
-    );
-  },
-  get: function (url, callback) {
-    callback = callback ? callback : $.ajax._callback;
-    $.ajax.req('GET', url, callback);
-  },
-  post: function (url, data) {
-    $.ajax.req('POST', url, $.ajax._callback, data);
-  },
+        if (srcElement) {
+            this.srcElement = srcElement;
+        }
+        //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with
+        //with (objXMLHttp) {
+        try {
+            objXMLHttp.open(getOrPost, url, true);
+            objXMLHttp.setRequestHeader('ajax', 'true');
+            objXMLHttp.setRequestHeader('pragma', 'no-cache');
+            objXMLHttp.setRequestHeader('cache-control', 'no-cache');
+            var token = this._findToken(url);
+            if (token) {
+                for (var key in token) {
+                    objXMLHttp.setRequestHeader(key, token[key]());
+                }
+            }
+            if (getOrPost === 'GET') {
+                objXMLHttp.send(null);
+                return;
+            }
+
+
+
+            //warn: Parameters: Character decoding failed
+            if (typeof postStr === 'object') {
+                objXMLHttp.setRequestHeader('Content-Type', 'application/json');
+                objXMLHttp.send(JSON.stringify(postStr));
+            } else {
+                postStr = postStr.replace(/%/g, '%25');
+                objXMLHttp.setRequestHeader(
+                    'Content-Type',
+                    'application/x-www-form-urlencoded;charset=utf-8'
+                );
+                objXMLHttp.send(postStr);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+    //内部业务使用
+    json: function (url, data, callback, srcElement, token) {
+        if (typeof data === 'function') {
+            callback = data;
+            data = null;
+        }
+
+        $.ajax.req(
+            'POST',
+            url,
+            function (responseText) {
+                var result = responseText.json();
+                if (result == null) {
+                    $.message('json parse error ' + responseText);
+                    return;
+                }
+                if (result.code === $.ajax.SUCCESS) {
+                    if (callback) {
+                        callback(result);
+                    } else {
+                        $.message(result.message, $.ajax.srcElement);
+                    }
+                } else {
+                    $.message(result.message, $.ajax.srcElement);
+                }
+            },
+            data,
+            srcElement,
+            token
+        );
+    },
+    get: function (url, callback) {
+        callback = callback ? callback : $.ajax._callback;
+        $.ajax.req('GET', url, callback, null, null)
+    },
+    post: function (url, data, callback) {
+        callback = callback ? callback : $.ajax._callback;
+        $.ajax.req('POST', url, callback, data, null);
+    },
+};
+
+Sparrow.http = {
+    post: function (url, data,token) {
+        return new Promise((resolve, reject) => {
+            Sparrow.ajax.post(url, data, function (responseText) {
+                var result = responseText.json();
+                if (result == null) {
+                    reject(responseText);
+                    return;
+                }
+                resolve(result);
+            },token)
+        })
+    },
+    get: function (url,token) {
+        return new Promise((resolve, reject) => {
+            Sparrow.ajax.get(url, function (responseText) {
+                var result = responseText.json();
+                if (result == null) {
+                    reject(responseText);
+                    return;
+                }
+                resolve(result);
+            })
+        },token)
+    }
 };
 
 /*------------------------------------validate 表单验证------------------------------------------------*/
@@ -1765,402 +2205,6 @@ var _hmt = _hmt || [];
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(hm, s);
 })();
-Sparrow.prototype.tabs = function (config) {
-    if (!config) {
-        config = {};
-    }
-    //首页的样式，默认为无
-    var withIndexClass = config.withIndexClass;
-    //当前tab 的index
-    var currentIndex = config.index;
-    //tab 框的子div
-    var tabChildren = $("!div." + this.s.id);
-    //第一个为title tab 控制
-    var controllerContainer = tabChildren[0];
-    //具体的tab 控制框
-    var controllerMenuList = $("!li", controllerContainer);
-    //第二个为内容框
-    var contentContainer = tabChildren[1];
-    //具体的内容框
-    var contentList = $("!div", contentContainer);
-    var menuSwitch = function (tabIndex) {
-        var menuHyperCtrl = $("!a",
-            controllerMenuList[tabIndex])[0];
-        //将当前的rev  more
-        // http://www.w3school.com.cn/tags/att_a_rev.asp
-        var rev = $(menuHyperCtrl).attr("rev");
-        if (rev) {
-            var moreHyperCtrl = $("!a",
-                controllerMenuList[controllerMenuList.length - 1]);
-            moreHyperCtrl[0].href = rev;
-        }
-        contentList.each(function (contentIndex) {
-            if (withIndexClass)
-                controllerMenuList[0].className = "pure-menu-item pure-menu-heading";
-            if (contentIndex == tabIndex) {
-                controllerMenuList[contentIndex].className = "pure-menu-item pure-menu-selected";
-                this.className = "block";
-                return;
-            }
-            controllerMenuList[contentIndex].className = "pure-menu-item";
-            this.className = "none";
-        });
-    }
-    //每个控制框的绑定事件
-    controllerMenuList.each(function (tab_index) {
-        $(this).attr("tab_index", tab_index);
-        if (this.className.indexOf("close") > 0 || this.className.indexOf("more") > 0) {
-            return;
-        }
-        //<a><span onclick=></span></a>
-        $(this).bind(
-            "onclick",
-            function () {
-                var tabIndex = $(this).attr("tab_index");
-                menuSwitch(tabIndex);
-            });
-    });
-    //select 当前tab
-    if (currentIndex) {
-        menuSwitch(currentIndex);
-    }
-};
-Sparrow.win = {
-    config: {
-        isInFrame: false,
-        showHead: true,
-        titleHeight: 45,
-        currentWindow: window,
-        bgsound: $.url.resource + "/media/sound.wav",
-        titleImg: $.url.resource + "/images/" + $.website.themes + "/panel.gif",
-        closeBtnImg: $.url.resource + "/images/" + $.website.themes
-            + "/panel.gif",
-        OKBtnImg: $.url.resource + "/images/" + $.website.themes + "/panel.gif",
-        smileImg: $.url.resource + "/images/" + $.website.themes + "/smile.gif",
-        sadImg: $.url.resource + "/images/" + $.website.themes + "/sad.gif",
-        lockImg: $.url.resource + "/images/" + $.website.themes + "/lock.gif",
-        waitImg: $.url.resource + "/images/" + $.website.themes + "/loading.gif",
-        askImg: $.url.resource + "/images/" + $.website.themes + "/smile.gif",
-        tagArray: ["select", "object"],
-        jalert: {
-            height: "auto",
-            width: "250px",
-            closeCallBack: function () {
-            }
-        },
-        dialog: {
-            // 用来保存box对话框中的选择项
-            descContainer: null
-        }
-    },
-    getWindow: function () {
-        return (this.config.isInFrame ? window.parent : window);
-    },
-    getScrollTop: function () {
-        return this.getWindow().pageYOffset
-            || this.getWindow().document.documentElement.scrollTop
-            || this.getWindow().document.body.scrollTop;
-    },
-    /*
-     * getScrollTop : function() { return document.documentElement &&
-     * document.documentElement.scrollTop ? document.documentElement.scrollTop :
-     * document.body.scrollTop; },
-     */
-    addSound: function () {
-        // 背景音乐
-        var sound = $("+bgsound.sound.doc", null, this.getWindow().document);
-        sound.s.src = this.config.bgsound;
-    },
-    addBackDiv: function () {
-        var backDiv = $("+div.backDiv.doc", null, this.getWindow().document);
-        var documentHeight = Math.max(
-            this.getWindow().document.body.scrollHeight,
-            this.getWindow().document.documentElement.scrollHeight);
-        backDiv.s.zIndex = 1000;
-        backDiv.opacity(80);
-        backDiv.s.style.position = "absolute";
-        backDiv.s.style.width = backDiv.doc.body.offsetWidth + "px";
-        backDiv.s.style.height = documentHeight + "px";
-        backDiv.s.style.left = "0px";
-        backDiv.s.style.top = "0px";
-        backDiv.s.style.backgroundColor = "#000000";
-    },
-    // 固定格式对话框主体结构
-    addMsgDialog: function (width, height) {
-        if (!width) {
-            width = this.config.jalert.width;
-        }
-        if (!height) {
-            height = this.config.jalert.height;
-        }
-        var dialog = $("+div.dialog.doc", null, this.getWindow().document);
-        dialog.s.className="modal";
-        dialog.s.zIndex = 1001;
-        dialog.s.style.width = width;
-        dialog.s.style.height = height;
-    },
-    // 自定义对话框主体结构 url
-    addPanel: function (url) {
-        var panel = $("+div.dialog.doc", null, this.getWindow().document);
-        //panel.s.className="modal";
-        panel.s.zIndex = 1001;
-        panel.s.style.cssText = "position:absolute;text-align:center;font-size: 10pt;background:white;";
-        if (this.config.showHead !==false) {
-            this.addTitle();
-        }
-
-        this.addRightClose();
-        var frame = $("+iframe.panel.dialog", null, panel.doc);
-        frame.s.setAttribute("frameborder", "0", 0);
-        frame.s.scrolling = "no";
-        frame.s.src = url;
-        frame
-            .loadComplete(function (element) {
-                var width = parseInt(
-                    element.contentWindow.document.body.style.width, 10);
-                var height = parseInt(
-                    element.contentWindow.document.body.style.height,
-                    10);
-                frame.s.style.width = (width - 4) + "px";
-                frame.s.style.height = (height
-                    - ($.win.config.showHead ? $.win.config.titleHeight : 0) - 5)
-                    + "px";
-                panel.s.style.width = width + "px";
-                panel.s.style.height = height + "px";
-                $("#dialog", null, panel.doc).center();
-                if ($.win.config.showHead !== false) {
-                    $("#divleft", null, panel.doc).s.innerHTML = element.contentWindow.document.title;
-                }
-            });
-    },
-    // 加标题
-    addTitle: function (title) {
-        if (this.config.showHead !== false) {
-            var divtitle = $("+div.divtitle.dialog", null,
-                this.getWindow().document);
-            divtitle.s.className="modal-header pure-g";
-            // 真正的标题文本
-            var divleft = $("+div.divleft.divtitle", null,
-                this.getWindow().document);
-            divleft.css("textAlign","left");
-
-            divleft.s.className = "drag-pp pure-u-23-24";
-            divleft.s.onmousedown = function (e) {
-                $.event(e).drags();
-            };
-            divleft.s.onmouseup = function (e) {
-                $.event(e).move_end();
-            };
-            divleft.html(title ? title : $.website.name + "提醒您:");
-        }
-    },
-    // 标题右上角关闭按钮
-    addRightClose: function () {
-        // 关闭按钮
-        if (this.config.showHead) {
-            var divright = $("+div.divright.divtitle", null, this
-                .getWindow().document);
-            divright.s.className="pure-u-1-24";
-            divright.css("cursor","pointer");
-            divright.html("\xd7");
-            divright.s.onclick = function () {
-                $.win.closeClick();
-            };
-        }
-    },
-    // 内容下方的ok按钮
-    addOK: function () {
-        var btnOK = $("+input.btnOK.divfooter", null, this.getWindow().document);
-        btnOK.s.id = "btnOK";
-        btnOK.s.type = "button";
-        btnOK.s.className="pure-button pure-button-primary";
-        btnOK.s.value = "\u786e\u5b9a";
-        btnOK.s.onclick = function () {
-            $.win.okClick();
-        };
-    },
-    // 内容下方的取消按钮
-    addClose: function () {
-        var btnclose = $("+input.btnclose.divfooter", null, this.getWindow().document);
-
-        btnclose.s.className="pure-button";
-        btnclose.attr("type", "button");
-        btnclose.s.value = "\u5173  \u95ed";
-        btnclose.s.onclick = function () {
-            $.win.closeClick();
-        };
-    },
-    // 内容正文
-    addMsgContent: function () {
-        var divcontent = $("+div.divcontent.dialog", null, this.getWindow().document);
-        divcontent.s.className="modal-body";
-    },
-
-    addFooter: function () {
-        var footer = $("+div.divfooter.dialog", null, this.getWindow().document);
-        footer.s.className="modal-footer";
-    },
-    okClick: function () {
-    },
-    closeClick: function () {
-        $.showOrHiddenTag(this.config.tagArray, true,
-                this.getWindow().document);
-        $("#dialog", null, this.getWindow().document).remove();
-        $("#backDiv", null, this.getWindow().document).remove();
-        $("#sound", null, this.getWindow().document).remove();
-        $.win.config.currentWindow.focus();
-        if ($.win.config.jalert.closeCallBack) {
-            $.win.config.jalert.closeCallBack();
-            $.win.config.jalert.closeCallBack = null;
-        }
-        $.win.ok = void (0);
-    }
-};
-//{msg:'',type:'sad',title:'',url:'',wait_message:''}
-Sparrow.alert = function (msg, type, title, url, wait_message) {
-    var config = {};
-    if (typeof(msg) == "object") {
-        config = msg;
-        msg = config.msg.decodeSplitKey();
-        type = config.type;
-        title = config.title.decodeSplitKey();
-        if (config.url) {
-            url = config.url.decodeSplitKey();
-        }
-        if (config.wait_message) {
-            wait_message = config.wait_message.decodeSplitKey();
-        }
-    }
-    $.win.addSound();
-    // 设置背景控件为false
-    $.showOrHiddenTag($.win.config.tagArray, false, $.win.getWindow().document);
-    // 背景层
-    $.win.addBackDiv();
-    // 对话框主体
-    $.win.addMsgDialog();
-    // 标题
-    $.win.addTitle(title);
-    // 内容
-    $.win.addMsgContent();
-
-
-    /*-----------以上部分全部一致---------------*/
-    var typeimg = null;
-    switch (type) {
-        case "smile":
-            $.win.addFooter();
-            $.win.addRightClose();
-            $.win.addClose();
-            typeimg = $.win.config.smileImg;
-            break;
-        case "sad":
-            $.win.addFooter();
-            $.win.addRightClose();
-            $.win.addClose();
-            typeimg = $.win.config.sadImg;
-            break;
-        case "lock":
-            typeimg = $.win.config.lockImg;
-            break;
-        case "wait":
-            typeimg = $.win.config.waitImg;
-            break;
-        case "ask":
-            $.win.addFooter();
-            $.win.addRightClose();
-            $.win.addOK();
-            $.win.addClose();
-            typeimg = $.win.config.askImg;
-            break;
-        case undefined:
-            $.win.addFooter();
-            $.win.addRightClose();
-            $.win.addClose();
-            break;
-    }
-    var content = "";
-    if (typeimg) {
-        content = "<br/>"
-            + "<img align=\"absMiddle\" src='" + typeimg + "'/>&nbsp;&nbsp;";
-    }
-    if (msg) {
-        content += msg;
-        if (!$.isNullOrEmpty(url)) {
-            //<br/><span id="timer">5</span>秒以后将自动跳转,或者<a href="{0}" target="_self">直接点击这里跳转</a>
-            content += wait_message.format(url);
-        }
-        $("#divcontent", null, $.win.getWindow().document).s.innerHTML = content;
-        $.waitRedirect("timer");
-    }
-
-    $.showOrHiddenTag("select", true, $.win.getWindow().document
-        .getElementById("divcontent"));
-
-    var dialog = $("#dialog", null, $.win.getWindow().document);// 设置浮动窗口位置
-    dialog.center();
-};
-// config={url:'',showHead:true,srcElement:id,cache:true}宽高取自页面的宽高
-Sparrow.window = function (config) {
-    if (!config) {
-        config = {};
-    }
-    if (!$.isNullOrEmpty(config.showHead)) {
-        $.win.config.showHead = config.showHead;
-    }
-    if (!$.isNullOrEmpty(config.inFrame)) {
-        $.win.config.isInFrame = config.inFrame;
-    }
-    // 如果本页中存在div对话框。则先将对话框删除
-    url = config.url;
-    $.win.closeClick();
-    if (config.cache !== false) {
-        url = $.randomUrl(url);
-    }
-    if (url.indexOf("http://") < 0) {
-        url = $.url.root + url;
-    }
-    $.showOrHiddenTag($.win.config.tagArray, false, $.win.getWindow().document);
-    if (config.srcElement) {
-        if (config.srcElement.indexOf('#') < 0) {
-            config.srcElement = "#" + config.srcElement;
-        }
-        $.win.config.toTopHeight = $(config.srcElement).getAbsoluteTop() - height / 2;
-    }
-    // 背景层
-    $.win.addBackDiv();
-    $.win.addPanel(url);
-};
-// Register as a named AMD module
-if (typeof define === "function" && define.amd) {
-    define("sparrow", [], function () {
-        return Sparrow;
-    });
-}
-/* {width:1,height:2,title:'',content:'',initialize:function(){}} */
-Sparrow.dialog = function (config) {
-    if (!config) {
-        config = {};
-    }
-    // 设置背景控件为false
-    $.showOrHiddenTag($.win.config.tagArray, false, $.win.getWindow().document);
-    // 背景层
-    $.win.addBackDiv();
-    // 对话框主体
-    $.win.addMsgDialog(config.width, config.height);
-    // 标题
-    $.win.addTitle(config.title);
-    // 内容
-    $.win.addMsgContent();
-    $.win.addOK();
-    $.win.addClose();
-    if (config.content) {
-        $("#divcontent", null, $.win.getWindow().document).s.innerHTML = config.content;
-    }
-    if (config.initialize) {
-        config.initialize($("divcontent"));
-    }
-    $("#dialog", null, $.win.getWindow().document).center();
-};
 /*---------------------------------------------JGridView全选和单选---------------------------------------------*/
 Sparrow.gridView = {
     keyType: "int",// string
@@ -2720,490 +2764,6 @@ Sparrow.event.prototype = {
         }
     }
 };
-Sparrow.prototype.mousewheel = function (handle) {
-    var eventArray = ('onwheel' in document || document.documentMode >= 9) ?
-        ['wheel'] : ['mousewheel', 'DomMouseScroll', 'MozMousePixelScroll'], slice = Array.prototype.slice,
-        lowestDelta;
-    var innerHandle = function (event) {
-        if (!handle) {
-            return;
-        }
-        event = $.event(event),
-            args = slice.call(arguments, 1),
-            delta = 0,
-            deltaX = 0,
-            deltaY = 0,
-            absDelta = 0;
-        event.preventDefault();
-        // Old school scrollwheel delta
-        if ('detail' in event.e) {
-            deltaY = event.e.detail * -1;
-        }
-        if ('wheelDelta' in event.e) {
-            deltaY = event.e.wheelDelta;
-        }
-        if ('wheelDeltaY' in event.e) {
-            deltaY = event.e.wheelDeltaY;
-        }
-        if ('wheelDeltaX' in event.e) {
-            deltaX = event.e.wheelDeltaX * -1;
-        }
-
-        // Firefox < 17 horizontal scrolling related to DOMMouseScroll event
-        if ('axis' in event.e && event.e.axis === event.e.HORIZONTAL_AXIS) {
-            deltaX = deltaY * -1;
-            deltaY = 0;
-        }
-
-        // Set delta to be deltaY or deltaX if deltaY is 0 for backwards compatabilitiy
-        delta = deltaY === 0 ? deltaX : deltaY;
-
-        // New school wheel delta (wheel event)
-        if ('deltaY' in event.e) {
-            deltaY = event.e.deltaY * -1;
-            delta = deltaY;
-        }
-        if ('deltaX' in event.e) {
-            deltaX = event.e.deltaX;
-            if (deltaY === 0) {
-                delta = deltaX * -1;
-            }
-        }
-
-        // No change actually happened, no reason to go any further
-        if (deltaY === 0 && deltaX === 0) {
-            return;
-        }
-
-        // Need to convert lines and pages to pixels if we aren't already in pixels
-        // There are three delta modes:
-        //   * deltaMode 0 is by pixels, nothing to do
-        //   * deltaMode 1 is by lines
-        //   * deltaMode 2 is by pages
-
-        // Store lowest absolute delta to normalize the delta values
-        absDelta = Math.max(Math.abs(deltaY), Math.abs(deltaX));
-
-        if (!lowestDelta || absDelta < lowestDelta) {
-            lowestDelta = absDelta;
-
-            // Adjust older deltas if necessary
-            if (absDelta % 120 === 0) {
-                lowestDelta /= 40;
-            }
-        }
-
-        // Adjust older deltas if necessary
-        if (absDelta % 120 === 0) {
-            // Divide all the things by 40!
-            delta /= 40;
-            deltaX /= 40;
-            deltaY /= 40;
-        }
-
-        // Get a whole, normalized value for the deltas
-        delta = Math[delta >= 1 ? 'floor' : 'ceil'](delta / lowestDelta);
-        deltaX = Math[deltaX >= 1 ? 'floor' : 'ceil'](deltaX / lowestDelta);
-        deltaY = Math[deltaY >= 1 ? 'floor' : 'ceil'](deltaY / lowestDelta);
-
-        // Add information to the event object
-        event.e.deltaX = deltaX;
-        event.e.deltaY = deltaY;
-        event.e.deltaFactor = lowestDelta;
-
-        // Go ahead and set deltaMode to 0 since we converted to pixels
-        // Although this is a little odd since we overwrite the deltaX/Y
-        // properties with normalized deltas.
-        event.e.deltaMode = 0;
-        // Add event and delta to the front of the arguments
-        args.unshift(event.e, delta, deltaX, deltaY);
-        handle(args);
-    };
-    if (this.s.addEventListener) {
-        for (var i = eventArray.length; i;) {
-            this.s.addEventListener(eventArray[--i], innerHandle, false);
-        }
-        return;
-    }
-    this.s.onmousewheel = innerHandle;
-};
-/*--------------------------select 控件相关---------------------------------------------*/
-Sparrow.prototype.addItem = function (text, value) {
-    if (this.s.tagName.toUpperCase() !== "SELECT") {
-        return;
-    }
-    if ($.isNullOrEmpty(value)) {
-        value = text;
-    }
-    var newoption = new Option(text, value);
-    if (!this.existItem(newoption))
-        this.s.options.add(newoption);
-};
-Sparrow.prototype.existItem = function (srcOption) {
-    var flag = false;
-    for (var j = 0; j < this.s.options.length; j++) {
-        if (srcOption.value === this.s.options[j].value)
-            flag = true;
-    }
-    return flag;
-};
-Sparrow.prototype.addItemToSelect = function (descSelect) {
-    var sparrowDescSelect = $(descSelect);
-    for (var i = 0; i < this.s.options.length; i += 1) {
-        if (!srcSelect.options[i].selected) {
-            continue;
-        }
-        var value = this.s.options[i].value;
-        var text = this.s.options[i].innerHTML;
-        var newoption = new Option(text, value);
-        if (!sparrowDescSelect.existItem(this.s.options[i]))
-            descSelect.options.add(newoption);
-    }
-};
-Sparrow.prototype.addAllItemToSelect = function (descSelect) {
-    var sparrowDescSelect = $(descSelect);
-    for (var i = 0; i < srcSelect.options.length; i += 1) {
-        var text = srcSelect.options[i].innerHTML;
-        var value = srcSelect.options[i].value;
-        var newoption = new Option(text, value);
-        if (!sparrowDescSelect.existItem(srcSelect.options[i]))
-            descSelect.options.add(newoption);
-    }
-};
-Sparrow.prototype.removeItem = function (isSubFirst) {
-    if (typeof (srcSelect) === "string") {
-        srcSelect = $(srcSelect);
-    }
-    var hasSelected = false;
-    for (var i = this.s.options.length - 1; i >= 0; i -= 1) {
-        if (this.s.options[i].selected) {
-            this.s.options.remove(i);
-            hasSelected = true;
-        }
-    }
-    if (isSubFirst !== false) {
-        if (hasSelected === false) {
-            this.s.options.remove(0);
-        }
-    }
-};
-Sparrow.prototype.removeAll = function () {
-    for (var i = this.s.options.length - 1; i >= 0; i -= 1) {
-        this.s.options.remove(i);
-    }
-};
-Sparrow.prototype.upDown = function (direction) {
-    if (this.s.selectedIndex < 0)
-        return;
-    if (direction < 0) {
-        if (this.s.selectedIndex === 0)
-            return;
-    } else {
-        if (this.s.selectedIndex === this.s.options.length - 1)
-            return;
-    }
-    var srcOption = this.s.options[this.s.selectedIndex];
-    var toOption = this.s.options[this.s.selectedIndex + direction];
-    var text = srcOption.text;
-    var value = srcOption.value;
-    srcOption.text = toOption.text;
-    srcOption.value = toOption.value;
-    toOption.text = text;
-    toOption.value = value;
-    this.s.selectedIndex += direction;
-};
-Sparrow.prototype.selectAll = function () {
-    for (var i = 0; i < this.s.options.length; i++) {
-        this.s.options[i].selected = true;
-    }
-};
-Sparrow.prototype.addJson = function (json, k, v) {
-    if (typeof(json) === "string") {
-        json = json.json();
-    }
-    if (json != null && json.length > 0) {
-        for (var j in json) {
-            this.addItem(json[j][v], json[j][k]);
-        }
-        return true;
-    }
-};
-Sparrow.message = function (content, srcElement) {
-    var id = "div_sparrow_msg";
-    var divmsg = $(id);
-    if (divmsg) {
-        divmsg.parentNode.removeChild(divmsg);
-    }
-    divmsg = $("+div." + id);
-    divmsg.s.style.cssText = "position:absolute;background-color:#cccccc;width:auto;padding:10px;text-align:left;";
-    divmsg.s.innerHTML = content;
-    divmsg.opacity(0);
-    document.body.appendChild(divmsg.s);
-    // 如果有事件源传递过来说明需要在事件触发源处显示提示信息
-    if (srcElement) {
-        var sparrowElement = $(srcElement);
-        divmsg.s.style.top = sparrowElement.getAbsoluteTop()
-            - divmsg.s.offsetHeight + "px";
-        divmsg.s.style.left = sparrowElement.getAbsoluteLeft()
-            - (divmsg.s.offsetWidth - srcElement.offsetWidth) / 2 + "px";
-    } else {
-        divmsg.center();
-    }
-    divmsg.move_end = function () {
-        this.s.parentNode.removeChild(this.s);
-    };
-    divmsg.animation("{opacity:100}", 30);
-};
-Sparrow.prototype.move = function (s) {
-  var status = s.json();
-  // console.log("move status ", status);
-  var _move = function (sparrowElement, start, end, percent, change) {
-    if ($.isNullOrEmpty(end)) {
-      return false;
-    }
-    var distance = parseInt(end, 10) - parseInt(start, 10);
-    var speed = distance * percent;
-    if (percent > 1) {
-      speed = distance > 0 ? percent : -percent;
-      if (Math.abs(distance) <= 1) {
-        sparrowElement.css(change, status.start, false);
-        return false;
-      }
-    } else {
-      speed = distance * percent;
-    }
-    if (typeof change === "function") {
-      change(sparrowElement.s, speed);
-    } else {
-      sparrowElement.css(change, speed, true);
-    }
-    if (Math.abs(distance) <= 1) {
-      return true;
-    }
-  };
-  var percent = status.percent;
-  if (!percent) {
-    percent = 0.05;
-  }
-  var end = _move(this, this.s.style.width, status.width, percent, "width");
-  if (!end) {
-    end = _move(this, this.s.style.height, status.height, percent, "height");
-  }
-  if (!end) {
-    end = _move(this, this.s.style.left, status.left, percent, "left");
-  }
-  if (!end) {
-    end = _move(this, this.s.style.top, status.top, percent, "top");
-  }
-  if (!end) {
-    end = _move(this, this.opacity(), status.opacity, percent, "opacity");
-  }
-  if (!end) {
-    return;
-  }
-  if (!$.isNullOrEmpty(status.width)) {
-    this.s.style.width = status.width;
-  }
-  if (!$.isNullOrEmpty(status.height)) {
-    this.s.style.height = status.height;
-  }
-  if (!$.isNullOrEmpty(status.left)) {
-    this.s.style.left = status.left;
-  }
-  if (!$.isNullOrEmpty(status.top)) {
-    this.s.style.top = status.top;
-  }
-  if (!$.isNullOrEmpty(status.opacity)) {
-    this.opacity(status.opacity);
-  }
-  if (parseInt(status.height, 10) === 0) {
-    this.s.style.display = "none";
-  }
-  this.stop();
-  this.move_end();
-  this.move_end = function () {};
-};
-Sparrow.prototype.move_end = function () {};
-
-Sparrow.prototype.stop = function () {
-  window.clearInterval(this.interval.pop());
-};
-Sparrow.prototype.animation = function (s, period) {
-  if (!period) {
-    period = 30;
-  }
-  this.s.style.display = "block";
-  this.stop();
-  var command = "$('" + this.selector + "').move(\"" + s + '");';
-  console.log("animation" + command);
-  this.interval.push(window.setInterval(command, period));
-};
-
-Sparrow.prototype.interlace = function (targetArray) {
-  if (!targetArray) {
-    targetArray = [
-      "{width:'0px',height:'0px'}",
-      "{top:'0px',height:'{0}',width:'{1}',left:'0px'}".format(
-        this.s.style.height,
-        this.s.style.width
-      ),
-      "{width:'{0}',height:'{1}'}".format(
-        this.s.style.width,
-        this.s.style.height
-      ),
-      "{top:'{0}',height:'0px',width:'0px',left:'{1}'}".format(
-        this.s.style.height,
-        this.s.style.width
-      ),
-    ];
-  }
-  var parentId = this.selector.substring(1);
-  $("!div." + parentId).each(function (i) {
-    this.style.position = "absolute";
-    if (i === 0) {
-      this.style.width = this.parentNode.style.width;
-      this.style.height = this.parentNode.style.height;
-    } else {
-      this.style.width = "0px";
-      this.style.height = "0px";
-      this.style.display = "none";
-      this.style.left = this.parentNode.style.width;
-      this.style.top = this.parentNode.style.height;
-    }
-  });
-  this.s.style.position = "relative";
-  this.s.style.overflow = "hidden";
-  this.s.onmouseover = function () {
-    $("!div." + this.id).each(function (i) {
-      $(this).animation(targetArray[i], 1);
-    });
-  };
-  this.s.onmouseout = function () {
-    $("!div." + this.id).each(function (i) {
-      $(this).animation(targetArray[i + 2], 1);
-    });
-  };
-};
-
-Sparrow.prototype.show = function () {
-  // 设置超出隐藏
-  this.s.style.overflow = "hidden";
-  // 如果默认是不显示或者第二次高度为0
-  var isHidden = this.s.style.display === "none" || this.s.offsetHeight === 0;
-  if (!isHidden) {
-    return;
-  }
-  // 记录当前被控控件的高度
-  if (this.height === undefined) {
-    this.s.style.display = "block";
-    this.height = this.s.offsetHeight + "px";
-    this.s.style.height = "0";
-  }
-  this.animation("{height:'" + this.height + "'}", 5);
-};
-Sparrow.prototype.hidden = function () {
-  if (!this.s) {
-    return;
-  }
-  if (!this.height) {
-    this.height = this.s.offsetHeight + "px";
-    this.s.style.height = this.height;
-  }
-  if (this.s.offsetHeight > 0) {
-    this.animation("{height:'0px'}", 5);
-  }
-};
-Sparrow.prototype.showHidden = function (descElement, config, all) {
-  if (!descElement) {
-    descElement = $(this.s.id + "_controlled");
-  }
-  if (!config) {
-    config = {
-      showText: "show",
-      hiddenText: "hidden",
-      showIco: "",
-      hiddenIco: "",
-    };
-  }
-  if (!all) {
-    all = {
-      show: true,
-      hidden: true,
-    };
-  }
-  // 设置超出隐藏
-  descElement.style.overflow = "hidden";
-  // 如果默认是不显示或者第二次高度为0
-  if (descElement.style.display === "none" || descElement.style.height === 0) {
-    if (!all.show) {
-      return;
-    }
-    // 记录当前被控控件的高度
-    if (this.s.tagName.toUpperCase() === "IMG") {
-      this.s.src = config.hiddenIco;
-      this.s.alt = config.hiddenText;
-    } else {
-      this.s.innerHTML = config.hiddenText;
-    }
-    $(descElement).show();
-    return;
-  }
-  if (!all.hidden) {
-    return;
-  }
-  $(descElement).hidden();
-  if (this.s.tagName === "img") {
-    this.s.src = config.showIco;
-    this.s.alt = config.showText;
-  } else {
-    this.s.innerHTML = config.showText;
-  }
-};
-
-Sparrow.showOrHiddenTag = function (tagArray, show, doc) {
-  if (!doc) {
-    doc = document;
-  }
-  for (var i = 0; i < tagArray.length; i++) {
-    var tagName = tagArray[i];
-    var tags = $("^" + tagName, null, doc);
-    if (tags === null || tags.length === 0) {
-      continue;
-    }
-    tags.each(function () {
-      this.zIndex = -1;
-      if (!show) {
-        this.style.visibility = "hidden";
-      } else {
-        this.style.visibility = "visible";
-      }
-    });
-  }
-};
-
-Sparrow.prototype.marque = function (direction, step, period, deviation) {
-  var status = null;
-  this.s.parentNode.style.position = "relative";
-  this.s.style.position = "absolute";
-  var containerHeight = this.s.parentNode.offsetHeight;
-  var contentHeight = this.s.offsetHeight;
-  switch (direction) {
-    case 0:
-      if (contentHeight <= containerHeight) return;
-      this.s.innerHTML += this.s.innerHTML;
-      var top = -contentHeight + "px";
-      if (!deviation) {
-        deviation = -3;
-      }
-      status =
-        "{top:'" + top + "',start:" + deviation + ",percent:" + step + "}";
-      break;
-    default:
-      break;
-  }
-  this.animation(status, period);
-};
-
 Sparrow.prototype.progressbar = function (callback, config) {
     var bar = $("+div");
     document.body.appendChild(bar.s);
@@ -3224,2145 +2784,6 @@ Sparrow.prototype.progressbar = function (callback, config) {
     };
     progress.remove = function () {
         document.body.removeChild(progress.s.parentNode);
-    };
-};
-/*
- * 垂直菜单 menu 与child的对应关系是以 menu.id+_child=child.id 对应
- * 水平菜单 用索引对应 因为html 结构决定
- * position[child.id]=child.position(height etc...)
- * */
-Sparrow.menu=function (obj, position,menuLink) {
-    this.config = // 菜单显示需要的常量配置
-    {
-        current_menu: null, //当前菜单
-        left_limit: -1,
-        period: 3,
-        frameDiv: null, // 菜单提示框的DIV
-        srcElement: null, // 事件源控件保存选中的提示结果
-        width: 300, // 提示框显示宽度
-        position: {},//高度
-        container: null, // 菜单显示的窗口
-        parent: null, // 父菜单
-        menu: [],
-        list: [],//水平菜单的列表 与menu 一一 对应
-        children: [],//快捷菜单隐藏时使用
-        brothers: []// 兄弟节点
-    };
-    this.obj = obj;
-    this.menuLink=menuLink;
-    //obj为leftMenu 则id默认为divLeftMenu
-    //for different obj in container
-    this.id = "div" + this.obj.firstCharUpperCase();
-    this.position = position ? position : "SIDE";// 位置默认右上角
-    $.global(obj, this);
-};
-Sparrow.menu.prototype.side = function () {
-    this.config.frameDiv = $("+div").s;
-    this.config.frameDiv.onmouseover = function (e) {
-        $.event(e).cancelBubble();
-    };
-    document.body.appendChild(this.config.frameDiv);
-    this.config.frameDiv.style.cssText = $.css.menu.frame.format(
-        this.config.width, 0, 0);
-    var menuHTML = [];
-    menuHTML.push('<ul style="{0}">'.format($.css.menu.ul
-        .format(this.config.width - 2)));
-    for (var i = 0; i < this.config.menu.length; i++) {
-        menuHTML
-            .push('<li style="{0}" {3}><a href="javascript:void(0);" onclick="{1}.itemClick({2});"  style="width:{4}px;display:inline-block;cursor:pointer"><span style="float:left">{5}</span><span  style="float:right;">{6}</span></a></li>'
-                .format(
-                    $.css.menu.li.format(this.config.width),
-                    this.obj,
-                    i,
-                    this.config.menu[i].more ? 'onmouseover="{0}.itemMore(this,{1});"'
-                        .format(this.obj, i)
-                        : '', this.config.width,
-                    this.config.menu[i].text,
-                    this.config.menu[i].more ? ">>" : ""));
-    }
-    menuHTML.push('</ul>');
-    this.config.frameDiv.innerHTML = menuHTML.join("");
-};
-Sparrow.menu.prototype.vertical = function () {
-    if (!$(this.id)) {
-        return;
-    }
-    var item = $("!div." + this.id);
-    var obj = this.obj;
-    item
-        .each(function (i) {
-            var menu = $.global(obj);
-            var item_link = $("!a", this)[0];
-            item_link.id = menu.id + "_" + menu.position + "_menu_" + i;
-            var child = $("!ul", this)[0];
-            if (child) {
-                child.id = item_link.id + "_child";
-                menu.config.position[child.id] = child.offsetHeight;
-                child.style.display = "none";
-                child.style.height = "0px";
-                $(child).bind("onmouseover", function (e) {
-                    $.event(e).cancelBubble();
-                });
-
-                $(item_link)
-                    .bind(
-                        "onclick",
-                        function (e) {
-                            $.event(e).cancelBubble();
-                            var child = $("#" + this.id + "_child");
-                            if (menu.config.current_menu != null) {
-                                return;
-                            }
-                            menu.config.current_menu = child;
-                            if(child.s.style.display==='block'){
-                                child.move_end = function () {
-                                    menu.config.current_menu=null;
-                                };
-                                child.animation("{height:'0px'}", menu.config.period);
-                            }
-                            else {
-                                child.s.style.display = "block";
-                                child.move_end = function () {
-                                    menu.config.current_menu=null;
-                                };
-                                child
-                                    .animation(
-                                        "{height:'"
-                                        + menu.config.position[child.s.id]
-                                        + "px'}",
-                                        menu.config.period);
-                            }
-                        });
-            }
-        });
-    var menuContainer=$("#"+this.id);
-    menuContainer.bind("onmouseover",function (e) {
-        $.event(e).cancelBubble();
-    })
-    $("#"+this.menuLink).bind("onmouseover",function (e) {
-        $.event(e).cancelBubble();
-        menuContainer.css("marginLeft","0px");
-    });
-    $(document).bind("onmouseover",function () {
-        menuContainer.css("marginLeft","-150px");
-    })
-};
-Sparrow.menu.prototype.dispose = function () {
-    if (this.config.frameDiv) {
-        document.body.removeChild(this.config.frameDiv);
-    }
-};
-Sparrow.menu.prototype.hidden = function () {
-    if (this.position === $.SIDE) {
-        if (!this.config.frameDiv) {
-            return;
-        }
-        this.config.frameDiv.style.display = "none";
-        // 隐藏其子菜单
-        for (var i = 0; i < this.config.children.length; i++) {
-            this.config.children[i].hidden();
-        }
-    }
-    if (this.position === $.HORIZONTAL) {
-        var menu = this;
-        if (this.config.current_menu == null) {
-            return;
-        }
-        $(this.config.current_menu.parentNode).stop();
-        $(this.config.current_menu.parentNode).move_end = function () {
-            menu.config.current_menu = null;
-        };
-        $(this.config.current_menu.parentNode).animation("{height:'0px'}",
-            this.config.period);
-    }
-};
-
-Sparrow.menu.prototype.show = function (srcElement, parentMenu) {
-    this.config.parent = parentMenu;
-    this.config.srcElement = srcElement;
-    var scrollTop = 0;
-    if (this.config.container)
-        scrollTop = this.config.container.scrollTop;
-    var left = $(this.config.srcElement).getAbsoluteLeft();
-    if (this.config.position === this.SIDE) {
-        left += this.config.srcElement.offsetWidth;
-    }
-    var top = $(this.config.srcElement).getAbsoluteTop()
-        - scrollTop;
-    this.config.frameDiv.style.left = left + "px";
-    this.config.frameDiv.style.top = (top - 2) + "px";
-    this.config.frameDiv.style.display = "block";
-    // 显示菜单同时隐藏子菜单
-    for (var i = 0; i < this.config.children.length; i++) {
-        this.config.children[i].hidden();
-    }
-    // 隐藏兄弟菜单
-    for (var i = 0; i < this.config.brothers.length; i++) {
-        this.config.brothers[i].hidden();
-    }
-};
-Sparrow.menu.prototype.itemClick = function (index) {
-    alert("click:" + this.config.menu[index].text);
-};
-Sparrow.menu.prototype.itemMore = function (srcElement, index) {
-    alert("more:" + this.config.menu[index].text);
-};
-Sparrow.menu.prototype.horizontal=function () {
-    if (!$(this.id)) {
-        return;
-    }
-    var div = $("!div." + this.id);
-    //初始化菜单
-    this.config.menu = $("!li", div[0]);
-    //初始化菜单对应的列表
-    this.config.list = $("!ul", div[1]);
-    this.config.left_limit = $("#" + this.id).getAbsoluteLeft();
-    if (this.config.position["height"] == null) {
-        this.config.position["height"] = 30;
-    }
-    var menu = $.global(this.obj);
-    $(document)
-        .bind("onmouseover", function () {
-            menu.hidden(this);
-        });
-    this.config.menu
-        .each(function (i) {
-            this.id = menu.obj + "_" + menu.position + "_menu_" + i;
-            //初始化list的位置和事件
-            var list = $(menu.config.list[i]);
-            list.s.style.cssText = "height:{0}px;overflow:hidden;width:{1}px;".format(list.s.offsetHeight, (list.s.offsetWidth+10));//加2误差
-            list.s.id = this.id + "_child";
-            list.bind("onmouseover", function (e) {
-                $.event(e).cancelBubble();
-            });
-
-            //初始化当前菜单的事件
-            $(this)
-                .bind(
-                    "onmouseover",
-                    function (e) {
-                        e = $.event(e);
-                        e.cancelBubble();
-                        if (e.srcElement.tagName !== "LI") {
-                            return;
-                        }
-                        var list = $(e.srcElement.id + "_child");
-                        if (menu.config.current_menu != null) {
-                            if (list === menu.config.current_menu) {
-                                return;
-                            }
-                            $(menu.config.current_menu).stop();
-                        }
-                        menu.config.current_menu = list;
-                        list.parentNode.style.height = "0";
-                        var top = ($(menu.id).offsetTop - $.win.getScrollTop());
-                        if (top <= 0) {
-                            top = 0;
-                        }
-                        list.parentNode.style.top = (top + menu.config.menu[0].offsetHeight - 8) + "px";
-                        if (list.getElementsByTagName("li").length > 0) {
-                            //显示当前list 并且隐藏其他列表
-                            menu.config.list.each(function () {
-                                this.style.display = "none";
-                            });
-                            list.style.display = "block";
-                            var left = parseInt(e.srcElement.offsetLeft, 10)
-                                - (parseInt(list.style.width, 10) - e.srcElement.offsetWidth) / 2;
-                            if (left < menu.config.left_limit) {
-                                left = menu.config.left_limit;
-                            }
-                            list.style.marginLeft = left + 'px';
-                            $(list.parentNode).stop();
-                            $(list.parentNode)
-                                .animation(
-                                    "{height:'"
-                                    + menu.config.position["height"]
-                                    + "px'}",
-                                    menu.config.period);
-                        }
-                    });
-        });
-};
-Sparrow.menu.prototype.init = function () {
-    if (this.position === $.SIDE) {
-        this.side();
-    }
-    else if (this.position === $.VERTICAL) {
-        this.vertical();
-    }
-    else if (this.position === $.HORIZONTAL) {
-       this.horizontal();
-    }
-};
-Sparrow.datePicker = function (pickerId) {
-    var dateFormat = Object();
-    dateFormat["yyyy年MM月dd日"] = new RegExp("^(\\d{4})年(\\d{2})月(\\d{2})日$",
-        "ig");
-    dateFormat["yyyy-MM-dd"] = new RegExp("^(\\d{4})-(\\d{2})-(\\d{2})$", "ig");
-    dateFormat["yyyy年MM月"] = new RegExp("^\\d{4}年\\d{2}月$", "ig");
-    dateFormat["yyyy-MM"] = new RegExp("^\\d{4}-\\d{2}$", "ig");
-    this.obj = pickerId;
-    this.currentDate = new Date();// 上一次验证通过的时间 文本框中则是当前选中的时间
-    this.pickerDiv = null;
-    this.config = {
-        format: dateFormat,
-        srcElement: null,
-        currentFMT: "yyyy-MM-dd",
-        maxDaysOfMonth: [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30,
-            31],
-        weekDay: ['日', '一', '二', '三', '四', '五', '六'],
-        month: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月',
-            '10月', '11月', '12月'],
-        minDate: null,
-        allowNull: false
-    };
-}
-// 判断是否为闰年年
-Sparrow.datePicker.prototype.isLeapYear = function (year) {
-    if (0 === year % 4 && ((year % 100 !== 0) || (year % 400 === 0))) {
-        return true;
-    }
-    return false;
-};
-// 闰年二月为29天
-Sparrow.datePicker.prototype.getMaxDaysOfMonth = function (year, month) {
-    if (month === -1) {
-        month = 11;
-    }
-    var maxDaysOfMonth = this.config.maxDaysOfMonth[month];
-    if ((month === 1) && this.isLeapYear(year)) {
-        maxDaysOfMonth += 1;
-    }
-    return maxDaysOfMonth;
-};
-Sparrow.datePicker.prototype.getFormatDate = function (yyyy, MM, dd) {
-    if (typeof (MM) == 'undefined' || typeof (dd) == 'undefined') {
-        var dateRegExp = this.config.format[this.config.currentFMT];
-        // 因为会出现1次错误一次正常情况
-        var dateGroup = dateRegExp.exec(this.config.srcElement.value);
-        if (dateGroup == null) {
-            dateGroup = dateRegExp.exec(this.config.srcElement.value);
-        }
-        if (dateGroup != null) {
-            var cMM = dateGroup[2];
-            var cdd = dateGroup[3];
-
-            if (!MM) {
-                MM = cMM - 1;
-            }
-            if (!dd) {
-                dd = cdd;
-            }
-        }
-    }
-    MM = parseInt(MM, 10);
-    dd = parseInt(dd, 10);
-    MM = MM + 1;
-    if (MM < 10)
-        MM = "0" + MM;
-    if (dd < 10)
-        dd = "0" + dd;
-    return this.config.currentFMT.replace("yyyy", yyyy).replace("MM", MM)
-        .replace("dd", dd);
-};
-
-// 初始化日期
-Sparrow.datePicker.prototype.init = function (yyyy, MM, dd) {
-    if (!yyyy) {
-        var currentDateTime = this.currentDate;
-        yyyy = currentDateTime.getFullYear();
-        MM = currentDateTime.getMonth();
-        dd = currentDateTime.getDate();
-    }
-    // 第一次加载时 如果yyyy-MM-dd不为空则设置当前时间
-    if (!this.pickerDiv) {
-        var sparrowElement = $(this.config.srcElement);
-        this.currentDate = new Date(yyyy, MM, dd);
-        this.pickerDiv = $("+div");
-        this.pickerDiv.s.id = this.obj;
-        this.pickerDiv.s.style.cssText = "position:absolute;display:none;text-align:center";
-        this.pickerDiv.s.style.left = sparrowElement.getAbsoluteLeft() + "px";
-        this.pickerDiv.s.style.top = (sparrowElement.getAbsoluteTop()
-            + this.config.srcElement.clientHeight) + "px";
-        this.pickerDiv.opacity(100);
-        document.body.appendChild(this.pickerDiv.s);
-        this.pickerDiv.s.onclick = function (e) {
-            $.event(e).cancelBubble();
-        };
-        this.config.srcElement.readOnly = "readonly";
-        var events = this.obj
-            + ".config.srcElement.onclick=function(e){$.event(e).cancelBubble();"
-            + this.obj + ".show();};" + this.obj
-            + ".config.srcElement.onchange=function(){" + this.obj
-            + ".validate();" + this.obj + ".init();};";
-
-        window.setTimeout(events, 0);
-    }
-
-    var maxDaysOfPreMonth = this.getMaxDaysOfMonth(yyyy, MM - 1);
-    var maxDaysOfMonth = this.getMaxDaysOfMonth(yyyy, MM);
-
-    var startDayOfMonth = new Date(yyyy, MM, 1).getDay();
-    var startDayOfPreMonth = maxDaysOfPreMonth
-        - (startDayOfMonth === 0 ? 7 : startDayOfMonth) + 1;
-    var datePickerHTML = [];
-    datePickerHTML
-        .push('<table class="pure-table pure-table-bordered">');
-    datePickerHTML.push('<tr>');
-    datePickerHTML
-        .push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(-1)">&lt;<a></td>'
-            .format(this.obj));
-    datePickerHTML
-        .push('<td colspan="3"><a onclick="{0}.initYear({1});" href="javascript:void(0)">{1}</a>年</td>'
-            .format(this.obj, yyyy));
-    datePickerHTML
-        .push('<td colspan="2"><a onclick="{0}.initMonth({2},{3});" href="javascript:void(0);">{1}</a></td>'
-            .format(this.obj, this.config.month[MM], yyyy, MM));
-    datePickerHTML
-        .push('<td><a  href="javascript:void(0);" onclick="{0}.changeMonth(1)">&gt;<a></td>'
-            .format(this.obj));
-    datePickerHTML.push('</tr>');
-    datePickerHTML.push('<tr>');
-    for (var i = 0; i < 7; i += 1) {
-        datePickerHTML.push('<td>{0}</td>'.format(this.config.weekDay[i]));
-    }
-    datePickerHTML.push('</tr>');
-    var tdIndex = 0;
-    datePickerHTML.push('<tr>');
-    for (var dayIndexOfPreMonth = startDayOfPreMonth; dayIndexOfPreMonth <= maxDaysOfPreMonth; dayIndexOfPreMonth += 1) {
-        datePickerHTML.push('<td><a  style="color:#ccc;">{0}</a></td>'
-            .format(dayIndexOfPreMonth));
-        tdIndex += 1;
-        if (tdIndex % 7 === 0) {
-            datePickerHTML.push('</tr>');
-            datePickerHTML.push('<tr>');
-        }
-    }
-    for (var dayIndexOfMonth = 1; dayIndexOfMonth <= maxDaysOfMonth; dayIndexOfMonth += 1) {
-        datePickerHTML
-            .push('<td><a href="javascript:void(0);" onclick="{0}.changeDate({1},{2},{3});">{3}</a></td>'
-                .format(this.obj, yyyy, MM, dayIndexOfMonth));
-        tdIndex += 1;
-        if (tdIndex % 7 === 0) {
-            datePickerHTML.push('</tr>');
-            datePickerHTML.push('<tr>');
-        }
-    }
-    var daysOfNextMonth = 7 - tdIndex % 7;
-    for (var dayIndexOfNextMonth = 1; dayIndexOfNextMonth <= daysOfNextMonth; dayIndexOfNextMonth += 1) {
-        datePickerHTML.push('<td><a  style="color:#ccc;">{0}</a></td>'
-            .format(dayIndexOfNextMonth));
-        tdIndex += 1;
-        if (tdIndex % 7 === 0) {
-            datePickerHTML.push('</tr>');
-            datePickerHTML.push('<tr>');
-        }
-    }
-    datePickerHTML.push('</tr>');
-    this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-    this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
-};
-Sparrow.datePicker.prototype.show = function () {
-    this.pickerDiv.s.style.display = "block";
-};
-Sparrow.datePicker.prototype.hidden = function () {
-    yyyy = this.currentDate.getFullYear();
-    MM = this.currentDate.getMonth();
-    dd = this.currentDate.getDate();
-    if (!this.config.allowNull && this.config.srcElement.value === "") {
-        this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
-    }
-    this.pickerDiv.s.style.display = "none";
-};
-// 初始化 年
-Sparrow.datePicker.prototype.initYear = function (yyyy) {
-    var startYear = yyyy - yyyy % 10;
-    if (startYear < 1900) {
-        startYear = 1900;
-    }
-
-    var endYear = startYear + 10;
-    var datePickerHTML = [];
-    datePickerHTML
-        .push('<table class="pure-table pure-table-bordered">');
-    datePickerHTML.push('<tr>');
-    datePickerHTML
-        .push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&lt;<a></td>'
-            .format(this.obj, yyyy - 10));
-    datePickerHTML.push('<td colspan="2">{0}-{1}</td>'.format(startYear,
-        endYear - 1));
-    datePickerHTML
-        .push('<td><a href="javascript:void(0);" onclick="{0}.initYear({1})">&gt;<a></td>'
-            .format(this.obj, yyyy < 1900 ? 1910 : yyyy + 10));
-    datePickerHTML.push('</tr>');
-    datePickerHTML.push('<tr>');
-    var index = 0;
-    for (var i = startYear - 1; i < endYear; i += 1) {
-        if (i === startYear - 1 || i === endYear) {
-            datePickerHTML.push('<td style="color:#ccc">{0}</td>'.format(i));
-        } else {
-            datePickerHTML
-                .push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1})">{1}</a></td>'
-                    .format(this.obj, i));
-        }
-        index++;
-        if (index % 4 === 0) {
-            datePickerHTML.push("</tr><tr>");
-        }
-    }
-    datePickerHTML.push('<td style="color:#ccc">{0}</td>'.format(endYear));
-    datePickerHTML.push('</tr>');
-    datePickerHTML.push('</table>');
-    this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-};
-// 初始化月
-Sparrow.datePicker.prototype.initMonth = function (yyyy, MM) {
-    if (!MM) {
-        MM = this.getCurrentDate().getMonth();
-    }
-    var datePickerHTML = [];
-    datePickerHTML
-        .push('<table  class="pure-table pure-table-bordered">');
-    datePickerHTML.push('<tr>');
-    datePickerHTML
-        .push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&lt;<a></td>'
-            .format(this.obj, yyyy - 1, MM));
-    datePickerHTML
-        .push('<td style="text-align:center;" colspan="2"><a href="javascript:void(0);" onclick="{0}.initYear({1})">{1}</a></td>'
-            .format(this.obj, yyyy));
-    datePickerHTML
-        .push('<td><a href="javascript:void(0);" onclick="{0}.initMonth({1},{2})">&gt;<a></td>'
-            .format(this.obj, yyyy + 1, MM));
-    datePickerHTML.push('</tr>');
-    datePickerHTML.push('<tr>');
-    var index = 0;
-    for (var i = 0; i < 12; i += 1) {
-        datePickerHTML
-            .push('<td><a href="javascript:void(0);" onclick="{0}.init({1},{2},{3})">{4}</a></td>'
-                .format(this.obj, yyyy, i, this.currentDate.getDate(),
-                    this.config.month[i]));
-        index++;
-        if (index % 4 === 0) {
-            datePickerHTML.push("</tr><tr>");
-        }
-    }
-    datePickerHTML.push('</tr>');
-    datePickerHTML.push('</table>');
-    this.pickerDiv.s.innerHTML = datePickerHTML.join("");
-    this.config.srcElement.value = this.getFormatDate(yyyy, MM);
-};
-Sparrow.datePicker.prototype.changeMonth = function (direction) {
-    var d = this.getCurrentDate();
-    var currentMonth = parseInt(d.getMonth(), 10) + direction;
-    var currentYear = parseInt(d.getFullYear(), 10);
-    var currentDay = parseInt(d.getDate(), 10);
-    if (direction === 1 && currentMonth === 12) {
-        currentMonth = 0;
-        currentYear = currentYear + 1;
-    } else if (direction === -1 && currentMonth === -1) {
-        currentMonth = 11;
-        currentYear = currentYear - 1;
-    }
-    this.config.srcElement.value = this.getFormatDate(currentYear, currentMonth, currentDay);
-    this.init(currentYear, currentMonth, currentDay);
-};
-Sparrow.datePicker.prototype.changeDate = function (yyyy, MM, dd) {
-    this.config.srcElement.value = this.getFormatDate(yyyy, MM, dd);
-    if (this.validate(yyyy, MM, dd)) {
-        this.currentDate = new Date(yyyy, MM, dd);
-    }
-    this.hidden();
-};
-Sparrow.datePicker.prototype.userValidate = null;
-
-Sparrow.datePicker.prototype.getCurrentDate = function () {
-    var dateRegExp = this.config.format[this.config.currentFMT];
-    // 因为会出现1次错误一次正常情况
-    var dateGroup = dateRegExp.exec(this.config.srcElement.value);
-    if (dateGroup == null) {
-        dateGroup = dateRegExp.exec(this.config.srcElement.value);
-    }
-    return new Date(dateGroup[1], parseInt(dateGroup[2], 10) - 1, dateGroup[3]);
-};
-
-Sparrow.datePicker.prototype.validate = function (yyyy, MM, dd) {
-    var result = true;
-    var selectedDate = null;
-
-    if (this.config.srcElement.value.trim() === "") {
-        if (this.config.allowNull) {
-            return true;
-        }
-        return false;
-    }
-
-    if (this.config.srcElement.value
-        .search(this.config.format[this.config.currentFMT]) === -1) {
-        $.message("请按【" + this.config.currentFMT + "】格式输入", this.config.srcElement);
-        return false;
-    }
-
-    if (!yyyy) {
-        var date = this.getCurrentDate();
-        yyyy = date.getFullYear();
-        MM = date.getMonth();
-        dd = date.getDate();
-    }
-
-    if (yyyy < 1900 || yyyy > 2099) {
-        $.m.show("年份超出范围！\n正确年份范围1900-2099", this.config.srcElement);
-        return false;
-    }
-    if (MM < 0 || MM > 12) {
-        $.m.show("月份超出范围!", this.config.srcElement);
-        return false;
-    }
-    if (dd < 0
-        || dd > this.getMaxDaysOfMonth(yyyy, MM)) {
-        $.m.show("日期范围超出!", this.config.srcElement);
-        return false;
-    }
-    selectedDate = new Date(yyyy, MM, dd);
-    if (this.config.minDate != null) {
-        var minDate = new Date(this.config.minDate.getFullYear(),
-            this.config.minDate.getMonth(), this.config.minDate
-                .getDate());
-        if (selectedDate < minDate) {
-            m.show("不允许小于"
-                + this.getFormatDate(minDate.getFullYear(), minDate
-                    .getMonth(), minDate.getDate()), this.config.srcElement);
-            return false;
-        }
-    }
-    if (this.userValidate) {
-        if (!this.userValidate()) {
-            return false;
-        }
-    }
-    this.currentDate = selectedDate;
-    return result;
-};
-﻿// 构造函数 objName:对象ID与对象同名；
-Sparrow.editor = function (objName, parentName) {
-    // 编辑器的对象名称与var Sparrow.editor=new Sparrow.editor("Sparrow.editor");一致.
-    this.obj = objName;
-    this.fullObjName = parentName ? (parentName + "." + objName) : objName;
-    // 编辑器的iframe框架对象
-    this.frame = null;
-    // config配置
-    this.config = {
-        cover_key: "Cover",
-        // 编辑器显示的样式 由config.tool.style.simple等进行配置
-        style: null,
-        //是否展示flash缩畧图
-        flash_thumbnail: true,
-        // iframe的ID
-        iframeId: null,
-        // 编辑器就对应的标题控件ID
-        titleCtrlId: "txtTitle",
-        // 要上传的编辑器内容控件ID
-        contentCtrlId: "hdnContent",
-        // 文字长度
-        wordCount: "spanWordCount",
-        // 提交按钮ID
-        submitButtonId: "btnSubmit",
-        // 打开下拉框时的window.setInterval对象
-        interval: null,
-        // 当前正在下拉的工具条边框ID
-        currentHtmlId: null,
-        // 创建的临时控件属性值
-        tempNodeAttribute: "i_temp_attribute",
-        // 编辑器容器 编辑器所要显示的位置，由父控件进行定位
-        container: {
-            // 父控件ID
-            id: null,
-            // 编辑器（包括工具条在内的）最大允许宽度
-            maxWidth: 900,
-            // 编辑器（包括工具条在内的）最小允许宽度
-            minWidth: 700
-        },
-        // 附件功能
-        attach: {
-            // 上传附件的关键字
-            key: "thread",
-            // 加载已经上传的附件的json格式列表
-            uploadedJson: "",
-            // 上传 图片的容器id
-            uploadImgContainerId: objName + "_uploadImgContainer",
-
-            localUploadImgTabId: objName + "_localUploadImgTab",
-            // 新建上传控件索引
-            index: 1,
-            // 已经上传的索引
-            uploadedIndex: 0,
-            // 设置currentUUID则默认执行对应的update.do事件
-            currentUUID: null,
-            // 事件url默认会根据currentUUID判断
-            actionUrl: null,
-            // 文件UUID 的控件name 通过tableID.getElementsByName获取
-            fileUUID: objName + "_fileUUID",
-            // 上传框架 name(上传iframe的id有用立即上传时会使用，保留不必删除)
-            iframeName: objName + "_fileUpload",
-            // 上传框架ID 创建时生成ID，{0}用format(this.config.attach.key)替换
-            iframeId: objName + ".{0}",
-            // 文件备注的 控件name
-            fileRemark: objName + "_fileRemark",
-            // 保存附件信息的隐藏控件id post到服务器端之后经过解析后入库保存需要手动在页面上配置
-            fileInfoId: objName + "_fileInfo",
-            // 编辑附件列表的table ID
-            tableId: objName + "_tabAttach",
-            // 文章编辑完成，准备要提交的form表单索引
-            formIndex: 0,
-            // 是否显示图片信息
-            showImageInfo: true,
-            // 待上传的控件ID数组
-            uploadingFileId: [],
-            // 最大允许上传文件数
-            maxAllowCount: 5
-        },
-        tool: {
-            // 工具条ID
-            id: objName + "_HtmlEditorToolBar",
-            // 工具条高度
-            height: 40,
-            // 工具条的位置
-            position: "top",
-            // 工具栏图标
-            icon: {
-                // icon背景颜色
-                backGroundColor: null,
-                // 图标容器ID
-                containerId: objName + "_tdEditorToolBar",
-                // 编辑器工具栏的icon图标所在路径
-                path: $.url.resource + "/images/sparrowEditor/"
-            },
-            // HTML与所见即所得界面切换配置
-            convertHTML: {
-                // 是否显示(允许)转换HTML
-                isConvert: true,
-                // 转换HTML按钮所在的td 的ID
-                ctrlId: objName + "_tdConvertHTMLID",
-                // 转换HTML按钮的宽度
-                ctrlWidth: 50
-            },
-            // 宽高调节
-            adjust: {
-                // 宽高是否可调节
-                adjustable: false,
-                // 调节控件宽度
-                width: 120
-            },
-            style: {
-                simple: [2, 3, 4, 13, 14, 15, 16, 21, 22, 23],
-                comment: [21, 23, 22],
-                list: [21, 22, 23]
-            },
-
-            toolBar: [
-                /* 1 */{
-                    left: -394,
-                    top: -8,
-                    width: 84,
-                    height: 24,
-                    title: "字号",
-                    cmd: "fontsize",
-                    htmlFrameId: "font_size",
-                    htmlheight: 315,
-                    htmlwidth: 170
-                },
-                /* 2 */{
-                    left: -310,
-                    top: -8,
-                    width: 82,
-                    height: 24,
-                    title: "字体",
-                    cmd: "fontname",
-                    htmlFrameId: "font_family",
-                    htmlheight: 360,
-                    htmlwidth: 130
-                },
-                /* 3 */{
-                    left: 2,
-                    top: -8,
-                    width: 26,
-                    height: 24,
-                    title: "加粗",
-                    cmd: "bold"
-                },
-                /* 4 */{
-                    left: -28,
-                    top: -7,
-                    width: 26,
-                    height: 24,
-                    title: "斜体",
-                    cmd: "italic"
-                },
-                /* 5 */{
-                    left: -56,
-                    top: -8,
-                    width: 26,
-                    height: 24,
-                    title: "下划线",
-                    cmd: "underline"
-                },
-                /* 6 */{
-                    left: -82,
-                    top: -8,
-                    width: 26,
-                    height: 24,
-                    title: "文字颜色",
-                    cmd: "forecolor",
-                    htmlFrameId: "FColor",
-                    htmlheight: 308,
-                    htmlwidth: 364
-                },
-                /* 7 */{
-                    left: -114,
-                    top: -8,
-                    width: 26,
-                    height: 24,
-                    title: "背景颜色",
-                    cmd: "BackColor",
-                    firefoxcmd: "hilitecolor",
-                    htmlFrameId: "HColor",
-                    htmlheight: 308,
-                    htmlwidth: 364
-                },
-                /* 8 */{
-                    split: '<img src="{0}icoBack.gif" style="background:url({0}ico.gif) -940px -8px;width:8px;height:24px;"/>'
-                },
-                /* 9 */{
-                    left: -144,
-                    top: -8,
-                    width: 26,
-                    height: 22,
-                    title: "左对齐",
-                    cmd: "justifyleft"
-                },
-                /* 10 */{
-                    left: -168,
-                    top: -8,
-                    width: 26,
-                    height: 22,
-                    title: "居中对齐",
-                    cmd: "justifycenter"
-                },
-                /* 11 */{
-                    left: -190,
-                    top: -8,
-                    width: 26,
-                    height: 22,
-                    title: "右对齐",
-                    cmd: "justifyright"
-                },
-                /* 12 */{
-                    left: -610,
-                    top: -8,
-                    width: 92,
-                    height: 22,
-                    title: "自动对齐",
-                    cmd: "justifyfull"
-                },
-                /* 13 */{
-                    split: '<img alt="" src="{0}icoBack.gif" style="background:url({0}ico.gif)-940px -8px;width:8px;height:24px;"/>'
-                },
-                /* 14 */{
-                    left: -562,
-                    top: -8,
-                    width: 26,
-                    height: 22,
-                    title: "编号",
-                    cmd: "InsertOrderedList"
-                },
-                /* 15 */{
-                    left: -588,
-                    top: -8,
-                    width: 26,
-                    height: 22,
-                    title: "项目符号",
-                    cmd: "InsertUnorderedList"
-                },
-                /* 16 */{
-                    left: -504,
-                    top: -8,
-                    width: 26,
-                    height: 22,
-                    title: "减少缩进",
-                    cmd: "outdent"
-                },
-                /* 17 */{
-                    left: -476,
-                    top: -8,
-                    width: 26,
-                    height: 22,
-                    title: "增加缩进",
-                    cmd: "indent"
-                },
-                /* 18 */
-                {
-                    split: ''
-                },
-                /* 19 */{
-                    left: -700,
-                    top: -7,
-                    width: 100,
-                    height: 22,
-                    title: "清除空格",
-                    cmd: "clearSpace"
-                },
-                /* 20 */
-                {
-                    left: -536,
-                    top: -9,
-                    width: 26,
-                    height: 20,
-                    title: "插入横线",
-                    cmd: "inserthorizontalrule"
-                },
-                /* 21 */{
-                    left: -273,
-                    top: -3,
-                    width: 34,
-                    height: 34,
-                    title: "插入超链接",
-                    cmd: "hyperLink",
-                    htmlFrameId: "HyperLink",
-                    htmlheight: 60,
-                    htmlwidth: 400,
-                    keepStatus: false
-                },
-                /* 22 */{
-                    left: -212,
-                    top: -3,
-                    width: 34,
-                    height: 34,
-                    title: "插入表情",
-                    cmd: "face",
-                    htmlFrameId: "face",
-                    htmlheight: 280,
-                    htmlwidth: 340
-                },
-                /* 23 */{
-                    left: -877,
-                    top: -3,
-                    width: 32,
-                    height: 34,
-                    title: "插入视频",
-                    cmd: "insertVideo",
-                    htmlFrameId: "video",
-                    htmlheight: 120,
-                    htmlwidth: 350
-                },
-                /* 24 */{
-                    left: -904,
-                    top: -3,
-                    width: 34,
-                    height: 34,
-                    title: "插入图片",
-                    cmd: "insertImage",
-                    htmlFrameId: "image",
-                    htmlheight: 260,
-                    htmlwidth: 520
-                }],
-            font_family: ["\u5b8b\u4f53", "\u9ed1\u4f53",
-                "\u96b6\u4e66", "\u6977\u4f53", "\u5e7c\u5706",
-                "Arial", "Impact", "Georgia", "Verdana",
-                "Courier New", "Times New Roman"],
-            font_size: [{
-                size: 1,
-                name: "1|8pt"
-            }, {
-                size: 2,
-                name: "2|10pt"
-            }, {
-                size: 3,
-                name: "3|12pt"
-            }, {
-                size: 4,
-                name: "4|14pt"
-            }, {
-                size: 5,
-                name: "5|18pt"
-            }, {
-                size: 6,
-                name: "6|24pt"
-            }, {
-                size: 7,
-                name: "7|36pt"
-            }],
-            face: [
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/01.gif",
-                    name: "呲牙"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/02.gif",
-                    name: "不嘛"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/03.gif",
-                    name: "哭泣"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/04.gif",
-                    name: "嘟嘟"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/05.gif",
-                    name: "嗯嗯"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/06.gif",
-                    name: "思考下"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/07.gif",
-                    name: "翻跟斗"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/08.gif",
-                    name: "我靠"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/09.gif",
-                    name: "扫射"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/10.gif",
-                    name: "嘘!"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/11.gif",
-                    name: "害羞"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/12.gif",
-                    name: "眯眯"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/13.gif",
-                    name: "求保佑"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/14.gif",
-                    name: "晕"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/15.gif",
-                    name: "来一拳"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/16.gif",
-                    name: "胜利"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/17.gif",
-                    name: "嚎叫"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/18.gif",
-                    name: "BIBI"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/19.gif",
-                    name: "哼哼"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/20.gif",
-                    name: "冷汗"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/21.gif",
-                    name: "泼墨"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/22.gif",
-                    name: "吐血"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/23.gif",
-                    name: "扣鼻子"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/24.gif",
-                    name: "挠挠脸"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/25.gif",
-                    name: "舔手指"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/26.gif",
-                    name: "吃饭啦"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/27.gif",
-                    name: "打哈欠"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/28.gif",
-                    name: "拜拜"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/29.gif",
-                    name: "抽一口"
-                },
-                {
-                    url: $.url.resource
-                        + "/images/sparrowEditor/face/30.gif",
-                    name: "杀死"
-                }]
-        }
-    };
-    this.attach = {
-        parentObject: null,
-        setParentObject: function (editor) {
-            this.parentObject = editor;
-        },
-        // 加载已经上传的文件信息
-        // /
-        // /fileKey文件标志键
-        // /如多个回复内容时，通过设置fileKey来分辨每个回复的附件
-        // /
-        loadAttach: function () {
-            var editor = this.parentObject;
-            //初始化图片的tabs
-            $('#tab' + editor.obj).tabs();
-            var uploadedFileList = editor.config.attach.uploadedJson
-                .json();
-            // 如果有已经上传的文件
-            if (uploadedFileList != null && uploadedFileList.length > 0) {
-                var imgContainer = $(editor.config.attach.uploadImgContainerId);
-                // 如果附件还未显示则重新加载
-                if (imgContainer == null) {
-                    editor.run('tool_' + 23 + '_' + editor.obj);
-                } else {
-                    if (imgContainer.innerHTML.trim() === "") {
-                        for (var i = uploadedFileList.length - 1; i >= 0; i--) {
-                            var clientFileName = uploadedFileList[i].clientFileName;
-                            var fileUrl = uploadedFileList[i].url;
-                            imgContainer.appendChild(getImgContainer(
-                                fileUrl, clientFileName, editor));
-                        }
-                    }
-                }
-            }
-        },
-        // 按一定格式拼写文件http的post请头信息。
-        // 服务器端接受后会进行解析 以当前编辑对象作为参数
-        collectFilePostInfo: function () {
-            var editor = this.parentObject;
-            // 当前编辑器的附件表格对象
-            var attachTable = $(editor.config.attach.tableId);
-            if (attachTable) {
-                // 获取当前编辑器的文件id
-                var fileUuidArray = $("&"
-                    + editor.config.attach.fileUUID);
-                // 获取当前编辑器的文件备注信息
-                var fileRemarkArray = $("&"
-                    + editor.config.attach.fileRemark);
-                var fileInfo = [];
-                for (var i = 0; i < fileUuidArray.length; i++) {
-                    if (fileUuidArray[i].value) {
-                        fileInfo.push(fileUuidArray[i].value + ":"
-                            + fileRemarkArray[i].value);
-                    }
-                }
-                return fileInfo.join();
-            } else {
-                return "";
-            }
-        },
-        // 验证方法
-        validate: function (validateConfig, nsOfLoginCallback) {
-            if (nsOfLoginCallback != null && !$.browser.isLogin()) {
-                $.user.login.dialog(nsOfLoginCallback);
-                return false;
-            }
-            return $.v.getValidateResult(validateConfig, false);
-        },
-        // 提交表单的私有方法 form action
-        _submit: function () {
-            // 收集需要上传的文件信息
-            $(this.parentObject.config.attach.fileInfoId).value = this.parentObject.attach
-                .collectFilePostInfo();
-            if (this.parentObject.config.attach.actionUrl) {
-                $.submit(
-                    this.parentObject.config.attach.actionUrl,
-                    this.parentObject.config.attach.formIndex);
-                return;
-            }
-            if (this.parentObject.config.attach.currentUUID) {
-                $.submit("update.do",
-                    this.parentObject.config.attach.formIndex);
-                return;
-            }
-            $.submit(
-                null,
-                this.parentObject.config.attach.formIndex);
-        },
-        // 表单提交的js方法 (需要显示调用)
-        submit: function (validateConfig, nsOfLoginCallback) {
-            // 获取当前编辑器
-            var editor = this.parentObject;
-            $(editor.config.contentCtrlId).value = editor.frame.contentWindow.document.body.innerHTML;
-            if (this.validate(validateConfig, nsOfLoginCallback)) {
-                // 直接提交
-                this._submit();
-            } else {
-                $(this.parentObject.config.submitButtonId).disabled = false;
-            }
-        },
-        // 将图片插入到编辑器
-        insertEditor: function (toolip, serverFileName) {
-            var editor = this.parentObject;
-            var insertHtml = '<img title="' + toolip + '"' + " src=\""
-                + serverFileName + "\"/>";
-            editor.createTempNode("span");
-            var face = editor.getTempNode();
-            face.innerHTML = insertHtml;
-            editor.removeElementById();
-        },
-        // 从服务器端删除附件
-        deleteOnServer: function (fileId, srcElement) {
-            var editor = this.parentObject;
-            if (window.confirm($.message.deleteFile)) {
-                $.ajax
-                    .json($.url.root + "/attach/delete.json", "uuid=" + fileUUID,
-                        function (result) {
-                            editor.attach
-                                .deleteImg($.ajax.srcElement);
-                            $.message("删除成功！");
-                        }, srcElement);
-            }
-        },
-        deleteImg: function (srcElement) {
-            $(srcElement.parentNode.parentNode
-                .removeChild(srcElement.parentNode));
-            if ($.file.wit) {
-                window.clearInterval($.file.wit);
-            }
-            if ($("divState")) {
-                document.body.removeChild($("divState"));
-            }
-        }
-    }
-};
-Sparrow.editor.editorArray = [];
-Sparrow.editor.uploadUrl = "http://upload.sparrowzoo.com"
-// 获取编辑中的对象通过控件ID
-Sparrow.editor.prototype.$ = function (id) {
-    return this.frame.contentWindow.document.getElementById(id);
-};
-Sparrow.editor.prototype.getTempNode = function (tagName) {
-    // document.createElementByTagName() 具有临时ID的标签一定会被清除
-    var tempNode = this.$(this.config.tempNodeAttribute);
-    if (tempNode) {
-        return tempNode;
-    }
-    // execCommand情况
-    else {
-        tagName = tagName ? tagName.toLowerCase()
-            : (($.browser.ie || $.browser.opera) ? "font"
-                : "span");
-        var tempAttributeValue = null;
-        var nodeArray = this.frame.contentWindow.document
-            .getElementsByTagName(tagName);
-        for (var i = nodeArray.length - 1; i >= 0; i--) {
-            if (tagName === "font" || tagName === "span") {
-                tempAttributeValue = ($.browser.ie || $.browser.opera) ? nodeArray[i].face
-                    : nodeArray[i].style.fontFamily;
-            } else if (tagName === "a") {
-                try {
-                    tempAttributeValue = nodeArray[i].href;
-                } catch (err) {
-                }
-            }
-            if (tempAttributeValue
-                && tempAttributeValue
-                    .indexOf(this.config.tempNodeAttribute) !== -1) {
-                nodeArray[i].id = this.config.tempNodeAttribute;
-                return nodeArray[i];
-                break;
-            }
-        }
-    }
-};
-Sparrow.editor.prototype.replaceTagWithInnerHTML = function (currentTag) {
-    if ($.browser.firefox) {
-        var range = this.getRange();
-        range.setStartBefore(currentTag);
-        var fragment = range.createContextualFragment(currentTag.innerHTML);
-        currentTag.parentNode.replaceChild(fragment, currentTag);
-    } else {
-        currentTag.outerHTML = currentTag.innerHTML;
-    }
-};
-Sparrow.editor.prototype.removeElementById = function () {
-    var currentCtrl = this.$(this.config.tempNodeAttribute);
-    this.replaceTagWithInnerHTML(currentCtrl);
-};
-Sparrow.editor.prototype.getBrief = function () {
-    var brief = null;
-    if ($.browser.ie) {
-        brief = this.frame.contentWindow.document.body.innerText.substring(0,
-            300);
-    } else {
-        brief = this.frame.contentWindow.document.body.textContent.length;
-    }
-    if (brief.length > 300) {
-        brief = brief.substring(0, 300);
-    }
-    return brief;
-};
-Sparrow.editor.prototype.getEditorContent = function () {
-    if (this.config.tool.convertHTML.isConvert) {
-        var tdconvertHTML = document.getElementById(this.config.tool.convertHTML.ctrlId);
-        if (tdconvertHTML.innerHTML !== "HTML") {
-            tdconvertHTML.innerHTML = "HTML";
-            document.getElementById(this.config.tool.icon.containerId).style.display = "block";
-            if ($.browser.ie) {
-                this.frame.contentWindow.document.body.innerHTML = this.frame.contentWindow.document.body.innerText;
-            } else {
-                this.frame.contentWindow.document.body.innerHTML = this.frame.contentWindow.document.body.textContent;
-            }
-        }
-    }
-    this.clear();
-    if (this.frame.contentWindow.document.body.innerHTML === "<br>"
-        || this.frame.contentWindow.document.body.innerHTML === "<br/>") {
-        return "";
-    }
-    return this.frame.contentWindow.document.body.innerHTML;
-};
-// iframe onload时执行
-Sparrow.editor.prototype.initContent = function () {
-    var contentCtrl = $(this.config.contentCtrlId);
-    if (contentCtrl != null) {
-        var content = contentCtrl.value;
-        this.setEditorContent(decodeURIComponent(content));
-    }
-    this.attach.setParentObject(this);
-    this.config.attach.uploadedJson = decodeURIComponent('');
-};
-Sparrow.editor.prototype.focus = function () {
-    this.frame.contentWindow.document.body.focus();
-};
-Sparrow.editor.prototype.setEditorContent = function (contentHtml) {
-    $(this.config.contentCtrlId).value = contentHtml;
-    if (this.frame == null) {
-        return;
-    }
-    this.frame.contentWindow.document.body.innerHTML = contentHtml;
-    this.updateWordCount();
-};
-Sparrow.editor.prototype.setEditorText = function (contentText) {
-    this.frame.contentWindow.document.body.innerText = contentText;
-    this.updateWordCount();
-};
-Sparrow.editor.prototype.getRange = function () {
-    this.frame.contentWindow.document.body.focus();
-    return ($.browser.ie ? this.frame.contentWindow.document.selection
-            .createRange()
-        : this.frame.contentWindow.getSelection().getRangeAt(0));
-};
-Sparrow.editor.prototype.m_over = function (srcObj) {
-    this.config.tool.icon.backGroundColor = srcObj.style.backgroundColor;
-    srcObj.style.backgroundColor = "#595959";
-    srcObj.style.cursor = "pointer";
-};
-Sparrow.editor.prototype.m_out = function (srcObj) {
-    srcObj.style.backgroundColor = this.config.tool.icon.backGroundColor;
-};
-Sparrow.editor.prototype.m_down = function (srcObj) {
-    var key = srcObj.id.split('_')[1];
-    srcObj.style.background = "url(" + this.config.tool.icon.path + "ico.gif) "
-        + (this.config.tool.toolBar[key].left + 1) + "px "
-        + (this.config.tool.toolBar[key].top + 1) + "px";
-};
-Sparrow.editor.prototype.m_up = function (srcObj) {
-    var key = srcObj.id.split('_')[1];
-    srcObj.style.background = "url(" + this.config.tool.icon.path + "ico.gif) "
-        + (this.config.tool.toolBar[key].left) + "px "
-        + (this.config.tool.toolBar[key].top) + "px";
-    this.run(srcObj.id);
-};
-Sparrow.editor.prototype.clearTag = function (tagName) {
-    var tags = this.frame.contentWindow.document.getElementsByTagName(tagName);
-    for (var i = tags.length - 1; i >= 0; i--) {
-        if (tags[i].innerHTML === "") {
-            tags[i].parentNode.removeChild(tags[i]);
-        }
-    }
-};
-Sparrow.editor.prototype.clear = function () {
-    this.clearTag("span");
-    this.clearTag("font");
-    this.clearTag("div");
-    this.clearTag("p");
-    try {
-        this.frame.contentWindow.document.body.innerHTML = this.frame.contentWindow.document.body.innerHTML
-            .replace(/&nbsp;+/g, " ").replace(/(<br>|<br\/>)+/g, "<br/>");
-    } catch (err) {
-    }
-    var tempNode = this.getTempNode() || this.getTempNode("a");
-    while (tempNode) {
-        if (tempNode.tagName.toLowerCase() == "a") {
-            if (tempNode.href.indexOf(this.config.tempNodeAttribute) == -1)
-                tempNode.removeAttribute("id");
-            else
-                this.removeElementById();
-        } else {
-            this.removeElementById();
-        }
-        tempNode = this.getTempNode() || this.getTempNode("a");
-    }
-};
-Sparrow.editor.prototype.createTempNode = function (newTagName) {
-    if (!newTagName) {
-        // a or span
-        newTagName = "a";
-    }
-    var range = this.getRange();
-    var rangeText = $.browser.ie ? range.text : range;
-    if (rangeText == "") {
-        var i_temp_node = document.createElement(newTagName);
-        if (newTagName == "a") {
-            i_temp_node.href = this.config.tempNodeAttribute;
-        } else {
-            i_temp_node.id = this.config.tempNodeAttribute;
-        }
-
-        if ($.browser.ie) {
-            i_temp_node.innerHTML = range.text;
-            range.pasteHTML(i_temp_node.outerHTML);
-        } else {
-            range.surroundContents(i_temp_node);
-        }
-    } else {
-        if (!newTagName || (newTagName.toLowerCase() == "a")) {
-            this.frame.contentWindow.document.execCommand("createLink", false,
-                this.config.tempNodeAttribute);
-        } else {
-            this.frame.contentWindow.document.execCommand("fontname", false,
-                this.config.tempNodeAttribute);
-        }
-    }
-};
-Sparrow.editor.prototype.findTagNode = function (tagName) {
-    tagName = tagName.toLowerCase();
-    var tagNode = null;
-    var currentSelectedElement = null;
-    try {
-        var range = this.getRange();
-
-        if ($.browser.ie) {
-            if (range.item) {
-                currentSelectedElement = range.item(0);
-            } else {
-                currentSelectedElement = range.parentElement();
-            }
-        } else {
-            if (range.startContainer.getElementsByTagName) {
-                var childNodes = range.startContainer
-                    .getElementsByTagName(tagName);
-                if (childNodes.length > 0) {
-                    currentSelectedElement = childNodes[0];
-                } else {
-                    currentSelectedElement = range.startContainer;
-                }
-            } else {
-                currentSelectedElement = range.startContainer;
-            }
-        }
-    } catch (err) {
-    }
-    if (currentSelectedElement.nodeName.toLowerCase() === tagName) {
-        tagNode = currentSelectedElement;
-    } else {
-        while (currentSelectedElement.nodeName.toLowerCase() !== "body") {
-            if (currentSelectedElement.nodeName.toLowerCase() === tagName) {
-                tagNode = currentSelectedElement;
-                break;
-            } else {
-                currentSelectedElement = currentSelectedElement.parentNode;
-            }
-        }
-    }
-    if (tagNode) {
-        tagNode.id = this.config.tempNodeAttribute;
-    }
-    return tagNode;
-};
-Sparrow.editor.prototype.run = function (srcElementId) {
-    var srcElement = $(srcElementId);
-    key = srcElement.id.split('_')[1];
-    this.frame.contentWindow.focus();
-    if (key == 0 || key == 1 || key == 5 || key == 6 || key == 20 || key == 21
-        || key == 22 || key == 23 || key == 24) {
-        clearHtmlFrame();
-        this.show(srcElement, key, this.config.tool.toolBar[key].htmlwidth,
-            this.config.tool.toolBar[key].htmlheight);
-    } else if (key == 18) {
-        this.frame.contentWindow.document.body.innerHTML = this.frame.contentWindow.document.body.innerHTML
-            .replace(/&nbsp;+/g, " ").replace(/(<br>|<br\/>)+/g, "<br/>");
-        this.clear();
-    } else {
-        this.frame.contentWindow.document.execCommand(
-            this.config.tool.toolBar[key].cmd, false, undefined);
-    }
-    this.frame.contentWindow.focus();
-};
-Sparrow.editor.prototype.callBackRun = function (key, e) {
-    e = e || window.event;
-    var srcObject = e.srcElement || e.target;
-    switch (key) {
-        case 21:
-            this.insertHyperLink();
-            break;
-        case 22:
-            this.insertFace(srcObject);
-            break;
-        case 23:
-            var result = this.insertVideo();
-            if (result == false) {
-                return;
-            }
-            break;
-        default:
-            var commandValue = srcObject.title;
-            var CMD = this.config.tool.toolBar[key].cmd;
-            if (this.config.tool.toolBar[key].firefoxcmd) {
-                CMD = $.browser.ie ? this.config.tool.toolBar[key].cmd
-                    : this.config.tool.toolBar[key].firefoxcmd;
-            }
-            this.frame.contentWindow.document.execCommand(CMD, false, commandValue);
-            break;
-    }
-    var listDiv = document.getElementById(this.config.currentHtmlId);
-    document.body.removeChild(listDiv);
-    this.config.currentHtmlId = null;
-};
-Sparrow.editor.prototype.show = function (srcObject, key, width, maxHeight) {
-    var sparrowObject = $(srcObject);
-    // 如果当前div菜单还存在则用样式隐藏
-    if (this.config.currentHtmlId) {
-        document.getElementById(this.config.currentHtmlId).style.display = "none";
-        this.config.currentHtmlId = null;
-    }
-    var htmlFrameId = this.obj + "_"
-        + this.config.tool.toolBar[key].htmlFrameId;
-    var listDiv = document.getElementById(htmlFrameId);
-    // 如果是第一次显示div菜单则创建DIV
-    if (!listDiv) {
-        listDiv = document.createElement("DIV");
-        listDiv.id = htmlFrameId;
-        document.body.appendChild(listDiv);
-    }
-    listDiv.style.cssText = "display:block;position:absolute;width:"
-        + width
-        + "px;height:0px;border:#595959 1px solid;background:#ffffff; padding:1px;text-align:center;";
-    listDiv.onclick = function (e) {
-        $.event(e).cancelBubble();
-    };
-    var leftPosition = sparrowObject.getAbsoluteLeft()
-        - (width - srcObject.offsetWidth) / 2;
-    var left = $(srcObject.parentNode).getAbsoluteLeft();
-    if (leftPosition < left)
-        leftPosition = left;
-    listDiv.style.left = leftPosition + "px";
-    listDiv.style.top = (sparrowObject.getAbsoluteTop() + srcObject.offsetHeight)
-        + "px";
-    this.config.interval = window.setInterval(this.fullObjName + ".intervalShow(" + key
-        + "," + maxHeight + ")", 10);
-};
-Sparrow.editor.prototype.intervalShow = function (key, maxHeight) {
-    var listDiv = document.getElementById(this.obj + "_"
-        + this.config.tool.toolBar[key].htmlFrameId);
-    // var divWidth = parseInt(listDiv.style.width.replace("px", ""));
-    var divHeight = listDiv.clientHeight + 15;
-    if (divHeight >= maxHeight) {
-        window.clearInterval(this.config.interval);
-        // 如果是第一次加载或者第二次以上重复加载并要求不保留状态的
-        if (listDiv.innerHTML.trim() == ""
-            || this.config.tool.toolBar[key].keepStatus == false) {
-            listDiv.innerHTML = this.getHtml(key);
-        }
-        if (key == 20) {
-            $(this.obj + "_txtURL").focus();
-        } else if (key == 22) {
-            $(this.obj + "_txtVideo").focus();
-        } else if (key == 23) {
-            this.attach.setParentObject(this);
-            // load 原有文件
-            this.attach.loadAttach(this.config.attach.key);
-        }
-        this.config.currentHtmlId = listDiv.id;
-    } else {
-        listDiv.style.height = divHeight + "px";
-    }
-};
-Sparrow.editor.prototype.getHtml = function (key) {
-    var HTML = [];
-    switch (key) {
-        case 0:
-            HTML
-                .push('<ul style="list-style-type:none;text-align:left;margin:0;padding:0;">');
-            for (var i = 0; i < this.config.tool.font_size.length; i++) {
-                HTML
-                    .push('<li unselectable="on" onclick="'
-                        + this.fullObjName
-                        + '.callBackRun('
-                        + key
-                        + ',event);" style="border-bottom:#ccc 1px dotted;padding:5px;cursor:pointer;font-size:'
-                        + this.config.tool.font_size[i].name.split("|")[1]
-                        + ';width:auto;" title="'
-                        + Math.round(this.config.tool.font_size[i].size)
-                        + '">' + this.config.tool.font_size[i].name
-                        + '</li>');
-            }
-            HTML.push("</ul>");
-            break;
-        case 1:
-            HTML
-                .push('<ul style="line-height:25px; list-style-type:none;margin:0;padding:0;">');
-            for (i = 0; i < this.config.tool.font_family.length; i++) {
-                HTML
-                    .push('<li unselectable="on" onclick="'
-                        + this.fullObjName
-                        + '.callBackRun('
-                        + key
-                        + ',event);" title="'
-                        + this.config.tool.font_family[i]
-                        + '" style="border:#ccc 1 dotted;padding:3px;cursor:pointer;font-family:'
-                        + this.config.tool.font_family[i] + "\">"
-                        + this.config.tool.font_family[i] + "</li>");
-            }
-            HTML.push('</ul>');
-            break;
-        case 5:
-        case 6:
-            var color = ["00", "33", "66", "99", "cc", "ff"];
-            var index = 0;
-            for (var i = 0; i < 6; i += 1) {
-                for (var j = 0; j < 6; j += 1) {
-                    for (var k = 0; k < 6; k += 1) {
-                        var c = "#" + color[i] + color[j] + color[k];
-                        HTML.push('<img src="' + this.config.tool.icon.path
-                            + 'icoBack.gif" onclick="' + this.fullObjName
-                            + '.callBackRun(' + key + ',event); " title="' + c
-                            + '" style="background:' + c
-                            + ';width:20px;height:20px;cursor:pointer"/>');
-                        index += 1;
-                        if ((index % 18) === 0) {
-                            HTML.push("<br/>");
-                        }
-                    }
-                }
-            }
-            break;
-        case 20:
-            var hyperLink = this.findTagNode("a");
-            var url = "";
-            var hasLink = false;
-            if (hyperLink != null) {
-                url = hyperLink.href.substring(7);
-                hasLink = true;
-            } else {
-                this.createTempNode("a");
-            }
-            HTML
-                .push('<label>\u94fe\u63a5\u5730\u5740</label><input class="pure-input-1" onkeyup="if(this.value.substring(0,7)!=\'http://\'){this.value=\'http://\'}" value="http://'
-                    + url
-                    + '" type="text" id="'
-                    + this.obj
-                    + '_txtURL" />  <input class="pure-button pure-button-primary" type="button" value="\u786e\u5b9a" id="ok" onclick="if(document.getElementById(\''
-                    + this.obj
-                    + '_txtURL\').value==\'http://\'&&'
-                    + !hasLink
-                    + '){alert(\'\u8bf7\u8f93\u5165\u6b63\u786e\u7684url\u5730\u5740\');}else{'
-                    + this.fullObjName + '.callBackRun(21,event);}" />');
-            break;
-        case 21:
-            this.createTempNode("span");
-            var col = 6;
-            var row = Math.ceil(this.config.tool.face.length / col);
-            HTML
-                .push('<table style="width:'
-                    + this.config.tool.toolBar[key].htmlwidth
-                    + 'px; border-collapse:collapse;" id="divFace" cellpadding="1" cellspacing="0">');
-            var index = 0;
-            for (i = 0; i < row; i++) {
-                HTML.push('<tr>');
-                for (j = 0; j < col; j++) {
-                    if (index < this.config.tool.face.length) {
-                        HTML.push('<td><img style="cursor: pointer;" title="'
-                            + this.config.tool.face[index].name + '" src="'
-                            + this.config.tool.face[index].url + '" onclick="'
-                            + this.fullObjName + '.callBackRun(22,event);" /></td>');
-                    } else {
-                        HTML.push('<td></td>');
-                    }
-                    index++;
-                }
-                HTML.push('</tr>');
-            }
-            HTML.push('</table>');
-            break;
-        case 22:
-            this.createTempNode("span");
-            HTML.push('<label>FLASH视频URL</label><input class="pure-input-rounded" id="' + this.obj
-                + '_txtVideo" type="text"/><br/><span id="' + this.obj
-                + '_spanVideoErrorMessage"></span><br/>');
-            HTML.push('<input value="插入视频" class="pure-button pure-button-primary" type="button" onclick="' + this.fullObjName
-                + '.callBackRun(23,event);"/>');
-            break;
-        case 23:
-            this.createTempNode("span");
-            HTML.push('<div  id="tab' + this.obj + '" class="tab">');
-            HTML.push('<div class="pure-menu pure-menu-horizontal">');
-            HTML.push('<ul class="pure-menu-list" style="width: 100%;">');
-
-            HTML.push('<li class="pure-menu-item pure-menu-selected">');
-            HTML.push('<a target="_self" href="javascript:void(0);" class="pure-menu-link">');
-            HTML.push('<span>本地图片</span>');
-            HTML.push('</a>');
-            HTML.push('</li>');
-
-            HTML.push('<li class="pure-menu-item">');
-            HTML.push('<a target="_self" href="javascript:void(0);" class="pure-menu-link">');
-            HTML.push('<span>网络图片</span>');
-            HTML.push('</a>');
-            HTML.push('</li>');
-            HTML.push('</ul>');
-            HTML.push('</div>');
-            HTML.push('<div class="tab-content">');
-
-            // 插入本地图片
-            HTML.push('<div id="' + this.config.attach.key
-                + this.config.attach.localUploadImgTabId + '" class="block">');
-            HTML
-                .push('<div style="width:100%;height:auto;overflow:hidden;padding:2px;" id="'
-                    + this.config.attach.uploadImgContainerId + '"></div>');
-            HTML.push('<iframe name="' + this.config.attach.iframeName + '" id="'
-                + this.config.attach.iframeId.format(this.config.attach.key)
-                + '" class="file-frame" frameborder="0"');
-            HTML.push(' src="' + $.editor.uploadUrl + '/file-upload?path-key='
-                + this.config.attach.key + '&editor=' + this.fullObjName + '"></iframe><br/>');
-            HTML.push('</div>');
-            // 插入本地图片结束
-
-            // 插入网络图片
-            HTML.push('<div class="none">');
-            HTML.push('图片URL:<input style="width:300px;" id="' + this.obj
-                + '_txtImage" type="text"/><br/><span id="' + this.obj
-                + '_spanImageErrorMessage"></span><br/>');
-            HTML.push('<input value="插入图片" type="button" onclick="' + this.fullObjName
-                + '.insertImage();"/>');
-            HTML.push('</div>');
-            // 网络图片插入结束
-
-            HTML.push('</div>');
-            HTML.push('</div>');
-    }
-    return HTML.join("");
-};
-Sparrow.editor.prototype.adjust = function (style, obj) {
-    try {
-        if (style === "width") {
-            var objWidth = parseInt(obj.value);
-            if (objWidth > this.config.container.maxWidth) {
-                alert('\u7f16\u8f91\u5668\u6700\u5927\u5bbd\u5ea6:'
-                    + this.config.container.maxWidth + 'px');
-                obj.value = this.config.container.maxWidth + "px";
-            } else {
-                if (objWidth < this.config.container.minWidth) {
-                    alert("\u7f16\u8f91\u5668\u6700\u5c0f\u5bbd\u5ea6:"
-                        + this.config.container.minWidth + 'px');
-                    obj.value = this.config.container.minWidth + "px";
-                }
-            }
-            document.getElementById(this.config.container.id).style.width = obj.value;
-            var editorToolBarTDWidth = parseInt(obj.value)
-                - this.config.tool.convertHTML.ctrlWidth;
-            if (this.config.tool.adjust.adjustable) {
-                editorToolBarTDWidth = editorToolBarTDWidth
-                    - this.config.tool.adjust.width;
-            }
-            document.getElementById(this.config.tool.id).style.width = obj.value;
-            document.getElementById(this.config.tool.id).style.width = editorToolBarTDWidth;
-        } else {
-            document.getElementById(this.config.container.id).style.height = obj.value;
-        }
-    } catch (ex) {
-        if (style === "width") {
-            obj.value = document.getElementById(this.config.container.id).style.width;
-        } else {
-            obj.value = document.getElementById(this.config.container.id).style.height;
-        }
-    }
-    this.autoAdjust(document.getElementById(this.config.iframeId));
-};
-Sparrow.editor.prototype.autoAdjust = function (obj) {
-    var parentDivHeight = parseInt(document
-        .getElementById(this.config.container.id).style.height);
-    var toolBarHeight = document.getElementById(this.config.tool.id).clientHeight + 10;
-    obj.style.height = parentDivHeight - toolBarHeight;
-};
-Sparrow.editor.prototype.convertHTML = function (obj) {
-    this.clear();
-    if (obj.innerHTML === "HTML") {
-        obj.innerHTML = "\u8fd4\u56de";
-        obj.title = "\u8fd4\u56de\u6240\u89c1\u5373\u6240\u5f97\u6a21\u5f0f";
-        document.getElementById(this.config.tool.icon.containerId).style.display = "none";
-        if ($.browser.ie) {
-            this.frame.contentWindow.document.body.innerText = this.frame.contentWindow.document.body.innerHTML;
-        } else {
-            this.frame.contentWindow.document.body.textContent = this.frame.contentWindow.document.body.innerHTML;
-        }
-    } else {
-        obj.innerHTML = "HTML";
-        document.getElementById(this.config.tool.icon.containerId).style.display = "block";
-        if ($.browser.ie) {
-            this.frame.contentWindow.document.body.innerHTML = this.frame.contentWindow.document.body.innerText;
-        } else {
-            this.frame.contentWindow.document.body.innerHTML = this.frame.contentWindow.document.body.textContent;
-        }
-    }
-};
-Sparrow.editor.prototype.insertVideo = function () {
-    var result = false;
-    var videoURL = document.getElementById(this.obj + "_txtVideo").value;
-    var errorMessage = $(this.obj + "_spanVideoErrorMessage");
-    if (videoURL.trim() === "") {
-        errorMessage.className = "error";
-        errorMessage.innerHTML = "请输入视频地址<br/>例:http://player.youku.com/player.php/sid/sparrow/v.swf";
-    } else if (videoURL.search(/^[http:\/\/][^<]*\.swf[^<]*/) === -1) {
-        errorMessage.className = "error";
-        errorMessage.innerHTML = "请输入正确的视频地址。例:http://player.youku.com/player.php/sid/sparrow/v.swf";
-    } else {
-        var tempNode = this.getTempNode();
-        var flashUrl = document.getElementById(this.obj + "_txtVideo").value;
-        var editor = this;
-        var videoHtml;
-        if (this.config.flash_thumbnail) {
-            //直接可播放为了预览视频效果 展示时通过正则转换成 image
-            $.ajax
-                .json($.url.root + "/attach/getFlashThumbnail.json", "parameter=" + encodeURIComponent(flashUrl),
-                    function (result) {
-                        videoHtml = result.message;
-                        if (tempNode) {
-                            tempNode.innerHTML = videoHtml;
-                            editor.removeElementById();
-                        } else {
-                            editor.frame.contentWindow.document.body.innerHTML += videoHtml;
-                        }
-                    });
-        } else {
-            videoHtml = '<embed src="{0}" quality="high" wmode="opaque" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="500" height="500"/>'.format(flashUrl);
-            if (tempNode) {
-                tempNode.innerHTML = videoHtml;
-                this.removeElementById();
-            } else {
-                this.frame.contentWindow.document.body.innerHTML += videoHtml;
-            }
-        }
-        result = true;
-    }
-    return result;
-};
-Sparrow.editor.prototype.insertImage = function () {
-    var imageURL = document.getElementById(this.obj + "_txtImage").value;
-    var errorMessage = $(this.obj + "_spanImageErrorMessage");
-    if (imageURL.trim() === "") {
-        errorMessage.className = "error";
-        errorMessage.innerHTML = "请输入图片地址<br/>例:" + $.url.resource
-            + "/img.jpg<br/>格式限制:gif|jpg|png";
-    } else if (imageURL.search(/^http:\/\/.*?\.(jpg|gif|png)$/) == -1) {
-        errorMessage.className = "error";
-        errorMessage.innerHTML = "请输入图片地址<br/>例:" + $.url.resource
-            + "/img.jpg<br/>格式限制:gif|jpg|png";
-    } else {
-        var editor = this;
-        $.ajax.json($.url.root + '/attach/downloadInternetPic.json', "imageUrl=" + imageURL,
-            function (result) {
-                $(editor.config.attach.uploadImgContainerId).appendChild(
-                    getImgContainer(result.message,
-                        imageURL, editor));
-                editor.attach.insertEditor($.file.getFileName(imageURL),
-                    result.message);
-            });
-    }
-};
-Sparrow.editor.prototype.insertFace = function (srcObject) {
-    var face = this.getTempNode();
-    if (face) {
-        face.innerHTML = "<img src=\"" + srcObject.src + "\"/>";
-        if ($(this.config.titleCtrlId)
-            && $(this.config.titleCtrlId).value === "") {
-            $(this.config.titleCtrlId).value = srcObject.title;
-        }
-        this.removeElementById();
-        return;
-    }
-    this.frame.contentWindow.document.execCommand("insertImage", false,
-        srcObject.src);
-};
-Sparrow.editor.prototype.insertHyperLink = function () {
-    var hyperLink = this.getTempNode("a");
-    var txtURL = document.getElementById(this.obj + "_txtURL").value;
-    if (!hyperLink) {
-        return
-    }
-
-    if (txtURL === "http://") {
-        if (window
-            .confirm("\u60a8\u786e\u8ba4\u8981\u53d6\u6d88\u94fe\u63a5\u5417?")) {
-            this.removeElementById();
-        }
-    } else {
-        if (hyperLink.innerHTML === "") {
-            hyperLink.innerHTML = txtURL;
-        }
-        hyperLink.removeAttribute("id");
-        hyperLink.setAttribute("target", "blank");
-        hyperLink.setAttribute("href", txtURL);
-    }
-};
-Sparrow.editor.prototype.initialize = function (containerId) {
-    $.global(this.obj, this);
-    $.editor.editorArray.push(this);
-    this.config.container.id = containerId;
-    var iframeId = "iframe" + $.random();
-    this.config.iframeId = iframeId;
-    document.getElementById(containerId).innerHTML =
-        this.config.tool.position == "top" ? (this
-                .initTool() + this.initEditor(iframeId))
-            : (this.initEditor(iframeId) + this.initTool());
-    this.frame = document.getElementById(iframeId);
-    this.frame.contentWindow.document.open();
-    this.frame.contentWindow.document
-        .write('<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">');
-    this.frame.contentWindow.document
-        .write('<html><body id="' + this.obj + '" style="width:100%;height:{0}px;" contenteditable="true"></body></html>'
-            .format($(iframeId).offsetHeight));
-    this.frame.contentWindow.document.close();
-    // 兼容flash能够正常播放
-    // this.Frame.contentWindow.document.designMode = "on";
-    if ($.browser.ie) {
-        this.frame.contentWindow.document.onclick = clearHtmlFrame;
-        this.frame.contentWindow.document.onkeyup = this.updateWordCount;
-        return;
-    }
-    try {
-        this.frame.contentWindow.document.addEventListener("click",
-            clearHtmlFrame, true);
-        this.frame.contentWindow.document.addEventListener("keyup",
-            this.updateWordCount, true);
-    } catch (e) {
-    }
-};
-Sparrow.editor.prototype.initTool = function () {
-    var key = 0;
-    var toolHTML = [];
-    var toolBarList = null;
-    // icon图标工具栏的宽度
-    toolHTML.push('<div class="pure-u-18-24" id="' + this.config.tool.icon.containerId + '" style="text-align:left;">');
-    if (this.config.style != null) {
-        // 保留以后扩展使用
-        if (this.config.style === "simple") {
-            toolBarList = this.config.tool.style.simple;
-        } else if (this.config.style === "comment") {
-            toolBarList = this.config.tool.style.comment;
-        } else if (this.config.style === "thread") {
-            toolBarList = this.config.tool.style.list;
-        }
-        for (var i = 0; i < toolBarList.length; i++) {
-            key = toolBarList[i];
-            if (typeof (this.config.tool.toolBar[key].split) != "undefined") {
-                toolHTML.push(this.config.tool.toolBar[key].split
-                    .format(this.config.tool.icon.path));
-            } else {
-                toolHTML.push('<img id="tool_' + key + '_' + this.obj
-                    + '" src="' + this.config.tool.icon.path
-                    + 'icoBack.gif"');
-                toolHTML.push(' title="' + this.config.tool.toolBar[key].title);
-                toolHTML.push('" style="background:url(\''
-                    + this.config.tool.icon.path + 'ico.gif\') ');
-                toolHTML.push(this.config.tool.toolBar[key].left + 'px '
-                    + this.config.tool.toolBar[key].top + 'px;width:'
-                    + this.config.tool.toolBar[key].width + 'px;height:'
-                    + this.config.tool.toolBar[key].height + 'px"');
-                toolHTML.push(' onmouseover="' + this.fullObjName
-                    + '.m_over(this);" onmouseout="' + this.fullObjName
-                    + '.m_out(this);"' + ' onmousedown="' + this.fullObjName
-                    + '.m_down(this);" onmouseup="' + this.fullObjName
-                    + '.m_up(this);"');
-                toolHTML.push('/>');
-            }
-        }
-    } else {
-        for (var key in this.config.tool.toolBar) {
-            if (typeof (this.config.tool.toolBar[key].split) != "undefined") {
-                toolHTML.push(this.config.tool.toolBar[key].split
-                    .format(this.config.tool.icon.path));
-            } else {
-                toolHTML.push('<img id="tool_' + key + '" src="'
-                    + this.config.tool.icon.path + 'icoBack.gif"');
-                toolHTML.push(' title="' + this.config.tool.toolBar[key].title);
-                toolHTML.push('" style="background:url(\''
-                    + this.config.tool.icon.path + 'ico.gif\') ');
-                toolHTML.push(this.config.tool.toolBar[key].left + 'px '
-                    + this.config.tool.toolBar[key].top + 'px;width:'
-                    + this.config.tool.toolBar[key].width + 'px;height:'
-                    + this.config.tool.toolBar[key].height + 'px"');
-                toolHTML.push(' onmouseover="' + this.fullObjName
-                    + '.m_over(this);" onmouseout="' + this.fullObjName
-                    + '.m_out(this);" onmousedown="' + this.fullObjName
-                    + '.m_down(this);" onmouseup="' + this.fullObjName
-                    + '.m_up(this);"');
-                toolHTML.push('/>');
-            }
-        }
-    }
-    toolHTML.push('</div>');
-    if (this.config.tool.convertHTML.isConvert) {
-        toolHTML
-            .push('<div align="center" id="'
-                + this.config.tool.convertHTML.ctrlId
-                + '" class="pure-u-2-24" " onclick="' + this.fullObjName
-                + '.convertHTML(this);">HTML</div>');
-    }
-    if (this.config.tool.adjust.adjustable) {
-        var container = document.getElementById(this.config.container.id);
-        toolHTML
-            .push('<div align="center" title="\u5728\u6b64\u8c03\u6574\u7f16\u8f91\u5668\u5927\u5c0f\u3002\u9f20\u6807\u79bb\u5f00\u5373\u751f\u6548\u3002" ' +
-                'class="pure-u-4-24 pure-form pure-form-aligned" '
-                + this.config.tool.adjust.width
-                + 'px;"><input onblur="'
-                + this.fullObjName
-                + '.adjust(\'width\',this);" style="height: 30px;" placeholder="width" class="pure-input-rounded pure-input-1" type="text" value="'
-                + container.style.width
-                + '"/><input onblur="'
-                + this.fullObjName
-                + '.adjust(\'height\',this);" style="height: 30px;" placeholder="height" class="pure-input-rounded pure-input-1" type="text" value="'
-                + container.style.height + '"/></div>');
-    }
-    return '<div class="pure-g tool-bar" id="' + this.config.tool.id + '" style="border-bottom:#ccc 1px solid; width:'
-        + document.getElementById(this.config.container.id).style.width
-        + ';height:auto;">' + toolHTML.join("") + '</div>';
-};
-Sparrow.editor.prototype.initEditor = function (iframeId) {
-    document.domain = $.browser.cookie.root_domain;
-    return '<iframe onload="'
-        + this.fullObjName
-        + '.autoAdjust(this);'
-        + this.fullObjName
-        + '.initContent();" class="'
-        + iframeId
-        + '" id="'
-        + iframeId
-        + '" name="'
-        + iframeId
-        + '" style="background:#ffffff;width: 100%;height:'
-        //-2为border
-        + (document.getElementById(this.config.container.id).offsetHeight - this.config.tool.height - 2)
-        + "px"
-        + ';scrollbar-face-color: #F7F5F4;" frameborder="0" marginheight="0" marginwidth="0" src="about:blank"></iframe>';
-};
-Sparrow.editor.prototype.updateWordCount = function () {
-    var obj = this.obj || this.body.id;
-    var editor = $.global(obj);
-    if ($(editor.config.wordCount)) {
-        $(editor.config.wordCount).innerHTML = editor.frame.contentWindow.document.body.innerHTML.length;
-    }
-};
-
-function getImgContainer(fileUrl, clientFileName, editor) {
-    var imgArray = [];
-    var imgDiv = $("+div");
-    var fileId = $.file.getFileName(fileUrl).split('.')[0];
-    imgDiv.s.className = "";
-    imgDiv.s.style.cssText = "width:92px;height:90px;float:left;padding:3px;border:#ccc 2px solid;";
-    imgArray
-        .push('<a target="_blank" href="{0}" title="{1}"><img style="width:91px;height:67px;" src="{2}"/></a>'
-            .format(fileUrl, $.file.getFileName(clientFileName), fileUrl));
-    imgArray.push('<br/><a href="javascript:void(0);" target="_self" onclick="'
-        + editor.fullObjName + '.attach.deleteOnServer(\'' + fileId
-        + '\',this);">删除</a>'
-        + '｜<a href="javascript:void(0);" target="_self" onclick="'
-        + editor.fullObjName + '.attach.insertEditor(\''
-        + $.file.getFileName(clientFileName) + '\',\'' + fileUrl
-        + '\');">插入</a>' + '<input type="hidden" name="'
-        + editor.config.attach.fileUUID + '" value="' + fileId + '"/>');
-    imgDiv.s.innerHTML = imgArray.join("");
-    return imgDiv.s;
-}
-
-function clearHtmlFrame() {
-    for (var i = 0; i < $.editor.editorArray.length; i++) {
-        if ($.editor.editorArray[i].config.currentHtmlId) {
-            document.getElementById($.editor.editorArray[i].config.currentHtmlId).style.display = "none";
-            $.editor.editorArray[i].config.currentHtmlId = null;
-            $.editor.editorArray[i].clear();
-        }
-    }
-}
-
-$(document).bind("onclick", function () {
-    clearHtmlFrame();
-});
-//初始化图片上传事件
-Sparrow.editor.prototype.initImageUploadEvent = function (coverKey) {
-    if (!coverKey) {
-        coverKey = this.config.cover_key;
-    }
-    $.file.validateUploadFile = function (f, key, editor) {
-        if ($.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-            "gif", "png", "zip"], "error" + coverKey)) {
-            $.file.uploadCallBack = function (uploadProgress, editor) {
-                $.file.clearStatus();
-                var clientFileName = uploadProgress.clientFileName;
-                if (clientFileName !== "") {
-                    $(editor.config.attach.uploadImgContainerId)
-                        .appendChild(
-                            getImgContainer(uploadProgress.fileUrl,
-                                clientFileName, editor));
-                    editor.attach.insertEditor($.file
-                        .getFileName(clientFileName), uploadProgress.fileUrl);
-                }
-            };
-            $.file.uploadDelegate(key, editor);
-        }
     };
 };
 Sparrow.treeNode = function (id,

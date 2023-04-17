@@ -19,6 +19,7 @@
         </action>
         <action name="/thread-{threadId}-{pageIndex}" method="thread"/>
         <action name="/json-test.json" method="json"/>
+        <action name="/json-post.json" method="postJson"/>
         <action name="/exception" method="exception"/>
         <action name="/exception.json" method="exception"/>
         <action name="/authorizing" method="authorizing"
