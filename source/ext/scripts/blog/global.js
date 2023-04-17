@@ -51,14 +51,14 @@ Sparrow.user.attention = function (attentionId, srcElement, attentionType) {
         return
     }
     $.ajax.req("POST", $.url.root + "/user/attention.do", function (xmlHttpRequest) {
-            if (xmlHttpRequest.responseText == ajax.OK) {
+            if (xmlHttpRequest.responseText === ajax.OK) {
                 $.message("恭喜!关注成功！", $.ajax.srcElement);
                 ajax.srcElement.html("-取消关注");
                 ajax.srcElement.onclick = function () {
                     cancelattention(attentionId, this, attentionType);
                 };
             } else {
-                if (xmlHttpRequest.responseText == ajax.EXIST) {
+                if (xmlHttpRequest.responseText === ajax.EXIST) {
                     $.message("哎哟！您之前已经关注过这个{0}了。".format(msg),
                         ajax.srcElement);
                     ajax.srcElement.innerHTML = "-取消关注";

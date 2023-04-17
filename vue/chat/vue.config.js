@@ -7,6 +7,8 @@ function resolve(dir) {
 const name = defaultSettings.title || 'sparrow js' // page title
 const port = process.env.port || process.env.npm_config_port || 9095
 
+console.log('process.env.CONSUMER_BASE_URL', process.env.CONSUMER_BASE_URL)
+console.log('process.env.SPARROW_BASE_URL', process.env.SPARROW_BASE_URL)
 
 const {defineConfig} = require('@vue/cli-service')
 
@@ -46,24 +48,16 @@ module.exports = defineConfig({
 		//warnings: false,
 		//errors: true
 		//},
-		// proxy: {
-		//   '/api/': {
-		//     target: 'http://120.46.197.40:9022',
-		//     changeOrigin: true,
-		//     logLevel: 'debug'
-		//     // pathRewrite: {
-		//     //   '^/api/': '/api/'
-		//     // }
-		//   },
-		//   '/to_passport/': {
-		//     target: 'https://dev-passport-cs-mall.tctm.life',
-		//     changeOrigin: true,
-		//     logLevel: 'debug',
-		//     pathRewrite: {
-		//       '^/to_passport/': ''
-		//     }
-		//   }
-		// }
+		proxy: {
+		  '/api/': {
+		    target: 'http://127.0.0.1:7777',
+		    changeOrigin: true,
+		    logLevel: 'debug',
+		    pathRewrite: {
+		      '^/api/': ''
+		    }
+		  }
+		}
 	},
 })
 //?输出configureWebpack

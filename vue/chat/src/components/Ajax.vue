@@ -2,6 +2,14 @@
     <div class="ajax">
         <van-nav-bar title="AJAX 接口请求" left-arrow @click-left="onClickLeft"></van-nav-bar>
         <van-button @click="exportTest">Export Test</van-button>
+        <van-button @click="awaitTest">Await Test</van-button>
+        <van-button @click="indexedDBTest">indexedDBTest</van-button>
+        <van-button @click="addContact">addContact</van-button>
+        <van-button @click="login">login</van-button>
+        <van-button @click="getUserById">getUserById</van-button>
+        <van-button @click="getUserByMobile">getUserByMobile</van-button>
+
+
     </div>
 </template>
 
@@ -11,7 +19,8 @@
 // import { searchUser, addFriend } from '../request'
 // import { mapState } from 'vuex'
 import { Toast } from 'vant';
-import { ExportDemo} from '../lib/ExportDemo.js';
+import { HttpApiDemo} from '@/lib/HttpApiDemo.js';
+import { ChatApi} from '@/api/Chat.js';
 export default {
     name: "AjaxDemo",
     data() {
@@ -27,9 +36,43 @@ export default {
         onClickLeft() {
             this.$router.go(-1)
         },
+
+        login() {
+            ChatApi.login("8888","13581579282","123456").then(res => {
+                console.log(res.data.token);
+                localStorage.setItem('token', res.data.token); // memberInfo
+            }, err => {
+                console.log("error:"+err);
+            })
+        },
+        getUserById() {
+            ChatApi.getUserById(7).then(res => {
+                console.log(res);
+            }, err => {
+                console.log("error:"+err);
+            })
+        },
+        getUserByMobile() {
+            ChatApi.getUserByPhone(13581579282).then(res => {
+                console.log(res);
+            }, err => {
+                console.log("error:"+err);
+            })
+        },
+
         exportTest() {
-            alert(ExportDemo);
-            ExportDemo.change();
+            alert(HttpApiDemo);
+            HttpApiDemo.change();
+        },
+
+        awaitTest() {
+            HttpApiDemo.awaitTest();
+        },
+        indexedDBTest() {
+            HttpApiDemo.indexedDBTest();
+        },
+        addContact() {
+            HttpApiDemo.addContact();
         },
         async sendAddFriend(user) {
             console.log(user);
