@@ -11,7 +11,7 @@ Sparrow.url = {
         if (path) {
             sparrowPath = [path];
         }
-        if (scripts == null || scripts.length == 0) {
+        if (scripts == null || scripts.length === 0) {
             return null;
         }
         var r = null;
