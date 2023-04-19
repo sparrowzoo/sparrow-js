@@ -50,10 +50,7 @@ Sparrow.ajax = {
     },
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
-            if (
-                this._objPool[i].readyState === 0 ||
-                this._objPool[i].readyState === 4
-            ) {
+            if (this._objPool[i].readyState === 0 || this._objPool[i].readyState === 4) {
                 return this._objPool[i];
             }
         }
@@ -135,9 +132,6 @@ Sparrow.ajax = {
                 objXMLHttp.send(null);
                 return;
             }
-
-
-
             //warn: Parameters: Character decoding failed
             if (typeof postStr === 'object') {
                 objXMLHttp.setRequestHeader('Content-Type', 'application/json');
@@ -192,5 +186,5 @@ Sparrow.ajax = {
     post: function (url, data, callback) {
         callback = callback ? callback : $.ajax._callback;
         $.ajax.req('POST', url, callback, data, null);
-    },
+    }
 };

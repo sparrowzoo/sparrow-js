@@ -25,7 +25,6 @@ String.prototype.json = function () {
         return console.log(err);
     }
 };
-
 String.prototype.firstCharToAscii = function () {
     return this.charCodeAt(0);
 };
@@ -94,20 +93,19 @@ String.prototype.decodeHtml = function () {
     html = html.replace(/&nbsp;/g, " ");
     return html;
 };
-
 // 字符格式化方法
 String.prototype.format = function () {
     var newStr = this;
-    if (arguments.length >=1 && typeof arguments[0] === "object") {
+    if (arguments.length >= 1 && typeof arguments[0] === "object") {
         var re = /#{(.*?)}/ig;
         while (r = re.exec(this)) {
             var placeHolder = r[0];
-            var property=r[1];
+            var property = r[1];
             var value = arguments[0].value(property);
-            if(arguments.length>1){
-                for(var i=1;i<arguments.length;i++){
-                    value=arguments[i].value(property);
-                    if(value){
+            if (arguments.length > 1) {
+                for (var i = 1; i < arguments.length; i++) {
+                    value = arguments[i].value(property);
+                    if (value) {
                         break;
                     }
                 }
@@ -142,16 +140,42 @@ String.prototype.filterHTML = function () {
     }
     return newString;
 };
-
 String.prototype.firstCharUpperCase = function () {
     return this.substr(0, 1).toUpperCase() + this.substr(1);
 };
-
 String.prototype.join = function (str) {
     if (!$.isNullOrEmpty(str)) {
         return this + str;
     }
     return this + "";
+};
+String.prototype.toArrayBuffer = function () {
+    var bytes = [];
+    var len, c;
+    len = this.length;
+    for (var i = 0; i < len; i++) {
+        c = this.charCodeAt(i);
+        if (c >= 0x010000 && c <= 0x10FFFF) {
+            bytes.push(((c >> 18) & 0x07) | 0xF0);
+            bytes.push(((c >> 12) & 0x3F) | 0x80);
+            bytes.push(((c >> 6) & 0x3F) | 0x80);
+            bytes.push((c & 0x3F) | 0x80);
+        } else if (c >= 0x000800 && c <= 0x00FFFF) {
+            bytes.push(((c >> 12) & 0x0F) | 0xE0);
+            bytes.push(((c >> 6) & 0x3F) | 0x80);
+            bytes.push((c & 0x3F) | 0x80);
+        } else if (c >= 0x000080 && c <= 0x0007FF) {
+            bytes.push(((c >> 6) & 0x1F) | 0xC0);
+            bytes.push((c & 0x3F) | 0x80);
+        } else {
+            bytes.push(c & 0xFF);
+        }
+    }
+    var array = new Int8Array(bytes.length);
+    for (var i in bytes) {
+        array[i] = bytes[i];
+    }
+    return array;
 };
 
 Array.prototype.clear = function () {
@@ -173,9 +197,15 @@ Array.prototype.remove = function (val) {
         this.splice(index, 1);
     }
 };
-
+Array.prototype.toUint8Array = function () {
+    var bytes = this;
+    var array = new Uint8Array(bytes.length);
+    for (var i = 0; i < array.length; i++) {
+        array[i] = bytes[i];
+    }
+    return array;
+};
 // If Push and pop is not implemented by the browser
-
 if (!Array.prototype.push) {
     Array.prototype.push = function array_push() {
         for (var i = 0; i < arguments.length; i++)
@@ -183,7 +213,6 @@ if (!Array.prototype.push) {
         return this.length;
     };
 }
-
 if (!Array.prototype.pop) {
     Array.prototype.pop = function array_pop() {
         lastElement = this[this.length - 1];
@@ -191,7 +220,53 @@ if (!Array.prototype.pop) {
         return lastElement;
     };
 }
-
+Uint8Array.prototype.toString = function () {
+    /**
+     * https://www.javascripture.com/DataView
+     * DataViews allow heterogeneous access to data stored in an ArrayBuffer. Values can be read and stored at any byte offset without alignment constraints.
+     * @type {DataView}
+     */
+    var dataView = new DataView(this.buffer);
+    var ints = new Uint8Array(this.buffer.byteLength);
+    for (var i = 0; i < ints.length; i++) {
+        ints[i] = dataView.getUint8(i);
+    }
+    var str = '', _arr = ints;
+    for (var i = 0; i < _arr.length; i++) {
+        var one = _arr[i].toString(2),
+            v = one.match(/^1+?(?=0)/);
+        if (v && one.length === 8) {
+            var bytesLength = v[0].length;
+            var store = _arr[i].toString(2).slice(7 - bytesLength);
+            for (var st = 1; st < bytesLength; st++) {
+                store += _arr[st + i].toString(2).slice(2);
+            }
+            str += String.fromCharCode(parseInt(store, 2));
+            i += bytesLength - 1;
+        } else {
+            str += String.fromCharCode(_arr[i]);
+        }
+    }
+    return str;
+};
+//小端模式
+//number 要转换的整形数值
+//length 要转成什么byte数组，规定数组的长度
+//如uint16，则length=2表示两个字节，转成的byte数组长度是length=2
+//如uint32，则length=2表示两个字节，转成的byte数组长度是length=4
+Number.prototype.toBytes = function () {
+    length = 4;
+    //只支持32位以下数字，32位以上会有精度问题
+    var number = this;
+    var bytes = [];
+    var i = length;
+    do {
+        //console.log(number.toString(2));
+        bytes[--i] = number & 255;
+        number = number >> 8;
+    } while (i);
+    return bytes;
+};
 Date.prototype.format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -207,6 +282,7 @@ Date.prototype.format = function (fmt) {
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
+
 /**
  * @return
  *
@@ -435,7 +511,7 @@ Sparrow.browser = {
         domain: window.location.host
     },
     ie: $(function () {
-        return navigator.userAgent.search(/MSIE/img) != -1;
+        return navigator.userAgent.search(/MSIE/img) !== -1;
     }),
     opera: $(function () {
         return navigator.userAgent.search(/Opera/img) !== -1;
@@ -678,6 +754,7 @@ Sparrow.browser = {
         return true;
     }
 };
+
 Sparrow.container = {};
 Sparrow.global = function (key, obj) {
     if (typeof(obj) === "undefined") {
@@ -701,7 +778,7 @@ Sparrow.url = {
         if (path) {
             sparrowPath = [path];
         }
-        if (scripts == null || scripts.length == 0) {
+        if (scripts == null || scripts.length === 0) {
             return null;
         }
         var r = null;
@@ -984,10 +1061,7 @@ Sparrow.ajax = {
     },
     _getInstance: function () {
         for (var i = 0; i < this._objPool.length; i += 1) {
-            if (
-                this._objPool[i].readyState === 0 ||
-                this._objPool[i].readyState === 4
-            ) {
+            if (this._objPool[i].readyState === 0 || this._objPool[i].readyState === 4) {
                 return this._objPool[i];
             }
         }
@@ -1069,9 +1143,6 @@ Sparrow.ajax = {
                 objXMLHttp.send(null);
                 return;
             }
-
-
-
             //warn: Parameters: Character decoding failed
             if (typeof postStr === 'object') {
                 objXMLHttp.setRequestHeader('Content-Type', 'application/json');
@@ -1126,7 +1197,7 @@ Sparrow.ajax = {
     post: function (url, data, callback) {
         callback = callback ? callback : $.ajax._callback;
         $.ajax.req('POST', url, callback, data, null);
-    },
+    }
 };
 
 Sparrow.http = {
@@ -1657,7 +1728,6 @@ Sparrow.randomUrl = function (url) {
     }
     return url;
 };
-
 Sparrow.request = function (name) {
     var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
     if (reg.test(location.href)) {
@@ -1665,7 +1735,6 @@ Sparrow.request = function (name) {
     }
     return "";
 };
-
 Sparrow.isNullOrEmpty = function (sourceString) {
     return (sourceString == null || typeof (sourceString) === "undefined"
         || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
@@ -1679,7 +1748,6 @@ Sparrow.toString = function (sourceString, defaultValue) {
     }
     return sourceString;
 };
-
 Sparrow.countDown = function (end, current, element) {
     var t = end - current;
     var count = {};
@@ -1740,7 +1808,6 @@ Sparrow.submit = function (action, formIndex) {
     }
     document.forms[formIndex].submit();
 };
-
 Sparrow.jsonKeys = function (json) {
     var jsonKeyArray = [];
     if (!json) {
@@ -2128,7 +2195,6 @@ Sparrow.prototype.fresh = function (url) {
     this.s.src = $.randomUrl(this.s.src);
 };
 
-
 Sparrow.prototype.enter = function (handle) {
     this.s.onkeydown = function (e) {
         e = window.event || e;
@@ -2142,62 +2208,6 @@ Sparrow.prototype.enter = function (handle) {
         handle();
     };
 };
-
-
-String.prototype.toArrayBuffer=function(){
-    var bytes = [];
-    var len, c;
-    len = this.length;
-    for (var i = 0; i < len; i++) {
-        c = this.charCodeAt(i);
-        if (c >= 0x010000 && c <= 0x10FFFF) {
-            bytes.push(((c >> 18) & 0x07) | 0xF0);
-            bytes.push(((c >> 12) & 0x3F) | 0x80);
-            bytes.push(((c >> 6) & 0x3F) | 0x80);
-            bytes.push((c & 0x3F) | 0x80);
-        } else if (c >= 0x000800 && c <= 0x00FFFF) {
-            bytes.push(((c >> 12) & 0x0F) | 0xE0);
-            bytes.push(((c >> 6) & 0x3F) | 0x80);
-            bytes.push((c & 0x3F) | 0x80);
-        } else if (c >= 0x000080 && c <= 0x0007FF) {
-            bytes.push(((c >> 6) & 0x1F) | 0xC0);
-            bytes.push((c & 0x3F) | 0x80);
-        } else {
-            bytes.push(c & 0xFF);
-        }
-    }
-    var array = new Int8Array(bytes.length);
-    for (var i in bytes) {
-        array[i] = bytes[i];
-    }
-    return array;
-};
-
-Int8Array.prototype.toString=function() {
-    var dataView = new DataView(this.buffer);
-    var ints = new Uint8Array(this.buffer.byteLength);
-    for (var i = 0; i < ints.length; i++) {
-        ints[i] = dataView.getUint8(i);
-    }
-    var str = '', _arr = ints;
-    for (var i = 0; i < _arr.length; i++) {
-        var one = _arr[i].toString(2),
-            v = one.match(/^1+?(?=0)/);
-        if (v && one.length == 8) {
-            var bytesLength = v[0].length;
-            var store = _arr[i].toString(2).slice(7 - bytesLength);
-            for (var st = 1; st < bytesLength; st++) {
-                store += _arr[st + i].toString(2).slice(2);
-            }
-            str += String.fromCharCode(parseInt(store, 2));
-            i += bytesLength - 1;
-        } else {
-            str += String.fromCharCode(_arr[i]);
-        }
-    }
-    return str;
-};
-
 var _hmt = _hmt || [];
 (function () {
     var hm = document.createElement("script");
@@ -2205,6 +2215,7 @@ var _hmt = _hmt || [];
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(hm, s);
 })();
+
 /*---------------------------------------------JGridView全选和单选---------------------------------------------*/
 Sparrow.gridView = {
     keyType: "int",// string
