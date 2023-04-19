@@ -179,8 +179,7 @@ var SparrowProtocol = function (
         fileBlob = new Blob([msgBuffer]);
         //本地直接读即可
         //const url = window.URL.createObjectURL(file);
-        const url = window.URL.createObjectURL(fileBlob);
-        this.url = url;
+        this.url = window.URL.createObjectURL(fileBlob);
       }
       offset += this.msgLength;
       this.clientSendTime = new Uint8Array(

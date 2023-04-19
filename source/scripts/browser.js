@@ -15,7 +15,7 @@ Sparrow.browser = {
         domain: window.location.host
     },
     ie: $(function () {
-        return navigator.userAgent.search(/MSIE/img) != -1;
+        return navigator.userAgent.search(/MSIE/img) !== -1;
     }),
     opera: $(function () {
         return navigator.userAgent.search(/Opera/img) !== -1;
