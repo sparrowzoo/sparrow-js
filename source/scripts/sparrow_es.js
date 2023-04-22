@@ -829,18 +829,13 @@ Sparrow.VERTICAL = "VERTICAL";
 Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/images/user.png";
 Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/images/menu.png";
 
-if (!window.indexedDB) {
-    window.alert(
-        "Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available."
-    );
-}
-Sparrow.indexedDB = {
-    config: {
-        name: 'Sparrow',
-        version: "1.0",
-        tableNames: [{"name":"t1","key":"id"}]
-    }
-};
+// Sparrow.indexedDB = {
+//     config: {
+//         name: 'Sparrow',
+//         version: "1.0",
+//         tableNames: [{"name":"t1","key":"id"}]
+//     }
+// };
 Sparrow.indexedDB = function (config) {
     this.instance = null;
     this.name = config.name;
@@ -848,6 +843,9 @@ Sparrow.indexedDB = function (config) {
 };
 Sparrow.indexedDB.prototype = {
     init: function () {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         this.request = window.indexedDB.open(this.config.name, this.config.version);
         return new Promise((resolve, reject) => {
             this.request.onsuccess = (event) => {
@@ -869,8 +867,8 @@ Sparrow.indexedDB.prototype = {
                 this._initTables();
                 resolve(this.instance);
             };
-            this.request.onerror = () => {
-                console.log('数据库发生错误');
+            this.request.onerror = (e) => {
+                console.log('数据库发生错误', e);
                 reject('连接indexedDB出错');
             };
         });
@@ -889,54 +887,53 @@ Sparrow.indexedDB.prototype = {
             .objectStore(tableName);
     },
     put: function (tableName, item) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .put(item);
-            req.onsuccess = function () {
-                resolve('添加成功');
-            };
-            req.onerror = function () {
-                reject('添加失败');
-            }
         });
     },
     get: function (tableName, key) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            console.log("get key:" + this._getTableInstance(tableName)
+                .get(key));
+            const request = this._getTableInstance(tableName)
                 .get(key);
-            req.onsuccess = function () {
-                resolve(req.result);
+            request.onsuccess = (event) => {
+                resolve(event.target.result);
             };
-            req.onerror = function () {
-                reject('查询失败');
-            }
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
         });
     },
     delete: function (tableName, key) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .delete(key);
-            req.onsuccess = function () {
-                resolve('删除成功');
-            };
-            req.onerror = function () {
-                reject('删除失败');
-            }
         });
     },
     clear: function (tableName) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .clear();
-            req.onsuccess = function () {
-                resolve('清空成功');
-            };
-            req.onerror = function () {
-                reject('清空失败');
-            }
         });
     },
     flush: function () {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
             this.config.tableNames.forEach((table) => {
                 this.clear(table.name).then(r => {
@@ -948,63 +945,48 @@ Sparrow.indexedDB.prototype = {
         });
     },
     getAll: function (tableName) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .getAll();
-            req.onsuccess = function () {
-                resolve(req.result);
-            };
-            req.onerror = function () {
-                reject('查询失败');
-            }
         });
     },
     getAllKeys: function (tableName) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .getAllKeys();
-            req.onsuccess = function () {
-                resolve(req.result);
-            };
-            req.onerror = function () {
-                reject('查询失败');
-            }
         });
     },
     count: function (tableName) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .count();
-            req.onsuccess = function () {
-                resolve(req.result);
-            };
-            req.onerror = function () {
-                reject('查询失败');
-            }
         });
     },
     openCursor: function (tableName) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .openCursor();
-            req.onsuccess = function () {
-                resolve(req.result);
-            };
-            req.onerror = function () {
-                reject('查询失败');
-            }
         });
     },
     openKeyCursor: function (tableName) {
+        if (!window.indexedDB) {
+            return Promise.reject('浏览器不支持indexedDB');
+        }
         return new Promise((resolve, reject) => {
-            const req = this._getTableInstance(tableName)
+            return this._getTableInstance(tableName)
                 .openKeyCursor();
-            req.onsuccess = function () {
-                resolve(req.result);
-            };
-            req.onerror = function () {
-                reject('查询失败');
-            }
         });
     }
 };

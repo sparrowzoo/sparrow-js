@@ -1,15 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router';
 
-
 Vue.use(VueRouter);
 const router = new VueRouter({
     // mode: 'history',
     routes: [
-        {
-            path: '/',
-            redirect: '/menu/session'
-        },
         {
             path: '/login',
             meta: {pass: true, title: '登录'},
@@ -34,6 +29,7 @@ const router = new VueRouter({
             name: "add-friend",
             component: () => import('../components/AddFriend')
         },
+
         {
             path: '/contact',
             meta: {pass: true},

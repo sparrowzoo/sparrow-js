@@ -1,4 +1,5 @@
 import {Sparrow} from '../../../../source/scripts/sparrow_es.js'
+
 console.log(process.env)
 const SPARROW_BASE_URL = process.env.VUE_APP_SPARROW_BASE_URL;
 const CONSUMER_BASE_URL = process.env.VUE_APP_CONSUMER_BASE_URL;
@@ -17,7 +18,7 @@ tokenConfig[CONSUMER_BASE_URL] = {
     }
 };
 
-Sparrow.ajax.tokenConfig= tokenConfig;
+Sparrow.ajax.tokenConfig = tokenConfig;
 const ChatApi = {
     getSession: function getSession(token) {
         const data = 'token=' + token;
@@ -77,7 +78,7 @@ const ChatApi = {
     },
     newFriendList: function (id) {
         const params = "id=" + id;
-        return Sparrow.http.post(CONSUMER_BASE_URL + "/app/message/newFriend", params);
+        return Sparrow.http.get(CONSUMER_BASE_URL + "/app/message/newFriend?" + params);
     },
     auditFriend: function (id, status) {
         const params = "id=" + id + "&status=" + status;
