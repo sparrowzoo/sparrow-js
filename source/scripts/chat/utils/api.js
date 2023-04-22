@@ -54,6 +54,17 @@ define(['request', 'axios'], function (request, axios) {
     });
   }
 
+  // 判断当前用户是否已经建立ws
+  function isWs(token) {
+    return new Promise((resolve, reject) => {
+      const url = 'is-online';
+      const data = 'token=' + token;
+      $.ajax.json(BASE_URL + url, data, function (result) {
+        resolve(result.data);
+      });
+    });
+  }
+
   /** 普通接口 */
   const URL = 'http://studyapi.zhilongsoft.com';
   // 登录接口
@@ -211,5 +222,6 @@ define(['request', 'axios'], function (request, axios) {
     changeGroup,
     serviceList,
     getDetailByIdArr,
+    isWs,
   };
 });
