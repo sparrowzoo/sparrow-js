@@ -1,5 +1,6 @@
 function createWs(userId, messagehandler, reconnectHandler) {
     console.log("current user:" + userId)
+    userId="eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl9tZW1iZXJfa2V5IjoiMDkyY2ZiYTYtZjJkNS00OWYwLTkxMmMtNTc2Y2ZhY2EyMjEyIn0.pI8wsEhCDrM43dhVTwKZhDWY9zEeQgXNOIdD-3s7PyBptzvRYYseuKOFT-lwRr48OoYetvWQbmDtalxd3MIkaQ";
     let ws = new WebSocket("ws://chat.sparrowzoo.com/websocket", [userId]);
     //申请一个WebSocket对象，参数是服务端地址，同http协议使用http://开头一样，WebSocket协议的url使用ws://开头，另外安全的WebSocket协议使用wss://开头
     // ws.reconnect = function () {

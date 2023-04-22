@@ -27,6 +27,41 @@ var paths = {
         src: 'source/media/**/*.*',
         dest: 'assets/media'
     },
+    scripts_es: {
+        src: [
+            'source/scripts/extend.js',
+            'source/scripts/selector.js',
+            'source/scripts/browser.js',
+            'source/scripts/container.js',
+            'source/scripts/constant.js',
+            'source/scripts/indexedDB.js',
+            'source/scripts/ajax.js',
+            'source/scripts/HttpClient.js',
+            'source/scripts/validator.js',
+            'source/scripts/pager.js',
+            'source/scripts/sparrow-core.js',
+            // 'src/scripts/tooltip.js',
+            // 'source/scripts/tabs.js',
+            // 'source/scripts/windows.js',
+            'source/scripts/grid-view.js',
+            'source/scripts/file.js',
+            'source/scripts/events.js',
+            // 'source/scripts/mouse-wheel.js',
+            // 'source/scripts/select.js',
+            // 'source/scripts/message.js',
+            // 'source/scripts/animation.js',
+            'source/scripts/progressbar.js',
+            // 'source/scripts/menu.js',
+            // 'source/scripts/datePicker.js',
+            // 'source/scripts/sparrowEditor.js',
+            'source/scripts/tree.js',
+            'source/scripts/dispatcher.js',
+            'source/scripts/user.js',
+            'source/scripts/share.js',
+            'source/scripts/es_tail.js'
+        ],
+        dest: 'source/scripts/'
+    },
     scripts_dev: {
         src: [
             'source/scripts/header.js',
@@ -36,6 +71,7 @@ var paths = {
             'source/scripts/container.js',
             'source/scripts/ready.js',
             'source/scripts/constant.js',
+            'source/scripts/indexedDB.js',
             'source/scripts/ajax.js',
             'source/scripts/validator.js',
             'source/scripts/pager.js',
@@ -66,6 +102,7 @@ var paths = {
         ],
         dest: 'source/scripts/'
     },
+
     ext: {
         src: ['source/ext/**/*.*'],
         dest: 'assets/ext/'
@@ -169,6 +206,12 @@ function scripts_dev() {
         .pipe(gulp.dest(paths.scripts_dev.dest));
 }
 
+function scripts_es() {
+    return gulp.src(paths.scripts_es.src, {base: 'source/script'})
+        .pipe(plugins.concat('sparrow_es.js'))
+        .pipe(gulp.dest(paths.scripts_es.dest));
+}
+
 function watch() {
     gulp.watch(paths.scripts.src, scripts);
     gulp.watch(paths.styles.src, styles);
@@ -192,7 +235,7 @@ exports.watch = plugins.watch;
  *  [10:21:42] Did you forget to signal async completion?
  *  use gulp.series is ok
  */
-var build_dev = gulp.series(clean, scripts_dev,styles_dev,dependency);
+var build_dev = gulp.series(clean, scripts_dev,scripts_es, styles_dev,dependency);
 
 //var build_dev = gulp.series(clean, styles, scripts_dev,dependency,images, medias,ext);
 
