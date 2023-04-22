@@ -68,7 +68,7 @@ define([
   // 根据 传入的id 获取当前用户详细信息
   async function getSelfInfoById(id) {
     const { data } = await api.getDetailById({ id });
-    console.log(data, '当前用户');
+    // console.log(data, '当前用户');
     changeSelfId(
       data.userId,
       data.avatar || 'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
@@ -81,7 +81,7 @@ define([
   // 根据 传入的id 获取目标用户详细信息
   async function getTargetInfoById() {
     const { data } = await api.getDetailById({ id: targetId });
-    console.log(data, '目标用户');
+    // console.log(data, '目标用户');
     temporaryChat(data.userId, data.userName, data.avatar, data);
   }
 
@@ -97,7 +97,7 @@ define([
       item.session = item.chatSession.sessionKey;
       DBObject.dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
     });
-    console.log('临时会话1');
+    // console.log('临时会话1');
 
     await myFriend.diffSessionList(sessionArr);
 
@@ -108,7 +108,7 @@ define([
 
     // 如果是临时会话
     if (isTemporary) {
-      console.log('临时会话2');
+      // console.log('临时会话2');
       getTargetInfoById();
     }
   }
@@ -168,7 +168,7 @@ define([
       password: pwa,
     };
     const { data } = await login(params);
-    console.log(data, '登录');
+    // console.log(data, '登录');
 
     // 设置token 以及保存当前用户信息
     localStorage.setItem('token', data.token); // memberInfo
