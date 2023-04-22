@@ -12,7 +12,6 @@ Sparrow.randomUrl = function (url) {
     }
     return url;
 };
-
 Sparrow.request = function (name) {
     var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
     if (reg.test(location.href)) {
@@ -20,7 +19,6 @@ Sparrow.request = function (name) {
     }
     return "";
 };
-
 Sparrow.isNullOrEmpty = function (sourceString) {
     return (sourceString == null || typeof (sourceString) === "undefined"
         || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
@@ -34,7 +32,6 @@ Sparrow.toString = function (sourceString, defaultValue) {
     }
     return sourceString;
 };
-
 Sparrow.countDown = function (end, current, element) {
     var t = end - current;
     var count = {};
@@ -95,7 +92,6 @@ Sparrow.submit = function (action, formIndex) {
     }
     document.forms[formIndex].submit();
 };
-
 Sparrow.jsonKeys = function (json) {
     var jsonKeyArray = [];
     if (!json) {
@@ -483,7 +479,6 @@ Sparrow.prototype.fresh = function (url) {
     this.s.src = $.randomUrl(this.s.src);
 };
 
-
 Sparrow.prototype.enter = function (handle) {
     this.s.onkeydown = function (e) {
         e = window.event || e;
@@ -497,62 +492,6 @@ Sparrow.prototype.enter = function (handle) {
         handle();
     };
 };
-
-
-String.prototype.toArrayBuffer=function(){
-    var bytes = [];
-    var len, c;
-    len = this.length;
-    for (var i = 0; i < len; i++) {
-        c = this.charCodeAt(i);
-        if (c >= 0x010000 && c <= 0x10FFFF) {
-            bytes.push(((c >> 18) & 0x07) | 0xF0);
-            bytes.push(((c >> 12) & 0x3F) | 0x80);
-            bytes.push(((c >> 6) & 0x3F) | 0x80);
-            bytes.push((c & 0x3F) | 0x80);
-        } else if (c >= 0x000800 && c <= 0x00FFFF) {
-            bytes.push(((c >> 12) & 0x0F) | 0xE0);
-            bytes.push(((c >> 6) & 0x3F) | 0x80);
-            bytes.push((c & 0x3F) | 0x80);
-        } else if (c >= 0x000080 && c <= 0x0007FF) {
-            bytes.push(((c >> 6) & 0x1F) | 0xC0);
-            bytes.push((c & 0x3F) | 0x80);
-        } else {
-            bytes.push(c & 0xFF);
-        }
-    }
-    var array = new Int8Array(bytes.length);
-    for (var i in bytes) {
-        array[i] = bytes[i];
-    }
-    return array;
-};
-
-Int8Array.prototype.toString=function() {
-    var dataView = new DataView(this.buffer);
-    var ints = new Uint8Array(this.buffer.byteLength);
-    for (var i = 0; i < ints.length; i++) {
-        ints[i] = dataView.getUint8(i);
-    }
-    var str = '', _arr = ints;
-    for (var i = 0; i < _arr.length; i++) {
-        var one = _arr[i].toString(2),
-            v = one.match(/^1+?(?=0)/);
-        if (v && one.length == 8) {
-            var bytesLength = v[0].length;
-            var store = _arr[i].toString(2).slice(7 - bytesLength);
-            for (var st = 1; st < bytesLength; st++) {
-                store += _arr[st + i].toString(2).slice(2);
-            }
-            str += String.fromCharCode(parseInt(store, 2));
-            i += bytesLength - 1;
-        } else {
-            str += String.fromCharCode(_arr[i]);
-        }
-    }
-    return str;
-};
-
 var _hmt = _hmt || [];
 (function () {
     var hm = document.createElement("script");

@@ -164,7 +164,7 @@ define([
     const pwa = document.querySelector('.t-selfId').value;
     const params = {
       code: '8888',
-      mobile,
+      mobile: mobile,
       password: pwa,
     };
     const { data } = await login(params);

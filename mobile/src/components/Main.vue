@@ -8,7 +8,6 @@
         </van-tabbar>
     </div>
 </template>
-
 <script>
 
 export default {
