@@ -68,14 +68,14 @@ define(function () {
     targetId.value = id;
     targetId.type = chatType;
     targetId.username = username;
-    targetId.avatar = avatar;
+    targetId.avatar = avatar || DEFAULTAVATAR;
     targetId.sessionKey = sessionKey;
   }
   function setServiceId(id, username, chatType, avatar, sessionKey) {
     serviceId.value = id;
     serviceId.type = chatType;
     serviceId.username = username;
-    serviceId.avatar = avatar;
+    serviceId.avatar = avatar || DEFAULTAVATAR;
     serviceId.sessionKey = sessionKey;
   }
   // 设置当前用户信息

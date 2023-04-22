@@ -279,7 +279,7 @@ define([
     }
 
     // 重连操作
-    reconnectWebSocket() {
+    async reconnectWebSocket() {
       // console.log('发起重连');
       // // 当前正在重连  直接返回 不再开启延时
       // if (this.lockReconnect) return;
@@ -290,7 +290,10 @@ define([
       //   this.connected(this.token);
       //   this.lockReconnect = false;
       // }, this.reconnectTime);
-      alert('连接断开，请刷新浏览器！');
+      const res = await api.isWs(this.token);
+      if (res) {
+        alert('连接断开，请刷新浏览器！');
+      }
     }
 
     // 心跳机制 --启动心跳
