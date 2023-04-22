@@ -19,7 +19,33 @@ tokenConfig[CONSUMER_BASE_URL] = {
 };
 
 Sparrow.ajax.tokenConfig = tokenConfig;
+
+var db = new Sparrow.indexedDB({
+    name: 'sparrow',
+    version: "5.0",
+    tableNames: [{"name": "contact", "key": "userId"}, {"name": "session", "key": "sessionKey"}, {
+        "name": "qun",
+        "key": "qunId"
+    }]
+});
+
+
 const ChatApi = {
+    getSessionFromLocal: function (sessionKey) {
+        console.log("getSessionFromLocal:" + sessionKey);
+        return db.init().then(function () {
+            console.log(" indexedDB init success")
+            return db.get('session', sessionKey).then(function (data) {
+                console.log("indexedDB get success:" + data);
+                return data;
+            }, function (error) {
+                console.log("indexedDB get fail:" + error);
+                return null;
+            });
+        }, function (error) {
+            console.log("indexedDB init fail:" + error);
+        });
+    },
     getSession: function getSession(token) {
         const data = 'token=' + token;
         return Sparrow.http.post(SPARROW_BASE_URL + "/sessions", data);
