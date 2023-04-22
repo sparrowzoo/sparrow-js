@@ -4,6 +4,7 @@ import com.sparrow.cache.exception.CacheNotFoundException;
 import com.sparrow.constant.User;
 import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
+import com.sparrow.param.ParamDemo;
 import com.sparrow.protocol.BusinessException;
 import com.sparrow.protocol.LoginUser;
 import com.sparrow.protocol.NotTryException;
@@ -87,6 +88,10 @@ public class HelloController {
 
     public HelloVO json() {
         return new HelloVO("够意思吧，json不用页面");
+    }
+
+    public HelloVO postJson(ParamDemo paramDemo) {
+        return new HelloVO(paramDemo.getName()+"-"+paramDemo.getAge());
     }
 
     public ViewWithModel welcome() {

@@ -45,7 +45,6 @@ String.prototype.json = function () {
         return console.log(err);
     }
 };
-
 String.prototype.firstCharToAscii = function () {
     return this.charCodeAt(0);
 };
@@ -114,20 +113,19 @@ String.prototype.decodeHtml = function () {
     html = html.replace(/&nbsp;/g, " ");
     return html;
 };
-
 // 字符格式化方法
 String.prototype.format = function () {
     var newStr = this;
-    if (arguments.length >=1 && typeof arguments[0] === "object") {
+    if (arguments.length >= 1 && typeof arguments[0] === "object") {
         var re = /#{(.*?)}/ig;
         while (r = re.exec(this)) {
             var placeHolder = r[0];
-            var property=r[1];
+            var property = r[1];
             var value = arguments[0].value(property);
-            if(arguments.length>1){
-                for(var i=1;i<arguments.length;i++){
-                    value=arguments[i].value(property);
-                    if(value){
+            if (arguments.length > 1) {
+                for (var i = 1; i < arguments.length; i++) {
+                    value = arguments[i].value(property);
+                    if (value) {
                         break;
                     }
                 }
@@ -162,16 +160,42 @@ String.prototype.filterHTML = function () {
     }
     return newString;
 };
-
 String.prototype.firstCharUpperCase = function () {
     return this.substr(0, 1).toUpperCase() + this.substr(1);
 };
-
 String.prototype.join = function (str) {
     if (!$.isNullOrEmpty(str)) {
         return this + str;
     }
     return this + "";
+};
+String.prototype.toArrayBuffer = function () {
+    var bytes = [];
+    var len, c;
+    len = this.length;
+    for (var i = 0; i < len; i++) {
+        c = this.charCodeAt(i);
+        if (c >= 0x010000 && c <= 0x10FFFF) {
+            bytes.push(((c >> 18) & 0x07) | 0xF0);
+            bytes.push(((c >> 12) & 0x3F) | 0x80);
+            bytes.push(((c >> 6) & 0x3F) | 0x80);
+            bytes.push((c & 0x3F) | 0x80);
+        } else if (c >= 0x000800 && c <= 0x00FFFF) {
+            bytes.push(((c >> 12) & 0x0F) | 0xE0);
+            bytes.push(((c >> 6) & 0x3F) | 0x80);
+            bytes.push((c & 0x3F) | 0x80);
+        } else if (c >= 0x000080 && c <= 0x0007FF) {
+            bytes.push(((c >> 6) & 0x1F) | 0xC0);
+            bytes.push((c & 0x3F) | 0x80);
+        } else {
+            bytes.push(c & 0xFF);
+        }
+    }
+    var array = new Int8Array(bytes.length);
+    for (var i in bytes) {
+        array[i] = bytes[i];
+    }
+    return array;
 };
 
 Array.prototype.clear = function () {
@@ -193,9 +217,15 @@ Array.prototype.remove = function (val) {
         this.splice(index, 1);
     }
 };
-
+Array.prototype.toUint8Array = function () {
+    var bytes = this;
+    var array = new Uint8Array(bytes.length);
+    for (var i = 0; i < array.length; i++) {
+        array[i] = bytes[i];
+    }
+    return array;
+};
 // If Push and pop is not implemented by the browser
-
 if (!Array.prototype.push) {
     Array.prototype.push = function array_push() {
         for (var i = 0; i < arguments.length; i++)
@@ -203,7 +233,6 @@ if (!Array.prototype.push) {
         return this.length;
     };
 }
-
 if (!Array.prototype.pop) {
     Array.prototype.pop = function array_pop() {
         lastElement = this[this.length - 1];
@@ -211,7 +240,53 @@ if (!Array.prototype.pop) {
         return lastElement;
     };
 }
-
+Uint8Array.prototype.toString = function () {
+    /**
+     * https://www.javascripture.com/DataView
+     * DataViews allow heterogeneous access to data stored in an ArrayBuffer. Values can be read and stored at any byte offset without alignment constraints.
+     * @type {DataView}
+     */
+    var dataView = new DataView(this.buffer);
+    var ints = new Uint8Array(this.buffer.byteLength);
+    for (var i = 0; i < ints.length; i++) {
+        ints[i] = dataView.getUint8(i);
+    }
+    var str = '', _arr = ints;
+    for (var i = 0; i < _arr.length; i++) {
+        var one = _arr[i].toString(2),
+            v = one.match(/^1+?(?=0)/);
+        if (v && one.length === 8) {
+            var bytesLength = v[0].length;
+            var store = _arr[i].toString(2).slice(7 - bytesLength);
+            for (var st = 1; st < bytesLength; st++) {
+                store += _arr[st + i].toString(2).slice(2);
+            }
+            str += String.fromCharCode(parseInt(store, 2));
+            i += bytesLength - 1;
+        } else {
+            str += String.fromCharCode(_arr[i]);
+        }
+    }
+    return str;
+};
+//小端模式
+//number 要转换的整形数值
+//length 要转成什么byte数组，规定数组的长度
+//如uint16，则length=2表示两个字节，转成的byte数组长度是length=2
+//如uint32，则length=2表示两个字节，转成的byte数组长度是length=4
+Number.prototype.toBytes = function () {
+    length = 4;
+    //只支持32位以下数字，32位以上会有精度问题
+    var number = this;
+    var bytes = [];
+    var i = length;
+    do {
+        //console.log(number.toString(2));
+        bytes[--i] = number & 255;
+        number = number >> 8;
+    } while (i);
+    return bytes;
+};
 Date.prototype.format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份
@@ -227,6 +302,7 @@ Date.prototype.format = function (fmt) {
         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
     return fmt;
 }
+
 /**
  * @return
  *
@@ -240,7 +316,7 @@ Date.prototype.format = function (fmt) {
  * ...
  */
 var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
-    if (window === this) {
+    if (window === this||!(this instanceof Sparrow)) {
         //Array.prototype.slice 将arguments 转化成数组
         var args = Array.prototype.slice.call(arguments, 0);
         if (!selector) {
@@ -366,8 +442,8 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
                             elements[0]);
                     }
                 }
-                if(selectorArray.length>=4){
-                    elements[0].type=selectorArray[3];
+                if (selectorArray.length >= 4) {
+                    elements[0].type = selectorArray[3];
                 }
                 break;
             case "!":
@@ -437,6 +513,7 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
     return this;
 };
 window.$ = window.Sparrow = Sparrow;
+
 Sparrow.browser = {
     url: {
         manage: "default.jsp",
@@ -454,7 +531,7 @@ Sparrow.browser = {
         domain: window.location.host
     },
     ie: $(function () {
-        return navigator.userAgent.search(/MSIE/img) != -1;
+        return navigator.userAgent.search(/MSIE/img) !== -1;
     }),
     opera: $(function () {
         return navigator.userAgent.search(/Opera/img) !== -1;
@@ -697,6 +774,7 @@ Sparrow.browser = {
         return true;
     }
 };
+
 Sparrow.container = {};
 Sparrow.global = function (key, obj) {
     if (typeof(obj) === "undefined") {
@@ -743,10 +821,10 @@ Sparrow.remove=function (key) {
 })();
 Sparrow.url = {
     root: $(function () {
-        pathName = window.location.pathname === "/" ? ""
-            : ("/" + window.location.pathname.split('/')[1]);
-        return window.location.protocol + "//" + window.location.host;
-        //+ (false ? pathName : "");
+        // var pathName = window.location.pathname === "/" ? ""
+        //     : ("/" + window.location.pathname.split('/')[1]);
+        // return window.location.protocol + "//" + window.location.host
+        //     + ("");
     }),
     _resource: function (path) {
         var scripts = document.scripts;
@@ -754,14 +832,20 @@ Sparrow.url = {
         if (path) {
             sparrowPath = [path];
         }
+        if (scripts == null || scripts.length === 0) {
+            return null;
+        }
         var r = null;
         for (var i in scripts) {
             var brk = false;
-            sparrowPath.forEach(function (path) {
-                var startIndex = scripts[i].src.indexOf(path);
-                if (startIndex > -1) {
-                    r = scripts[i].src.substring(0, startIndex);
-                    brk = true;
+            sparrowPath.forEach(function () {
+                for(var i=0;i<sparrowPath.length;i++) {
+                    var p= sparrowPath[i];
+                    var startIndex = scripts[i].src.indexOf(p);
+                    if (startIndex > -1) {
+                        r = scripts[i].src.substring(0, startIndex);
+                        brk = true;
+                    }
                 }
             });
             if (brk) {
@@ -774,7 +858,7 @@ Sparrow.url = {
 };
 Sparrow.url.resource = $.url._resource();
 Sparrow.url.passport = $(function () {
-    return "http://passport."+$.browser.cookie.root_domain;
+    return "http://passport." + $.browser.cookie.root_domain;
 });
 Sparrow.website = {
     name: $.browser.getCookie($.browser.cookie.website_name),
@@ -798,177 +882,376 @@ Sparrow.HORIZONTAL = "HORIZONTAL";
 Sparrow.VERTICAL = "VERTICAL";
 Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/images/user.png";
 Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/images/menu.png";
-Sparrow.ajax = {
-  _objPool: [],
-  referWindow: window,
-  url: null,
-  srcElement: null,
-  SUCCESS: '0',
-  _bindReadyStateChange: function (objXMLHttp, callback) {
-    objXMLHttp.onreadystatechange = function () {
-      if (objXMLHttp.readyState !== 4) {
-        return;
-      }
-      if (objXMLHttp.status === 200) {
-        if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
-          console.log('login false');
-          var config = objXMLHttp.responseText.json();
-          document.domain = $.browser.cookie.root_domain;
-          if (config.inFrame) {
-            window.parent.location.href = config.url;
-          } else {
-            $.window(config);
-          }
-          return;
-        }
-        if (objXMLHttp.responseText.indexOf('Access Denied') !== -1) {
-          if (!lang.message.accessDenied)
-            lang.message.accessDenied = 'Access Denied';
-          $.alert(lang.message.accessDenied, 'sad');
-          return;
-        }
-        if (callback) {
-          callback(objXMLHttp.responseText);
-          return;
-        }
-      }
-      if (objXMLHttp.status === 404) {
-        console.log('资源未找到');
-        return;
-      }
-      if (objXMLHttp.status === 500) {
-        console.log('服务器错误'); //
-        return;
-      }
-      if (objXMLHttp.status === 12031) {
-        console.log('服务器未启动'); //
-        return;
-      }
-      console.log(objXMLHttp.status + ':未知错误');
-    };
-  },
-  _getInstance: function () {
-    for (var i = 0; i < this._objPool.length; i += 1) {
-      if (
-        this._objPool[i].readyState === 0 ||
-        this._objPool[i].readyState === 4
-      ) {
-        return this._objPool[i];
-      }
-    }
-    this._objPool[this._objPool.length] = this._createObj();
-    return this._objPool[this._objPool.length - 1];
-  },
-  _createObj: function () {
-    var http_request = null;
-    if (window.XMLHttpRequest) {
-      http_request = new XMLHttpRequest();
-      if (http_request.overrideMimeType) {
-        http_request.overrideMimeType('text/xml');
-      }
-      return http_request;
-    }
-    if (window.ActiveXObject) {
-      try {
-        http_request = new ActiveXObject('Msxml2.XMLHTTP');
-      } catch (e) {
-        try {
-          http_request = new ActiveXObject('Microsoft.XMLHTTP');
-        } catch (e) {}
-      }
-    } else {
-      console.log('浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器');
-    }
-    return http_request;
-  },
-  _callback: function (xmlHttpRequest) {
-    var result = xmlHttpRequest.responseText.json();
-    if (result == null) {
-      $.message('json parse error ' + xmlHttpRequest.responseText);
-      return;
-    }
-    if (result.code !== this.ajax.SUCCESS) {
-      $.message(result.message);
-    }
-  },
-  gourl: function (url) {
-    this.ajax.referWindow.location.href = url;
-  },
-  req: function (getOrPost, url, callback, postStr, srcElement) {
-    if (url.indexOf('http://') === -1) {
-      url = $.url.root + url;
-    }
-    var objXMLHttp = this._getInstance();
-    if (objXMLHttp != null) {
-      this._bindReadyStateChange(objXMLHttp, callback);
-    }
-    if (srcElement) {
-      this.srcElement = srcElement;
-    }
-    //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with
-    //with (objXMLHttp) {
-    try {
-      objXMLHttp.open(getOrPost, url, true);
-      objXMLHttp.setRequestHeader('ajax', 'true');
-      objXMLHttp.setRequestHeader('pragma', 'no-cache');
-      objXMLHttp.setRequestHeader('cache-control', 'no-cache');
-      if (getOrPost === 'GET') {
-        objXMLHttp.send(null);
-        return;
-      }
-        //warn: Parameters: Character decoding failed
-        if (typeof postStr === 'object') {
-          objXMLHttp.setRequestHeader('Content-Type', 'application/json');
-          objXMLHttp.send(JSON.stringify(postStr));
-        } else {
-          postStr = postStr.replace(/%/g, '%25');
-          objXMLHttp.setRequestHeader(
-            'Content-Type',
-            'application/x-www-form-urlencoded;charset=utf-8'
-          );
-          objXMLHttp.send(postStr);
-        }
-    } catch (e) {
-      console.log(e);
-    }
-  },
-  json: function (url, data, callback, srcElement) {
-    if (typeof data === 'function') {
-      callback = data;
-      data = null;
-    }
 
-    $.ajax.req(
-      'POST',
-      url,
-      function (responseText) {
+if (!window.indexedDB) {
+    window.alert(
+        "Your browser doesn't support a stable version of IndexedDB. Such and such feature will not be available."
+    );
+}
+Sparrow.indexedDB = {
+    config: {
+        name: 'Sparrow',
+        version: "1.0",
+        tableNames: [{"name":"t1","key":"id"}]
+    }
+};
+Sparrow.indexedDB = function (config) {
+    this.instance = null;
+    this.name = config.name;
+    this.config = config;
+};
+Sparrow.indexedDB.prototype = {
+    init: function () {
+        this.request = window.indexedDB.open(this.config.name, this.config.version);
+        return new Promise((resolve, reject) => {
+            this.request.onsuccess = (event) => {
+                //数据库实例
+                this.instance = event.target.result;
+                console.log('数据库连接成功');
+                this.flush().then(r => {
+                    console.log(r);
+                    resolve(this);
+                }, e => {
+                    console.log(e);
+                    reject(e);
+                });
+                resolve(this.instance);
+            };
+            this.request.onupgradeneeded = (event) => {
+                console.log('首次创建数据库');
+                this.instance = event.target.result;
+                this._initTables();
+                resolve(this.instance);
+            };
+            this.request.onerror = () => {
+                console.log('数据库发生错误');
+                reject('连接indexedDB出错');
+            };
+        });
+    },
+    _createTable: function (tableName, key) {
+        this.instance.createObjectStore(tableName, {keyPath: key});
+    },
+    _initTables: function () {
+        this.config.tableNames.forEach((tableName) => {
+            this._createTable(tableName.name, tableName.key);
+        });
+    },
+    _getTableInstance: function (tableName) {
+        return this.instance
+            .transaction(tableName, 'readwrite')
+            .objectStore(tableName);
+    },
+    put: function (tableName, item) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .put(item);
+            req.onsuccess = function () {
+                resolve('添加成功');
+            };
+            req.onerror = function () {
+                reject('添加失败');
+            }
+        });
+    },
+    get: function (tableName, key) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .get(key);
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    delete: function (tableName, key) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .delete(key);
+            req.onsuccess = function () {
+                resolve('删除成功');
+            };
+            req.onerror = function () {
+                reject('删除失败');
+            }
+        });
+    },
+    clear: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .clear();
+            req.onsuccess = function () {
+                resolve('清空成功');
+            };
+            req.onerror = function () {
+                reject('清空失败');
+            }
+        });
+    },
+    flush: function () {
+        return new Promise((resolve, reject) => {
+            this.config.tableNames.forEach((table) => {
+                this.clear(table.name).then(r => {
+                    console.log(r);
+                }).catch(e => {
+                    console.log(e);
+                });
+            }, this);
+        });
+    },
+    getAll: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .getAll();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    getAllKeys: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .getAllKeys();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    count: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .count();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    openCursor: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .openCursor();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    },
+    openKeyCursor: function (tableName) {
+        return new Promise((resolve, reject) => {
+            const req = this._getTableInstance(tableName)
+                .openKeyCursor();
+            req.onsuccess = function () {
+                resolve(req.result);
+            };
+            req.onerror = function () {
+                reject('查询失败');
+            }
+        });
+    }
+};
+
+Sparrow.ajax = {
+    tokenConfig: {},
+    _objPool: [],
+    referWindow: window,
+    url: null,
+    srcElement: null,
+    SUCCESS: '0',
+    _bindReadyStateChange: function (objXMLHttp, callback) {
+        objXMLHttp.onreadystatechange = function () {
+            if (objXMLHttp.readyState !== 4) {
+                return;
+            }
+            if (objXMLHttp.status === 200) {
+                if (objXMLHttp.responseText.indexOf('"login":false') !== -1) {
+                    console.log('login false');
+                    var config = objXMLHttp.responseText.json();
+                    document.domain = $.browser.cookie.root_domain;
+                    if (config.inFrame) {
+                        window.parent.location.href = config.url;
+                    } else {
+                        $.window(config);
+                    }
+                    return;
+                }
+                if (objXMLHttp.responseText.indexOf('Access Denied') !== -1) {
+                    if (!lang.message.accessDenied)
+                        lang.message.accessDenied = 'Access Denied';
+                    $.alert(lang.message.accessDenied, 'sad');
+                    return;
+                }
+                if (callback) {
+                    callback(objXMLHttp.responseText);
+                    return;
+                }
+            }
+            if (objXMLHttp.status === 404) {
+                console.log('资源未找到');
+                return;
+            }
+            if (objXMLHttp.status === 500) {
+                console.log('服务器错误'); //
+                return;
+            }
+            if (objXMLHttp.status === 12031) {
+                console.log('服务器未启动'); //
+                return;
+            }
+            console.log(objXMLHttp.status + ':未知错误');
+        };
+    },
+    _getInstance: function () {
+        for (var i = 0; i < this._objPool.length; i += 1) {
+            if (this._objPool[i].readyState === 0 || this._objPool[i].readyState === 4) {
+                return this._objPool[i];
+            }
+        }
+        this._objPool[this._objPool.length] = this._createObj();
+        return this._objPool[this._objPool.length - 1];
+    },
+    _createObj: function () {
+        var http_request = null;
+        if (window.XMLHttpRequest) {
+            http_request = new XMLHttpRequest();
+            if (http_request.overrideMimeType) {
+                http_request.overrideMimeType('text/xml');
+            }
+            return http_request;
+        }
+        if (window.ActiveXObject) {
+            try {
+                http_request = new ActiveXObject('Msxml2.XMLHTTP');
+            } catch (e) {
+                try {
+                    http_request = new ActiveXObject('Microsoft.XMLHTTP');
+                } catch (e) {
+                }
+            }
+        } else {
+            console.log('浏览器不支持AJAX,请设置浏览器安全级别或更新浏览器');
+        }
+        return http_request;
+    },
+    _callback: function (responseText) {
         var result = responseText.json();
         if (result == null) {
-          $.message('json parse error ' + responseText);
-          return;
+            $.message('json parse error ' + responseText);
+            return;
+        }
+        if (result.code !== this.ajax.SUCCESS) {
+            $.message(result.message);
+        }
+    },
+    gourl: function (url) {
+        this.ajax.referWindow.location.href = url;
+    },
+    _findToken: function (url) {
+        var token = null;
+        for (var baseUrl in this.tokenConfig) {
+            if (url.indexOf(baseUrl) === 0) {
+                token = this.tokenConfig[baseUrl];
+                break;
+            }
+        }
+        return token;
+    },
+    req: function (getOrPost, url, callback, postStr, srcElement) {
+        if (url.indexOf('http://') === -1) {
+            url = $.url.root + url;
         }
 
-        if (result.code === $.ajax.SUCCESS) {
-          if (callback) {
-            callback(result);
-          } else {
-            $.message(result.message, $.ajax.srcElement);
-          }
-        } else {
-          $.message(result.message, $.ajax.srcElement);
+        var objXMLHttp = this._getInstance();
+        if (objXMLHttp != null) {
+            this._bindReadyStateChange(objXMLHttp, callback);
         }
-      },
-      data,
-      srcElement
-    );
-  },
-  get: function (url, callback) {
-    callback = callback ? callback : $.ajax._callback;
-    $.ajax.req('GET', url, callback);
-  },
-  post: function (url, data) {
-    $.ajax.req('POST', url, $.ajax._callback, data);
-  },
+        if (srcElement) {
+            this.srcElement = srcElement;
+        }
+        //https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with
+        //with (objXMLHttp) {
+        try {
+            objXMLHttp.open(getOrPost, url, true);
+            objXMLHttp.setRequestHeader('ajax', 'true');
+            objXMLHttp.setRequestHeader('pragma', 'no-cache');
+            objXMLHttp.setRequestHeader('cache-control', 'no-cache');
+            var token = this._findToken(url);
+            if (token) {
+                for (var key in token) {
+                    objXMLHttp.setRequestHeader(key, token[key]());
+                }
+            }
+            if (getOrPost === 'GET') {
+                objXMLHttp.send(null);
+                return;
+            }
+            //warn: Parameters: Character decoding failed
+            if (typeof postStr === 'object') {
+                objXMLHttp.setRequestHeader('Content-Type', 'application/json');
+                objXMLHttp.send(JSON.stringify(postStr));
+            } else {
+                postStr = postStr.replace(/%/g, '%25');
+                objXMLHttp.setRequestHeader(
+                    'Content-Type',
+                    'application/x-www-form-urlencoded;charset=utf-8'
+                );
+                objXMLHttp.send(postStr);
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    },
+    //内部业务使用
+    json: function (url, data, callback, srcElement, token) {
+        if (typeof data === 'function') {
+            callback = data;
+            data = null;
+        }
+
+        $.ajax.req(
+            'POST',
+            url,
+            function (responseText) {
+                var result = responseText.json();
+                if (result == null) {
+                    $.message('json parse error ' + responseText);
+                    return;
+                }
+                if (result.code === $.ajax.SUCCESS) {
+                    if (callback) {
+                        callback(result);
+                    } else {
+                        $.message(result.message, $.ajax.srcElement);
+                    }
+                } else {
+                    $.message(result.message, $.ajax.srcElement);
+                }
+            },
+            data,
+            srcElement,
+            token
+        );
+    },
+    get: function (url, callback) {
+        callback = callback ? callback : $.ajax._callback;
+        $.ajax.req('GET', url, callback, null, null)
+    },
+    post: function (url, data, callback) {
+        callback = callback ? callback : $.ajax._callback;
+        $.ajax.req('POST', url, callback, data, null);
+    }
 };
 
 /*------------------------------------validate 表单验证------------------------------------------------*/
@@ -1472,7 +1755,6 @@ Sparrow.randomUrl = function (url) {
     }
     return url;
 };
-
 Sparrow.request = function (name) {
     var reg = new RegExp("(^|\\?|&)" + name + "=([^&]*)(\\s|&|$)", "i");
     if (reg.test(location.href)) {
@@ -1480,7 +1762,6 @@ Sparrow.request = function (name) {
     }
     return "";
 };
-
 Sparrow.isNullOrEmpty = function (sourceString) {
     return (sourceString == null || typeof (sourceString) === "undefined"
         || (typeof (sourceString) === "string" && (sourceString.trim() === "" || sourceString.trim() === "null")))
@@ -1494,7 +1775,6 @@ Sparrow.toString = function (sourceString, defaultValue) {
     }
     return sourceString;
 };
-
 Sparrow.countDown = function (end, current, element) {
     var t = end - current;
     var count = {};
@@ -1555,7 +1835,6 @@ Sparrow.submit = function (action, formIndex) {
     }
     document.forms[formIndex].submit();
 };
-
 Sparrow.jsonKeys = function (json) {
     var jsonKeyArray = [];
     if (!json) {
@@ -1943,7 +2222,6 @@ Sparrow.prototype.fresh = function (url) {
     this.s.src = $.randomUrl(this.s.src);
 };
 
-
 Sparrow.prototype.enter = function (handle) {
     this.s.onkeydown = function (e) {
         e = window.event || e;
@@ -1957,62 +2235,6 @@ Sparrow.prototype.enter = function (handle) {
         handle();
     };
 };
-
-
-String.prototype.toArrayBuffer=function(){
-    var bytes = [];
-    var len, c;
-    len = this.length;
-    for (var i = 0; i < len; i++) {
-        c = this.charCodeAt(i);
-        if (c >= 0x010000 && c <= 0x10FFFF) {
-            bytes.push(((c >> 18) & 0x07) | 0xF0);
-            bytes.push(((c >> 12) & 0x3F) | 0x80);
-            bytes.push(((c >> 6) & 0x3F) | 0x80);
-            bytes.push((c & 0x3F) | 0x80);
-        } else if (c >= 0x000800 && c <= 0x00FFFF) {
-            bytes.push(((c >> 12) & 0x0F) | 0xE0);
-            bytes.push(((c >> 6) & 0x3F) | 0x80);
-            bytes.push((c & 0x3F) | 0x80);
-        } else if (c >= 0x000080 && c <= 0x0007FF) {
-            bytes.push(((c >> 6) & 0x1F) | 0xC0);
-            bytes.push((c & 0x3F) | 0x80);
-        } else {
-            bytes.push(c & 0xFF);
-        }
-    }
-    var array = new Int8Array(bytes.length);
-    for (var i in bytes) {
-        array[i] = bytes[i];
-    }
-    return array;
-};
-
-Int8Array.prototype.toString=function() {
-    var dataView = new DataView(this.buffer);
-    var ints = new Uint8Array(this.buffer.byteLength);
-    for (var i = 0; i < ints.length; i++) {
-        ints[i] = dataView.getUint8(i);
-    }
-    var str = '', _arr = ints;
-    for (var i = 0; i < _arr.length; i++) {
-        var one = _arr[i].toString(2),
-            v = one.match(/^1+?(?=0)/);
-        if (v && one.length == 8) {
-            var bytesLength = v[0].length;
-            var store = _arr[i].toString(2).slice(7 - bytesLength);
-            for (var st = 1; st < bytesLength; st++) {
-                store += _arr[st + i].toString(2).slice(2);
-            }
-            str += String.fromCharCode(parseInt(store, 2));
-            i += bytesLength - 1;
-        } else {
-            str += String.fromCharCode(_arr[i]);
-        }
-    }
-    return str;
-};
-
 var _hmt = _hmt || [];
 (function () {
     var hm = document.createElement("script");
@@ -2020,6 +2242,7 @@ var _hmt = _hmt || [];
     var s = document.getElementsByTagName("script")[0];
     s.parentNode.insertBefore(hm, s);
 })();
+
 Sparrow.prototype.tabs = function (config) {
     if (!config) {
         config = {};
@@ -3749,6 +3972,7 @@ Sparrow.menu.prototype.init = function () {
        this.horizontal();
     }
 };
+
 Sparrow.datePicker = function (pickerId) {
     var dateFormat = Object();
     dateFormat["yyyy年MM月dd日"] = new RegExp("^(\\d{4})年(\\d{2})月(\\d{2})日$",
@@ -7082,3 +7306,4 @@ if ( !noGlobal ) {
 
 return Sparrow;
 }));
+
