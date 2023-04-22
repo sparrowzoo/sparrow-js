@@ -3,8 +3,8 @@ import {Sparrow} from '../../../../source/scripts/sparrow_es.js'
 const HttpApiDemo = {
     name: 'SparrowAjax',
     userId: 1,
-    db: null,
-    addContact: function () {
+    db:null,
+    addContact:function (){
         this.db.put('contact', {"userId": this.userId++, "name": 'zhangsan', "age": 18}).then(function (data) {
             console.log(data);
         }, function (error) {
@@ -14,28 +14,23 @@ const HttpApiDemo = {
     indexedDBTest: function () {
         var db = new Sparrow.indexedDB({
             name: 'sparrow',
-            version: "5.0",
-            tableNames: [{"name": "contact", "key": "userId"}, {"name": "session", "key": "sessionKey"}, {
+            version: "4.0",
+            tableNames: [{"name": "contact", "key": "userId"}, {"name": "session", "key": "sessionId"}, {
                 "name": "qun",
                 "key": "qunId"
             }]
         });
 
         var initPromise = db.init();
-        this.db = db;
+        this.db=db;
         //连接确认成功后提交数据
         initPromise.then(function () {
-                // db.put('session', {"userId": HttpApiDemo.userId++, "name": 'zhangsan', "age": 18})
-                //     .then(function (data) {
-                //         console.log(data);
-                //     }, function (error) {
-                //         console.log(error);
-                //     });
-
-                db.put('session', {
-                    "sessionKey": '1',
-                    "message-list": [{'id': 123, 'content': 'content'}, {'id': 456, 'content': 'content'}]
-                })
+                db.put('contact', {"userId": HttpApiDemo.userId++, "name": 'zhangsan', "age": 18})
+                    .then(function (data) {
+                        console.log(data);
+                    }, function (error) {
+                        console.log(error);
+                    });
             }
             , function (error) {
                 console.log("fail:" + error);
