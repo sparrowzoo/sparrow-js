@@ -24,7 +24,7 @@ define(['store'], function (store) {
       return new Promise((resolve, reject) => {
         this.request.onsuccess = (event) => {
           this.db = event.target.result;
-          console.log('数据库连接成功');
+          // console.log('数据库连接成功');
 
           // 清空之前保存的内容
           this.clearStore([
@@ -37,7 +37,7 @@ define(['store'], function (store) {
           });
         };
         this.request.onupgradeneeded = (event) => {
-          console.log('首次创建数据库');
+          // console.log('首次创建数据库');
           const db = event.target.result;
           // 创建存储仓库
           db.createObjectStore(DB_STORE_NAME_SESSION, { keyPath: 'session' });
@@ -45,7 +45,7 @@ define(['store'], function (store) {
           db.createObjectStore(DB_STORE_NAME_QUN, { keyPath: 'qunId' });
         };
         this.request.onerror = () => {
-          console.log('数据库发生错误');
+          // console.log('数据库发生错误');
           reject('连接indexedDB出错');
         };
       });
@@ -90,7 +90,7 @@ define(['store'], function (store) {
 
         const updateRequest = updateStore.put(sessionItem);
         updateRequest.onsuccess = function () {
-          console.log('数据更新成功');
+          // console.log('数据更新成功');
         };
       };
     }
