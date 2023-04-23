@@ -15,11 +15,11 @@ Sparrow.url = {
             return null;
         }
         var r = null;
-        for (var i in scripts) {
+        for (var i=0;i<scripts.length;i++) {
             var brk = false;
             sparrowPath.forEach(function () {
-                for(var i=0;i<sparrowPath.length;i++) {
-                    var p= sparrowPath[i];
+                for(var j=0;j<sparrowPath.length;j++) {
+                    var p= sparrowPath[j];
                     var startIndex = scripts[i].src.indexOf(p);
                     if (startIndex > -1) {
                         r = scripts[i].src.substring(0, startIndex);

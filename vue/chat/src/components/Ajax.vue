@@ -3,6 +3,8 @@
         <van-nav-bar title="AJAX 接口请求" left-arrow @click-left="onClickLeft"></van-nav-bar>
         <van-button @click="exportTest">Export Test</van-button>
         <van-button @click="awaitTest">Await Test</van-button>
+        <van-button @click="awaitTestMultiWaiter2">awaitTestMultiWaiter2</van-button>
+
         <van-button @click="indexedDBTest">indexedDBTest</van-button>
         <van-button @click="addContact">addContact</van-button>
         <van-button @click="login">login</van-button>
@@ -39,11 +41,11 @@ export default {
         this.userId = localStorage.getItem("userId");
         this.websocket = new ImWebSocket('ws://chat.sparrowzoo.com/websocket', localStorage.getItem('token'));
         this.websocket.onMsgCallback = function (data) {
-            ImProtocol.parse(data,function (protocol) {
-                console.log("parse protocol:"+protocol);
+            ImProtocol.parse(data, function (protocol) {
+                console.log("parse protocol:" + protocol);
             });
         };
-        this.websocket.reconnectionAlarmCallback=function () {
+        this.websocket.reconnectionAlarmCallback = function () {
             console.log("reconnection AlarmCallback");
         };
     },
@@ -94,9 +96,12 @@ export default {
             alert(HttpApiDemo);
             HttpApiDemo.change();
         },
-
+        awaitTestMultiWaiter2() {
+            HttpApiDemo.awaitTestMultiWaiter2();
+        },
         awaitTest() {
-            HttpApiDemo.awaitTest();
+            //HttpApiDemo.awaitTest();
+            HttpApiDemo.awaitTestMultiWaiter();
         },
         indexedDBTest() {
             HttpApiDemo.indexedDBTest();

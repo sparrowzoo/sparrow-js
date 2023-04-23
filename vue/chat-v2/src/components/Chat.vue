@@ -40,7 +40,6 @@
 
 <script>
 
-// import {IndexdedDB} from "@/char/indexedDB";
 // import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
 // import '../lib/sparrowChat'
 // import { getSessionKey } from '../lib/sparrowChat'
@@ -131,6 +130,7 @@ export default {
     methods: {
         loadMessage() {
             console.log("loadMessage");
+            console.log(this.$sparrowDB);
             return ChatApi.getSessionFromLocal("1").then((session) => {
                 console.log(session);
             }, (error) => {
