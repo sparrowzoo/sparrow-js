@@ -50,9 +50,9 @@ const ChatApi = {
         const data = 'token=' + token;
         return Sparrow.http.post(SPARROW_BASE_URL + "/sessions", data);
     },
-    getContacts: function getFrinedList(token) {
+    getContacts:async function getFrinedList(token) {
         const data = 'token=' + token;
-        return Sparrow.http.post(SPARROW_BASE_URL + "/contacts", data);
+        return await Sparrow.http.post(SPARROW_BASE_URL + "/contacts", data);
     },
     setRead: function setRead(chatType, sessionKey, token) {
         const params = {
@@ -84,15 +84,38 @@ const ChatApi = {
         const params = "mobile=" + mobile;
         return Sparrow.http.get(CONSUMER_BASE_URL + "/app/message/userDetail?" + params);
     },
-    getUserById: function (id) {
+    getUserById: async function (id,userMap) {
+        if(userMap!=null&&userMap[id]!=null){
+            return userMap[id];
+        }
         const params = "id=" + id;
-        return Sparrow.http.get(CONSUMER_BASE_URL + "/app/message/findById?" + params);
+        return await Sparrow.http.get(CONSUMER_BASE_URL + "/app/message/findById?" + params).then(function (res) {
+            return res.data;
+        });
     },
-    getUserListByIds: function (idArr) {
-        const params = {
-            idArr: idArr,
-        };
-        return Sparrow.http.post(CONSUMER_BASE_URL + "/app/message/userDetailList", params);
+    getUserListByIds:async  function (idArr, userMap) {
+        if (Array.isArray(idArr) || idArr.length === 0) {
+            return null;
+        }
+      try {
+          for (var i = 0; i < idArr.length; i++) {
+              if (userMap[idArr[i]] != null) {
+                  idArr.splice(i, 1);
+                  i--;
+              }
+          }
+          return  Promise.resolve(data);
+          const params = {
+              idArr: idArr,
+          };
+          //var a=await Sparrow.http.post(CONSUMER_BASE_URL + "/app/message/userDetailList", params);
+          if(a.code!=200){
+              return Promise.reject(a);
+          }
+      }
+      catch (e){
+          return null;
+      }
     },
     addFriendById: function (id) {
         const params = "id=" + id;

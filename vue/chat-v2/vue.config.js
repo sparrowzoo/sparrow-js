@@ -32,6 +32,9 @@ module.exports = defineConfig({
 				'@': resolve('src'),
 				'$': resolve('../../source/scripts'),
 			}
+		},
+		experiments: {
+			topLevelAwait: true, // 此处为新增配置
 		}
 	},
 
