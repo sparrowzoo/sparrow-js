@@ -2,7 +2,7 @@
     <div class="chatPerson">
         <van-nav-bar :title="$route.query.title" left-arrow @click-left="onClickLeft">
             <template #right v-if="$route.query.target == -1">
-                <van-icon name="ellipsis" size="1.5rem" @click="toMyQunDetail()" />
+                <van-icon name="ellipsis" size="1.5rem" @click="toQunDetail()" />
             </template></van-nav-bar>
 
         <div class="center" ref="scrollDiv">

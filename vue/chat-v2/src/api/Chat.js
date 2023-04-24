@@ -20,37 +20,21 @@ tokenConfig[CONSUMER_BASE_URL] = {
 
 Sparrow.ajax.tokenConfig = tokenConfig;
 
-var db = new Sparrow.indexedDB({
-    name: 'sparrow',
-    version: "5.0",
-    tableNames: [{"name": "contact", "key": "userId"}, {"name": "session", "key": "sessionKey"}, {
-        "name": "qun",
-        "key": "qunId"
-    }]
-});
-
 
 const ChatApi = {
-    getSessionFromLocal: function (sessionKey) {
-        console.log("getSessionFromLocal:" + sessionKey);
-        return db.init().then(function () {
-            console.log(" indexedDB init success")
-            return db.get('session', sessionKey).then(function (data) {
-                console.log("indexedDB get success:" + data);
-                return data;
-            }, function (error) {
-                console.log("indexedDB get fail:" + error);
-                return null;
-            });
-        }, function (error) {
-            console.log("indexedDB init fail:" + error);
-        });
-    },
     getSession: function getSession(token) {
         const data = 'token=' + token;
         return Sparrow.http.post(SPARROW_BASE_URL + "/sessions", data);
     },
-    getContacts:async function getFrinedList(token) {
+    getUserId: async function getSession(token) {
+        const data = 'token=' + token;
+        return await Sparrow.http.post(SPARROW_BASE_URL + "/get-user-id", data).then(res => {
+            return res.data;
+        }, err => {
+            console.log(err);
+        });
+    },
+    getContacts: async function getFrinedList(token) {
         const data = 'token=' + token;
         return await Sparrow.http.post(SPARROW_BASE_URL + "/contacts", data);
     },
@@ -84,8 +68,8 @@ const ChatApi = {
         const params = "mobile=" + mobile;
         return Sparrow.http.get(CONSUMER_BASE_URL + "/app/message/userDetail?" + params);
     },
-    getUserById: async function (id,userMap) {
-        if(userMap!=null&&userMap[id]!=null){
+    getUserById: async function (id, userMap) {
+        if (userMap != null && userMap[id] != null) {
             return userMap[id];
         }
         const params = "id=" + id;
@@ -93,29 +77,56 @@ const ChatApi = {
             return res.data;
         });
     },
-    getUserListByIds:async  function (idArr, userMap) {
-        if (Array.isArray(idArr) || idArr.length === 0) {
-            return null;
+    getUserMapByIds: async function (idArr, localUserCache) {
+        //如果idArr为空，直接返回空对象
+        if (!Array.isArray(idArr) || idArr.length === 0) {
+            return {};
         }
-      try {
-          for (var i = 0; i < idArr.length; i++) {
-              if (userMap[idArr[i]] != null) {
-                  idArr.splice(i, 1);
-                  i--;
-              }
-          }
-          return  Promise.resolve(data);
-          const params = {
-              idArr: idArr,
-          };
-          //var a=await Sparrow.http.post(CONSUMER_BASE_URL + "/app/message/userDetailList", params);
-          if(a.code!=200){
-              return Promise.reject(a);
-          }
-      }
-      catch (e){
-          return null;
-      }
+
+        var userId = -1;
+        var i = 0;
+        try {
+            var userResultMap = {};
+            var needRemoteFetchIdArr = [];
+            //先从本地缓存中获取,并且将本地缓存中没有的id放入needRemoteFetchIdArr
+            for (i = 0; i < idArr.length; i++) {
+                userId = idArr[i];
+                if (localUserCache[userId] != null) {
+                    userResultMap[userId] = localUserCache[userId];
+                } else {
+                    needRemoteFetchIdArr.push(userId);
+                }
+            }
+            //如果本地缓存中已经包含了所有的id，则直接返回
+            if (needRemoteFetchIdArr.length === 0) {
+                return userResultMap;
+            }
+            //如果本地缓存中没有，则从远程获取
+            const params = {
+                idArr: needRemoteFetchIdArr,
+            };
+
+            const remoteUsers = await Sparrow.http.post(CONSUMER_BASE_URL + "/app/message/userDetailList", params)
+                .then(function (res) {
+                    return res.data;
+                }, function (error) {
+                    return {error};
+                });
+            if (remoteUsers == null || remoteUsers.length === 0) {
+                return userResultMap;
+            }
+            for (i = 0; i < remoteUsers.length; i++) {
+                userId = remoteUsers[i].id;
+                //将远程获取的用户信息放入本地缓存
+                localUserCache[userId] = remoteUsers[i];
+                //将远程获取的用户信息放入返回结果
+                userResultMap[userId] = remoteUsers[i];
+            }
+            return userResultMap;
+        } catch (e) {
+            console.error(e);
+            return {};
+        }
     },
     addFriendById: function (id) {
         const params = "id=" + id;

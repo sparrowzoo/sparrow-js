@@ -1,4 +1,4 @@
-var ImWebSocket = function (url, token) {
+Sparrow.webSocket = function (url, token) {
     this.url = url;
     // websocket 连接的 token
     this.token = token;
@@ -24,7 +24,7 @@ var ImWebSocket = function (url, token) {
     this.reconnectionAlarmCallback = null;
 }
 
-ImWebSocket.prototype.connect = function () {
+Sparrow.webSocket.prototype.connect = function () {
     try {
         if ('WebSocket' in window) {
             this.ws = new WebSocket(this.url, [this.token,]);
@@ -39,12 +39,12 @@ ImWebSocket.prototype.connect = function () {
     }
 }
 
-ImWebSocket.prototype.close = function () {
+Sparrow.webSocket.prototype.close = function () {
     // 关闭连接
     this.ws.close();
 }
 
-ImWebSocket.prototype.reconnectWebSocket = function () {
+Sparrow.webSocket.prototype.reconnectWebSocket = function () {
     //如果是服务器关闭的连接，不需要重连
     if (new Date() - this.lastHeartTime > this.heartTimeout * 2) {
         console.log('发起重连');
@@ -60,7 +60,7 @@ ImWebSocket.prototype.reconnectWebSocket = function () {
     }
 }
 
-ImWebSocket.prototype._onOpen = function () {
+Sparrow.webSocket.prototype._onOpen = function () {
     this.ws.onopen = (e) => {
         console.log('连接成功' + e);
         this.closeHeartBeat();
@@ -70,7 +70,7 @@ ImWebSocket.prototype._onOpen = function () {
 }
 
 
-ImWebSocket.prototype._onMsg = function () {
+Sparrow.webSocket.prototype._onMsg = function () {
     this.ws.onmessage = (e) => {
         // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
         if (e.data === 'PONG') {
@@ -81,7 +81,7 @@ ImWebSocket.prototype._onMsg = function () {
     }
 }
 
-ImWebSocket.prototype._onClose = function () {
+Sparrow.webSocket.prototype._onClose = function () {
     this.ws.onclose = (e) => {
         console.log('close 事件');
         if (e.wasClean) {
@@ -94,7 +94,7 @@ ImWebSocket.prototype._onClose = function () {
     };
 }
 
-ImWebSocket.prototype._onError = function () {
+Sparrow.webSocket.prototype._onError = function () {
     this.onerror = (e) => {
         // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
         console.log('连接出错' + e);
@@ -104,7 +104,7 @@ ImWebSocket.prototype._onError = function () {
 
 
 // 心跳机制 --启动心跳
-ImWebSocket.prototype.startHeartBeat = function () {
+Sparrow.webSocket.prototype.startHeartBeat = function () {
     this.timeoutTimer = setInterval(() => {
         // 开启一个心跳
         try {
@@ -125,16 +125,13 @@ ImWebSocket.prototype.startHeartBeat = function () {
 }
 
 // 关闭心跳
-ImWebSocket.prototype.closeHeartBeat = function () {
+Sparrow.webSocket.prototype.closeHeartBeat = function () {
     clearTimeout(this.timeoutTimer);
-    clearTimeout(this.reconnectionAlarmTimer);
     clearTimeout(this.serverTimeoutTimer);
 }
 //发送消息
-ImWebSocket.prototype.sendMessage = function (data) {
+Sparrow.webSocket.prototype.sendMessage = function (data) {
     // 发送到服务器
     this.ws.send(data.toBytes());
 }
-
-export {ImWebSocket}
 

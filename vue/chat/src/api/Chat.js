@@ -24,6 +24,7 @@ const ChatApi = {
         const data = 'token=' + token;
         return Sparrow.http.post(SPARROW_BASE_URL + "/sessions", data);
     },
+
     getContacts: function getFrinedList(token) {
         const data = 'token=' + token;
         return Sparrow.http.post(SPARROW_BASE_URL + "/contacts", data);
