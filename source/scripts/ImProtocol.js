@@ -56,9 +56,10 @@ ImProtocol.prototype.toBytes = function () {
         this.targetUserIdBytes = this.targetUserId.toBytes();
         this.targetUserIdLength = 4;//int 4bytes
     }
-    let msgLength = this.msg.length ? this.msg.length : this.msg.byteLength;
-    this.msgLength = msgLength;
-    this.msgLengthBytes = msgLength.toBytes();
+
+    this.contentBytes=this.msgType===ImProtocol.TEXT_MESSAGE?this.msg.toArrayBuffer():this.msg;
+    this.msgLength = this.msgType===ImProtocol.TEXT_MESSAGE ? this.contentBytes.length : this.msg.byteLength;;
+    this.msgLengthBytes = this.msgLength.toBytes();
     this.msgLengthLength = 4;//int 4bytes
     this.sendTimeBytes = (this.clientSendTime + "").toArrayBuffer();
     this.sendTimeLength = this.sendTimeBytes.length;
@@ -102,17 +103,16 @@ ImProtocol.prototype.toBytes = function () {
     }
     result.set(this.msgLengthBytes, offset);
     offset += this.msgLengthLength;
-    result.set(this.msg.toArrayBuffer(), offset);
+    result.set(this.contentBytes, offset);
     offset += this.msgLength;
     result.set(this.sendTimeBytes, offset);
     return result;
 };
 //收到推送的消息
-ImProtocol.parse = function (data,callback) {
+ImProtocol.parse = function (blob,callback) {
     //当客户端收到服务端发来的消息时，触发onmessage事件，
     // 参数e.data包含server传递过来的数据
      (async () => {
-        const blob = data;
         const buf = await blob.arrayBuffer();
         if (buf.byteLength === 1) {
             console.log("对方不在线!!!!");
@@ -193,10 +193,18 @@ ImProtocol.parse = function (data,callback) {
         }
         offset += this.msgLength;
         //客户端发送时间【对方传过来】
-        this.clientSendTime = new Uint8Array(
-            buf.slice(offset, buf.byteLength)
-        ).toString();
-        callback(this);
+        this.clientSendTime = new Uint8Array(buf.slice(offset, buf.byteLength)).toString();
+
+        callback({
+            chatType: this.chatType,
+            msgType: this.msgType,
+            fromUserId: this.fromUserId,
+            currentUserId: this.currentUserId,
+            content:this.msg,
+            url:this.url,
+            clientSendTime: this.clientSendTime,
+            sessionKey: this.sessionKey
+        });
     })();
 }
 

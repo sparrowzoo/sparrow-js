@@ -267,6 +267,7 @@ Number.prototype.toBytes = function () {
     } while (i);
     return bytes;
 };
+// new Date().format("yyyy-MM-dd hh:mm:ss");
 Date.prototype.format = function (fmt) {
     var o = {
         "M+": this.getMonth() + 1, //月份

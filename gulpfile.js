@@ -58,6 +58,7 @@ var paths = {
             'source/scripts/dispatcher.js',
             'source/scripts/user.js',
             'source/scripts/share.js',
+            'source/scripts/websocket.js',
             'source/scripts/es_tail.js'
         ],
         dest: 'source/scripts/'
@@ -98,7 +99,8 @@ var paths = {
             'source/scripts/metricChart.js',
             'source/scripts/user.js',
             'source/scripts/share.js',
-            'source/scripts/tail.js'
+            'source/scripts/tail.js',
+            'source/scripts/websocket.js'
         ],
         dest: 'source/scripts/'
     },

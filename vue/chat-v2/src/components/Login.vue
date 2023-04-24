@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {ChatApi} from "@/api/Chat";
+// import {ChatApi} from "@/api/Chat";
 import router from "@/route";
 import {Toast} from "vant";
 
@@ -28,17 +28,21 @@ export default {
     },
     methods: {
         login() {
+            this.$userId = parseInt(this.phone, 10);
+            this.$token = "mock:" + this.phone;
+            router.push("/contact");
+
             Toast.success("登录成功");
-            ChatApi.login(this.code, this.phone, "123456").then(res => {
-                console.log(res.data.token);
-                console.log(res.data.memberInfo.id);
-                localStorage.setItem("userId", res.data.memberInfo.id);
-                localStorage.setItem('token', res.data.token); // memberInfo
-                Toast.success("登录成功");
-                router.push("/contact");
-            }, err => {
-                console.log("error:" + err);
-            })
+            // ChatApi.login(this.code, this.phone, "123456").then(res => {
+            //     console.log(res.data.token);
+            //     console.log(res.data.memberInfo.id);
+            //     localStorage.setItem("userId", res.data.memberInfo.id);
+            //     localStorage.setItem('token', res.data.token); // memberInfo
+            //     Toast.success("登录成功");
+            //     router.push("/contact");
+            // }, err => {
+            //     console.log("error:" + err);
+            // })
         },
     }
 }

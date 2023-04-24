@@ -43,7 +43,9 @@ import HelloWorld from "@/chat/components/HelloWorld.vue";
 export default {
 	name: 'ChatMain',
     components: {HelloWorld},
-	computed: {},
+	computed: {
+
+  },
 	//除了App.vue，其他的vue文件都要加上name （copilot的badcase 不对 ）
 	//降了App.vue的name，其他的vue文件命名必须是驼峰命名法
 	//https://sparrowzoo.feishu.cn/docx/RzKZdWXQioxE5vxamcec8YBencb

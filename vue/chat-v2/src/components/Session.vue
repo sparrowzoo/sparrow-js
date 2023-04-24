@@ -13,18 +13,18 @@
                             @click="toContact"></van-button>
             </van-col>
         </van-row>
-        <div class="chat_item" v-for="session in sessionList" :key="session.id"
+        <div class="chat_item" v-for="session in sessionList" :key="session.key"
              @click="toChat(session)">
             <van-badge :content="session.count > 1 ? session.count : null" :dot="session.count == 1">
                 <img :src="session.icon" class="child"/>
             </van-badge>
             <div class="chat_right">
                 <div class="chat_top">
-                    <span class="chat_name ">{{ session.fromUserName }}</span>
+                    <span class="chat_name ">{{ session.title }}</span>
                     <span class="chat_time gray">{{ session.time }}</span>
                 </div>
                 <div class="chat_bottom gray">
-                    {{ session.content }}
+                    {{ session.lastMessageContent }}
                 </div>
             </div>
         </div>
@@ -32,84 +32,17 @@
 </template>
 
 <script>
-// import systemImage from "../assets/system.png";
-// import serviceImage from "../assets/service.png";
 // import qunIcon from "../assets/group.png";
-// import { mapState, mapGetters } from 'vuex'
-import {ChatApi} from "@/api/Chat";
-
 export default {
-    name: "ChatChat",
+    name: "ChatSession",
     data() {
         return {
-            ws: null,
-            sessionList: null
+            sessionList: []
         };
     },
-    mounted() {
-        //生成sessions 假数据
-       var sessionList= await ChatApi.getSession(7);
-        const user = await ChatApi.getUserById(target, this.$userMap);
-
-        //.then(async sessions => {
-       const sessionList = sessions.map(async session => {
-                const chatType = session.chatSession.chatType; //1群 0单聊
-                const sessionKey = session.chatSession.sessionKey;//唯一id，可以作为群名
-                const target = session.chatSession.target;//用户id
-                var lastMessage = null;
-                var lastMessageTime = null;
-                var lastMessageContent = null;
-                if (session.messages != null && session.messages.length > 0) {
-                    lastMessage = session.messages[session.messages.length - 1];//最后收到的一条消息
-                    lastMessageTime = lastMessage.clientSendTime;//最后一条消息的发送时间
-                    lastMessageContent = lastMessage.messageType === 1 ? '/图片/' : this.$Base64.decode(lastMessage.content);
-                }
-                const unReadCount = session.messages.filter(message => message.serverTime >= session.lastReadTime).length;
-                if (chatType === 0) {
-                    // 普通用户
-                    if (!user) {
-                        return null;
-                    }
-                    console.log("get user from db", user)
-                    return {
-                        id: sessionKey,
-                        target: target,
-                        type: chatType,
-                        lastMessageTime: lastMessageTime,
-                        //time: this.$moment(lastMessageTime).format('YY/MM/DD'),
-                        content: lastMessageContent,
-                        count: unReadCount,
-                        icon: user.avatar,
-                        fromUserName: user.userName,
-                        // icon: qunIcon
-                    }
-                }
-                if(chatType===1){
-                    // 普通用户
-                    const user = await ChatApi.getUserById(target, this.$userMap);
-                    if (!user) {
-                        return null;
-                    }
-                    console.log("get user from db", user)
-                    return {
-                        id: sessionKey,
-                        target: target,
-                        type: chatType,
-                        lastMessageTime: lastMessageTime,
-                        //time: this.$moment(lastMessageTime).format('YY/MM/DD'),
-                        content: lastMessageContent,
-                        count: unReadCount,
-                        icon: user.avatar,
-                        fromUserName: user.userName,
-                        // icon: qunIcon
-                    }
-                }
-            });
-            this.sessionList = await Promise.all(sessionList);
-            console.log(this.sessionList);
-        }, err => {
-            console.log(err)
-        });
+    async mounted() {
+        this.sessionList=this.$sessions;
+        console.log(this.sessionList);
     },
     computed: {},
     methods: {
@@ -118,7 +51,7 @@ export default {
         },
         toChat(item) {
             console.log(item)
-            this.$router.push({name: 'chat', query: {id: item.id, target: item.target, title: item.title}})
+            this.$router.push({name: 'chat', query: {chatType: item.type, key: item.key, title: item.title}})
         },
         toContact() {
             this.$router.push({name: 'contact'})
