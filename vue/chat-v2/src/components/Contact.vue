@@ -119,13 +119,10 @@ export default {
         //聊天
         toChat(user) {
             console.log(user);
-            // Toast('toChatPerson');
-            this.$router.push({name: 'chat', query: {target: user.userId, title: user.userName}})
-
-            // this.$router.push({
-            // 	name: 'chatPerson',
-            // 	query: {id: "1-2", target: user.userId, title: '用户' + user.userId}
-            // })
+            this.$router.push({
+                name: 'chat',
+                query: {chatType: this.$protocol.CHAT_TYPE_1_2_1, key: user.userId, title: user.userName}
+            });
         },
         myQun() {
             this.$router.push({name: 'qun'})

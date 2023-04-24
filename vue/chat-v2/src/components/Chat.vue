@@ -1,87 +1,58 @@
 <template>
     <div class="chat">
         <van-nav-bar :title="$route.query.title" left-arrow @click-left="goBack">
-            <template #right v-if="$route.query.target == -1">
+            <template #right v-if="$route.query.chatType == this.$protocol.CHAT_TYPE_1_2_N">
                 <van-icon name="ellipsis" size="1.5rem" @click="qunDetail()"/>
             </template>
         </van-nav-bar>
         <div class="center" ref="scrollDiv">
-            <div class="chat" v-for="item in messageList" :key="item.id">
-                <div class="time">{{ item.time }}</div>
-                <div :class="item.isMe ? 'right' : 'left'">
-                    <img :src="item.headUrl" class="avatar"/>
+            <div class="chat" v-for="message in this.session.messages" :key="message.id">
+                <div class="time">{{ message.time }}</div>
+                <div :class="message.isMe ? 'right' : 'left'">
+                    <img :src="message.avatar" class="avatar"/>
                     <div class="content_wrap">
                         <div class="user_name">
-                            {{ item.userName }}
+                            {{ message.userName }}
                         </div>
-                        <div v-if="item.text" class="content">
-                            <div v-if="item.fromUserId === 1" v-longpress="() => cancel(item)">
-                                {{ item.content }}
+                        <div v-if="message.isText" class="content">
+                            <div v-if="message.isMe" v-longpress="() => cancel(message)">
+                                {{ message.content }}
                             </div>
                             <div v-else>
-                                {{ item.content }}
+                                {{ message.content }}
                             </div>
                         </div>
-                        <img v-longpress="() => cancel(item)" v-else class="img" :src="item.contentImage" alt="image">
+                        <img v-longpress="() => cancel(message)" v-else class="img" :src="message.contentImage"
+                             alt="image">
                     </div>
                 </div>
             </div>
         </div>
         <div class="bottom">
-            <van-uploader :after-read="afterRead">
+            <van-uploader :after-read="sendImage">
                 <van-icon name="smile" size="2rem"/>
             </van-uploader>
             <van-field class="content" type="textarea" rows="1" :autosize="{ maxHeight: 80 }" v-model="content"
                        placeholder=""/>
-            <van-button class="send" type="primary" size="small" @click="send()">发送</van-button>
+            <van-button class="send" type="primary" size="small" @click="sendText()">发送</van-button>
         </div>
     </div>
 </template>
 
 <script>
-
-// import { mapGetters, mapActions, mapState, mapMutations } from 'vuex'
-// import '../lib/sparrowChat'
 // import { getSessionKey } from '../lib/sparrowChat'
 import {Dialog, Toast} from 'vant';
 import {ChatApi} from "@/api/Chat";
-// import '../lib/imgCompression'
+import {ImProtocol} from "../../../../source/scripts/ImProtocol";
 // import imgCompression from '../lib/imgCompression';
-const TEXT_MESSAGE = 0;
-// const IMAGE_MESSAGE = 1;
-// const CHAT_TYPE_1_2_1 = 0;
-// const CHAT_TYPE_1_2_N = 1;
 export default {
     name: "ChatDialog",
     data() {
         return {
-            content: '',
-            session: null,
-            interval: null,
-            messageList: [{
-                chatType: 1,
-                userName: "admin",
-                fromUserId: 1,
-                id: 1,
-                isMe: true,
-                time: "2020-12-12 12:12:12",
-                content: "content",
-                isText: true,
-                contentImage: "url",
-                avatar: "head",
-            },
-                {
-                    chatType: 1,
-                    userName: "admin2",
-                    fromUserId: 1,
-                    id: 2,
-                    isMe: false,
-                    time: "2020-12-12 12:12:12",
-                    content: "content",
-                    isText: false,
-                    contentImage: "url",
-                    avatar: "head",
-                }]
+            session: {},
+            content: "",
+            messageList: [],
+            interval: null
         };
     },
     directives: {
@@ -116,31 +87,53 @@ export default {
             }
         }
     },
-    mounted() {
+    async mounted() {
         this.handleScrollBottom();
-        var p = this.loadMessage();
-        p.then(() => {
-            this.read();
-        })
+        console.log(this.$protocol.TEXT_MESSAGE);
+        //如果是1对1单聊，则session key 需要组装
+        var sessionKey = this.$route.query.key;
+        if (this.$route.query.chatType == this.$protocol.CHAT_TYPE_1_2_1) {
+            sessionKey = this.$sessionKey(this.$route.query.key, this.$getUserId())
+        }
+        this.session = this.$sessions[sessionKey];
+
+
+        var that=this;
+        this.$webSocket.onMsgCallback = function (data) {
+            ImProtocol.parse(data, function (protocol) {
+                var message = that.getMessageByProtocol(protocol);
+                that.$sessions[protocol.sessionKey].messages.push(message);
+                console.log("parse protocol:" + protocol);
+            });
+        };
+
+        this.read();
     },
     beforeDestroy() {
         Toast.success("beforeDestroy");
     },
     computed: {},
     methods: {
-        loadMessage() {
-            console.log("loadMessage");
-            console.log(this.$sparrowDB);
-            return ChatApi.getSessionFromLocal("1").then((session) => {
-                console.log(session);
-            }, (error) => {
-                console.log(error);
-            });
-        },
-        // ...mapActions(["sendMessage", "sendImage", "sendText", "readSession", "cancelMessage"]),
-        // ...mapMutations(["addSession"]),
         qunDetail() {
-            this.$router.push({name: 'qun-detail', query: {id: this.session.chatSession.sessionKey}})
+            this.$router.push({name: 'qun-detail', query: {key: this.$route.query.key}})
+        },
+        getMessageByProtocol(protocol){
+            var sender = this.$userMap[protocol.fromUserId];
+            return  {
+                id: protocol.id,
+                fromUserId: protocol.fromUserId,
+                clientSendTime: protocol.clientSendTime,
+                serverTime: protocol.serverTime,
+                messageType: protocol.messageType,
+                content: protocol.content,
+                contentImage: protocol.contentImage,
+                isMe: protocol.fromUserId === this.$getUserId(),
+                userName: sender.userName,
+                avatar: sender.avatar,
+                time: new Date(protocol.serverTime).format("MM/dd hh:mm:ss"),
+                isText: protocol.messageType=== this.$protocol.TEXT_MESSAGE
+            };
+
         },
         async cancel(item) {
             if (item.fromUserId !== this.userId) {
@@ -154,9 +147,9 @@ export default {
                     console.log("cancel", item)
                     const param = {
                         fromUserId: item.fromUserId,
-                        clientSendTime: item.id,
-                        sessionKey: this.session.chatSession.sessionKey,
-                        chatType: this.session.chatSession.chatType,
+                        clientSendTime: item.clientSendTime,
+                        sessionKey: this.session.key,
+                        chatType: this.session.chatType,
                     }
                     this.cancelMessage(param);
                 })
@@ -165,22 +158,7 @@ export default {
                 });
         },
         read() {
-            if (this.session == null) {
-                const session =
-                    {
-                        "chatSession": {
-                            "chatType": 0,
-                            "me": this.userId,
-                            "sessionKey": "1",// getSessionKey(this.userId, this.$route.query.target),
-                            "target": this.$route.query.target
-                        },
-                        "lastReadTime": Date.now(),
-                        "messages": []
-                    }
-                // this.addSession(session)
-                this.session = session
-            }
-            //this.readSession(this.session.chatSession.sessionKey)
+            ChatApi.setRead(this.session.sessionKey)
         },
         // 滚动到底部
         handleScrollBottom() {
@@ -193,53 +171,33 @@ export default {
         goBack() {
             this.$router.go(-1)
         },
-        async afterRead(file) {
-            console.log(file)
-            // const options = {
-            //     maxSizeMB: 0.1,
-            //     maxWidthOrHeight: 1920,
-            //     useWebWorker: true,
-            // };
-            //file = await imgCompression(file.file, options)
-            // await new Promise((resolve, reject) => {
-            //     const fileReader = new FileReader();
-            //     fileReader.onload = () => {
-            //         //concatenate(msg,charType,current_user_id, msgType, session_key)
-            //         this.sendMessage(
-            //             {
-            //                 chatType: this.session.chatSession.chatType,
-            //                 msgType: IMAGE_MESSAGE,
-            //                 from: this.session.chatSession.me,
-            //                 to: this.session.chatSession.target,
-            //                 sessionKey: this.session.chatSession.sessionKey,
-            //                 msg: new Uint8Array(fileReader.result),
-            //                 image: window.URL.createObjectURL(file),
-            //                 clientSendTime: Date.now()
-            //             })
-            //         resolve();
-            //     }
-            //     fileReader.readAsArrayBuffer(file);
-            // })
+        async sendImage(file) {
+            const fileReader = new FileReader();
+            var img = new Image();
+            img.src = window.URL.createObjectURL(file);
+            fileReader.onload = function () {
+                const result = fileReader.result;
+                console.log(result);
+                var content = new Uint8Array(result)
+                var time = new Date().getTime();
+                //如果是1对1聊天，则传过来的key=对方用户ID
+                var data = new this.$protocol(this.$route.query.chatType, this.$protocol.IMAGE_MESSAGE, this.$getUserId(), this.$route.query.key, content, time);
+                this.$webSocket.sendMessage(data);
+            }
+            fileReader.readAsArrayBuffer(file);
             this.handleScrollBottom()
         },
-        send() {
-            if (this.content) {
-                //chatType, msgType, from, to, sessionKey, msg
-                this.sendMessage(
-                    {
-                        chatType: this.session.chatSession.chatType,
-                        msgType: TEXT_MESSAGE,
-                        from: this.session.chatSession.me,
-                        to: this.session.chatSession.target,
-                        sessionKey: this.session.chatSession.sessionKey,
-                        msg: this.content.toArray().toUint8Array(),
-                        image: null,
-                        clientSendTime: Date.now()
-                    }
-                )
-                this.content = ''
-                this.handleScrollBottom()
+        sendText() {
+            if (!this.content) {
+                Toast.fail("嘿！你还没有输入内容哦！");
+                return
             }
+            var time = new Date().getTime();
+            //如果是1对1聊天，则传过来的key=对方用户ID
+            var data = new ImProtocol(this.$route.query.chatType, ImProtocol.TEXT_MESSAGE, this.$getUserId(), this.$route.query.key, this.content, time);
+            this.$webSocket.sendMessage(data);
+            this.content = ''
+            this.handleScrollBottom()
         },
     }
 }
