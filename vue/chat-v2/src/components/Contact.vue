@@ -1,12 +1,10 @@
 <template>
     <div class="contact">
-        <van-nav-bar title="我的好友" left-arrow @click-left="goBack">
-        </van-nav-bar>
         <van-index-bar>
             <van-cell v-for="menu in menus" :key="menu.name">
                 <template>
                     <div class="menu" @click="menu.command">
-                        <img class="header" :src="menu.image" :alt="menu.name">
+                        <img class="icon" :src="menu.image" :alt="menu.name">
                         <span>{{ menu.name }}</span>
                     </div>
                 </template>
@@ -31,9 +29,7 @@
 import groupImage from "@/assets/group.png";
 import addImage from "@/assets/add.png";
 import newFriendImage from "@/assets/newFriend.png";
-// import {Toast} from "vant";
 import {Toast} from "vant";
-
 export default {
     name: 'ChatContact',
     data() {
@@ -47,67 +43,8 @@ export default {
         };
     },
     computed: {
-        // friendGroupList() {
-        //     return [
-        //         {
-        //             index: "A",
-        //             members: [
-        //                 {
-        //                     //生成假数据
-        //                     userId: 1,
-        //                     userName: "A",
-        //                     avatar: "https://img.yzcdn.cn/vant/cat.jpeg"
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             index: "B",
-        //             members: [
-        //                 {
-        //                     //生成假数据
-        //                     userId: 2,
-        //                     userName: "B",
-        //                     avatar: "https://img.yzcdn.cn/vant/cat.jpeg"
-        //                 },
-        //                 {
-        //                     //生成假数据
-        //                     userId: 3,
-        //                     userName: "B1",
-        //                     avatar: "https://img.yzcdn.cn/vant/cat.jpeg"
-        //                 },
-        //                 {
-        //                     //生成假数据
-        //                     userId: 4,
-        //                     userName: "B2",
-        //                     avatar: "https://img.yzcdn.cn/vant/cat.jpeg"
-        //                 },
-        //                 {
-        //                     //生成假数据
-        //                     userId: 5,
-        //                     userName: "b3",
-        //                     avatar: "https://img.yzcdn.cn/vant/cat.jpeg"
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             index: "C",
-        //             members: [
-        //                 {
-        //                     //生成假数据
-        //                     userId: 6,
-        //                     userName: "C",
-        //                     avatar: "https://img.yzcdn.cn/vant/cat.jpeg"
-        //                 }
-        //             ]
-        //         }
-        //     ]
-        // }
     },
     methods: {
-        //返回上一页
-        goBack() {
-            this.$router.go(-1)
-        },
         //添加好友
         addFriend() {
             this.$router.push({name: 'add-friend'})
@@ -161,8 +98,6 @@ export default {
         console.log("mounted init contact");
         console.log("init contact");
         // var token = localStorage.getItem("token");
-        console.log("VUE property", this.$sparrow);
-        console.log("VUE property", this.$sparrowDB);
         this.friendGroupList = this._groupFriends(this.$contact.users);
         //Toast.success("mounted");
     },
@@ -258,7 +193,10 @@ export default {
 .menu span {
     margin-left: 0.5rem;
 }
-
+.icon{
+    width: 1.5rem;
+    height: 1.5rem;
+}
 .avatar {
     width: 2.5rem;
     height: 2.5rem;

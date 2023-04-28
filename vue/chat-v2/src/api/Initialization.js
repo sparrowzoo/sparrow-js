@@ -25,7 +25,7 @@ var Initialization = {
             if (userIds.indexOf(session.chatSession.me) < 0) {
                 userIds.push(session.chatSession.me);
             }
-            if (userIds.indexOf(session.chatSession.target < 0)) {
+            if (session.chatSession.target>0&&userIds.indexOf(session.chatSession.target) < 0) {
                 userIds.push(session.chatSession.target);
             }
             session.messages.forEach(message => {
@@ -74,6 +74,7 @@ var Initialization = {
                 });
             }
             if (sessionItem.chatType === vue.$protocol.CHAT_TYPE_1_2_N) {
+                var qun= vue.$qunMap[sessionItem.sessionKey];
                 sessionList.push({
                     key: sessionItem.sessionKey,
                     type: sessionItem.chatType,
@@ -81,8 +82,9 @@ var Initialization = {
                     time: sessionItem.time,
                     content: sessionItem.lastMessageContent,
                     count: sessionItem.unReadCount,
-                    messages: session.messages
-                    // icon: qunIcon
+                    title: qun.qunName,
+                    messages: session.messages,
+                    icon: qun.unitIcon,
                 });
             }
         });
@@ -123,7 +125,14 @@ var Initialization = {
     initSessions: async function (Vue, vue) {
         var userId = vue.$getUserId();
         //获取当前用户的所有会话
-        var sessions = await ChatApi.getSession(userId);
+        var sessions = await ChatApi.getSession(userId).then(
+            res => {
+                return res.data;
+            },
+            err => {
+                console.log(err);
+            }
+        );
         //根据会话获取用户Id 列表(包括消息的发送者)
         var userIds = this.fetchUserIds(sessions);
 
@@ -142,7 +151,7 @@ var Initialization = {
                 if (message.isText) {
                     message.content = vue.$Base64.decode(message.content);
                 } else {
-                    message.content = '/图片/';
+                    message.imgUrl = message.content;
                 }
             });
         });
@@ -151,10 +160,9 @@ var Initialization = {
             sessionMap[item.key] = item;
         });
         Vue.prototype.$sessions = sessionMap;// 全局会话
-    }
-    ,
+    },
     initWebSocket: function (Vue, vue) {
-        var webSocket = new vue.$sparrow.webSocket('ws://chat.sparrowzoo.com/websocket', vue.$token);
+        var webSocket = new vue.$sparrow.webSocket('ws://chat.sparrowzoo.com/websocket', vue.$token());
         webSocket.reconnectionAlarmCallback = function () {
             console.log("reconnection AlarmCallback");
         };

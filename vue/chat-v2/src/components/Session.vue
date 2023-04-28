@@ -15,7 +15,7 @@
         </van-row>
         <div class="chat_item" v-for="session in sessionList" :key="session.key"
              @click="toChat(session)">
-            <van-badge :content="session.count > 1 ? session.count : null" :dot="session.count == 1">
+            <van-badge :content="session.count > 1 ? session.count : null" :dot="session.count === 1">
                 <img :src="session.icon" class="child"/>
             </van-badge>
             <div class="chat_right">

@@ -1,17 +1,17 @@
 <template>
-    <div class="myFriend">
-        <van-nav-bar title="我的群聊" left-arrow @click-left="onClickLeft">
+    <div class="qun">
+        <van-nav-bar title="我的群聊" left-arrow @click-left="$router.go(-1)">
         </van-nav-bar>
-        <div class="chat_item" v-for="item in viewList" :key="item.id" @click="toChatPerson(item)">
-            <van-badge :content="item.count > 1 ? item.count : null" :dot="item.count === 1">
-                <img :src="item.headUrl" class="child" />
+        <div class="chat_item" v-for="qun in qunList" :key="qun.id" @click="toChat(qun)">
+            <van-badge :content="qun.unReadCount > 1 ? qun.unReadCount : null" :dot="qun.unReadCount > 1">
+                <img :src="qun.avatar" class="child"/>
             </van-badge>
             <div class="chat_right">
                 <div class="chat_top">
-                    <span class="chat_name ">{{ item.title }}</span>
-                    <span class="chat_time gray">{{ item.time }}</span>
+                    <span class="chat_name ">{{ qun.title }}</span>
+                    <span class="chat_time gray">{{ qun.lastMessageTime }}</span>
                 </div>
-                <div class="chat_bottom gray" v-html="item.content">
+                <div class="chat_bottom gray" v-html="qun.lastMessageContent">
                 </div>
             </div>
         </div>
@@ -19,121 +19,44 @@
 </template>
 
 <script>
-
-// import groupImage from "../assets/group.png";
-// import addImage from "../assets/add.png";
-// import newFriendImage from "../assets/newFriend.png";
-// import { getSessionKey } from '../lib/sparrowChat'
-// import { mapGetters, mapActions, mapState } from 'vuex'
 export default {
-	name: 'ChatQun',
-	data() {
-		return {
+    name: 'ChatQun',
+    data() {
+        return {};
+    },
+    methods: {
+        toChat(qun) {
+            this.$router.push({name: 'chat', query: {chatType: this.$protocol.CHAT_TYPE_1_2_N, key: qun.id, title: qun.title}})
+        }
+    },
+    computed: {
+        qunList() {
+            return this.$contact.quns.map(qun => {
+                const title = qun.qunName;
+                const qunId = qun.qunId;//唯一id，可以作为群名
+                var session =this.$sessions?this.$sessions[qun.qunId]:null;
+                var messages =session? session.messages:null;
+                const lastMessage = messages != null && messages.length > 0 ? messages[messages.length - 1] : null;//最后收到的一条消息
+                const lastMessageTime = lastMessage ? lastMessage.time : null;//最后一条消息的发送时间
+                const lastMessageContent = lastMessage ? (lastMessage.messageType === 1 ? '/图片/' : lastMessage.content) : null;
+                const unReadCount = lastMessage ? session.messages.filter(message => message.serverTime >= session.lastReadTime).length : 0;
+                return {
 
-		};
-	},
-	methods: {
-		onClickLeft() {
-			this.$router.go(-1)
-		},
-		toChatPerson(user) {
-			this.$router.push({ name: 'chat', query: { id: user.id, target: user.target, title: user.title } })
-		}
-	},
-	computed: {
-		// ...mapState(['contacts', 'sessions', "userId"]),
-		// ...mapGetters(['getSessionById']),
+                    id: qunId,
+                    title: title,
+                    lastMessageTime: lastMessageTime,
+                    lastMessageContent: lastMessageContent,
+                    unReadCount: unReadCount,
+                    avatar: qun.unitIcon
+                }
 
-		viewList() {
-       return [{
-            id: 1,
-            target: -1,
-            type: 1,
-            title: "群名1",
-            lastMessageTime: 1,
-            time: 1,
-            content: "最后回复内容",
-            count: "未读数",
-            headUrl: "url"
-        },{
-            id: 2,
-            target: -1,
-            type: 2,
-            title: "title2",
-            lastMessageTime: 1,
-            time: 1,
-            content: "content",
-            count: 1,
-            headUrl: "url"
-        },]
-
-
-			// return this.contacts.quns.map(qun => {
-			// 	const session = this.getSessionById(qun.qunId);
-			// 	console.log(session)
-			// 	const chatType = 1; //1群 0用户
-			// 	const title = qun.qunName;
-			// 	const sessionKey = qun.qunId;//唯一id，可以作为群名
-			// 	const target = -1;//用户id
-			// 	const lastMessage = session ? session.messages[session.messages.length - 1] : null;//最后收到的一条消息
-			// 	const lastMessageTime = session && lastMessage ? lastMessage.clientSendTime : null;//最后一条消息的发送时间
-			// 	const lastMessageContent = session && lastMessage ? (lastMessage.messageType === 1 ? '/图片/' : this.$Base64.decode(lastMessage.content)) : null;
-			// 	const unReadCount = session ? session.messages.filter(message => message.serverTime >= session.lastReadTime).length : 0;
-			// 	return {
-			// 		id: sessionKey,
-			// 		target: target,
-			// 		type: chatType,
-			// 		title: title,
-			// 		lastMessageTime: lastMessageTime,
-			// 		time: lastMessageTime ? this.$moment(lastMessageTime).format('YY/MM/DD') : null,
-			// 		content: lastMessage ? '用户' + lastMessage.fromUserId + "：" + lastMessageContent : null,
-			// 		count: unReadCount,
-			// 		headUrl: groupImage
-			// 	}
-			// 	// return this.sessions.filter(session => session.messages.length > 0).map(session => {
-			// 	//     console.log(session)
-			// 	//     const chatType = session.chatSession.chatType; //1群 0用户
-			// 	//     const sessionKey = session.chatSession.sessionKey;//唯一id，可以作为群名
-			// 	//     const target = session.chatSession.target;//用户id
-			// 	//     const lastMessage = session.messages[session.messages.length - 1];//最后收到的一条消息
-			// 	//     const lastMessageTime = lastMessage.clientSendTime;//最后一条消息的发送时间
-			// 	//     const lastMessageContent = lastMessage.messageType === 1 ? '/图片/' : this.$Base64.decode(lastMessage.content);
-			// 	//     const unReadCount = session.messages.filter(message => message.serverTime >= session.lastReadTime).length;
-			// 	//     if (chatType === 0) {
-			// 	//         return {
-			// 	//             id: sessionKey,
-			// 	//             target: target,
-			// 	//             type: chatType,
-			// 	//             title: '用户' + target,
-			// 	//             lastMessageTime: lastMessageTime,
-			// 	//             time: this.$moment(lastMessageTime).format('YY/MM/DD'),
-			// 	//             content: lastMessageContent,
-			// 	//             count: unReadCount,
-			// 	//             headUrl: target !== session.chatSession.me ? this.getUserImageById(target) : "https://img01.yzcdn.cn/vant/cat.jpeg",
-			// 	//         }
-			// 	//     } else {
-			// 	//         return {
-			// 	//             id: sessionKey,
-			// 	//             target: target,
-			// 	//             type: chatType,
-			// 	//             title: sessionKey,
-			// 	//             lastMessageTime: lastMessageTime,
-			// 	//             time: this.$moment(lastMessageTime).format('YY/MM/DD'),
-			// 	//             content: '用户' + lastMessage.fromUserId + "：" + lastMessageContent,
-			// 	//             count: unReadCount,
-			// 	//             headUrl: groupImage
-			// 	//         }
-			// 	//     }
-			// 	// })
-			// 	//     .sort((s1, s2) => s2.lastMessageTime - s1.lastMessageTime)
-			// })
-		}
-	}
+            }).sort((s1, s2) => s2.lastMessageTime - s1.lastMessageTime);
+        }
+    }
 }
 </script>
 
 <style scoped>
-.myFriend {}
 
 .cmd {
     display: flex;
@@ -144,7 +67,7 @@ export default {
     margin-left: 0.5rem;
 }
 
-.header {
+.avatar {
     width: 2.5rem;
     height: 2.5rem;
 }
@@ -184,8 +107,8 @@ export default {
 }
 
 .child {
-    width: 4rem;
-    height: 4rem;
+    width: 2.5rem;
+    height: 2.5rem;
     background: #f2f3f5;
     border-radius: 4px;
     display: block;
