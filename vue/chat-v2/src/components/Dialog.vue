@@ -22,8 +22,7 @@
                                 {{ message.content }}
                             </div>
                         </div>
-                        <img v-longpress="() => cancel(message)" v-else class="img" :src="message.contentImage"
-                             alt="image">
+                        <img v-longpress="() => cancel(message)" v-else class="img" :src="message.imgUrl"/>
                     </div>
                 </div>
             </div>
@@ -40,7 +39,6 @@
 </template>
 
 <script>
-// import { getSessionKey } from '../lib/sparrowChat'
 import {Dialog, Toast} from 'vant';
 import {ChatApi} from "@/api/Chat";
 import {ImProtocol} from "../../../../source/scripts/ImProtocol";
@@ -92,17 +90,37 @@ export default {
         console.log(this.$protocol.TEXT_MESSAGE);
         //如果是1对1单聊，则session key 需要组装
         var sessionKey = this.$route.query.key;
-        if (this.$route.query.chatType == this.$protocol.CHAT_TYPE_1_2_1) {
+        var chatType=parseInt(this.$route.query.chatType,10);
+        if (chatType=== this.$protocol.CHAT_TYPE_1_2_1) {
             sessionKey = this.$sessionKey(this.$route.query.key, this.$getUserId())
         }
         this.session = this.$sessions[sessionKey];
+        if (!this.session) {
+
+            var icon = chatType=== this.$protocol.CHAT_TYPE_1_2_1 ?
+                this.$userMap[this.$route.query.key].avatar :
+                this.$qunMap[this.$route.query.key].unitIcon;
+            var title = chatType=== this.$protocol.CHAT_TYPE_1_2_1 ?
+                this.$userMap[this.$route.query.key].userName :
+                this.$qunMap[this.$route.query.key].qunName;
 
 
-        var that=this;
+            this.session = {
+                key: sessionKey,
+                type: this.$route.query.chatType,
+                icon: icon,
+                title: title,
+                messages: []
+            }
+            this.$sessions[sessionKey] = this.session;
+        }
+
+
+        var that = this;
         this.$webSocket.onMsgCallback = function (data) {
             ImProtocol.parse(data, function (protocol) {
                 var message = that.getMessageByProtocol(protocol);
-                that.$sessions[protocol.sessionKey].messages.push(message);
+                that.$sessions[message.session].messages.push(message);
                 console.log("parse protocol:" + protocol);
             });
         };
@@ -114,48 +132,64 @@ export default {
     },
     computed: {},
     methods: {
-        qunDetail() {
-            this.$router.push({name: 'qun-detail', query: {key: this.$route.query.key}})
+        goBack(){
+            this.$router.go(-1);
         },
-        getMessageByProtocol(protocol){
-            var sender = this.$userMap[protocol.fromUserId];
-            return  {
-                id: protocol.id,
-                fromUserId: protocol.fromUserId,
+        qunDetail() {
+            this.$router.push({name: 'qunDetail', query: {key: this.$route.query.key}})
+        },
+        getMessageByProtocol(protocol) {
+            var sender = this.$userMap[protocol.senderId];
+            var imgUrl = null;
+            if (protocol.msgType === this.$protocol.IMAGE_MESSAGE) {
+                var fileBlob = new Blob([protocol.msg]);
+                imgUrl = window.URL.createObjectURL(fileBlob);
+            }
+
+
+            return {
+                id: protocol.clientSendTime,
+                chatType: protocol.chatType,
+                fromUserId: protocol.senderId,
                 clientSendTime: protocol.clientSendTime,
-                serverTime: protocol.serverTime,
-                messageType: protocol.messageType,
-                content: protocol.content,
-                contentImage: protocol.contentImage,
-                isMe: protocol.fromUserId === this.$getUserId(),
+                messageType: protocol.msgType,
+                content: protocol.msg,
+                imgUrl: imgUrl,
+                isMe: protocol.senderId === this.$getUserId(),
                 userName: sender.userName,
                 avatar: sender.avatar,
-                time: new Date(protocol.serverTime).format("MM/dd hh:mm:ss"),
-                isText: protocol.messageType=== this.$protocol.TEXT_MESSAGE
+                time: new Date().format("MM/dd hh:mm:ss"),
+                isText: protocol.msgType === this.$protocol.TEXT_MESSAGE,
+                session: protocol.chatType === this.$protocol.CHAT_TYPE_1_2_N ? protocol.sessionKey :
+                    this.$sessionKey(protocol.senderId, protocol.sessionKey)
             };
 
         },
         async cancel(item) {
-            if (item.fromUserId !== this.userId) {
+            var currentUserId = this.$getUserId();
+            if (item.fromUserId !== currentUserId) {
                 return
             }
             Dialog.confirm({
                 title: '消息撤回',
                 message: '请确认是否撤销消息',
-            })
-                .then(() => {
-                    console.log("cancel", item)
-                    const param = {
-                        fromUserId: item.fromUserId,
-                        clientSendTime: item.clientSendTime,
-                        sessionKey: this.session.key,
-                        chatType: this.session.chatType,
-                    }
-                    this.cancelMessage(param);
-                })
-                .catch(() => {
-                    // on cancel
-                });
+            }).then(async () => {
+                console.log("cancel", item)
+                const param = {
+                    fromUserId: currentUserId,
+                    token: currentUserId,
+                    clientSendTime: item.clientSendTime,
+                    sessionKey: item.session,
+                    chatType: item.chatType,
+                }
+                var result =await ChatApi.cancelMsg(param);
+                if (result === true) {
+                    var session = this.$sessions[param.sessionKey]
+                    session.messages = session.messages.filter(message => message.clientSendTime !== item.clientSendTime)
+                }
+            }).catch(() => {
+                // on cancel
+            });
         },
         read() {
             ChatApi.setRead(this.session.sessionKey)
@@ -164,27 +198,29 @@ export default {
         handleScrollBottom() {
             this.$nextTick(() => {
                 let scrollElem = this.$refs.scrollDiv;
-                if (scrollElem)
+                console.log(scrollElem);
+                if (scrollElem) {
                     scrollElem.scrollTo({top: scrollElem.scrollHeight + 100});
+                }
             });
-        },
-        goBack() {
-            this.$router.go(-1)
         },
         async sendImage(file) {
             const fileReader = new FileReader();
-            var img = new Image();
-            img.src = window.URL.createObjectURL(file);
+            var that = this;
             fileReader.onload = function () {
                 const result = fileReader.result;
                 console.log(result);
                 var content = new Uint8Array(result)
                 var time = new Date().getTime();
                 //如果是1对1聊天，则传过来的key=对方用户ID
-                var data = new this.$protocol(this.$route.query.chatType, this.$protocol.IMAGE_MESSAGE, this.$getUserId(), this.$route.query.key, content, time);
-                this.$webSocket.sendMessage(data);
+                var chatType = parseInt(that.$route.query.chatType, 10);
+                var protocol = new that.$protocol(chatType, that.$protocol.IMAGE_MESSAGE, that.$getUserId(), that.$route.query.key, content, time);
+                that.$webSocket.sendMessage(protocol);
+                var message = that.getMessageByProtocol(protocol);
+                message.imgUrl = window.URL.createObjectURL(file.file);
+                that.$sessions[message.session].messages.push(message);
             }
-            fileReader.readAsArrayBuffer(file);
+            fileReader.readAsArrayBuffer(file.file);
             this.handleScrollBottom()
         },
         sendText() {
@@ -193,10 +229,14 @@ export default {
                 return
             }
             var time = new Date().getTime();
+            var chatType = parseInt(this.$route.query.chatType, 10);
             //如果是1对1聊天，则传过来的key=对方用户ID
-            var data = new ImProtocol(this.$route.query.chatType, ImProtocol.TEXT_MESSAGE, this.$getUserId(), this.$route.query.key, this.content, time);
-            this.$webSocket.sendMessage(data);
+            var protocol = new ImProtocol(chatType, ImProtocol.TEXT_MESSAGE, this.$getUserId(), this.$route.query.key, this.content, time);
+            this.$webSocket.sendMessage(protocol);
             this.content = ''
+            var message = this.getMessageByProtocol(protocol);
+            this.$sessions[message.session].messages.push(message);
+            console.log("parse protocol:" + protocol);
             this.handleScrollBottom()
         },
     }
@@ -215,7 +255,8 @@ export default {
     background-color: #eee;
     padding: 0 1rem 1rem;
     overflow-y: scroll;
-    height: 100%;
+    height: 90%;
+    margin-bottom: 4rem;
 }
 
 
@@ -296,10 +337,13 @@ export default {
     display: flex;
     align-items: center;
     padding: 1rem;
+    padding-bottom: 4rem;
+    position: fixed;
+    bottom: 0;
 }
 
 
 .send {
-    width: 3rem;
+    width: 4rem;
 }
 </style>

@@ -1,6 +1,10 @@
 <template>
     <div id="app">
-        <router-view/>
+        <router-view :key="$route.fullPath"></router-view>
+        <van-tabbar route>
+            <van-tabbar-item replace :to="{ name: 'session'}" icon="chat-o">消息</van-tabbar-item>
+            <van-tabbar-item replace :to="{ name: 'contact' }" icon="user-o">通讯录</van-tabbar-item>
+        </van-tabbar>
     </div>
 </template>
 <script>
@@ -21,5 +25,6 @@ export default {
 
 <style>
 #app {
+    padding-bottom: 4rem;
 }
 </style>

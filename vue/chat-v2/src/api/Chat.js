@@ -8,7 +8,7 @@ console.log(SPARROW_BASE_URL);
 
 var tokenConfig = {};
 tokenConfig[SPARROW_BASE_URL] = {
-    'Token': function () {
+    'login-token': function () {
         return localStorage.getItem('token')
     }
 };
@@ -46,14 +46,12 @@ const ChatApi = {
         };
         return Sparrow.http.post(SPARROW_BASE_URL + "/session/read", params);
     },
-    cancelMsg: function cancelMsg(chatType, sessionKey, token, clientSendTime) {
-        const params = {
-            chatType: chatType,
-            sessionKey: sessionKey,
-            token: token,
-            clientSendTime: clientSendTime,
-        };
-        return Sparrow.http.post(SPARROW_BASE_URL + "/cancel", params);
+    cancelMsg:async function cancelMsg(params) {
+        return await Sparrow.http.post(SPARROW_BASE_URL + "/cancel", params).then(res => {
+            return res.data;
+        }, err => {
+            console.log(err);
+        });
     },
 
     login: function (code, mobile, password) {
@@ -146,7 +144,7 @@ const ChatApi = {
     },
     existGroup: function (id) {
         const params = "groupId=" + id;
-        return Sparrow.http.post(CONSUMER_BASE_URL + "/app/message/removeGroup", params);
+        return Sparrow.http.post(CONSUMER_BASE_URL + "/app/message/quitGroup", params);
     },
     modifyGroup: function (id, name, avatar) {
         const params = "groupId=" + id + "&name=" + name + "&avatar=" + avatar;

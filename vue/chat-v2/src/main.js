@@ -7,7 +7,6 @@ import {Sparrow} from '../../../source/scripts/sparrow_es.js'
 import {ImProtocol} from "../../../source/scripts/ImProtocol";
 import {Base64} from 'js-base64'
 import {Initialization} from '@/api/Initialization';
-import {ChatApi} from "@/api/Chat";
 
 Vue.use(Vant); // 使用vant
 Vue.config.productionTip = false // 关闭生产模式下给出的提示
@@ -19,22 +18,23 @@ Vue.prototype.$sparrow = Sparrow;
 Vue.prototype.$Base64 = Base64;
 Vue.prototype.$protocol = ImProtocol;
 
-
-var token = Sparrow.request("token");
-var userId = await ChatApi.getUserId(token);
-Vue.prototype.$userId = userId;
-Vue.prototype.$token = token;
 Vue.prototype.$getUserId = function () {
-    return this.$userId;
+    return localStorage.getItem("userId");
 };
+Vue.prototype.$token=function (){
+    return localStorage.getItem("token");
+}
 Vue.prototype.$sessionKey = function (userId, userId2) {
     if (userId < userId2) {
         return userId + "_" + userId2;
     }
     return userId2 + "_" + userId;
 };
-
-await Initialization.initContact(Vue, vue);
-await Initialization.initSessions(Vue, vue);
-Initialization.initWebSocket(Vue, vue);
+var userId =vue.$getUserId();
+var url=window.location.href;
+if(userId&&url.indexOf("/login")<0){
+    await Initialization.initContact(Vue, vue);
+    await Initialization.initSessions(Vue, vue);
+    Initialization.initWebSocket(Vue, vue);
+}
 vue.$mount('#app')

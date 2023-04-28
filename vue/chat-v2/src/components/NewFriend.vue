@@ -1,8 +1,8 @@
 <template>
     <div class="apply_friend_list">
-        <van-nav-bar title="新的朋友" left-text="left-text" left-arrow @click-left="onClickLeft"></van-nav-bar>
+        <van-nav-bar title="新的朋友" left-text="返回" left-arrow @click-left="onClickLeft"></van-nav-bar>
         <div>
-            <div class="friend_container" v-for="user in users" :key="user.userId">
+            <div class="friend_container" v-for="user in users" :key="user.id">
                 <div class="friend_name">{{ user.userName }}添加您为好友</div>
                 <!--好友状态-->
                 <span class="status" v-if="user.status !== 0">{{ user.status === 1 ? "已通过" : "已驳回" }}</span>
@@ -29,29 +29,22 @@ export default {
         };
     },
     watch: {
-        //监听users
-        // users: function (newVal, oldVal) {
-        // 	//将user 对象json 化
-        // 	let userJson = JSON.stringify(newVal)
-        // 	//oldVal 为旧的值
-        // 	console.log('newVal: ', newVal, 'oldVal: ', oldVal);
-        // 	Toast(userJson);
-        // }
     },
     computed: {},
     async mounted() {
-        this.fresh()
+        this.refresh()
     },
     methods: {
         onClickLeft() {
             this.$router.go(-1)
         },
-        async fresh() {
+        async refresh() {
             var userId = localStorage.getItem("userId");
             var promise = ChatApi.newFriendList(userId);
             promise.then(res => {
                 this.users = res.data.map(item => {
                     return {
+                        id:item.id,
                         userId: item.vo.userId,
                         status: item.status,
                         userName: item.vo.userName
@@ -62,20 +55,26 @@ export default {
             });
         },
         async reject(user) {
-
-            // await auditFriend(user.id, 2)
-            //将user 对象json 化
-            let userJson = JSON.stringify(user)
-            Toast.success(userJson)
-            Toast.success("操作成功")
-            this.fresh()
+            var that=this;
+            await ChatApi.auditFriend(user.id, 2).then(res => {
+                Toast.success("操作成功");
+                that.refresh();
+                console.log(res);
+            }, err => {
+                console.log(err);
+                Toast.fail("操作失败");
+            });
         },
         async pass(user) {
-            // await auditFriend(user.id, 1)
-            // Toast.success("操作成功")
-            let userJson = JSON.stringify(user)
-            Toast.success(userJson)
-            this.fresh()
+            var that=this;
+            await ChatApi.auditFriend(user.id, 1).then(res => {
+                Toast.success("操作成功");
+                that.refresh();
+                console.log(res);
+            }, err => {
+                console.log(err);
+                Toast.fail("操作失败");
+            });
         }
     }
 }
