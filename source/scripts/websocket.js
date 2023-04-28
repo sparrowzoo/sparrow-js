@@ -5,9 +5,9 @@ Sparrow.webSocket = function (url, token) {
     // 接收到信息后需要执行的事件
     this.onMsgCallback = null;
     // 心跳间隔时间 10s
-    this.heartTime = 1000;
+    this.heartTime = 10000;
     // 心跳超时时间 12s
-    this.heartTimeout = 2000;
+    this.heartTimeout = 20000;
     // 重连时间 0.5s
     this.reconnectTime = 500;
 

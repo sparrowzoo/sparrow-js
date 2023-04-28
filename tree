@@ -1,118 +1,0 @@
-[WARNING] 
-[WARNING] Some problems were encountered while building the effective settings
-[WARNING] Unrecognised tag: 'repositories' (position: START_TAG seen ...</servers>\n\n    <repositories>... @32:19)  @ /Users/zhanglizhi/.m2/settings.xml, line 32, column 19
-[WARNING] 
-[INFO] Scanning for projects...
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-bom/0.0.2-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-bom/0.0.2-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-bom:0.0.2-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-bom:0.0.2-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life: nodename nor servname provided, or not known
-[INFO]                                                                         
-[INFO] ------------------------------------------------------------------------
-[INFO] Building sparrow-js 1.0.0-SNAPSHOT
-[INFO] ------------------------------------------------------------------------
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-container/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-container/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-container:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-container:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-container:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-container:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-container:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-container:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-bom:0.0.2-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-bom:0.0.2-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-bom:0.0.2-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-bom:0.0.2-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life: nodename nor servname provided, or not known
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-protocol/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-protocol/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-protocol:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-protocol:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-protocol:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-protocol:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-protocol:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-protocol:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-protocol-dao/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-protocol-dao/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-protocol-dao:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-protocol-dao:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-protocol-dao:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-protocol-dao:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-protocol-dao:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-protocol-dao:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-protocol-redis/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-protocol-redis/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-protocol-redis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-protocol-redis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-protocol-redis:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-protocol-redis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-protocol-redis:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-protocol-redis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-loader/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-loader/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-loader:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-loader:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-loader:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-loader:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-loader:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-loader:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-json/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-json/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-json:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-json:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-json:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-json:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-json:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-json:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-markdown/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-markdown/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-markdown:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-markdown:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-markdown:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-markdown:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-markdown:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-markdown:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-mvc/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-mvc/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-mvc:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-mvc:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-mvc:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-mvc:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-mvc:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-mvc:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-jedis/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-jedis/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-jedis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-jedis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-jedis:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-jedis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-jedis:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-jedis:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-Downloading: https://nexus.tctm.life/repository/tedu-snapshots/com/sparrowzoo/sparrow-data-source/1.0.0-SNAPSHOT/maven-metadata.xml
-Downloading: https://nexus.tctm.life/repository/maven-public/com/sparrowzoo/sparrow-data-source/1.0.0-SNAPSHOT/maven-metadata.xml
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-data-source:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Could not transfer metadata com.sparrowzoo:sparrow-data-source:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-data-source:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/tedu-snapshots/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-data-source:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-snapshots (https://nexus.tctm.life/repository/tedu-snapshots/): nexus.tctm.life
-[WARNING] Failure to transfer com.sparrowzoo:sparrow-data-source:1.0.0-SNAPSHOT/maven-metadata.xml from https://nexus.tctm.life/repository/maven-public/ was cached in the local repository, resolution will not be reattempted until the update interval of tedu-public has elapsed or updates are forced. Original error: Could not transfer metadata com.sparrowzoo:sparrow-data-source:1.0.0-SNAPSHOT/maven-metadata.xml from/to tedu-public (https://nexus.tctm.life/repository/maven-public/): nexus.tctm.life
-[INFO] 
-[INFO] --- maven-dependency-plugin:2.8:tree (default-cli) @ sparrow-js ---
-[INFO] com.sparrowzoo:sparrow-js:war:1.0.0-SNAPSHOT
-[INFO] +- com.sparrowzoo:sparrow-container:jar:1.0.0-SNAPSHOT:compile
-[INFO] |  +- com.sparrowzoo:sparrow:jar:1.0.0-SNAPSHOT:compile
-[INFO] |  |  +- javax.mail:mail:jar:1.4.7:compile
-[INFO] |  |  |  \- javax.activation:activation:jar:1.1:compile
-[INFO] |  |  +- javax.persistence:persistence-api:jar:1.0:compile
-[INFO] |  |  \- com.sparrowzoo:sparrow-protocol-dao:jar:1.0.0-SNAPSHOT:compile
-[INFO] |  \- javax.inject:javax.inject:jar:1:compile
-[INFO] +- com.sparrowzoo:sparrow-loader:jar:1.0.0-SNAPSHOT:compile
-[INFO] +- com.sparrowzoo:sparrow-json:jar:1.0.0-SNAPSHOT:compile
-[INFO] |  \- com.alibaba:fastjson:jar:1.2.83:compile
-[INFO] +- com.sparrowzoo:sparrow-markdown:jar:1.0.0-SNAPSHOT:compile
-[INFO] +- com.sparrowzoo:sparrow-mvc:jar:1.0.0-SNAPSHOT:compile
-[INFO] |  +- com.google.zxing:core:jar:2.2:compile
-[INFO] |  \- eu.bitwalker:UserAgentUtils:jar:1.21:compile
-[INFO] +- javax.servlet:javax.servlet-api:jar:3.0.1:provided
-[INFO] +- javax.servlet.jsp:jsp-api:jar:2.2:provided
-[INFO] +- jstl:jstl:jar:1.2:compile
-[INFO] +- org.yaml:snakeyaml:jar:1.26:compile
-[INFO] +- com.sparrowzoo:sparrow-jedis:jar:1.0.0-SNAPSHOT:compile
-[INFO] |  +- redis.clients:jedis:jar:3.9.0:compile
-[INFO] |  |  \- org.apache.commons:commons-pool2:jar:2.4.3:compile
-[INFO] |  \- com.sparrowzoo:sparrow-protocol-redis:jar:1.0.0-SNAPSHOT:compile
-[INFO] +- com.sparrowzoo:sparrow-data-source:jar:1.0.0-SNAPSHOT:compile
-[INFO] +- ch.qos.logback:logback-classic:jar:1.2.9:compile
-[INFO] |  +- ch.qos.logback:logback-core:jar:1.2.9:compile
-[INFO] |  \- org.slf4j:slf4j-api:jar:1.7.12:compile
-[INFO] \- com.sparrowzoo:sparrow-protocol:jar:1.0.0-SNAPSHOT:compile
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time: 3.330 s
-[INFO] Finished at: 2023-02-24T23:31:19+08:00
-[INFO] Final Memory: 17M/323M
-[INFO] ------------------------------------------------------------------------
