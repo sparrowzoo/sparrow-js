@@ -1,11 +1,11 @@
 <template>
     <div class="login" @submit="login">
         <van-form>
-            <van-field v-model="phone" name="用户名" autocomplete="off" label="用户名" placeholder="请输入手机号"/>
-            <van-field v-model="password" name="密码" autocomplete="off" label="密码" placeholder="请输入密码"/>
-            <van-field v-model="code" name="验证码" autocomplete="off" label="验证码" placeholder="请输入验证码"/>
+            <van-field v-model="phone" autocomplete="off" label="用户名" name="用户名" placeholder="请输入手机号"/>
+            <van-field v-model="password" autocomplete="off" label="密码" name="密码" placeholder="请输入密码"/>
+            <van-field v-model="code" autocomplete="off" label="验证码" name="验证码" placeholder="请输入验证码"/>
             <div style="margin: 16px;">
-                <van-button round block type="info" native-type="submit">登录</van-button>
+                <van-button block native-type="submit" round type="info">登录</van-button>
             </div>
         </van-form>
     </div>
@@ -31,7 +31,7 @@ export default {
         login() {
 
             Toast.success("登录成功");
-            ChatApi.login(this.code, this.phone, "123456").then(res => {
+            ChatApi.login(this.code, this.phone, this.password).then(res => {
                 console.log(res.data.token);
                 console.log(res.data.memberInfo.id);
                 localStorage.setItem("userId", res.data.memberInfo.id);
