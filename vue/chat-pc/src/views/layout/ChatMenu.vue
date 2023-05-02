@@ -18,6 +18,7 @@
 
 <script>
 export default {
+  name: "chat-menu",
   data() {
     return {
       asideList: [

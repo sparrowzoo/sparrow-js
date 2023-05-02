@@ -2,7 +2,7 @@
   <div class="">
     <el-container>
       <el-aside width="200px">
-        <Aside></Aside>
+        <ChatMenu></ChatMenu>
       </el-aside>
       <el-main>
         <router-view></router-view>
@@ -12,10 +12,10 @@
 </template>
 
 <script>
-import Aside from "./aside.vue";
+import ChatMenu from "./ChatMenu.vue";
 export default {
   name: "pageMain",
-  components: { Aside },
+  components: { ChatMenu },
   data() {
     return {};
   },

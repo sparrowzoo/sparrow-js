@@ -35,7 +35,7 @@
           </div>
           <div class="msg-user-time">
             <div class="msg-user">
-              <span class="username">{{ item.name }}</span>
+              <span class="user-name">{{ item.name }}</span>
               <span class="msg-time">{{ item.lastTime }}</span>
             </div>
             <span class="msg-last">{{
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import ChatPart from "@/components/chatPart.vue";
+import ChatPart from "@/components/ChatPart.vue";
 export default {
   components: { ChatPart },
   data() {
@@ -148,7 +148,6 @@ export default {
   methods: {
     // 切换聊天用户
     switchSession(item) {
-      // console.log(item);
       // 将最新的聊天对象保存到全局
       const newTarget = {
         type: item.sessionType,
@@ -285,7 +284,7 @@ export default {
         .msg-user {
           display: flex;
           justify-content: space-between;
-          .username {
+          .user-name {
             max-width: 85px;
             overflow: hidden;
             text-overflow: ellipsis;

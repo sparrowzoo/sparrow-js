@@ -6,7 +6,7 @@
           <img :src="item.avatar" alt="" />
           <img v-if="isUser" class="img-flag" :src="item.flag" alt="" />
         </div>
-        <div class="username">
+        <div class="user-name">
           <span></span>
           <span>{{ item.name }}</span>
         </div>
@@ -87,7 +87,7 @@ export default {
       }
     }
 
-    .username {
+    .user-name {
       margin-left: 10px;
       display: flex;
       flex-direction: column;
