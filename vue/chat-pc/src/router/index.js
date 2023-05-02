@@ -4,14 +4,15 @@ import VueRouter from "vue-router";
 // import Login from "../views/login.vue"; "../views/login.vue"
 const Login = () => import("@/views/login.vue");
 const Main = () => import("@/views/layout/layout.vue");
-const MyFriend = () => import("@/views/myFriend/myFriend.vue");
-const ChatMsg = () => import("@/views/chatMsg/chatMsg.vue");
+const MyFriend = () => import("@/views/myFriend/MyFriend.vue");
+const NewFriend = () => import("@/views/myFriend/newFriend/NewFriend.vue");
+const AddFriend = () => import("@/views/myFriend/addFriend/AddFriend.vue");
+const MyGroup = () => import("@/views/myFriend/myGroup/MyGroup");
+
+const ChatMsg = () => import("@/views/chatMsg/ChatMsg.vue");
 const ContactService = () =>
-  import("@/views/contactService/contactService.vue");
-const SystemNotice = () => import("@/views/systemNotice/systemNotice.vue");
-const AddFriend = () => import("@/views/myFriend/addFriend/addFriend.vue");
-const NewFriend = () => import("@/views/myFriend/newFriend/newFriend.vue");
-const MyGroup = () => import("@/views/myFriend/myGroup/myGroup");
+  import("@/views/contactService/ContactService.vue");
+const SystemNotice = () => import("@/views/systemNotice/SystemNotice.vue");
 
 Vue.use(VueRouter);
 // 解决重复push同一路径报错问题

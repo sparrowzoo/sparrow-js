@@ -8,14 +8,14 @@
       <img class="avatar-user" :src="targetUser.avatar" alt="" />
       <!-- 文本信息和图片信息 动态显示 -->
       <div class="message-detail" v-if="messageItem.messageType === 'txt'">
-        <div class="username">{{ targetUser.name }}</div>
+        <div class="user-name">{{ targetUser.name }}</div>
         <span class="block"></span>
         <span class="message-text">{{ messageItem.messageContent }}</span>
       </div>
       <!-- 图片类型 -->
       <div class="msg-picture-detail" v-else>
-        <div class="username">{{ targetUser.name }}</div>
-        <div style="display: none" class="username">
+        <div class="user-name">{{ targetUser.name }}</div>
+        <div style="display: none" class="user-name">
           {{ messageItem.name }}
         </div>
         <img :src="targetUser.avatar" class="msg-picture" alt="" />
@@ -98,7 +98,7 @@ export default {
 .left {
   .user-msg {
     flex-direction: row;
-    .username {
+    .user-name {
       position: absolute;
       top: 0;
       left: 0;
@@ -128,7 +128,7 @@ export default {
 .right {
   .user-msg {
     flex-direction: row-reverse;
-    .username {
+    .user-name {
       display: none !important;
     }
     .message-detail {

@@ -74,8 +74,8 @@
 </template>
 
 <script>
-import MoreDetail from "./moreDetail.vue";
-import ChatItem from "./chartItem.vue";
+import MoreDetail from "./MoreDetail.vue";
+import ChatItem from "./ChartItem.vue";
 export default {
   components: { MoreDetail, ChatItem },
   props: {
