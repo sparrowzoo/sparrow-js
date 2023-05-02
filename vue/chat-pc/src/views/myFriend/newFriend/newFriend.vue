@@ -6,7 +6,7 @@
           <img :src="item.avatar" alt="" />
           <img class="img-flag" :src="item.flag" alt="" />
         </div>
-        <div class="username">
+        <div class="user-name">
           <span>{{ item.name }}</span>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default {
       }
     }
 
-    .username {
+    .user-name {
       margin-left: 10px;
       display: flex;
       flex-direction: column;

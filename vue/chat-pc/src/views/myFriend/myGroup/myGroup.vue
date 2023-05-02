@@ -1,19 +1,19 @@
 <template>
   <div class="">
-    <ContacterItem
+    <ContactItem
       :contacter-list="groupList"
       :is-user="false"
       @remove="onRemove"
       @chat="onChat"
-    ></ContacterItem>
+    ></ContactItem>
   </div>
 </template>
 
 <script>
-import ContacterItem from "@/components/contacterItem.vue";
+import ContactItem from "@/components/ContactItem.vue";
 
 export default {
-  components: { ContacterItem },
+  components: { ContactItem },
   data() {
     return {
       groupList: [
