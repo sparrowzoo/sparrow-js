@@ -90,6 +90,7 @@ Sparrow.submit = function (action, formIndex) {
     if (action) {
         document.forms[formIndex].action = action;
     }
+
     document.forms[formIndex].submit();
 };
 Sparrow.jsonKeys = function (json) {
@@ -99,7 +100,7 @@ Sparrow.jsonKeys = function (json) {
     }
     //{}.prototype会多一个this该方法本身
     //区分数组和json
-    if (typeof(json.length) === "undefined") {
+    if (typeof (json.length) === "undefined") {
         for (var key in json) {
             jsonKeyArray.push(key);
         }
@@ -139,7 +140,7 @@ Sparrow.getFormData = function (inputIdArray) {
     return data.join("&");
 };
 Sparrow.waitRedirect = function (timerId, period) {
-    var queryString=$("#hdnQueryString").value();
+    var queryString = $("#hdnQueryString").value();
     var timer = $("#" + timerId);
     if (timer == null || timer.s == null) return;
     if (!period) period = 1000;
@@ -147,10 +148,9 @@ Sparrow.waitRedirect = function (timerId, period) {
         var time = parseInt(timer.html(), 10);
         if (time-- === 0) {
             window.location.target = "_self";
-            window.location.href =queryString;
+            window.location.href = queryString;
             window.clearInterval(interval);
-        }
-        else {
+        } else {
             timer.html(time);
         }
     }, period);
@@ -166,12 +166,10 @@ Sparrow.format = function (txt, compress) {
     var data = null;
     if (typeof txt === 'object') {
         data = txt;
-    }
-    else {
+    } else {
         try {
             data = eval('(' + txt + ')');
-        }
-        catch (e) {
+        } catch (e) {
             alert('数据源语法错误,格式化失败! 错误信息: ' + e.description, 'err');
             return;
         }
@@ -260,14 +258,14 @@ Sparrow.prototype.html = function (value) {
     return this.s.innerHTML;
 };
 
-Sparrow.prototype.format = function (html,args) {
+Sparrow.prototype.format = function (html, args) {
     if (!this.s) {
         return;
     }
-    if($(html)!=null){
-        html=$("#"+html).html();
+    if ($(html) != null) {
+        html = $("#" + html).html();
     }
-    this.s.innerHTML =html.format(args);
+    this.s.innerHTML = html.format(args);
 };
 
 Sparrow.prototype.value = function (value) {
