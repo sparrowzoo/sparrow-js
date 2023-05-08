@@ -1,3 +1,5 @@
+import {Toast} from "vant";
+
 Sparrow.webSocket = function (url, token) {
     this.url = url;
     // websocket 连接的 token
@@ -22,16 +24,18 @@ Sparrow.webSocket = function (url, token) {
     this.reconnectionAlarmTimer = null;
 
     this.reconnectionAlarmCallback = null;
+
+    this.userId = null;
 }
 
-Sparrow.webSocket.prototype.connect = function () {
+Sparrow.webSocket.prototype.connect = function (resolve, reject) {
     try {
         if ('WebSocket' in window) {
             this.ws = new WebSocket(this.url, [this.token,]);
-            this._onOpen(this.ws);
-            this._onMsg(this.ws);
-            this._onClose(this.ws);
-            this._onError(this.ws);
+            this._onOpen();
+            this._onMsg(resolve, reject);
+            this._onClose();
+            this._onError(reject);
         }
     } catch (e) {
         console.log(e)
@@ -70,12 +74,28 @@ Sparrow.webSocket.prototype._onOpen = function () {
 }
 
 
-Sparrow.webSocket.prototype._onMsg = function () {
+Sparrow.webSocket.prototype._onMsg = function (resolve) {
     this.ws.onmessage = (e) => {
+        console.log('收到消息' + e.data);
         // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
-        if (e.data === 'PONG') {
-            this.lastHeartTime = new Date().getTime();
-            return;
+        if (typeof e.data === 'string') {
+            if (e.data === 'PONG') {
+                this.lastHeartTime = new Date().getTime();
+                return;
+            }
+
+            if (e.data === 'offline') {
+                this.lastHeartTime = new Date().getTime();
+                Toast.fail("消息已发出,但对方未在线！待上线后将自动发送！")
+                return;
+            }
+
+            var userIndex = e.data.indexOf("USER_ID.");
+            if (userIndex > -1) {
+                this.userId = parseInt(e.data.substring(8), 10);
+                resolve(this.userId);
+                return;
+            }
         }
         this.onMsgCallback(e.data);
     }
@@ -94,10 +114,11 @@ Sparrow.webSocket.prototype._onClose = function () {
     };
 }
 
-Sparrow.webSocket.prototype._onError = function () {
+Sparrow.webSocket.prototype._onError = function (reject) {
     this.onerror = (e) => {
         // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
         console.log('连接出错' + e);
+        reject(e);
         this.reconnectWebSocket();
     };
 }

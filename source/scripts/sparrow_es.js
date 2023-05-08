@@ -1893,6 +1893,7 @@ Sparrow.submit = function (action, formIndex) {
     if (action) {
         document.forms[formIndex].action = action;
     }
+
     document.forms[formIndex].submit();
 };
 Sparrow.jsonKeys = function (json) {
@@ -1902,7 +1903,7 @@ Sparrow.jsonKeys = function (json) {
     }
     //{}.prototype会多一个this该方法本身
     //区分数组和json
-    if (typeof(json.length) === "undefined") {
+    if (typeof (json.length) === "undefined") {
         for (var key in json) {
             jsonKeyArray.push(key);
         }
@@ -1942,7 +1943,7 @@ Sparrow.getFormData = function (inputIdArray) {
     return data.join("&");
 };
 Sparrow.waitRedirect = function (timerId, period) {
-    var queryString=$("#hdnQueryString").value();
+    var queryString = $("#hdnQueryString").value();
     var timer = $("#" + timerId);
     if (timer == null || timer.s == null) return;
     if (!period) period = 1000;
@@ -1950,10 +1951,9 @@ Sparrow.waitRedirect = function (timerId, period) {
         var time = parseInt(timer.html(), 10);
         if (time-- === 0) {
             window.location.target = "_self";
-            window.location.href =queryString;
+            window.location.href = queryString;
             window.clearInterval(interval);
-        }
-        else {
+        } else {
             timer.html(time);
         }
     }, period);
@@ -1969,12 +1969,10 @@ Sparrow.format = function (txt, compress) {
     var data = null;
     if (typeof txt === 'object') {
         data = txt;
-    }
-    else {
+    } else {
         try {
             data = eval('(' + txt + ')');
-        }
-        catch (e) {
+        } catch (e) {
             alert('数据源语法错误,格式化失败! 错误信息: ' + e.description, 'err');
             return;
         }
@@ -2063,14 +2061,14 @@ Sparrow.prototype.html = function (value) {
     return this.s.innerHTML;
 };
 
-Sparrow.prototype.format = function (html,args) {
+Sparrow.prototype.format = function (html, args) {
     if (!this.s) {
         return;
     }
-    if($(html)!=null){
-        html=$("#"+html).html();
+    if ($(html) != null) {
+        html = $("#" + html).html();
     }
-    this.s.innerHTML =html.format(args);
+    this.s.innerHTML = html.format(args);
 };
 
 Sparrow.prototype.value = function (value) {
@@ -4267,6 +4265,8 @@ Sparrow.share = {
         }
     }
 };
+import {Toast} from "vant";
+
 Sparrow.webSocket = function (url, token) {
     this.url = url;
     // websocket 连接的 token
@@ -4291,16 +4291,18 @@ Sparrow.webSocket = function (url, token) {
     this.reconnectionAlarmTimer = null;
 
     this.reconnectionAlarmCallback = null;
+
+    this.userId = null;
 }
 
-Sparrow.webSocket.prototype.connect = function () {
+Sparrow.webSocket.prototype.connect = function (resolve, reject) {
     try {
         if ('WebSocket' in window) {
             this.ws = new WebSocket(this.url, [this.token,]);
-            this._onOpen(this.ws);
-            this._onMsg(this.ws);
-            this._onClose(this.ws);
-            this._onError(this.ws);
+            this._onOpen();
+            this._onMsg(resolve, reject);
+            this._onClose();
+            this._onError(reject);
         }
     } catch (e) {
         console.log(e)
@@ -4339,12 +4341,28 @@ Sparrow.webSocket.prototype._onOpen = function () {
 }
 
 
-Sparrow.webSocket.prototype._onMsg = function () {
+Sparrow.webSocket.prototype._onMsg = function (resolve) {
     this.ws.onmessage = (e) => {
+        console.log('收到消息' + e.data);
         // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
-        if (e.data === 'PONG') {
-            this.lastHeartTime = new Date().getTime();
-            return;
+        if (typeof e.data === 'string') {
+            if (e.data === 'PONG') {
+                this.lastHeartTime = new Date().getTime();
+                return;
+            }
+
+            if (e.data === 'offline') {
+                this.lastHeartTime = new Date().getTime();
+                Toast.fail("消息已发出,但对方未在线！待上线后将自动发送！")
+                return;
+            }
+
+            var userIndex = e.data.indexOf("USER_ID.");
+            if (userIndex > -1) {
+                this.userId = parseInt(e.data.substring(8), 10);
+                resolve(this.userId);
+                return;
+            }
         }
         this.onMsgCallback(e.data);
     }
@@ -4363,10 +4381,11 @@ Sparrow.webSocket.prototype._onClose = function () {
     };
 }
 
-Sparrow.webSocket.prototype._onError = function () {
+Sparrow.webSocket.prototype._onError = function (reject) {
     this.onerror = (e) => {
         // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
         console.log('连接出错' + e);
+        reject(e);
         this.reconnectWebSocket();
     };
 }

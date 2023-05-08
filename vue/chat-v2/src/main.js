@@ -7,7 +7,6 @@ import {Sparrow} from '../../../source/scripts/sparrow_es.js'
 import {ImProtocol} from "../../../source/scripts/ImProtocol";
 import {Base64} from 'js-base64'
 import {Initialization} from '@/api/Initialization';
-import {ChatApi} from "@/api/Chat";
 
 Vue.use(Vant); // 使用vant
 Vue.config.productionTip = false // 关闭生产模式下给出的提示
@@ -19,33 +18,38 @@ Vue.prototype.$sparrow = Sparrow;
 Vue.prototype.$Base64 = Base64;
 Vue.prototype.$protocol = ImProtocol;
 
-Vue.prototype.$getUserId = async function () {
-    return await ChatApi.getUserId(this.$token()).then(res => {
-        return res.data;
-    }, err => {
-        console.log(err);
-    });
-};
-Vue.prototype.$token = function () {
-    //url 优先
-    var token = Sparrow.request("token");
-    if (!Sparrow.isNullOrEmpty(token)) {
-        localStorage.setItem("token", token);
-        return token;
+Vue.prototype.$getUserId = function () {
+    if (this.$webSocket != null && this.$webSocket.userId != null) {
+        return this.$webSocket.userId;
     }
-    return localStorage.getItem("token");
-}
+
+    console.log("兜底获取用户id");
+    // this.$webSocket.userId = await ChatApi.getUserId(this.$token()).then(res => {
+    //     return res;
+    // }, err => {
+    //     console.log(err);
+    // });
+    //return this.$webSocket.userId;
+    return null;
+};
+
 Vue.prototype.$sessionKey = function (userId, userId2) {
     if (userId < userId2) {
         return userId + "_" + userId2;
     }
     return userId2 + "_" + userId;
 };
-var userId = vue.$getUserId();
-var url = window.location.href;
-if (userId && url.indexOf("/login") < 0) {
+
+Vue.prototype.$init = async function () {
+    Vue.prototype.$token = router.getToken();
+    //router.token = Vue.prototype.$token;
+    await Initialization.initWebSocket(Vue, vue);
     await Initialization.initContact(Vue, vue);
     await Initialization.initSessions(Vue, vue);
-    Initialization.initWebSocket(Vue, vue);
+};
+//非登录页面，则初始化用户信息
+//刷新页面时执行s
+if (window.location.href.indexOf("/login") < 0) {
+    await vue.$init();
 }
 vue.$mount('#app')
