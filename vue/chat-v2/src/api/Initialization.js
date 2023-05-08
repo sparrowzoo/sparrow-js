@@ -25,7 +25,7 @@ var Initialization = {
             if (userIds.indexOf(session.chatSession.me) < 0) {
                 userIds.push(session.chatSession.me);
             }
-            if (session.chatSession.target>0&&userIds.indexOf(session.chatSession.target) < 0) {
+            if (session.chatSession.target > 0 && userIds.indexOf(session.chatSession.target) < 0) {
                 userIds.push(session.chatSession.target);
             }
             session.messages.forEach(message => {
@@ -74,7 +74,7 @@ var Initialization = {
                 });
             }
             if (sessionItem.chatType === vue.$protocol.CHAT_TYPE_1_2_N) {
-                var qun= vue.$qunMap[sessionItem.sessionKey];
+                var qun = vue.$qunMap[sessionItem.sessionKey];
                 sessionList.push({
                     key: sessionItem.sessionKey,
                     type: sessionItem.chatType,
@@ -161,13 +161,15 @@ var Initialization = {
         });
         Vue.prototype.$sessions = sessionMap;// 全局会话
     },
-    initWebSocket: function (Vue, vue) {
-        var webSocket = new vue.$sparrow.webSocket('ws://chat.sparrowzoo.com/websocket', vue.$token());
-        webSocket.reconnectionAlarmCallback = function () {
-            console.log("reconnection AlarmCallback");
-        };
-        webSocket.connect()
-        Vue.prototype.$webSocket = webSocket;
+    initWebSocket: async function (Vue, vue) {
+        return await new Promise((resolve, reject) => {
+            var webSocket = new vue.$sparrow.webSocket('ws://chat.sparrowzoo.com/websocket', vue.$token);
+            webSocket.reconnectionAlarmCallback = function () {
+                console.log("reconnection AlarmCallback");
+            };
+            webSocket.connect(resolve, reject);
+            Vue.prototype.$webSocket = webSocket;
+        });
     }
 }
 
