@@ -37,6 +37,7 @@ export default {
                 localStorage.setItem("userId", res.data.memberInfo.id);
                 localStorage.setItem('token', res.data.token); // memberInfo
                 Toast.success("登录成功");
+                this.$init();
                 router.push("/contact");
             }, err => {
                 console.log("error:" + err);
