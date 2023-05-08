@@ -4,7 +4,7 @@
             <van-cell v-for="menu in menus" :key="menu.name">
                 <template>
                     <div class="menu" @click="menu.command">
-                        <img class="icon" :src="menu.image" :alt="menu.name">
+                        <img :alt="menu.name" :src="menu.image" class="icon">
                         <span>{{ menu.name }}</span>
                     </div>
                 </template>
@@ -16,7 +16,7 @@
                 <van-cell v-for="friend in friendGroup.members" :key="friend.userId" @click="toChat(friend)">
                     <template>
                         <div class="friend">
-                            <img class="avatar" :src="friend.avatar" :alt="friend.userName">
+                            <img :alt="friend.userName" :src="friend.avatar" class="avatar">
                             <span>{{ friend.userName }}</span>
                         </div>
                     </template>
@@ -29,7 +29,7 @@
 import groupImage from "@/assets/group.png";
 import addImage from "@/assets/add.png";
 import newFriendImage from "@/assets/newFriend.png";
-import {Toast} from "vant";
+
 export default {
     name: 'ChatContact',
     data() {
@@ -42,8 +42,7 @@ export default {
             friendGroupList: []
         };
     },
-    computed: {
-    },
+    computed: {},
     methods: {
         //添加好友
         addFriend() {
@@ -99,39 +98,39 @@ export default {
         console.log("init contact");
         // var token = localStorage.getItem("token");
         this.friendGroupList = this._groupFriends(this.$contact.users);
-        //Toast.success("mounted");
+        // console.log("mounted");
     },
 
     beforeCreate() {
-        Toast.success("beforeCreate");
+        console.log("beforeCreate");
     },
     created() {
-        Toast.success("created");
+        console.log("created");
     },
     async beforeMount() {
-        Toast.success("beforeMount");
+        console.log("beforeMount");
     },
     beforeUpdate() {
-        Toast.success("beforeUpdate");
+        console.log("beforeUpdate");
     },
     updated() {
-        Toast.success("updated");
+        console.log("updated");
     },
 
     destroyed() {
-        Toast.success("destroyed");
+        console.log("destroyed");
     },
     activated() {
-        Toast.success("activated");
+        console.log("activated");
     },
     deactivated() {
-        Toast.success("deactivated");
+        console.log("deactivated");
     }, errorCaptured() {
-        Toast.success("errorCaptured");
+        console.log("errorCaptured");
     },
 
     beforeDestroy() {
-        Toast.success("beforeDestroy");
+        console.log("beforeDestroy");
     },
     /**
      * Vue生命周期函数有：
@@ -193,10 +192,12 @@ export default {
 .menu span {
     margin-left: 0.5rem;
 }
-.icon{
+
+.icon {
     width: 1.5rem;
     height: 1.5rem;
 }
+
 .avatar {
     width: 2.5rem;
     height: 2.5rem;

@@ -1,12 +1,12 @@
 <template>
     <div class="chat">
         <van-nav-bar :title="$route.query.title" left-arrow @click-left="goBack">
-            <template #right v-if="$route.query.chatType == this.$protocol.CHAT_TYPE_1_2_N">
+            <template v-if="$route.query.chatType == this.$protocol.CHAT_TYPE_1_2_N" #right>
                 <van-icon name="ellipsis" size="1.5rem" @click="qunDetail()"/>
             </template>
         </van-nav-bar>
-        <div class="center" ref="scrollDiv">
-            <div class="chat" v-for="message in this.session.messages" :key="message.id">
+        <div ref="scrollDiv" class="center">
+            <div v-for="message in this.session.messages" :key="message.id" class="chat">
                 <div class="time">{{ message.time }}</div>
                 <div :class="message.isMe ? 'right' : 'left'">
                     <img :src="message.avatar" class="avatar"/>
@@ -22,7 +22,7 @@
                                 {{ message.content }}
                             </div>
                         </div>
-                        <img v-longpress="() => cancel(message)" v-else class="img" :src="message.imgUrl"/>
+                        <img v-else v-longpress="() => cancel(message)" :src="message.imgUrl" class="img"/>
                     </div>
                 </div>
             </div>
@@ -31,9 +31,9 @@
             <van-uploader :after-read="sendImage">
                 <van-icon name="smile" size="2rem"/>
             </van-uploader>
-            <van-field class="content" type="textarea" rows="1" :autosize="{ maxHeight: 80 }" v-model="content"
-                       placeholder=""/>
-            <van-button class="send" type="primary" size="small" @click="sendText()">发送</van-button>
+            <van-field v-model="content" :autosize="{ maxHeight: 80 }" class="content" placeholder="" rows="1"
+                       type="textarea"/>
+            <van-button class="send" size="small" type="primary" @click="sendText()">发送</van-button>
         </div>
     </div>
 </template>
@@ -90,17 +90,17 @@ export default {
         console.log(this.$protocol.TEXT_MESSAGE);
         //如果是1对1单聊，则session key 需要组装
         var sessionKey = this.$route.query.key;
-        var chatType=parseInt(this.$route.query.chatType,10);
-        if (chatType=== this.$protocol.CHAT_TYPE_1_2_1) {
+        var chatType = parseInt(this.$route.query.chatType, 10);
+        if (chatType === this.$protocol.CHAT_TYPE_1_2_1) {
             sessionKey = this.$sessionKey(this.$route.query.key, this.$getUserId())
         }
         this.session = this.$sessions[sessionKey];
         if (!this.session) {
 
-            var icon = chatType=== this.$protocol.CHAT_TYPE_1_2_1 ?
+            var icon = chatType === this.$protocol.CHAT_TYPE_1_2_1 ?
                 this.$userMap[this.$route.query.key].avatar :
                 this.$qunMap[this.$route.query.key].unitIcon;
-            var title = chatType=== this.$protocol.CHAT_TYPE_1_2_1 ?
+            var title = chatType === this.$protocol.CHAT_TYPE_1_2_1 ?
                 this.$userMap[this.$route.query.key].userName :
                 this.$qunMap[this.$route.query.key].qunName;
 
@@ -128,11 +128,11 @@ export default {
         this.read();
     },
     beforeDestroy() {
-        Toast.success("beforeDestroy");
+        console.log("beforeDestroy");
     },
     computed: {},
     methods: {
-        goBack(){
+        goBack() {
             this.$router.go(-1);
         },
         qunDetail() {
@@ -182,7 +182,7 @@ export default {
                     sessionKey: item.session,
                     chatType: item.chatType,
                 }
-                var result =await ChatApi.cancelMsg(param);
+                var result = await ChatApi.cancelMsg(param);
                 if (result === true) {
                     var session = this.$sessions[param.sessionKey]
                     session.messages = session.messages.filter(message => message.clientSendTime !== item.clientSendTime)
