@@ -46,7 +46,7 @@ const ChatApi = {
         };
         return Sparrow.http.post(SPARROW_BASE_URL + "/session/read", params);
     },
-    cancelMsg:async function cancelMsg(params) {
+    cancelMsg: async function cancelMsg(params) {
         return await Sparrow.http.post(SPARROW_BASE_URL + "/cancel", params).then(res => {
             return res.data;
         }, err => {
@@ -59,6 +59,7 @@ const ChatApi = {
             code: code,
             mobile: mobile,
             password: password,
+            areaCode: ''
         };
         return Sparrow.http.post(CONSUMER_BASE_URL + "/app/authMember/loginByCode", params);
     },

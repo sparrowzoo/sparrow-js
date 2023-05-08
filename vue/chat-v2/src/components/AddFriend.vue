@@ -1,11 +1,11 @@
 <template>
     <div class="addFriend">
-        <van-nav-bar title="添加好友" left-arrow @click-left="onClickLeft"></van-nav-bar>
+        <van-nav-bar left-arrow title="添加好友" @click-left="onClickLeft"></van-nav-bar>
         <van-search v-model="phone" placeholder="请输入手机号" @search="onSearch"/>
         <div v-if="user">
             <div class="wrap">
                 <div class="wrap_name">{{ user.userName }}</div>
-                <van-button type="primary" size="small" @click="sendAddFriend()">确认申请</van-button>
+                <van-button size="small" type="primary" @click="sendAddFriend()">确认申请</van-button>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@ export default {
 
             ChatApi.getUserByPhone(this.phone).then(res => {
                 console.log(res);
-                if (res.data.id !== this.userId) {
+                if (res.data.userId != this.$getUserId()) {
                     this.user = res.data
                 } else {
                     Toast.fail("不能向自己发出申请");

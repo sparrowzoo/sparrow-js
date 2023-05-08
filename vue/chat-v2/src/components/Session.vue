@@ -2,20 +2,20 @@
     <div class="chat">
         <van-row gutter="10">
             <van-col span="18">
-                <van-button type="default" icon="search" size="small" block>搜索</van-button>
+                <van-button block icon="search" size="small" type="default">搜索</van-button>
             </van-col>
             <van-col span="3">
-                <van-button type="default" icon="plus" size="small" block
+                <van-button block icon="plus" size="small" type="default"
                             @click="toAddFriend"></van-button>
             </van-col>
             <van-col span="3">
-                <van-button type="default" icon="friends-o" size="small" block
+                <van-button block icon="friends-o" size="small" type="default"
                             @click="toContact"></van-button>
             </van-col>
         </van-row>
-        <div class="chat_item" v-for="session in sessionList" :key="session.key"
+        <div v-for="session in sessionList" :key="session.key" class="chat_item"
              @click="toChat(session)">
-            <van-badge :content="session.count > 1 ? session.count : null" :dot="session.count === 1">
+            <van-badge :content="session.count > 1 ? session.count : null" :dot="session.count>0">
                 <img :src="session.icon" class="child"/>
             </van-badge>
             <div class="chat_right">
@@ -41,7 +41,7 @@ export default {
         };
     },
     async mounted() {
-        this.sessionList=this.$sessions;
+        this.sessionList = this.$sessions;
         console.log(this.sessionList);
     },
     computed: {},
