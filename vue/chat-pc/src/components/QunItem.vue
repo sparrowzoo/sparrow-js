@@ -1,59 +1,47 @@
 <template>
-  <div class="">
-    <div class="user-item" v-for="item of newFriendList" :key="item.id">
+  <div>
+    <div v-for="item of qunList" :key="item.id" class="user-item">
       <div class="user-info">
         <div class="avatar">
           <img :src="item.avatar" alt="" />
-          <img class="img-flag" :src="item.flag" alt="" />
         </div>
         <div class="user-name">
-          <span>{{ item.name }}</span>
+          <span>{{ item.title }}</span>
+          <span>{{ item.lastMessageContent }}</span>
+          <span>{{ item.lastMessageTime }}</span>
         </div>
       </div>
-      <div v-if="item.state === 0" class="operate">
-        <button>拒绝</button>
-        <button class="chat">通过</button>
+      <div class="operate">
+        <button @click="remove(item)">
+          {{ "退出群聊" }}
+        </button>
+        <button class="chat" @click="chat(item)">聊一下</button>
       </div>
-      <div v-else-if="item.state === 1" class="operate-res">已通过</div>
-      <div v-else class="operate-res">已拒绝</div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    qunList: {
+      type: Array,
+      default: () => [],
+    },
+  },
+
   data() {
-    return {
-      newFriendList: [
-        {
-          id: 1,
-          userId: 6,
-          name: "用户1",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          state: 0,
-        },
-        {
-          id: 2,
-          userId: 7,
-          name: "用户2",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          state: 1,
-        },
-        {
-          id: 3,
-          userId: 7,
-          name: "用户2",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          state: 2,
-        },
-      ],
-    };
+    return {};
+  },
+  methods: {
+    remove(item) {
+      // console.log(item);
+      this.$emit("remove", item);
+    },
+    chat(item) {
+      // console.log(item);
+      this.$emit("chat", item);
+    },
   },
 };
 </script>
@@ -114,6 +102,7 @@ export default {
   .operate {
     width: 70%;
     text-align: end;
+
     button {
       min-width: 80px;
       width: 15%;

@@ -1,10 +1,10 @@
 <template>
   <div class="">
-    <div class="user-item" v-for="item of newFriendList" :key="item.id">
+    <div v-for="item of users" :key="item.id" class="user-item">
       <div class="user-info">
         <div class="avatar">
           <img :src="item.avatar" alt="" />
-          <img class="img-flag" :src="item.flag" alt="" />
+          <img :src="item.flagUrl" alt="" class="img-flag" />
         </div>
         <div class="user-name">
           <span>{{ item.name }}</span>
@@ -21,39 +21,71 @@
 </template>
 
 <script>
+import { ChatApi } from "../../../api/Chat";
+
 export default {
   data() {
     return {
-      newFriendList: [
-        {
-          id: 1,
-          userId: 6,
-          name: "用户1",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          state: 0,
-        },
-        {
-          id: 2,
-          userId: 7,
-          name: "用户2",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          state: 1,
-        },
-        {
-          id: 3,
-          userId: 7,
-          name: "用户2",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          state: 2,
-        },
-      ],
+      users: [],
     };
+  },
+  async mounted() {
+    this.refresh();
+  },
+  methods: {
+    onClickLeft() {
+      this.$router.go(-1);
+    },
+    async refresh() {
+      var promise = ChatApi.newFriendList();
+      promise.then(
+        (res) => {
+          this.users = res.data.map((item) => {
+            return {
+              id: item.id,
+              userId: item.vo.userId,
+              status: item.status,
+              userName: item.vo.userName,
+              avatar: item.vo.avatar,
+              addTime: item.vo.addTime,
+              flagUrl: item.vo.flagUrl,
+              nationality: item.vo.nationality,
+            };
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+    },
+    async reject(user) {
+      var that = this;
+      await ChatApi.auditFriend(user.id, 2).then(
+        (res) => {
+          this.$message("操作成功");
+          that.refresh();
+          console.log(res);
+        },
+        (err) => {
+          console.log(err);
+          this.$message("操作失败");
+        }
+      );
+    },
+    async pass(user) {
+      var that = this;
+      await ChatApi.auditFriend(user.id, 1).then(
+        (res) => {
+          this.$message("操作成功");
+          that.refresh();
+          console.log(res);
+        },
+        (err) => {
+          console.log(err);
+          this.$message("操作失败");
+        }
+      );
+    },
   },
 };
 </script>
@@ -114,6 +146,7 @@ export default {
   .operate {
     width: 70%;
     text-align: end;
+
     button {
       min-width: 80px;
       width: 15%;
