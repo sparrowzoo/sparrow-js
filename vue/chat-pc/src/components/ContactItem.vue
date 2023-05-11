@@ -1,19 +1,19 @@
 <template>
   <div>
-    <div class="user-item" v-for="item of contacterList" :key="item.id">
+    <div v-for="item of contactList" :key="item.id" class="user-item">
       <div class="user-info">
         <div class="avatar">
           <img :src="item.avatar" alt="" />
-          <img v-if="isUser" class="img-flag" :src="item.flag" alt="" />
+          <img :src="item.flagUrl" alt="" class="img-flag" />
         </div>
         <div class="user-name">
           <span></span>
-          <span>{{ item.name }}</span>
+          <span>{{ item.userName }}</span>
         </div>
       </div>
       <div class="operate">
-        <button @click="remove(item)">
-          {{ isUser ? "删除好友" : "删除群聊" }}
+        <button v-if="platform === false" @click="remove(item)">
+          {{ "删除好友" }}
         </button>
         <button class="chat" @click="chat(item)">聊一下</button>
       </div>
@@ -24,13 +24,13 @@
 <script>
 export default {
   props: {
-    contacterList: {
+    contactList: {
       type: Array,
       default: () => [],
     },
-    isUser: {
+    platform: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 
@@ -106,6 +106,7 @@ export default {
   .operate {
     width: 70%;
     text-align: end;
+
     button {
       min-width: 80px;
       width: 15%;
