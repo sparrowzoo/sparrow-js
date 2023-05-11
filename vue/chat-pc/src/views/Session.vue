@@ -5,158 +5,85 @@
       <!-- 搜索框 -->
       <div class="search-part">
         <div class="search-icon">
-          <i class="iconfont icon-sousuo"></i>
-          <input class="search-input" type="text" placeholder="搜索" />
+          <i class="iconfont icon-search"></i>
+          <!--          <input class="search-input" placeholder="搜索" type="text" />-->
         </div>
-        <div class="search-add">+</div>
+        <div class="search-add iconfont icon-add-user"></div>
       </div>
       <!-- 消息列表 -->
       <div class="msg-list">
         <div
+          v-for="item of sessionList"
+          :key="item.key"
+          :class="item.key === activeSession.key ? 'session-active' : ''"
           class="msg-item"
-          v-for="item of sesstionList"
-          :key="item.id"
           @click="switchSession(item)"
-          :class="
-            item.userId === $store.state.targetInfo.userId
-              ? 'session-active'
-              : ''
-          "
         >
           <div class="avatar">
-            <img :src="item.avatar" class="avatar-img" alt="用户头像" />
+            <img :src="item.icon" alt="用户头像" class="avatar-img" />
             <img
-              v-if="item.sessionType === 'user'"
+              v-if="item.type === $protocol.CHAT_TYPE_1_2_1"
               :src="item.flag"
-              class="nation"
               alt="国籍"
+              class="nation"
             />
-            <span class="unread">{{ item.unread }}</span>
+            <span v-if="item.unReadCount > 0" class="unread">{{
+              item.unReadCount
+            }}</span>
           </div>
           <div class="msg-user-time">
             <div class="msg-user">
-              <span class="user-name">{{ item.name }}</span>
-              <span class="msg-time">{{ item.lastTime }}</span>
+              <span class="user-name">{{ item.title }}</span>
+              <span class="msg-time">{{ item.time }}</span>
             </div>
-            <span class="msg-last">{{
-              item.messageType === "txt" ? item.lastMsg : "图片"
-            }}</span>
+            <span class="msg-last">{{ item.lastMessageContent }}</span>
           </div>
         </div>
       </div>
     </div>
     <!-- 右侧聊天框 -->
     <div class="msg-content">
-      <ChatPart
-        :message-list="messageList"
-        :target-info="targetInfo"
-      ></ChatPart>
+      <ChatPart :session="activeSession"></ChatPart>
     </div>
   </div>
 </template>
 
 <script>
 import ChatPart from "@/components/ChatPart.vue";
+import { ChatApi } from "../../../api/Chat";
+
 export default {
   components: { ChatPart },
   data() {
     return {
-      sesstionList: [
-        {
-          id: 1,
-          sessionType: "user",
-          name: "张三",
-          userId: 6,
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          unread: 10,
-          lastTime: "19:03",
-          lastMsg: "你好",
-          messageType: "txt",
-        },
-        {
-          id: 2,
-          userId: 7,
-          sessionType: "user",
-          name: "用户2",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          unread: 10,
-          lastTime: "19:03",
-          lastMsg: "你好",
-          messageType: "txt",
-        },
-        {
-          id: 3,
-          userId: 8,
-          sessionType: "group",
-          name: "群聊1",
-          avatar:
-            "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/xu1vxs0yg2wjw30jrlvd.png",
-          flag: "https://fast-refuel.oss-cn-shenzhen.aliyuncs.com/ipt97p56wya010s3vpde.png",
-          unread: 10,
-          lastTime: "19:03",
-          lastMsg: "你好",
-          messageType: "txt",
-        },
-      ],
-      activeSessionIndex: 0,
-      messageList: [
-        {
-          id: 1,
-          messageType: "txt",
-          messageContent: "这是一条文本信息",
-          messageTime: "2020-12-10",
-          isSelf: true,
-        },
-        {
-          id: 2,
-          messageType: "image",
-          messageContent: "https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg",
-          messageTime: "2020-12-10",
-          isSelf: true,
-        },
-        {
-          id: 3,
-          messageType: "txt",
-          messageContent: "这是一条文本信息",
-          messageTime: "2020-12-10",
-          isSelf: false,
-        },
-        {
-          id: 4,
-          messageType: "image",
-          messageContent: "https://img1.imgtp.com/2023/04/30/xQeYeb8b.jpg",
-          messageTime: "2020-12-10",
-          isSelf: false,
-        },
-        {
-          id: 5,
-          messageType: "recall",
-          messageContent: "撤回的内容",
-          isSelf: false,
-        },
-      ],
-      targetInfo: {
-        name: "用户2",
-        avatar: "https://img1.imgtp.com/2023/04/30/xQeYeb8b.jpg",
-      },
+      sessionList: this.$sessions,
+      //一定要添加初始化数据，否则会报错
+      activeSession: { key: -1 },
     };
   },
+  computed: {},
+  mounted() {
+    this.initActiveSession();
+    ChatApi.setRead(this.activeSession, this);
+  },
   methods: {
+    initActiveSession() {
+      this.$store.commit("activeMenu", 2);
+
+      if (this.$sessionMap == null || this.$sessionMap.length === 0) {
+        return;
+      }
+      var key = this.$route.query.key;
+      if (key != null) {
+        this.activeSession = this.$sessionMap[key];
+        return;
+      }
+      this.activeSession = this.sessionList[0];
+    },
     // 切换聊天用户
-    switchSession(item) {
-      // 将最新的聊天对象保存到全局
-      const newTarget = {
-        type: item.sessionType,
-        userId: item.userId,
-        name: item.name,
-        avatar: item.avatar,
-        targetId: item.targetId,
-      };
-      this.$store.commit("setTargetUser", newTarget);
+    switchSession(session) {
+      this.activeSession = session;
+      ChatApi.setRead(this.activeSession, this);
     },
   },
 };
@@ -174,6 +101,7 @@ export default {
   min-width: 250px;
   background-color: @theme-color;
   border: 1px solid @border-color;
+
   .search-part {
     height: 75px;
     padding: 0 15px;
@@ -227,9 +155,11 @@ export default {
     // 隐藏滚动条
     scrollbar-width: none; /* Firefox */
     -ms-overflow-style: none; /* IE 10+ */
+
     &::-webkit-scrollbar {
       display: none; /* Chrome Safari */
     }
+
     .msg-item {
       width: 100%;
       padding: 20px 15px;
@@ -253,6 +183,7 @@ export default {
           bottom: -5px;
           left: -1px;
         }
+
         .avatar-img {
           width: 100%;
           height: 100%;
@@ -284,12 +215,14 @@ export default {
         .msg-user {
           display: flex;
           justify-content: space-between;
+
           .user-name {
             max-width: 85px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
           }
+
           .msg-time {
             color: #8c8c8c;
             font-size: 14px;

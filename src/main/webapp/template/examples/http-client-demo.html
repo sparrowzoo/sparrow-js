@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
     <title>demo</title>
     <script language="javascript" type="text/javascript">
         var parameters = {};
@@ -33,7 +33,6 @@
         }
 
         function button_click() {
-            debugger;
             call(document.getElementById("methodList").value);
         }
 
@@ -43,6 +42,6 @@
 <select id="methodList">
     <option value="order-flight.query">order-flight.query</option>
 </select>
-<input type="button" onclick="button_click()" value="请求"/>
+<input onclick="button_click()" type="button" value="请求"/>
 </body>
 </html>

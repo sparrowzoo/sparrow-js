@@ -1,15 +1,15 @@
 <template>
-  <div ref="detail-ref" v-show="showDetailFlag" class="more-message">
+  <div v-show="showDetailFlag" ref="detail-ref" class="more-message">
     <div class="group-more-part">
       <div class="more-search">
         <i class="iconfont icon-sousuo"></i>
-        <input type="text" class="search-member" placeholder="搜索" />
+        <input class="search-member" placeholder="搜索" type="text" />
       </div>
       <div class="group-more-content">
         <!-- 群成员 -->
         <div class="user-list">
           <div class="more-user">
-            <img src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" alt="" />
+            <img alt="" src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" />
             <span>用名</span>
           </div>
           <div class="more-icon">
@@ -19,7 +19,7 @@
         </div>
         <div class="look-more-user">
           <span>查看更多</span>
-          <i class="iconfont icon-xiala"></i>
+          <i class="iconfont icon-down-more"></i>
         </div>
         <div class="more-common">
           <p>群聊名称</p>
@@ -83,11 +83,13 @@ export default {
   // transform: translateX(100%);
   background-color: @theme-color;
   border: 1px solid @border-color;
+
   .group-more-part {
     .more-search {
       position: relative;
       margin-bottom: 25px;
       .input();
+
       .iconfont {
         position: absolute;
         top: 8px;
@@ -103,9 +105,11 @@ export default {
       // 隐藏滚动条
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE 10+ */
+
       &::-webkit-scrollbar {
         display: none; /* Chrome Safari */
       }
+
       .user-list {
         display: flex;
         flex-wrap: wrap;
@@ -114,10 +118,12 @@ export default {
 
         & > div {
           margin-bottom: 15px;
+
           &:nth-child(4n + 2) {
             margin-left: 12px;
             margin-right: 12px;
           }
+
           &:nth-child(4n + 3) {
             margin-right: 12px;
           }
@@ -132,18 +138,22 @@ export default {
           text-align: center;
           margin-top: 6px;
         }
+
         .more-user {
           display: flex;
           flex-direction: column;
           width: 40px;
+
           img {
             width: 100%;
             height: 40px;
             border-radius: 2px;
           }
         }
+
         .more-icon {
           text-align: center;
+
           .search-add {
             box-sizing: border-box;
             width: 40px;
@@ -178,6 +188,7 @@ export default {
           margin-bottom: 0;
           color: @text-color;
         }
+
         span {
           color: @text-gray-color;
         }

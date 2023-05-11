@@ -1,16 +1,16 @@
 <template>
   <div class="system-notice">
-    <div class="inform-item" v-for="item of noticeList" :key="item.id">
+    <div v-for="item of noticeList" :key="item.noticeId" class="inform-item">
       <div class="setting-icon"></div>
       <div class="inform-content">
-        <span>{{ item.title }}</span>
-        <p>
-          {{ item.content }}
+        <span>{{ item.noticeTitle }}</span>
+        <p v-if="item.fold">
+          {{ item.noticeContent }}
         </p>
         <div class="inform-message">
-          <span class="inform-time">{{ item.timer }}</span>
-          <span class="inform-operate">{{
-            item.flod ? "展开全部" : "收起"
+          <span class="inform-time">{{ item.updateTime }}</span>
+          <span class="inform-operate" @click="change(item)">{{
+            item.fold ? "展开全部" : "收起"
           }}</span>
         </div>
       </div>
@@ -19,36 +19,43 @@
 </template>
 
 <script>
+import { ChatApi } from "../../../api/Chat";
+
 export default {
   data() {
     return {
       noticeList: [
         {
-          id: 1,
-          title: "系统通知",
-          content:
-            "关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...",
-          time: "2022-11-17 16:15:20",
-          flod: true,
-        },
-        {
-          id: 2,
-          title: "系统通知",
-          content:
-            "关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...",
-          time: "2022-11-17 16:15:20",
-          flod: true,
-        },
-        {
-          id: 3,
-          title: "系统通知",
-          content:
-            "关于公布浙江大学第十届大学生英语写作比赛、第七届大学生英语阅读比赛考场安排的通知外国语学院2022-09-21...",
-          time: "2022-11-17 16:15:20",
-          flod: true,
+          noticeId: 1,
+          noticeTitle: "",
+          noticeContent: "",
+          updateTime: "",
+          fold: true,
         },
       ],
     };
+  },
+  mounted() {
+    ChatApi.systemNotice().then(
+      (res) => {
+        var result = res.data;
+        //this.noticeList = result;
+        // 加上这句话就无法正常显示？
+        result.forEach((item) => {
+          item.fold = true;
+        });
+        this.noticeList = result;
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  },
+  methods: {
+    change(item) {
+      console.log(item.fold);
+      item.fold = !item.fold;
+    },
   },
 };
 </script>
@@ -71,6 +78,7 @@ export default {
     display: none; /* Chrome Safari */
   }
 }
+
 .inform-item {
   padding: 30px 0;
   border-bottom: 1px solid @border-color;

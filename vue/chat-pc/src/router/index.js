@@ -2,17 +2,17 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 // import store from "../store";
 // import Login from "../views/login.vue"; "../views/login.vue"
-const Login = () => import("@/views/login.vue");
-const Main = () => import("@/views/layout/layout.vue");
-const MyFriend = () => import("@/views/myFriend/MyFriend.vue");
-const NewFriend = () => import("@/views/myFriend/newFriend/NewFriend.vue");
-const AddFriend = () => import("@/views/myFriend/addFriend/AddFriend.vue");
-const MyGroup = () => import("@/views/myFriend/myGroup/MyGroup");
+const Login = () => import("@/views/Login");
+const Main = () => import("@/views/layout/Layout");
+const ContactMenu = () => import("@/views/layout/ContactMenu");
+const Contact = () => import("@/views/Contact.vue");
+const NewFriend = () => import("@/views/NewFriend");
+const Qun = () => import("@/views/Qun");
 
-const ChatMsg = () => import("@/views/chatMsg/ChatMsg.vue");
-const ContactService = () =>
-  import("@/views/contactService/ContactService.vue");
-const SystemNotice = () => import("@/views/systemNotice/SystemNotice.vue");
+const PlatformService = () => import("@/views/PlatformService");
+
+const Session = () => import("@/views/Session");
+const SystemNotice = () => import("@/views/SystemNotice");
 
 Vue.use(VueRouter);
 // 解决重复push同一路径报错问题
@@ -22,46 +22,59 @@ VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch((err) => err);
 };
 
-const routes = [
-  {
-    path: "/",
-    name: "login",
-    component: Login,
-  },
-  {
-    path: "/main",
-    name: "main",
-    component: Main,
-    children: [
-      {
-        path: "/main",
-        name: "friend",
-        component: MyFriend,
-        children: [
-          { path: "/main", name: "addFriend", component: AddFriend },
-          { path: "new", name: "newFriend", component: NewFriend },
-          { path: "group", name: "myGroup", component: MyGroup },
-        ],
-      },
-      { path: "message", name: "message", component: ChatMsg },
-      {
-        path: "notice",
-        name: "notice",
-        component: SystemNotice,
-      },
-      {
-        path: "service",
-        name: "service",
-        component: ContactService,
-      },
-    ],
-  },
-];
-
 const router = new VueRouter({
-  mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes: [
+    {
+      path: "/login",
+      name: "login",
+      component: Login,
+    },
+    {
+      path: "/",
+      name: "main",
+      component: Main,
+      children: [
+        {
+          path: "/contact",
+          name: "contact-menu",
+          component: ContactMenu,
+          children: [
+            {
+              path: "/",
+              name: "contact",
+              component: Contact,
+            },
+            {
+              path: "new",
+              name: "new-friend",
+              component: NewFriend,
+            },
+            {
+              path: "qun",
+              name: "qun",
+              component: Qun,
+            },
+          ],
+        },
+        {
+          path: "session",
+          name: "session",
+          component: Session,
+        },
+        {
+          path: "notice",
+          name: "notice",
+          component: SystemNotice,
+        },
+        {
+          path: "platform-service",
+          name: "platform-service",
+          component: PlatformService,
+        },
+      ],
+    },
+  ],
 });
 
 // router.beforeEach((to, from, next) => {
