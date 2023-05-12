@@ -6,7 +6,6 @@
 
 <script>
 import QunItem from "@/components/QunItem.vue";
-import { Initialization } from "../../../api/Initialization";
 
 export default {
   components: { QunItem },
@@ -53,10 +52,9 @@ export default {
       console.log(data);
     },
     onChat(qun) {
-      var sessionKey = Initialization.getQunSession(qun, this);
       this.$router.push({
         name: "session",
-        query: { key: sessionKey },
+        query: { key: qun.id },
       });
     },
   },
