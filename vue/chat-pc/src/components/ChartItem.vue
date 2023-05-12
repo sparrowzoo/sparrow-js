@@ -45,7 +45,7 @@ export default {
       // 根据事件对象中鼠标点击的位置，进行定位
       menu.style.display = "block";
       menu.style.top = sparrowEvent.getAbsoluteTop() + "px";
-      menu.style.left = sparrowEvent.getAbsoluteLeft() + "px";
+      menu.style.left = sparrowEvent.getAbsoluteLeft() + 5 + "px";
       menu.style.zIndex = 1000;
     },
   },
