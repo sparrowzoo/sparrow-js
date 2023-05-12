@@ -1,6 +1,5 @@
 <template>
   <div class="">
-    <div class="msg-recall" style="display: none">撤回</div>
     <div class="msg-content">
       <!-- 聊天头部信息 -->
       <div class="title">
@@ -167,29 +166,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.msg-recall {
-  position: absolute;
-  //left: 0;
-  //top: 0;
-  //color: red;
-  //background-color: #fff;
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
-}
-
-.msg-recall ul {
-  //list-style-type: none;
-  //padding: 0;
-  //margin: 0;
-}
-
-.msg-recall ul li {
-  //padding: 5px 15px;
-  //cursor: pointer;
-}
-
-.msg-recall ul li:hover {
-  //background: rgba(0, 0, 0, 0.1);
-}
+// 全局 消息撤回
 
 .msg-content {
   // float: right;

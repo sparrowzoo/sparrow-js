@@ -12,23 +12,42 @@
       <router-view></router-view>
     </div>
 
-    <el-dialog :visible.sync="dialogFormVisible" title="添加好友">
+    <el-dialog :visible.sync="dialogFormVisible" width="26%" title="添加好友">
       <el-form>
         <el-form-item
           :label-width="formLabelWidth"
           label="请输入手机号"
           tabindex="-1"
         >
-          <el-input v-model="phone" autocomplete="off"></el-input>
-          <el-button @click="searchFriend">查找</el-button>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <el-input v-model="phone" autocomplete="off"></el-input>
+            </el-col>
+            <el-col :span="6">
+              <el-button @click="searchFriend">查找</el-button>
+            </el-col>
+          </el-row>
         </el-form-item>
 
         <div v-if="user">
           <div class="wrap">
-            <div class="wrap_name">{{ user.userName }}</div>
+            <el-row :gutter="30">
+              <el-col :span="10">
+                <div class="wrap_info">
+                  <img class="wrap_avatar" :src="user.avatar" alt="头像" />
+                  <div class="wrap_name">{{ user.userName }}</div>
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addFriend"
+                  >确认申请</el-button
+                >
+              </el-col>
+            </el-row>
+            <!-- <div class="wrap_name">{{ user.userName }}</div>
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="addFriend">确认申请</el-button>
-            <!--            <van-button size="small" type="primary" @click="sendAddFriend()">确认申请</van-button>-->
+            <el-button type="primary" @click="addFriend">确认申请</el-button> -->
           </div>
         </div>
       </el-form>
@@ -65,7 +84,7 @@ export default {
       phone: "",
       user: null,
       dialogFormVisible: false,
-      formLabelWidth: "120px",
+      formLabelWidth: "100px",
     };
   },
   methods: {
@@ -162,5 +181,21 @@ export default {
   &::-webkit-scrollbar {
     display: none; /* Chrome Safari */
   }
+}
+
+.wrap {
+  .wrap_info {
+    display: flex;
+    align-items: center;
+  }
+  .wrap_avatar {
+    margin-right: 6px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+::v-deep .el-form-item__label {
+  text-align: start;
 }
 </style>
