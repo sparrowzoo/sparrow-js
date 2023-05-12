@@ -61,7 +61,7 @@ export default {
             localStorage.setItem("token", res.data.token); // memberInfo
             await this.$init();
             Toast.success("登录成功");
-            this.router.push("/contact");
+            await this.$router.push("/contact");
           } else {
             Toast.fail("登录失败-" + res.msg);
           }
