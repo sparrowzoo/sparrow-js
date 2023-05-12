@@ -29,9 +29,13 @@ module.exports = defineConfig({
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
     name: name,
-    output: {
-      publicPath: process.env.publicPath,
-    },
+    /**
+     * 打开会报以下错误
+     * Configuration Error: Avoid modifying webpack output.publicPath directly. Use the "publicPath" option instead.
+     */
+    // output: {
+    //   publicPath: process.env.publicPath,
+    // },
     resolve: {
       alias: {
         "@": resolve("src"),
@@ -69,4 +73,5 @@ module.exports = defineConfig({
 });
 //?输出configureWebpack
 console.log(module.exports.configureWebpack.resolve.alias);
+debugger;
 console.log("publicPath:" + process.env.publicPath);

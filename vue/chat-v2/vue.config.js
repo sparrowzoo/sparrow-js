@@ -17,7 +17,7 @@ const { defineConfig } = require("@vue/cli-service");
 module.exports = defineConfig({
   // dev 必须是/ 生产环境才允许配置
   //publicPath: process.env.NODE_ENV === 'prod' ? '/my-project/' : '/',
-  publicPath: process.env.publicPath, //npm run serve 启动后对应的项目子目录
+  // publicPath: process.env.publicPath, //npm run serve 启动后对应的项目子目录
   outputDir: "build-dist", //打包编译后生成的路径 npm run build
   assetsDir: "static", //静态资源生成的路径
   indexPath: "index.html", //编译后的首页
@@ -26,9 +26,6 @@ module.exports = defineConfig({
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
     name: name,
-    output: {
-      publicPath: process.env.publicPath,
-    },
     resolve: {
       alias: {
         "@": resolve("src"),
@@ -67,4 +64,5 @@ module.exports = defineConfig({
 });
 //?输出configureWebpack
 console.log(module.exports.configureWebpack.resolve.alias);
+
 console.log("publicPath:" + process.env.publicPath);
