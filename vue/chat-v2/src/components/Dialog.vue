@@ -114,24 +114,13 @@ export default {
   },
   async mounted() {
     this.handleScrollBottom();
-    this.initActiveSession();
+    Initialization.initActiveSession(this);
   },
   beforeDestroy() {
     console.log("beforeDestroy");
   },
   computed: {},
   methods: {
-    initActiveSession() {
-      if (this.$sessionMap == null || this.$sessionMap.length === 0) {
-        return;
-      }
-      var key = this.$route.query.key;
-      if (key != null) {
-        this.activeSession = this.$sessionMap[key];
-        return;
-      }
-      this.activeSession = this.sessionList[0];
-    },
     goBack() {
       this.$router.go(-1);
     },

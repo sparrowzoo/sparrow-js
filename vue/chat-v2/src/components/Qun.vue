@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import { Initialization } from "../../../api/Initialization";
-
 export default {
   name: "ChatQun",
   data() {
@@ -35,11 +33,10 @@ export default {
   },
   methods: {
     toChat(qun) {
-      var sessionKey = Initialization.getQunSession(qun, this);
       this.$router.push({
         name: "chat",
         query: {
-          key: sessionKey,
+          key: qun.id,
         },
       });
     },

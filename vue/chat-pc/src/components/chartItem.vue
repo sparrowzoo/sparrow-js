@@ -40,11 +40,12 @@ export default {
       console.log(item);
       // 阻止默认的菜单弹出事件
       e.preventDefault();
+      var sparrowEvent = this.$sparrow.event(e);
       let menu = document.querySelector(".msg-recall");
       // 根据事件对象中鼠标点击的位置，进行定位
       menu.style.display = "block";
-      menu.style.top = e.pageX - 800 + "px";
-      menu.style.left = e.pageY + 50 + "px";
+      menu.style.top = sparrowEvent.getAbsoluteTop() + "px";
+      menu.style.left = sparrowEvent.getAbsoluteLeft() + "px";
       menu.style.zIndex = 1000;
     },
   },
