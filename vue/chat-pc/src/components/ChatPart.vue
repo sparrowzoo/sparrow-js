@@ -84,6 +84,12 @@ export default {
     },
   },
   mounted() {
+    let that = this;
+    document.onkeydown = function (e) {
+      let key = e.keyCode;
+      if (key !== 13) return;
+      that.sendText();
+    };
     console.log("session:" + JSON.stringify(this.session));
   },
   data() {
@@ -98,6 +104,12 @@ export default {
       e.stopPropagation();
       // 展开详细信息
       this.$refs["showMore"].showDetail();
+    },
+    handleScrollBottom() {
+      this.$nextTick(() => {
+        var msgDetail = document.querySelector(".msg-detail");
+        msgDetail.scrollTop = msgDetail.scrollHeight;
+      });
     },
     async sendImage(file) {
       const fileReader = new FileReader();
@@ -147,6 +159,7 @@ export default {
       this.content = "";
       Initialization.rebuild(protocol, this);
       Initialization.resortSessions(this);
+      this.handleScrollBottom();
       console.log("parse protocol:" + protocol);
     },
   },
