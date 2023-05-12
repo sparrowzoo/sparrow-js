@@ -33,7 +33,6 @@
 import groupImage from "@/assets/group.png";
 import addImage from "@/assets/add.png";
 import newFriendImage from "@/assets/newFriend.png";
-import { Initialization } from "../../../api/Initialization";
 
 export default {
   name: "ChatContact",
@@ -58,9 +57,12 @@ export default {
       this.$router.push({ name: "new-friend" });
     },
     //聊天
-    toChat(user) {
-      var sessionKey = Initialization.get121Session(user, this);
-      console.log(user);
+    toChat(friend) {
+      var sessionKey = this.$protocol.generate121SessionKey(
+        friend.userId,
+        this.$getUserId()
+      );
+      console.log(friend);
       this.$router.push({
         name: "chat",
         query: { key: sessionKey },

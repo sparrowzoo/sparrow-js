@@ -103,12 +103,33 @@ var Initialization = {
   },
   resortSessions: function (vue) {
     vue.$sessions = vue.$sessions.sort(function (a, b) {
-      if (b.time === a.time) {
+      if (b.lastReadTime === a.lastReadTime) {
         return 0;
       }
-      return b.time > a.time ? 1 : -1;
+      return b.lastReadTime > a.lastReadTime ? 1 : -1;
     });
   },
+  initActiveSession: function (vue) {
+    var currentUsrId = vue.$getUserId();
+    var key = vue.$route.query.key;
+    if (key == null) {
+      //如果没有指定session key 则默认取第一个,即最近的聊天
+      vue.activeSession = vue.sessionList[0];
+      return;
+    }
+    //如果指定了session key 则取指定的session
+    //说明是一对一单聊
+    if (key.indexOf("_")) {
+      var oppositeId = vue.$protocol.getOppositeUser(key, currentUsrId);
+      var oppositeUser = vue.$userMap[oppositeId];
+      this.get121Session(oppositeUser, vue);
+    } else {
+      var qun = vue.$qunMap[key];
+      this.getQunSession(qun, vue);
+    }
+    vue.activeSession = vue.$sessionMap[key];
+  },
+
   rebuild: function (protocol, vue) {
     var sender = vue.$userMap[protocol.sender];
     var imgUrl = null;
@@ -128,7 +149,7 @@ var Initialization = {
       isMe: protocol.sender === vue.$getUserId(),
       userName: sender.userName,
       avatar: sender.avatar,
-      time: new Date().format("MM/dd hh:mm:ss"),
+      time: new Date(protocol.clientSendTime).format("MM/dd hh:mm:ss"),
       isText: protocol.msgType === vue.$protocol.TEXT_MESSAGE,
       session:
         protocol.chatType === vue.$protocol.CHAT_TYPE_1_2_N
@@ -255,7 +276,7 @@ var Initialization = {
   initWebSocket: async function (Vue, vue) {
     return await new Promise((resolve, reject) => {
       var webSocket = new vue.$sparrow.webSocket(
-        "ws://localhost:8080/websocket",
+        "ws://chat.sparrowzoo.com/websocket",
         vue.$token
       );
       webSocket.reconnectionAlarmCallback = function () {

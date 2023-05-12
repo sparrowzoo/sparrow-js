@@ -51,6 +51,7 @@
 <script>
 import ChatPart from "@/components/ChatPart.vue";
 import { ChatApi } from "../../../api/Chat";
+import { Initialization } from "../../../api/Initialization";
 
 export default {
   components: { ChatPart },
@@ -63,23 +64,11 @@ export default {
   },
   computed: {},
   mounted() {
-    this.initActiveSession();
+    this.$store.commit("activeMenu", 2);
+    Initialization.initActiveSession(this);
     ChatApi.setRead(this.activeSession, this);
   },
   methods: {
-    initActiveSession() {
-      this.$store.commit("activeMenu", 2);
-
-      if (this.$sessionMap == null || this.$sessionMap.length === 0) {
-        return;
-      }
-      var key = this.$route.query.key;
-      if (key != null) {
-        this.activeSession = this.$sessionMap[key];
-        return;
-      }
-      this.activeSession = this.sessionList[0];
-    },
     // 切换聊天用户
     switchSession(session) {
       this.activeSession = session;
