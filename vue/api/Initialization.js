@@ -119,7 +119,7 @@ var Initialization = {
     }
     //如果指定了session key 则取指定的session
     //说明是一对一单聊
-    if (key.indexOf("_")) {
+    if (key.indexOf("_") > -1) {
       var oppositeId = vue.$protocol.getOppositeUser(key, currentUsrId);
       var oppositeUser = vue.$userMap[oppositeId];
       this.get121Session(oppositeUser, vue);
