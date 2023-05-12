@@ -82,7 +82,6 @@ export default {
   directives: {
     longpress: {
       bind(el, binding) {
-        console.log(binding);
         let timer;
         const start = () => {
           timer = setTimeout(() => {
@@ -115,11 +114,77 @@ export default {
   async mounted() {
     this.handleScrollBottom();
     Initialization.initActiveSession(this);
+    this.read();
   },
+  computed: {},
+  beforeCreate() {
+    console.log("beforeCreate");
+  },
+  created() {
+    console.log("created");
+  },
+  async beforeMount() {
+    console.log("beforeMount");
+  },
+  beforeUpdate() {
+    console.log("beforeUpdate");
+  },
+  updated() {
+    console.log("updated");
+  },
+
+  destroyed() {
+    console.log("destroyed");
+  },
+  activated() {
+    console.log("activated");
+  },
+  deactivated() {
+    console.log("deactivated");
+  },
+  errorCaptured() {
+    console.log("errorCaptured");
+  },
+
   beforeDestroy() {
     console.log("beforeDestroy");
   },
-  computed: {},
+  /**
+   * Vue生命周期函数有：
+   * beforeCreate、
+   * created、
+   * beforeMount、
+   * mounted、
+   * beforeUpdate、
+   * updated、
+   * beforeDestroy、
+   * destroyed、
+   * activated、
+   * deactivated、
+   * errorCaptured。
+   *
+   * 1、beforeCreate：组件实例刚被创建，组件属性计算之前。
+   *
+   * 2、Created：组件实例刚被创建，属性已绑定，但DOM还未生成。
+   *
+   * 3、beforeMount：模板编译/挂载之前。
+   *
+   * 4、Mounted：模板编译/挂载之后。
+   *
+   * 5、beforeUpdate：组件更新之前。
+   *
+   * 6、Updated：组件更新之后。
+   *
+   * 7、beforeDestroy：组件销毁前调用。
+   *
+   * 8、Destroyed：组件销毁后调用。
+   *
+   * 9、activated：组件激活时调用。
+   *
+   * 10、deactivated：组件停用时调用。
+   *
+   * 11、errorCaptured：当捕获一个来自子孙组件的错误时被调用。
+   */
   methods: {
     goBack() {
       this.$router.go(-1);
@@ -163,15 +228,17 @@ export default {
         });
     },
     read() {
-      ChatApi.setRead(this.activeSession.sessionKey);
+      ChatApi.setRead(this.activeSession, this);
     },
     // 滚动到底部
     handleScrollBottom() {
+      //页面渲染完毕后执行
+
       this.$nextTick(() => {
         let scrollElem = this.$refs.scrollDiv;
-        console.log(scrollElem);
+        console.log("next tick:", scrollElem);
         if (scrollElem) {
-          scrollElem.scrollTo({ top: scrollElem.scrollHeight + 100 });
+          window.scrollTo(0, scrollElem.scrollHeight);
         }
       });
     },
@@ -183,11 +250,17 @@ export default {
         var content = new Uint8Array(result);
         var time = new Date().getTime();
 
-        var chatType = parseInt(this.activeSession.type, 10);
+        var chatType = parseInt(that.activeSession.type, 10);
+        //如果是1对1聊天
+        var oppositeUserId = ImProtocol.getOppositeUser(
+          that.$route.query.key,
+          that.$getUserId()
+        );
         var protocol = new that.$protocol(
           chatType,
           that.$protocol.IMAGE_MESSAGE,
           that.$getUserId(),
+          oppositeUserId,
           that.$route.query.key,
           content,
           time
@@ -207,7 +280,7 @@ export default {
       }
       var time = new Date().getTime();
       var chatType = parseInt(this.activeSession.type, 10);
-      //如果是1对1聊天，则传过来的key=对方用户ID
+      //如果是1对1聊天
       var oppositeUserId = ImProtocol.getOppositeUser(
         this.$route.query.key,
         this.$getUserId()
