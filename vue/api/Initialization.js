@@ -194,7 +194,7 @@ var Initialization = {
   },
   getQunSession: function (qun, vue) {
     //通讯录好友聊天，一定存在对方用户
-    var sessionKey = qun.id;
+    var sessionKey = qun.qunId;
     var session = vue.$sessionMap[sessionKey];
     if (session != null) {
       return sessionKey;
@@ -203,8 +203,8 @@ var Initialization = {
       key: sessionKey, //发送方ID
       type: ImProtocol.CHAT_TYPE_1_2_N,
       //session 头象
-      icon: qun.avatar,
-      title: qun.title,
+      icon: qun.unitIcon,
+      title: qun.qunName,
       //消息列表
       messages: [],
       lastReadTime: 0,

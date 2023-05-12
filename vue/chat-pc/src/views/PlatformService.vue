@@ -10,7 +10,6 @@
 
 <script>
 import ContactItem from "@/components/ContactItem.vue";
-import { Initialization } from "../../../api/Initialization";
 
 export default {
   components: { ContactItem },
@@ -24,7 +23,10 @@ export default {
       console.log(data);
     },
     onChat(friend) {
-      var sessionKey = Initialization.get121Session(friend, this);
+      var sessionKey = this.$protocol.generate121SessionKey(
+        friend.userId,
+        this.$getUserId()
+      );
       // 跳 我的消息
       this.$router.push({
         name: "session",
