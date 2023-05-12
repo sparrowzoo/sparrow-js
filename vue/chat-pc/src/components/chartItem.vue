@@ -1,4 +1,4 @@
-<template>
+
   <div :class="messageItem.isMe ? 'right' : 'left'" class="message">
     <!-- 根据条件展示聊天时间 -->
     <div v-if="messageItem.time" class="time">
