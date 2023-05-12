@@ -33,7 +33,6 @@
 
 <script>
 // import {ChatApi} from "@/api/Chat";
-import router from "@/route";
 import { Toast } from "vant";
 import { ChatApi } from "../../../api/Chat";
 
@@ -54,15 +53,15 @@ export default {
         return;
       }
       ChatApi.login(this.code, this.phone, this.password).then(
-        (res) => {
+        async (res) => {
           if (res.code === 200) {
             console.log(res.data.token);
             console.log(res.data.memberInfo.id);
             localStorage.setItem("userId", res.data.memberInfo.id);
             localStorage.setItem("token", res.data.token); // memberInfo
+            await this.$init();
             Toast.success("登录成功");
-            this.$init();
-            router.push("/contact");
+            this.router.push("/contact");
           } else {
             Toast.fail("登录失败-" + res.msg);
           }
