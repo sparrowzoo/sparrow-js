@@ -112,9 +112,14 @@ var Initialization = {
   initActiveSession: function (vue) {
     var currentUsrId = vue.$getUserId();
     var key = vue.$route.query.key;
-    if (key == null) {
+    var targetUserId = vue.$route.query.targetUserId;
+    if (key == null && targetUserId == null) {
       //如果没有指定session key 则默认取第一个,即最近的聊天
       vue.activeSession = vue.sessionList[0];
+      return;
+    }
+    if (targetUserId != null) {
+      this.get121Session(targetUserId, vue);
       return;
     }
     //如果指定了session key 则取指定的session
