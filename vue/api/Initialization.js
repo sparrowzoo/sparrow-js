@@ -118,15 +118,18 @@ var Initialization = {
       vue.activeSession = vue.sessionList[0];
       return;
     }
+    var oppositeUser = null;
     if (targetUserId != null) {
-      this.get121Session(targetUserId, vue);
+      oppositeUser = vue.$userMap[targetUserId];
+      key = this.get121Session(oppositeUser, vue);
+      vue.activeSession = vue.$sessionMap[key];
       return;
     }
     //如果指定了session key 则取指定的session
     //说明是一对一单聊
     if (key.indexOf("_") > -1) {
       var oppositeId = vue.$protocol.getOppositeUser(key, currentUsrId);
-      var oppositeUser = vue.$userMap[oppositeId];
+      oppositeUser = vue.$userMap[oppositeId];
       this.get121Session(oppositeUser, vue);
     } else {
       var qun = vue.$qunMap[key];

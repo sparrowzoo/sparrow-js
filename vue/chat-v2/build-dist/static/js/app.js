@@ -6,8 +6,7 @@
  * or disable the default devtool with "devtool: false".
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
-/******/ (function() { // webpackBootstrap
-/******/ 	var __webpack_modules__ = ({
+(self["webpackChunksparrow_vue_cli_v2"] = self["webpackChunksparrow_vue_cli_v2"] || []).push([["app"],{
 
 /***/ "./src/App.vue":
 /*!*********************!*\
@@ -16,7 +15,7 @@
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App.vue?vue&type=template&id=7ba5bd90& */ \"./src/App.vue?vue&type=template&id=7ba5bd90&\");\n/* harmony import */ var _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.vue?vue&type=script&lang=js& */ \"./src/App.vue?vue&type=script&lang=js&\");\n/* harmony import */ var _App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& */ \"./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&\");\n/* harmony import */ var _node_modules_vue_vue_loader_v15_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../node_modules/@vue/vue-loader-v15/lib/runtime/componentNormalizer.js */ \"./node_modules/@vue/vue-loader-v15/lib/runtime/componentNormalizer.js\");\n\n\n\n;\n\n\n/* normalize component */\n\nvar component = (0,_node_modules_vue_vue_loader_v15_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n  _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.render,\n  _App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"src/App.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App.vue?vue&type=template&id=7ba5bd90& */ \"./src/App.vue?vue&type=template&id=7ba5bd90&\");\n/* harmony import */ var _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./App.vue?vue&type=script&lang=js& */ \"./src/App.vue?vue&type=script&lang=js&\");\n/* harmony import */ var _App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& */ \"./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&\");\n/* harmony import */ var _node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/runtime/componentNormalizer.js */ \"./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/runtime/componentNormalizer.js\");\n\n\n\n;\n\n\n/* normalize component */\n\nvar component = (0,_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__[\"default\"])(\n  _App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.render,\n  _App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"src/App.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
 
 /***/ }),
 
@@ -27,7 +26,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _App
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=script&lang=js&\");\n /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=script&lang=js& */ \"./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=script&lang=js&\");\n /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
 
 /***/ }),
 
@@ -38,7 +37,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _nod
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_vue_loader_v15_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_vue_loader_v15_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }\n/* harmony export */ });\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_vue_loader_v15_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=template&id=7ba5bd90& */ \"./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=template&id=7ba5bd90&\");\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns; }\n/* harmony export */ });\n/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_40_use_0_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_templateLoader_js_ruleSet_1_rules_3_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_template_id_7ba5bd90___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=template&id=7ba5bd90& */ \"./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=template&id=7ba5bd90&\");\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
 
 /***/ }),
 
@@ -49,7 +48,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!../node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!../node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& */ \"./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&\");\n/* harmony import */ var _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__);\n/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};\n/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== \"default\") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = function(key) { return _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }.bind(0, __WEBPACK_IMPORT_KEY__)\n/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& */ \"./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&\");\n/* harmony import */ var _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__);\n/* harmony reexport (unknown) */ var __WEBPACK_REEXPORT_OBJECT__ = {};\n/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== \"default\") __WEBPACK_REEXPORT_OBJECT__[__WEBPACK_IMPORT_KEY__] = function(key) { return _node_modules_vue_style_loader_index_js_clonedRuleSet_12_use_0_node_modules_css_loader_dist_cjs_js_clonedRuleSet_12_use_1_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_12_use_2_node_modules_vue_cli_service_node_modules_vue_vue_loader_v15_lib_index_js_vue_loader_options_App_vue_vue_type_style_index_0_id_7ba5bd90_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }.bind(0, __WEBPACK_IMPORT_KEY__)\n/* harmony reexport (unknown) */ __webpack_require__.d(__webpack_exports__, __WEBPACK_REEXPORT_OBJECT__);\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?");
 
 /***/ }),
 
@@ -93,29 +92,29 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Initialization\": function() { return /* binding */ Initialization; }\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.push.js */ \"./node_modules/core-js/modules/es.array.push.js\");\n/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chat */ \"../api/Chat.js\");\n/* harmony import */ var _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../source/scripts/ImProtocol */ \"../../source/scripts/ImProtocol.js\");\n\n\n\nvar Initialization = {\n  initPlatformService: async function (Vue) {\n    var res = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.platformServices();\n    if (res.code === 200) {\n      Vue.prototype.$platformServers = res.rows;\n      res.rows.forEach(user => {\n        user.platform = true;\n        Vue.prototype.$userMap[user.userId] = user;\n      });\n    }\n    console.log(\"res\", res);\n  },\n  initContact: async function (Vue, vue) {\n    var res = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.getContacts();\n    Vue.prototype.$contact = res.data;\n    console.log(\"res\", res);\n    var userMap = {};\n    res.data.users.forEach(user => {\n      userMap[user.userId] = user;\n    });\n    Vue.prototype.$userMap = userMap;\n    var qunMap = {};\n    res.data.quns.forEach(qun => {\n      qunMap[qun.qunId] = qun;\n    });\n    Vue.prototype.$qunMap = qunMap;\n    console.log(\"userMap\", userMap);\n  },\n  _oppositeUser: function (session, vue) {\n    return _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.getOppositeUser(session.chatSession.sessionKey, vue.$getUserId());\n  },\n  fetchUserIds: function (sessions) {\n    var userIds = [];\n    sessions.forEach(session => {\n      //考虑接收方和发送方的 消息拉取逻辑\n      if (userIds.indexOf(session.chatSession.sender) < 0) {\n        userIds.push(session.chatSession.sender);\n      }\n      if (session.chatSession.receiver > 0 && userIds.indexOf(session.chatSession.receiver) < 0) {\n        userIds.push(session.chatSession.receiver);\n      }\n      session.messages.forEach(message => {\n        if (userIds.indexOf(message.sender) < 0) {\n          userIds.push(message.sender);\n        }\n      });\n    });\n    return userIds;\n  },\n  assembleSessions: function (sessions, userMap, vue) {\n    var sessionList = [];\n    //组装会话列表\n    sessions.forEach(session => {\n      var chatSession = session.chatSession;\n      const chatType = chatSession.chatType; //1群 0单聊\n      const sessionKey = chatSession.sessionKey; //唯一id，1 2 N群ID\n      var newSession = null;\n      if (chatType === vue.$protocol.CHAT_TYPE_1_2_1) {\n        //获取对方用户信息\n        var oppositeUserId = this._oppositeUser(session, vue);\n        var oppositeUser = userMap[oppositeUserId];\n        // 普通用户\n        if (!oppositeUser) {\n          return null;\n        }\n        newSession = {\n          key: sessionKey,\n          //session 类型\n          type: chatType,\n          //session 头象\n          icon: oppositeUser.avatar,\n          lastReadTime: session.lastReadTime,\n          flag: oppositeUser.flagUrl,\n          //session 名称 对方的昵称\n          title: oppositeUser.userName,\n          //对方ID\n          oppositeUserId: oppositeUser.userId,\n          //消息列表\n          messages: session.messages\n        };\n      }\n      if (chatType === vue.$protocol.CHAT_TYPE_1_2_N) {\n        var qun = vue.$qunMap[sessionKey];\n        newSession = {\n          key: sessionKey,\n          type: chatType,\n          title: qun.qunName,\n          messages: session.messages,\n          icon: qun.unitIcon,\n          lastReadTime: session.lastReadTime\n        };\n      }\n      this.assembleLastMessage(newSession, vue);\n      sessionList.push(newSession);\n    });\n    return sessionList;\n  },\n  resortSessions: function (vue) {\n    vue.$sessions = vue.$sessions.sort(function (a, b) {\n      if (b.lastReadTime === a.lastReadTime) {\n        return 0;\n      }\n      return b.lastReadTime > a.lastReadTime ? 1 : -1;\n    });\n  },\n  initActiveSession: function (vue) {\n    var currentUsrId = vue.$getUserId();\n    var key = vue.$route.query.key;\n    if (key == null) {\n      //如果没有指定session key 则默认取第一个,即最近的聊天\n      vue.activeSession = vue.sessionList[0];\n      return;\n    }\n    //如果指定了session key 则取指定的session\n    //说明是一对一单聊\n    if (key.indexOf(\"_\") > -1) {\n      var oppositeId = vue.$protocol.getOppositeUser(key, currentUsrId);\n      var oppositeUser = vue.$userMap[oppositeId];\n      this.get121Session(oppositeUser, vue);\n    } else {\n      var qun = vue.$qunMap[key];\n      this.getQunSession(qun, vue);\n    }\n    vue.activeSession = vue.$sessionMap[key];\n  },\n  rebuild: function (protocol, vue) {\n    var sender = vue.$userMap[protocol.sender];\n    var imgUrl = null;\n    if (protocol.msgType === vue.$protocol.IMAGE_MESSAGE) {\n      var fileBlob = new Blob([protocol.msg]);\n      imgUrl = window.URL.createObjectURL(fileBlob);\n    }\n    var message = {\n      id: protocol.clientSendTime,\n      chatType: protocol.chatType,\n      sender: protocol.sender,\n      clientSendTime: protocol.clientSendTime,\n      messageType: protocol.msgType,\n      content: protocol.msg,\n      imgUrl: imgUrl,\n      isMe: protocol.sender === vue.$getUserId(),\n      userName: sender.userName,\n      avatar: sender.avatar,\n      time: new Date(protocol.clientSendTime).format(\"MM/dd hh:mm:ss\"),\n      isText: protocol.msgType === vue.$protocol.TEXT_MESSAGE,\n      session: protocol.chatType === vue.$protocol.CHAT_TYPE_1_2_N ? protocol.sessionKey : _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.generate121SessionKey(protocol.sender, protocol.receiver)\n    };\n    var session = vue.$sessionMap[message.session];\n    session.messages.push(message);\n    this.assembleLastMessage(session, vue);\n  },\n  //组装1对1会话 和具体业务相关\n  get121Session: function (friend, vue) {\n    var currentUserId = vue.$getUserId();\n    //通讯录好友聊天，一定存在对方用户\n    var sessionKey = vue.$protocol.generate121SessionKey(friend.userId, currentUserId);\n    var session = vue.$sessionMap[sessionKey];\n    if (session != null) {\n      return sessionKey;\n    }\n    session = {\n      platform: !!friend.platform,\n      //1对1的key\n      key: sessionKey,\n      //发送方ID\n      type: _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.CHAT_TYPE_1_2_1,\n      //session 头象\n      icon: friend.avatar,\n      flag: friend.flagUrl,\n      //session 名称 对方的昵称\n      title: friend.userName,\n      //消息列表\n      messages: [],\n      oppositeUserId: friend.userId,\n      lastReadTime: 0\n    };\n    vue.$sessions.push(session);\n    vue.$sessionMap[session.key] = session;\n    return session.key;\n  },\n  getQunSession: function (qun, vue) {\n    //通讯录好友聊天，一定存在对方用户\n    var sessionKey = qun.qunId;\n    var session = vue.$sessionMap[sessionKey];\n    if (session != null) {\n      return sessionKey;\n    }\n    session = {\n      key: sessionKey,\n      //发送方ID\n      type: _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.CHAT_TYPE_1_2_N,\n      //session 头象\n      icon: qun.unitIcon,\n      title: qun.qunName,\n      //消息列表\n      messages: [],\n      lastReadTime: 0\n    };\n    vue.$sessions.push(session);\n    vue.$sessionMap[session.key] = session;\n    return session.key;\n  },\n  assembleLastMessage(session, vue) {\n    if (session.messages == null || session.messages.length === 0) {\n      return;\n    }\n    var lastMessage = null;\n    var lastMessageTime = null;\n    var lastMessageContent = null;\n    lastMessage = session.messages[session.messages.length - 1]; //最后收到的一条消息\n    lastMessageTime = lastMessage.clientSendTime; //最后一条消息的发送时间\n    lastMessageContent = lastMessage.messageType === 1 ? \"/图片/\" : lastMessage.content;\n    const unReadCount = session.messages.filter(message => message.serverTime >= session.lastReadTime).length;\n\n    //最后一条消息的发送时间\n    session.lastMessageTime = lastMessageTime;\n    session.time = new Date(lastMessageTime).format(\"MM/dd hh:mm:ss\");\n    session.lastMessageContent = lastMessageContent;\n    session.unReadCount = unReadCount;\n  },\n  initSessions: async function (Vue, vue) {\n    //获取当前用户的所有会话\n    var sessions = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.getSession().then(res => {\n      return res.data;\n    }, err => {\n      console.log(err);\n    });\n    //根据会话获取用户Id 列表(包括消息的发送者)\n    var userIds = this.fetchUserIds(sessions);\n\n    //获取用户实例信息\n    const userMap = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.getUserMapByIds(userIds, vue.$userMap);\n    //组装会话列表\n    var sessionList = this.assembleSessions(sessions, userMap, vue);\n    sessionList.forEach(session => {\n      session.messages.forEach(message => {\n        message.isMe = message.sender === vue.$getUserId();\n        var user = userMap[message.sender];\n        message.userName = user.userName;\n        message.avatar = user.avatar;\n        message.time = new Date(message.serverTime).format(\"MM/dd hh:mm:ss\");\n        message.isText = message.messageType === vue.$protocol.TEXT_MESSAGE;\n        if (!message.isText) {\n          message.imgUrl = message.content;\n        }\n      });\n    });\n    var sessionMap = {};\n    sessionList.forEach(item => {\n      sessionMap[item.key] = item;\n    });\n    Vue.prototype.$sessions = sessionList;\n    this.resortSessions(vue);\n    Vue.prototype.$sessionMap = sessionMap; // 全局会话\n  },\n\n  initWebSocket: async function (Vue, vue) {\n    return await new Promise((resolve, reject) => {\n      var webSocket = new vue.$sparrow.webSocket(\"ws://chat.sparrowzoo.com/websocket\", vue.$token);\n      webSocket.reconnectionAlarmCallback = function () {\n        console.log(\"reconnection AlarmCallback\");\n      };\n      webSocket.onMsgCallback = function (data) {\n        if (data.offline) {\n          console.log(\"消息已发送，对方不在线，稍后会收到消息\");\n          return;\n        }\n        _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.parse(data, function (protocol) {\n          Initialization.rebuild(protocol, vue);\n          console.log(\"parse protocol:\" + protocol);\n        });\n      };\n      webSocket.connect(resolve, reject);\n      Vue.prototype.$webSocket = webSocket;\n    }).then(userInfo => {\n      var userInfoArray = userInfo.split(\",\");\n      if (userInfoArray.length !== 2) {\n        throw new Error(\"用户信息错误\");\n      }\n      vue.$webSocket.userId = parseInt(userInfoArray[0], 10);\n      vue.$webSocket.platform = userInfoArray[1] === \"true\";\n    });\n  }\n};\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/../api/Initialization.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Initialization\": function() { return /* binding */ Initialization; }\n/* harmony export */ });\n/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es.array.push.js */ \"./node_modules/core-js/modules/es.array.push.js\");\n/* harmony import */ var core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es_array_push_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _Chat__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Chat */ \"../api/Chat.js\");\n/* harmony import */ var _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../source/scripts/ImProtocol */ \"../../source/scripts/ImProtocol.js\");\n\n\n\nvar Initialization = {\n  initPlatformService: async function (Vue) {\n    var res = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.platformServices();\n    if (res.code === 200) {\n      Vue.prototype.$platformServers = res.rows;\n      res.rows.forEach(user => {\n        user.platform = true;\n        Vue.prototype.$userMap[user.userId] = user;\n      });\n    }\n    console.log(\"res\", res);\n  },\n  initContact: async function (Vue, vue) {\n    var res = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.getContacts();\n    Vue.prototype.$contact = res.data;\n    console.log(\"res\", res);\n    var userMap = {};\n    res.data.users.forEach(user => {\n      userMap[user.userId] = user;\n    });\n    Vue.prototype.$userMap = userMap;\n    var qunMap = {};\n    res.data.quns.forEach(qun => {\n      qunMap[qun.qunId] = qun;\n    });\n    Vue.prototype.$qunMap = qunMap;\n    console.log(\"userMap\", userMap);\n  },\n  _oppositeUser: function (session, vue) {\n    return _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.getOppositeUser(session.chatSession.sessionKey, vue.$getUserId());\n  },\n  fetchUserIds: function (sessions) {\n    var userIds = [];\n    sessions.forEach(session => {\n      //考虑接收方和发送方的 消息拉取逻辑\n      if (userIds.indexOf(session.chatSession.sender) < 0) {\n        userIds.push(session.chatSession.sender);\n      }\n      if (session.chatSession.receiver > 0 && userIds.indexOf(session.chatSession.receiver) < 0) {\n        userIds.push(session.chatSession.receiver);\n      }\n      session.messages.forEach(message => {\n        if (userIds.indexOf(message.sender) < 0) {\n          userIds.push(message.sender);\n        }\n      });\n    });\n    return userIds;\n  },\n  assembleSessions: function (sessions, userMap, vue) {\n    var sessionList = [];\n    //组装会话列表\n    sessions.forEach(session => {\n      var chatSession = session.chatSession;\n      const chatType = chatSession.chatType; //1群 0单聊\n      const sessionKey = chatSession.sessionKey; //唯一id，1 2 N群ID\n      var newSession = null;\n      if (chatType === vue.$protocol.CHAT_TYPE_1_2_1) {\n        //获取对方用户信息\n        var oppositeUserId = this._oppositeUser(session, vue);\n        var oppositeUser = userMap[oppositeUserId];\n        // 普通用户\n        if (!oppositeUser) {\n          return null;\n        }\n        newSession = {\n          key: sessionKey,\n          //session 类型\n          type: chatType,\n          //session 头象\n          icon: oppositeUser.avatar,\n          lastReadTime: session.lastReadTime,\n          flag: oppositeUser.flagUrl,\n          //session 名称 对方的昵称\n          title: oppositeUser.userName,\n          //对方ID\n          oppositeUserId: oppositeUser.userId,\n          //消息列表\n          messages: session.messages\n        };\n      }\n      if (chatType === vue.$protocol.CHAT_TYPE_1_2_N) {\n        var qun = vue.$qunMap[sessionKey];\n        newSession = {\n          key: sessionKey,\n          type: chatType,\n          title: qun.qunName,\n          messages: session.messages,\n          icon: qun.unitIcon,\n          lastReadTime: session.lastReadTime\n        };\n      }\n      this.assembleLastMessage(newSession, vue);\n      sessionList.push(newSession);\n    });\n    return sessionList;\n  },\n  resortSessions: function (vue) {\n    vue.$sessions = vue.$sessions.sort(function (a, b) {\n      if (b.lastReadTime === a.lastReadTime) {\n        return 0;\n      }\n      return b.lastReadTime > a.lastReadTime ? 1 : -1;\n    });\n  },\n  initActiveSession: function (vue) {\n    var currentUsrId = vue.$getUserId();\n    var key = vue.$route.query.key;\n    var targetUserId = vue.$route.query.targetUserId;\n    if (key == null && targetUserId == null) {\n      //如果没有指定session key 则默认取第一个,即最近的聊天\n      vue.activeSession = vue.sessionList[0];\n      return;\n    }\n    var oppositeUser = null;\n    if (targetUserId != null) {\n      oppositeUser = vue.$userMap[targetUserId];\n      key = this.get121Session(oppositeUser, vue);\n      vue.activeSession = vue.$sessionMap[key];\n      return;\n    }\n    //如果指定了session key 则取指定的session\n    //说明是一对一单聊\n    if (key.indexOf(\"_\") > -1) {\n      var oppositeId = vue.$protocol.getOppositeUser(key, currentUsrId);\n      oppositeUser = vue.$userMap[oppositeId];\n      this.get121Session(oppositeUser, vue);\n    } else {\n      var qun = vue.$qunMap[key];\n      this.getQunSession(qun, vue);\n    }\n    vue.activeSession = vue.$sessionMap[key];\n  },\n  rebuild: function (protocol, vue) {\n    var sender = vue.$userMap[protocol.sender];\n    var imgUrl = null;\n    if (protocol.msgType === vue.$protocol.IMAGE_MESSAGE) {\n      var fileBlob = new Blob([protocol.msg]);\n      imgUrl = window.URL.createObjectURL(fileBlob);\n    }\n    var message = {\n      id: protocol.clientSendTime,\n      chatType: protocol.chatType,\n      sender: protocol.sender,\n      clientSendTime: protocol.clientSendTime,\n      messageType: protocol.msgType,\n      content: protocol.msg,\n      imgUrl: imgUrl,\n      isMe: protocol.sender === vue.$getUserId(),\n      userName: sender.userName,\n      avatar: sender.avatar,\n      time: new Date(protocol.clientSendTime).format(\"MM/dd hh:mm:ss\"),\n      isText: protocol.msgType === vue.$protocol.TEXT_MESSAGE,\n      session: protocol.chatType === vue.$protocol.CHAT_TYPE_1_2_N ? protocol.sessionKey : _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.generate121SessionKey(protocol.sender, protocol.receiver)\n    };\n    var session = vue.$sessionMap[message.session];\n    session.messages.push(message);\n    this.assembleLastMessage(session, vue);\n  },\n  //组装1对1会话 和具体业务相关\n  get121Session: function (friend, vue) {\n    var currentUserId = vue.$getUserId();\n    //通讯录好友聊天，一定存在对方用户\n    var sessionKey = vue.$protocol.generate121SessionKey(friend.userId, currentUserId);\n    var session = vue.$sessionMap[sessionKey];\n    if (session != null) {\n      return sessionKey;\n    }\n    session = {\n      platform: !!friend.platform,\n      //1对1的key\n      key: sessionKey,\n      //发送方ID\n      type: _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.CHAT_TYPE_1_2_1,\n      //session 头象\n      icon: friend.avatar,\n      flag: friend.flagUrl,\n      //session 名称 对方的昵称\n      title: friend.userName,\n      //消息列表\n      messages: [],\n      oppositeUserId: friend.userId,\n      lastReadTime: 0\n    };\n    vue.$sessions.push(session);\n    vue.$sessionMap[session.key] = session;\n    return session.key;\n  },\n  getQunSession: function (qun, vue) {\n    //通讯录好友聊天，一定存在对方用户\n    var sessionKey = qun.qunId;\n    var session = vue.$sessionMap[sessionKey];\n    if (session != null) {\n      return sessionKey;\n    }\n    session = {\n      key: sessionKey,\n      //发送方ID\n      type: _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.CHAT_TYPE_1_2_N,\n      //session 头象\n      icon: qun.unitIcon,\n      title: qun.qunName,\n      //消息列表\n      messages: [],\n      lastReadTime: 0\n    };\n    vue.$sessions.push(session);\n    vue.$sessionMap[session.key] = session;\n    return session.key;\n  },\n  assembleLastMessage(session, vue) {\n    if (session.messages == null || session.messages.length === 0) {\n      return;\n    }\n    var lastMessage = null;\n    var lastMessageTime = null;\n    var lastMessageContent = null;\n    lastMessage = session.messages[session.messages.length - 1]; //最后收到的一条消息\n    lastMessageTime = lastMessage.clientSendTime; //最后一条消息的发送时间\n    lastMessageContent = lastMessage.messageType === 1 ? \"/图片/\" : lastMessage.content;\n    const unReadCount = session.messages.filter(message => message.serverTime >= session.lastReadTime).length;\n\n    //最后一条消息的发送时间\n    session.lastMessageTime = lastMessageTime;\n    session.time = new Date(lastMessageTime).format(\"MM/dd hh:mm:ss\");\n    session.lastMessageContent = lastMessageContent;\n    session.unReadCount = unReadCount;\n  },\n  initSessions: async function (Vue, vue) {\n    //获取当前用户的所有会话\n    var sessions = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.getSession().then(res => {\n      return res.data;\n    }, err => {\n      console.log(err);\n    });\n    //根据会话获取用户Id 列表(包括消息的发送者)\n    var userIds = this.fetchUserIds(sessions);\n\n    //获取用户实例信息\n    const userMap = await _Chat__WEBPACK_IMPORTED_MODULE_1__.ChatApi.getUserMapByIds(userIds, vue.$userMap);\n    //组装会话列表\n    var sessionList = this.assembleSessions(sessions, userMap, vue);\n    sessionList.forEach(session => {\n      session.messages.forEach(message => {\n        message.isMe = message.sender === vue.$getUserId();\n        var user = userMap[message.sender];\n        message.userName = user.userName;\n        message.avatar = user.avatar;\n        message.time = new Date(message.serverTime).format(\"MM/dd hh:mm:ss\");\n        message.isText = message.messageType === vue.$protocol.TEXT_MESSAGE;\n        if (!message.isText) {\n          message.imgUrl = message.content;\n        }\n      });\n    });\n    var sessionMap = {};\n    sessionList.forEach(item => {\n      sessionMap[item.key] = item;\n    });\n    Vue.prototype.$sessions = sessionList;\n    this.resortSessions(vue);\n    Vue.prototype.$sessionMap = sessionMap; // 全局会话\n  },\n\n  initWebSocket: async function (Vue, vue) {\n    return await new Promise((resolve, reject) => {\n      var webSocket = new vue.$sparrow.webSocket(\"ws://chat.sparrowzoo.com/websocket\", vue.$token);\n      webSocket.reconnectionAlarmCallback = function () {\n        console.log(\"reconnection AlarmCallback\");\n      };\n      webSocket.onMsgCallback = function (data) {\n        if (data.offline) {\n          console.log(\"消息已发送，对方不在线，稍后会收到消息\");\n          return;\n        }\n        _source_scripts_ImProtocol__WEBPACK_IMPORTED_MODULE_2__.ImProtocol.parse(data, function (protocol) {\n          Initialization.rebuild(protocol, vue);\n          console.log(\"parse protocol:\" + protocol);\n        });\n      };\n      webSocket.connect(resolve, reject);\n      Vue.prototype.$webSocket = webSocket;\n    }).then(userInfo => {\n      var userInfoArray = userInfo.split(\",\");\n      if (userInfoArray.length !== 2) {\n        throw new Error(\"用户信息错误\");\n      }\n      vue.$webSocket.userId = parseInt(userInfoArray[0], 10);\n      vue.$webSocket.platform = userInfoArray[1] === \"true\";\n    });\n  }\n};\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/../api/Initialization.js?");
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=script&lang=js&":
-/*!************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=script&lang=js& ***!
-  \************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {},\n  computed: {},\n  //除了App.vue，其他的vue文件都要加上name （copilot的badcase 不对 ）\n  //除了App.vue的name，其他的vue文件命名必须是驼峰命名法\n  //https://sparrowzoo.feishu.cn/docx/RzKZdWXQioxE5vxamcec8YBencb\n  data() {\n    return {};\n  },\n  mounted() {\n    console.log(\"welcome to sparrow im\");\n  }\n});\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use%5B0%5D!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {},\n  computed: {},\n  //除了App.vue，其他的vue文件都要加上name （copilot的badcase 不对 ）\n  //除了App.vue的name，其他的vue文件命名必须是驼峰命名法\n  //https://sparrowzoo.feishu.cn/docx/RzKZdWXQioxE5vxamcec8YBencb\n  data() {\n    return {};\n  },\n  mounted() {\n    console.log(\"welcome to sparrow im\");\n  }\n});\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use%5B0%5D!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=template&id=7ba5bd90&":
-/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=template&id=7ba5bd90& ***!
-  \********************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=template&id=7ba5bd90&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use[0]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet[1].rules[3]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=template&id=7ba5bd90& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function render() {\n  var _vm = this,\n    _c = _vm._self._c;\n  return _c(\"div\", {\n    attrs: {\n      id: \"app\"\n    }\n  }, [_c(\"router-view\", {\n    key: _vm.$route.fullPath\n  }), _c(\"van-tabbar\", {\n    attrs: {\n      route: \"\"\n    }\n  }, [_c(\"van-tabbar-item\", {\n    attrs: {\n      replace: \"\",\n      to: {\n        name: \"session\"\n      },\n      icon: \"chat-o\"\n    }\n  }, [_vm._v(\"消息\")]), _c(\"van-tabbar-item\", {\n    attrs: {\n      replace: \"\",\n      to: {\n        name: \"contact\"\n      },\n      icon: \"user-o\"\n    }\n  }, [_vm._v(\"通讯录\")])], 1)], 1);\n};\nvar staticRenderFns = [];\nrender._withStripped = true;\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use%5B0%5D!./node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet%5B1%5D.rules%5B3%5D!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"render\": function() { return /* binding */ render; },\n/* harmony export */   \"staticRenderFns\": function() { return /* binding */ staticRenderFns; }\n/* harmony export */ });\nvar render = function render() {\n  var _vm = this,\n    _c = _vm._self._c;\n  return _c(\"div\", {\n    attrs: {\n      id: \"app\"\n    }\n  }, [_c(\"router-view\", {\n    key: _vm.$route.fullPath\n  }), _vm.$route.path != \"/chat\" ? _c(\"van-tabbar\", {\n    attrs: {\n      route: \"\"\n    }\n  }, [_c(\"van-tabbar-item\", {\n    attrs: {\n      to: {\n        name: \"session\"\n      },\n      icon: \"chat-o\",\n      replace: \"\"\n    }\n  }, [_vm._v(\"消息 \")]), _c(\"van-tabbar-item\", {\n    attrs: {\n      to: {\n        name: \"contact\"\n      },\n      icon: \"user-o\",\n      replace: \"\"\n    }\n  }, [_vm._v(\"通讯录 \")])], 1) : _vm._e()], 1);\n};\nvar staticRenderFns = [];\nrender._withStripped = true;\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/babel-loader/lib/index.js??clonedRuleSet-40.use%5B0%5D!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/templateLoader.js??ruleSet%5B1%5D.rules%5B3%5D!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
 
 /***/ }),
 
@@ -141,24 +140,24 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue_
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/noSourceMaps.js */ \"./node_modules/css-loader/dist/runtime/noSourceMaps.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);\n// Imports\n\n\nvar ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, \"\\n#app {\\n    padding-bottom: 4rem;\\n}\\n\", \"\"]);\n// Exports\n/* harmony default export */ __webpack_exports__[\"default\"] = (___CSS_LOADER_EXPORT___);\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use%5B1%5D!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use%5B2%5D!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/noSourceMaps.js */ \"./node_modules/css-loader/dist/runtime/noSourceMaps.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ \"./node_modules/css-loader/dist/runtime/api.js\");\n/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);\n// Imports\n\n\nvar ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_noSourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));\n// Module\n___CSS_LOADER_EXPORT___.push([module.id, \"\\n#app {\\n  padding-bottom: 4rem;\\n}\\n\", \"\"]);\n// Exports\n/* harmony default export */ __webpack_exports__[\"default\"] = (___CSS_LOADER_EXPORT___);\n\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use%5B1%5D!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use%5B2%5D!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&":
-/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& ***!
-  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use[0]!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ (function(module, __unused_webpack_exports, __webpack_require__) {
 
-eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// load the styles\nvar content = __webpack_require__(/*! !!../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!../node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!../node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& */ \"./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&\");\nif(content.__esModule) content = content.default;\nif(typeof content === 'string') content = [[module.id, content, '']];\nif(content.locals) module.exports = content.locals;\n// add the styles to the DOM\nvar add = (__webpack_require__(/*! !../node_modules/vue-style-loader/lib/addStylesClient.js */ \"./node_modules/vue-style-loader/lib/addStylesClient.js\")[\"default\"])\nvar update = add(\"7089b03d\", content, false, {\"sourceMap\":false,\"shadowMode\":false});\n// Hot Module Replacement\nif(false) {}\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use%5B0%5D!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use%5B1%5D!./node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use%5B2%5D!./node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
+eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// load the styles\nvar content = __webpack_require__(/*! !!../node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!../node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css& */ \"./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use[1]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use[2]!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options!./src/App.vue?vue&type=style&index=0&id=7ba5bd90&lang=css&\");\nif(content.__esModule) content = content.default;\nif(typeof content === 'string') content = [[module.id, content, '']];\nif(content.locals) module.exports = content.locals;\n// add the styles to the DOM\nvar add = (__webpack_require__(/*! !../node_modules/vue-style-loader/lib/addStylesClient.js */ \"./node_modules/vue-style-loader/lib/addStylesClient.js\")[\"default\"])\nvar update = add(\"520e8f5d\", content, false, {\"sourceMap\":false,\"shadowMode\":false});\n// Hot Module Replacement\nif(false) {}\n\n//# sourceURL=webpack://sparrow-vue-cli-v2/./src/App.vue?./node_modules/vue-style-loader/index.js??clonedRuleSet-12.use%5B0%5D!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-12.use%5B1%5D!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-12.use%5B2%5D!./node_modules/@vue/cli-service/node_modules/@vue/vue-loader-v15/lib/index.js??vue-loader-options");
 
 /***/ }),
 
@@ -173,362 +172,10 @@ eval("module.exports = \"data:font/woff2;charset=utf-8;base64,d09GMgABAAAAAFukAA
 
 /***/ })
 
-/******/ 	});
-/************************************************************************/
-/******/ 	// The module cache
-/******/ 	var __webpack_module_cache__ = {};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
-/******/ 		if (cachedModule !== undefined) {
-/******/ 			return cachedModule.exports;
-/******/ 		}
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			id: moduleId,
-/******/ 			// no module.loaded needed
-/******/ 			exports: {}
-/******/ 		};
-/******/ 	
-/******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 	
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = __webpack_modules__;
-/******/ 	
-/************************************************************************/
-/******/ 	/* webpack/runtime/async module */
-/******/ 	!function() {
-/******/ 		var webpackQueues = typeof Symbol === "function" ? Symbol("webpack queues") : "__webpack_queues__";
-/******/ 		var webpackExports = typeof Symbol === "function" ? Symbol("webpack exports") : "__webpack_exports__";
-/******/ 		var webpackError = typeof Symbol === "function" ? Symbol("webpack error") : "__webpack_error__";
-/******/ 		var resolveQueue = function(queue) {
-/******/ 			if(queue && !queue.d) {
-/******/ 				queue.d = 1;
-/******/ 				queue.forEach(function(fn) { fn.r--; });
-/******/ 				queue.forEach(function(fn) { fn.r-- ? fn.r++ : fn(); });
-/******/ 			}
-/******/ 		}
-/******/ 		var wrapDeps = function(deps) { return deps.map(function(dep) {
-/******/ 			if(dep !== null && typeof dep === "object") {
-/******/ 				if(dep[webpackQueues]) return dep;
-/******/ 				if(dep.then) {
-/******/ 					var queue = [];
-/******/ 					queue.d = 0;
-/******/ 					dep.then(function(r) {
-/******/ 						obj[webpackExports] = r;
-/******/ 						resolveQueue(queue);
-/******/ 					}, function(e) {
-/******/ 						obj[webpackError] = e;
-/******/ 						resolveQueue(queue);
-/******/ 					});
-/******/ 					var obj = {};
-/******/ 					obj[webpackQueues] = function(fn) { fn(queue); };
-/******/ 					return obj;
-/******/ 				}
-/******/ 			}
-/******/ 			var ret = {};
-/******/ 			ret[webpackQueues] = function() {};
-/******/ 			ret[webpackExports] = dep;
-/******/ 			return ret;
-/******/ 		}); };
-/******/ 		__webpack_require__.a = function(module, body, hasAwait) {
-/******/ 			var queue;
-/******/ 			hasAwait && ((queue = []).d = 1);
-/******/ 			var depQueues = new Set();
-/******/ 			var exports = module.exports;
-/******/ 			var currentDeps;
-/******/ 			var outerResolve;
-/******/ 			var reject;
-/******/ 			var promise = new Promise(function(resolve, rej) {
-/******/ 				reject = rej;
-/******/ 				outerResolve = resolve;
-/******/ 			});
-/******/ 			promise[webpackExports] = exports;
-/******/ 			promise[webpackQueues] = function(fn) { queue && fn(queue), depQueues.forEach(fn), promise["catch"](function() {}); };
-/******/ 			module.exports = promise;
-/******/ 			body(function(deps) {
-/******/ 				currentDeps = wrapDeps(deps);
-/******/ 				var fn;
-/******/ 				var getResult = function() { return currentDeps.map(function(d) {
-/******/ 					if(d[webpackError]) throw d[webpackError];
-/******/ 					return d[webpackExports];
-/******/ 				}); }
-/******/ 				var promise = new Promise(function(resolve) {
-/******/ 					fn = function() { resolve(getResult); };
-/******/ 					fn.r = 0;
-/******/ 					var fnQueue = function(q) { q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))); };
-/******/ 					currentDeps.map(function(dep) { dep[webpackQueues](fnQueue); });
-/******/ 				});
-/******/ 				return fn.r ? promise : getResult();
-/******/ 			}, function(err) { (err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue); });
-/******/ 			queue && (queue.d = 0);
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/chunk loaded */
-/******/ 	!function() {
-/******/ 		var deferred = [];
-/******/ 		__webpack_require__.O = function(result, chunkIds, fn, priority) {
-/******/ 			if(chunkIds) {
-/******/ 				priority = priority || 0;
-/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
-/******/ 				deferred[i] = [chunkIds, fn, priority];
-/******/ 				return;
-/******/ 			}
-/******/ 			var notFulfilled = Infinity;
-/******/ 			for (var i = 0; i < deferred.length; i++) {
-/******/ 				var chunkIds = deferred[i][0];
-/******/ 				var fn = deferred[i][1];
-/******/ 				var priority = deferred[i][2];
-/******/ 				var fulfilled = true;
-/******/ 				for (var j = 0; j < chunkIds.length; j++) {
-/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every(function(key) { return __webpack_require__.O[key](chunkIds[j]); })) {
-/******/ 						chunkIds.splice(j--, 1);
-/******/ 					} else {
-/******/ 						fulfilled = false;
-/******/ 						if(priority < notFulfilled) notFulfilled = priority;
-/******/ 					}
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferred.splice(i--, 1)
-/******/ 					var r = fn();
-/******/ 					if (r !== undefined) result = r;
-/******/ 				}
-/******/ 			}
-/******/ 			return result;
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	!function() {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = function(module) {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				function() { return module['default']; } :
-/******/ 				function() { return module; };
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	!function() {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = function(exports, definition) {
-/******/ 			for(var key in definition) {
-/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/ensure chunk */
-/******/ 	!function() {
-/******/ 		__webpack_require__.f = {};
-/******/ 		// This file contains only the entry chunk.
-/******/ 		// The chunk loading function for additional chunks
-/******/ 		__webpack_require__.e = function(chunkId) {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
-/******/ 				__webpack_require__.f[key](chunkId, promises);
-/******/ 				return promises;
-/******/ 			}, []));
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/get javascript chunk filename */
-/******/ 	!function() {
-/******/ 		// This function allow to reference async chunks
-/******/ 		__webpack_require__.u = function(chunkId) {
-/******/ 			// return url for filenames based on template
-/******/ 			return "static/js/" + chunkId + ".js";
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/global */
-/******/ 	!function() {
-/******/ 		__webpack_require__.g = (function() {
-/******/ 			if (typeof globalThis === 'object') return globalThis;
-/******/ 			try {
-/******/ 				return this || new Function('return this')();
-/******/ 			} catch (e) {
-/******/ 				if (typeof window === 'object') return window;
-/******/ 			}
-/******/ 		})();
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	!function() {
-/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/load script */
-/******/ 	!function() {
-/******/ 		var inProgress = {};
-/******/ 		var dataWebpackPrefix = "sparrow-vue-cli-v2:";
-/******/ 		// loadScript function to load a script via script tag
-/******/ 		__webpack_require__.l = function(url, done, key, chunkId) {
-/******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
-/******/ 			var script, needAttach;
-/******/ 			if(key !== undefined) {
-/******/ 				var scripts = document.getElementsByTagName("script");
-/******/ 				for(var i = 0; i < scripts.length; i++) {
-/******/ 					var s = scripts[i];
-/******/ 					if(s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) { script = s; break; }
-/******/ 				}
-/******/ 			}
-/******/ 			if(!script) {
-/******/ 				needAttach = true;
-/******/ 				script = document.createElement('script');
-/******/ 		
-/******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120;
-/******/ 				if (__webpack_require__.nc) {
-/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 				}
-/******/ 				script.setAttribute("data-webpack", dataWebpackPrefix + key);
-/******/ 				script.src = url;
-/******/ 			}
-/******/ 			inProgress[url] = [done];
-/******/ 			var onScriptComplete = function(prev, event) {
-/******/ 				// avoid mem leaks in IE.
-/******/ 				script.onerror = script.onload = null;
-/******/ 				clearTimeout(timeout);
-/******/ 				var doneFns = inProgress[url];
-/******/ 				delete inProgress[url];
-/******/ 				script.parentNode && script.parentNode.removeChild(script);
-/******/ 				doneFns && doneFns.forEach(function(fn) { return fn(event); });
-/******/ 				if(prev) return prev(event);
-/******/ 			}
-/******/ 			var timeout = setTimeout(onScriptComplete.bind(null, undefined, { type: 'timeout', target: script }), 120000);
-/******/ 			script.onerror = onScriptComplete.bind(null, script.onerror);
-/******/ 			script.onload = onScriptComplete.bind(null, script.onload);
-/******/ 			needAttach && document.head.appendChild(script);
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/make namespace object */
-/******/ 	!function() {
-/******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = function(exports) {
-/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 			}
-/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 		};
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/publicPath */
-/******/ 	!function() {
-/******/ 		__webpack_require__.p = "/chat/m/";
-/******/ 	}();
-/******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	!function() {
-/******/ 		__webpack_require__.b = document.baseURI || self.location.href;
-/******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
-/******/ 			"app": 0
-/******/ 		};
-/******/ 		
-/******/ 		__webpack_require__.f.j = function(chunkId, promises) {
-/******/ 				// JSONP chunk loading for javascript
-/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
-/******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
-/******/ 		
-/******/ 					// a Promise means "currently loading".
-/******/ 					if(installedChunkData) {
-/******/ 						promises.push(installedChunkData[2]);
-/******/ 					} else {
-/******/ 						if(true) { // all chunks have JS
-/******/ 							// setup Promise in chunk cache
-/******/ 							var promise = new Promise(function(resolve, reject) { installedChunkData = installedChunks[chunkId] = [resolve, reject]; });
-/******/ 							promises.push(installedChunkData[2] = promise);
-/******/ 		
-/******/ 							// start chunk loading
-/******/ 							var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							var error = new Error();
-/******/ 							var loadingEnded = function(event) {
-/******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
-/******/ 									installedChunkData = installedChunks[chunkId];
-/******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
-/******/ 									if(installedChunkData) {
-/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										var realSrc = event && event.target && event.target.src;
-/******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 										error.name = 'ChunkLoadError';
-/******/ 										error.type = errorType;
-/******/ 										error.request = realSrc;
-/******/ 										installedChunkData[1](error);
-/******/ 									}
-/******/ 								}
-/******/ 							};
-/******/ 							__webpack_require__.l(url, loadingEnded, "chunk-" + chunkId, chunkId);
-/******/ 						} else installedChunks[chunkId] = 0;
-/******/ 					}
-/******/ 				}
-/******/ 		};
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 		
-/******/ 		__webpack_require__.O.j = function(chunkId) { return installedChunks[chunkId] === 0; };
-/******/ 		
-/******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = function(parentChunkLoadingFunction, data) {
-/******/ 			var chunkIds = data[0];
-/******/ 			var moreModules = data[1];
-/******/ 			var runtime = data[2];
-/******/ 			// add "moreModules" to the modules object,
-/******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
-/******/ 			if(chunkIds.some(function(id) { return installedChunks[id] !== 0; })) {
-/******/ 				for(moduleId in moreModules) {
-/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 					}
-/******/ 				}
-/******/ 				if(runtime) var result = runtime(__webpack_require__);
-/******/ 			}
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
-/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					installedChunks[chunkId][0]();
-/******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 			return __webpack_require__.O(result);
-/******/ 		}
-/******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunksparrow_vue_cli_v2"] = self["webpackChunksparrow_vue_cli_v2"] || [];
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 	}();
-/******/ 	
-/************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["chunk-vendors"], function() { return __webpack_require__("./src/main.js"); })
-/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
-/******/ 	
-/******/ })()
-;
+},
+/******/ function(__webpack_require__) { // webpackRuntimeModules
+/******/ var __webpack_exec__ = function(moduleId) { return __webpack_require__(__webpack_require__.s = moduleId); }
+/******/ __webpack_require__.O(0, ["npm.vant","npm.core-js","npm.vue","npm.vue-router","npm.vue-lazyload","chunk-vendors"], function() { return __webpack_exec__("./src/main.js"); });
+/******/ var __webpack_exports__ = __webpack_require__.O();
+/******/ }
+]);

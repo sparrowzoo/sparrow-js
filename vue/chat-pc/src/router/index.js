@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 // import store from "../store";
 // import Login from "../views/login.vue"; "../views/login.vue"
+
 const Login = () => import("@/views/Login");
 const Main = () => import("@/views/layout/Layout");
 const ContactMenu = () => import("@/views/layout/ContactMenu");

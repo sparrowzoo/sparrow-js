@@ -117,6 +117,10 @@ export default {
         const result = fileReader.result;
         console.log(result);
         var content = new Uint8Array(result);
+        if (content.byteLength > 1024 * 1024 * 3) {
+          that.$message("图片大小不能超过3M");
+          return;
+        }
         var time = new Date().getTime();
         //如果是1对1聊天，则传过来的key=对方用户ID
         var chatType = parseInt(that.$route.query.chatType, 10);
