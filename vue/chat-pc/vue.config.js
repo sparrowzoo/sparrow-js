@@ -1,22 +1,20 @@
 const path = require("path");
 const defaultSettings = require("./src/settings.js");
 const webpack = require("webpack");
-const CompressionWebpackPlugin = require("compression-webpack-plugin"); //引入插件
-const productionGzipExtensions = ["js", "css"]; //压缩js 和css文件
 const isProd = process.env.NODE_ENV === "prod";
+console.log("process.env.NODE_ENV" + process.env.NODE_ENV);
 
 function resolve(dir) {
   return path.join(__dirname, dir);
 }
 
 const name = defaultSettings.title || "sparrow pc"; // page title
-const port = process.env.port || process.env.npm_config_port || 9095;
+const port = process.env.port || 9095;
 
 console.log("process.env.CONSUMER_BASE_URL", process.env.CONSUMER_BASE_URL);
 console.log("process.env.SPARROW_BASE_URL", process.env.SPARROW_BASE_URL);
 const { defineConfig } = require("@vue/cli-service");
 const CompressionPlugin = require("compression-webpack-plugin");
-const { constants } = require("zlib");
 module.exports = defineConfig({
   // dev 必须是/ 生产环境才允许配置
   //publicPath: process.env.NODE_ENV === 'prod' ? '/my-project/' : '/',
@@ -25,6 +23,7 @@ module.exports = defineConfig({
   assetsDir: "static", //静态资源生成的路径
   indexPath: "index.html", //编译后的首页
   transpileDependencies: true,
+  productionSourceMap: !isProd, //生产环境关闭
   pluginOptions: {
     "style-resources-loader": {
       preProcessor: "less",
@@ -77,6 +76,9 @@ module.exports = defineConfig({
       // }),
       // 开启分离 js
     ],
+    /**
+     * 拆包方式
+     */
     optimization: {
       runtimeChunk: "single",
       splitChunks: {
@@ -96,12 +98,40 @@ module.exports = defineConfig({
               return `npm.${packageName.replace("@", "")}`;
             },
           },
+          // elementUI: {
+          //   name: "chunk-element", // split elementUI into a single package
+          //   priority: 20, // the weight needs to be larger than libs and app or it will be packaged into libs or app
+          //   test: /[\\/]node_modules[\\/]_?element-ui(.*)/, // in order to adapt to cnpm
+          // },
         },
       },
     },
   },
 
   chainWebpack: (config) => {
+    //发布模式
+    config.when(isProd, (config) => {
+      //entry找到默认的打包入口，调用clear则是删除默认的打包入口
+      //add添加新的打包入口
+      // config.entry('app').clear().add('./src/main-prod.js')
+
+      //使用externals设置排除项
+      config.set("externals", {
+        /**
+         * 将package.js 中的依赖排除
+         */
+        "element-ui": "ElementUI",
+        vue: "Vue",
+        //中间有[-]需要''
+        "vue-router": "VueRouter",
+        vuex: "Vuex",
+      });
+    });
+    //开发模式
+    config.when(!isProd, (config) => {
+      //config.entry('app').clear().add('./src/main-dev.js')
+    });
+
     config.plugins.delete("prefetch");
     // 移除 preload 插件
     config.plugins.delete("preload");
