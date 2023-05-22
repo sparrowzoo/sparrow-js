@@ -1,6 +1,11 @@
 <template>
   <div class="chat">
-    <van-nav-bar :title="activeSession.title" left-arrow @click-left="goBack">
+    <van-nav-bar
+      :fixed="true"
+      :title="activeSession.title"
+      left-arrow
+      @click-left="goBack"
+    >
       <template
         v-if="activeSession.type === this.$protocol.CHAT_TYPE_1_2_N"
         #right
@@ -39,14 +44,15 @@
         </div>
       </div>
     </div>
-    <div class="bottom">
-      <van-uploader :after-read="sendImage">
+
+    <van-tabbar :fixed="true" class="bar">
+      <van-uploader :after-read="sendImage" class="send_img">
         <van-icon name="smile" size="2rem" />
       </van-uploader>
       <van-field
         v-model="content"
         :autosize="{ maxHeight: 80 }"
-        class="content"
+        class="send_content"
         placeholder=""
         rows="1"
         type="textarea"
@@ -54,7 +60,9 @@
       <van-button class="send" size="small" type="primary" @click="sendText()"
         >发送
       </van-button>
-    </div>
+    </van-tabbar>
+    <!--    <div class="bottom">-->
+    <!--       </div>-->
   </div>
 </template>
 
@@ -248,6 +256,10 @@ export default {
       fileReader.onload = function () {
         const result = fileReader.result;
         var content = new Uint8Array(result);
+        if (content.byteLength > 1024 * 1024 * 3) {
+          Toast.fail("图片大小不能超过3M");
+          return;
+        }
         var time = new Date().getTime();
 
         var chatType = parseInt(that.activeSession.type, 10);
@@ -311,13 +323,18 @@ export default {
   flex-direction: column;
 }
 
+.bar {
+  display: flex;
+  background-color: #fff;
+}
+
 .center {
   /*flex: 1 0 0;*/
-  background-color: #eee;
+  background-color: #f7f7f7;
   padding: 0 1rem 1rem;
   overflow-y: scroll;
-  height: 90%;
-  margin-bottom: 4rem;
+  height: 100%;
+  margin-top: 2.5rem;
 }
 
 .avatar {
@@ -349,6 +366,7 @@ export default {
 .content_wrap {
   flex: 1 0 0;
   width: 0;
+  background: #fff;
 }
 
 .right .content_wrap {
@@ -390,16 +408,21 @@ export default {
   /* margin-right: 1rem; */
 }
 
-.bottom {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  padding-bottom: 4rem;
-  position: fixed;
-  bottom: 0;
-}
-
 .send {
   width: 4rem;
+  margin: 10px 10px 0 10px;
+}
+
+.send_content {
+  border: 1px solid #f9f9f9;
+  height: 2.5rem;
+  flex: 1;
+  margin: 5px 10px 0 0;
+  border-radius: 4px;
+}
+
+.send_img {
+  height: 2.5rem;
+  margin: 10px;
 }
 </style>
