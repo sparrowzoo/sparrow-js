@@ -128,7 +128,7 @@ export default {
         }
         var time = new Date().getTime();
         //如果是1对1聊天，则传过来的key=对方用户ID
-        var chatType = parseInt(that.$route.query.chatType, 10);
+        var chatType = parseInt(this.session.type, 10);
         var protocol = new that.$protocol(
           chatType,
           that.$protocol.IMAGE_MESSAGE,
