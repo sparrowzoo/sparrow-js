@@ -123,6 +123,16 @@ export default {
     this.handleScrollBottom();
     Initialization.initActiveSession(this);
     this.read();
+    console.log("first load");
+    var that = this;
+    document.onkeydown = function (e) {
+      let key = e.keyCode;
+      if (key !== 13) return;
+      that.sendText();
+    };
+    Initialization.toBottom = function () {
+      that.handleScrollBottom();
+    };
   },
   computed: {},
   beforeCreate() {
@@ -256,7 +266,7 @@ export default {
       fileReader.onload = function () {
         const result = fileReader.result;
         var content = new Uint8Array(result);
-        if (content.byteLength > 1024 * 1024 * 3) {
+        if (content.byteLength >= 1024 * 1024 * 3) {
           Toast.fail("图片大小不能超过3M");
           return;
         }
@@ -280,10 +290,10 @@ export default {
         that.$webSocket.sendMessage(protocol);
         this.content = "";
         Initialization.rebuild(protocol, that);
+        that.handleScrollBottom();
         console.log("parse protocol:" + protocol);
       };
       fileReader.readAsArrayBuffer(file.file);
-      this.handleScrollBottom();
     },
     sendText() {
       if (!this.content) {

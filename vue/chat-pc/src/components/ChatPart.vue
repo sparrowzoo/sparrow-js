@@ -84,10 +84,15 @@ export default {
   },
   mounted() {
     let that = this;
+    that.handleScrollBottom();
+
     document.onkeydown = function (e) {
       let key = e.keyCode;
       if (key !== 13) return;
       that.sendText();
+    };
+    Initialization.toBottom = function () {
+      that.handleScrollBottom();
     };
     console.log("session:" + JSON.stringify(this.session));
   },
@@ -117,7 +122,7 @@ export default {
         const result = fileReader.result;
         console.log(result);
         var content = new Uint8Array(result);
-        if (content.byteLength > 1024 * 1024 * 3) {
+        if (content.byteLength >= 1024 * 1024 * 3) {
           that.$message("图片大小不能超过3M");
           return;
         }
@@ -137,9 +142,9 @@ export default {
         this.content = "";
         Initialization.rebuild(protocol, that);
         Initialization.resortSessions(that);
+        that.handleScrollBottom();
       };
       fileReader.readAsArrayBuffer(file);
-      this.handleScrollBottom();
     },
     sendText() {
       if (!this.content) {
