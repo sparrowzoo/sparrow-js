@@ -281,6 +281,7 @@ var Initialization = {
     this.resortSessions(vue);
     Vue.prototype.$sessionMap = sessionMap; // 全局会话
   },
+  toBottom: function () {},
   initWebSocket: async function (Vue, vue) {
     return await new Promise((resolve, reject) => {
       var webSocket = new vue.$sparrow.webSocket(
@@ -298,6 +299,7 @@ var Initialization = {
         }
         ImProtocol.parse(data, function (protocol) {
           Initialization.rebuild(protocol, vue);
+          Initialization.toBottom();
           console.log("parse protocol:" + protocol);
         });
       };
