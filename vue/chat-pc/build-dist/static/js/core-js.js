@@ -1,4 +1,4 @@
-(self["webpackChunkchat_pc"]=self["webpackChunkchat_pc"]||[]).push([["npm.core-js"],{"./node_modules/core-js/internals/a-callable.js":
+(self["webpackChunkchat_pc"]=self["webpackChunkchat_pc"]||[]).push([["core-js"],{"./node_modules/core-js/internals/a-callable.js":
 /*!******************************************************!*\
   !*** ./node_modules/core-js/internals/a-callable.js ***!
   \******************************************************/function(module,__unused_webpack_exports,__webpack_require__){eval('var isCallable = __webpack_require__(/*! ../internals/is-callable */ "./node_modules/core-js/internals/is-callable.js");\nvar tryToString = __webpack_require__(/*! ../internals/try-to-string */ "./node_modules/core-js/internals/try-to-string.js");\n\nvar $TypeError = TypeError;\n\n// `Assert: IsCallable(argument) is true`\nmodule.exports = function (argument) {\n  if (isCallable(argument)) return argument;\n  throw $TypeError(tryToString(argument) + \' is not a function\');\n};\n\n\n//# sourceURL=webpack://chat-pc/./node_modules/core-js/internals/a-callable.js?')},"./node_modules/core-js/internals/a-possible-prototype.js":

@@ -3,7 +3,6 @@ import router from "./router";
 import store from "./store";
 
 import app from "@/App"; // 引入主组件
-import "element-ui/lib/theme-chalk/index.css";
 import "@/assets/style/base.less";
 import "@/assets/style/font.css";
 import { Sparrow } from "../../../source/scripts/sparrow_es.js";
@@ -12,12 +11,13 @@ import { Initialization } from "../../api/Initialization";
 
 var isProd = process.env.NODE_ENV === "prod";
 if (!isProd) {
+  await import("element-ui/lib/theme-chalk/index.css");
   await import("element-ui").then((ElementUI) => {
     Vue.use(ElementUI);
   });
 }
 
-Vue.config.productionTip = false;
+Vue.config.productionTip = !isProd;
 
 const vue = new Vue({
   // 创建vue实例
