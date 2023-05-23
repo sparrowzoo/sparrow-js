@@ -33,8 +33,8 @@
 
 <script>
 // import {ChatApi} from "@/api/Chat";
-import { Toast } from "vant";
 import { ChatApi } from "../../../api/Chat";
+import { Toast } from "vant";
 
 export default {
   name: "ChatLogin",
