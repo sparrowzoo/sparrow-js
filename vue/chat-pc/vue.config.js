@@ -77,7 +77,7 @@ module.exports = defineConfig({
       // 开启分离 js
     ],
     /**
-     * 拆包方式
+     * 拆包方式 与package.json 的依赖无关,与import 引入有关
      */
     optimization: {
       runtimeChunk: "single",
@@ -94,8 +94,11 @@ module.exports = defineConfig({
               const packageName = module.context.match(
                 /[\\/]node_modules[\\/](.*?)([\\/]|$)/
               )[1];
+              console.log("vendor packageName " + packageName);
+
+              return packageName;
               // npm package names are URL-safe, but some servers don't like @ symbols
-              return `npm.${packageName.replace("@", "")}`;
+              //return `npm.${packageName.replace("@", "")}`;
             },
           },
           // elementUI: {
@@ -116,10 +119,9 @@ module.exports = defineConfig({
       // config.entry('app').clear().add('./src/main-prod.js')
 
       //使用externals设置排除项
+      //拆包方式 与package.json 的依赖无关,与import 引入有关
+      //这里排除也是import 引入的部分
       config.set("externals", {
-        /**
-         * 将package.js 中的依赖排除
-         */
         "element-ui": "ElementUI",
         vue: "Vue",
         //中间有[-]需要''
