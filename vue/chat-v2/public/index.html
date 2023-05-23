@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1.0" name="viewport">
+    <link href="<%= BASE_URL %>favicon.ico" rel="icon">
     <title><%= htmlWebpackPlugin.options.title %></title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+
+    <% if(process.env.NODE_ENV === 'dev'){ %>
+    <!--    <link href="https://cdn.staticfile.org/element-ui/2.15.13/theme-chalk/index.css" rel="stylesheet"/>-->
+    <!--    <script src="https://cdn.staticfile.org/element-ui/2.15.13/index.js"></script>-->
+    <% } else{ %>
+    <!-- 引入样式文件 -->
+    <!--    <link href="https://fastly.jsdelivr.net/npm/vant@2.12.54/lib/index.css"-->
+    <!--          rel="stylesheet"/>-->
+    <!-- 引入 Vue 和 Vant 的 JS 文件 -->
+    <!--    <script src="https://cdn.staticfile.org/vue/2.7.14/vue.min.js"></script>-->
+    <!--    <script src="https://cdn.staticfile.org/vue-router/3.6.5/vue-router.min.js"></script>-->
+    <!--    <script src="https://fastly.jsdelivr.net/npm/vant@2.12.54/lib/vant.min.js"></script>-->
+    <% }%>
+</head>
+<body>
+<noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+</noscript>
+<div id="app"></div>
+<!-- built files will be auto injected -->
+</body>
 </html>

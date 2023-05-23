@@ -1,6 +1,7 @@
 "use strict";
 const path = require("path");
 const defaultSettings = require("./src/settings.js");
+const isProd = process.env.NODE_ENV === "prod";
 
 function resolve(dir) {
   return path.join(__dirname, dir);
@@ -85,7 +86,6 @@ module.exports = defineConfig({
       },
     },
   },
-
   devServer: {
     port: port, //端口
     open: true, //是否自动启用浏览器
@@ -109,6 +109,33 @@ module.exports = defineConfig({
         },
       },
     },
+  },
+  chainWebpack: (config) => {
+    //发布模式
+    config.when(isProd, (config) => {
+      //entry找到默认的打包入口，调用clear则是删除默认的打包入口
+      //add添加新的打包入口
+      // config.entry('app').clear().add('./src/main-prod.js')
+      //使用externals设置排除项
+      //拆包方式 与package.json 的依赖无关,与import 引入有关
+      //这里排除也是import 引入的部分
+      config.set("externals", {
+        // vant: "Vant",
+        // vue: "Vue",
+        // //中间有[-]需要''
+        // "vue-router": "VueRouter",
+      });
+    });
+    //开发模式
+    config.when(!isProd, (config) => {
+      //config.entry('app').clear().add('./src/main-dev.js')
+    });
+
+    config.plugins.delete("prefetch");
+    // 移除 preload 插件
+    config.plugins.delete("preload");
+    // 压缩代码
+    config.optimization.minimize(true);
   },
 });
 //?输出configureWebpack
