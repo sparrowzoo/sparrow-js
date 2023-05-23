@@ -12,9 +12,9 @@
         </div>
       </div>
       <div class="operate">
-        <button @click="remove(item)">
-          {{ "退出群聊" }}
-        </button>
+        <!--        <button @click="remove(item)">-->
+        <!--          {{ "退出群聊" }}-->
+        <!--        </button>-->
         <button class="chat" @click="chat(item)">聊一下</button>
       </div>
     </div>
