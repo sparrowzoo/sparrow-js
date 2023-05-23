@@ -298,7 +298,14 @@ var Initialization = {
           return;
         }
         ImProtocol.parse(data, function (protocol) {
-          Initialization.rebuild(protocol, vue);
+          if (protocol.chatType === ImProtocol.CHAT_TYPE_CANCEL) {
+            var session = vue.$sessionMap[protocol.sessionKey];
+            session.messages = session.messages.filter(
+              (message) => message.clientSendTime !== protocol.clientSendTime
+            );
+          } else {
+            Initialization.rebuild(protocol, vue);
+          }
           Initialization.toBottom();
           console.log("parse protocol:" + protocol);
         });

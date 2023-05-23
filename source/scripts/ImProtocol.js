@@ -121,6 +121,7 @@ ImProtocol.prototype.toBytes = function () {
 };
 ImProtocol.cancel = function (dataView, buf, callback) {
   var offset = 0;
+  var chatType = dataView.getUint8(offset);
   console.log("撤销协议");
   offset += 1;
   const sessionKeyLength = dataView.getInt32(offset);
@@ -134,7 +135,7 @@ ImProtocol.cancel = function (dataView, buf, callback) {
   const clientSendTime = +new Uint8Array(clientSendTimeBuffer).toString();
   console.log(sessionKeyLength, sessionKey, clientSendTime);
   callback({
-    chatType: this.chatType,
+    chatType: chatType,
     clientSendTime: clientSendTime,
     sessionKey: sessionKey,
   });
