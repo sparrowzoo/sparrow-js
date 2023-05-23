@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div style="display: none" class="msg-recall">
+    <div class="msg-recall" style="display: none">
       <ul>
         <li class="recall">撤回</li>
       </ul>
@@ -28,7 +28,7 @@
     margin: 0;
 
     li {
-      padding: 5px 15px;
+      padding: 5px 5px;
       cursor: pointer;
 
       &:hover {

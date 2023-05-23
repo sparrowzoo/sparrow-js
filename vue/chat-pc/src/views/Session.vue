@@ -4,11 +4,11 @@
     <div class="msg-part">
       <!-- 搜索框 -->
       <div class="search-part">
-        <div class="search-icon">
-          <i class="iconfont icon-search"></i>
-          <!--          <input class="search-input" placeholder="搜索" type="text" />-->
-        </div>
-        <div class="search-add iconfont icon-add-user"></div>
+        <!--              <div class="search-icon">-->
+        <!--                <i class="iconfont icon-search"></i>-->
+        <!--                &lt;!&ndash;          <input class="search-input" placeholder="搜索" type="text" />&ndash;&gt;-->
+        <!--              </div>-->
+        <!--              <div class="search-add iconfont icon-add-user"></div>-->
       </div>
       <!-- 消息列表 -->
       <div class="msg-list">

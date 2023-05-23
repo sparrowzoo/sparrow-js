@@ -62,7 +62,7 @@
         </div>
       </div>
       <!-- 群聊的详细信息 -->
-      <MoreDetail ref="showMore"></MoreDetail>
+      <MoreDetail ref="showMore" :session="session"></MoreDetail>
     </div>
   </div>
 </template>
@@ -72,6 +72,7 @@ import MoreDetail from "./MoreDetail.vue";
 import ChatItem from "./ChartItem.vue";
 import { ImProtocol } from "../../../../source/scripts/ImProtocol";
 import { Initialization } from "../../../api/Initialization";
+import { ChatApi } from "../../../api/Chat";
 
 export default {
   components: { MoreDetail, ChatItem },
@@ -85,7 +86,6 @@ export default {
   mounted() {
     let that = this;
     that.handleScrollBottom();
-
     document.onkeydown = function (e) {
       let key = e.keyCode;
       if (key !== 13) return;
@@ -108,6 +108,61 @@ export default {
       e.stopPropagation();
       // 展开详细信息
       this.$refs["showMore"].showDetail();
+    },
+    // 取消右键取消
+    msgRightClick(item, e) {
+      if (!item.isMe) {
+        return;
+      }
+      var that = this;
+      // 阻止默认的菜单弹出事件
+      e.preventDefault();
+      let menu = document.querySelector(".msg-recall");
+
+      var cancelMenuHiddenHandler = function () {
+        menu.style.display = "none";
+        menu.removeEventListener("click", menuClickHandler);
+        window.removeEventListener("click", cancelMenuHiddenHandler);
+      };
+      window.addEventListener("click", cancelMenuHiddenHandler);
+      var menuClickHandler = function () {
+        that.cancel(item);
+        menu.removeEventListener("click", menuClickHandler);
+      };
+      menu.addEventListener("click", menuClickHandler);
+      var sparrowEvent = this.$sparrow.event(e);
+      // 根据事件对象中鼠标点击的位置，进行定位
+      menu.style.display = "block";
+      menu.style.top = sparrowEvent.getAbsoluteTop() + "px";
+      menu.style.left = sparrowEvent.getAbsoluteLeft() + 5 + "px";
+      menu.style.zIndex = 1000;
+    },
+    async cancel(item) {
+      console.log(item);
+      var currentUserId = this.$getUserId();
+      if (item.sender !== currentUserId) {
+        return;
+      }
+      this.$confirm("确认撤消？")
+        .then(async () => {
+          console.log("cancel", item);
+          const param = {
+            sender: currentUserId,
+            token: this.$token,
+            clientSendTime: item.clientSendTime,
+            sessionKey: item.session,
+            chatType: item.chatType,
+          };
+          console.log(param);
+          var result = await ChatApi.cancelMsg(param);
+          if (result === true) {
+            var session = this.$sessionMap[param.sessionKey];
+            session.messages = session.messages.filter(
+              (message) => message.clientSendTime !== item.clientSendTime
+            );
+          }
+        })
+        .catch(() => {});
     },
     handleScrollBottom() {
       this.$nextTick(() => {

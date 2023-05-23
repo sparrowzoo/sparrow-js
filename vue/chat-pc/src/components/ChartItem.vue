@@ -11,14 +11,18 @@
       <div
         v-if="messageItem.isText"
         class="message-detail"
-        v-on:contextmenu="rightClick(messageItem, $event)"
+        v-on:contextmenu="$parent.msgRightClick(messageItem, $event)"
       >
         <div class="user-name">{{ messageItem.userName }}</div>
         <span class="block"></span>
         <span class="message-text">{{ messageItem.content }}</span>
       </div>
       <!-- 图片类型 -->
-      <div v-else class="msg-picture-detail" v-on:contextmenu="rightClick">
+      <div
+        v-else
+        class="msg-picture-detail"
+        v-on:contextmenu="$parent.msgRightClick(messageItem, $event)"
+      >
         <div class="user-name">{{ messageItem.userName }}</div>
         <img :src="messageItem.imgUrl" alt="" class="msg-picture" />
       </div>
@@ -34,21 +38,7 @@ export default {
       require: true,
     },
   },
-  methods: {
-    // 表格右击的功能
-    rightClick(item, e) {
-      console.log(item);
-      // 阻止默认的菜单弹出事件
-      e.preventDefault();
-      var sparrowEvent = this.$sparrow.event(e);
-      let menu = document.querySelector(".msg-recall");
-      // 根据事件对象中鼠标点击的位置，进行定位
-      menu.style.display = "block";
-      menu.style.top = sparrowEvent.getAbsoluteTop() + "px";
-      menu.style.left = sparrowEvent.getAbsoluteLeft() + 5 + "px";
-      menu.style.zIndex = 1000;
-    },
-  },
+  methods: {},
   data() {
     return {
       //右键菜单栏
