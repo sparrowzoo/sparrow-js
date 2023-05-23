@@ -12,9 +12,9 @@
         </div>
       </div>
       <div class="operate">
-        <button v-if="platform === false" @click="remove(item)">
-          {{ "删除好友" }}
-        </button>
+        <!--        <button v-if="platform === false" @click="remove(item)">-->
+        <!--          {{ "删除好友" }}-->
+        <!--        </button>-->
         <button class="chat" @click="chat(item)">聊一下</button>
       </div>
     </div>

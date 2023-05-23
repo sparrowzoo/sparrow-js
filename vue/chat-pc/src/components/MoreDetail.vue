@@ -1,30 +1,36 @@
 <template>
   <div v-show="showDetailFlag" ref="detail-ref" class="more-message">
     <div class="group-more-part">
-      <div class="more-search">
-        <i class="iconfont icon-sousuo"></i>
-        <input class="search-member" placeholder="搜索" type="text" />
-      </div>
+      <!--      <div class="more-search">-->
+      <!--        <i class="iconfont icon-sousuo"></i>-->
+      <!--        <input class="search-member" placeholder="搜索" type="text" />-->
+      <!--      </div>-->
       <div class="group-more-content">
         <!-- 群成员 -->
         <div class="user-list">
-          <div class="more-user">
-            <img alt="" src="https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg" />
-            <span>用名</span>
+          <div
+            v-for="member of qun.members"
+            :key="member.userId"
+            class="more-user"
+          >
+            <img :src="member.avatar" alt="" />
+            <span>{{ member.userName }}</span>
           </div>
-          <div class="more-icon">
-            <div class="search-add">+</div>
-            <span>添加</span>
-          </div>
+          <!--          <div class="more-icon">-->
+          <!--            <div class="search-add">+</div>-->
+          <!--            <span>添加</span>-->
+          <!--          </div>-->
         </div>
-        <div class="look-more-user">
-          <span>查看更多</span>
-          <i class="iconfont icon-down-more"></i>
-        </div>
+
+        <el-button type="primary" @click="existGroup">退出群聊</el-button>
+        <!--        <div class="look-more-user">-->
+        <!--          <span>退出群聊</span>-->
+        <!--          <i class="iconfont icon-down-more"></i>-->
+        <!--        </div>-->
         <div class="more-common">
-          <p>群聊名称</p>
+          <p>{{ qun.qunName }}</p>
           <span class="qun-name"></span>
-          <p>群公告</p>
+          <p>{{ qun.announcement }}</p>
           <span class="qun-announcement"></span>
         </div>
       </div>
@@ -33,9 +39,21 @@
 </template>
 
 <script>
+import { ChatApi } from "../../../api/Chat";
+
 export default {
+  props: {
+    // 当前聊天对象 / 群 的信息
+    session: {},
+  },
   destroyed() {
     console.log("销毁");
+  },
+  computed: {
+    qun() {
+      console.log(JSON.stringify(this.$qunMap[this.session.key]));
+      return this.$qunMap[this.session.key];
+    },
   },
   data() {
     return {
@@ -45,27 +63,39 @@ export default {
   methods: {
     showDetail() {
       this.showDetailFlag = true;
-      this.detailRegister();
+      var detailRef = this.$refs["detail-ref"];
+      var detailClickHandler = function (e) {
+        e.stopPropagation();
+      };
+      var windowClickHandler = () => {
+        this.showDetailFlag = false;
+        detailRef.removeEventListener("click", detailClickHandler);
+        window.removeEventListener("click", windowClickHandler);
+      };
+      detailRef.addEventListener("click", detailClickHandler);
+      window.addEventListener("click", windowClickHandler);
     },
-    // 给展示详细信息的区域注册点击事件
-    detailRegister() {
-      this.$refs["detail-ref"].addEventListener("click", this.showFn);
-      this.windowRegister();
-    },
-    // 展示弹层事件
-    showFn(e) {
-      // 阻止冒泡，防止触发 window的click事件
-      e.stopPropagation();
-    },
-    // 给全局注册点击事件
-    windowRegister() {
-      window.addEventListener("click", this.closeDetail);
-    },
-    // 关闭详细区域
-    closeDetail() {
-      this.showDetailFlag = false;
-      window.removeEventListener("click", this.closeDetail);
-      this.$refs["detail-ref"].removeEventListener("click", this.closeDetail);
+    existGroup() {
+      this.$confirm("退出群聊？")
+        .then(async () => {
+          ChatApi.existGroup(this.qun.qunId).then(
+            (res) => {
+              if (res.code === 200) {
+                this.$contact.quns = this.$contact.quns.filter(
+                  (qun) => qun.qunId !== this.qun.qunId
+                );
+                this.$message("退出成功");
+                this.$router.push({ name: "qun" });
+              }
+            },
+            () => {
+              this.$message("退出失败，请稍等重试");
+            }
+          );
+        })
+        .catch(() => {
+          // on cancel
+        });
     },
   },
 };
