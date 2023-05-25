@@ -160,6 +160,7 @@ ImProtocol.parse = async function (blob, callback) {
   var msgBuffer = null;
   var sender = null;
   var clientSendTime = null;
+  var serverTime = null;
 
   //正常接收消息推送
   offset += ImProtocol.CHAT_TYPE_LENGTH; //chat type length=1
@@ -202,7 +203,13 @@ ImProtocol.parse = async function (blob, callback) {
   }
   offset += msgLength;
   //客户端发送时间【对方传过来】
-  clientSendTime = new Uint8Array(buf.slice(offset, buf.byteLength)).toString();
+  var clientTimeServiceTimePair = new Uint8Array(
+    buf.slice(offset, buf.byteLength)
+  ).toString();
+  console.log("im protocol ", JSON.stringify(clientTimeServiceTimePair));
+  var clientServiceTimeArray = clientTimeServiceTimePair.split("_");
+  clientSendTime = parseInt(clientServiceTimeArray[0], 10);
+  serverTime = parseInt(clientServiceTimeArray[1], 10);
 
   callback({
     chatType: chatType,
@@ -210,7 +217,8 @@ ImProtocol.parse = async function (blob, callback) {
     sender: sender,
     receiver: receiver,
     msg: msgType === ImProtocol.TEXT_MESSAGE ? text : msgBuffer,
-    clientSendTime: parseInt(clientSendTime, 10),
+    clientSendTime: clientSendTime,
+    serverTime: serverTime,
     sessionKey: sessionKey,
   });
 };
