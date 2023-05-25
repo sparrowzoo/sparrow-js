@@ -62,7 +62,11 @@
         </div>
       </div>
       <!-- 群聊的详细信息 -->
-      <MoreDetail ref="showMore" :session="session"></MoreDetail>
+      <MoreDetail
+        v-if="session.type === $protocol.CHAT_TYPE_1_2_N"
+        ref="showMore"
+        :session="session"
+      ></MoreDetail>
     </div>
   </div>
 </template>
@@ -94,7 +98,6 @@ export default {
     Initialization.toBottom = function () {
       that.handleScrollBottom();
     };
-    console.log("session:" + JSON.stringify(this.session));
   },
   data() {
     return {
@@ -171,6 +174,8 @@ export default {
       });
     },
     async sendImage(file) {
+      debugger;
+      console.log(this.session);
       const fileReader = new FileReader();
       var that = this;
       fileReader.onload = function () {
@@ -194,6 +199,7 @@ export default {
           time
         );
         that.$webSocket.sendMessage(protocol);
+        Initialization.setSessionLastReadTime(this.session);
         this.content = "";
         Initialization.rebuild(protocol, that);
         Initialization.resortSessions(that);
@@ -220,6 +226,7 @@ export default {
       );
       this.$webSocket.sendMessage(protocol);
       this.content = "";
+      Initialization.setSessionLastReadTime(this.session);
       Initialization.rebuild(protocol, this);
       Initialization.resortSessions(this);
       this.handleScrollBottom();

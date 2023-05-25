@@ -2,9 +2,9 @@
   <div class="chat">
     <van-row gutter="10">
       <van-col span="18">
-        <van-button block icon="search" size="small" type="default"
-          >搜索
-        </van-button>
+        <!--        <van-button block icon="search" size="small" type="default"-->
+        <!--          >搜索-->
+        <!--        </van-button>-->
       </van-col>
       <van-col span="3">
         <van-button
@@ -32,9 +32,9 @@
       @click="toChat(session)"
     >
       <van-badge
-        :content="session.count > 1 ? session.count : null"
-        :dot="session.count > 0"
+        :content="session.unReadCount > 0 ? session.unReadCount : null"
       >
+        <!--        :dot="session.unReadCount > 0"-->
         <img :src="session.icon" class="child" />
       </van-badge>
       <div class="chat_right">

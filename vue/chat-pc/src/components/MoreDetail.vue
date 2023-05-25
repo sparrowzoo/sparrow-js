@@ -51,7 +51,11 @@ export default {
   },
   computed: {
     qun() {
-      console.log(JSON.stringify(this.$qunMap[this.session.key]));
+      debugger;
+      if (this.session == null || this.session.key === -1) {
+        return { members: [] };
+      }
+      // console.log(JSON.stringify(this.$qunMap[this.session.key]));
       return this.$qunMap[this.session.key];
     },
   },
