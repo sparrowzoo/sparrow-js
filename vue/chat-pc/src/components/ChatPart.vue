@@ -199,7 +199,7 @@ export default {
           time
         );
         that.$webSocket.sendMessage(protocol);
-        Initialization.setSessionLastReadTime(this.session);
+        Initialization.setSessionLastReadTime(that.session);
         this.content = "";
         Initialization.rebuild(protocol, that);
         Initialization.resortSessions(that);
