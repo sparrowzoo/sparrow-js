@@ -284,7 +284,7 @@ var Initialization = {
     this.resortSessions(vue);
     Vue.prototype.$sessionMap = sessionMap; // 全局会话
   },
-  toBottom: function () {},
+  toBottom: function () {}, //滚动到底部钩子
   initWebSocket: async function (Vue, vue) {
     return await new Promise((resolve, reject) => {
       var webSocket = new vue.$sparrow.webSocket(
@@ -301,12 +301,13 @@ var Initialization = {
           return;
         }
         ImProtocol.parse(data, function (protocol) {
+          var session = vue.$sessionMap[protocol.sessionKey];
           if (protocol.chatType === ImProtocol.CHAT_TYPE_CANCEL) {
-            var session = vue.$sessionMap[protocol.sessionKey];
             session.messages = session.messages.filter(
               (message) => message.clientSendTime !== protocol.clientSendTime
             );
           } else {
+            //Initialization.setSessionLastReadTime(session);
             Initialization.rebuild(protocol, vue);
           }
           Initialization.toBottom();
