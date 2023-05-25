@@ -289,6 +289,8 @@ export default {
         );
         that.$webSocket.sendMessage(protocol);
         this.content = "";
+        Initialization.setSessionLastReadTime(that.activeSession);
+
         Initialization.rebuild(protocol, that);
         that.handleScrollBottom();
         console.log("parse protocol:" + protocol);
@@ -318,6 +320,7 @@ export default {
       );
       this.$webSocket.sendMessage(protocol);
       this.content = "";
+      Initialization.setSessionLastReadTime(this.activeSession);
       Initialization.rebuild(protocol, this);
       console.log("parse protocol:" + protocol);
       this.handleScrollBottom();

@@ -7436,23 +7436,6 @@ Sparrow.share = {
         }
     }
 };
-if ( typeof define === "function" && define.amd ) {
-    define( "Sparrow", [], function() {
-        return Sparrow;
-    });
-}
-
-
-// Expose Sparrow and $ identifiers, even in AMD
-// and CommonJS for browser emulators
-if ( !noGlobal ) {
-    window.Sparrow = window.$ = Sparrow;
-}
-
-return Sparrow;
-}));
-
-
 Sparrow.webSocket = function (url, token) {
   this.url = url;
   // websocket 连接的 token
@@ -7616,3 +7599,20 @@ Sparrow.webSocket.prototype.sendMessage = function (data) {
   // 发送到服务器
   this.ws.send(data.toBytes());
 };
+
+if ( typeof define === "function" && define.amd ) {
+    define( "Sparrow", [], function() {
+        return Sparrow;
+    });
+}
+
+
+// Expose Sparrow and $ identifiers, even in AMD
+// and CommonJS for browser emulators
+if ( !noGlobal ) {
+    window.Sparrow = window.$ = Sparrow;
+}
+
+return Sparrow;
+}));
+

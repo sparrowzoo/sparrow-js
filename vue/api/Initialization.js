@@ -137,7 +137,9 @@ var Initialization = {
     }
     vue.activeSession = vue.$sessionMap[key];
   },
-
+  setSessionLastReadTime: function (session) {
+    session.lastReadTime = new Date().getTime() + 2;
+  },
   rebuild: function (protocol, vue) {
     var sender = vue.$userMap[protocol.sender];
     var imgUrl = null;
@@ -151,6 +153,7 @@ var Initialization = {
       chatType: protocol.chatType,
       sender: protocol.sender,
       clientSendTime: protocol.clientSendTime,
+      serverTime: protocol.clientSendTime, //新消息默认与本地时间一致
       messageType: protocol.msgType,
       content: protocol.msg,
       imgUrl: imgUrl,
