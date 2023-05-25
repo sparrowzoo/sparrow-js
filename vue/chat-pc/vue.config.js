@@ -168,5 +168,4 @@ module.exports = defineConfig({
 });
 //?输出configureWebpack
 console.log(module.exports.configureWebpack.resolve.alias);
-debugger;
 console.log("publicPath:" + process.env.publicPath);

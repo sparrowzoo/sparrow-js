@@ -51,7 +51,6 @@ export default {
   },
   computed: {
     qun() {
-      debugger;
       if (this.session == null || this.session.key === -1) {
         return { members: [] };
       }
