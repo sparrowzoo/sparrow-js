@@ -174,7 +174,6 @@ export default {
       });
     },
     async sendImage(file) {
-      debugger;
       console.log(this.session);
       const fileReader = new FileReader();
       var that = this;
