@@ -41,7 +41,7 @@ export default {
             lastMessageTime: lastMessageTime,
             lastMessageContent: lastMessageContent,
             unReadCount: unReadCount,
-            avatar: qun.unitIcon,
+            avatar: qun.icon,
           };
         })
         .sort((s1, s2) => s2.lastMessageTime - s1.lastMessageTime);
