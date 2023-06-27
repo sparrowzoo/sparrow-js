@@ -1,5 +1,8 @@
-import { ChatApi } from "./Chat";
-import { ImProtocol } from "../../source/scripts/ImProtocol";
+const ChatApi = await import(`${process.env.VUE_APP_CHAT_API}`).then(
+  (chatModule) => {
+    return chatModule.ChatApi;
+  }
+);
 
 var Initialization = {
   initPlatformService: async function (Vue) {
