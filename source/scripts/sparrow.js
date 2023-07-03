@@ -2354,65 +2354,74 @@ var _hmt = _hmt || [];
 })();
 
 Sparrow.prototype.tabs = function (config) {
-    if (!config) {
-        config = {};
+  if (!config) {
+    config = {};
+  }
+  var tabClickCallback = config.tabClickCallback;
+  //首页的样式，默认为无
+  var withIndexClass = config.withIndexClass;
+  //当前tab 的index
+  var currentIndex = config.index;
+  //tab 框的子div
+  var tabChildren = $("!div." + this.s.id);
+  //第一个为title tab 控制
+  var controllerContainer = tabChildren[0];
+  //具体的tab 控制框
+  var controllerMenuList = $("!li", controllerContainer);
+  //第二个为内容框
+  var contentContainer = tabChildren[1];
+  //具体的内容框
+  var contentList = $("!div", contentContainer);
+  var menuSwitch = function (tabIndex) {
+    if (tabClickCallback) {
+      tabClickCallback(tabIndex);
     }
-    //首页的样式，默认为无
-    var withIndexClass = config.withIndexClass;
-    //当前tab 的index
-    var currentIndex = config.index;
-    //tab 框的子div
-    var tabChildren = $("!div." + this.s.id);
-    //第一个为title tab 控制
-    var controllerContainer = tabChildren[0];
-    //具体的tab 控制框
-    var controllerMenuList = $("!li", controllerContainer);
-    //第二个为内容框
-    var contentContainer = tabChildren[1];
-    //具体的内容框
-    var contentList = $("!div", contentContainer);
-    var menuSwitch = function (tabIndex) {
-        var menuHyperCtrl = $("!a",
-            controllerMenuList[tabIndex])[0];
-        //将当前的rev  more
-        // http://www.w3school.com.cn/tags/att_a_rev.asp
-        var rev = $(menuHyperCtrl).attr("rev");
-        if (rev) {
-            var moreHyperCtrl = $("!a",
-                controllerMenuList[controllerMenuList.length - 1]);
-            moreHyperCtrl[0].href = rev;
-        }
-        contentList.each(function (contentIndex) {
-            if (withIndexClass)
-                controllerMenuList[0].className = "pure-menu-item pure-menu-heading";
-            if (contentIndex == tabIndex) {
-                controllerMenuList[contentIndex].className = "pure-menu-item pure-menu-selected";
-                this.className = "block";
-                return;
-            }
-            controllerMenuList[contentIndex].className = "pure-menu-item";
-            this.className = "none";
-        });
+    var menuHyperCtrl = $("!a", controllerMenuList[tabIndex])[0];
+    //将当前的rev  more
+    // http://www.w3school.com.cn/tags/att_a_rev.asp
+    var rev = $(menuHyperCtrl).attr("rev");
+    if (rev) {
+      var moreHyperCtrl = $(
+        "!a",
+        controllerMenuList[controllerMenuList.length - 1]
+      );
+      moreHyperCtrl[0].href = rev;
     }
-    //每个控制框的绑定事件
-    controllerMenuList.each(function (tab_index) {
-        $(this).attr("tab_index", tab_index);
-        if (this.className.indexOf("close") > 0 || this.className.indexOf("more") > 0) {
-            return;
-        }
-        //<a><span onclick=></span></a>
-        $(this).bind(
-            "onclick",
-            function () {
-                var tabIndex = $(this).attr("tab_index");
-                menuSwitch(tabIndex);
-            });
+    contentList.each(function (contentIndex) {
+      if (withIndexClass) {
+        controllerMenuList[0].className = "pure-menu-item pure-menu-heading";
+      }
+      if (contentIndex == tabIndex) {
+        controllerMenuList[contentIndex].className =
+          "pure-menu-item pure-menu-selected";
+        this.className = "block";
+        return;
+      }
+      controllerMenuList[contentIndex].className = "pure-menu-item";
+      this.className = "none";
     });
-    //select 当前tab
-    if (currentIndex) {
-        menuSwitch(currentIndex);
+  };
+  //每个控制框的绑定事件
+  controllerMenuList.each(function (tab_index) {
+    $(this).attr("tab_index", tab_index);
+    if (
+      this.className.indexOf("close") > 0 ||
+      this.className.indexOf("more") > 0
+    ) {
+      return;
     }
+    //<a><span onclick=></span></a>
+    $(this).bind("onclick", function () {
+      var tabIndex = $(this).attr("tab_index");
+      menuSwitch(tabIndex);
+    });
+  });
+  //select 当前tab
+  if (currentIndex) {
+    menuSwitch(currentIndex);
+  }
 };
+
 Sparrow.win = {
     config: {
         isInFrame: false,
@@ -4091,16 +4100,17 @@ Sparrow.menu.prototype.init = function () {
     }
 };
 
-function ImageCopper(el, option, complete) {
+Sparrow.ImageCopper = function (masterId, el, option, complete) {
+  this.masterId = masterId;
   this.preview = el;
   this.draging = this.moving = false;
   this.init(option);
   if (complete && typeof complete == "function") {
-    this.OnComplete = complete;
+    this.onComplete = complete;
   }
-}
+};
 
-ImageCopper.prototype = {
+Sparrow.ImageCopper.prototype = {
   init: function (option) {
     //初始化一些参数
     this.offset = {
@@ -4113,8 +4123,8 @@ ImageCopper.prototype = {
       y: previewPosition.top,
     };
     this.size = {
-      width: this.preview.offsetwidth,
-      height: this.preview.offsetheight,
+      width: this.preview.offsetWidth,
+      height: this.preview.offsetHeight,
     };
     this.selectSize = {
       width: 0,
@@ -4147,6 +4157,7 @@ ImageCopper.prototype = {
     //创建遮罩层
     var master = (this.master = document.createElement("div"));
     master.style.color = "#ca151d";
+    master.id = this.masterId;
     master.style.position = "absolute";
     master.style.width = this.size.width + "px";
     master.style.height = this.size.height + "px";
@@ -4160,6 +4171,7 @@ ImageCopper.prototype = {
     //创建拖动显示层.
     var content = (this.content = document.createElement("div"));
     content.style.color = "blue";
+    content.id = this.masterId + "Drag";
     content.style.position = "absolute";
     content.style.width = opt.width + "px";
     content.style.height = opt.height + "px";
@@ -4358,7 +4370,7 @@ ImageCopper.prototype = {
     if (this.dragElement.releaseCapture) {
       this.dragElement.releaseCapture();
     }
-    this.Complete();
+    this.complete();
   },
   onResize: function () //设置拖动时产生的尺寸和位置到dom元素上.
   {
@@ -4368,13 +4380,13 @@ ImageCopper.prototype = {
         "|" +
         this.option.top
     );
-    this.Content.style.left = this.option.left + "px";
-    this.Content.style.top = this.option.top + "px";
-    this.Content.style.width = this.option.width + "px";
-    this.Content.style.height = this.option.height + "px";
-    this.DragDiv.style.width = this.option.width - 14 + "px";
-    this.DragDiv.style.height = this.option.height - 14 + "px";
-    this.Content.style.backgroundPosition =
+    this.content.style.left = this.option.left + "px";
+    this.content.style.top = this.option.top + "px";
+    this.content.style.width = this.option.width + "px";
+    this.content.style.height = this.option.height + "px";
+    this.dragDiv.style.width = this.option.width - 14 + "px";
+    this.dragDiv.style.height = this.option.height - 14 + "px";
+    this.content.style.backgroundPosition =
       -(this.option.left - this.position.x) +
       "px" +
       " " +
@@ -4423,8 +4435,8 @@ ImageCopper.prototype = {
         console.info(document.body.scrollLeft);
         console.info(document.body.scrollTop);
         var newPoint = {
-          Left: e ? e.pageX : event.clientX + document.body.scrollLeft,
-          Top: e ? e.pageY : event.clientY + document.body.scrollTop,
+          left: e ? e.pageX : event.clientX + document.body.scrollLeft,
+          top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepY = original.top - newPoint.top + this.offset.y;
         if (this.option.top - stepY < this.position.y) {
@@ -4440,7 +4452,7 @@ ImageCopper.prototype = {
               this.position.x + this.size.width ||
             this.option.width + stepX < this.selectSize.width
           ) {
-            console.info("2 return LockRate");
+            console.info("2 return lockRate");
             return;
           }
           this.option.width += stepX;
@@ -4493,7 +4505,7 @@ ImageCopper.prototype = {
         if (this.option.left - stepX < this.position.x) {
           return;
         }
-        if (this.option.LockRate) {
+        if (this.option.lockRate) {
           var stepY = this.option.width * this.option.rate - this.option.height;
           if (
             this.option.top - stepY / 2 < this.position.y ||
@@ -4511,14 +4523,14 @@ ImageCopper.prototype = {
         }
         this.option.left -= stepX;
         this.option.width += stepX;
-        this.OnResize();
+        this.onResize();
         break;
       }
       case 5: {
         var original = this.getPosition(this.dragElement);
         var newPoint = {
-          Left: e ? e.pageX : event.clientX + document.body.scrollLeft,
-          Top: e ? e.pageY : event.clientY + document.body.scrollTop,
+          left: e ? e.pageX : event.clientX + document.body.scrollLeft,
+          top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepX = newPoint.left - original.left - this.offset.x;
         if (
@@ -4527,7 +4539,7 @@ ImageCopper.prototype = {
         ) {
           return;
         }
-        if (this.option.LockRate) {
+        if (this.option.lockRate) {
           var stepY =
             (this.option.width + stepX) * this.option.rate - this.option.height;
           if (
@@ -4551,12 +4563,12 @@ ImageCopper.prototype = {
       case 6: {
         var original = this.getPosition(this.dragElement);
         var newPoint = {
-          Left: e ? e.pageX : event.clientX + document.body.scrollLeft,
-          Top: e ? e.pageY : event.clientY + document.body.scrollTop,
+          left: e ? e.pageX : event.clientX + document.body.scrollLeft,
+          top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepX = original.left - newPoint.left + this.offset.x;
         var stepY = newPoint.top - original.top - this.offset.y;
-        if (this.option.LockRate) {
+        if (this.option.lockRate) {
           stepY =
             (this.option.width + stepX) * this.option.rate - this.option.height;
         }
@@ -4588,7 +4600,7 @@ ImageCopper.prototype = {
         ) {
           return;
         }
-        if (this.option.LockRate) {
+        if (this.option.lockRate) {
           var stepX =
             (this.option.height + stepY) / this.option.rate - this.option.width;
           if (
@@ -4606,18 +4618,18 @@ ImageCopper.prototype = {
           return;
         }
         this.option.height += stepY;
-        this.OnResize();
+        this.onResize();
         break;
       }
       case 8: {
         var original = this.getPosition(this.dragElement);
         var newPoint = {
-          Left: e ? e.pageX : event.clientX + document.body.scrollLeft,
-          Top: e ? e.pageY : event.clientY + document.body.scrollTop,
+          left: e ? e.pageX : event.clientX + document.body.scrollLeft,
+          top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepX = newPoint.left - original.left - this.offset.x;
         var stepY = newPoint.top - original.top - this.offset.y;
-        if (this.option.LockRate) {
+        if (this.option.lockRate) {
           stepY =
             (this.option.width + stepX) * this.option.rate - this.option.height;
         }
@@ -4653,9 +4665,9 @@ ImageCopper.prototype = {
     return result;
   },
   release: function () {
-    this.Master.parentNode.removeChild(this.Master);
-    this.Content.parentNode.removeChild(this.Content);
-    this.DragDiv.parentNode.removeChild(this.DragDiv);
+    this.master.parentNode.removeChild(this.master);
+    this.content.parentNode.removeChild(this.content);
+    this.dragDiv.parentNode.removeChild(this.dragDiv);
   },
   complete: function () {
     //触发拖动完成的事件,传出当前的状态数据.
@@ -4670,96 +4682,6 @@ ImageCopper.prototype = {
     //接收当前状态数据的方法.
   },
 };
-//***************************************************************************************************//
-//保存用户选择的图片位置
-var currentImageSize = {
-  top: 75,
-  left: 75,
-  width: 150,
-  height: 150,
-};
-//初始化上传按钮状态
-//FileUpload.servlet中会调用该函数  不删除备份使用
-var imageCopper = null;
-var config = null;
-document.ready(function () {
-  var hdnImageCooperConfig = $("#.hdnImageCooperConfig");
-  if (hdnImageCooperConfig.s == null) {
-    return;
-  }
-  config = {
-    preview: hdnImageCooperConfig.attr("preview"),
-    current: hdnImageCooperConfig.attr("current"),
-    parent_current: hdnImageCooperConfig.attr("parent_current"),
-    parent_input: hdnImageCooperConfig.attr("parent_input"),
-    post: hdnImageCooperConfig.attr("post"),
-    command: hdnImageCooperConfig.attr("command"),
-    business_id: hdnImageCooperConfig.attr("business_id"),
-  };
-  var parentImage = (
-    parent.manage ? parent.manage.document : parent.document
-  ).getElementById(config.parent_current);
-  if (parentImage != null) {
-    $(config.current).src = $.randomUrl(parentImage.src);
-  }
-  $.file.validateUploadFile = function (f) {
-    $.file.uploadDelegate(false, "", "fileUpload");
-  };
-  //设置上传成功后的回调函数
-  $.file.uploadCallBack = function (fileInfo, clientFileName) {
-    var currentImage = $(config.preview);
-    currentImage.src = $.randomUrl(fileInfo.fileName);
-    if (imageCopper !== null) {
-      imageCopper.release();
-    }
-    imageCopper = new ImageCopper(
-      currentImage,
-      {
-        lockRate: true,
-        left: 75,
-        top: 75,
-      },
-      function (x, y, w, h) {
-        currentImageSize.top = x;
-        currentImageSize.left = y;
-        currentImageSize.width = w;
-        currentImageSize.height = h;
-      }
-    );
-    $.file.reset();
-  };
-
-  $(config.command).onclick = function () {
-    var businessId = $.request(config.business_id);
-    var previewImage = $(config.preview);
-    var imageUrl = previewImage.src.split("?")[0];
-    var postString =
-      "parameter=" +
-      imageUrl +
-      "," +
-      currentImageSize.top +
-      "," +
-      currentImageSize.left +
-      "," +
-      currentImageSize.width +
-      "," +
-      currentImageSize.height +
-      "," +
-      businessId;
-    var postUrl = $.url.root + config.post;
-    $.ajax.json(postUrl, postString, function (result) {
-      //配置文本
-      var image_url = imageUrl + "?time=" + new Date();
-      var w = parent.manage ? parent.manage.document : parent.document;
-      w.getElementById(config.parent_current).src = image_url;
-      if ($(config.parent_input)) {
-        w.getElementById(config.parent_input).value = image_url;
-      }
-      $(config.current).src = image_url;
-      $.message("operation success!");
-    });
-  };
-});
 
 Sparrow.datePicker = function (pickerId) {
     var dateFormat = Object();
