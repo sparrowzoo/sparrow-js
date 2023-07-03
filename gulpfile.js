@@ -93,7 +93,7 @@ var paths = {
       "source/scripts/progressbar.js",
       "source/scripts/menu.js",
       //'src/scripts/image-switch.js',
-      "source/scripts/ImageCopper.js",
+      "source/scripts/image-copper.js",
       //'src/scripts/marquee.js',
       "source/scripts/datePicker.js",
       "source/scripts/sparrowEditor.js",

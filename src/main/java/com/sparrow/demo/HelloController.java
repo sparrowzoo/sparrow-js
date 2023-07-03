@@ -5,27 +5,23 @@ import com.sparrow.constant.User;
 import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
 import com.sparrow.param.ParamDemo;
-import com.sparrow.protocol.BusinessException;
-import com.sparrow.protocol.LoginUser;
-import com.sparrow.protocol.NotTryException;
-import com.sparrow.protocol.Result;
+import com.sparrow.protocol.*;
 import com.sparrow.protocol.constant.SparrowError;
 import com.sparrow.servlet.ServletContainer;
 import com.sparrow.support.Authenticator;
 import com.sparrow.support.web.ResultAssembler;
 import com.sparrow.support.web.ServletUtility;
 import com.sparrow.vo.HelloVO;
-import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class HelloController {
 
+    private static final Logger logger = LoggerFactory.getLogger(HelloController.class);
     private Authenticator authenticator;
-
     private ServletContainer servletContainer;
-
-    private static Logger logger = LoggerFactory.getLogger(HelloController.class);
 
     public void setAuthenticator(Authenticator authenticator) {
         this.authenticator = authenticator;
@@ -42,7 +38,7 @@ public class HelloController {
 
     @RequestParameters("seconds")
     public ViewWithModel error(Integer seconds) throws Throwable {
-        if (seconds!=null&&seconds > 0) {
+        if (seconds != null && seconds > 0) {
             Thread.sleep(seconds * 1000);
         }
         throw new NotTryException("error");
@@ -91,7 +87,7 @@ public class HelloController {
     }
 
     public HelloVO postJson(ParamDemo paramDemo) {
-        return new HelloVO(paramDemo.getName()+"-"+paramDemo.getAge());
+        return new HelloVO(paramDemo.getName() + "-" + paramDemo.getAge());
     }
 
     public ViewWithModel welcome() {
@@ -109,8 +105,7 @@ public class HelloController {
         loginToken.setDays(20);
         loginToken.setUserId(1L);
         loginToken.setUserName("zhangsan");
-        loginToken.setActivate(true);
-        String sign = authenticator.sign(loginToken);
+        String sign = authenticator.sign(loginToken, new LoginUserStatus(1, System.currentTimeMillis() + 100000000000L));
         servletContainer.rootCookie(User.PERMISSION, sign, 6);
         Result result = ResultAssembler.assemble(new Result<>(loginToken, "login_success"));
         return ViewWithModel.transit("/login_success", "/", result);
