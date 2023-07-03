@@ -6,9 +6,11 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
+    <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
     <style type="text/css">
- p{margin: 0px;}
+        p {
+            margin: 0px;
+        }
     </style>
     <jsp:include page="/template/examples/head.jsp"/>
 </head>
@@ -20,7 +22,7 @@
     <div id="main">
         <div class="header">
             <h1>滑动动画效果</h1>
-            <h2>最外层div  overflow:hidden;</h2>
+            <h2>最外层div overflow:hidden;</h2>
         </div>
 
         <div class="content">
@@ -51,8 +53,6 @@
                     向右
                 </div>
             </div>
-
-
         </div>
     </div>
 </div>
@@ -73,6 +73,7 @@
     //最小位置
     var minTarget = -(listWidth - frameWidth - controlWidth);
     var period = 1;
+
     function left() {
         index++;
         var targetLeft = -(frameWidth * index - controlWidth);
@@ -85,6 +86,7 @@
         $("#divList").animation("{left:'" + targetLeft + "px'}", period);
         document.title = targetLeft + "|" + index;
     }
+
     function right() {
         index--;
         var targetLeft = -(frameWidth * index - controlWidth);

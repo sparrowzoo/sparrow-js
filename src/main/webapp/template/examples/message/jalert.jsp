@@ -6,7 +6,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <title>Sparrow Alert 对话框 &ndash; Sparrow JS Framework</title>
+    <title>Sparrow Alert 对话框 &ndash; Sparrow JS Framework</title>
     <jsp:include page="/template/examples/head.jsp"/>
     <j:style href="$resource/styles/modal.css"/>
     <script type="application/javascript">
