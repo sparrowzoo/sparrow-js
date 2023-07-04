@@ -1,14 +1,9 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib uri="http://www.sparrowzoo.com/ui" prefix="j" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sparrow 动画 &ndash; Sparrow JS Framework</title>
-    <jsp:include page="/template/examples/head.jsp"/>
-    <j:style href="$resource/styles/sparrow.css"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Sparrow 简单移动动画 &ndash; Sparrow JS Framework</title>
+    <th:block th:include="/frames::global_resource"/>
     <script type="application/javascript">
         $.win.okClick = function () {
             alert("OK");
@@ -20,7 +15,7 @@
 <body>
 
 <div id="layout">
-    <jsp:include page="/template/examples/menu.jsp"/>
+    <th:block th:include="/frames::menu"/>
     <div id="main">
         <div class="header">
             <h1> 对话框效果</h1>
