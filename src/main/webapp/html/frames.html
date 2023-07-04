@@ -1,7 +1,29 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <body>
-<div th:fragment="menu">
 
+<div th:fragment="baidu">
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?11daae2d559a82e0e8bd4872ad217164";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</div>
+<div th:fragment="menu">
+    <script language="JavaScript">
+        requirejs.config({
+            baseUrl: "http://r.sparrowzoo.net/scripts",
+            paths: {
+                // Sparrow: 'sparrow'
+            }
+        });
+        require(['sparrow', 'domReady!'], function ($, dom) {
+            new $.menu("verticalMenu", $.VERTICAL, "menuLink").init();
+        });
+    </script>
     <a class="menu-link" href="#menu" id="menuLink">
         <span></span>
     </a>
@@ -121,20 +143,9 @@
     <link href="http://r.sparrowzoo.net/styles/layouts.css?v=1.0" rel="stylesheet" type="text/css"/>
     <!--<![endif]-->
     <link href="http://r.sparrowzoo.net/styles/sparrow.css?v=1.0" rel="stylesheet" type="text/css"/>
-    <script language="javascript" src="http://r.sparrowzoo.net/scripts/require.js"/>
+    <script language="javascript" src="http://r.sparrowzoo.net/scripts/require.js"></script>
     <script language="javascript" src="http://r.sparrowzoo.net/scripts/sparrow.js?v=1.0"
             type="text/javascript"></script>
-    <script language="JavaScript">
-        requirejs.config({
-            baseUrl: "http://r.sparrowzoo.net/scripts",
-            paths: {
-                // Sparrow: 'sparrow'
-            }
-        });
-        require(['sparrow', 'domReady!'], function ($, dom) {
-            new $.menu("verticalMenu", $.VERTICAL, "menuLink").init();
-        });
-    </script>
 </div>
 </body>
 

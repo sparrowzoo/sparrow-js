@@ -1,1 +1,0 @@
-callback('come from server jsonp Response '+new Date());
