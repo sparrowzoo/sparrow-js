@@ -1,19 +1,15 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@taglib uri="http://www.sparrowzoo.com/ui" prefix="j" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sparrow 选择器 &ndash; Sparrow JS Framework</title>
-    <jsp:include page="/template/examples/head.jsp"/>
+    <title>用户登录-程序员有问题就上麻雀窝 和大牛直接聊</title>
+    <meta content="程序员有问题就上麻雀窝 和大牛直接聊" name="description"/>
+    <meta content="麻雀窝" name="application-name"/>
+    <th:block th:include="/frames::global_resource"/>
 </head>
 
 <body>
 
 <div id="layout">
-    <jsp:include page="/template/examples/menu.jsp"/>
+    <th:block th:include="/frames::menu"/>
     <div id="main">
         <div class="header">
             <h1>SELECTOR</h1>
@@ -30,7 +26,8 @@
 
                 <li>
                     Sparrow标签对象 选择符 # 代表id $('#html label id')
-                    <input type="button" id="sparrowId" onclick="alert($('#sparrowId').value())" value="点我输出我的value"/>
+                    <input type="button" id="sparrowId" onclick="alert($('#sparrowId').value())"
+                           value="点我输出我的value"/>
                 </li>
 
                 <li>
@@ -41,12 +38,14 @@
 
                 <li>
                     Sparrow标签对象 选择符 ^ 代表name $('^html label') 助记^表示标签起始标记&lt; 为避免与html冲突 所以用^
-                    <input type="button" name="sparrowName" onclick="alert($('^input')[0].value)" value="点我输出我的value"/>
+                    <input type="button" name="sparrowName" onclick="alert($('^input')[0].value)"
+                           value="点我输出我的value"/>
                 </li>
 
                 <li>
                     Sparrow标签对象 选择符 $ 获取当前控件的for 标签 $('$html label') 助记$表示数字4的上档键，4英文发音for
-                    <input type="text" value="我有标签" id="txtFor"><label id="lblFor" for="txtFor">我是标签的内容</label>
+                    <input type="text" value="我有标签" id="txtFor"><label id="lblFor"
+                                                                           for="txtFor">我是标签的内容</label>
                     <input type="button" name="sparrowName" onclick="alert($('$txtFor').html())"
                            value="点我输出文本控件的for 标签内容"/>
                 </li>
