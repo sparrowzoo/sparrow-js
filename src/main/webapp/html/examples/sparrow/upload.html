@@ -1,31 +1,60 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>用户登录-程序员有问题就上麻雀窝 和大牛直接聊</title>
+    <title>程序员有问题就上麻雀窝 和大牛直接聊</title>
     <meta content="程序员有问题就上麻雀窝 和大牛直接聊" name="description"/>
     <meta content="麻雀窝" name="application-name"/>
     <th:block th:include="/frames::global_resource"/>
-
     <script type="text/javascript">
+
         document.ready(function () {
-            $.file.validateUploadFile = function (f, key) {
-                if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
-                    "jpeg", "gif", "png", "zip"], "errorImgForumIco")) {
-                    $.file.uploadDelegate(true, key, null);
-                }
-            }
-            $.url.upload = "http://upload.sparrowzoo.com";
-            document.domain = $.browser.cookie.root_domain;
-            $("#null_forum").attr("src", $.url.upload + "/file-upload?path-key=forum");
+            var pathKeySuffixPair = {
+                'resource': 'ResourceIco',
+                'resource_cover': 'ResourceCoverIco',
+                'group': 'GroupIco',
+                'cms_cover': 'CmsCover',
+                'user': 'User'
+            };
+            $.file.isShowProgress = true;
+            $.file.initImageUploadEvent('resource', pathKeySuffixPair);
+            $.file.initImageUploadEvent('resource_cover', pathKeySuffixPair);
+            $.file.initImageUploadEvent('group', pathKeySuffixPair);
+            $.file.initImageUploadEvent('cms_cover', pathKeySuffixPair);
+            $.file.initImageUploadEvent('user', pathKeySuffixPair);
         });
     </script>
 </head>
-<th:block th:include="/frames::menu"/>
-
 <body>
-resource :[[${resource}]]
-<div id="imgForumIco"></div>
-null_forum -->uploadDelegate(true, key,null)
-<iframe id="null_forum" class="file-frame" frameborder="0"
+
+
+resource :http://r.sparrowzoo.net
+<H2>forum</H2>
+<iframe class="file-frame" frameborder="0" id="null.resource"
+        src=""></iframe>
+
+<div id="divResourceIco"></div>
+
+<H2>resource_cover</H2>
+<iframe class="file-frame" frameborder="0" id="null.resource_cover"
+        src=""></iframe>
+
+<div id="divResourceCoverIco"></div>
+
+
+<h2>group ICON</h2>
+<div id="divGroupIco"></div>
+<iframe class="file-frame" frameborder="0" id="null.group"
+        src=""></iframe>
+
+
+<h2>CMS Cover</h2>
+<div id="divCmsCover"></div>
+<iframe class="file-frame" frameborder="0" id="null.cms_cover"
+        src=""></iframe>
+
+
+<h2>User</h2>
+<div id="divUser"></div>
+<iframe class="file-frame" frameborder="0" id="null.user"
         src=""></iframe>
 </body>
 </html>

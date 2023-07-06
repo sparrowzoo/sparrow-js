@@ -153,36 +153,6 @@ Sparrow.ajax = {
     } catch (e) {
       console.log(e);
     }
-  }, //内部业务使用
-  json: function (url, data, callback, srcElement, token) {
-    if (typeof data === "function") {
-      callback = data;
-      data = null;
-    }
-
-    $.ajax.req(
-      "POST",
-      url,
-      function (responseText) {
-        var result = responseText.json();
-        if (result == null) {
-          $.message("json parse error " + responseText);
-          return;
-        }
-        if (result.code === $.ajax.SUCCESS) {
-          if (callback) {
-            callback(result);
-          } else {
-            $.message(result.message, $.ajax.srcElement);
-          }
-        } else {
-          $.message(result.message, $.ajax.srcElement);
-        }
-      },
-      data,
-      srcElement,
-      token
-    );
   },
   get: function (url, callback) {
     callback = callback ? callback : $.ajax._callback;
