@@ -7,7 +7,7 @@
         <artifactId>sparrow-bom</artifactId>
         <version>1.0.3.1-RELEASE</version>
     </parent>
-
+    <packaging>war</packaging>
     <dependencies>
         <dependency>
             <groupId>com.sparrowzoo</groupId>
@@ -63,7 +63,6 @@
             <artifactId>sparrow-protocol</artifactId>
         </dependency>
     </dependencies>
-    <packaging>war</packaging>
 
     <artifactId>sparrow-js</artifactId>
     <version>1.0.0-SNAPSHOT</version>

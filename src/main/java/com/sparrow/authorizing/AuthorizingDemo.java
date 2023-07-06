@@ -5,9 +5,6 @@ import com.sparrow.protocol.LoginUser;
 import com.sparrow.protocol.LoginUserStatus;
 import com.sparrow.support.AbstractAuthenticatorService;
 
-import javax.inject.Named;
-
-@Named("authenticatorService")
 public class AuthorizingDemo extends AbstractAuthenticatorService {
 
     @Override
