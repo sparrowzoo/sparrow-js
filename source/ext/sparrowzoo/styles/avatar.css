@@ -11,31 +11,33 @@
 
 .avatar-content {
     height: 420px;
-    width: 680px;
+    width: 660px;
+    margin: 20px;
+    padding: 20px;
 }
 
 .current-avatar {
     float: left;
     height: 420px;
-    width: 196px;
+    width: 170px;
     border-right: #ccc 1px solid;
+    padding: 10px;
 }
 
 .current-avatar img {
     height: 150px;
     width: 150px;
-    margin-top: 20px;
 }
 
 .local-upload {
     float: right;
     height: 420px;
-    width: 480px;
-    border-left: #ccc 1px solid;
+    width: 400px;
+    /*border-left: #ccc 1px solid;*/
+    padding: 10px;
 }
 
 .local-upload img {
     width: 300px;
     height: 300px;
-    margin-top: 20px;
 }

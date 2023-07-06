@@ -1,8 +1,8 @@
 var loginInfo = {
   txtUserName: {
     errorCtrlId: "errorUserName",
-    prompt: "请输入您的用户名或email.",
-    nullError: "请输入您的用户名或email.",
+    prompt: "请输入您的用户名或Email.",
+    nullError: "请输入您的用户名或Email.",
     parentLevel: 1,
   },
   txtPassword: {
@@ -18,6 +18,7 @@ var loginInfo = {
     parentLevel: 1,
   },
 };
+
 var password = {
   txtOldPassword: {
     errorCtrlId: "errorOldPassword",
@@ -120,7 +121,7 @@ var regInfo = {
     parentLevel: 1,
   },
 };
-var userInfo = {
+var profileInfo = {
   txtUserName: {
     errorCtrlId: "errorUserName",
     prompt: "请输入用户昵称",
@@ -138,32 +139,6 @@ var userInfo = {
     prompt: "请输入个性签名",
     lengthError: "个性签名不得超过500个字符。",
     spanTxtCount: "spanPersonalSignatureTxtCount",
-    allowNull: true,
-  },
-  txtQQ: {
-    errorCtrlId: "errorQQ",
-    prompt: "请输入QQ号码",
-    lengthError: "请输入5-12位QQ号码",
-    minLength: 5,
-    maxLength: 13,
-    digitalError: "必须输入数字",
-    allowNull: true,
-  },
-  txtMSN: {
-    errorCtrlId: "errorMSN",
-    prompt: "请输入MSN号码",
-    emailError: "电子邮件格式输入有误。",
-    minLength: 6,
-    maxLength: 200,
-    lengthError: "电子邮件长度在6-200位之间",
-    allowNull: true,
-  },
-  txtTel: {
-    errorCtrlId: "errorTel",
-    prompt: "请输入电话号码",
-    telError: "电话号码输入有误。",
-    mobileError: "请输入11位手机号码",
-    lengthError: "请输入11位手机号码",
     allowNull: true,
   },
 };

@@ -1,66 +1,90 @@
-﻿Sparrow.ImageCopper = function (masterId, el, option, complete) {
-  this.masterId = masterId;
-  this.preview = el;
+﻿/**
+ * 图片裁剪机
+ * @param preview 预览图片
+ * @param config 裁剪配置
+ * @param complete 结束事件
+ * @constructor
+ */
+Sparrow.ImageCropper = function (preview, config, complete) {
+  this.preview = typeof preview === "string" ? $(preview) : preview;
+  //初始化剪切器尺寸
+  this.size = {
+    width: this.preview.offsetWidth,
+    height: this.preview.offsetHeight,
+  };
+
+  this.config = {
+    width: 150,
+    height: 150,
+    left: 30,
+    top: 30,
+    locked: false,
+    lockRate: false,
+    rate: 0,
+  };
+  //覆盖默认配置
+  if (config) {
+    for (var c in config) {
+      this.config[c] = config[c];
+    }
+  }
+
+  //选中尺寸
+  this.selectSize = {
+    width: this.config.width,
+    height: this.config.height,
+  };
+  //初始化一些参数
+  this.offset = {
+    x: 0,
+    y: 0,
+  };
+
   this.draging = this.moving = false;
-  this.init(option);
   if (complete && typeof complete == "function") {
     this.onComplete = complete;
+  } else {
+    var that = this;
+    this.onComplete = function (x, y, w, h) {
+      that.result = {
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+      };
+    };
   }
 };
 
-Sparrow.ImageCopper.prototype = {
-  init: function (option) {
-    //初始化一些参数
-    this.offset = {
-      x: 0,
-      y: 0,
-    };
-    var previewPosition = this.getPosition(this.preview);
+Sparrow.ImageCropper.prototype = {
+  /**
+   * 初始化方法
+   */
+  init: function () {
+    //动态计算剪切器初始位置
+    var position = this.getPosition(this.preview);
     this.position = {
-      x: previewPosition.left,
-      y: previewPosition.top,
+      x: position.left,
+      y: position.top,
     };
-    this.size = {
-      width: this.preview.offsetWidth,
-      height: this.preview.offsetHeight,
-    };
-    this.selectSize = {
-      width: 0,
-      height: 0,
-    };
+
     this.dragElement = null;
     this.dragIndex = 0;
-    var opt = (this.option = {
-      width: 150,
-      height: 150,
-      left: 30,
-      top: 60,
-      locked: false,
-      lockRate: false,
-      rate: 0,
-    });
-    if (option) {
-      this.selectSize.width = this.option.width;
-      this.selectSize.height = this.option.height;
-      for (var c in option) {
-        this.option[c] = option[c];
-      }
+
+    if (!this.config.rate && this.config.lockRate) {
+      this.config.rate = this.config.height / this.config.width;
     }
-    if (!this.option.rate && this.option.lockRate) {
-      this.option.rate = this.option.height / this.option.width;
-    }
-    this.option.left += this.position.x;
-    this.option.top += this.position.y;
+    this.config.left += this.position.x;
+    this.config.top += this.position.y;
 
     //创建遮罩层
     var master = (this.master = document.createElement("div"));
     master.style.color = "#ca151d";
-    master.id = this.masterId;
     master.style.position = "absolute";
     master.style.width = this.size.width + "px";
     master.style.height = this.size.height + "px";
-    master.style.left = previewPosition.left + "px";
-    master.style.top = previewPosition.top + "px";
+    master.style.left = this.position.left + "px";
+    master.style.top = this.position.top + "px";
     master.style.backgroundColor = "#FFFFFF";
     master.style.filter = "alpha(opacity=50)";
     master.style.opacity = "0.5";
@@ -69,19 +93,18 @@ Sparrow.ImageCopper.prototype = {
     //创建拖动显示层.
     var content = (this.content = document.createElement("div"));
     content.style.color = "blue";
-    content.id = this.masterId + "Drag";
     content.style.position = "absolute";
-    content.style.width = opt.width + "px";
-    content.style.height = opt.height + "px";
-    content.style.top = opt.top + "px";
-    content.style.left = opt.left + "px";
+    content.style.width = this.config.width + "px";
+    content.style.height = this.config.height + "px";
+    content.style.top = this.config.top + "px";
+    content.style.left = this.config.left + "px";
     content.style.background = "url(" + this.preview.src + ")";
     content.style.backgroundRepeat = "no-repeat";
     content.style.backgroundPosition =
-      -(this.option.left - this.position.x) +
+      -(this.config.left - this.position.x) +
       "px" +
       " " +
-      (-(this.option.top - this.position.y) + "px");
+      (-(this.config.top - this.position.y) + "px");
     //为了防止与父窗口的遮罩层冲突
     content.style.filter = "alpha(opacity=100)";
     content.style.opacity = "1";
@@ -170,8 +193,8 @@ Sparrow.ImageCopper.prototype = {
     var d = (this.dragDiv = document.createElement("div"));
     d.style.left = "7px";
     d.style.top = "7px";
-    d.style.height = this.option.height - 14 + "px";
-    d.style.width = this.option.width - 14 + "px";
+    d.style.height = this.config.height - 14 + "px";
+    d.style.width = this.config.width - 14 + "px";
     d.style.position = "absolute";
     d.style.cursor = "move";
     content.appendChild(d);
@@ -180,9 +203,7 @@ Sparrow.ImageCopper.prototype = {
     content.onmouseup = $.bind(this, "moveStop");
     content.onmouseout = $.bind(this, "moveStop");
   },
-  moveStart: function (
-    e //拖动位置开始.
-  ) {
+  moveStart: function (e) {
     console.info("拖动位置开始 moving" + this.moving);
     this.moving = true;
     var offset = this.getPosition(this.content);
@@ -213,13 +234,13 @@ Sparrow.ImageCopper.prototype = {
       y = this.position.y,
       h = this.size.height,
       w = this.size.width;
-    newX = newX > w + x - this.option.width ? w + x - this.option.width : newX;
+    newX = newX > w + x - this.config.width ? w + x - this.config.width : newX;
     newY =
-      newY > h + y - this.option.height ? h + y - this.option.height : newY;
+      newY > h + y - this.config.height ? h + y - this.config.height : newY;
     newX = newX < x ? x : newX;
     newY = newY < y ? y : newY;
-    this.option.left = newX;
-    this.option.top = newY;
+    this.config.left = newX;
+    this.config.top = newY;
     this.onResize();
   },
   moveStop: function () //拖动位置结束.
@@ -238,8 +259,8 @@ Sparrow.ImageCopper.prototype = {
     param,
     e //拖动尺寸开始,初始化一些数据.
   ) {
-    console.info("拖动尺寸开始,初始化一些数据." + this.option.locked);
-    if (this.option.locked) {
+    console.info("拖动尺寸开始,初始化一些数据." + this.config.locked);
+    if (this.config.locked) {
       return;
     }
     this.draging = true;
@@ -274,28 +295,28 @@ Sparrow.ImageCopper.prototype = {
   {
     console.info(
       "设置拖动时产生的尺寸和位置到dom元素上." +
-        this.option.left +
+        this.config.left +
         "|" +
-        this.option.top
+        this.config.top
     );
-    this.content.style.left = this.option.left + "px";
-    this.content.style.top = this.option.top + "px";
-    this.content.style.width = this.option.width + "px";
-    this.content.style.height = this.option.height + "px";
-    this.dragDiv.style.width = this.option.width - 14 + "px";
-    this.dragDiv.style.height = this.option.height - 14 + "px";
+    this.content.style.left = this.config.left + "px";
+    this.content.style.top = this.config.top + "px";
+    this.content.style.width = this.config.width + "px";
+    this.content.style.height = this.config.height + "px";
+    this.dragDiv.style.width = this.config.width - 14 + "px";
+    this.dragDiv.style.height = this.config.height - 14 + "px";
     this.content.style.backgroundPosition =
-      -(this.option.left - this.position.x) +
+      -(this.config.left - this.position.x) +
       "px" +
       " " +
-      (-(this.option.top - this.position.y) + "px");
+      (-(this.config.top - this.position.y) + "px");
   },
   dragMoving: function (
     e //拖动改变显示层尺寸.
   ) {
     //console.info("拖动改变显示层尺寸this.draging"+this.draging);
-    //console.info("拖动改变显示层尺寸this.option.Locked"+this.option.Locked);
-    if (!this.draging || this.option.locked) {
+    //console.info("拖动改变显示层尺寸this.config.Locked"+this.config.Locked);
+    if (!this.draging || this.config.locked) {
       return;
     }
 
@@ -308,23 +329,23 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = original.left - newPoint.left + this.offset.x;
         var stepY = original.top - newPoint.top + this.offset.y;
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
         }
         if (
-          this.option.left - stepX < this.position.x ||
-          this.option.top - stepY < this.position.y ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.left - stepX < this.position.x ||
+          this.config.top - stepY < this.position.y ||
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
 
-        this.option.left -= stepX;
-        this.option.top -= stepY;
-        this.option.width += stepX;
-        this.option.height += stepY;
+        this.config.left -= stepX;
+        this.config.top -= stepY;
+        this.config.width += stepX;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -337,30 +358,30 @@ Sparrow.ImageCopper.prototype = {
           top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepY = original.top - newPoint.top + this.offset.y;
-        if (this.option.top - stepY < this.position.y) {
+        if (this.config.top - stepY < this.position.y) {
           console.info("2 return ");
           return;
         }
         console.info("stepY" + stepY);
-        if (this.option.lockRate) {
-          var stepX = this.option.height / this.option.rate - this.option.width;
+        if (this.config.lockRate) {
+          var stepX = this.config.height / this.config.rate - this.config.width;
           if (
-            this.option.left - stepX / 2 < this.position.x ||
-            this.option.left + stepX / 2 + this.option.width >
+            this.config.left - stepX / 2 < this.position.x ||
+            this.config.left + stepX / 2 + this.config.width >
               this.position.x + this.size.width ||
-            this.option.width + stepX < this.selectSize.width
+            this.config.width + stepX < this.selectSize.width
           ) {
             console.info("2 return lockRate");
             return;
           }
-          this.option.width += stepX;
-          this.option.left -= stepX / 2;
+          this.config.width += stepX;
+          this.config.left -= stepX / 2;
         }
-        if (this.option.height + stepY < this.selectSize.height) {
+        if (this.config.height + stepY < this.selectSize.height) {
           return;
         }
-        this.option.top -= stepY;
-        this.option.height += stepY;
+        this.config.top -= stepY;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -372,24 +393,24 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepY = original.top - newPoint.top + this.offset.y;
         var stepX = newPoint.left - original.left - this.offset.x;
-        if (this.option.top - stepY < this.position.y) {
+        if (this.config.top - stepY < this.position.y) {
           return;
         }
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepX =
-            (this.option.height + stepY) / this.option.rate - this.option.width;
+            (this.config.height + stepY) / this.config.rate - this.config.width;
         }
         if (
-          this.option.left + stepX + this.option.width >
+          this.config.left + stepX + this.config.width >
             this.position.x + this.size.width ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
-        this.option.width += stepX;
-        this.option.top -= stepY;
-        this.option.height += stepY;
+        this.config.width += stepX;
+        this.config.top -= stepY;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -400,27 +421,27 @@ Sparrow.ImageCopper.prototype = {
           top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepX = original.left - newPoint.left + this.offset.x;
-        if (this.option.left - stepX < this.position.x) {
+        if (this.config.left - stepX < this.position.x) {
           return;
         }
-        if (this.option.lockRate) {
-          var stepY = this.option.width * this.option.rate - this.option.height;
+        if (this.config.lockRate) {
+          var stepY = this.config.width * this.config.rate - this.config.height;
           if (
-            this.option.top - stepY / 2 < this.position.y ||
-            this.option.height + this.option.top - stepY / 2 >
+            this.config.top - stepY / 2 < this.position.y ||
+            this.config.height + this.config.top - stepY / 2 >
               this.size.height + this.position.y ||
-            this.option.height + stepY < this.selectSize.height
+            this.config.height + stepY < this.selectSize.height
           ) {
             return;
           }
-          this.option.height += stepY;
-          this.option.top -= stepY / 2;
+          this.config.height += stepY;
+          this.config.top -= stepY / 2;
         }
-        if (this.option.width + stepX < this.selectSize.width) {
+        if (this.config.width + stepX < this.selectSize.width) {
           return;
         }
-        this.option.left -= stepX;
-        this.option.width += stepX;
+        this.config.left -= stepX;
+        this.config.width += stepX;
         this.onResize();
         break;
       }
@@ -432,29 +453,29 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = newPoint.left - original.left - this.offset.x;
         if (
-          this.option.left + this.option.width + stepX >
+          this.config.left + this.config.width + stepX >
           this.position.x + this.size.width
         ) {
           return;
         }
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           var stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
           if (
-            this.option.top - stepY / 2 < this.position.y ||
-            this.option.height + this.option.top + stepY / 2 >
+            this.config.top - stepY / 2 < this.position.y ||
+            this.config.height + this.config.top + stepY / 2 >
               this.position.y + this.size.height ||
-            this.option.height + stepY < this.selectSize.height
+            this.config.height + stepY < this.selectSize.height
           ) {
             return;
           }
-          this.option.height += stepY;
-          this.option.top -= stepY / 2;
+          this.config.height += stepY;
+          this.config.top -= stepY / 2;
         }
-        if (this.option.width + stepX < this.selectSize.width) {
+        if (this.config.width + stepX < this.selectSize.width) {
           return;
         }
-        this.option.width += stepX;
+        this.config.width += stepX;
         this.onResize();
         break;
       }
@@ -466,22 +487,22 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = original.left - newPoint.left + this.offset.x;
         var stepY = newPoint.top - original.top - this.offset.y;
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
         }
         if (
-          this.option.left - stepX < this.position.x ||
-          this.option.top + stepY + this.option.height >
+          this.config.left - stepX < this.position.x ||
+          this.config.top + stepY + this.config.height >
             this.position.y + this.size.height ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
-        this.option.left -= stepX;
-        this.option.width += stepX;
-        this.option.height += stepY;
+        this.config.left -= stepX;
+        this.config.width += stepX;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -493,29 +514,29 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepY = newPoint.top - original.top - this.offset.y;
         if (
-          this.option.top + stepY + this.option.height >
+          this.config.top + stepY + this.config.height >
           this.position.y + this.size.height
         ) {
           return;
         }
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           var stepX =
-            (this.option.height + stepY) / this.option.rate - this.option.width;
+            (this.config.height + stepY) / this.config.rate - this.config.width;
           if (
-            this.option.left - stepX / 2 < this.position.x ||
-            this.option.left + stepX + this.option.width >
+            this.config.left - stepX / 2 < this.position.x ||
+            this.config.left + stepX + this.config.width >
               this.position.x + this.size.width ||
-            this.option.width + stepX < this.selectSize.width
+            this.config.width + stepX < this.selectSize.width
           ) {
             return;
           }
-          this.option.width += stepX;
-          this.option.left -= stepX / 2;
+          this.config.width += stepX;
+          this.config.left -= stepX / 2;
         }
-        if (this.option.height + stepY < this.selectSize.height) {
+        if (this.config.height + stepY < this.selectSize.height) {
           return;
         }
-        this.option.height += stepY;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -527,22 +548,22 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = newPoint.left - original.left - this.offset.x;
         var stepY = newPoint.top - original.top - this.offset.y;
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
         }
         if (
-          this.option.left + stepX + this.option.width >
+          this.config.left + stepX + this.config.width >
             this.position.x + this.size.width ||
-          this.option.top + stepY + this.option.height >
+          this.config.top + stepY + this.config.height >
             this.position.y + this.size.height ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
-        this.option.width += stepX;
-        this.option.height += stepY;
+        this.config.width += stepX;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -567,13 +588,17 @@ Sparrow.ImageCopper.prototype = {
     this.content.parentNode.removeChild(this.content);
     this.dragDiv.parentNode.removeChild(this.dragDiv);
   },
+  resetImage: function (url) {
+    this.preview.src = url;
+    this.content.style.background = "url(" + url + ")";
+  },
   complete: function () {
     //触发拖动完成的事件,传出当前的状态数据.
     this.onComplete(
-      this.option.left - this.position.x,
-      this.option.top - this.position.y,
-      this.option.width,
-      this.option.height
+      this.config.left - this.position.x,
+      this.config.top - this.position.y,
+      this.config.width,
+      this.config.height
     );
   },
   onComplete: function (Left, Top, width, height) {

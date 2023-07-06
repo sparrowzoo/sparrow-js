@@ -31,10 +31,10 @@ const ChatApi = {
       }
     );
   },
-  getContacts: async function getFrinedList() {
+  getContacts: async function () {
     return await Sparrow.http.post(SPARROW_BASE_URL + "/contacts");
   },
-  setRead: function setRead(session, vue) {
+  setRead: function (session, vue) {
     const params = {
       sessionKey: session.key,
     };
@@ -52,7 +52,7 @@ const ChatApi = {
       }
     );
   },
-  cancelMsg: async function cancelMsg(params) {
+  cancelMsg: async function (params) {
     return await Sparrow.http.post(SPARROW_BASE_URL + "/cancel", params).then(
       (res) => {
         return res.data;

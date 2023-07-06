@@ -530,264 +530,330 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
 window.$ = window.Sparrow = Sparrow;
 
 Sparrow.browser = {
-    url: {
-        manage: "default.jsp",
-        logout_url: "/user/logout.json"
-    },
-    cookie: {
-        permission: "permission",
-        call_back_url: "call_back_url",
-        website_name: "website_name",
-        themes: "sparrow.themes",
-        // 配置cookie的域并非cookie的key
-        root_domain: $(function () {
-            return window.location.host.substr(window.location.host.indexOf('.') + 1);
-        }),
-        domain: window.location.host
-    },
-    ie: $(function () {
-        return navigator.userAgent.search(/MSIE/img) !== -1;
+  url: {
+    manage: "default.jsp",
+    logout_url: "/user/logout.json",
+  },
+  cookie: {
+    permission: "permission",
+    call_back_url: "call_back_url",
+    website_name: "website_name",
+    themes: "sparrow.themes",
+    // 配置cookie的域并非cookie的key
+    root_domain: $(function () {
+      return window.location.host.substr(window.location.host.indexOf(".") + 1);
     }),
-    opera: $(function () {
-        return navigator.userAgent.search(/Opera/img) !== -1;
-    }),
-    firefox: $(function () {
-        return navigator.userAgent.search(/Firefox/img) !== -1;
-    }),
-    google: $(function () {
-        return navigator.userAgent.search(/Chrome/img) !== -1;
-    }),
-    version: $(function () {
-        if (navigator.userAgent.search(/MSIE/img) !== -1) {
-            navigator.userAgent.match(/MSIE\b\s*([0-9\.0-9]+);/img);
-            return RegExp.$1;
-        } else if (navigator.userAgent.search(/Opera/img) !== -1) {
-            navigator.userAgent.match(/Version\/([0-9\.]+)/img);
-            return RegExp.$1;
-        } else if (navigator.userAgent.search(/Firefox/img) !== -1) {
-            navigator.userAgent.match(/Firefox\/([0-9\.]+)/img);
-            return RegExp.$1;
-        } else if (navigator.userAgent.search(/Chrome/img) !== -1) {
-            navigator.userAgent.search(/Chrome\/([0-9\.]+)/img);
-            return RegExp.$1;
-        }
-    }),
-    addFavorite: function (url, title) {
-        if (document.all) {
-            window.external.AddFavorite(url, title);
-        } else if (window.sidebar) {
-            window.sidebar.addPanel(title, url, "");
-        } else {
-            alert("对不起，您的浏览器不支持此操作!\n请您使用菜单栏或Ctrl+D收藏本站。");
-        }
-    },
-    setHome: function (anchorLabel, url) {
-        try {
-            anchorLabel.style.behavior = 'url(#default#homepage)';
-            anchorLabel.setHomePage(url);
-        } catch (e) {
-            if (window.netscape) {
-                try {
-                    netscape.security.PrivilegeManager
-                        .enablePrivilege("UniversalXPConnect");
-                    var prefs = Components.classes['@mozilla.org/preferences-service;1']
-                        .getService(Components.interfaces.nsIPrefBranch);
-                    prefs.setCharPref('browser.startup.homepage', url);
-                } catch (e) {
-                    alert('抱歉！您的浏览器不支持直接设为首页。请在浏览器地址栏输入“about:config”并回车然后将[signed.applets.codebase_principal_support]设置为“true”，点击“加入收藏”后忽略安全提示，即可设置成功。');
-                }
-            }
-        }
-    },
-    copy: function (text, msg) {
-        if (!msg) {
-            msg = "成功复制！可以通过ctrl+v进行粘贴操作！";
-        }
-        try {
-            if (window.clipboardData) {
-                window.clipboardData.setData("Text", text);
-                alert(msg);
-                return
-            }
-            try {
-                netscape.security.PrivilegeManager
-                    .enablePrivilege("UniversalXPConnect");
-            } catch (e) {
-                alert("您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!");
-                return false;
-            }
-            var clip = Components.classes['@mozilla.org/widget/clipboard;1']
-                .createInstance(Components.interfaces.nsIClipboard);
-            if (!clip)
-                return;
-            var trans = Components.classes['@mozilla.org/widget/transferable;1']
-                .createInstance(Components.interfaces.nsITransferable);
-            if (!trans) {
-                return;
-            }
-            trans.addDataFlavor('text/unicode');
-            var supportsString = Components.classes["@mozilla.org/supports-string;1"]
-                .createInstance(Components.interfaces.nsISupportsString);
-            supportsString.data = text;
-            trans.setTransferData("text/unicode", supportsString, text
-                .getByteLength());
-            var clipid = Components.interfaces.nsIClipboard;
-            if (!clip)
-                return false;
-            clip.setData(trans, null, clipid.kGlobalClipboard);
-            alert(msg);
-        } catch (e) {
-            alert("对不起！您的浏览器不支持该功能");
-        }
-    },
-
-    setCookie: function (cookieName, cookieValue, expireseconds, domain, path,
-                         secure) {
-        var expires = null;
-        if (expireseconds !== 0 && expireseconds) {
-            expires = new Date();
-            expires.setTime(expires.getTime() + expireseconds * 1000);
-        }
-        document.cookie = (encodeURIComponent(cookieName) + '='
-            + encodeURIComponent(cookieValue)
-            + (expires ? '; expires=' + expires.toGMTString() : '')
-            + '; path=' + (path ? path : '/') + '; domain='
-            + (domain ? domain : this.cookie.root_domain) + (secure ? '; secure' : ''));
-    },
-    getCookie: function (cookieName) {
-        var cookieValue = null;
-        var posName = document.cookie.indexOf(escape(cookieName) + '=');
-        if (posName !== -1) {
-            var posValue = posName + (escape(cookieName) + '=').length;
-            var endPos = document.cookie.indexOf(';', posValue);
-            if (endPos !== -1)
-                cookieValue = decodeURIComponent(document.cookie.substring(
-                    posValue, endPos));
-            else
-                cookieValue = decodeURIComponent(document.cookie
-                    .substring(posValue));
-        }
-        if (cookieValue == null || typeof (cookieValue) === "undefined"
-            || cookieValue === "undefined") {
-            return null;
-        }
-        return cookieValue;
-    },
-    // 根据按下控件的对象获取要执行的按钮事件
-    // auguments=window.dialogArguments子页获取参数
-    showModalDialog: function (width, height, url, callback, args) {
-        var result;
-        url = $.randomUrl(url);
-        if ($.browser.ie) {
-            result = window.showModalDialog(url, args, "dialogHeight:{0}px; dialogWidth:{1}px; status:no; help:no; scroll:auto".format(height, width));
-        } else {
-            result = window.open(url, args, "height={0}, width={1},toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(height, width));
-        }
-        if (result) {
-            callback(result);
-        }
-    },
-    /*{url:'',height:1px;width:1px,target:'_blank'}*/
-    window: function (config) {
-        var url = $.randomUrl(config.url);
-        if (!config.win) {
-            config.win = window;
-        }
-        var target = config.target ? config.target : "_blank";
-        var parameters = null;
-        if ($.isNullOrEmpty(config.width)) {
-            parameters = "height={0}px,width={1}px,toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(config.height, config.width);
-        }
-        config.win.open(url, target, parameters);
-    },
-    close: function () {
-        window.opener = null;
-        window.open('about:blank', '_self');
-        window.close();
-    },
-    getUrlWithoutParameter: function (url) {
-        var currentLocation = url ? url : window.location.href;
-        var locationIndex = currentLocation.indexOf('?');
-        if (locationIndex < 0) {
-            locationIndex = currentLocation.indexOf("#");
-        }
-        if (locationIndex > -1) {
-            currentLocation = currentLocation.substring(0, locationIndex);
-        }
-        return currentLocation;
-    },
-    getUserId: function () {
-        var permission = $.browser.getCookie(this.cookie.permission);
-        if (permission == null) {
-            return 0;
-        }
-        return permission.split('&')[0].substring("id=".length);
-    },
-    getUserName: function () {
-        var permission = $.browser.getCookie(this.cookie.permission);
-        if (permission == null) {
-            return null;
-        }
-        return permission.split('&')[1].substring("name=".length);
-    },
-    isLogin: function () {
-        var userId = $.browser.getUserId();
-        return !(userId == null || userId === 0 || userId === "0" || userId === "null"
-            || userId === "");
-    },
-    logout: function (domain, logoutUrl, defaultUrl) {
-        if ($.isNullOrEmpty(logoutUrl)) {
-            logoutUrl = this.url.logout_url;
-        }
-        if ($.isNullOrEmpty(defaultUrl)) {
-            defaultUrl = this.url.manage;
-        }
-        $.ajax.json($.url.root + logoutUrl, function (result) {
-            var permissionKey = result.value;
-            if ($.isNullOrEmpty(permissionKey)) {
-                permissionKey = $.browser.cookie.permission;
-            }
-            // 注销成功后回调
-            $.browser.setCookie(permissionKey, "0", -1, domain);
-            if (($.url.root + "/") === window.parent.location.href || window.parent.location.href.indexOf(defaultUrl) !== -1) {
-                window.parent.location.href = $.url.root;
-            } else {
-                window.location.href = window.location.href;
-            }
-        }, true);
-    },
-    /***************************************************************************
-     * 取窗口可视范围的高度
-     **************************************************************************/
-    getClientHeight: function () {
-        return (document.body.clientHeight && document.documentElement.clientHeight) ? Math
-                .min(document.body.clientHeight,
-                    document.documentElement.clientHeight)
-            : Math.max(document.body.clientHeight,
-                document.documentElement.clientHeight);
-    },
-    /***************************************************************************
-     * 取文档内容实际高度
-     **************************************************************************/
-    getScrollHeight: function () {
-        return Math.max(document.body.scrollHeight,
-            document.documentElement.scrollHeight);
-    },
-    linkClick: function (condition, message) {
-        if (typeof(condition) === "boolean") {
-            if (!condition) {
-                $.alert(message, "sad");
-                return false;
-            }
-            return true;
-        }
-        //非field.value==1 则为this对象
-        if (condition.href === "javascript:void(0);") {
-            $.alert(message, "sad");
-            return false;
-        }
-        return true;
+    domain: window.location.host,
+  },
+  ie: $(function () {
+    return navigator.userAgent.search(/MSIE/gim) !== -1;
+  }),
+  opera: $(function () {
+    return navigator.userAgent.search(/Opera/gim) !== -1;
+  }),
+  firefox: $(function () {
+    return navigator.userAgent.search(/Firefox/gim) !== -1;
+  }),
+  google: $(function () {
+    return navigator.userAgent.search(/Chrome/gim) !== -1;
+  }),
+  version: $(function () {
+    if (navigator.userAgent.search(/MSIE/gim) !== -1) {
+      navigator.userAgent.match(/MSIE\b\s*([0-9\.0-9]+);/gim);
+      return RegExp.$1;
     }
+    if (navigator.userAgent.search(/Opera/gim) !== -1) {
+      navigator.userAgent.match(/Version\/([0-9\.]+)/gim);
+      return RegExp.$1;
+    }
+    if (navigator.userAgent.search(/Firefox/gim) !== -1) {
+      navigator.userAgent.match(/Firefox\/([0-9\.]+)/gim);
+      return RegExp.$1;
+    }
+    if (navigator.userAgent.search(/Chrome/gim) !== -1) {
+      navigator.userAgent.search(/Chrome\/([0-9\.]+)/gim);
+      return RegExp.$1;
+    }
+  }),
+  addFavorite: function (url, title) {
+    if (document.all) {
+      window.external.AddFavorite(url, title);
+    } else if (window.sidebar) {
+      window.sidebar.addPanel(title, url, "");
+    } else {
+      alert(
+        "对不起，您的浏览器不支持此操作!\n请您使用菜单栏或Ctrl+D收藏本站。"
+      );
+    }
+  },
+  setHome: function (anchorLabel, url) {
+    try {
+      anchorLabel.style.behavior = "url(#default#homepage)";
+      anchorLabel.setHomePage(url);
+    } catch (e) {
+      if (window.netscape) {
+        try {
+          netscape.security.PrivilegeManager.enablePrivilege(
+            "UniversalXPConnect"
+          );
+          var prefs = Components.classes[
+            "@mozilla.org/preferences-service;1"
+          ].getService(Components.interfaces.nsIPrefBranch);
+          prefs.setCharPref("browser.startup.homepage", url);
+        } catch (e) {
+          alert(
+            "抱歉！您的浏览器不支持直接设为首页。请在浏览器地址栏输入“about:config”并回车然后将[signed.applets.codebase_principal_support]设置为“true”，点击“加入收藏”后忽略安全提示，即可设置成功。"
+          );
+        }
+      }
+    }
+  },
+  copy: function (text, msg) {
+    if (!msg) {
+      msg = "成功复制！可以通过ctrl+v进行粘贴操作！";
+    }
+    try {
+      if (window.clipboardData) {
+        window.clipboardData.setData("Text", text);
+        alert(msg);
+        return;
+      }
+      try {
+        netscape.security.PrivilegeManager.enablePrivilege(
+          "UniversalXPConnect"
+        );
+      } catch (e) {
+        alert(
+          "您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!"
+        );
+        return false;
+      }
+      var clip = Components.classes[
+        "@mozilla.org/widget/clipboard;1"
+      ].createInstance(Components.interfaces.nsIClipboard);
+      if (!clip) return;
+      var trans = Components.classes[
+        "@mozilla.org/widget/transferable;1"
+      ].createInstance(Components.interfaces.nsITransferable);
+      if (!trans) {
+        return;
+      }
+      trans.addDataFlavor("text/unicode");
+      var supportsString = Components.classes[
+        "@mozilla.org/supports-string;1"
+      ].createInstance(Components.interfaces.nsISupportsString);
+      supportsString.data = text;
+      trans.setTransferData(
+        "text/unicode",
+        supportsString,
+        text.getByteLength()
+      );
+      var clipid = Components.interfaces.nsIClipboard;
+      if (!clip) return false;
+      clip.setData(trans, null, clipid.kGlobalClipboard);
+      alert(msg);
+    } catch (e) {
+      alert("对不起！您的浏览器不支持该功能");
+    }
+  },
+
+  setCookie: function (
+    cookieName,
+    cookieValue,
+    expireseconds,
+    domain,
+    path,
+    secure
+  ) {
+    var expires = null;
+    if (expireseconds !== 0 && expireseconds) {
+      expires = new Date();
+      expires.setTime(expires.getTime() + expireseconds * 1000);
+    }
+    document.cookie =
+      encodeURIComponent(cookieName) +
+      "=" +
+      encodeURIComponent(cookieValue) +
+      (expires ? "; expires=" + expires.toGMTString() : "") +
+      "; path=" +
+      (path ? path : "/") +
+      "; domain=" +
+      (domain ? domain : this.cookie.root_domain) +
+      (secure ? "; secure" : "");
+  },
+  getCookie: function (cookieName) {
+    var cookieValue = null;
+    var posName = document.cookie.indexOf(escape(cookieName) + "=");
+    if (posName !== -1) {
+      var posValue = posName + (escape(cookieName) + "=").length;
+      var endPos = document.cookie.indexOf(";", posValue);
+      if (endPos !== -1)
+        cookieValue = decodeURIComponent(
+          document.cookie.substring(posValue, endPos)
+        );
+      else
+        cookieValue = decodeURIComponent(document.cookie.substring(posValue));
+    }
+    if (
+      cookieValue == null ||
+      typeof cookieValue === "undefined" ||
+      cookieValue === "undefined"
+    ) {
+      return null;
+    }
+    return cookieValue;
+  },
+  // 根据按下控件的对象获取要执行的按钮事件
+  // auguments=window.dialogArguments子页获取参数
+  showModalDialog: function (width, height, url, callback, args) {
+    var result;
+    url = $.randomUrl(url);
+    if ($.browser.ie) {
+      result = window.showModalDialog(
+        url,
+        args,
+        "dialogHeight:{0}px; dialogWidth:{1}px; status:no; help:no; scroll:auto".format(
+          height,
+          width
+        )
+      );
+    } else {
+      result = window.open(
+        url,
+        args,
+        "height={0}, width={1},toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(
+          height,
+          width
+        )
+      );
+    }
+    if (result) {
+      callback(result);
+    }
+  },
+  /*{url:'',height:1px;width:1px,target:'_blank'}*/
+  window: function (config) {
+    var url = $.randomUrl(config.url);
+    if (!config.win) {
+      config.win = window;
+    }
+    var target = config.target ? config.target : "_blank";
+    var parameters = null;
+    if ($.isNullOrEmpty(config.width)) {
+      parameters =
+        "height={0}px,width={1}px,toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(
+          config.height,
+          config.width
+        );
+    }
+    config.win.open(url, target, parameters);
+  },
+  close: function () {
+    window.opener = null;
+    window.open("about:blank", "_self");
+    window.close();
+  },
+  getUrlWithoutParameter: function (url) {
+    var currentLocation = url ? url : window.location.href;
+    var locationIndex = currentLocation.indexOf("?");
+    if (locationIndex < 0) {
+      locationIndex = currentLocation.indexOf("#");
+    }
+    if (locationIndex > -1) {
+      currentLocation = currentLocation.substring(0, locationIndex);
+    }
+    return currentLocation;
+  },
+  getUserId: function () {
+    var permission = $.browser.getCookie(this.cookie.permission);
+    if (permission == null) {
+      return 0;
+    }
+    return permission.split("&")[0].substring("id=".length);
+  },
+  getUserName: function () {
+    var permission = $.browser.getCookie(this.cookie.permission);
+    if (permission == null) {
+      return null;
+    }
+    return permission.split("&")[1].substring("name=".length);
+  },
+  isLogin: function () {
+    var userId = $.browser.getUserId();
+    return !(
+      userId == null ||
+      userId === 0 ||
+      userId === "0" ||
+      userId === "null" ||
+      userId === ""
+    );
+  },
+  logout: function (domain, logoutUrl, defaultUrl) {
+    if ($.isNullOrEmpty(logoutUrl)) {
+      logoutUrl = this.url.logout_url;
+    }
+    if ($.isNullOrEmpty(defaultUrl)) {
+      defaultUrl = this.url.manage;
+    }
+    $.ajax.json(
+      $.url.root + logoutUrl,
+      function (result) {
+        var permissionKey = result.value;
+        if ($.isNullOrEmpty(permissionKey)) {
+          permissionKey = $.browser.cookie.permission;
+        }
+        // 注销成功后回调
+        $.browser.setCookie(permissionKey, "0", -1, domain);
+        if (
+          $.url.root + "/" === window.parent.location.href ||
+          window.parent.location.href.indexOf(defaultUrl) !== -1
+        ) {
+          window.parent.location.href = $.url.root;
+        } else {
+          window.location.href = window.location.href;
+        }
+      },
+      true
+    );
+  },
+  /***************************************************************************
+   * 取窗口可视范围的高度
+   **************************************************************************/
+  getClientHeight: function () {
+    return document.body.clientHeight && document.documentElement.clientHeight
+      ? Math.min(
+          document.body.clientHeight,
+          document.documentElement.clientHeight
+        )
+      : Math.max(
+          document.body.clientHeight,
+          document.documentElement.clientHeight
+        );
+  },
+  /***************************************************************************
+   * 取文档内容实际高度
+   **************************************************************************/
+  getScrollHeight: function () {
+    return Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+  },
+  linkClick: function (condition, message) {
+    if (typeof condition === "boolean") {
+      if (!condition) {
+        $.alert(message, "sad");
+        return false;
+      }
+      return true;
+    }
+    //非field.value==1 则为this对象
+    if (condition.href === "javascript:void(0);") {
+      $.alert(message, "sad");
+      return false;
+    }
+    return true;
+  },
 };
 
 Sparrow.container = {};
@@ -1325,13 +1391,31 @@ Sparrow.ajax = {
     } catch (e) {
       console.log(e);
     }
-  }, //内部业务使用
-  json: function (url, data, callback, srcElement, token) {
+  },
+  get: function (url, callback) {
+    callback = callback ? callback : $.ajax._callback;
+    $.ajax.req("GET", url, callback, null, null);
+  },
+  post: function (url, data, callback) {
+    callback = callback ? callback : $.ajax._callback;
+    $.ajax.req("POST", url, callback, data, null);
+  },
+};
+
+var tokenConfig = {};
+tokenConfig[$.url.root] = {
+  "login-token": function () {
+    return $.browser.getCookie("PERMISSION");
+  },
+};
+
+Sparrow.ajax.tokenConfig = tokenConfig;
+Sparrow.http = {
+  post: function (url, data, callback, srcElement) {
     if (typeof data === "function") {
       callback = data;
       data = null;
     }
-
     $.ajax.req(
       "POST",
       url,
@@ -1341,28 +1425,37 @@ Sparrow.ajax = {
           $.message("json parse error " + responseText);
           return;
         }
-        if (result.code === $.ajax.SUCCESS) {
-          if (callback) {
-            callback(result);
-          } else {
-            $.message(result.message, $.ajax.srcElement);
-          }
-        } else {
+        if (result.code != $.ajax.SUCCESS) {
           $.message(result.message, $.ajax.srcElement);
+          return;
         }
+        if (callback) {
+          callback(result.data);
+          return;
+        }
+        $.message(result.message, $.ajax.srcElement);
       },
       data,
-      srcElement,
-      token
+      srcElement
     );
   },
   get: function (url, callback) {
-    callback = callback ? callback : $.ajax._callback;
-    $.ajax.req("GET", url, callback, null, null);
-  },
-  post: function (url, data, callback) {
-    callback = callback ? callback : $.ajax._callback;
-    $.ajax.req("POST", url, callback, data, null);
+    Sparrow.ajax.get(url, function (responseText) {
+      var result = responseText.json();
+      if (result == null) {
+        $.message("json parse error " + responseText);
+        return;
+      }
+      if (result.code != $.ajax.SUCCESS) {
+        $.message(result.message, $.ajax.srcElement);
+        return;
+      }
+      if (callback) {
+        callback(result.data);
+        return;
+      }
+      $.message(result.message, $.ajax.srcElement);
+    });
   },
 };
 
@@ -2950,292 +3043,327 @@ Sparrow.table.prototype = {
 };
 //document.domain=$.browser.cookie.root_domain; 解决跨域
 Sparrow.file = {
-    // 是否显示上传进度
-    isShowProgress: true,
-    // 等待
-    wit: null,
-    // 客户端文件名
-    clientFileName: null,
-    // 上传框架id editorId.path-key 非editor id为null e.g null.forum 表示path-key为forum 的无editor 上传组件
-    uploadFrameId: null,
-    // 上传回调函数
-    uploadCallBack: function (fileInfo, editor, size) {
-        console.info(fileInfo);
-        console.info(size);
-        this.clearStatus();
-    },
-    // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
-    clearStatus: function () {
-        window.clearInterval(this.wit);
-        window.setTimeout(function () {
-            var divStatus = $('divStatus');
-            if ($.file.isShowProgress && divStatus != null) {
-                document.body.removeChild(divStatus);
-            }
-        },1000);
-    },
-    // 文件序列号
-    fileSerialNumber: null,
-    // 文件上传前的验证方法由 input file 的onchange响应
-    // file控件的onchange方法
-    // file.uploadDelegate(this,pathKey);
-    // upload frame的id与editorId_pathKey要保持一致
-    // path key 对应后台配置的上传策略
-    validateUploadFile: function (f, key, editor) {
-        if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
-            "jpeg", "gif", "png"], "errorImgForumIco")) {
-            $.file.uploadDelegate(key, editor);
-        }
-    },
-    callbackValidate: function (uploadProgress) {
-        if ($.isNullOrEmpty(uploadProgress.error)) {
-            return true;
-        }
-        $.alert(uploadProgress.error, "sad");
-        $.file.clearStatus();
-        return false;
-    },
-    // 文件上传成功后的重置方法
-    // 因为文件上传完毕之后需要重置上传序列号。所以一定要手动设置该方法
-    reset: function () {
-        var uploadFrame = $(this.uploadFrameId);
-        var tempSrc = uploadFrame.src;
-        uploadFrame.src = "about:blank";
-        uploadFrame.src = tempSrc;
-    },
-    getUploadFrame: function () {
-        return this.uploadFrameId ? $(this.uploadFrameId) : $("fileUpload");
-    },
-    // 获取上传的input type="file"控件
-    getUploadFile: function (frame) {
-        if (!frame) {
-            frame = this.getUploadFrame();
-        }
-        return frame.contentWindow.document.getElementById("file_upload");
-    },
-    getUploadFileInfo: function (frame) {
-        if (!frame) {
-            frame = this.getUploadFrame();
-        }
-        return frame.contentWindow.document.getElementById("fileInfo");
-    },
-    // 获取文件序列号
-    getFileSerialNumber: function () {
-        return this.fileSerialNumber;
-    },
-    setFileSerialNumber: function (serialNumber) {
-        this.fileSerialNumber = serialNumber;
-    },
-    // 获取文件的全路径文件名?
-    getFullPath: function (obj) {
-        if (!obj) {
-            return ""
-        }
-        if ($.browser.ie) {
-            obj.select();
-            var txt = document.frames[0].document.selection.createRange().text;
-            document.frames[0].document.selection.empty();
-            return txt;
-        }
-        if ($.browser.firefox) {
-            if (obj.files) {
-                return obj.files.item(0).getAsDataURL();
-            }
-            return obj.value;
-        }
-        return obj.value;
-    },
-    // 获文件扩展名
-    getExtension: function (fileName) {
-        fileName = $.browser.getUrlWithoutParameter(fileName);
-        return fileName.substring(fileName.lastIndexOf("."))
-            .toLocaleLowerCase();
-    },
-    // 获取文件名
-    getFileName: function (fileName) {
-        fileName = $.browser.getUrlWithoutParameter(fileName);
-        if (fileName.indexOf("\\") !== -1) {
-            return fileName.substring(fileName.lastIndexOf("\\") + 1);
-        }
-        if (fileName.indexOf('/') !== -1) {
-            return fileName.substring(fileName.lastIndexOf("/") + 1);
-        }
-        return fileName;
-    },
-    // 验证文件类型
-    checkFileType: function (fileName, rightExtension, errorCtrl) {
-        //这里封装跨域可以复用，因为
-        var fileExtension = this.getExtension(fileName);
-        var result = false;
-        for (var i = 0; i < rightExtension.length; i += 1) {
-            if (rightExtension[i].toLocaleLowerCase() === fileExtension
-                || '.' + rightExtension[i].toLocaleLowerCase() === fileExtension) {
-                result = true;
-                break;
-            }
-        }
-
-        if (result) {
-            $.v.ok(errorCtrl)
-            return result;
-        }
-        var errorLabel = $("#" + errorCtrl);
-        if (errorLabel != null && errorLabel.source() != null) {
-            errorLabel.class("error");
-            errorLabel.html("!只支持:" + rightExtension + "格式");
-        }
-        $.message("文件格式不正确，只支持以下格式:\n" + rightExtension);
-        return result;
-    },
-    // 如果editor为null则表示非编辑器控件
-    uploadDelegate: function (key, editor,
-                              srcElement) {
-        // 如果显示状态并且状态控件已经显示则说明已经有文件正在上传中...
-        if (this.isShowProgress !== false && $("divStatus")) {
-            $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
-            return false;
-        }
-        this.uploadFrameId = (editor ? editor.obj : "null") + "." + key;
-        var uploadFrame = this.getUploadFrame();
-        // 客户端文件名
-        this.clientFileName = this.getUploadFile(uploadFrame).value;
-        // 如果没有选择上传文件
-        if (this.clientFileName === "") {
-            $.message("请选择上传文件!", srcElement);
-            return false;
-        }
-
-        var fileInfo = this.getUploadFileInfo(uploadFrame).value;
-        var fileInfoArray = fileInfo.split(".");
-        // 设置当前文件的序列号
-        this.setFileSerialNumber(fileInfoArray[2]);
-        // 如果要显示状态
-        if ($.file.isShowProgress !== false) {
-            // 如果状态控件不存在则创建
-            if (!$("divStatus")) {
-                var sparrowUploadFrame = $(uploadFrame);
-                var divStatus = $("+div");
-                divStatus.s.id = "divStatus";
-                divStatus.s.style.cssText = "width:260px;height:100px;position:absolute;color:#ffffff;background:#000000;font-size:10pt;border:#ccc 1px solid;text-align:left;";
-                divStatus.html("服务器正在加载文件信息...");
-                document.body.appendChild(divStatus.s);
-                divStatus.s.style.top = (sparrowUploadFrame
-                        .getAbsoluteTop() - 10)
-                    + "px";
-                divStatus.s.style.left = (sparrowUploadFrame
-                        .getAbsoluteLeft())
-                    + "px";
-                divStatus.opacity(90);
-            }
-            // 设置状态跟踪
-            if (typeof (editor) === "undefined" || editor === null) {
-                // 非编辑器控件
-                this.wit = window.setInterval(function (){$.file.getStatus()}, 1000);
-            } else {
-                this.wit = window.setInterval(function (){$.file.getStatus()}, 1000);
-            }
-        }
-        // 提交
-        uploadFrame.contentWindow.document.forms[0].submit();
-    },
-    //只负责显示进度
-    progressCallback: function (uploadProgress) {
-        if (uploadProgress == null) {
-            return;
-        }
-        if (uploadProgress.status === "loading") {
-            return;
-        }
-
-        if (!this.callbackValidate(uploadProgress)) {
-            return;
-        }
-        // 正常显示状态
-        var statusString = [];
-        var status = Math
-                .ceil(parseFloat(uploadProgress.readLength)
-                    / parseFloat(uploadProgress.contentLength)
-                    * 1000000)
-            / 10000 + "%";
-
-
-        statusString
-            .push("正在上传文件<br/><span class='highlight'>《"
-                + $.file
-                    .getFileName($.file.clientFileName)
-                + "》</span><br/>");
-        statusString.push("文件大小:"
-            + uploadProgress.humanReadableContentLength
-            + "<br/>");
-        statusString.push("上传大小:"
-            + uploadProgress.humanReadableReadLength
-            + "<br/>");
-        statusString.push("上传进度:" + status);
-        $("#divStatus", false).html(statusString.toString());
-        if (status === "100%") {
-            $.file.clearStatus();
-        }
-    },
-    getStatus: function () {
-        // 根据当前文件的序列号,实时获取当前文件的上传状态
-        $("jsonp", $.url.upload + "/file-upload?file-serial-number="
-            + this.getFileSerialNumber() + "&t="
-            + Math.random() + "&callback=progressCallback", "uploadProgress");
-    },
-    /**
-     * @param key path-key
-     * @param pathKeySuffixPair {path-key:suffix}
-     */
-    initImageUploadEvent: function (key, pathKeySuffixPair) {
-        if (!$.url.upload) {
-            console.error("please config $.url.upload the default config is $.url.root ["+$.url.root+"]");
-            $.url.upload = $.url.root;
-        }
-        var fileFrame = $("null." + key);
-        if (fileFrame == null) {
-            return;
-        }
-        document.domain = $.browser.cookie.root_domain;
-        if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
-        fileFrame.src = $.url.upload + "/file-upload?path-key=" + key+"&t="+ Math.random();
-        //第一次加载初始化
-        $.file.uploadCallBack = function (fileInfo, editor, size) {
-            console.info(size);
-        };
-        $.file.validateUploadFile = function (f, key, editor) {
-            var suffix = pathKeySuffixPair;
-            if (typeof (pathKeySuffixPair) === "object") {
-                suffix = pathKeySuffixPair[key];
-            }
-            if (!$.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                "gif", "png"], "error" + suffix)) {
-                return;
-            }
-            $.file.uploadCallBack = function (uploadingProgress) {
-                $.file.clearStatus();
-                if (!uploadingProgress.fileUrl) {
-                    return;
-                }
-
-                var divContainer = $("#div" + suffix);
-                if (divContainer != null) {
-                    divContainer.html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
-                        + "'/></a>");
-                }
-                var hdnWebUrl = $("#hdn" + suffix);
-                if (hdnWebUrl != null) {
-                    hdnWebUrl.value(uploadingProgress.fileUrl);
-                }
-                var errorPrompt = $("#error" + suffix);
-                if (errorPrompt != null&&errorPrompt.s!=null) {
-                    errorPrompt.class("prompt");
-                    errorPrompt.html("");
-                }
-            };
-            $.file.uploadDelegate(key, editor);
-        };
+  // 是否显示上传进度
+  isShowProgress: true,
+  // 等待
+  wit: null,
+  // 客户端文件名
+  clientFileName: null,
+  // 上传框架id editorId.path-key 非editor id为null e.g null.forum 表示path-key为forum 的无editor 上传组件
+  uploadFrameId: null,
+  /**
+   * 第一次加载的默认方法
+   * @param progress UploadingProgress 当前上传进度
+   * @param editor 当前富文本编辑器
+   * @param size 后台的FileConfig 可以读到图片的尺寸
+   */
+  uploadCallBack: function (progress, editor, size) {
+    console.info(progress);
+    console.info(size);
+    this.clearStatus();
+  },
+  // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
+  clearStatus: function () {
+    window.clearInterval(this.wit);
+    window.setTimeout(function () {
+      var divStatus = $("divStatus");
+      if ($.file.isShowProgress && divStatus != null) {
+        document.body.removeChild(divStatus);
+      }
+    }, 1000);
+  },
+  // 文件序列号
+  fileSerialNumber: null,
+  /**
+   *    文件上传前的验证方法由 input file 的onchange响应
+   *    file控件的onchange方法
+   *    file.uploadDelegate(this,pathKey);
+   *    upload frame的id与editorId_pathKey要保持一致
+   *    path key 对应后台配置的上传策略
+   * @param f 当前input type=file 组件
+   * @param key 当前文件上传 pathKey 由后台配置
+   * @param editor 当前富文件编辑器
+   */
+  validateUploadFile: function (srcElement, key, editor) {
+    var clientFileName = $.file.getFileName(srcElement.value);
+    var validFileType = ["jpg", "jpeg", "gif", "png"];
+    var validResult = $.file.checkFileType(
+      clientFileName,
+      validFileType,
+      "errorImgForumIco"
+    );
+    if (!validResult) {
+      return;
     }
+    $.file.uploadDelegate(key, editor);
+  },
+  callbackValidate: function (uploadProgress) {
+    if ($.isNullOrEmpty(uploadProgress.error)) {
+      return true;
+    }
+    $.alert(uploadProgress.error, "sad");
+    $.file.clearStatus();
+    return false;
+  },
+  // 文件上传成功后的重置方法
+  // 因为文件上传完毕之后需要重置上传序列号。所以一定要手动设置该方法
+  reset: function () {
+    var uploadFrame = $(this.uploadFrameId);
+    var tempSrc = uploadFrame.src;
+    uploadFrame.src = "about:blank";
+    uploadFrame.src = tempSrc;
+  },
+  getUploadFrame: function () {
+    return this.uploadFrameId ? $(this.uploadFrameId) : $("fileUpload");
+  },
+  // 获取上传的input type="file"控件
+  getUploadFile: function (frame) {
+    if (!frame) {
+      frame = this.getUploadFrame();
+    }
+    return frame.contentWindow.document.getElementById("file_upload");
+  },
+  getUploadFileInfo: function (frame) {
+    if (!frame) {
+      frame = this.getUploadFrame();
+    }
+    return frame.contentWindow.document.getElementById("fileInfo");
+  },
+  // 获取文件序列号
+  getFileSerialNumber: function () {
+    return this.fileSerialNumber;
+  },
+  setFileSerialNumber: function (serialNumber) {
+    this.fileSerialNumber = serialNumber;
+  },
+  // 获取文件的全路径文件名?
+  getFullPath: function (obj) {
+    if (!obj) {
+      return "";
+    }
+    if ($.browser.ie) {
+      obj.select();
+      var txt = document.frames[0].document.selection.createRange().text;
+      document.frames[0].document.selection.empty();
+      return txt;
+    }
+    if ($.browser.firefox) {
+      if (obj.files) {
+        return obj.files.item(0).getAsDataURL();
+      }
+      return obj.value;
+    }
+    return obj.value;
+  },
+  // 获文件扩展名
+  getExtension: function (fileName) {
+    fileName = $.browser.getUrlWithoutParameter(fileName);
+    return fileName.substring(fileName.lastIndexOf(".")).toLocaleLowerCase();
+  },
+  // 获取文件名
+  getFileName: function (fileName) {
+    fileName = $.browser.getUrlWithoutParameter(fileName);
+    if (fileName.indexOf("\\") !== -1) {
+      return fileName.substring(fileName.lastIndexOf("\\") + 1);
+    }
+    if (fileName.indexOf("/") !== -1) {
+      return fileName.substring(fileName.lastIndexOf("/") + 1);
+    }
+    return fileName;
+  },
+  // 验证文件类型
+  checkFileType: function (fileName, rightExtension, errorCtrl) {
+    //这里封装跨域可以复用，因为
+    var fileExtension = this.getExtension(fileName);
+    var result = false;
+    for (var i = 0; i < rightExtension.length; i += 1) {
+      var extension = rightExtension[i].toLocaleLowerCase();
+      var extensionWithDot = "." + rightExtension[i].toLocaleLowerCase();
+      if (extension === fileExtension || extensionWithDot === fileExtension) {
+        result = true;
+        break;
+      }
+    }
+    if (result) {
+      $.v.ok(errorCtrl);
+      return result;
+    }
+    var errorLabel = $("#" + errorCtrl);
+    if (errorLabel != null && errorLabel.source() != null) {
+      errorLabel.class("error");
+      errorLabel.html("!只支持:" + rightExtension + "格式");
+    }
+    $.message("文件格式不正确，只支持以下格式:\n" + rightExtension);
+    return result;
+  },
+  // 如果editor为null则表示非编辑器控件
+  uploadDelegate: function (key, editor, srcElement) {
+    // 如果显示状态并且状态控件已经显示则说明已经有文件正在上传中...
+    if (this.isShowProgress !== false && $("divStatus")) {
+      $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
+      return false;
+    }
+    this.uploadFrameId = (editor ? editor.obj : "null") + "." + key;
+    var uploadFrame = $(this.uploadFrameId);
+    var fileInfo = this.getUploadFileInfo(uploadFrame).value;
+    var fileInfoArray = fileInfo.split(".");
+    // 设置当前文件的序列号
+    this.setFileSerialNumber(fileInfoArray[2]);
+    // 如果要显示状态
+    if ($.file.isShowProgress !== false) {
+      // 如果状态控件不存在则创建
+      if (!$("divStatus")) {
+        var sparrowUploadFrame = $(uploadFrame);
+        var divStatus = $("+div");
+        divStatus.s.id = "divStatus";
+        divStatus.s.style.cssText =
+          "width:260px;height:100px;position:absolute;color:#ffffff;background:#000000;font-size:10pt;border:#ccc 1px solid;text-align:left;";
+        divStatus.html("服务器正在加载文件信息...");
+        document.body.appendChild(divStatus.s);
+        divStatus.s.style.top = sparrowUploadFrame.getAbsoluteTop() - 10 + "px";
+        divStatus.s.style.left = sparrowUploadFrame.getAbsoluteLeft() + "px";
+        divStatus.opacity(90);
+      }
+      // 设置状态跟踪
+      if (typeof editor === "undefined" || editor === null) {
+        // 非编辑器控件
+        this.wit = window.setInterval(function () {
+          $.file.getStatus();
+        }, 1000);
+      } else {
+        this.wit = window.setInterval(function () {
+          $.file.getStatus();
+        }, 1000);
+      }
+    }
+    // 提交
+    uploadFrame.contentWindow.document.forms[0].submit();
+  },
+  //只负责显示进度
+  progressCallback: function (uploadProgress) {
+    if (uploadProgress == null) {
+      return;
+    }
+    if (uploadProgress.status === "loading") {
+      return;
+    }
+
+    if (!this.callbackValidate(uploadProgress)) {
+      return;
+    }
+    // 正常显示状态
+    var statusString = [];
+    var status =
+      Math.ceil(
+        (parseFloat(uploadProgress.readLength) /
+          parseFloat(uploadProgress.contentLength)) *
+          1000000
+      ) /
+        10000 +
+      "%";
+
+    statusString.push(
+      "正在上传文件<br/><span class='highlight'>《" +
+        $.file.getFileName($.file.clientFileName) +
+        "》</span><br/>"
+    );
+    statusString.push(
+      "文件大小:" + uploadProgress.humanReadableContentLength + "<br/>"
+    );
+    statusString.push(
+      "上传大小:" + uploadProgress.humanReadableReadLength + "<br/>"
+    );
+    statusString.push("上传进度:" + status);
+    $("#divStatus", false).html(statusString.toString());
+    if (status === "100%") {
+      $.file.clearStatus();
+    }
+  },
+  getStatus: function () {
+    // 根据当前文件的序列号,实时获取当前文件的上传状态
+    $(
+      "jsonp",
+      $.url.upload +
+        "/file-upload?file-serial-number=" +
+        this.getFileSerialNumber() +
+        "&t=" +
+        Math.random() +
+        "&callback=progressCallback",
+      "uploadProgress"
+    );
+  },
+  /**
+   * @param key path-key
+   * @param pathKeySuffixPair {path-key:suffix}
+   */
+  initImageUploadEvent: function (key, pathKeySuffixPair) {
+    if (!$.url.upload) {
+      console.error(
+        "please config $.url.upload the default config is $.url.root [" +
+          $.url.root +
+          "]"
+      );
+      $.url.upload = $.url.root;
+    }
+    var fileFrame = $("null." + key);
+    if (fileFrame == null) {
+      return;
+    }
+    document.domain = $.browser.cookie.root_domain;
+    if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
+    fileFrame.src =
+      $.url.upload + "/file-upload?path-key=" + key + "&t=" + Math.random();
+    $.file.validateUploadFile = function (f, key, editor) {
+      var suffix = pathKeySuffixPair;
+      if (typeof pathKeySuffixPair === "object") {
+        suffix = pathKeySuffixPair[key];
+      }
+      if (
+        !$.file.checkFileType(
+          $.file.getFileName(f.value),
+          ["jpg", "jpeg", "gif", "png"],
+          "error" + suffix
+        )
+      ) {
+        return;
+      }
+      $.file.uploadCallBack = function (uploadingProgress) {
+        $.file.clearStatus();
+        if (!uploadingProgress.fileUrl) {
+          return;
+        }
+        var divContainer = $("#div" + suffix);
+        if (divContainer != null) {
+          divContainer.html(
+            "<a href='" +
+              uploadingProgress.fileUrl +
+              "' target='_blank'><img src='" +
+              uploadingProgress.fileUrl +
+              "'/></a>"
+          );
+        }
+        var imgPreview = $("img" + suffix);
+        if (imgPreview != null) {
+          imgPreview.src = uploadingProgress.fileUrl;
+        }
+        var hdnWebUrl = $("#hdn" + suffix);
+        if (hdnWebUrl != null) {
+          hdnWebUrl.value(uploadingProgress.fileUrl);
+        }
+        if ($.file.imagePreviewCallback) {
+          $.file.imagePreviewCallback(uploadingProgress.fileUrl);
+        }
+        var errorPrompt = $("#error" + suffix);
+        if (errorPrompt != null && errorPrompt.s != null) {
+          errorPrompt.class("prompt");
+          errorPrompt.html("");
+        }
+      };
+      $.file.uploadDelegate(key, editor);
+    };
+  },
 };
+
 Sparrow.event = function (e) {
   if (!(this instanceof Sparrow.event)) {
     return new Sparrow.event(e);
@@ -4100,69 +4228,93 @@ Sparrow.menu.prototype.init = function () {
     }
 };
 
-Sparrow.ImageCopper = function (masterId, el, option, complete) {
-  this.masterId = masterId;
-  this.preview = el;
+/**
+ * 图片裁剪机
+ * @param preview 预览图片
+ * @param config 裁剪配置
+ * @param complete 结束事件
+ * @constructor
+ */
+Sparrow.ImageCropper = function (preview, config, complete) {
+  this.preview = typeof preview === "string" ? $(preview) : preview;
+  //初始化剪切器尺寸
+  this.size = {
+    width: this.preview.offsetWidth,
+    height: this.preview.offsetHeight,
+  };
+
+  this.config = {
+    width: 150,
+    height: 150,
+    left: 30,
+    top: 30,
+    locked: false,
+    lockRate: false,
+    rate: 0,
+  };
+  //覆盖默认配置
+  if (config) {
+    for (var c in config) {
+      this.config[c] = config[c];
+    }
+  }
+
+  //选中尺寸
+  this.selectSize = {
+    width: this.config.width,
+    height: this.config.height,
+  };
+  //初始化一些参数
+  this.offset = {
+    x: 0,
+    y: 0,
+  };
+
   this.draging = this.moving = false;
-  this.init(option);
   if (complete && typeof complete == "function") {
     this.onComplete = complete;
+  } else {
+    var that = this;
+    this.onComplete = function (x, y, w, h) {
+      that.result = {
+        x: x,
+        y: y,
+        w: w,
+        h: h,
+      };
+    };
   }
 };
 
-Sparrow.ImageCopper.prototype = {
-  init: function (option) {
-    //初始化一些参数
-    this.offset = {
-      x: 0,
-      y: 0,
-    };
-    var previewPosition = this.getPosition(this.preview);
+Sparrow.ImageCropper.prototype = {
+  /**
+   * 初始化方法
+   */
+  init: function () {
+    //动态计算剪切器初始位置
+    var position = this.getPosition(this.preview);
     this.position = {
-      x: previewPosition.left,
-      y: previewPosition.top,
+      x: position.left,
+      y: position.top,
     };
-    this.size = {
-      width: this.preview.offsetWidth,
-      height: this.preview.offsetHeight,
-    };
-    this.selectSize = {
-      width: 0,
-      height: 0,
-    };
+
     this.dragElement = null;
     this.dragIndex = 0;
-    var opt = (this.option = {
-      width: 150,
-      height: 150,
-      left: 30,
-      top: 60,
-      locked: false,
-      lockRate: false,
-      rate: 0,
-    });
-    if (option) {
-      this.selectSize.width = this.option.width;
-      this.selectSize.height = this.option.height;
-      for (var c in option) {
-        this.option[c] = option[c];
-      }
+
+    if (!this.config.rate && this.config.lockRate) {
+      this.config.rate = this.config.height / this.config.width;
     }
-    if (!this.option.rate && this.option.lockRate) {
-      this.option.rate = this.option.height / this.option.width;
-    }
-    this.option.left += this.position.x;
-    this.option.top += this.position.y;
+    this.config.left += this.position.x;
+    this.config.top += this.position.y;
 
     //创建遮罩层
     var master = (this.master = document.createElement("div"));
     master.style.color = "#ca151d";
-    master.id = this.masterId;
     master.style.position = "absolute";
     master.style.width = this.size.width + "px";
     master.style.height = this.size.height + "px";
-    master.style.left = previewPosition.left + "px";
-    master.style.top = previewPosition.top + "px";
+    master.style.left = this.position.left + "px";
+    master.style.top = this.position.top + "px";
     master.style.backgroundColor = "#FFFFFF";
     master.style.filter = "alpha(opacity=50)";
     master.style.opacity = "0.5";
@@ -4171,19 +4323,18 @@ Sparrow.ImageCopper.prototype = {
     //创建拖动显示层.
     var content = (this.content = document.createElement("div"));
     content.style.color = "blue";
-    content.id = this.masterId + "Drag";
     content.style.position = "absolute";
-    content.style.width = opt.width + "px";
-    content.style.height = opt.height + "px";
-    content.style.top = opt.top + "px";
-    content.style.left = opt.left + "px";
+    content.style.width = this.config.width + "px";
+    content.style.height = this.config.height + "px";
+    content.style.top = this.config.top + "px";
+    content.style.left = this.config.left + "px";
     content.style.background = "url(" + this.preview.src + ")";
     content.style.backgroundRepeat = "no-repeat";
     content.style.backgroundPosition =
-      -(this.option.left - this.position.x) +
+      -(this.config.left - this.position.x) +
       "px" +
       " " +
-      (-(this.option.top - this.position.y) + "px");
+      (-(this.config.top - this.position.y) + "px");
     //为了防止与父窗口的遮罩层冲突
     content.style.filter = "alpha(opacity=100)";
     content.style.opacity = "1";
@@ -4272,8 +4423,8 @@ Sparrow.ImageCopper.prototype = {
     var d = (this.dragDiv = document.createElement("div"));
     d.style.left = "7px";
     d.style.top = "7px";
-    d.style.height = this.option.height - 14 + "px";
-    d.style.width = this.option.width - 14 + "px";
+    d.style.height = this.config.height - 14 + "px";
+    d.style.width = this.config.width - 14 + "px";
     d.style.position = "absolute";
     d.style.cursor = "move";
     content.appendChild(d);
@@ -4282,9 +4433,7 @@ Sparrow.ImageCopper.prototype = {
     content.onmouseup = $.bind(this, "moveStop");
     content.onmouseout = $.bind(this, "moveStop");
   },
-  moveStart: function (
-    e //拖动位置开始.
-  ) {
+  moveStart: function (e) {
     console.info("拖动位置开始 moving" + this.moving);
     this.moving = true;
     var offset = this.getPosition(this.content);
@@ -4315,13 +4464,13 @@ Sparrow.ImageCopper.prototype = {
       y = this.position.y,
       h = this.size.height,
       w = this.size.width;
-    newX = newX > w + x - this.option.width ? w + x - this.option.width : newX;
+    newX = newX > w + x - this.config.width ? w + x - this.config.width : newX;
     newY =
-      newY > h + y - this.option.height ? h + y - this.option.height : newY;
+      newY > h + y - this.config.height ? h + y - this.config.height : newY;
     newX = newX < x ? x : newX;
     newY = newY < y ? y : newY;
-    this.option.left = newX;
-    this.option.top = newY;
+    this.config.left = newX;
+    this.config.top = newY;
     this.onResize();
   },
   moveStop: function () //拖动位置结束.
@@ -4340,8 +4489,8 @@ Sparrow.ImageCopper.prototype = {
     param,
     e //拖动尺寸开始,初始化一些数据.
   ) {
-    console.info("拖动尺寸开始,初始化一些数据." + this.option.locked);
-    if (this.option.locked) {
+    console.info("拖动尺寸开始,初始化一些数据." + this.config.locked);
+    if (this.config.locked) {
       return;
     }
     this.draging = true;
@@ -4376,28 +4525,28 @@ Sparrow.ImageCopper.prototype = {
   {
     console.info(
       "设置拖动时产生的尺寸和位置到dom元素上." +
-        this.option.left +
+        this.config.left +
         "|" +
-        this.option.top
+        this.config.top
     );
-    this.content.style.left = this.option.left + "px";
-    this.content.style.top = this.option.top + "px";
-    this.content.style.width = this.option.width + "px";
-    this.content.style.height = this.option.height + "px";
-    this.dragDiv.style.width = this.option.width - 14 + "px";
-    this.dragDiv.style.height = this.option.height - 14 + "px";
+    this.content.style.left = this.config.left + "px";
+    this.content.style.top = this.config.top + "px";
+    this.content.style.width = this.config.width + "px";
+    this.content.style.height = this.config.height + "px";
+    this.dragDiv.style.width = this.config.width - 14 + "px";
+    this.dragDiv.style.height = this.config.height - 14 + "px";
     this.content.style.backgroundPosition =
-      -(this.option.left - this.position.x) +
+      -(this.config.left - this.position.x) +
       "px" +
       " " +
-      (-(this.option.top - this.position.y) + "px");
+      (-(this.config.top - this.position.y) + "px");
   },
   dragMoving: function (
     e //拖动改变显示层尺寸.
   ) {
     //console.info("拖动改变显示层尺寸this.draging"+this.draging);
-    //console.info("拖动改变显示层尺寸this.option.Locked"+this.option.Locked);
-    if (!this.draging || this.option.locked) {
+    //console.info("拖动改变显示层尺寸this.config.Locked"+this.config.Locked);
+    if (!this.draging || this.config.locked) {
       return;
     }
 
@@ -4410,23 +4559,23 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = original.left - newPoint.left + this.offset.x;
         var stepY = original.top - newPoint.top + this.offset.y;
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
         }
         if (
-          this.option.left - stepX < this.position.x ||
-          this.option.top - stepY < this.position.y ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.left - stepX < this.position.x ||
+          this.config.top - stepY < this.position.y ||
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
 
-        this.option.left -= stepX;
-        this.option.top -= stepY;
-        this.option.width += stepX;
-        this.option.height += stepY;
+        this.config.left -= stepX;
+        this.config.top -= stepY;
+        this.config.width += stepX;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -4439,30 +4588,30 @@ Sparrow.ImageCopper.prototype = {
           top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepY = original.top - newPoint.top + this.offset.y;
-        if (this.option.top - stepY < this.position.y) {
+        if (this.config.top - stepY < this.position.y) {
           console.info("2 return ");
           return;
         }
         console.info("stepY" + stepY);
-        if (this.option.lockRate) {
-          var stepX = this.option.height / this.option.rate - this.option.width;
+        if (this.config.lockRate) {
+          var stepX = this.config.height / this.config.rate - this.config.width;
           if (
-            this.option.left - stepX / 2 < this.position.x ||
-            this.option.left + stepX / 2 + this.option.width >
+            this.config.left - stepX / 2 < this.position.x ||
+            this.config.left + stepX / 2 + this.config.width >
               this.position.x + this.size.width ||
-            this.option.width + stepX < this.selectSize.width
+            this.config.width + stepX < this.selectSize.width
           ) {
             console.info("2 return lockRate");
             return;
           }
-          this.option.width += stepX;
-          this.option.left -= stepX / 2;
+          this.config.width += stepX;
+          this.config.left -= stepX / 2;
         }
-        if (this.option.height + stepY < this.selectSize.height) {
+        if (this.config.height + stepY < this.selectSize.height) {
           return;
         }
-        this.option.top -= stepY;
-        this.option.height += stepY;
+        this.config.top -= stepY;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -4474,24 +4623,24 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepY = original.top - newPoint.top + this.offset.y;
         var stepX = newPoint.left - original.left - this.offset.x;
-        if (this.option.top - stepY < this.position.y) {
+        if (this.config.top - stepY < this.position.y) {
           return;
         }
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepX =
-            (this.option.height + stepY) / this.option.rate - this.option.width;
+            (this.config.height + stepY) / this.config.rate - this.config.width;
         }
         if (
-          this.option.left + stepX + this.option.width >
+          this.config.left + stepX + this.config.width >
             this.position.x + this.size.width ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
-        this.option.width += stepX;
-        this.option.top -= stepY;
-        this.option.height += stepY;
+        this.config.width += stepX;
+        this.config.top -= stepY;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -4502,27 +4651,27 @@ Sparrow.ImageCopper.prototype = {
           top: e ? e.pageY : event.clientY + document.body.scrollTop,
         };
         var stepX = original.left - newPoint.left + this.offset.x;
-        if (this.option.left - stepX < this.position.x) {
+        if (this.config.left - stepX < this.position.x) {
           return;
         }
-        if (this.option.lockRate) {
-          var stepY = this.option.width * this.option.rate - this.option.height;
+        if (this.config.lockRate) {
+          var stepY = this.config.width * this.config.rate - this.config.height;
           if (
-            this.option.top - stepY / 2 < this.position.y ||
-            this.option.height + this.option.top - stepY / 2 >
+            this.config.top - stepY / 2 < this.position.y ||
+            this.config.height + this.config.top - stepY / 2 >
               this.size.height + this.position.y ||
-            this.option.height + stepY < this.selectSize.height
+            this.config.height + stepY < this.selectSize.height
           ) {
             return;
           }
-          this.option.height += stepY;
-          this.option.top -= stepY / 2;
+          this.config.height += stepY;
+          this.config.top -= stepY / 2;
         }
-        if (this.option.width + stepX < this.selectSize.width) {
+        if (this.config.width + stepX < this.selectSize.width) {
           return;
         }
-        this.option.left -= stepX;
-        this.option.width += stepX;
+        this.config.left -= stepX;
+        this.config.width += stepX;
         this.onResize();
         break;
       }
@@ -4534,29 +4683,29 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = newPoint.left - original.left - this.offset.x;
         if (
-          this.option.left + this.option.width + stepX >
+          this.config.left + this.config.width + stepX >
           this.position.x + this.size.width
         ) {
           return;
         }
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           var stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
           if (
-            this.option.top - stepY / 2 < this.position.y ||
-            this.option.height + this.option.top + stepY / 2 >
+            this.config.top - stepY / 2 < this.position.y ||
+            this.config.height + this.config.top + stepY / 2 >
               this.position.y + this.size.height ||
-            this.option.height + stepY < this.selectSize.height
+            this.config.height + stepY < this.selectSize.height
           ) {
             return;
           }
-          this.option.height += stepY;
-          this.option.top -= stepY / 2;
+          this.config.height += stepY;
+          this.config.top -= stepY / 2;
         }
-        if (this.option.width + stepX < this.selectSize.width) {
+        if (this.config.width + stepX < this.selectSize.width) {
           return;
         }
-        this.option.width += stepX;
+        this.config.width += stepX;
         this.onResize();
         break;
       }
@@ -4568,22 +4717,22 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = original.left - newPoint.left + this.offset.x;
         var stepY = newPoint.top - original.top - this.offset.y;
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
         }
         if (
-          this.option.left - stepX < this.position.x ||
-          this.option.top + stepY + this.option.height >
+          this.config.left - stepX < this.position.x ||
+          this.config.top + stepY + this.config.height >
             this.position.y + this.size.height ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
-        this.option.left -= stepX;
-        this.option.width += stepX;
-        this.option.height += stepY;
+        this.config.left -= stepX;
+        this.config.width += stepX;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -4595,29 +4744,29 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepY = newPoint.top - original.top - this.offset.y;
         if (
-          this.option.top + stepY + this.option.height >
+          this.config.top + stepY + this.config.height >
           this.position.y + this.size.height
         ) {
           return;
         }
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           var stepX =
-            (this.option.height + stepY) / this.option.rate - this.option.width;
+            (this.config.height + stepY) / this.config.rate - this.config.width;
           if (
-            this.option.left - stepX / 2 < this.position.x ||
-            this.option.left + stepX + this.option.width >
+            this.config.left - stepX / 2 < this.position.x ||
+            this.config.left + stepX + this.config.width >
               this.position.x + this.size.width ||
-            this.option.width + stepX < this.selectSize.width
+            this.config.width + stepX < this.selectSize.width
           ) {
             return;
           }
-          this.option.width += stepX;
-          this.option.left -= stepX / 2;
+          this.config.width += stepX;
+          this.config.left -= stepX / 2;
         }
-        if (this.option.height + stepY < this.selectSize.height) {
+        if (this.config.height + stepY < this.selectSize.height) {
           return;
         }
-        this.option.height += stepY;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -4629,22 +4778,22 @@ Sparrow.ImageCopper.prototype = {
         };
         var stepX = newPoint.left - original.left - this.offset.x;
         var stepY = newPoint.top - original.top - this.offset.y;
-        if (this.option.lockRate) {
+        if (this.config.lockRate) {
           stepY =
-            (this.option.width + stepX) * this.option.rate - this.option.height;
+            (this.config.width + stepX) * this.config.rate - this.config.height;
         }
         if (
-          this.option.left + stepX + this.option.width >
+          this.config.left + stepX + this.config.width >
             this.position.x + this.size.width ||
-          this.option.top + stepY + this.option.height >
+          this.config.top + stepY + this.config.height >
             this.position.y + this.size.height ||
-          this.option.width + stepX < this.selectSize.width ||
-          this.option.height + stepY < this.selectSize.height
+          this.config.width + stepX < this.selectSize.width ||
+          this.config.height + stepY < this.selectSize.height
         ) {
           return;
         }
-        this.option.width += stepX;
-        this.option.height += stepY;
+        this.config.width += stepX;
+        this.config.height += stepY;
         this.onResize();
         break;
       }
@@ -4669,13 +4818,17 @@ Sparrow.ImageCopper.prototype = {
     this.content.parentNode.removeChild(this.content);
     this.dragDiv.parentNode.removeChild(this.dragDiv);
   },
+  resetImage: function (url) {
+    this.preview.src = url;
+    this.content.style.background = "url(" + url + ")";
+  },
   complete: function () {
     //触发拖动完成的事件,传出当前的状态数据.
     this.onComplete(
-      this.option.left - this.position.x,
-      this.option.top - this.position.y,
-      this.option.width,
-      this.option.height
+      this.config.left - this.position.x,
+      this.config.top - this.position.y,
+      this.config.width,
+      this.config.height
     );
   },
   onComplete: function (Left, Top, width, height) {
