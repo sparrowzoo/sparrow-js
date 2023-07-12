@@ -11,8 +11,8 @@
         </div>
       </div>
       <div v-if="item.state === 0" class="operate">
-        <button>拒绝</button>
-        <button class="chat">通过</button>
+        <button @click="reject(item)">拒绝</button>
+        <button class="chat" @click="pass(item)">通过</button>
       </div>
       <div v-else-if="item.state === 1" class="operate-res">已通过</div>
       <div v-else class="operate-res">已拒绝</div>
@@ -44,8 +44,8 @@ export default {
             return {
               id: item.id,
               userId: item.vo.userId,
-              status: item.status,
-              userName: item.vo.userName,
+              state: item.status,
+              name: item.vo.userName,
               avatar: item.vo.avatar,
               addTime: item.vo.addTime,
               flagUrl: item.vo.flagUrl,
@@ -78,6 +78,7 @@ export default {
         (res) => {
           this.$message("操作成功");
           that.refresh();
+          ChatApi.getUserById(user.id, that);
           console.log(res);
         },
         (err) => {

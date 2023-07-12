@@ -77,8 +77,7 @@ var paths = {
       "source/scripts/constant.js",
       "source/scripts/indexedDB.js",
       "source/scripts/ajax.js",
-      "source/scripts/sparrow-ajax.js",
-
+      "source/scripts/HttpClient.js",
       "source/scripts/validator.js",
       "source/scripts/pager.js",
       "source/scripts/sparrow-core.js",
@@ -226,6 +225,10 @@ function scripts_dev() {
     .pipe(gulp.dest(paths.scripts_dev.dest));
 }
 
+/**
+ * es 语法 必要
+ * @returns {*}
+ */
 function scripts_es() {
   return gulp
     .src(paths.scripts_es.src, { base: "source/script" })
@@ -259,7 +262,7 @@ exports.watch = plugins.watch;
 var build_dev = gulp.series(
   clean,
   scripts_dev,
-  // scripts_es,
+  scripts_es,
   styles_dev,
   dependency
 );

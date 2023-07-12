@@ -11,8 +11,6 @@ function resolve(dir) {
 const name = defaultSettings.title || "sparrow pc"; // page title
 const port = process.env.port || 9095;
 
-console.log("process.env.CONSUMER_BASE_URL", process.env.CONSUMER_BASE_URL);
-console.log("process.env.SPARROW_BASE_URL", process.env.SPARROW_BASE_URL);
 const { defineConfig } = require("@vue/cli-service");
 const CompressionPlugin = require("compression-webpack-plugin");
 module.exports = defineConfig({
@@ -169,3 +167,7 @@ module.exports = defineConfig({
 //?输出configureWebpack
 console.log(module.exports.configureWebpack.resolve.alias);
 console.log("publicPath:" + process.env.publicPath);
+console.log(
+  "process.env.SPARROW_BASE_URL",
+  process.env.VUE_APP_SPARROW_BASE_URL
+);

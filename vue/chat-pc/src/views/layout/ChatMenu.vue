@@ -26,7 +26,6 @@ export default {
       menuList: [
         { id: 1, title: "我的好友", pathName: "contact" },
         { id: 2, title: "聊天消息", pathName: "session" },
-        { id: 3, title: "系统通知", pathName: "notice" },
       ],
     };
   },
@@ -38,12 +37,20 @@ export default {
     if (index !== -1) {
       this.$store.commit("activeMenu", index);
     }
-    if (!this.$webSocket.platform) {
+
+    if (!this.$isInner) {
       this.menuList.push({
-        id: 4,
-        title: "联系客服",
-        pathName: "platform-service",
+        id: 3,
+        title: "系统通知",
+        pathName: "notice",
       });
+      if (!this.$webSocket.platform) {
+        this.menuList.push({
+          id: 4,
+          title: "联系客服",
+          pathName: "platform-service",
+        });
+      }
     }
   },
   methods: {

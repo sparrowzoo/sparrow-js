@@ -25,9 +25,9 @@ export default {
   data() {
     return {
       login: {
-        phone: "",
-        password: "",
-        code: "",
+        phone: "13777777777",
+        password: "111111",
+        code: "8888",
       },
     };
   },
