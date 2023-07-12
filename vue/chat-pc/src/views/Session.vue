@@ -26,7 +26,7 @@
               :src="item.flag"
               alt="国籍"
               class="nation"
-            />{{ item.unReadCount }}
+            />
             <span v-if="item.unReadCount > 0" class="unread">{{
               item.unReadCount
             }}</span>
@@ -50,8 +50,6 @@
 
 <script>
 import ChatPart from "@/components/ChatPart.vue";
-import { ChatApi } from "../../../api/Chat";
-import { Initialization } from "../../../api/Initialization";
 
 export default {
   components: { ChatPart },
@@ -65,14 +63,14 @@ export default {
   computed: {},
   mounted() {
     this.$store.commit("activeMenu", 2);
-    Initialization.initActiveSession(this);
-    ChatApi.setRead(this.activeSession, this);
+    this.$initialization.initActiveSession(this);
+    this.$chatApi.setRead(this.activeSession, this);
   },
   methods: {
     // 切换聊天用户
     switchSession(session) {
       this.activeSession = session;
-      ChatApi.setRead(this.activeSession, this);
+      this.$chatApi.setRead(this.activeSession, this);
     },
   },
 };
