@@ -1401,15 +1401,14 @@ Sparrow.ajax = {
     $.ajax.req("POST", url, callback, data, null);
   },
 };
-
 var tokenConfig = {};
 tokenConfig[$.url.root] = {
   "login-token": function () {
-    return $.browser.getCookie("PERMISSION");
+    return Sparrow.browser.getCookie("PERMISSION");
   },
 };
-
 Sparrow.ajax.tokenConfig = tokenConfig;
+
 Sparrow.http = {
   post: function (url, data, callback, srcElement) {
     if (typeof data === "function") {
@@ -1422,18 +1421,18 @@ Sparrow.http = {
       function (responseText) {
         var result = responseText.json();
         if (result == null) {
-          $.message("json parse error " + responseText);
+          Sparrow.message("json parse error " + responseText);
           return;
         }
-        if (result.code != $.ajax.SUCCESS) {
-          $.message(result.message, $.ajax.srcElement);
+        if (result.code != Sparrow.ajax.SUCCESS) {
+          $.message(result.message, Sparrow.ajax.srcElement);
           return;
         }
         if (callback) {
-          callback(result.data);
+          callback(result);
           return;
         }
-        $.message(result.message, $.ajax.srcElement);
+        Sparrow.message(result.message, Sparrow.ajax.srcElement);
       },
       data,
       srcElement
@@ -1443,18 +1442,56 @@ Sparrow.http = {
     Sparrow.ajax.get(url, function (responseText) {
       var result = responseText.json();
       if (result == null) {
-        $.message("json parse error " + responseText);
+        Sparrow.message("json parse error " + responseText);
         return;
       }
-      if (result.code != $.ajax.SUCCESS) {
-        $.message(result.message, $.ajax.srcElement);
+      if (result.code != Sparrow.ajax.SUCCESS) {
+        Sparrow.message(result.message, Sparrow.ajax.srcElement);
         return;
       }
       if (callback) {
-        callback(result.data);
+        callback(result);
         return;
       }
-      $.message(result.message, $.ajax.srcElement);
+      Sparrow.message(result.message, Sparrow.ajax.srcElement);
+    });
+  },
+  syncPost: function (url, data, successCode) {
+    return new Promise((resolve, reject) => {
+      Sparrow.ajax.post(url, data, function (responseText) {
+        var result = responseText.json();
+        if (result == null) {
+          reject(responseText);
+          return;
+        }
+        if (!successCode) {
+          successCode = $.ajax.SUCCESS;
+        }
+        if (result.code != successCode) {
+          reject(result);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  },
+  syncGet: function (url, successCode) {
+    return new Promise((resolve, reject) => {
+      Sparrow.ajax.get(url, function (responseText) {
+        var result = responseText.json();
+        if (result == null) {
+          reject(responseText);
+          return;
+        }
+        if (!successCode) {
+          successCode = $.ajax.SUCCESS;
+        }
+        if (result.code != successCode) {
+          reject(result);
+          return;
+        }
+        resolve(result);
+      });
     });
   },
 };
@@ -8132,10 +8169,16 @@ Sparrow.user = {
     //url 优先
     var token = Sparrow.request("token");
     if (!Sparrow.isNullOrEmpty(token)) {
-      localStorage.setItem("token", token);
       return token;
     }
-    return localStorage.getItem("token");
+    token = localStorage.getItem("token");
+    if (!Sparrow.isNullOrEmpty(token)) {
+      return token;
+    }
+    token = Sparrow.browser.getCookie("PERMISSION");
+    if (token != null) {
+      return token;
+    }
   },
 };
 

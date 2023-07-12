@@ -1,12 +1,9 @@
-const ChatApi = await import(`${process.env.VUE_APP_CHAT_API}`).then(
-  (chatModule) => {
-    return chatModule.ChatApi;
-  }
-);
+const WEBSOCKET_BASE_URL = process.env.VUE_APP_SPARROW_WEBSOCKET;
+console.log("VUE_APP_SPARROW_WEBSOCKET" + WEBSOCKET_BASE_URL);
 
 var Initialization = {
-  initPlatformService: async function (Vue) {
-    var res = await ChatApi.platformServices();
+  initPlatformService: async function (Vue, vue) {
+    var res = await vue.$chatApi.platformServices();
     if (res.code === 200) {
       Vue.prototype.$platformServers = res.rows;
       res.rows.forEach((user) => {
@@ -16,8 +13,9 @@ var Initialization = {
     }
     console.log("res", res);
   },
+
   initContact: async function (Vue, vue) {
-    var res = await ChatApi.getContacts();
+    var res = await vue.$chatApi.getContacts();
     Vue.prototype.$contact = res.data;
     console.log("res", res);
     var userMap = {};
@@ -33,23 +31,15 @@ var Initialization = {
     console.log("userMap", userMap);
   },
   _oppositeUser: function (session, vue) {
-    return ImProtocol.getOppositeUser(
-      session.chatSession.sessionKey,
-      vue.$getUserId()
-    );
+    return vue.$protocol.getOppositeUser(vue, session);
   },
-  fetchUserIds: function (sessions) {
+  fetchUserIds: function (sessions, vue) {
     var userIds = [];
     sessions.forEach((session) => {
       //考虑接收方和发送方的 消息拉取逻辑
-      if (userIds.indexOf(session.chatSession.sender) < 0) {
-        userIds.push(session.chatSession.sender);
-      }
-      if (
-        session.chatSession.receiver > 0 &&
-        userIds.indexOf(session.chatSession.receiver) < 0
-      ) {
-        userIds.push(session.chatSession.receiver);
+      var oppositeUser = this._oppositeUser(session, vue);
+      if (userIds.indexOf(oppositeUser) < 0) {
+        userIds.push(oppositeUser);
       }
       session.messages.forEach((message) => {
         if (userIds.indexOf(message.sender) < 0) {
@@ -112,7 +102,7 @@ var Initialization = {
       return b.lastReadTime > a.lastReadTime ? 1 : -1;
     });
   },
-  initActiveSession: function (vue) {
+  initActiveSession: async function (vue) {
     var currentUsrId = vue.$getUserId();
     var key = vue.$route.query.key;
     var targetUserId = vue.$route.query.targetUserId;
@@ -122,7 +112,9 @@ var Initialization = {
       return;
     }
     var oppositeUser = null;
+    //临时会话
     if (targetUserId != null) {
+      await vue.$chatApi.getUserById(targetUserId, vue);
       oppositeUser = vue.$userMap[targetUserId];
       key = this.get121Session(oppositeUser, vue);
       vue.activeSession = vue.$sessionMap[key];
@@ -131,7 +123,7 @@ var Initialization = {
     //如果指定了session key 则取指定的session
     //说明是一对一单聊
     if (key.indexOf("_") > -1) {
-      var oppositeId = vue.$protocol.getOppositeUser(key, currentUsrId);
+      var oppositeId = vue.$protocol.getOppositeUser(vue);
       oppositeUser = vue.$userMap[oppositeId];
       this.get121Session(oppositeUser, vue);
     } else {
@@ -163,18 +155,20 @@ var Initialization = {
       isMe: protocol.sender === vue.$getUserId(),
       userName: sender.userName,
       avatar: sender.avatar,
-      time: new Date(protocol.clientSendTime).format("MM/dd hh:mm:ss"),
       isText: protocol.msgType === vue.$protocol.TEXT_MESSAGE,
       session:
         protocol.chatType === vue.$protocol.CHAT_TYPE_1_2_N
           ? protocol.sessionKey
-          : ImProtocol.generate121SessionKey(
+          : vue.$protocol.generate121SessionKey(
               protocol.sender,
               protocol.receiver
             ),
     };
-
     var session = vue.$sessionMap[message.session];
+    var lastMessageTime = session.lastMessageTime;
+    if (message.serverTime - lastMessageTime > 1000 * 5) {
+      message.time = new Date(protocol.clientSendTime).format("MM/dd hh:mm:ss");
+    }
     session.messages.push(message);
     this.assembleLastMessage(session, vue);
   }, //组装1对1会话 和具体业务相关
@@ -193,7 +187,7 @@ var Initialization = {
     session = {
       platform: !!friend.platform, //1对1的key
       key: sessionKey, //发送方ID
-      type: ImProtocol.CHAT_TYPE_1_2_1, //session 头象
+      type: vue.$protocol.CHAT_TYPE_1_2_1, //session 头象
       icon: friend.avatar,
       flag: friend.flagUrl, //session 名称 对方的昵称
       title: friend.userName,
@@ -215,7 +209,7 @@ var Initialization = {
     }
     session = {
       key: sessionKey, //发送方ID
-      type: ImProtocol.CHAT_TYPE_1_2_N,
+      type: vue.$protocol.CHAT_TYPE_1_2_N,
       //session 头象
       icon: qun.unitIcon,
       title: qun.qunName,
@@ -236,7 +230,7 @@ var Initialization = {
     var lastMessageContent = null;
 
     lastMessage = session.messages[session.messages.length - 1]; //最后收到的一条消息
-    lastMessageTime = lastMessage.clientSendTime; //最后一条消息的发送时间
+    lastMessageTime = lastMessage.serverTime; //最后一条消息的发送时间
     lastMessageContent =
       lastMessage.messageType === 1 ? "/图片/" : lastMessage.content;
     const unReadCount = session.messages.filter(
@@ -251,7 +245,7 @@ var Initialization = {
   },
   initSessions: async function (Vue, vue) {
     //获取当前用户的所有会话
-    var sessions = await ChatApi.getSession().then(
+    var sessions = await vue.$chatApi.getSession().then(
       (res) => {
         return res.data;
       },
@@ -260,24 +254,31 @@ var Initialization = {
       }
     );
     //根据会话获取用户Id 列表(包括消息的发送者)
-    var userIds = this.fetchUserIds(sessions);
+    var userIds = this.fetchUserIds(sessions, vue);
 
     //获取用户实例信息
-    const userMap = await ChatApi.getUserMapByIds(userIds, vue.$userMap);
+    const userMap = await vue.$chatApi.getUserMapByIds(userIds, vue.$userMap);
     //组装会话列表
     var sessionList = this.assembleSessions(sessions, userMap, vue);
     sessionList.forEach((session) => {
-      session.messages.forEach((message) => {
+      var lastTime = 0;
+      for (var i = 0; i < session.messages.length; i++) {
+        var message = session.messages[i];
         message.isMe = message.sender === vue.$getUserId();
         var user = userMap[message.sender];
         message.userName = user.userName;
         message.avatar = user.avatar;
-        message.time = new Date(message.serverTime).format("MM/dd hh:mm:ss");
+        if (message.serverTime - lastTime > 1000 * 5) {
+          message.time = new Date(message.serverTime).format("MM/dd hh:mm:ss");
+        } else {
+          message.time = "";
+        }
         message.isText = message.messageType === vue.$protocol.TEXT_MESSAGE;
         if (!message.isText) {
           message.imgUrl = message.content;
         }
-      });
+        lastTime = message.serverTime;
+      }
     });
     var sessionMap = {};
     sessionList.forEach((item) => {
@@ -291,7 +292,7 @@ var Initialization = {
   initWebSocket: async function (Vue, vue) {
     return await new Promise((resolve, reject) => {
       var webSocket = new vue.$sparrow.webSocket(
-        "ws://chat.sparrowzoo.com/websocket",
+        WEBSOCKET_BASE_URL + "/websocket",
         vue.$token
       );
       webSocket.reconnectionAlarmCallback = function () {
@@ -303,9 +304,9 @@ var Initialization = {
           console.log("消息已发送，对方不在线，稍后会收到消息");
           return;
         }
-        ImProtocol.parse(data, function (protocol) {
+        vue.$protocol.parse(data, function (protocol) {
           var session = vue.$sessionMap[protocol.sessionKey];
-          if (protocol.chatType === ImProtocol.CHAT_TYPE_CANCEL) {
+          if (protocol.chatType === vue.$protocol.CHAT_TYPE_CANCEL) {
             session.messages = session.messages.filter(
               (message) => message.clientSendTime !== protocol.clientSendTime
             );

@@ -163,3 +163,10 @@ Sparrow.ajax = {
     $.ajax.req("POST", url, callback, data, null);
   },
 };
+var tokenConfig = {};
+tokenConfig[$.url.root] = {
+  "login-token": function () {
+    return Sparrow.browser.getCookie("PERMISSION");
+  },
+};
+Sparrow.ajax.tokenConfig = tokenConfig;

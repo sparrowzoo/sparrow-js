@@ -167,9 +167,15 @@ Sparrow.user = {
     //url 优先
     var token = Sparrow.request("token");
     if (!Sparrow.isNullOrEmpty(token)) {
-      localStorage.setItem("token", token);
       return token;
     }
-    return localStorage.getItem("token");
+    token = localStorage.getItem("token");
+    if (!Sparrow.isNullOrEmpty(token)) {
+      return token;
+    }
+    token = Sparrow.browser.getCookie("PERMISSION");
+    if (token != null) {
+      return token;
+    }
   },
 };

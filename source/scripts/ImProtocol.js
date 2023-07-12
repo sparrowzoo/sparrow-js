@@ -222,18 +222,28 @@ ImProtocol.parse = async function (blob, callback) {
     sessionKey: sessionKey,
   });
 };
-ImProtocol.getOppositeUser = function (sessionKey, currentUserId) {
+ImProtocol.getOppositeUser = function (vue, session) {
+  // 如果有session 则以session 优先否则以queryString 优先
+  var sessionKey = session
+    ? session.chatSession.sessionKey
+    : vue.$route.query.key;
   if (Sparrow.isNullOrEmpty(sessionKey)) {
-    return -1;
+    //会在?token=###&targetUserId=n的url 初始化session 列表的对方id
+    //所以以session 优先
+    var oppositeUserId = vue.$route.query.targetUserId;
+    if (oppositeUserId != null) {
+      //有临时会话 直接返回
+      return parseInt(oppositeUserId, 10);
+    }
+    return null;
   }
-
   var sessionArray = sessionKey.split("_");
   if (sessionArray.length < 2) {
     return -1;
   }
   var userId1 = parseInt(sessionArray[0], 10);
   var userId2 = parseInt(sessionArray[1], 10);
-  if (userId1 === currentUserId) {
+  if (userId1 === vue.$getUserId()) {
     return userId2;
   }
   return userId1;

@@ -510,264 +510,330 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
 window.$ = window.Sparrow = Sparrow;
 
 Sparrow.browser = {
-    url: {
-        manage: "default.jsp",
-        logout_url: "/user/logout.json"
-    },
-    cookie: {
-        permission: "permission",
-        call_back_url: "call_back_url",
-        website_name: "website_name",
-        themes: "sparrow.themes",
-        // 配置cookie的域并非cookie的key
-        root_domain: $(function () {
-            return window.location.host.substr(window.location.host.indexOf('.') + 1);
-        }),
-        domain: window.location.host
-    },
-    ie: $(function () {
-        return navigator.userAgent.search(/MSIE/img) !== -1;
+  url: {
+    manage: "default.jsp",
+    logout_url: "/user/logout.json",
+  },
+  cookie: {
+    permission: "permission",
+    call_back_url: "call_back_url",
+    website_name: "website_name",
+    themes: "sparrow.themes",
+    // 配置cookie的域并非cookie的key
+    root_domain: $(function () {
+      return window.location.host.substr(window.location.host.indexOf(".") + 1);
     }),
-    opera: $(function () {
-        return navigator.userAgent.search(/Opera/img) !== -1;
-    }),
-    firefox: $(function () {
-        return navigator.userAgent.search(/Firefox/img) !== -1;
-    }),
-    google: $(function () {
-        return navigator.userAgent.search(/Chrome/img) !== -1;
-    }),
-    version: $(function () {
-        if (navigator.userAgent.search(/MSIE/img) !== -1) {
-            navigator.userAgent.match(/MSIE\b\s*([0-9\.0-9]+);/img);
-            return RegExp.$1;
-        } else if (navigator.userAgent.search(/Opera/img) !== -1) {
-            navigator.userAgent.match(/Version\/([0-9\.]+)/img);
-            return RegExp.$1;
-        } else if (navigator.userAgent.search(/Firefox/img) !== -1) {
-            navigator.userAgent.match(/Firefox\/([0-9\.]+)/img);
-            return RegExp.$1;
-        } else if (navigator.userAgent.search(/Chrome/img) !== -1) {
-            navigator.userAgent.search(/Chrome\/([0-9\.]+)/img);
-            return RegExp.$1;
-        }
-    }),
-    addFavorite: function (url, title) {
-        if (document.all) {
-            window.external.AddFavorite(url, title);
-        } else if (window.sidebar) {
-            window.sidebar.addPanel(title, url, "");
-        } else {
-            alert("对不起，您的浏览器不支持此操作!\n请您使用菜单栏或Ctrl+D收藏本站。");
-        }
-    },
-    setHome: function (anchorLabel, url) {
-        try {
-            anchorLabel.style.behavior = 'url(#default#homepage)';
-            anchorLabel.setHomePage(url);
-        } catch (e) {
-            if (window.netscape) {
-                try {
-                    netscape.security.PrivilegeManager
-                        .enablePrivilege("UniversalXPConnect");
-                    var prefs = Components.classes['@mozilla.org/preferences-service;1']
-                        .getService(Components.interfaces.nsIPrefBranch);
-                    prefs.setCharPref('browser.startup.homepage', url);
-                } catch (e) {
-                    alert('抱歉！您的浏览器不支持直接设为首页。请在浏览器地址栏输入“about:config”并回车然后将[signed.applets.codebase_principal_support]设置为“true”，点击“加入收藏”后忽略安全提示，即可设置成功。');
-                }
-            }
-        }
-    },
-    copy: function (text, msg) {
-        if (!msg) {
-            msg = "成功复制！可以通过ctrl+v进行粘贴操作！";
-        }
-        try {
-            if (window.clipboardData) {
-                window.clipboardData.setData("Text", text);
-                alert(msg);
-                return
-            }
-            try {
-                netscape.security.PrivilegeManager
-                    .enablePrivilege("UniversalXPConnect");
-            } catch (e) {
-                alert("您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!");
-                return false;
-            }
-            var clip = Components.classes['@mozilla.org/widget/clipboard;1']
-                .createInstance(Components.interfaces.nsIClipboard);
-            if (!clip)
-                return;
-            var trans = Components.classes['@mozilla.org/widget/transferable;1']
-                .createInstance(Components.interfaces.nsITransferable);
-            if (!trans) {
-                return;
-            }
-            trans.addDataFlavor('text/unicode');
-            var supportsString = Components.classes["@mozilla.org/supports-string;1"]
-                .createInstance(Components.interfaces.nsISupportsString);
-            supportsString.data = text;
-            trans.setTransferData("text/unicode", supportsString, text
-                .getByteLength());
-            var clipid = Components.interfaces.nsIClipboard;
-            if (!clip)
-                return false;
-            clip.setData(trans, null, clipid.kGlobalClipboard);
-            alert(msg);
-        } catch (e) {
-            alert("对不起！您的浏览器不支持该功能");
-        }
-    },
-
-    setCookie: function (cookieName, cookieValue, expireseconds, domain, path,
-                         secure) {
-        var expires = null;
-        if (expireseconds !== 0 && expireseconds) {
-            expires = new Date();
-            expires.setTime(expires.getTime() + expireseconds * 1000);
-        }
-        document.cookie = (encodeURIComponent(cookieName) + '='
-            + encodeURIComponent(cookieValue)
-            + (expires ? '; expires=' + expires.toGMTString() : '')
-            + '; path=' + (path ? path : '/') + '; domain='
-            + (domain ? domain : this.cookie.root_domain) + (secure ? '; secure' : ''));
-    },
-    getCookie: function (cookieName) {
-        var cookieValue = null;
-        var posName = document.cookie.indexOf(escape(cookieName) + '=');
-        if (posName !== -1) {
-            var posValue = posName + (escape(cookieName) + '=').length;
-            var endPos = document.cookie.indexOf(';', posValue);
-            if (endPos !== -1)
-                cookieValue = decodeURIComponent(document.cookie.substring(
-                    posValue, endPos));
-            else
-                cookieValue = decodeURIComponent(document.cookie
-                    .substring(posValue));
-        }
-        if (cookieValue == null || typeof (cookieValue) === "undefined"
-            || cookieValue === "undefined") {
-            return null;
-        }
-        return cookieValue;
-    },
-    // 根据按下控件的对象获取要执行的按钮事件
-    // auguments=window.dialogArguments子页获取参数
-    showModalDialog: function (width, height, url, callback, args) {
-        var result;
-        url = $.randomUrl(url);
-        if ($.browser.ie) {
-            result = window.showModalDialog(url, args, "dialogHeight:{0}px; dialogWidth:{1}px; status:no; help:no; scroll:auto".format(height, width));
-        } else {
-            result = window.open(url, args, "height={0}, width={1},toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(height, width));
-        }
-        if (result) {
-            callback(result);
-        }
-    },
-    /*{url:'',height:1px;width:1px,target:'_blank'}*/
-    window: function (config) {
-        var url = $.randomUrl(config.url);
-        if (!config.win) {
-            config.win = window;
-        }
-        var target = config.target ? config.target : "_blank";
-        var parameters = null;
-        if ($.isNullOrEmpty(config.width)) {
-            parameters = "height={0}px,width={1}px,toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(config.height, config.width);
-        }
-        config.win.open(url, target, parameters);
-    },
-    close: function () {
-        window.opener = null;
-        window.open('about:blank', '_self');
-        window.close();
-    },
-    getUrlWithoutParameter: function (url) {
-        var currentLocation = url ? url : window.location.href;
-        var locationIndex = currentLocation.indexOf('?');
-        if (locationIndex < 0) {
-            locationIndex = currentLocation.indexOf("#");
-        }
-        if (locationIndex > -1) {
-            currentLocation = currentLocation.substring(0, locationIndex);
-        }
-        return currentLocation;
-    },
-    getUserId: function () {
-        var permission = $.browser.getCookie(this.cookie.permission);
-        if (permission == null) {
-            return 0;
-        }
-        return permission.split('&')[0].substring("id=".length);
-    },
-    getUserName: function () {
-        var permission = $.browser.getCookie(this.cookie.permission);
-        if (permission == null) {
-            return null;
-        }
-        return permission.split('&')[1].substring("name=".length);
-    },
-    isLogin: function () {
-        var userId = $.browser.getUserId();
-        return !(userId == null || userId === 0 || userId === "0" || userId === "null"
-            || userId === "");
-    },
-    logout: function (domain, logoutUrl, defaultUrl) {
-        if ($.isNullOrEmpty(logoutUrl)) {
-            logoutUrl = this.url.logout_url;
-        }
-        if ($.isNullOrEmpty(defaultUrl)) {
-            defaultUrl = this.url.manage;
-        }
-        $.ajax.json($.url.root + logoutUrl, function (result) {
-            var permissionKey = result.value;
-            if ($.isNullOrEmpty(permissionKey)) {
-                permissionKey = $.browser.cookie.permission;
-            }
-            // 注销成功后回调
-            $.browser.setCookie(permissionKey, "0", -1, domain);
-            if (($.url.root + "/") === window.parent.location.href || window.parent.location.href.indexOf(defaultUrl) !== -1) {
-                window.parent.location.href = $.url.root;
-            } else {
-                window.location.href = window.location.href;
-            }
-        }, true);
-    },
-    /***************************************************************************
-     * 取窗口可视范围的高度
-     **************************************************************************/
-    getClientHeight: function () {
-        return (document.body.clientHeight && document.documentElement.clientHeight) ? Math
-                .min(document.body.clientHeight,
-                    document.documentElement.clientHeight)
-            : Math.max(document.body.clientHeight,
-                document.documentElement.clientHeight);
-    },
-    /***************************************************************************
-     * 取文档内容实际高度
-     **************************************************************************/
-    getScrollHeight: function () {
-        return Math.max(document.body.scrollHeight,
-            document.documentElement.scrollHeight);
-    },
-    linkClick: function (condition, message) {
-        if (typeof(condition) === "boolean") {
-            if (!condition) {
-                $.alert(message, "sad");
-                return false;
-            }
-            return true;
-        }
-        //非field.value==1 则为this对象
-        if (condition.href === "javascript:void(0);") {
-            $.alert(message, "sad");
-            return false;
-        }
-        return true;
+    domain: window.location.host,
+  },
+  ie: $(function () {
+    return navigator.userAgent.search(/MSIE/gim) !== -1;
+  }),
+  opera: $(function () {
+    return navigator.userAgent.search(/Opera/gim) !== -1;
+  }),
+  firefox: $(function () {
+    return navigator.userAgent.search(/Firefox/gim) !== -1;
+  }),
+  google: $(function () {
+    return navigator.userAgent.search(/Chrome/gim) !== -1;
+  }),
+  version: $(function () {
+    if (navigator.userAgent.search(/MSIE/gim) !== -1) {
+      navigator.userAgent.match(/MSIE\b\s*([0-9\.0-9]+);/gim);
+      return RegExp.$1;
     }
+    if (navigator.userAgent.search(/Opera/gim) !== -1) {
+      navigator.userAgent.match(/Version\/([0-9\.]+)/gim);
+      return RegExp.$1;
+    }
+    if (navigator.userAgent.search(/Firefox/gim) !== -1) {
+      navigator.userAgent.match(/Firefox\/([0-9\.]+)/gim);
+      return RegExp.$1;
+    }
+    if (navigator.userAgent.search(/Chrome/gim) !== -1) {
+      navigator.userAgent.search(/Chrome\/([0-9\.]+)/gim);
+      return RegExp.$1;
+    }
+  }),
+  addFavorite: function (url, title) {
+    if (document.all) {
+      window.external.AddFavorite(url, title);
+    } else if (window.sidebar) {
+      window.sidebar.addPanel(title, url, "");
+    } else {
+      alert(
+        "对不起，您的浏览器不支持此操作!\n请您使用菜单栏或Ctrl+D收藏本站。"
+      );
+    }
+  },
+  setHome: function (anchorLabel, url) {
+    try {
+      anchorLabel.style.behavior = "url(#default#homepage)";
+      anchorLabel.setHomePage(url);
+    } catch (e) {
+      if (window.netscape) {
+        try {
+          netscape.security.PrivilegeManager.enablePrivilege(
+            "UniversalXPConnect"
+          );
+          var prefs = Components.classes[
+            "@mozilla.org/preferences-service;1"
+          ].getService(Components.interfaces.nsIPrefBranch);
+          prefs.setCharPref("browser.startup.homepage", url);
+        } catch (e) {
+          alert(
+            "抱歉！您的浏览器不支持直接设为首页。请在浏览器地址栏输入“about:config”并回车然后将[signed.applets.codebase_principal_support]设置为“true”，点击“加入收藏”后忽略安全提示，即可设置成功。"
+          );
+        }
+      }
+    }
+  },
+  copy: function (text, msg) {
+    if (!msg) {
+      msg = "成功复制！可以通过ctrl+v进行粘贴操作！";
+    }
+    try {
+      if (window.clipboardData) {
+        window.clipboardData.setData("Text", text);
+        alert(msg);
+        return;
+      }
+      try {
+        netscape.security.PrivilegeManager.enablePrivilege(
+          "UniversalXPConnect"
+        );
+      } catch (e) {
+        alert(
+          "您的浏览器设置为不允许复制！\n如果需要此操作，请在浏览器地址栏输入'about:config'并回车\n然后将'signed.applets.codebase_principal_support'设置为'true',再重试复制操作!"
+        );
+        return false;
+      }
+      var clip = Components.classes[
+        "@mozilla.org/widget/clipboard;1"
+      ].createInstance(Components.interfaces.nsIClipboard);
+      if (!clip) return;
+      var trans = Components.classes[
+        "@mozilla.org/widget/transferable;1"
+      ].createInstance(Components.interfaces.nsITransferable);
+      if (!trans) {
+        return;
+      }
+      trans.addDataFlavor("text/unicode");
+      var supportsString = Components.classes[
+        "@mozilla.org/supports-string;1"
+      ].createInstance(Components.interfaces.nsISupportsString);
+      supportsString.data = text;
+      trans.setTransferData(
+        "text/unicode",
+        supportsString,
+        text.getByteLength()
+      );
+      var clipid = Components.interfaces.nsIClipboard;
+      if (!clip) return false;
+      clip.setData(trans, null, clipid.kGlobalClipboard);
+      alert(msg);
+    } catch (e) {
+      alert("对不起！您的浏览器不支持该功能");
+    }
+  },
+
+  setCookie: function (
+    cookieName,
+    cookieValue,
+    expireseconds,
+    domain,
+    path,
+    secure
+  ) {
+    var expires = null;
+    if (expireseconds !== 0 && expireseconds) {
+      expires = new Date();
+      expires.setTime(expires.getTime() + expireseconds * 1000);
+    }
+    document.cookie =
+      encodeURIComponent(cookieName) +
+      "=" +
+      encodeURIComponent(cookieValue) +
+      (expires ? "; expires=" + expires.toGMTString() : "") +
+      "; path=" +
+      (path ? path : "/") +
+      "; domain=" +
+      (domain ? domain : this.cookie.root_domain) +
+      (secure ? "; secure" : "");
+  },
+  getCookie: function (cookieName) {
+    var cookieValue = null;
+    var posName = document.cookie.indexOf(escape(cookieName) + "=");
+    if (posName !== -1) {
+      var posValue = posName + (escape(cookieName) + "=").length;
+      var endPos = document.cookie.indexOf(";", posValue);
+      if (endPos !== -1)
+        cookieValue = decodeURIComponent(
+          document.cookie.substring(posValue, endPos)
+        );
+      else
+        cookieValue = decodeURIComponent(document.cookie.substring(posValue));
+    }
+    if (
+      cookieValue == null ||
+      typeof cookieValue === "undefined" ||
+      cookieValue === "undefined"
+    ) {
+      return null;
+    }
+    return cookieValue;
+  },
+  // 根据按下控件的对象获取要执行的按钮事件
+  // auguments=window.dialogArguments子页获取参数
+  showModalDialog: function (width, height, url, callback, args) {
+    var result;
+    url = $.randomUrl(url);
+    if ($.browser.ie) {
+      result = window.showModalDialog(
+        url,
+        args,
+        "dialogHeight:{0}px; dialogWidth:{1}px; status:no; help:no; scroll:auto".format(
+          height,
+          width
+        )
+      );
+    } else {
+      result = window.open(
+        url,
+        args,
+        "height={0}, width={1},toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(
+          height,
+          width
+        )
+      );
+    }
+    if (result) {
+      callback(result);
+    }
+  },
+  /*{url:'',height:1px;width:1px,target:'_blank'}*/
+  window: function (config) {
+    var url = $.randomUrl(config.url);
+    if (!config.win) {
+      config.win = window;
+    }
+    var target = config.target ? config.target : "_blank";
+    var parameters = null;
+    if ($.isNullOrEmpty(config.width)) {
+      parameters =
+        "height={0}px,width={1}px,toolbar= no, menubar=no, scrollbars=auto, resizable=no, location=no, status=no,top=100,left=300".format(
+          config.height,
+          config.width
+        );
+    }
+    config.win.open(url, target, parameters);
+  },
+  close: function () {
+    window.opener = null;
+    window.open("about:blank", "_self");
+    window.close();
+  },
+  getUrlWithoutParameter: function (url) {
+    var currentLocation = url ? url : window.location.href;
+    var locationIndex = currentLocation.indexOf("?");
+    if (locationIndex < 0) {
+      locationIndex = currentLocation.indexOf("#");
+    }
+    if (locationIndex > -1) {
+      currentLocation = currentLocation.substring(0, locationIndex);
+    }
+    return currentLocation;
+  },
+  getUserId: function () {
+    var permission = $.browser.getCookie(this.cookie.permission);
+    if (permission == null) {
+      return 0;
+    }
+    return permission.split("&")[0].substring("id=".length);
+  },
+  getUserName: function () {
+    var permission = $.browser.getCookie(this.cookie.permission);
+    if (permission == null) {
+      return null;
+    }
+    return permission.split("&")[1].substring("name=".length);
+  },
+  isLogin: function () {
+    var userId = $.browser.getUserId();
+    return !(
+      userId == null ||
+      userId === 0 ||
+      userId === "0" ||
+      userId === "null" ||
+      userId === ""
+    );
+  },
+  logout: function (domain, logoutUrl, defaultUrl) {
+    if ($.isNullOrEmpty(logoutUrl)) {
+      logoutUrl = this.url.logout_url;
+    }
+    if ($.isNullOrEmpty(defaultUrl)) {
+      defaultUrl = this.url.manage;
+    }
+    $.ajax.json(
+      $.url.root + logoutUrl,
+      function (result) {
+        var permissionKey = result.value;
+        if ($.isNullOrEmpty(permissionKey)) {
+          permissionKey = $.browser.cookie.permission;
+        }
+        // 注销成功后回调
+        $.browser.setCookie(permissionKey, "0", -1, domain);
+        if (
+          $.url.root + "/" === window.parent.location.href ||
+          window.parent.location.href.indexOf(defaultUrl) !== -1
+        ) {
+          window.parent.location.href = $.url.root;
+        } else {
+          window.location.href = window.location.href;
+        }
+      },
+      true
+    );
+  },
+  /***************************************************************************
+   * 取窗口可视范围的高度
+   **************************************************************************/
+  getClientHeight: function () {
+    return document.body.clientHeight && document.documentElement.clientHeight
+      ? Math.min(
+          document.body.clientHeight,
+          document.documentElement.clientHeight
+        )
+      : Math.max(
+          document.body.clientHeight,
+          document.documentElement.clientHeight
+        );
+  },
+  /***************************************************************************
+   * 取文档内容实际高度
+   **************************************************************************/
+  getScrollHeight: function () {
+    return Math.max(
+      document.body.scrollHeight,
+      document.documentElement.scrollHeight
+    );
+  },
+  linkClick: function (condition, message) {
+    if (typeof condition === "boolean") {
+      if (!condition) {
+        $.alert(message, "sad");
+        return false;
+      }
+      return true;
+    }
+    //非field.value==1 则为this对象
+    if (condition.href === "javascript:void(0);") {
+      $.alert(message, "sad");
+      return false;
+    }
+    return true;
+  },
 };
 
 Sparrow.container = {};
@@ -781,68 +847,340 @@ Sparrow.remove=function (key) {
   delete this.container[key];
 };
 Sparrow.url = {
-    root: $(function () {
-        // var pathName = window.location.pathname === "/" ? ""
-        //     : ("/" + window.location.pathname.split('/')[1]);
-        // return window.location.protocol + "//" + window.location.host
-        //     + ("");
-    }),
-    _resource: function (path) {
-        var scripts = document.scripts;
-        var sparrowPath = ["/scripts/sparrow.js", "/scripts/sparrow-min.js", "/scripts-dev/sparrow.js"];
-        if (path) {
-            sparrowPath = [path];
+  root: $(function () {
+    var pathName =
+      window.location.pathname === "/"
+        ? ""
+        : "/" + window.location.pathname.split("/")[1];
+    return window.location.protocol + "//" + window.location.host + "";
+  }),
+  _resource: function (path) {
+    var scripts = document.scripts;
+    var sparrowPath = [
+      "/scripts/sparrow.js",
+      "/scripts/sparrow-min.js",
+      "/scripts-dev/sparrow.js",
+    ];
+    if (path) {
+      sparrowPath = [path];
+    }
+    if (scripts == null || scripts.length === 0) {
+      return null;
+    }
+    var r = null;
+    for (var i = 0; i < scripts.length; i++) {
+      var brk = false;
+      sparrowPath.forEach(function () {
+        for (var j = 0; j < sparrowPath.length; j++) {
+          var p = sparrowPath[j];
+          var startIndex = scripts[i].src.indexOf(p);
+          if (startIndex > -1) {
+            r = scripts[i].src.substring(0, startIndex);
+            brk = true;
+          }
         }
-        if (scripts == null || scripts.length === 0) {
-            return null;
-        }
-        var r = null;
-        for (var i=0;i<scripts.length;i++) {
-            var brk = false;
-            sparrowPath.forEach(function () {
-                for(var j=0;j<sparrowPath.length;j++) {
-                    var p= sparrowPath[j];
-                    var startIndex = scripts[i].src.indexOf(p);
-                    if (startIndex > -1) {
-                        r = scripts[i].src.substring(0, startIndex);
-                        brk = true;
-                    }
-                }
-            });
-            if (brk) {
-                break;
-            }
-        }
-        return r;
-    },
-    name: $.browser.cookie.domain.split('.')[0]
+      });
+      if (brk) {
+        break;
+      }
+    }
+    return r;
+  },
+  name: $.browser.cookie.domain.split(".")[0],
 };
 Sparrow.url.resource = $.url._resource();
 Sparrow.url.passport = $(function () {
-    return "http://passport." + $.browser.cookie.root_domain;
+  return "http://passport." + $.browser.cookie.root_domain;
 });
 Sparrow.website = {
-    name: $.browser.getCookie($.browser.cookie.website_name),
-    themes: $(function () {
-        var themes = $.browser.getCookie($.browser.cookie.themes);
-        if (themes == null) {
-            themes = "themes_default";
-        }
-        return themes;
-    })
+  name: $.browser.getCookie($.browser.cookie.website_name),
+  themes: $(function () {
+    var themes = $.browser.getCookie($.browser.cookie.themes);
+    if (themes == null) {
+      themes = "themes_default";
+    }
+    return themes;
+  }),
 };
 Sparrow.css = {
-    menu: {
-        frame: "background:#ffffff;position:absolute;z-index:1000;border:#ccc 1px solid;width:{0}px;height:auto;left:{1}px;top:{2}px;display:none",
-        ul: "width:{0}px;height:auto;overflow:hidden;list-style:none;margin:0px;padding:0px;text-align:left",
-        li: "width:{0}px;overflow:hidden;line-height:20px;margin:0px;border-bottom:#ccc 1px dotted;cursor:pointer;"
-    }
+  menu: {
+    frame:
+      "background:#ffffff;position:absolute;z-index:1000;border:#ccc 1px solid;width:{0}px;height:auto;left:{1}px;top:{2}px;display:none",
+    ul: "width:{0}px;height:auto;overflow:hidden;list-style:none;margin:0px;padding:0px;text-align:left",
+    li: "width:{0}px;overflow:hidden;line-height:20px;margin:0px;border-bottom:#ccc 1px dotted;cursor:pointer;",
+  },
 };
 Sparrow.SIDE = "SIDE";
 Sparrow.HORIZONTAL = "HORIZONTAL";
 Sparrow.VERTICAL = "VERTICAL";
 Sparrow.DEFAULT_AVATOR_URL = $.url.resource + "/images/user.png";
 Sparrow.DEFAULT_RESOURCE_ICO_URL = $.url.resource + "/images/menu.png";
+
+// Sparrow.indexedDB = {
+//     config: {
+//         name: 'Sparrow',
+//         version: "1.0",
+//         tableNames: [{"name":"t1","key":"id"}]
+//     }
+// };
+Sparrow.indexedDB = function (config) {
+    //当前浏览器是否支持indexedDB
+    this.support = window.indexedDB;
+    //数据库实例
+    this.instance = null;
+    //数据库名称
+    this.name = config.name;
+    //数据库相关配置
+    this.config = config;
+
+    this.userId=localStorage.getItem("userId");
+    //是否初始化成功
+    this.initSuccess = false;
+
+    //自定义数据库初始化方法
+    this.$initDB=null
+};
+Sparrow.indexedDB.prototype = {
+    init: async function () {
+        if (!this.support) {
+            return this.support;
+        }
+        this.request = window.indexedDB.open(this.name+this.userId, this.config.version);
+        return await new Promise((resolve, reject) => {
+            this.request.onsuccess = async (event) => {
+                //数据库实例
+                this.instance = event.target.result;
+                console.log('数据库连接成功');
+                var result = await this.flush();
+                console.log('数据库flush结果', result);
+                if (result) {
+                    this.initSuccess = true;
+                    console.log('数据库flush成功');
+                    if (this.$dbInit) {
+                       await this.$dbInit();
+                    }
+                    resolve(this.instance);
+                } else {
+                    reject('数据库连接失败');
+                }
+            };
+            this.request.onupgradeneeded = async (event) => {
+                console.log('首次创建数据库');
+                this.instance = event.target.result;
+                this._initTables();
+                if (this.$dbInit) {
+                    await this.$dbInit();
+                }
+                this.initSuccess = true;
+                resolve(this.instance);
+            };
+            this.request.onerror = (e) => {
+                console.log('数据库发生错误', e);
+                reject('连接indexedDB出错');
+            };
+        });
+    },
+    _createTable: function (tableName, key) {
+        this.instance.createObjectStore(tableName, {keyPath: key});
+    },
+    _initTables: function () {
+        this.config.tableNames.forEach((tableName) => {
+            this._createTable(tableName.name, tableName.key);
+        });
+    },
+    _getTableInstance: function (tableName) {
+        return this.instance
+            .transaction(tableName, 'readwrite')
+            .objectStore(tableName);
+    },
+    put: async function (tableName, item) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .put(item);
+            request.onsuccess = (event) => {
+                console.log("put success: TABLE-NAME" + tableName + " item " + item);
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    },
+    get: async function (tableName, key) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            console.log("GET tableName " + tableName + ", get key:" + key);
+            const request = this._getTableInstance(tableName)
+                .get(key);
+            request.onsuccess = (event) => {
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    },
+    delete: async function (tableName, key) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .delete(key);
+            request.onsuccess = () => {
+                console.log("delete success: TABLE-NAME" + tableName + " ,key " + key)
+                resolve("tableName " + tableName + " ,key " + key);
+            };
+            request.fail = (event) => {
+                reject(event);
+            };
+        });
+    },
+    clear: async function (tableName) {
+        if (!this.support) {
+            return this.support;
+        }
+        //await 必须在async函数中使用
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .clear();
+            request.onsuccess = (event) => {
+                console.log("clear success: TABLE-NAME", tableName)
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    },
+    flush: async function () {
+        if (!this.support) {
+            return this.support;
+        }
+        //await 多个 需要Promise 封装
+
+        for (var i = 0; i < this.config.tableNames.length; i++) {
+            var tableName = this.config.tableNames[i].name;
+            //这里只有一个await 不起作用
+            await this.clear(tableName).then(() => {
+                console.log("clear success: TABLE-NAME", tableName);
+            }).catch(e => {
+                console.log(e);
+            });
+        }
+        console.log("flush all table success");
+        return true;
+    },
+    getAll: async function (tableName) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .getAll();
+            request.onsuccess = (event) => {
+                console.log("getAll success: TABLE-NAME", tableName);
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    },
+    getAllKeys: async function (tableName) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .getAllKeys();
+            request.onsuccess = (event) => {
+                console.log("getAllKeys success: TABLE-NAME:", tableName + " ,keys:", event.target.result);
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    },
+    count: async function (tableName) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .count();
+            request.onsuccess = (event) => {
+                console.log("count success: TABLE-NAME", tableName);
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    },
+    openCursor: async function (tableName) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .openCursor();
+            request.onsuccess = (event) => {
+                console.log("openCursor success: TABLE-NAME.", tableName);
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    },
+    openKeyCursor: async function (tableName) {
+        if (!this.support) {
+            return this.support;
+        }
+        if (!this.initSuccess) {
+            await this.init();
+        }
+        return await new Promise((resolve, reject) => {
+            const request = this._getTableInstance(tableName)
+                .openKeyCursor();
+            request.onsuccess = (event) => {
+                console.log("openKeyCursor success:TABLE-NAME", tableName);
+                resolve(event.target.result);
+            };
+            request.fail = (event) => {
+                reject(event.target.result);
+            };
+        });
+    }
+};
 
 Sparrow.ajax = {
   tokenConfig: {},
@@ -999,36 +1337,6 @@ Sparrow.ajax = {
     } catch (e) {
       console.log(e);
     }
-  }, //内部业务使用
-  json: function (url, data, callback, srcElement, token) {
-    if (typeof data === "function") {
-      callback = data;
-      data = null;
-    }
-
-    $.ajax.req(
-      "POST",
-      url,
-      function (responseText) {
-        var result = responseText.json();
-        if (result == null) {
-          $.message("json parse error " + responseText);
-          return;
-        }
-        if (result.code === $.ajax.SUCCESS) {
-          if (callback) {
-            callback(result);
-          } else {
-            $.message(result.message, $.ajax.srcElement);
-          }
-        } else {
-          $.message(result.message, $.ajax.srcElement);
-        }
-      },
-      data,
-      srcElement,
-      token
-    );
   },
   get: function (url, callback) {
     callback = callback ? callback : $.ajax._callback;
@@ -1039,32 +1347,99 @@ Sparrow.ajax = {
     $.ajax.req("POST", url, callback, data, null);
   },
 };
+var tokenConfig = {};
+tokenConfig[$.url.root] = {
+  "login-token": function () {
+    return Sparrow.browser.getCookie("PERMISSION");
+  },
+};
+Sparrow.ajax.tokenConfig = tokenConfig;
 
 Sparrow.http = {
-    post: function (url, data,token) {
-        return new Promise((resolve, reject) => {
-            Sparrow.ajax.post(url, data, function (responseText) {
-                var result = responseText.json();
-                if (result == null) {
-                    reject(responseText);
-                    return;
-                }
-                resolve(result);
-            },token)
-        })
-    },
-    get: function (url,token) {
-        return new Promise((resolve, reject) => {
-            Sparrow.ajax.get(url, function (responseText) {
-                var result = responseText.json();
-                if (result == null) {
-                    reject(responseText);
-                    return;
-                }
-                resolve(result);
-            })
-        },token)
+  post: function (url, data, callback, srcElement) {
+    if (typeof data === "function") {
+      callback = data;
+      data = null;
     }
+    $.ajax.req(
+      "POST",
+      url,
+      function (responseText) {
+        var result = responseText.json();
+        if (result == null) {
+          Sparrow.message("json parse error " + responseText);
+          return;
+        }
+        if (result.code != Sparrow.ajax.SUCCESS) {
+          $.message(result.message, Sparrow.ajax.srcElement);
+          return;
+        }
+        if (callback) {
+          callback(result);
+          return;
+        }
+        Sparrow.message(result.message, Sparrow.ajax.srcElement);
+      },
+      data,
+      srcElement
+    );
+  },
+  get: function (url, callback) {
+    Sparrow.ajax.get(url, function (responseText) {
+      var result = responseText.json();
+      if (result == null) {
+        Sparrow.message("json parse error " + responseText);
+        return;
+      }
+      if (result.code != Sparrow.ajax.SUCCESS) {
+        Sparrow.message(result.message, Sparrow.ajax.srcElement);
+        return;
+      }
+      if (callback) {
+        callback(result);
+        return;
+      }
+      Sparrow.message(result.message, Sparrow.ajax.srcElement);
+    });
+  },
+  syncPost: function (url, data, successCode) {
+    return new Promise((resolve, reject) => {
+      Sparrow.ajax.post(url, data, function (responseText) {
+        var result = responseText.json();
+        if (result == null) {
+          reject(responseText);
+          return;
+        }
+        if (!successCode) {
+          successCode = $.ajax.SUCCESS;
+        }
+        if (result.code != successCode) {
+          reject(result);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  },
+  syncGet: function (url, successCode) {
+    return new Promise((resolve, reject) => {
+      Sparrow.ajax.get(url, function (responseText) {
+        var result = responseText.json();
+        if (result == null) {
+          reject(responseText);
+          return;
+        }
+        if (!successCode) {
+          successCode = $.ajax.SUCCESS;
+        }
+        if (result.code != successCode) {
+          reject(result);
+          return;
+        }
+        resolve(result);
+      });
+    });
+  },
 };
 
 /*------------------------------------validate 表单验证------------------------------------------------*/
@@ -2246,292 +2621,327 @@ Sparrow.table.prototype = {
 };
 //document.domain=$.browser.cookie.root_domain; 解决跨域
 Sparrow.file = {
-    // 是否显示上传进度
-    isShowProgress: true,
-    // 等待
-    wit: null,
-    // 客户端文件名
-    clientFileName: null,
-    // 上传框架id editorId.path-key 非editor id为null e.g null.forum 表示path-key为forum 的无editor 上传组件
-    uploadFrameId: null,
-    // 上传回调函数
-    uploadCallBack: function (fileInfo, editor, size) {
-        console.info(fileInfo);
-        console.info(size);
-        this.clearStatus();
-    },
-    // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
-    clearStatus: function () {
-        window.clearInterval(this.wit);
-        window.setTimeout(function () {
-            var divStatus = $('divStatus');
-            if ($.file.isShowProgress && divStatus != null) {
-                document.body.removeChild(divStatus);
-            }
-        },1000);
-    },
-    // 文件序列号
-    fileSerialNumber: null,
-    // 文件上传前的验证方法由 input file 的onchange响应
-    // file控件的onchange方法
-    // file.uploadDelegate(this,pathKey);
-    // upload frame的id与editorId_pathKey要保持一致
-    // path key 对应后台配置的上传策略
-    validateUploadFile: function (f, key, editor) {
-        if ($.file.checkFileType($.file.getFileName(f.value), ["jpg",
-            "jpeg", "gif", "png"], "errorImgForumIco")) {
-            $.file.uploadDelegate(key, editor);
-        }
-    },
-    callbackValidate: function (uploadProgress) {
-        if ($.isNullOrEmpty(uploadProgress.error)) {
-            return true;
-        }
-        $.alert(uploadProgress.error, "sad");
-        $.file.clearStatus();
-        return false;
-    },
-    // 文件上传成功后的重置方法
-    // 因为文件上传完毕之后需要重置上传序列号。所以一定要手动设置该方法
-    reset: function () {
-        var uploadFrame = $(this.uploadFrameId);
-        var tempSrc = uploadFrame.src;
-        uploadFrame.src = "about:blank";
-        uploadFrame.src = tempSrc;
-    },
-    getUploadFrame: function () {
-        return this.uploadFrameId ? $(this.uploadFrameId) : $("fileUpload");
-    },
-    // 获取上传的input type="file"控件
-    getUploadFile: function (frame) {
-        if (!frame) {
-            frame = this.getUploadFrame();
-        }
-        return frame.contentWindow.document.getElementById("file_upload");
-    },
-    getUploadFileInfo: function (frame) {
-        if (!frame) {
-            frame = this.getUploadFrame();
-        }
-        return frame.contentWindow.document.getElementById("fileInfo");
-    },
-    // 获取文件序列号
-    getFileSerialNumber: function () {
-        return this.fileSerialNumber;
-    },
-    setFileSerialNumber: function (serialNumber) {
-        this.fileSerialNumber = serialNumber;
-    },
-    // 获取文件的全路径文件名?
-    getFullPath: function (obj) {
-        if (!obj) {
-            return ""
-        }
-        if ($.browser.ie) {
-            obj.select();
-            var txt = document.frames[0].document.selection.createRange().text;
-            document.frames[0].document.selection.empty();
-            return txt;
-        }
-        if ($.browser.firefox) {
-            if (obj.files) {
-                return obj.files.item(0).getAsDataURL();
-            }
-            return obj.value;
-        }
-        return obj.value;
-    },
-    // 获文件扩展名
-    getExtension: function (fileName) {
-        fileName = $.browser.getUrlWithoutParameter(fileName);
-        return fileName.substring(fileName.lastIndexOf("."))
-            .toLocaleLowerCase();
-    },
-    // 获取文件名
-    getFileName: function (fileName) {
-        fileName = $.browser.getUrlWithoutParameter(fileName);
-        if (fileName.indexOf("\\") !== -1) {
-            return fileName.substring(fileName.lastIndexOf("\\") + 1);
-        }
-        if (fileName.indexOf('/') !== -1) {
-            return fileName.substring(fileName.lastIndexOf("/") + 1);
-        }
-        return fileName;
-    },
-    // 验证文件类型
-    checkFileType: function (fileName, rightExtension, errorCtrl) {
-        //这里封装跨域可以复用，因为
-        var fileExtension = this.getExtension(fileName);
-        var result = false;
-        for (var i = 0; i < rightExtension.length; i += 1) {
-            if (rightExtension[i].toLocaleLowerCase() === fileExtension
-                || '.' + rightExtension[i].toLocaleLowerCase() === fileExtension) {
-                result = true;
-                break;
-            }
-        }
-
-        if (result) {
-            $.v.ok(errorCtrl)
-            return result;
-        }
-        var errorLabel = $("#" + errorCtrl);
-        if (errorLabel != null && errorLabel.source() != null) {
-            errorLabel.class("error");
-            errorLabel.html("!只支持:" + rightExtension + "格式");
-        }
-        $.message("文件格式不正确，只支持以下格式:\n" + rightExtension);
-        return result;
-    },
-    // 如果editor为null则表示非编辑器控件
-    uploadDelegate: function (key, editor,
-                              srcElement) {
-        // 如果显示状态并且状态控件已经显示则说明已经有文件正在上传中...
-        if (this.isShowProgress !== false && $("divStatus")) {
-            $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
-            return false;
-        }
-        this.uploadFrameId = (editor ? editor.obj : "null") + "." + key;
-        var uploadFrame = this.getUploadFrame();
-        // 客户端文件名
-        this.clientFileName = this.getUploadFile(uploadFrame).value;
-        // 如果没有选择上传文件
-        if (this.clientFileName === "") {
-            $.message("请选择上传文件!", srcElement);
-            return false;
-        }
-
-        var fileInfo = this.getUploadFileInfo(uploadFrame).value;
-        var fileInfoArray = fileInfo.split(".");
-        // 设置当前文件的序列号
-        this.setFileSerialNumber(fileInfoArray[2]);
-        // 如果要显示状态
-        if ($.file.isShowProgress !== false) {
-            // 如果状态控件不存在则创建
-            if (!$("divStatus")) {
-                var sparrowUploadFrame = $(uploadFrame);
-                var divStatus = $("+div");
-                divStatus.s.id = "divStatus";
-                divStatus.s.style.cssText = "width:260px;height:100px;position:absolute;color:#ffffff;background:#000000;font-size:10pt;border:#ccc 1px solid;text-align:left;";
-                divStatus.html("服务器正在加载文件信息...");
-                document.body.appendChild(divStatus.s);
-                divStatus.s.style.top = (sparrowUploadFrame
-                        .getAbsoluteTop() - 10)
-                    + "px";
-                divStatus.s.style.left = (sparrowUploadFrame
-                        .getAbsoluteLeft())
-                    + "px";
-                divStatus.opacity(90);
-            }
-            // 设置状态跟踪
-            if (typeof (editor) === "undefined" || editor === null) {
-                // 非编辑器控件
-                this.wit = window.setInterval(function (){$.file.getStatus()}, 1000);
-            } else {
-                this.wit = window.setInterval(function (){$.file.getStatus()}, 1000);
-            }
-        }
-        // 提交
-        uploadFrame.contentWindow.document.forms[0].submit();
-    },
-    //只负责显示进度
-    progressCallback: function (uploadProgress) {
-        if (uploadProgress == null) {
-            return;
-        }
-        if (uploadProgress.status === "loading") {
-            return;
-        }
-
-        if (!this.callbackValidate(uploadProgress)) {
-            return;
-        }
-        // 正常显示状态
-        var statusString = [];
-        var status = Math
-                .ceil(parseFloat(uploadProgress.readLength)
-                    / parseFloat(uploadProgress.contentLength)
-                    * 1000000)
-            / 10000 + "%";
-
-
-        statusString
-            .push("正在上传文件<br/><span class='highlight'>《"
-                + $.file
-                    .getFileName($.file.clientFileName)
-                + "》</span><br/>");
-        statusString.push("文件大小:"
-            + uploadProgress.humanReadableContentLength
-            + "<br/>");
-        statusString.push("上传大小:"
-            + uploadProgress.humanReadableReadLength
-            + "<br/>");
-        statusString.push("上传进度:" + status);
-        $("#divStatus", false).html(statusString.toString());
-        if (status === "100%") {
-            $.file.clearStatus();
-        }
-    },
-    getStatus: function () {
-        // 根据当前文件的序列号,实时获取当前文件的上传状态
-        $("jsonp", $.url.upload + "/file-upload?file-serial-number="
-            + this.getFileSerialNumber() + "&t="
-            + Math.random() + "&callback=progressCallback", "uploadProgress");
-    },
-    /**
-     * @param key path-key
-     * @param pathKeySuffixPair {path-key:suffix}
-     */
-    initImageUploadEvent: function (key, pathKeySuffixPair) {
-        if (!$.url.upload) {
-            console.error("please config $.url.upload the default config is $.url.root ["+$.url.root+"]");
-            $.url.upload = $.url.root;
-        }
-        var fileFrame = $("null." + key);
-        if (fileFrame == null) {
-            return;
-        }
-        document.domain = $.browser.cookie.root_domain;
-        if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
-        fileFrame.src = $.url.upload + "/file-upload?path-key=" + key+"&t="+ Math.random();
-        //第一次加载初始化
-        $.file.uploadCallBack = function (fileInfo, editor, size) {
-            console.info(size);
-        };
-        $.file.validateUploadFile = function (f, key, editor) {
-            var suffix = pathKeySuffixPair;
-            if (typeof (pathKeySuffixPair) === "object") {
-                suffix = pathKeySuffixPair[key];
-            }
-            if (!$.file.checkFileType($.file.getFileName(f.value), ["jpg", "jpeg",
-                "gif", "png"], "error" + suffix)) {
-                return;
-            }
-            $.file.uploadCallBack = function (uploadingProgress) {
-                $.file.clearStatus();
-                if (!uploadingProgress.fileUrl) {
-                    return;
-                }
-
-                var divContainer = $("#div" + suffix);
-                if (divContainer != null) {
-                    divContainer.html("<a href='" + uploadingProgress.fileUrl + "' target='_blank'><img src='" + uploadingProgress.fileUrl
-                        + "'/></a>");
-                }
-                var hdnWebUrl = $("#hdn" + suffix);
-                if (hdnWebUrl != null) {
-                    hdnWebUrl.value(uploadingProgress.fileUrl);
-                }
-                var errorPrompt = $("#error" + suffix);
-                if (errorPrompt != null&&errorPrompt.s!=null) {
-                    errorPrompt.class("prompt");
-                    errorPrompt.html("");
-                }
-            };
-            $.file.uploadDelegate(key, editor);
-        };
+  // 是否显示上传进度
+  isShowProgress: true,
+  // 等待
+  wit: null,
+  // 客户端文件名
+  clientFileName: null,
+  // 上传框架id editorId.path-key 非editor id为null e.g null.forum 表示path-key为forum 的无editor 上传组件
+  uploadFrameId: null,
+  /**
+   * 第一次加载的默认方法
+   * @param progress UploadingProgress 当前上传进度
+   * @param editor 当前富文本编辑器
+   * @param size 后台的FileConfig 可以读到图片的尺寸
+   */
+  uploadCallBack: function (progress, editor, size) {
+    console.info(progress);
+    console.info(size);
+    this.clearStatus();
+  },
+  // 如果图片很小，不会通过getStatus方法，则在回调时主动清除上传状态
+  clearStatus: function () {
+    window.clearInterval(this.wit);
+    window.setTimeout(function () {
+      var divStatus = $("divStatus");
+      if ($.file.isShowProgress && divStatus != null) {
+        document.body.removeChild(divStatus);
+      }
+    }, 1000);
+  },
+  // 文件序列号
+  fileSerialNumber: null,
+  /**
+   *    文件上传前的验证方法由 input file 的onchange响应
+   *    file控件的onchange方法
+   *    file.uploadDelegate(this,pathKey);
+   *    upload frame的id与editorId_pathKey要保持一致
+   *    path key 对应后台配置的上传策略
+   * @param f 当前input type=file 组件
+   * @param key 当前文件上传 pathKey 由后台配置
+   * @param editor 当前富文件编辑器
+   */
+  validateUploadFile: function (srcElement, key, editor) {
+    var clientFileName = $.file.getFileName(srcElement.value);
+    var validFileType = ["jpg", "jpeg", "gif", "png"];
+    var validResult = $.file.checkFileType(
+      clientFileName,
+      validFileType,
+      "errorImgForumIco"
+    );
+    if (!validResult) {
+      return;
     }
+    $.file.uploadDelegate(key, editor);
+  },
+  callbackValidate: function (uploadProgress) {
+    if ($.isNullOrEmpty(uploadProgress.error)) {
+      return true;
+    }
+    $.alert(uploadProgress.error, "sad");
+    $.file.clearStatus();
+    return false;
+  },
+  // 文件上传成功后的重置方法
+  // 因为文件上传完毕之后需要重置上传序列号。所以一定要手动设置该方法
+  reset: function () {
+    var uploadFrame = $(this.uploadFrameId);
+    var tempSrc = uploadFrame.src;
+    uploadFrame.src = "about:blank";
+    uploadFrame.src = tempSrc;
+  },
+  getUploadFrame: function () {
+    return this.uploadFrameId ? $(this.uploadFrameId) : $("fileUpload");
+  },
+  // 获取上传的input type="file"控件
+  getUploadFile: function (frame) {
+    if (!frame) {
+      frame = this.getUploadFrame();
+    }
+    return frame.contentWindow.document.getElementById("file_upload");
+  },
+  getUploadFileInfo: function (frame) {
+    if (!frame) {
+      frame = this.getUploadFrame();
+    }
+    return frame.contentWindow.document.getElementById("fileInfo");
+  },
+  // 获取文件序列号
+  getFileSerialNumber: function () {
+    return this.fileSerialNumber;
+  },
+  setFileSerialNumber: function (serialNumber) {
+    this.fileSerialNumber = serialNumber;
+  },
+  // 获取文件的全路径文件名?
+  getFullPath: function (obj) {
+    if (!obj) {
+      return "";
+    }
+    if ($.browser.ie) {
+      obj.select();
+      var txt = document.frames[0].document.selection.createRange().text;
+      document.frames[0].document.selection.empty();
+      return txt;
+    }
+    if ($.browser.firefox) {
+      if (obj.files) {
+        return obj.files.item(0).getAsDataURL();
+      }
+      return obj.value;
+    }
+    return obj.value;
+  },
+  // 获文件扩展名
+  getExtension: function (fileName) {
+    fileName = $.browser.getUrlWithoutParameter(fileName);
+    return fileName.substring(fileName.lastIndexOf(".")).toLocaleLowerCase();
+  },
+  // 获取文件名
+  getFileName: function (fileName) {
+    fileName = $.browser.getUrlWithoutParameter(fileName);
+    if (fileName.indexOf("\\") !== -1) {
+      return fileName.substring(fileName.lastIndexOf("\\") + 1);
+    }
+    if (fileName.indexOf("/") !== -1) {
+      return fileName.substring(fileName.lastIndexOf("/") + 1);
+    }
+    return fileName;
+  },
+  // 验证文件类型
+  checkFileType: function (fileName, rightExtension, errorCtrl) {
+    //这里封装跨域可以复用，因为
+    var fileExtension = this.getExtension(fileName);
+    var result = false;
+    for (var i = 0; i < rightExtension.length; i += 1) {
+      var extension = rightExtension[i].toLocaleLowerCase();
+      var extensionWithDot = "." + rightExtension[i].toLocaleLowerCase();
+      if (extension === fileExtension || extensionWithDot === fileExtension) {
+        result = true;
+        break;
+      }
+    }
+    if (result) {
+      $.v.ok(errorCtrl);
+      return result;
+    }
+    var errorLabel = $("#" + errorCtrl);
+    if (errorLabel != null && errorLabel.source() != null) {
+      errorLabel.class("error");
+      errorLabel.html("!只支持:" + rightExtension + "格式");
+    }
+    $.message("文件格式不正确，只支持以下格式:\n" + rightExtension);
+    return result;
+  },
+  // 如果editor为null则表示非编辑器控件
+  uploadDelegate: function (key, editor, srcElement) {
+    // 如果显示状态并且状态控件已经显示则说明已经有文件正在上传中...
+    if (this.isShowProgress !== false && $("divStatus")) {
+      $.alert(this.clientFileName + "正在上传中,请稍侯...", "sad");
+      return false;
+    }
+    this.uploadFrameId = (editor ? editor.obj : "null") + "." + key;
+    var uploadFrame = $(this.uploadFrameId);
+    var fileInfo = this.getUploadFileInfo(uploadFrame).value;
+    var fileInfoArray = fileInfo.split(".");
+    // 设置当前文件的序列号
+    this.setFileSerialNumber(fileInfoArray[2]);
+    // 如果要显示状态
+    if ($.file.isShowProgress !== false) {
+      // 如果状态控件不存在则创建
+      if (!$("divStatus")) {
+        var sparrowUploadFrame = $(uploadFrame);
+        var divStatus = $("+div");
+        divStatus.s.id = "divStatus";
+        divStatus.s.style.cssText =
+          "width:260px;height:100px;position:absolute;color:#ffffff;background:#000000;font-size:10pt;border:#ccc 1px solid;text-align:left;";
+        divStatus.html("服务器正在加载文件信息...");
+        document.body.appendChild(divStatus.s);
+        divStatus.s.style.top = sparrowUploadFrame.getAbsoluteTop() - 10 + "px";
+        divStatus.s.style.left = sparrowUploadFrame.getAbsoluteLeft() + "px";
+        divStatus.opacity(90);
+      }
+      // 设置状态跟踪
+      if (typeof editor === "undefined" || editor === null) {
+        // 非编辑器控件
+        this.wit = window.setInterval(function () {
+          $.file.getStatus();
+        }, 1000);
+      } else {
+        this.wit = window.setInterval(function () {
+          $.file.getStatus();
+        }, 1000);
+      }
+    }
+    // 提交
+    uploadFrame.contentWindow.document.forms[0].submit();
+  },
+  //只负责显示进度
+  progressCallback: function (uploadProgress) {
+    if (uploadProgress == null) {
+      return;
+    }
+    if (uploadProgress.status === "loading") {
+      return;
+    }
+
+    if (!this.callbackValidate(uploadProgress)) {
+      return;
+    }
+    // 正常显示状态
+    var statusString = [];
+    var status =
+      Math.ceil(
+        (parseFloat(uploadProgress.readLength) /
+          parseFloat(uploadProgress.contentLength)) *
+          1000000
+      ) /
+        10000 +
+      "%";
+
+    statusString.push(
+      "正在上传文件<br/><span class='highlight'>《" +
+        $.file.getFileName($.file.clientFileName) +
+        "》</span><br/>"
+    );
+    statusString.push(
+      "文件大小:" + uploadProgress.humanReadableContentLength + "<br/>"
+    );
+    statusString.push(
+      "上传大小:" + uploadProgress.humanReadableReadLength + "<br/>"
+    );
+    statusString.push("上传进度:" + status);
+    $("#divStatus", false).html(statusString.toString());
+    if (status === "100%") {
+      $.file.clearStatus();
+    }
+  },
+  getStatus: function () {
+    // 根据当前文件的序列号,实时获取当前文件的上传状态
+    $(
+      "jsonp",
+      $.url.upload +
+        "/file-upload?file-serial-number=" +
+        this.getFileSerialNumber() +
+        "&t=" +
+        Math.random() +
+        "&callback=progressCallback",
+      "uploadProgress"
+    );
+  },
+  /**
+   * @param key path-key
+   * @param pathKeySuffixPair {path-key:suffix}
+   */
+  initImageUploadEvent: function (key, pathKeySuffixPair) {
+    if (!$.url.upload) {
+      console.error(
+        "please config $.url.upload the default config is $.url.root [" +
+          $.url.root +
+          "]"
+      );
+      $.url.upload = $.url.root;
+    }
+    var fileFrame = $("null." + key);
+    if (fileFrame == null) {
+      return;
+    }
+    document.domain = $.browser.cookie.root_domain;
+    if (!pathKeySuffixPair) pathKeySuffixPair = "Cover";
+    fileFrame.src =
+      $.url.upload + "/file-upload?path-key=" + key + "&t=" + Math.random();
+    $.file.validateUploadFile = function (f, key, editor) {
+      var suffix = pathKeySuffixPair;
+      if (typeof pathKeySuffixPair === "object") {
+        suffix = pathKeySuffixPair[key];
+      }
+      if (
+        !$.file.checkFileType(
+          $.file.getFileName(f.value),
+          ["jpg", "jpeg", "gif", "png"],
+          "error" + suffix
+        )
+      ) {
+        return;
+      }
+      $.file.uploadCallBack = function (uploadingProgress) {
+        $.file.clearStatus();
+        if (!uploadingProgress.fileUrl) {
+          return;
+        }
+        var divContainer = $("#div" + suffix);
+        if (divContainer != null) {
+          divContainer.html(
+            "<a href='" +
+              uploadingProgress.fileUrl +
+              "' target='_blank'><img src='" +
+              uploadingProgress.fileUrl +
+              "'/></a>"
+          );
+        }
+        var imgPreview = $("img" + suffix);
+        if (imgPreview != null) {
+          imgPreview.src = uploadingProgress.fileUrl;
+        }
+        var hdnWebUrl = $("#hdn" + suffix);
+        if (hdnWebUrl != null) {
+          hdnWebUrl.value(uploadingProgress.fileUrl);
+        }
+        if ($.file.imagePreviewCallback) {
+          $.file.imagePreviewCallback(uploadingProgress.fileUrl);
+        }
+        var errorPrompt = $("#error" + suffix);
+        if (errorPrompt != null && errorPrompt.s != null) {
+          errorPrompt.class("prompt");
+          errorPrompt.html("");
+        }
+      };
+      $.file.uploadDelegate(key, editor);
+    };
+  },
 };
+
 Sparrow.event = function (e) {
   if (!(this instanceof Sparrow.event)) {
     return new Sparrow.event(e);
@@ -4004,10 +4414,16 @@ Sparrow.user = {
     //url 优先
     var token = Sparrow.request("token");
     if (!Sparrow.isNullOrEmpty(token)) {
-      localStorage.setItem("token", token);
       return token;
     }
-    return localStorage.getItem("token");
+    token = localStorage.getItem("token");
+    if (!Sparrow.isNullOrEmpty(token)) {
+      return token;
+    }
+    token = Sparrow.browser.getCookie("PERMISSION");
+    if (token != null) {
+      return token;
+    }
   },
 };
 
