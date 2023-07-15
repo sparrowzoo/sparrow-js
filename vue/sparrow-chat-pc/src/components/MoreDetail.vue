@@ -39,8 +39,6 @@
 </template>
 
 <script>
-import { ChatApi } from "../../../api/Chat";
-
 export default {
   props: {
     // 当前聊天对象 / 群 的信息
@@ -81,7 +79,7 @@ export default {
     existGroup() {
       this.$confirm("退出群聊？")
         .then(async () => {
-          ChatApi.existGroup(this.qun.qunId).then(
+          this.$chatApi.existGroup(this.qun.qunId).then(
             (res) => {
               if (res.code === 200) {
                 this.$contact.quns = this.$contact.quns.filter(
