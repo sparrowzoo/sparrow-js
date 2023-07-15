@@ -74,9 +74,6 @@
 <script>
 import MoreDetail from "./MoreDetail.vue";
 import ChatItem from "./ChartItem.vue";
-import { ImProtocol } from "../../../../source/scripts/ImProtocol";
-import { Initialization } from "../../../api/Initialization";
-import { ChatApi } from "../../../api/Chat";
 
 export default {
   components: { MoreDetail, ChatItem },
@@ -95,7 +92,7 @@ export default {
       if (key !== 13) return;
       that.sendText();
     };
-    Initialization.toBottom = function () {
+    this.$initialization.toBottom = function () {
       that.handleScrollBottom();
     };
   },
@@ -157,7 +154,7 @@ export default {
             chatType: item.chatType,
           };
           console.log(param);
-          var result = await ChatApi.cancelMsg(param);
+          var result = await this.$chatApi.cancelMsg(param);
           if (result === true) {
             var session = this.$sessionMap[param.sessionKey];
             session.messages = session.messages.filter(
@@ -198,10 +195,10 @@ export default {
           time
         );
         that.$webSocket.sendMessage(protocol);
-        Initialization.setSessionLastReadTime(that.session);
+        that.$initialization.setSessionLastReadTime(that.session);
         this.content = "";
-        Initialization.rebuild(protocol, that);
-        Initialization.resortSessions(that);
+        that.$initialization.rebuild(protocol, that);
+        that.$initialization.resortSessions(that);
         that.handleScrollBottom();
       };
       fileReader.readAsArrayBuffer(file);
@@ -214,9 +211,9 @@ export default {
       var time = new Date().getTime();
       var chatType = parseInt(this.session.type, 10);
       //如果是1对1聊天，则传过来的key=对方用户ID
-      var protocol = new ImProtocol(
+      var protocol = new this.$protocol(
         chatType,
-        ImProtocol.TEXT_MESSAGE,
+        this.$protocol.TEXT_MESSAGE,
         this.$getUserId(),
         this.session.oppositeUserId,
         this.session.key,
@@ -225,9 +222,9 @@ export default {
       );
       this.$webSocket.sendMessage(protocol);
       this.content = "";
-      Initialization.setSessionLastReadTime(this.session);
-      Initialization.rebuild(protocol, this);
-      Initialization.resortSessions(this);
+      this.$initialization.setSessionLastReadTime(this.session);
+      this.$initialization.rebuild(protocol, this);
+      this.$initialization.resortSessions(this);
       this.handleScrollBottom();
       console.log("parse protocol:" + protocol);
     },

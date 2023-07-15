@@ -5,6 +5,7 @@ import store from "./store";
 import app from "@/App"; // 引入主组件
 import "@/assets/style/base.less";
 import "@/assets/style/font.css";
+//vue  需要支持 ES6 语法
 import { Sparrow } from "../../../source/scripts/sparrow_es.js";
 
 var isProd = process.env.NODE_ENV === "prod";

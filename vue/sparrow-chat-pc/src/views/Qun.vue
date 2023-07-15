@@ -1,6 +1,11 @@
 <template>
   <div class="">
-    <QunItem :qun-list="qunList" @chat="onChat" @remove="onRemove"></QunItem>
+    <QunItem
+      :qun-list="qunList"
+      @applyList="applyList"
+      @chat="onChat"
+      @remove="onRemove"
+    ></QunItem>
   </div>
 </template>
 
@@ -16,9 +21,9 @@ export default {
     qunList() {
       return this.$contact.quns
         .map((qun) => {
-          const title = qun.qunName;
+          const title = qun.name;
           const qunId = qun.qunId; //唯一id，可以作为群名
-          var session = this.$sessions ? this.$sessions[qun.qunId] : null;
+          var session = this.$sessions ? this.$sessionMap[qunId] : null;
           var messages = session ? session.messages : null;
           const lastMessage =
             messages != null && messages.length > 0
@@ -41,7 +46,7 @@ export default {
             lastMessageTime: lastMessageTime,
             lastMessageContent: lastMessageContent,
             unReadCount: unReadCount,
-            avatar: qun.icon,
+            avatar: qun.avatar,
           };
         })
         .sort((s1, s2) => s2.lastMessageTime - s1.lastMessageTime);
@@ -55,6 +60,13 @@ export default {
       this.$router.push({
         name: "session",
         query: { key: qun.id },
+      });
+    },
+    applyList(item) {
+      console.log("from child event apply list {}", item);
+      this.$router.push({
+        name: "new-qun-member",
+        query: { qunId: item.id },
       });
     },
   },
