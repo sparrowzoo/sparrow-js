@@ -39,18 +39,18 @@ export default {
     }
 
     if (!this.$isInner) {
-      this.menuList.push({
-        id: 3,
-        title: "系统通知",
-        pathName: "notice",
-      });
-      if (!this.$webSocket.platform) {
-        this.menuList.push({
-          id: 4,
-          title: "联系客服",
-          pathName: "platform-service",
-        });
-      }
+      // this.menuList.push({
+      //   id: 3,
+      //   title: "系统通知",
+      //   pathName: "notice",
+      // });
+      // if (!this.$webSocket.platform) {
+      //   this.menuList.push({
+      //     id: 4,
+      //     title: "联系客服",
+      //     pathName: "platform-service",
+      //   });
+      // }
     }
   },
   methods: {

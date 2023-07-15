@@ -28,7 +28,7 @@ var Initialization = {
       qunMap[qun.qunId] = qun;
     });
     Vue.prototype.$qunMap = qunMap;
-    console.log("userMap", userMap);
+    // console.log("userMap", userMap);
   },
   _oppositeUser: function (session, vue) {
     return vue.$protocol.getOppositeUser(vue, session);
@@ -40,6 +40,7 @@ var Initialization = {
       var oppositeUser = this._oppositeUser(session, vue);
       if (userIds.indexOf(oppositeUser) < 0) {
         userIds.push(oppositeUser);
+        userIds.push(vue.$getUserId());
       }
       session.messages.forEach((message) => {
         if (userIds.indexOf(message.sender) < 0) {
@@ -103,7 +104,6 @@ var Initialization = {
     });
   },
   initActiveSession: async function (vue) {
-    var currentUsrId = vue.$getUserId();
     var key = vue.$route.query.key;
     var targetUserId = vue.$route.query.targetUserId;
     if (key == null && targetUserId == null) {
@@ -122,7 +122,7 @@ var Initialization = {
     }
     //如果指定了session key 则取指定的session
     //说明是一对一单聊
-    if (key.indexOf("_") > -1) {
+    if (typeof key == "string" && key.indexOf("_") > -1) {
       var oppositeId = vue.$protocol.getOppositeUser(vue);
       oppositeUser = vue.$userMap[oppositeId];
       this.get121Session(oppositeUser, vue);
@@ -211,7 +211,7 @@ var Initialization = {
       key: sessionKey, //发送方ID
       type: vue.$protocol.CHAT_TYPE_1_2_N,
       //session 头象
-      icon: qun.unitIcon,
+      icon: qun.avatar,
       title: qun.qunName,
       //消息列表
       messages: [],
@@ -266,6 +266,10 @@ var Initialization = {
         var message = session.messages[i];
         message.isMe = message.sender === vue.$getUserId();
         var user = userMap[message.sender];
+        if (!user) {
+          console.log("user is not found!");
+          continue;
+        }
         message.userName = user.userName;
         message.avatar = user.avatar;
         if (message.serverTime - lastTime > 1000 * 5) {
@@ -304,8 +308,18 @@ var Initialization = {
           console.log("消息已发送，对方不在线，稍后会收到消息");
           return;
         }
-        vue.$protocol.parse(data, function (protocol) {
+        vue.$protocol.parse(data, async function (protocol) {
           var session = vue.$sessionMap[protocol.sessionKey];
+          if (session == null) {
+            var oppositeUser = null;
+            var senderId = protocol.sender;
+            var key = null;
+            //临时会话
+            await vue.$chatApi.getUserById(senderId, vue);
+            var oppositeUser = vue.$userMap[senderId];
+            key = vue.$initialization.get121Session(oppositeUser, vue);
+            vue.activeSession = vue.$sessionMap[key];
+          }
           if (protocol.chatType === vue.$protocol.CHAT_TYPE_CANCEL) {
             session.messages = session.messages.filter(
               (message) => message.clientSendTime !== protocol.clientSendTime

@@ -17,7 +17,7 @@ const ChatApi = {
     );
   },
   getContacts: async function () {
-    return await Sparrow.http.syncPost(SPARROW_BASE_URL + "/chat/v2/contacts");
+    return await Sparrow.http.syncPost(SPARROW_BASE_URL + "/contact/contacts");
   },
   setRead: function (session, vue) {
     const params = {
@@ -27,11 +27,9 @@ const ChatApi = {
       .syncPost(SPARROW_BASE_URL + "/chat/v2/session/read", params)
       .then(
         (res) => {
-          if (res.code == 0) {
-            session.lastReadTime = new Date();
-            Initialization.assembleLastMessage(session);
-            Initialization.resortSessions(vue);
-          }
+          session.lastReadTime = new Date();
+          vue.$initialization.assembleLastMessage(session);
+          vue.$initialization.resortSessions(vue);
           return res.data;
         },
         (err) => {
@@ -111,8 +109,8 @@ const ChatApi = {
       }
       //如果本地缓存中没有，则从远程获取
       const remoteUsers = await Sparrow.http
-        .post(
-          CONSUMER_BASE_URL + "/app/message/userDetailList",
+        .syncPost(
+          SPARROW_BASE_URL + "/contact/get-users-by-ids",
           needRemoteFetchIdArr
         )
         .then(
@@ -120,14 +118,15 @@ const ChatApi = {
             return res.data;
           },
           function (error) {
-            return { error };
+            console.log(error.message);
+            return userResultMap;
           }
         );
       if (remoteUsers == null || remoteUsers.length === 0) {
         return userResultMap;
       }
       for (i = 0; i < remoteUsers.length; i++) {
-        userId = remoteUsers[i].id;
+        userId = remoteUsers[i].userId;
         var user = remoteUsers[i];
         user.platform = !!user.isCustomer;
         //将远程获取的用户信息放入本地缓存
@@ -160,6 +159,12 @@ const ChatApi = {
       SPARROW_BASE_URL + "/contact/friend-apply-list"
     );
   },
+  qunMemberApplyList: function (qunId) {
+    return Sparrow.http.syncPost(
+      SPARROW_BASE_URL + "/contact/qun-member-apply-list",
+      "qunId=" + qunId
+    );
+  },
   auditFriend: function (auditId, agree) {
     const params = {
       agree: agree,
@@ -171,6 +176,18 @@ const ChatApi = {
       params
     );
   },
+  auditQunMember: function (auditId, agree) {
+    const params = {
+      agree: agree,
+      auditId: auditId,
+      reason: "",
+    };
+    return Sparrow.http.syncPost(
+      SPARROW_BASE_URL + "/contact/audit-qun-apply",
+      params
+    );
+  },
+
   existGroup: function (id) {
     const params = "groupId=" + id;
     return Sparrow.http.syncPost(

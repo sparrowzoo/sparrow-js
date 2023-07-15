@@ -12,7 +12,6 @@
 <style lang="less">
 #app {
   width: 1100px;
-  margin: 100px auto;
 }
 
 .msg-recall {
