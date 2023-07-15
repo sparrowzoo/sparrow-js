@@ -3,7 +3,7 @@
     <div v-for="item of qunList" :key="item.id" class="user-item">
       <div class="user-info">
         <div class="avatar">
-          <img :src="item.avatar" alt="" />
+          <img :src="item.icon" alt="" />
         </div>
         <div class="user-name">
           <span>{{ item.title }}</span>
@@ -12,9 +12,6 @@
         </div>
       </div>
       <div class="operate">
-        <!--        <button @click="remove(item)">-->
-        <!--          {{ "退出群聊" }}-->
-        <!--        </button>-->
         <button class="chat" @click="chat(item)">聊一下</button>
       </div>
     </div>

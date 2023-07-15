@@ -6,6 +6,11 @@ console.log(SPARROW_BASE_URL);
 var tokenConfig = {};
 tokenConfig[SPARROW_BASE_URL] = {
   "login-token": function () {
+    var token = $.request("token");
+    if (!$.isNullOrEmpty(token)) {
+      localStorage.setItem("token", token);
+      return token;
+    }
     return localStorage.getItem("token");
   },
 };
@@ -137,7 +142,7 @@ const ChatApi = {
         return userResultMap;
       }
       for (i = 0; i < remoteUsers.length; i++) {
-        userId = remoteUsers[i].id;
+        userId = remoteUsers[i].userId;
         var user = remoteUsers[i];
         user.platform = !!user.isCustomer;
         //将远程获取的用户信息放入本地缓存

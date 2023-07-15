@@ -8,6 +8,8 @@ const Main = () => import("@/views/layout/Layout");
 const ContactMenu = () => import("@/views/layout/ContactMenu");
 const Contact = () => import("@/views/Contact.vue");
 const NewFriend = () => import("@/views/NewFriend");
+const NewQunMember = () => import("@/views/NewQunMember");
+
 const Qun = () => import("@/views/Qun");
 
 const PlatformService = () => import("@/views/PlatformService");
@@ -47,9 +49,14 @@ const router = new VueRouter({
               component: Contact,
             },
             {
-              path: "new",
+              path: "new-friend",
               name: "new-friend",
               component: NewFriend,
+            },
+            {
+              path: "new-qun-member",
+              name: "new-qun-member",
+              component: NewQunMember,
             },
             {
               path: "qun",

@@ -12,9 +12,9 @@
         </div>
       </div>
       <div class="operate">
-        <!--        <button @click="remove(item)">-->
-        <!--          {{ "退出群聊" }}-->
-        <!--        </button>-->
+        <button v-if="(item.ownerId = $getUserId())" @click="applyList(item)">
+          {{ "新成员申请" }}
+        </button>
         <button class="chat" @click="chat(item)">聊一下</button>
       </div>
     </div>
@@ -41,6 +41,17 @@ export default {
     chat(item) {
       // console.log(item);
       this.$emit("chat", item);
+    },
+    /**
+     *  //子传父
+     *  // 执行$emit函数，会调用父组件中名为parentEvent的函数再将"hello world"的值传过去
+     *  this.$emit("parentEvent", "hello world");
+     *
+     *  同时需要在你组件中@applyList 来监控听子组件的事件！
+     * @param item
+     */
+    applyList(item) {
+      this.$emit("applyList", item);
     },
   },
 };

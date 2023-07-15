@@ -18,7 +18,7 @@ export default {
         .map((qun) => {
           const title = qun.qunName;
           const qunId = qun.qunId; //唯一id，可以作为群名
-          var session = this.$sessions ? this.$sessions[qun.qunId] : null;
+          var session = this.$sessionMap ? this.$sessionMap[qun.qunId] : null;
           var messages = session ? session.messages : null;
           const lastMessage =
             messages != null && messages.length > 0
