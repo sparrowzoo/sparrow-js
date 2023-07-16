@@ -1,0 +1,12 @@
+.login-frame {height: 350px;}
+.login-title {font-weight: bold;width: 1004px;border-bottom: #5f86e0 3px solid;line-height: 40px;text-indent:20px;}
+.login-left {float: left; width: 610px; height: 300px;}
+.line,.validate{ width: 574px;border: 0;height: 50px; border-bottom: #ccc 1px dotted; }
+.day{width: 574px;border: 0;height: 60px;border-bottom: #ccc 1px dotted;padding-left:80px; }
+.line input { width: 144px;  }
+.line label,.validate label {width: 100px; font-size: 12pt; text-align: right; display: inline-block; }
+.validate input { width: 90px;}
+.line .login {margin-left:80px;}
+.login-right {float: right; width: 350px;height: 300px;text-align: center; }
+.login-right .welcome {font-size: 12pt;font-weight: bold;}
+.login-right .websitname {font-size: 12pt;font-weight: bold;}

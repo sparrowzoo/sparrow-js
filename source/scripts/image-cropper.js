@@ -22,6 +22,12 @@ Sparrow.ImageCropper = function (preview, config, complete) {
     lockRate: false,
     rate: 0,
   };
+  this.result = {
+    x: this.config.left,
+    y: this.config.top,
+    w: this.config.width,
+    h: this.config.height,
+  };
   //覆盖默认配置
   if (config) {
     for (var c in config) {
