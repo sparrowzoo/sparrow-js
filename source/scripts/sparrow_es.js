@@ -2664,6 +2664,7 @@ Sparrow.file = {
    */
   validateUploadFile: function (srcElement, key, editor) {
     var clientFileName = $.file.getFileName(srcElement.value);
+    $.file.clientFileName = clientFileName;
     var validFileType = ["jpg", "jpeg", "gif", "png"];
     var validResult = $.file.checkFileType(
       clientFileName,
@@ -2892,6 +2893,8 @@ Sparrow.file = {
     fileFrame.src =
       $.url.upload + "/file-upload?path-key=" + key + "&t=" + Math.random();
     $.file.validateUploadFile = function (f, key, editor) {
+      $.file.clientFileName = f.value;
+
       var suffix = pathKeySuffixPair;
       if (typeof pathKeySuffixPair === "object") {
         suffix = pathKeySuffixPair[key];
