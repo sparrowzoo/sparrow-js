@@ -19,6 +19,13 @@ const ChatApi = {
   getContacts: async function () {
     return await Sparrow.http.syncPost(SPARROW_BASE_URL + "/contact/contacts");
   },
+  getQunMembers: async function (qunId) {
+    var param = "qunId=" + qunId;
+    return await Sparrow.http.syncPost(
+      SPARROW_BASE_URL + "/qun/members",
+      param
+    );
+  },
   setRead: function (session, vue) {
     const params = {
       sessionKey: session.key,
@@ -187,7 +194,6 @@ const ChatApi = {
       params
     );
   },
-
   existGroup: function (id) {
     const params = "groupId=" + id;
     return Sparrow.http.syncPost(

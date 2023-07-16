@@ -22,7 +22,7 @@
           <!--          </div>-->
         </div>
 
-        <el-button type="primary" @click="existGroup">退出群聊</el-button>
+        <!--        <el-button type="primary" @click="existGroup">退出群聊</el-button>-->
         <!--        <div class="look-more-user">-->
         <!--          <span>退出群聊</span>-->
         <!--          <i class="iconfont icon-down-more"></i>-->
@@ -52,7 +52,6 @@ export default {
       if (this.session == null || this.session.key === -1) {
         return { members: [] };
       }
-      // console.log(JSON.stringify(this.$qunMap[this.session.key]));
       return this.$qunMap[this.session.key];
     },
   },
@@ -62,7 +61,19 @@ export default {
     };
   },
   methods: {
-    showDetail() {
+    async showDetail() {
+      if (this.qun.members == null) {
+        this.qun.members = await this.$chatApi
+          .getQunMembers(this.session.key)
+          .then(
+            (res) => {
+              return res.data;
+            },
+            (err) => {
+              console.log(err);
+            }
+          );
+      }
       this.showDetailFlag = true;
       var detailRef = this.$refs["detail-ref"];
       var detailClickHandler = function (e) {
