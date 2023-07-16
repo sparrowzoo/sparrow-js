@@ -173,7 +173,7 @@ Sparrow.user = {
     if (!Sparrow.isNullOrEmpty(token)) {
       return token;
     }
-    token = Sparrow.browser.getCookie("PERMISSION");
+    token = Sparrow.browser.getCookie(Sparrow.browser.cookie.permission);
     if (token != null) {
       return token;
     }
