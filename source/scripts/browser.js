@@ -4,7 +4,7 @@ Sparrow.browser = {
     logout_url: "/user/logout.json",
   },
   cookie: {
-    permission: "permission",
+    permission: "PERMISSION",
     call_back_url: "call_back_url",
     website_name: "website_name",
     themes: "sparrow.themes",
