@@ -535,7 +535,7 @@ Sparrow.browser = {
     logout_url: "/user/logout.json",
   },
   cookie: {
-    permission: "permission",
+    permission: "PERMISSION",
     call_back_url: "call_back_url",
     website_name: "website_name",
     themes: "sparrow.themes",
@@ -8184,7 +8184,7 @@ Sparrow.user = {
     if (!Sparrow.isNullOrEmpty(token)) {
       return token;
     }
-    token = Sparrow.browser.getCookie("PERMISSION");
+    token = Sparrow.browser.getCookie(Sparrow.browser.cookie.permission);
     if (token != null) {
       return token;
     }
