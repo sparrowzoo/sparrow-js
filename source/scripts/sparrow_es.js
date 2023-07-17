@@ -2680,7 +2680,7 @@ Sparrow.file = {
     if ($.isNullOrEmpty(uploadProgress.error)) {
       return true;
     }
-    $.alert(uploadProgress.error, "sad");
+    $.alert(uploadProgress.error, "sad", "上传出错");
     $.file.clearStatus();
     return false;
   },
