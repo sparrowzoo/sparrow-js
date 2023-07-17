@@ -19,14 +19,18 @@ var Initialization = {
     Vue.prototype.$contact = res.data;
     console.log("res", res);
     var userMap = {};
-    res.data.users.forEach((user) => {
-      userMap[user.userId] = user;
-    });
+    if (res.data.users) {
+      res.data.users.forEach((user) => {
+        userMap[user.userId] = user;
+      });
+    }
     Vue.prototype.$userMap = userMap;
     var qunMap = {};
-    res.data.quns.forEach((qun) => {
-      qunMap[qun.qunId] = qun;
-    });
+    if (res.data.quns) {
+      res.data.quns.forEach((qun) => {
+        qunMap[qun.qunId] = qun;
+      });
+    }
     Vue.prototype.$qunMap = qunMap;
     // console.log("userMap", userMap);
   },
