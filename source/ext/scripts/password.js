@@ -18,7 +18,7 @@ Sparrow.password = {
   },
   sendPasswordToken: function (srcElement) {
     $.v.getValidateResult(findPassword, function () {
-      $.ajax.post(
+      $.http.post(
         $.url.root + $.password.api.find,
         "email=" + $("#txtValidateEmail").value(),
         function (result) {
