@@ -2681,8 +2681,7 @@ Sparrow.file = {
       return true;
     }
     $.alert(uploadProgress.error, "sad", "上传出错");
-    $.file.clearStatus();
-    return false;
+    window.location.href = window.location.href;
   },
   // 文件上传成功后的重置方法
   // 因为文件上传完毕之后需要重置上传序列号。所以一定要手动设置该方法
