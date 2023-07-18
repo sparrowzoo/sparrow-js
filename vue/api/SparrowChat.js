@@ -91,6 +91,7 @@ const ChatApi = {
           var user = users[0];
           vue.$userMap[res.data.userId] = user;
           vue.$contact.users.push(user);
+          return user;
         }
         return null;
       });
