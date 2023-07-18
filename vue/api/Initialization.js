@@ -319,7 +319,6 @@ var Initialization = {
         vue.$protocol.parse(data, async function (protocol) {
           var session = vue.$sessionMap[protocol.sessionKey];
           if (session == null) {
-            var oppositeUser = null;
             var senderId = protocol.sender;
             var key = null;
             //临时会话
