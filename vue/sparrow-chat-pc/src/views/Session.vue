@@ -26,7 +26,7 @@
               :src="item.flag"
               alt="国籍"
               class="nation"
-            />{{ item.unReadCount }}
+            />
             <span v-if="item.unReadCount > 0" class="unread">{{
               item.unReadCount
             }}</span>
