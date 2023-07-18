@@ -1,0 +1,6 @@
+/*内容定义结束*/
+.cms_line{width:710px;height:180px;display:inline-block;border:#ccc 1px solid;margin:0px;margin-bottom:10px;padding:10px;}
+.cms_line .left{width:424px;height:180px;float:left;margin:0px;padding:5px;text-align:left;}
+.cms_line .right{width:260px;height:180px;float:right;margin:0px;padding:0px}
+.cms_line .right a{width:240px;height:160px;display:block;}
+.cms_line .right a img{width:240px;height:160px;margin:10px;}
