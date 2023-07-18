@@ -91,6 +91,7 @@ var Initialization = {
           title: qun.qunName,
           messages: session.messages,
           icon: qun.unitIcon,
+          avatar: qun.avatar,
           lastReadTime: session.lastReadTime,
         };
       }
