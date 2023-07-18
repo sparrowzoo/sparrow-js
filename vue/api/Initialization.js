@@ -13,7 +13,6 @@ var Initialization = {
     }
     console.log("res", res);
   },
-
   initContact: async function (Vue, vue) {
     var res = await vue.$chatApi.getContacts();
     Vue.prototype.$contact = res.data;
@@ -142,7 +141,7 @@ var Initialization = {
     session.lastReadTime = new Date().getTime() + 2;
   },
   rebuild: function (protocol, vue) {
-    var sender = vue.$userMap[protocol.sender];
+    var sender = vue.$chatApi.getUserById(protocol.sender);
     var imgUrl = null;
     if (protocol.msgType === vue.$protocol.IMAGE_MESSAGE) {
       var fileBlob = new Blob([protocol.msg]);
@@ -320,7 +319,6 @@ var Initialization = {
         vue.$protocol.parse(data, async function (protocol) {
           var session = vue.$sessionMap[protocol.sessionKey];
           if (session == null) {
-            var oppositeUser = null;
             var senderId = protocol.sender;
             var key = null;
             //临时会话
