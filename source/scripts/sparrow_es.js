@@ -4568,7 +4568,9 @@ Sparrow.webSocket.prototype._onMsg = function (resolve) {
       if (e.data === "PONG") {
         this.lastHeartTime = new Date().getTime();
         this.showPingStatus(
-          "服务器健康 最后心跳时间:" + new Date().format("yyyy-MM-dd hh:mm:ss")
+          "服务器健康 最后心跳时间:<span style='color:red'>" +
+            new Date().format("mm:ss") +
+            "</span>"
         );
         return;
       }
