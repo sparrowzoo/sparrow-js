@@ -12,7 +12,7 @@
           @click="showMore"
         ></i>
       </div>
-      <div class="msg-detail">
+      <div ref="divScroll" class="msg-detail">
         <!-- 渲染聊天记录 -->
 
         <template v-for="item of session.messages">
@@ -86,7 +86,7 @@ export default {
   },
   mounted() {
     let that = this;
-    that.handleScrollBottom();
+    this.handleScrollBottom();
     document.onkeydown = function (e) {
       let key = e.keyCode;
       if (key !== 13) return;
@@ -108,6 +108,18 @@ export default {
       e.stopPropagation();
       // 展开详细信息
       this.$refs["showMore"].showDetail();
+    },
+    handleScrollBottom() {
+      this.$nextTick(() => {
+        var that = this;
+        window.setTimeout(function () {
+          let divScroll = that.$refs.divScroll;
+          divScroll.scrollTo({
+            top: divScroll.scrollHeight,
+            behavior: "smooth",
+          });
+        }, 100);
+      });
     },
     // 取消右键取消
     msgRightClick(item, e) {
@@ -163,12 +175,6 @@ export default {
           }
         })
         .catch(() => {});
-    },
-    handleScrollBottom() {
-      this.$nextTick(() => {
-        var msgDetail = document.querySelector(".msg-detail");
-        msgDetail.scrollTop = msgDetail.scrollHeight;
-      });
     },
     async sendImage(file) {
       console.log(this.session);
@@ -228,6 +234,13 @@ export default {
       this.handleScrollBottom();
       console.log("parse protocol:" + protocol);
     },
+  },
+  watch: {
+    //对数据的监听
+  },
+  computed: {},
+  updated() {
+    this.handleScrollBottom();
   },
 };
 </script>

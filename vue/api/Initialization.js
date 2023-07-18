@@ -74,8 +74,9 @@ var Initialization = {
           key: sessionKey,
           //session 类型
           type: chatType,
-          //session 头象
+          //session 头象 兼容老版本
           icon: oppositeUser.avatar,
+          avatar: oppositeUser.avatar,
           lastReadTime: session.lastReadTime,
           flag: oppositeUser.flagUrl, //session 名称 对方的昵称
           title: oppositeUser.userName, //对方ID
@@ -194,6 +195,8 @@ var Initialization = {
       key: sessionKey, //发送方ID
       type: vue.$protocol.CHAT_TYPE_1_2_1, //session 头象
       icon: friend.avatar,
+      avatar: friend.avatar,
+
       flag: friend.flagUrl, //session 名称 对方的昵称
       title: friend.userName,
       //消息列表
@@ -304,6 +307,7 @@ var Initialization = {
         WEBSOCKET_BASE_URL + "/websocket",
         vue.$token
       );
+      webSocket.statusBarId = "pingStatus";
       webSocket.reconnectionAlarmCallback = function () {
         console.log("reconnection AlarmCallback");
       };
