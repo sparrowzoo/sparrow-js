@@ -20,7 +20,7 @@
           @click="switchSession(item)"
         >
           <div class="avatar">
-            <img :src="item.icon" alt="用户头像" class="avatar-img" />
+            <img :src="item.avatar" alt="用户头像" class="avatar-img" />
             <img
               v-if="item.type === $protocol.CHAT_TYPE_1_2_1"
               :src="item.flag"
