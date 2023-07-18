@@ -140,8 +140,8 @@ var Initialization = {
   setSessionLastReadTime: function (session) {
     session.lastReadTime = new Date().getTime() + 2;
   },
-  rebuild: function (protocol, vue) {
-    var sender = vue.$chatApi.getUserById(protocol.sender);
+  rebuild: async function (protocol, vue) {
+    var sender = await vue.$chatApi.getUserById(protocol.sender);
     var imgUrl = null;
     if (protocol.msgType === vue.$protocol.IMAGE_MESSAGE) {
       var fileBlob = new Blob([protocol.msg]);
@@ -319,6 +319,7 @@ var Initialization = {
         vue.$protocol.parse(data, async function (protocol) {
           var session = vue.$sessionMap[protocol.sessionKey];
           if (session == null) {
+            var oppositeUser = null;
             var senderId = protocol.sender;
             var key = null;
             //临时会话
