@@ -141,7 +141,7 @@ var Initialization = {
     session.lastReadTime = new Date().getTime() + 2;
   },
   rebuild: async function (protocol, vue) {
-    var sender = await vue.$chatApi.getUserById(protocol.sender);
+    var sender = await vue.$chatApi.getUserById(protocol.sender, vue);
     var imgUrl = null;
     if (protocol.msgType === vue.$protocol.IMAGE_MESSAGE) {
       var fileBlob = new Blob([protocol.msg]);
