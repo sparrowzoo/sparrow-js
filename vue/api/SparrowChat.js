@@ -78,15 +78,21 @@ const ChatApi = {
         }
       );
   },
-  getUserById: async function (id, userMap) {
-    if (userMap != null && userMap[id] != null) {
-      return userMap[id];
+  getUserById: async function (id, vue) {
+    if (vue.$userMap != null && vue.$userMap[id] != null) {
+      return vue.$userMap[id];
     }
-    const params = "id=" + id;
+    const params = [id];
     return await Sparrow.http
-      .syncPost(CONSUMER_BASE_URL + "/app/message/findById?" + params)
+      .syncPost(SPARROW_BASE_URL + "/contact/get-users-by-ids", params)
       .then(function (res) {
-        return res.data;
+        var users = res.data;
+        if (users.length > 0) {
+          var user = users[0];
+          vue.$userMap[res.data.userId] = user;
+          vue.$contact.users.push(user);
+        }
+        return null;
       });
   },
   getUserMapByIds: async function (idArr, localUserCache) {
