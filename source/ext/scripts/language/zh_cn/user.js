@@ -22,7 +22,8 @@ var loginInfo = {
 var password = {
   txtOldPassword: {
     errorCtrlId: "errorOldPassword",
-    prompt: "请输入您的原始密码",
+    prompt:
+      "请输入您的原始密码 [至少8个字符，至少1个字母，1个数字和1个特殊字符]",
     nullError: "请输入您的原始密码",
     minLength: 6,
     maxLength: 16,
@@ -33,11 +34,11 @@ var password = {
   },
   txtPassword: {
     errorCtrlId: "errorPassword",
-    prompt: "6-16个字符,建议使用字母加数字或符号的组合密码。",
+    prompt: "至少8个字符，至少1个字母，1个数字和1个特殊字符",
     nullError: "请输入密码。",
-    minLength: 6,
+    minLength: 8,
     maxLength: 16,
-    lengthError: "密码至少6位",
+    lengthError: "密码至少8位",
     parentLevel: 0,
   },
   txtConfirmPassword: {
@@ -99,11 +100,11 @@ var regInfo = {
   },
   txtRegPassword: {
     errorCtrlId: "errorRegPassword",
-    prompt: "请输入6-16个字符,建议使用字母加数字或符号的组合密码。",
+    prompt: "至少8个字符，至少1个字母，1个数字和1个特殊字符",
     nullError: "请输入密码",
-    minLength: 6,
+    minLength: 8,
     maxLength: 16,
-    lengthError: "密码至少6位",
+    lengthError: "密码至少8位",
     parentLevel: 1,
   },
   txtConfirmPassword: {
