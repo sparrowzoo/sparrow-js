@@ -11,7 +11,6 @@ var Initialization = {
         Vue.prototype.$userMap[user.userId] = user;
       });
     }
-    console.log("res", res);
   },
   initContact: async function (Vue, vue) {
     var res = await vue.$chatApi.getContacts();
@@ -301,14 +300,23 @@ var Initialization = {
   },
   toBottom: function () {}, //滚动到底部钩子
   initWebSocket: async function (Vue, vue) {
+    vue.$sparrow.browser.monitorFocus();
     return await new Promise((resolve, reject) => {
       var webSocket = new vue.$sparrow.webSocket(
         WEBSOCKET_BASE_URL + "/websocket",
         vue.$token
       );
       webSocket.statusBarId = "pingStatus";
-      webSocket.reconnectionAlarmCallback = function () {
-        console.log("reconnection AlarmCallback");
+      webSocket.reconnectionCallback = function () {
+        webSocket.showPingStatus(vue.$sparrow.browser.focus);
+        if (vue.$sparrow.browser.focus) {
+          webSocket.clearReconnectionTimer();
+          vue.$init();
+        } else {
+          webSocket.showPingStatus(
+            "连接已断开，<span style='color:red'>点击(一次不行就点N次...)</span>屏幕任意位置继续聊!"
+          );
+        }
       };
 
       webSocket.onMsgCallback = function (data) {
