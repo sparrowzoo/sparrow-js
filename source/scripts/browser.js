@@ -1,5 +1,5 @@
 Sparrow.browser = {
-  focus: false,
+  active: false,
   url: {
     manage: "default.jsp",
     logout_url: "/user/logout.json",
@@ -327,16 +327,16 @@ Sparrow.browser = {
   monitorFocus: function () {
     window.onfocus = function () {
       console.log("window.onfocus");
-      Sparrow.browser.focus = true;
+      Sparrow.browser.active = true;
     };
     window.onclick = function () {
       console.log("window.onclick");
-      Sparrow.browser.focus = true;
+      Sparrow.browser.active = true;
     };
     window.onblur = function () {
       console.log("window.onblur");
 
-      Sparrow.browser.focus = false;
+      Sparrow.browser.active = false;
     };
   },
 };

@@ -308,8 +308,7 @@ var Initialization = {
       );
       webSocket.statusBarId = "pingStatus";
       webSocket.reconnectionCallback = function () {
-        webSocket.showPingStatus(vue.$sparrow.browser.focus);
-        if (vue.$sparrow.browser.focus) {
+        if (vue.$sparrow.browser.active) {
           webSocket.clearReconnectionTimer();
           vue.$init();
         } else {
