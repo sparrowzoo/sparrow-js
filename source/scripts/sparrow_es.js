@@ -510,7 +510,7 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
 window.$ = window.Sparrow = Sparrow;
 
 Sparrow.browser = {
-  focus: false,
+  active: false,
   url: {
     manage: "default.jsp",
     logout_url: "/user/logout.json",
@@ -838,16 +838,16 @@ Sparrow.browser = {
   monitorFocus: function () {
     window.onfocus = function () {
       console.log("window.onfocus");
-      Sparrow.browser.focus = true;
+      Sparrow.browser.active = true;
     };
     window.onclick = function () {
       console.log("window.onclick");
-      Sparrow.browser.focus = true;
+      Sparrow.browser.active = true;
     };
     window.onblur = function () {
       console.log("window.onblur");
 
-      Sparrow.browser.focus = false;
+      Sparrow.browser.active = false;
     };
   },
 };
@@ -4553,6 +4553,8 @@ Sparrow.webSocket.prototype.reconnectWebSocket = function () {
   this.closeHeartBeat();
   //关闭现有链接
   this.close();
+  //清空活跃状态
+  Sparrow.browser.active = false;
   //发起重连
   this.reconnectionTimer = setInterval(() => {
     if (this.reconnectionCallback) {
