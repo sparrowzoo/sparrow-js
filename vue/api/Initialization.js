@@ -310,7 +310,7 @@ var Initialization = {
       webSocket.reconnectionCallback = function () {
         if (vue.$sparrow.browser.active) {
           webSocket.clearReconnectionTimer();
-          window.reload();
+          vue.$router.go(0);
         } else {
           webSocket.showPingStatus(
             "连接已断开，<span style='color:red'>点击(一次不行就点N次...)</span>屏幕任意位置继续聊!"
