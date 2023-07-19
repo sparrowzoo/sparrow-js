@@ -232,7 +232,6 @@ export default {
       this.$initialization.rebuild(protocol, this);
       this.$initialization.resortSessions(this);
       this.handleScrollBottom();
-      console.log("parse protocol:" + protocol);
     },
   },
   watch: {
