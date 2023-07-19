@@ -4551,6 +4551,7 @@ Sparrow.webSocket.prototype.showPingStatus = function (status) {
 Sparrow.webSocket.prototype.reconnectWebSocket = function () {
   //停止心跳
   this.closeHeartBeat();
+  this.clearReconnectionTimer();
   //关闭现有链接
   this.close();
   //清空活跃状态
