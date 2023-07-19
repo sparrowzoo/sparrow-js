@@ -58,6 +58,8 @@ Sparrow.webSocket.prototype.reconnectWebSocket = function () {
   this.closeHeartBeat();
   //关闭现有链接
   this.close();
+  //清空活跃状态
+  Sparrow.browser.active = false;
   //发起重连
   this.reconnectionTimer = setInterval(() => {
     if (this.reconnectionCallback) {
