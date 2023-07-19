@@ -223,7 +223,7 @@ export default {
         this.$getUserId(),
         this.session.oppositeUserId,
         this.session.key,
-        this.content,
+        this.content.trim(),
         time
       );
       this.$webSocket.sendMessage(protocol);
