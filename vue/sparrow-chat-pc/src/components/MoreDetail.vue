@@ -1,10 +1,10 @@
 <template>
   <div v-show="showDetailFlag" ref="detail-ref" class="more-message">
     <div class="group-more-part">
-      <!--      <div class="more-search">-->
-      <!--        <i class="iconfont icon-sousuo"></i>-->
-      <!--        <input class="search-member" placeholder="搜索" type="text" />-->
-      <!--      </div>-->
+      <div class="more-search">
+        <i class="iconfont icon-sousuo"></i>
+        <input class="search-member" placeholder="搜索" type="text" />
+      </div>
       <div class="group-more-content">
         <!-- 群成员 -->
         <div class="user-list">
