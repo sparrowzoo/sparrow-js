@@ -530,6 +530,7 @@ var Sparrow = function (selector, parent, doc, cache, sparrowContainerKey) {
 window.$ = window.Sparrow = Sparrow;
 
 Sparrow.browser = {
+  focus: false,
   url: {
     manage: "default.jsp",
     logout_url: "/user/logout.json",
@@ -853,6 +854,21 @@ Sparrow.browser = {
       return false;
     }
     return true;
+  },
+  monitorFocus: function () {
+    window.onfocus = function () {
+      console.log("window.onfocus");
+      Sparrow.browser.focus = true;
+    };
+    window.onclick = function () {
+      console.log("window.onclick");
+      Sparrow.browser.focus = true;
+    };
+    window.onblur = function () {
+      console.log("window.onblur");
+
+      Sparrow.browser.focus = false;
+    };
   },
 };
 
@@ -8244,24 +8260,22 @@ Sparrow.webSocket = function (url, token) {
   this.token = token;
   // 接收到信息后需要执行的事件
   this.onMsgCallback = null;
-  // 心跳间隔时间 10s
-  this.heartTime = 2000;
-  // 心跳超时时间 12s
-  this.heartTimeout = 5000;
+  // 心跳间隔时间
+  this.heartTime = 1000;
+  // 心跳超时时间
+  this.heartTimeout = 3000;
   // 重连时间 0.5s
-  this.reconnectTime = 500;
+  this.reconnectTime = 1000;
 
-  this.timeoutTimer = null;
-
-  this.serverTimeoutTimer = null;
+  this.heartTimer = null;
 
   this.ws = null;
 
   this.lastHeartTime = 0;
 
-  this.reconnectionAlarmTimer = null;
+  this.reconnectionTimer = null;
 
-  this.reconnectionAlarmCallback = null;
+  this.reconnectionCallback = null;
 
   this.userId = null;
 
@@ -8279,7 +8293,7 @@ Sparrow.webSocket.prototype.connect = function (resolve, reject) {
       this._onError(reject);
     }
   } catch (e) {
-    console.log(e);
+    console.log("链接失败，直接重连", e);
     this.reconnectWebSocket();
   }
 };
@@ -8296,24 +8310,21 @@ Sparrow.webSocket.prototype.showPingStatus = function (status) {
   }
 };
 Sparrow.webSocket.prototype.reconnectWebSocket = function () {
-  //如果是服务器关闭的连接，不需要重连
-  if (new Date() - this.lastHeartTime > this.heartTimeout * 2) {
-    console.log("发起重连");
-    this.reconnectionAlarmTimer = setInterval(() => {
-      if (this.reconnectionAlarmCallback) {
-        this.reconnectionAlarmCallback();
-      }
-      this.showPingStatus("服务器断了，如果您想继续聊，刷一下呗~~~");
-    }, 1000);
-    this.closeHeartBeat();
-  } else {
-    console.log("服务器顶替逻辑，不重连!");
-  }
+  //停止心跳
+  this.closeHeartBeat();
+  //关闭现有链接
+  this.close();
+  //发起重连
+  this.reconnectionTimer = setInterval(() => {
+    if (this.reconnectionCallback) {
+      this.reconnectionCallback();
+    }
+    console.log("心跳超时，retry ????" + this.reconnectionTimer);
+  }, 1000);
 };
 
 Sparrow.webSocket.prototype._onOpen = function () {
   this.ws.onopen = (e) => {
-    console.log(e.currentTarget.protocol);
     console.log("连接成功" + e);
     this.showPingStatus("连接成功...");
     this.closeHeartBeat();
@@ -8329,8 +8340,8 @@ Sparrow.webSocket.prototype._onMsg = function (resolve) {
       if (e.data === "PONG") {
         this.lastHeartTime = new Date().getTime();
         this.showPingStatus(
-          "服务器健康 最后心跳时间:<span style='color:red'>" +
-            new Date().format("mm:ss") +
+          "健康<span style='color:red'>" +
+            new Date().format("hh:mm:ss") +
             "</span>"
         );
         return;
@@ -8357,13 +8368,12 @@ Sparrow.webSocket.prototype._onMsg = function (resolve) {
 
 Sparrow.webSocket.prototype._onClose = function (reject) {
   this.ws.onclose = (e) => {
-    console.log("close 事件");
     if (e.wasClean) {
-      this.showPingStatus("服务器休息了，稍侯再试哈....");
-      // 干净的关闭，客户端主动关闭 不需要发起重连,关闭上一个心跳
-      console.log("不重连");
+      console.log("干净的关闭 重连");
+      this.reconnectWebSocket();
     } else {
       // 异常关闭 需要发起重连
+      console.log("异常关闭 重连");
       this.reconnectWebSocket();
     }
     reject(e);
@@ -8374,7 +8384,7 @@ Sparrow.webSocket.prototype._onError = function (reject) {
   this.onerror = (e) => {
     // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
     console.log("连接出错" + e);
-    this.showPingStatus("连接出错啦~~~");
+    this.showPingStatus("on error 重连");
     this.reconnectWebSocket();
     reject(e);
   };
@@ -8382,34 +8392,30 @@ Sparrow.webSocket.prototype._onError = function (reject) {
 
 // 心跳机制 --启动心跳
 Sparrow.webSocket.prototype.startHeartBeat = function () {
-  this.timeoutTimer = setInterval(() => {
+  this.lastHeartTime = new Date().getTime();
+  this.heartTimer = setInterval(() => {
+    var heartDiff = new Date().getTime() - this.lastHeartTime;
+    // 如果超过两个周期未拿到心跳，说明超时
+    if (heartDiff > this.heartTimeout) {
+      console.log("超时重连 heart diff {}", heartDiff);
+      this.reconnectWebSocket();
+    }
     // 开启一个心跳
     try {
       this.ws.send("PING");
     } catch (e) {
       console.log("heart beat error:" + e);
     }
-    console.log(
-      "heart beat: " +
-        new Date().getSeconds() +
-        " timer id:" +
-        this.timeoutTimer
-    );
   }, this.heartTime);
-
-  // 检测当前开启的这个心跳是否超时
-  this.serverTimeoutTimer = setInterval(() => {
-    // 如果超过两个周期未拿到心跳，说明超时
-    if (new Date().getTime() - this.lastHeartTime > this.heartTime * 2) {
-      this.reconnectWebSocket();
-    }
-  }, this.heartTimeout);
 };
 
 // 关闭心跳
 Sparrow.webSocket.prototype.closeHeartBeat = function () {
-  clearTimeout(this.timeoutTimer);
-  clearTimeout(this.serverTimeoutTimer);
+  clearTimeout(this.heartTimer);
+};
+
+Sparrow.webSocket.prototype.clearReconnectionTimer = function () {
+  clearTimeout(this.reconnectionTimer);
 };
 //发送消息
 Sparrow.webSocket.prototype.sendMessage = function (data) {
