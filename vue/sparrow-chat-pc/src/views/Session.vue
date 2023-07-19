@@ -73,6 +73,11 @@ export default {
       this.$chatApi.setRead(this.activeSession, this);
     },
   },
+  watch: {
+    sessionList: function () {
+      this.sessionList = this.$sessions;
+    },
+  },
 };
 </script>
 

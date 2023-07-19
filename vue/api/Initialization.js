@@ -310,6 +310,11 @@ var Initialization = {
       webSocket.reconnectionCallback = function () {
         if (vue.$sparrow.browser.active) {
           webSocket.clearReconnectionTimer();
+          //刷一下当前窗口
+          //因为用户断开后，聊天数据未更新，重连后，相关联系人，群和消息需要重新加载
+          //vue.$init();
+          //导致页面绑定的对象引用不一致，比如this.$sessions对象会被重新赋值，session对象引用地址发生变化,VUE无法探测数据变化
+          //综上刷新即可
           vue.$router.go(0);
         } else {
           webSocket.showPingStatus(
