@@ -1,5 +1,8 @@
 import React, {useState} from "react";
 import store from './store/index';
+import './pages/main.css';
+
+
 
 export default function Son() {
     //拿到set 值的方法
@@ -14,7 +17,7 @@ export default function Son() {
         setState(store.getState);
     };
     return (
-        <div style={{border: '1px solid #ccc', margin: 10, padding: 10}}>
+        <div className="main" style={{border: '1px solid #ccc', margin: 10, padding: 10}}>
             I.m son {store.getState()}
             <button onClick={add}>+n</button>
             <input readOnly={true} value="1"/>
