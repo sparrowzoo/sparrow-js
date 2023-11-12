@@ -27,6 +27,17 @@ module.exports = {
                 use: [MiniCssExtractPlugin.loader, "css-loader"],
             },
             {
+                test: /\.png$/i,
+                //,'file-loader' 有文件路径的
+                use: {
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10 * 1024,
+                        name: '[name]-[hash].png'
+                    }
+                }
+            },
+            {
                 test: /\.(js|jsx)$/,
                 loader: "babel-loader",
                 exclude: /node_modules/,
