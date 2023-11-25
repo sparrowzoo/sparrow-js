@@ -85,6 +85,7 @@ var regInfo = {
       '">网易</a>邮箱。',
     isExist: false,
     parentLevel: 1,
+    event : 'EmailValidator'
   },
   txtRegUserName: {
     errorCtrlId: "errorRegUserName",
@@ -97,6 +98,8 @@ var regInfo = {
     lengthError: "用户名至少6位。",
     setError: "用户名已被注册,请您换一个用户名。",
     parentLevel: 1,
+    event : 'UserNameRuleValidator'
+
   },
   txtRegPassword: {
     errorCtrlId: "errorRegPassword",
