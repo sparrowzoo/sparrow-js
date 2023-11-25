@@ -74,7 +74,7 @@ module.exports = {
             title: "webpack merge html",
             template: "./src/pages/index.html",//结合 html-withimg-loader 生成html
             filename: "./marge.html",
-            chunks: ["index", "main"]
+            chunks: ["index", "main"]//chunk 即上边entry的key
         }),
         new CleanWebpackPlugin({
             path: path.join(__dirname, "public"),
