@@ -2,13 +2,12 @@ const path = require("path");
 // 引入自动生成 html 的插件
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
-const MiddlewarePlugin = require("next/dist/build/webpack/plugins/middleware-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 module.exports = {
     optimization: {
-        // usedExports: false, // 禁用仅导出使用的导出
+        usedExports: false, // 只使用导出(意思是不使用的脚本不导出)
         sideEffects: false, // 禁用副作用检测（对于 package.json 中的 "sideEffects" 属性）
-        minimize: false, // <---- 禁用 uglify.
+        minimize: false, // <---- 禁用 uglify. //禁用代码混淆
     },
     mode: "development", //开发模式
     entry: {
@@ -40,12 +39,12 @@ module.exports = {
             {
                 test: /\.(js|jsx)$/,
                 loader: "babel-loader",
-                exclude: /node_modules/,
+                exclude: /node_modules/,//node modules 文件夹下的要排除
             },
             {
                 test: /\.html$/,
                 use: [
-                    'html-withimg-loader'
+                    'html-withimg-loader'//合并html功能
                 ]
             },
             // {
@@ -64,16 +63,18 @@ module.exports = {
             // 定义输出文件名和目录
             filename: "css/[name]-wrap-[hash].css",
         }),
+        //生成html
         new HtmlWebpackPlugin({
             template: "./src/index.html",
-            title: "Webpack App",
+            title: "react html",
             filename: "index.html",
+            chunks: ["index"]//默认是所有chunks
         }),
         new HtmlWebpackPlugin({
-            title: "Webpack App 2",
-            template: "./src/pages/index.html",
+            title: "webpack merge html",
+            template: "./src/pages/index.html",//结合 html-withimg-loader 生成html
             filename: "./marge.html",
-            chunks: ["index", "main"]
+            chunks: ["index", "main"]//chunk 即上边entry的key
         }),
         new CleanWebpackPlugin({
             path: path.join(__dirname, "public"),
