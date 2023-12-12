@@ -142,16 +142,10 @@ module.exports = defineConfig({
   devServer: {
     port: port, //端口
     open: true, //是否自动启用浏览器
-    //overlay: { //vue3
-    /**
-     * INFO  Starting development server...
-     ERROR  ValidationError: Invalid options object. Dev Server has been initialized using an options object that does not match the API schema.
-     - options has an unknown property 'overlay'. These properties are valid:
-     object { allowedHosts?, bonjour?, client?, compress?, devMiddleware?, headers?, historyApiFallback?, host?, hot?, http2?, https?, ipc?, liveReload?, magicHtml?, onAfterSetupMiddleware?, onBeforeSetupMiddleware?, onListening?, open?, port?, proxy?, server?, setupExitSignals?, setupMiddlewares?, static?, watchFiles?, webSocketServer? }
-     */
-    //warnings: false,
-    //errors: true
-    //},
+    overlay: {
+      warnings: false,
+      errors: true,
+    },
     proxy: {
       "/api/": {
         target: "http://127.0.0.1:7777",
