@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import store from './store/index';
-import './pages/main.css';
+// import './pages/main.css';
 
 
 

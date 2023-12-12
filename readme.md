@@ -9,13 +9,13 @@ https://www.gulpjs.com.cn/docs/getting-started/
 
 build
 ---
+
 - gulp dev
 - gulp
 
-
-
 nginx
 ---
+
 ```
 root is: /opt/homebrew/var/www
 
@@ -34,7 +34,6 @@ TypeError: Cannot read property 'apply' of undefined issue
 ---
 https://github.com/gulpjs/gulp-cli/issues/84
 
-
 ## supervisor 报错
 
 ```
@@ -42,12 +41,16 @@ entered FATAL state, too many start retries too quickly
 ```
 
 ## 解决方案
+
 - tomcat 启动用run 非start (start 为守护进程无法监控)
+
 ```
 /root/tomcat-sparrow/bin/catalina.sh run
 ```
+
 - 为 supervisor 创建新用户 否则启动后无法监控其状态 导致supervisor重试
 - 重启后要重新设置权限（否则读不到环境变量)
+
 ```
 chown -R www:www /root/tomcat-sparrow
 chown -R www:www /var/log/supervisor
@@ -71,6 +74,7 @@ groups www //show groups of www
 ```
 
 ## 文件上传超时重试问题
+
 ```
 proxy_connect_timeout:600 
 #与后端/上游服务器建立连接的超时时间，默认为60s，此时间不超过75s。
@@ -82,9 +86,12 @@ proxy_send_timeout:600
 #设置往后端/上游服务器发送请求的超时时间，默认为60s，此超时时间指的是两次成功写操作间隔时间，而不是发送整个请求的超时时间。如果在此超时时间内上，游服务器没有接收任何响应，则Nginx关闭此连接。
 
 ```
+
 # 部署运行脚本
+
 [部署脚本](deploy/deploy.md)
 [nginx 配置](deploy/nginx.conf)
 [server.xml 配置](deploy/server.xml)
 [supervisor 配置](deploy/supervisor.md)
+https://sparrowzoo.feishu.cn/docx/E9X0d5Zt9oSY28x2Hjqcv7e1nLg
 
