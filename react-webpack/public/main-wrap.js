@@ -136,11 +136,11 @@ var exports = __webpack_exports__;
 
 
 Object.defineProperty(exports, "__esModule", ({
-    value: true
+  value: true
 }));
 
 exports["default"] = function () {
-    (0, _heading.greet)("zhangsan");
+  (0, _heading.greet)("zhangsan");
 };
 
 var _heading = __webpack_require__(842);
@@ -160,16 +160,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * 一定有dom 使用的方法才会被导出，否则不预导出
  */
 //引css
-document.getElementById("clickButton").addEventListener('click', function () {
-    alert((0, _heading.greet)('zhangsan'));
-    alert(_heading.greet);
+document.getElementById("clickButton").addEventListener("click", function () {
+  alert((0, _heading.greet)("zhangsan"));
+  alert(_heading.greet);
 });
-
-document.getElementById("hello").classList.add("main");
 
 var image = new Image();
 image.src = _logo2.default;
-document.body.append(image);
+document.getElementById("img").append(image);
 })();
 
 /******/ })()

@@ -34,7 +34,7 @@ function About() {
 
 
 Object.defineProperty(exports, "__esModule", ({
-    value: true
+  value: true
 }));
 exports["default"] = App;
 
@@ -66,122 +66,128 @@ var _Home2 = _interopRequireDefault(_Home);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var menus = [{ url: '/home', component: _Home2.default, name: 'Home' }, { url: '/about', component: _About2.default, name: 'About' }];
+var menus = [{ url: "/home", component: _Home2.default, name: "Home" }, { url: "/about", component: _About2.default, name: "About" }];
 
 function MenuRoutes() {
-    var menuRoutes = menus.map(function (menu) {
-        return _react2.default.createElement(_reactRouterDom.Route, { path: menu.url, Component: menu.component });
-    });
-    return _react2.default.createElement(
-        _reactRouterDom.Routes,
-        null,
-        menuRoutes
-    );
+  var menuRoutes = menus.map(function (menu) {
+    return _react2.default.createElement(_reactRouterDom.Route, { path: menu.url, Component: menu.component });
+  });
+  return _react2.default.createElement(
+    _reactRouterDom.Routes,
+    null,
+    menuRoutes
+  );
 }
 
 function DynamicMenus() {
-    var menus = [{ title: 'Cabbage', id: 1, url: "/Home" }, { title: 'Garlic', id: 2, url: "/About" }, { title: 'Blog', id: 2, url: "/blog" }];
-    var listItems = menus.map(function (menu) {
-        return _react2.default.createElement(
-            "div",
-            null,
-            _react2.default.createElement(
-                _reactRouterDom.NavLink,
-                { to: menu.url, className: "link" },
-                menu.title
-            ),
-            _react2.default.createElement("br", null)
-        );
-    });
-
+  var menus = [{ title: "Home", id: 1, url: "/home" }, { title: "About", id: 2, url: "/about" }];
+  var listItems = menus.map(function (menu) {
     return _react2.default.createElement(
-        _reactRouterDom.BrowserRouter,
-        null,
-        listItems,
-        _react2.default.createElement(
-            _reactRouterDom.Routes,
-            null,
-            _react2.default.createElement(_reactRouterDom.Route, { path: "/home", Component: _Home2.default }),
-            _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
-        )
+      "div",
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: menu.url, className: "link" },
+        menu.title
+      ),
+      _react2.default.createElement("br", null)
     );
+  });
+
+  return _react2.default.createElement(
+    _reactRouterDom.BrowserRouter,
+    null,
+    listItems,
+    _react2.default.createElement(
+      _reactRouterDom.Routes,
+      null,
+      _react2.default.createElement(_reactRouterDom.Route, { Component: _Home2.default, path: "/home" }),
+      _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
+    )
+  );
 }
 
 function App(properties) {
-    return _react2.default.createElement(
-        "div",
-        { style: { border: "1px solid #ccc", margin: 10, padding: 10 } },
-        "I.Root my name is:",
-        properties.name,
-        _react2.default.createElement(_EventButton2.default, { name: "click me" }),
-        _react2.default.createElement(_Father2.default, null),
-        _react2.default.createElement(_Uncle2.default, null),
-        _react2.default.createElement(
-            "h1",
-            null,
-            "\u6D4F\u89C8\u5668history\u8DEF\u7531[\u52A8\u6001]"
-        ),
-        _react2.default.createElement(DynamicMenus, null),
-        _react2.default.createElement(
-            "h1",
-            null,
-            "Hash \u8DEF\u7531"
-        ),
-        _react2.default.createElement(
-            "a",
-            { href: "/blog" },
-            "\u5BB6\u76EE\u5F55"
-        ),
-        _react2.default.createElement("br", null),
-        _react2.default.createElement(
-            _reactRouterDom.HashRouter,
-            null,
-            _react2.default.createElement(
-                _reactRouterDom.Link,
-                { target: "_blank", to: "http://www.baidu.com" },
-                "\u767E\u5EA6"
-            ),
-            _react2.default.createElement(
-                _reactRouterDom.NavLink,
-                { to: "home", className: "link" },
-                "\u8DF3\u8F6CHome\u9875\u9762"
-            ),
-            _react2.default.createElement("br", null),
-            _react2.default.createElement(
-                _reactRouterDom.NavLink,
-                { to: "about", className: "link" },
-                "\u8DF3\u8F6CAbout\u9875\u9762"
-            ),
-            _react2.default.createElement("br", null)
-        ),
-        _react2.default.createElement(
-            "h1",
-            null,
-            "MemoryRouter \u8DEF\u7531"
-        ),
-        _react2.default.createElement(
-            _reactRouterDom.MemoryRouter,
-            null,
-            _react2.default.createElement(
-                _reactRouterDom.NavLink,
-                { to: "/home", className: "link" },
-                "\u8DF3\u8F6CHome\u9875\u9762"
-            ),
-            _react2.default.createElement("br", null),
-            _react2.default.createElement(
-                _reactRouterDom.NavLink,
-                { to: "/about", className: "link" },
-                "\u8DF3\u8F6CAbout\u9875\u9762"
-            ),
-            _react2.default.createElement("br", null),
-            _react2.default.createElement(
-                _reactRouterDom.Routes,
-                null,
-                _react2.default.createElement(_reactRouterDom.Route, { path: "/home", Component: _Home2.default }),
-                _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
-            )
-        )
-    );
+  return _react2.default.createElement(
+    "div",
+    { style: { border: "1px solid #ccc", margin: 10, padding: 10 } },
+    "I.Root my name is:",
+    properties.name,
+    _react2.default.createElement(_EventButton2.default, { name: "click me" }),
+    _react2.default.createElement(_Father2.default, null),
+    _react2.default.createElement(_Uncle2.default, null),
+    _react2.default.createElement(
+      "h1",
+      null,
+      "\u6D4F\u89C8\u5668history\u8DEF\u7531[\u52A8\u6001]"
+    ),
+    _react2.default.createElement(DynamicMenus, null),
+    _react2.default.createElement(
+      "h1",
+      null,
+      "Hash \u8DEF\u7531"
+    ),
+    _react2.default.createElement(
+      "a",
+      { href: "/blog" },
+      "\u5BB6\u76EE\u5F55"
+    ),
+    _react2.default.createElement("br", null),
+    _react2.default.createElement(
+      _reactRouterDom.HashRouter,
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.Link,
+        { target: "_blank", to: "http://www.baidu.com" },
+        "\u767E\u5EA6"
+      ),
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "home", className: "link" },
+        "\u8DF3\u8F6CHome\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "about", className: "link" },
+        "\u8DF3\u8F6CAbout\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.Routes,
+        null,
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _Home2.default, path: "/home" }),
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
+      )
+    ),
+    _react2.default.createElement(
+      "h1",
+      null,
+      "MemoryRouter \u8DEF\u7531"
+    ),
+    _react2.default.createElement(
+      _reactRouterDom.MemoryRouter,
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "/home", className: "link" },
+        "\u8DF3\u8F6CHome\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "/about", className: "link" },
+        "\u8DF3\u8F6CAbout\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.Routes,
+        null,
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _Home2.default, path: "/home" }),
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
+      )
+    )
+  );
 }
 
 /***/ }),
@@ -408,7 +414,57 @@ var _reducer2 = _interopRequireDefault(_reducer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports["default"] = (0, _redux.createStore)(_reducer2.default);
+/**
+ * import { createSlice, configureStore } from '@reduxjs/toolkit'
+ *
+ * const countSlice = createSlice({
+ *   name: 'count',
+ *   initialState: { value: 0 },
+ *   reducers: {
+ *     incremented: (state, qty: number) => {
+ *       // Redux Toolkit does not mutate the state, it uses the Immer library
+ *       // behind scenes, allowing us to have something called "draft state".
+ *       state.value += qty
+ *     },
+ *     decremented: (state, qty: number) => {
+ *       state.value -= qty
+ *     },
+ *   },
+ * })
+ *
+ * const countStore = configureStore({ reducer: countSlice.reducer })
+ * @type {Store<unknown, Action>}
+ */
+var store = (0, _redux.createStore)(_reducer2.default);
+exports["default"] = store;
+
+// https://docs.pmnd.rs/zustand/getting-started/comparison
+/**
+ * import { createStore } from 'redux'
+ * import { useSelector, useDispatch } from 'react-redux'
+ *
+ * type State = {
+ *   count: number
+ * }
+ *
+ * type Action = {
+ *   type: 'increment' | 'decrement'
+ *   qty: number
+ * }
+ *
+ * const countReducer = (state: State, action: Action) => {
+ *   switch (action.type) {
+ *     case 'increment':
+ *       return { count: state.count + action.qty }
+ *     case 'decrement':
+ *       return { count: state.count - action.qty }
+ *     default:
+ *       return state
+ *   }
+ * }
+ *
+ * const countStore = createStore(countReducer)
+ */
 
 /***/ }),
 
@@ -8677,16 +8733,6 @@ var _App = __webpack_require__(187);
 var _App2 = _interopRequireDefault(_App);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// class App extends React.Component {
-//   render() {
-//     return <div>hello world</div>;
-//   }
-// }
-
-// function App(props) {
-//   return <h1>Hello, {props.name}</h1>;
-// }
 
 _reactDom2.default.render(_react2.default.createElement(_App2.default, { name: "zhangsan" }), document.getElementById("root"));
 })();
