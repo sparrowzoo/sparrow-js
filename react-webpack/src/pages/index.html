@@ -3,11 +3,11 @@
     <meta charset="UTF-8">
 </head>
 #include("./layout/header.html")
-#include("./layout/bottom.html")
 <div id="hello">
-    Hello main
+    <input class="button" id="clickButton" type="button" value="点击我试一下">
+    <div id="img"></div>
 </div>
-<input id="clickButton" type="button" value="点击我试一下">
+#include("./layout/bottom.html")
 </html>
 <script>
     //因为闭包，这里无法执行，但事件是可以执行的的
