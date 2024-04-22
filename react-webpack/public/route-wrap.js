@@ -2,7 +2,33 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 911:
+/***/ 256:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+
+Object.defineProperty(exports, "__esModule", ({
+    value: true
+}));
+exports["default"] = About;
+
+var _react = __webpack_require__(294);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function About() {
+    return _react2.default.createElement(
+        "div",
+        null,
+        "About"
+    );
+}
+
+/***/ }),
+
+/***/ 883:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -18,44 +44,141 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(818);
 
-var _Father = __webpack_require__(591);
+var _About = __webpack_require__(256);
 
-var _Father2 = _interopRequireDefault(_Father);
+var _About2 = _interopRequireDefault(_About);
 
-var _Uncle = __webpack_require__(62);
+var _Home = __webpack_require__(31);
 
-var _Uncle2 = _interopRequireDefault(_Uncle);
-
-var _EventButton = __webpack_require__(279);
-
-var _EventButton2 = _interopRequireDefault(_EventButton);
+var _Home2 = _interopRequireDefault(_Home);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var menus = [{ url: "/home", component: _Home2.default, name: "Home" }, { url: "/about", component: _About2.default, name: "About" }];
+
+function MenuRoutes() {
+  var menuRoutes = menus.map(function (menu) {
+    return _react2.default.createElement(_reactRouterDom.Route, { path: menu.url, Component: menu.component });
+  });
+  return _react2.default.createElement(
+    _reactRouterDom.Routes,
+    null,
+    menuRoutes
+  );
+}
+
+function DynamicMenus() {
+  var menus = [{ title: "Home", id: 1, url: "/home" }, { title: "About", id: 2, url: "/about" }];
+  var listItems = menus.map(function (menu) {
+    return _react2.default.createElement(
+      "div",
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: menu.url, className: "link" },
+        menu.title
+      ),
+      _react2.default.createElement("br", null)
+    );
+  });
+
+  return _react2.default.createElement(
+    _reactRouterDom.BrowserRouter,
+    null,
+    listItems,
+    _react2.default.createElement(
+      _reactRouterDom.Routes,
+      null,
+      _react2.default.createElement(_reactRouterDom.Route, { Component: _Home2.default, path: "/home" }),
+      _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
+    )
+  );
+}
 
 function App(properties) {
   return _react2.default.createElement(
     "div",
     { style: { border: "1px solid #ccc", margin: 10, padding: 10 } },
+    "I.Root my name is:",
+    properties.name,
     _react2.default.createElement(
       "h1",
       null,
-      "I.Root "
+      "\u6D4F\u89C8\u5668history\u8DEF\u7531[\u52A8\u6001]"
+    ),
+    _react2.default.createElement(DynamicMenus, null),
+    _react2.default.createElement(
+      "h1",
+      null,
+      "Hash \u8DEF\u7531"
     ),
     _react2.default.createElement(
-      "h2",
-      null,
-      "my name is:",
-      properties.name
+      "a",
+      { href: "/blog" },
+      "\u5BB6\u76EE\u5F55"
     ),
-    _react2.default.createElement(_EventButton2.default, { name: "click me" }),
-    _react2.default.createElement(_Father2.default, { name: properties.name }),
-    _react2.default.createElement(_Uncle2.default, null)
+    _react2.default.createElement("br", null),
+    _react2.default.createElement(
+      _reactRouterDom.HashRouter,
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.Link,
+        { target: "_blank", to: "http://www.baidu.com" },
+        "\u767E\u5EA6"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "home", className: "link" },
+        "\u8DF3\u8F6CHome\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "about", className: "link" },
+        "\u8DF3\u8F6CAbout\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.Routes,
+        null,
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _Home2.default, path: "/home" }),
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
+      )
+    ),
+    _react2.default.createElement(
+      "h1",
+      null,
+      "MemoryRouter \u8DEF\u7531"
+    ),
+    _react2.default.createElement(
+      _reactRouterDom.MemoryRouter,
+      null,
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "/home", className: "link" },
+        "\u8DF3\u8F6CHome\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.NavLink,
+        { to: "/about", className: "link" },
+        "\u8DF3\u8F6CAbout\u9875\u9762"
+      ),
+      _react2.default.createElement("br", null),
+      _react2.default.createElement(
+        _reactRouterDom.Routes,
+        null,
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _Home2.default, path: "/home" }),
+        _react2.default.createElement(_reactRouterDom.Route, { Component: _About2.default, path: "/about" })
+      )
+    )
   );
 }
 
 /***/ }),
 
-/***/ 279:
+/***/ 31:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -63,7 +186,7 @@ function App(properties) {
 Object.defineProperty(exports, "__esModule", ({
     value: true
 }));
-exports["default"] = MyButton;
+exports["default"] = Home;
 
 var _react = __webpack_require__(294);
 
@@ -71,334 +194,12 @@ var _react2 = _interopRequireDefault(_react);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-/**
- * 你可能已经注意到 <MyButton /> 是以大写字母开头的。你可以据此识别 React 组件。React 组件必须以大写字母开头，而 HTML 标签则必须是小写字母。
- * @constructor
- */
-function MyButton(props) {
-    var add = function add(name) {
-        alert(name);
-    };
-    //事件传参数
-    return _react2.default.createElement(
-        "button",
-        { value: props.name, onClick: function onClick() {
-                return add(props.name);
-            } },
-        props.name
-    );
-}
-
-/***/ }),
-
-/***/ 591:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({
-    value: true
-}));
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-exports["default"] = Father;
-
-var _react = __webpack_require__(294);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _Son = __webpack_require__(756);
-
-var _Son2 = _interopRequireDefault(_Son);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function Father(props) {
-    var _useState = (0, _react.useState)(props.name),
-        _useState2 = _slicedToArray(_useState, 2),
-        name = _useState2[0],
-        setName = _useState2[1];
-
-    var changName = function changName() {
-        setName("lisi" + Math.random());
-    };
-    // 参考官方文档  https://react.docschina.org/learn/synchronizing-with-effects
-    /**
-     * 
-     * 陷阱
-     * 没有依赖数组作为第二个参数，与依赖数组位空数组 [] 的行为是不一致的：
-    useEffect(() => {
-    // 这里的代码会在每次渲染后执行
-    });
-    useEffect(() => {
-    // 这里的代码只会在组件挂载后执行
-    }, []);
-    useEffect(() => {
-    //这里的代码只会在每次渲染后，并且 a 或 b 的值与上次渲染不一致时执行
-    }, [a, b]);
-     */
-
-    (0, _react.useEffect)(function () {
-        console.log("parent init 模拟componentDidMount");
-    }, []);
-
-    (0, _react.useEffect)(function () {
-        console.log("parent state update 模拟componentDidUpdate" + { name: name }.name);
-    }, [name]); //监控状态
-
+function Home() {
     return _react2.default.createElement(
         "div",
-        { style: { border: '1px solid #ccc', margin: 10, padding: 10 } },
-        _react2.default.createElement(
-            "h1",
-            null,
-            "I.m Father [\u7236\u7EC4\u4EF6\u81EA\u8EAB\u5C5E\u6027]",
-            props.name,
-            _react2.default.createElement("br", null),
-            "I.m Father state \u3010\u4F60\u7EC4\u4EF6\u81EA\u8EAB\u72B6\u6001\u4F1A\u6539\u53D8\u3011",
-            name,
-            _react2.default.createElement(_Son2.default, { name: name })
-        ),
-        _react2.default.createElement(
-            "button",
-            { onClick: changName },
-            "chang name"
-        )
+        null,
+        "home"
     );
-}
-
-/***/ }),
-
-/***/ 756:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({
-    value: true
-}));
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-exports["default"] = Son;
-
-var _react = __webpack_require__(294);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _index = __webpack_require__(319);
-
-var _index2 = _interopRequireDefault(_index);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-// import './pages/main.css';
-
-
-function Son(props) {
-
-    //拿到set 值的方法
-    var _useState = (0, _react.useState)(0),
-        _useState2 = _slicedToArray(_useState, 2),
-        n = _useState2[0],
-        setState = _useState2[1];
-
-    var _useState3 = (0, _react.useState)(props.name),
-        _useState4 = _slicedToArray(_useState3, 2),
-        name = _useState4[0],
-        setName = _useState4[1];
-
-    _index2.default.subscribe(function () {
-        setState(_index2.default.getState);
-    });
-
-    var add = function add() {
-        _index2.default.dispatch({ type: 'addN', payload: 1 });
-        //重置当前组件的状态
-        setState(_index2.default.getState);
-    };
-
-    (0, _react.useEffect)(function () {
-        console.log("son init 模拟componentDidMount");
-    }, []);
-    //https://blog.csdn.net/ImagineCode/article/details/12462751 //不加依赖项会导致死循环
-
-
-    return _react2.default.createElement(
-        'div',
-        { className: 'main', style: { border: '1px solid #ccc', margin: 10, padding: 10 } },
-        'I.m from parent [\u5B50\u7EC4\u4EF6\u7684\u5C5E\u6027\u4F1A\u968F\u7236\u7EC4\u4EF6\u6539\u53D8\u800C\u6539\u53D8]',
-        props.name,
-        _react2.default.createElement('br', null),
-        'I.m from parent state [\u5B50\u7EC4\u4EF6\u81EA\u5DF1\u7684\u72B6\u6001\u4E0D\u4F1A\u6539\u53D8] ',
-        name,
-        _react2.default.createElement('br', null),
-        'I.m son ',
-        _index2.default.getState(),
-        _react2.default.createElement(
-            'button',
-            { onClick: add },
-            '+n'
-        ),
-        _react2.default.createElement('input', { readOnly: true, value: n })
-    );
-}
-
-/***/ }),
-
-/***/ 62:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({
-    value: true
-}));
-
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
-exports["default"] = Uncle;
-
-var _react = __webpack_require__(294);
-
-var _react2 = _interopRequireDefault(_react);
-
-var _index = __webpack_require__(319);
-
-var _index2 = _interopRequireDefault(_index);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function Uncle() {
-    var _useState = (0, _react.useState)(0),
-        _useState2 = _slicedToArray(_useState, 2),
-        n = _useState2[0],
-        setState = _useState2[1];
-
-    _index2.default.subscribe(function () {
-        setState(_index2.default.getState);
-    });
-
-    return _react2.default.createElement(
-        'div',
-        { style: { border: '1px solid #ccc', margin: 10, padding: 10 } },
-        'Uncle\u7EC4\u4EF6 ',
-        _index2.default.getState(),
-        _react2.default.createElement(
-            'button',
-            {
-                onClick: function onClick() {
-                    _index2.default.dispatch({ type: 'sub' });
-                    setState(_index2.default.getState);
-                }
-            },
-            '-1'
-        )
-    );
-}
-
-/***/ }),
-
-/***/ 319:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-
-var _redux = __webpack_require__(791);
-
-var _reducer = __webpack_require__(816);
-
-var _reducer2 = _interopRequireDefault(_reducer);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * import { createSlice, configureStore } from '@reduxjs/toolkit'
- *
- * const countSlice = createSlice({
- *   name: 'count',
- *   initialState: { value: 0 },
- *   reducers: {
- *     incremented: (state, qty: number) => {
- *       // Redux Toolkit does not mutate the state, it uses the Immer library
- *       // behind scenes, allowing us to have something called "draft state".
- *       state.value += qty
- *     },
- *     decremented: (state, qty: number) => {
- *       state.value -= qty
- *     },
- *   },
- * })
- *
- * const countStore = configureStore({ reducer: countSlice.reducer })
- * @type {Store<unknown, Action>}
- */
-/**
- * @deprecated
- * We recommend using the configureStore method of the @reduxjs/toolkit package, which replaces createStore.
- */
-var store = (0, _redux.createStore)(_reducer2.default);
-
-exports["default"] = store;
-
-// https://docs.pmnd.rs/zustand/getting-started/comparison
-/**
- * import { createStore } from 'redux'
- * import { useSelector, useDispatch } from 'react-redux'
- *
- * type State = {
- *   count: number
- * }
- *
- * type Action = {
- *   type: 'increment' | 'decrement'
- *   qty: number
- * }
- *
- * const countReducer = (state: State, action: Action) => {
- *   switch (action.type) {
- *     case 'increment':
- *       return { count: state.count + action.qty }
- *     case 'decrement':
- *       return { count: state.count - action.qty }
- *     default:
- *       return state
- *   }
- * }
- *
- * const countStore = createStore(countReducer)
- */
-
-/***/ }),
-
-/***/ 816:
-/***/ ((__unused_webpack_module, exports) => {
-
-
-
-Object.defineProperty(exports, "__esModule", ({
-  value: true
-}));
-exports["default"] = reducer;
-var initState = 0;
-function reducer() {
-  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initState;
-  var action = arguments[1];
-
-  console.log(state);
-  switch (action.type) {
-    case 'addN':
-      return state + parseInt(action.payload);
-    case 'sub':
-      return state - 1;
-    default:
-      return state;
-  }
 }
 
 /***/ }),
@@ -7718,787 +7519,6 @@ if (true) {
 
 /***/ }),
 
-/***/ 791:
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-// ESM COMPAT FLAG
-__webpack_require__.r(__webpack_exports__);
-
-// EXPORTS
-__webpack_require__.d(__webpack_exports__, {
-  __DO_NOT_USE__ActionTypes: () => (/* binding */ ActionTypes),
-  applyMiddleware: () => (/* binding */ applyMiddleware),
-  bindActionCreators: () => (/* binding */ bindActionCreators),
-  combineReducers: () => (/* binding */ combineReducers),
-  compose: () => (/* binding */ compose),
-  createStore: () => (/* binding */ createStore),
-  legacy_createStore: () => (/* binding */ legacy_createStore)
-});
-
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/typeof.js
-function _typeof(o) {
-  "@babel/helpers - typeof";
-
-  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-    return typeof o;
-  } : function (o) {
-    return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, _typeof(o);
-}
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toPrimitive.js
-
-function _toPrimitive(input, hint) {
-  if (_typeof(input) !== "object" || input === null) return input;
-  var prim = input[Symbol.toPrimitive];
-  if (prim !== undefined) {
-    var res = prim.call(input, hint || "default");
-    if (_typeof(res) !== "object") return res;
-    throw new TypeError("@@toPrimitive must return a primitive value.");
-  }
-  return (hint === "string" ? String : Number)(input);
-}
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/toPropertyKey.js
-
-
-function _toPropertyKey(arg) {
-  var key = _toPrimitive(arg, "string");
-  return _typeof(key) === "symbol" ? key : String(key);
-}
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/defineProperty.js
-
-function _defineProperty(obj, key, value) {
-  key = _toPropertyKey(key);
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectSpread2.js
-
-function ownKeys(e, r) {
-  var t = Object.keys(e);
-  if (Object.getOwnPropertySymbols) {
-    var o = Object.getOwnPropertySymbols(e);
-    r && (o = o.filter(function (r) {
-      return Object.getOwnPropertyDescriptor(e, r).enumerable;
-    })), t.push.apply(t, o);
-  }
-  return t;
-}
-function _objectSpread2(e) {
-  for (var r = 1; r < arguments.length; r++) {
-    var t = null != arguments[r] ? arguments[r] : {};
-    r % 2 ? ownKeys(Object(t), !0).forEach(function (r) {
-      _defineProperty(e, r, t[r]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) {
-      Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r));
-    });
-  }
-  return e;
-}
-;// CONCATENATED MODULE: ./node_modules/redux/es/redux.js
-
-
-/**
- * Adapted from React: https://github.com/facebook/react/blob/master/packages/shared/formatProdErrorMessage.js
- *
- * Do not require this module directly! Use normal throw error calls. These messages will be replaced with error codes
- * during build.
- * @param {number} code
- */
-function formatProdErrorMessage(code) {
-  return "Minified Redux error #" + code + "; visit https://redux.js.org/Errors?code=" + code + " for the full message or " + 'use the non-minified dev environment for full errors. ';
-}
-
-// Inlined version of the `symbol-observable` polyfill
-var $$observable = (function () {
-  return typeof Symbol === 'function' && Symbol.observable || '@@observable';
-})();
-
-/**
- * These are private action types reserved by Redux.
- * For any unknown actions, you must return the current state.
- * If the current state is undefined, you must return the initial state.
- * Do not reference these action types directly in your code.
- */
-var randomString = function randomString() {
-  return Math.random().toString(36).substring(7).split('').join('.');
-};
-
-var ActionTypes = {
-  INIT: "@@redux/INIT" + randomString(),
-  REPLACE: "@@redux/REPLACE" + randomString(),
-  PROBE_UNKNOWN_ACTION: function PROBE_UNKNOWN_ACTION() {
-    return "@@redux/PROBE_UNKNOWN_ACTION" + randomString();
-  }
-};
-
-/**
- * @param {any} obj The object to inspect.
- * @returns {boolean} True if the argument appears to be a plain object.
- */
-function isPlainObject(obj) {
-  if (typeof obj !== 'object' || obj === null) return false;
-  var proto = obj;
-
-  while (Object.getPrototypeOf(proto) !== null) {
-    proto = Object.getPrototypeOf(proto);
-  }
-
-  return Object.getPrototypeOf(obj) === proto;
-}
-
-// Inlined / shortened version of `kindOf` from https://github.com/jonschlinkert/kind-of
-function miniKindOf(val) {
-  if (val === void 0) return 'undefined';
-  if (val === null) return 'null';
-  var type = typeof val;
-
-  switch (type) {
-    case 'boolean':
-    case 'string':
-    case 'number':
-    case 'symbol':
-    case 'function':
-      {
-        return type;
-      }
-  }
-
-  if (Array.isArray(val)) return 'array';
-  if (isDate(val)) return 'date';
-  if (isError(val)) return 'error';
-  var constructorName = ctorName(val);
-
-  switch (constructorName) {
-    case 'Symbol':
-    case 'Promise':
-    case 'WeakMap':
-    case 'WeakSet':
-    case 'Map':
-    case 'Set':
-      return constructorName;
-  } // other
-
-
-  return type.slice(8, -1).toLowerCase().replace(/\s/g, '');
-}
-
-function ctorName(val) {
-  return typeof val.constructor === 'function' ? val.constructor.name : null;
-}
-
-function isError(val) {
-  return val instanceof Error || typeof val.message === 'string' && val.constructor && typeof val.constructor.stackTraceLimit === 'number';
-}
-
-function isDate(val) {
-  if (val instanceof Date) return true;
-  return typeof val.toDateString === 'function' && typeof val.getDate === 'function' && typeof val.setDate === 'function';
-}
-
-function kindOf(val) {
-  var typeOfVal = typeof val;
-
-  if (false) {}
-
-  return typeOfVal;
-}
-
-/**
- * @deprecated
- *
- * **We recommend using the `configureStore` method
- * of the `@reduxjs/toolkit` package**, which replaces `createStore`.
- *
- * Redux Toolkit is our recommended approach for writing Redux logic today,
- * including store setup, reducers, data fetching, and more.
- *
- * **For more details, please read this Redux docs page:**
- * **https://redux.js.org/introduction/why-rtk-is-redux-today**
- *
- * `configureStore` from Redux Toolkit is an improved version of `createStore` that
- * simplifies setup and helps avoid common bugs.
- *
- * You should not be using the `redux` core package by itself today, except for learning purposes.
- * The `createStore` method from the core `redux` package will not be removed, but we encourage
- * all users to migrate to using Redux Toolkit for all Redux code.
- *
- * If you want to use `createStore` without this visual deprecation warning, use
- * the `legacy_createStore` import instead:
- *
- * `import { legacy_createStore as createStore} from 'redux'`
- *
- */
-
-function createStore(reducer, preloadedState, enhancer) {
-  var _ref2;
-
-  if (typeof preloadedState === 'function' && typeof enhancer === 'function' || typeof enhancer === 'function' && typeof arguments[3] === 'function') {
-    throw new Error( true ? formatProdErrorMessage(0) : 0);
-  }
-
-  if (typeof preloadedState === 'function' && typeof enhancer === 'undefined') {
-    enhancer = preloadedState;
-    preloadedState = undefined;
-  }
-
-  if (typeof enhancer !== 'undefined') {
-    if (typeof enhancer !== 'function') {
-      throw new Error( true ? formatProdErrorMessage(1) : 0);
-    }
-
-    return enhancer(createStore)(reducer, preloadedState);
-  }
-
-  if (typeof reducer !== 'function') {
-    throw new Error( true ? formatProdErrorMessage(2) : 0);
-  }
-
-  var currentReducer = reducer;
-  var currentState = preloadedState;
-  var currentListeners = [];
-  var nextListeners = currentListeners;
-  var isDispatching = false;
-  /**
-   * This makes a shallow copy of currentListeners so we can use
-   * nextListeners as a temporary list while dispatching.
-   *
-   * This prevents any bugs around consumers calling
-   * subscribe/unsubscribe in the middle of a dispatch.
-   */
-
-  function ensureCanMutateNextListeners() {
-    if (nextListeners === currentListeners) {
-      nextListeners = currentListeners.slice();
-    }
-  }
-  /**
-   * Reads the state tree managed by the store.
-   *
-   * @returns {any} The current state tree of your application.
-   */
-
-
-  function getState() {
-    if (isDispatching) {
-      throw new Error( true ? formatProdErrorMessage(3) : 0);
-    }
-
-    return currentState;
-  }
-  /**
-   * Adds a change listener. It will be called any time an action is dispatched,
-   * and some part of the state tree may potentially have changed. You may then
-   * call `getState()` to read the current state tree inside the callback.
-   *
-   * You may call `dispatch()` from a change listener, with the following
-   * caveats:
-   *
-   * 1. The subscriptions are snapshotted just before every `dispatch()` call.
-   * If you subscribe or unsubscribe while the listeners are being invoked, this
-   * will not have any effect on the `dispatch()` that is currently in progress.
-   * However, the next `dispatch()` call, whether nested or not, will use a more
-   * recent snapshot of the subscription list.
-   *
-   * 2. The listener should not expect to see all state changes, as the state
-   * might have been updated multiple times during a nested `dispatch()` before
-   * the listener is called. It is, however, guaranteed that all subscribers
-   * registered before the `dispatch()` started will be called with the latest
-   * state by the time it exits.
-   *
-   * @param {Function} listener A callback to be invoked on every dispatch.
-   * @returns {Function} A function to remove this change listener.
-   */
-
-
-  function subscribe(listener) {
-    if (typeof listener !== 'function') {
-      throw new Error( true ? formatProdErrorMessage(4) : 0);
-    }
-
-    if (isDispatching) {
-      throw new Error( true ? formatProdErrorMessage(5) : 0);
-    }
-
-    var isSubscribed = true;
-    ensureCanMutateNextListeners();
-    nextListeners.push(listener);
-    return function unsubscribe() {
-      if (!isSubscribed) {
-        return;
-      }
-
-      if (isDispatching) {
-        throw new Error( true ? formatProdErrorMessage(6) : 0);
-      }
-
-      isSubscribed = false;
-      ensureCanMutateNextListeners();
-      var index = nextListeners.indexOf(listener);
-      nextListeners.splice(index, 1);
-      currentListeners = null;
-    };
-  }
-  /**
-   * Dispatches an action. It is the only way to trigger a state change.
-   *
-   * The `reducer` function, used to create the store, will be called with the
-   * current state tree and the given `action`. Its return value will
-   * be considered the **next** state of the tree, and the change listeners
-   * will be notified.
-   *
-   * The base implementation only supports plain object actions. If you want to
-   * dispatch a Promise, an Observable, a thunk, or something else, you need to
-   * wrap your store creating function into the corresponding middleware. For
-   * example, see the documentation for the `redux-thunk` package. Even the
-   * middleware will eventually dispatch plain object actions using this method.
-   *
-   * @param {Object} action A plain object representing “what changed”. It is
-   * a good idea to keep actions serializable so you can record and replay user
-   * sessions, or use the time travelling `redux-devtools`. An action must have
-   * a `type` property which may not be `undefined`. It is a good idea to use
-   * string constants for action types.
-   *
-   * @returns {Object} For convenience, the same action object you dispatched.
-   *
-   * Note that, if you use a custom middleware, it may wrap `dispatch()` to
-   * return something else (for example, a Promise you can await).
-   */
-
-
-  function dispatch(action) {
-    if (!isPlainObject(action)) {
-      throw new Error( true ? formatProdErrorMessage(7) : 0);
-    }
-
-    if (typeof action.type === 'undefined') {
-      throw new Error( true ? formatProdErrorMessage(8) : 0);
-    }
-
-    if (isDispatching) {
-      throw new Error( true ? formatProdErrorMessage(9) : 0);
-    }
-
-    try {
-      isDispatching = true;
-      currentState = currentReducer(currentState, action);
-    } finally {
-      isDispatching = false;
-    }
-
-    var listeners = currentListeners = nextListeners;
-
-    for (var i = 0; i < listeners.length; i++) {
-      var listener = listeners[i];
-      listener();
-    }
-
-    return action;
-  }
-  /**
-   * Replaces the reducer currently used by the store to calculate the state.
-   *
-   * You might need this if your app implements code splitting and you want to
-   * load some of the reducers dynamically. You might also need this if you
-   * implement a hot reloading mechanism for Redux.
-   *
-   * @param {Function} nextReducer The reducer for the store to use instead.
-   * @returns {void}
-   */
-
-
-  function replaceReducer(nextReducer) {
-    if (typeof nextReducer !== 'function') {
-      throw new Error( true ? formatProdErrorMessage(10) : 0);
-    }
-
-    currentReducer = nextReducer; // This action has a similiar effect to ActionTypes.INIT.
-    // Any reducers that existed in both the new and old rootReducer
-    // will receive the previous state. This effectively populates
-    // the new state tree with any relevant data from the old one.
-
-    dispatch({
-      type: ActionTypes.REPLACE
-    });
-  }
-  /**
-   * Interoperability point for observable/reactive libraries.
-   * @returns {observable} A minimal observable of state changes.
-   * For more information, see the observable proposal:
-   * https://github.com/tc39/proposal-observable
-   */
-
-
-  function observable() {
-    var _ref;
-
-    var outerSubscribe = subscribe;
-    return _ref = {
-      /**
-       * The minimal observable subscription method.
-       * @param {Object} observer Any object that can be used as an observer.
-       * The observer object should have a `next` method.
-       * @returns {subscription} An object with an `unsubscribe` method that can
-       * be used to unsubscribe the observable from the store, and prevent further
-       * emission of values from the observable.
-       */
-      subscribe: function subscribe(observer) {
-        if (typeof observer !== 'object' || observer === null) {
-          throw new Error( true ? formatProdErrorMessage(11) : 0);
-        }
-
-        function observeState() {
-          if (observer.next) {
-            observer.next(getState());
-          }
-        }
-
-        observeState();
-        var unsubscribe = outerSubscribe(observeState);
-        return {
-          unsubscribe: unsubscribe
-        };
-      }
-    }, _ref[$$observable] = function () {
-      return this;
-    }, _ref;
-  } // When a store is created, an "INIT" action is dispatched so that every
-  // reducer returns their initial state. This effectively populates
-  // the initial state tree.
-
-
-  dispatch({
-    type: ActionTypes.INIT
-  });
-  return _ref2 = {
-    dispatch: dispatch,
-    subscribe: subscribe,
-    getState: getState,
-    replaceReducer: replaceReducer
-  }, _ref2[$$observable] = observable, _ref2;
-}
-/**
- * Creates a Redux store that holds the state tree.
- *
- * **We recommend using `configureStore` from the
- * `@reduxjs/toolkit` package**, which replaces `createStore`:
- * **https://redux.js.org/introduction/why-rtk-is-redux-today**
- *
- * The only way to change the data in the store is to call `dispatch()` on it.
- *
- * There should only be a single store in your app. To specify how different
- * parts of the state tree respond to actions, you may combine several reducers
- * into a single reducer function by using `combineReducers`.
- *
- * @param {Function} reducer A function that returns the next state tree, given
- * the current state tree and the action to handle.
- *
- * @param {any} [preloadedState] The initial state. You may optionally specify it
- * to hydrate the state from the server in universal apps, or to restore a
- * previously serialized user session.
- * If you use `combineReducers` to produce the root reducer function, this must be
- * an object with the same shape as `combineReducers` keys.
- *
- * @param {Function} [enhancer] The store enhancer. You may optionally specify it
- * to enhance the store with third-party capabilities such as middleware,
- * time travel, persistence, etc. The only store enhancer that ships with Redux
- * is `applyMiddleware()`.
- *
- * @returns {Store} A Redux store that lets you read the state, dispatch actions
- * and subscribe to changes.
- */
-
-var legacy_createStore = createStore;
-
-/**
- * Prints a warning in the console if it exists.
- *
- * @param {String} message The warning message.
- * @returns {void}
- */
-function warning(message) {
-  /* eslint-disable no-console */
-  if (typeof console !== 'undefined' && typeof console.error === 'function') {
-    console.error(message);
-  }
-  /* eslint-enable no-console */
-
-
-  try {
-    // This error was thrown as a convenience so that if you enable
-    // "break on all exceptions" in your console,
-    // it would pause the execution at this line.
-    throw new Error(message);
-  } catch (e) {} // eslint-disable-line no-empty
-
-}
-
-function getUnexpectedStateShapeWarningMessage(inputState, reducers, action, unexpectedKeyCache) {
-  var reducerKeys = Object.keys(reducers);
-  var argumentName = action && action.type === ActionTypes.INIT ? 'preloadedState argument passed to createStore' : 'previous state received by the reducer';
-
-  if (reducerKeys.length === 0) {
-    return 'Store does not have a valid reducer. Make sure the argument passed ' + 'to combineReducers is an object whose values are reducers.';
-  }
-
-  if (!isPlainObject(inputState)) {
-    return "The " + argumentName + " has unexpected type of \"" + kindOf(inputState) + "\". Expected argument to be an object with the following " + ("keys: \"" + reducerKeys.join('", "') + "\"");
-  }
-
-  var unexpectedKeys = Object.keys(inputState).filter(function (key) {
-    return !reducers.hasOwnProperty(key) && !unexpectedKeyCache[key];
-  });
-  unexpectedKeys.forEach(function (key) {
-    unexpectedKeyCache[key] = true;
-  });
-  if (action && action.type === ActionTypes.REPLACE) return;
-
-  if (unexpectedKeys.length > 0) {
-    return "Unexpected " + (unexpectedKeys.length > 1 ? 'keys' : 'key') + " " + ("\"" + unexpectedKeys.join('", "') + "\" found in " + argumentName + ". ") + "Expected to find one of the known reducer keys instead: " + ("\"" + reducerKeys.join('", "') + "\". Unexpected keys will be ignored.");
-  }
-}
-
-function assertReducerShape(reducers) {
-  Object.keys(reducers).forEach(function (key) {
-    var reducer = reducers[key];
-    var initialState = reducer(undefined, {
-      type: ActionTypes.INIT
-    });
-
-    if (typeof initialState === 'undefined') {
-      throw new Error( true ? formatProdErrorMessage(12) : 0);
-    }
-
-    if (typeof reducer(undefined, {
-      type: ActionTypes.PROBE_UNKNOWN_ACTION()
-    }) === 'undefined') {
-      throw new Error( true ? formatProdErrorMessage(13) : 0);
-    }
-  });
-}
-/**
- * Turns an object whose values are different reducer functions, into a single
- * reducer function. It will call every child reducer, and gather their results
- * into a single state object, whose keys correspond to the keys of the passed
- * reducer functions.
- *
- * @param {Object} reducers An object whose values correspond to different
- * reducer functions that need to be combined into one. One handy way to obtain
- * it is to use ES6 `import * as reducers` syntax. The reducers may never return
- * undefined for any action. Instead, they should return their initial state
- * if the state passed to them was undefined, and the current state for any
- * unrecognized action.
- *
- * @returns {Function} A reducer function that invokes every reducer inside the
- * passed object, and builds a state object with the same shape.
- */
-
-
-function combineReducers(reducers) {
-  var reducerKeys = Object.keys(reducers);
-  var finalReducers = {};
-
-  for (var i = 0; i < reducerKeys.length; i++) {
-    var key = reducerKeys[i];
-
-    if (false) {}
-
-    if (typeof reducers[key] === 'function') {
-      finalReducers[key] = reducers[key];
-    }
-  }
-
-  var finalReducerKeys = Object.keys(finalReducers); // This is used to make sure we don't warn about the same
-  // keys multiple times.
-
-  var unexpectedKeyCache;
-
-  if (false) {}
-
-  var shapeAssertionError;
-
-  try {
-    assertReducerShape(finalReducers);
-  } catch (e) {
-    shapeAssertionError = e;
-  }
-
-  return function combination(state, action) {
-    if (state === void 0) {
-      state = {};
-    }
-
-    if (shapeAssertionError) {
-      throw shapeAssertionError;
-    }
-
-    if (false) { var warningMessage; }
-
-    var hasChanged = false;
-    var nextState = {};
-
-    for (var _i = 0; _i < finalReducerKeys.length; _i++) {
-      var _key = finalReducerKeys[_i];
-      var reducer = finalReducers[_key];
-      var previousStateForKey = state[_key];
-      var nextStateForKey = reducer(previousStateForKey, action);
-
-      if (typeof nextStateForKey === 'undefined') {
-        var actionType = action && action.type;
-        throw new Error( true ? formatProdErrorMessage(14) : 0);
-      }
-
-      nextState[_key] = nextStateForKey;
-      hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
-    }
-
-    hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
-    return hasChanged ? nextState : state;
-  };
-}
-
-function bindActionCreator(actionCreator, dispatch) {
-  return function () {
-    return dispatch(actionCreator.apply(this, arguments));
-  };
-}
-/**
- * Turns an object whose values are action creators, into an object with the
- * same keys, but with every function wrapped into a `dispatch` call so they
- * may be invoked directly. This is just a convenience method, as you can call
- * `store.dispatch(MyActionCreators.doSomething())` yourself just fine.
- *
- * For convenience, you can also pass an action creator as the first argument,
- * and get a dispatch wrapped function in return.
- *
- * @param {Function|Object} actionCreators An object whose values are action
- * creator functions. One handy way to obtain it is to use ES6 `import * as`
- * syntax. You may also pass a single function.
- *
- * @param {Function} dispatch The `dispatch` function available on your Redux
- * store.
- *
- * @returns {Function|Object} The object mimicking the original object, but with
- * every action creator wrapped into the `dispatch` call. If you passed a
- * function as `actionCreators`, the return value will also be a single
- * function.
- */
-
-
-function bindActionCreators(actionCreators, dispatch) {
-  if (typeof actionCreators === 'function') {
-    return bindActionCreator(actionCreators, dispatch);
-  }
-
-  if (typeof actionCreators !== 'object' || actionCreators === null) {
-    throw new Error( true ? formatProdErrorMessage(16) : 0);
-  }
-
-  var boundActionCreators = {};
-
-  for (var key in actionCreators) {
-    var actionCreator = actionCreators[key];
-
-    if (typeof actionCreator === 'function') {
-      boundActionCreators[key] = bindActionCreator(actionCreator, dispatch);
-    }
-  }
-
-  return boundActionCreators;
-}
-
-/**
- * Composes single-argument functions from right to left. The rightmost
- * function can take multiple arguments as it provides the signature for
- * the resulting composite function.
- *
- * @param {...Function} funcs The functions to compose.
- * @returns {Function} A function obtained by composing the argument functions
- * from right to left. For example, compose(f, g, h) is identical to doing
- * (...args) => f(g(h(...args))).
- */
-function compose() {
-  for (var _len = arguments.length, funcs = new Array(_len), _key = 0; _key < _len; _key++) {
-    funcs[_key] = arguments[_key];
-  }
-
-  if (funcs.length === 0) {
-    return function (arg) {
-      return arg;
-    };
-  }
-
-  if (funcs.length === 1) {
-    return funcs[0];
-  }
-
-  return funcs.reduce(function (a, b) {
-    return function () {
-      return a(b.apply(void 0, arguments));
-    };
-  });
-}
-
-/**
- * Creates a store enhancer that applies middleware to the dispatch method
- * of the Redux store. This is handy for a variety of tasks, such as expressing
- * asynchronous actions in a concise manner, or logging every action payload.
- *
- * See `redux-thunk` package as an example of the Redux middleware.
- *
- * Because middleware is potentially asynchronous, this should be the first
- * store enhancer in the composition chain.
- *
- * Note that each middleware will be given the `dispatch` and `getState` functions
- * as named arguments.
- *
- * @param {...Function} middlewares The middleware chain to be applied.
- * @returns {Function} A store enhancer applying the middleware.
- */
-
-function applyMiddleware() {
-  for (var _len = arguments.length, middlewares = new Array(_len), _key = 0; _key < _len; _key++) {
-    middlewares[_key] = arguments[_key];
-  }
-
-  return function (createStore) {
-    return function () {
-      var store = createStore.apply(void 0, arguments);
-
-      var _dispatch = function dispatch() {
-        throw new Error( true ? formatProdErrorMessage(15) : 0);
-      };
-
-      var middlewareAPI = {
-        getState: store.getState,
-        dispatch: function dispatch() {
-          return _dispatch.apply(void 0, arguments);
-        }
-      };
-      var chain = middlewares.map(function (middleware) {
-        return middleware(middlewareAPI);
-      });
-      _dispatch = compose.apply(void 0, chain)(store.dispatch);
-      return _objectSpread2(_objectSpread2({}, store), {}, {
-        dispatch: _dispatch
-      });
-    };
-  };
-}
-
-
-
-
-/***/ }),
-
 /***/ 53:
 /***/ ((__unused_webpack_module, exports) => {
 
@@ -8636,7 +7656,7 @@ var _reactDom = __webpack_require__(935);
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _App = __webpack_require__(911);
+var _App = __webpack_require__(883);
 
 var _App2 = _interopRequireDefault(_App);
 

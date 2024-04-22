@@ -1,4 +1,4 @@
-import {createStore} from 'redux';
+import { createStore } from 'redux';
 import reducer from './reducer';
 
 /**
@@ -22,7 +22,12 @@ import reducer from './reducer';
  * const countStore = configureStore({ reducer: countSlice.reducer })
  * @type {Store<unknown, Action>}
  */
+/**
+ * @deprecated
+ * We recommend using the configureStore method of the @reduxjs/toolkit package, which replaces createStore.
+ */
 const store = createStore(reducer);
+
 export default store;
 
 // https://docs.pmnd.rs/zustand/getting-started/comparison
