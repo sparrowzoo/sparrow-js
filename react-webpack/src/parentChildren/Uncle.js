@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import store from './store/index';
+import store from '../store/index';
 
 export default function Uncle() {
     const [n, setState] = useState(0);

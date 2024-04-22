@@ -11,8 +11,10 @@ module.exports = {
   },
   mode: "development", //开发模式
   entry: {
-    index: path.resolve(__dirname, "src", "index.js"),
+    index: path.resolve(__dirname, "src","parentChildren", "index.js"),
     main: path.resolve(__dirname, "src", "pages", "main.js"),
+    route: path.resolve(__dirname, "src", "route", "index.js"),
+
   }, //指定入口文件，程序从这里开始编译,__dirname当前所在目录, ../表示上一级目录, ./同级目录
   output: {
     path: path.resolve(__dirname, "public"), // 输出的路径
@@ -62,19 +64,30 @@ module.exports = {
       // 定义输出文件名和目录
       filename: "css/[name]-wrap-[hash].css",
     }),
-    //生成html
+    //父子状态关系实例
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
-      title: "react html",
+      template: "./src/parentChildren/index.html",
+      title: "parent children demo",
       filename: "index.html",
       chunks: ["index"], //默认是所有chunks
     }),
+//html 合并实例
     new HtmlWebpackPlugin({
       title: "webpack merge html",
       template: "./src/pages/index.html", //结合 html-withimg-loader 生成html
       filename: "./marge.html",
       chunks: ["main"], //chunk 即上边entry的key
     }),
+
+    //站内路由实例
+    new HtmlWebpackPlugin({
+      title: "route demo",
+      template: "./src/route/index.html",
+      filename: "./route.html",
+      chunks: ["route"], //chunk 即上边entry的key
+    }),
+
+
     new CleanWebpackPlugin({
       path: path.join(__dirname, "public"),
     }),
