@@ -4,7 +4,22 @@
     <meta charset="utf-8">
     <title>父子状态</title>
 <body>
-    <h1>父子状态实例演示</h1>
+<h1>案例演示</h1>
+<ul>
+    <li><a href="./marge.html">webpack 组合</a></li>
+    <li><a href="./route.html">多页面路由</a></li>
+</ul>
+
+<h1>父子状态实例演示</h1>
+<div>
+    <p>//父子状态关系实例</p>
+    <p>new HtmlWebpackPlugin({</p>
+    <p>template: "./src/parentChildren/index.html",</p>
+    <p>title: "parent children demo",</p>
+    <p>filename: "index.html",</p>
+    <p>chunks: ["index"], //默认是所有chunks</p>
+    <p>}),</p>
+</div>
 <div id='root'></div>
 </body>
 </html>
