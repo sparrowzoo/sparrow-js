@@ -20,8 +20,10 @@ import reducer from './reducer';
  * })
  *
  * const countStore = configureStore({ reducer: countSlice.reducer })
- * @type {Store<unknown, Action>}
+ *
  */
+
+
 /**
  * @deprecated
  * We recommend using the configureStore method of the @reduxjs/toolkit package, which replaces createStore.
@@ -29,7 +31,7 @@ import reducer from './reducer';
 const store = createStore(reducer);
 
 export default store;
-
+// https://cn.redux.js.org/introduction/why-rtk-is-redux-today
 // https://docs.pmnd.rs/zustand/getting-started/comparison
 /**
  * import { createStore } from 'redux'
