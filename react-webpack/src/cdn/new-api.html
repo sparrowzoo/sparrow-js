@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CDN React 新版本API</title>
+    <!--react的核心库必须在依赖库前面引入-->
+    <!-- Load Babel -->
+    <!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <!-- React DOM -->
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+</head>
+
+<body>
+<div id="root"></div>
+<p>注意最新的18版本支持新API</p>
+<p>注意用ReactDOM.createRoot</p>
+<script type="text/babel">
+    const JSX = <h1>Hello JSX组件 官方最新推荐形式</h1>;//注意这里不要加引号，因为是jsx，不是js
+    // 新的API
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(JSX)
+</script>
+</body>
+</html>
+

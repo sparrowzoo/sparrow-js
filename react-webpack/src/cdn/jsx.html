@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CDN React JSX 形式定义组件</title>
+    <!--react的核心库必须在依赖库前面引入-->
+    <!-- Load Babel -->
+    <!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React -->
+    <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+    <!-- React DOM -->
+    <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+
+</head>
+
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    const JSX = <h1>Hello JSX组件 官方最新推荐形式</h1>;//注意这里不要加引号，因为是jsx，不是js
+    ReactDOM.render(JSX, document.getElementById("root"));
+</script>
+</body>
+</html>
+
