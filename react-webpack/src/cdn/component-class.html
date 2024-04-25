@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CDN React 旧新版本Component Class形式定义组件</title>
+    <!--react的核心库必须在依赖库前面引入-->
+    <!-- Load Babel -->
+    <!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React -->
+    <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+    <!-- React DOM -->
+    <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+
+</head>
+
+<body>
+<div id="root"></div>
+<script type="text/babel">
+    class App extends React.Component {
+        render() {
+            return <h1>Hello CDN Component Class</h1>
+        }
+    }
+    ReactDOM.render(<App/>, document.getElementById("root"));
+</script>
+</body>
+</html>
+

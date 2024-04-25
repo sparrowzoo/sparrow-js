@@ -13,6 +13,8 @@ import Uncle from "./Uncle";
 import MyButton from "./EventButton";
 import Gallery from "../component/Profile";
 
+
+
 export default function App(properties) {
     return (
         <div style={{border: "1px solid #ccc", margin: 10, padding: 10}}>

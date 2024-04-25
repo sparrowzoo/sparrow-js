@@ -5,15 +5,11 @@
     <meta content="IE=edge" http-equiv="X-UA-Compatible">
     <meta content="width=device-width,initial-scale=1.0" name="viewport">
     <title>第一个在浏览器上运行的React组件</title>
-    <!-- Load Babel -->
-    <!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <!-- React -->
-    https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js
-
-    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
     <!-- React DOM -->
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
 
 </head>
 <body>
@@ -55,31 +51,22 @@
         </script>
     </div>
 
-    <h2><a href="https://www.jsdelivr.com/">https://www.jsdelivr.com/</a></h2>
+    <h2><a href="https://unpkg.com">https://unpkg.com</a></h2>
     <div>
-        <p>将cdn.jsdelivr.net域名替换为fastly.jsdelivr.net或者gcore.jsdelivr.net</p>
-        <p>例如：https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js</p>
-        替换为：<br/>
-        <p>https://fastly.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js</p>
-        <p>https://gcore.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js</p>
-    </div>
-    <div>
-        <p>
-            https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js
-        </p>
-        <p>
-            https://cdn.jsdelivr.net/npm/react-dom@18.2.0/index.min.js </p>
-    </div>
+        <p>unpkg is a fast, global content delivery network for everything on npm. Use it to quickly and easily load any
+            file from any package using a URL like:</p>
+        <p>unpkg.com/:package@:version/:file</p>
+        <img src="npm2unpkg.png"/></div>
 </div>
-<div id="root">
-</div>
-<script type="text/babel">
-    const VDOM = <h1>hello react</h1>;//注意这里不要加引号，因为是jsx，不是js
-    //    引入了React核心库和依赖库，所以全局多了React，和ReactDOM
-    //    该react-dom包提供了特定于 DOM 的方法，这些方法可以在您的应用程序的顶层使用
-    //    虚拟DOM对象最终会被React转为真实的DOM，呈现在页面上
-    ReactDOM.render(VDOM, document.getElementById("root"));
-</script>
 
+
+<h1>案例演示</h1>
+
+<ul>
+    <li><a target="_blank" href="./component-class.html">React 旧版本API Component Class</a></li>
+    <li><a target="_blank" href="./react-create.html">React 旧版本API React createElement</a></li>
+    <li><a target="_blank" href="./jsx.html">JSX 组件</a></li>
+    <li><a target="_blank" href="./new-api.html">JSX 组件 18版最新API</a></li>
+</ul>
 </body>
 </html>
