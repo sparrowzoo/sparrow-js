@@ -4,6 +4,17 @@
 </head>
 #include("./layout/header.html")
 <div id="hello">
+    <div>
+        <h2>本页面由webpack如下配置生成</h2>
+        <p>//html 合并实例</p>
+        <p> new HtmlWebpackPlugin({</p>
+        <p> title: "webpack merge html",</p>
+        <p> template: "./src/pages/index.html", </p>
+        <p> //结合 html-withimg-loader 生成html</p>
+        <p> filename: "./marge.html",</p>
+        <p> chunks: ["main"], //chunk 即上边entry的key</p>
+        <p> }),</p>
+    </div>
     <input class="button" id="clickButton" type="button" value="点击我试一下">
     <div id="img"></div>
 </div>

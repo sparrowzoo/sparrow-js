@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width,initial-scale=1.0" name="viewport">
+    <title>第一个在浏览器上运行的React组件</title>
+    <!-- Load Babel -->
+    <!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- React -->
+    https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js
+
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <!-- React DOM -->
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+
+</head>
+<body>
+<noscript>
+    <strong>We're sorry but Sparrow-PC-CHAT doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+</noscript>
+<div>
+    <h1>第一个在浏览器上运行的React组件</h1>
+    <h1>环境依赖</h1>
+    <h2>
+        <a href="https://babeljs.io/">https://babeljs.io/</a>
+    </h2>
+    <div>
+        <h3>What is Babel?</h3>
+        Babel is a JavaScript compiler
+        Babel is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards compatible
+        version of JavaScript in current and older browsers or environments.
+        <h3>
+            Using Babel
+        </h3>
+        https://babeljs.io/setup#installation
+        <pre>&lt;div id=&quot;output&quot;&gt;&lt;/div&gt;
+                    &lt;!-- Load Babel --&gt;
+                    &lt;!-- v6 &lt;script src=&quot;https://unpkg.com/babel-standalone@6/babel.min.js&quot;&gt;&lt;/script&gt; --&gt;
+                    &lt;script src=&quot;https://unpkg.com/@babel/standalone/babel.min.js&quot;&gt;&lt;/script&gt;
+                    &lt;!-- Your custom script here --&gt;
+                    &lt;script type=&quot;text/babel&quot;&gt;
+                        const getMessage = () =&gt; &quot;Hello World&quot;;
+                        document.getElementById(&#x27;output&#x27;).innerHTML = getMessage();
+                    &lt;/script&gt;
+                </pre>
+
+        <div id="output" style="color:red;"></div>
+        <!-- Your custom script here -->
+        <script type="text/babel">
+            const getMessage = () => "这里是实际生成的内容";
+            document.getElementById('output').innerHTML = getMessage();
+        </script>
+    </div>
+
+    <h2><a href="https://www.jsdelivr.com/">https://www.jsdelivr.com/</a></h2>
+    <div>
+        <p>将cdn.jsdelivr.net域名替换为fastly.jsdelivr.net或者gcore.jsdelivr.net</p>
+        <p>例如：https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js</p>
+        替换为：<br/>
+        <p>https://fastly.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js</p>
+        <p>https://gcore.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js</p>
+    </div>
+    <div>
+        <p>
+            https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js
+        </p>
+        <p>
+            https://cdn.jsdelivr.net/npm/react-dom@18.2.0/index.min.js </p>
+    </div>
+</div>
+<div id="root">
+</div>
+<script type="text/babel">
+    const VDOM = <h1>hello react</h1>;//注意这里不要加引号，因为是jsx，不是js
+    //    引入了React核心库和依赖库，所以全局多了React，和ReactDOM
+    //    该react-dom包提供了特定于 DOM 的方法，这些方法可以在您的应用程序的顶层使用
+    //    虚拟DOM对象最终会被React转为真实的DOM，呈现在页面上
+    ReactDOM.render(VDOM, document.getElementById("root"));
+</script>
+
+</body>
+</html>

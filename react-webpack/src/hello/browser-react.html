@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>react</title>
+</head>
+
+<body>
+<div id="test"></div>
+<!--react的核心库必须在依赖库前面引入-->
+<!-- Load Babel -->
+<!-- v6 <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script> -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- React -->
+<script src="https://cdn.jsdelivr.net/npm/react@17.0.2/umd/react.production.min.js"></script>
+<!-- React DOM -->
+<script src="https://cdn.jsdelivr.net/npm/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+
+<!--这里要把类型设置为babel(解析jsx)，不然默认是js-->
+// jsx是js的语法糖：我们写的jsx最后会通过babel翻译为js的形式
+<script type="text/babel">
+
+    const VDOM = <h1>hello react</h1>;//注意这里不要加引号，因为是jsx，不是js
+    //    引入了React核心库和依赖库，所以全局多了React，和ReactDOM
+    //    该react-dom包提供了特定于 DOM 的方法，这些方法可以在您的应用程序的顶层使用
+    //    虚拟DOM对象最终会被React转为真实的DOM，呈现在页面上
+    ReactDOM.render(VDOM, document.getElementById("test"));
+
+</script>
+</body>
+</html>
+
