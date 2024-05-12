@@ -11,7 +11,7 @@ module.exports = {
   },
   mode: "development", //开发模式
   entry: {
-    index: path.resolve(__dirname, "src","parentChildren", "index.js"),
+    index: path.resolve(__dirname, "src", "parent-children-redux", "index.js"),
     main: path.resolve(__dirname, "src", "pages", "main.js"),
     route: path.resolve(__dirname, "src", "route", "index.js"),
   }, //指定入口文件，程序从这里开始编译,__dirname当前所在目录, ../表示上一级目录, ./同级目录
@@ -65,12 +65,12 @@ module.exports = {
     }),
     //父子状态关系实例
     new HtmlWebpackPlugin({
-      template: "./src/parentChildren/index.html",
+      template: "./src/parent-children-redux/index.html",
       title: "parent children demo",
       filename: "index.html",
       chunks: ["index"], //默认是所有chunks
     }),
-//html 合并实例
+    //html 合并实例
     new HtmlWebpackPlugin({
       title: "webpack merge html",
       template: "./src/pages/index.html", //结合 html-withimg-loader 生成html
@@ -85,7 +85,6 @@ module.exports = {
       filename: "./route.html",
       chunks: ["route"], //chunk 即上边entry的key
     }),
-
 
     new CleanWebpackPlugin({
       path: path.join(__dirname, "public"),
