@@ -4,9 +4,9 @@
   "main": "dist/sparrow.js",
   "homepage": "http://www.sparrowzoo.net",
   "scripts": {
-    "test": "coffee make test",
+    "test": "coffee make react-next-13",
     "dist": "coffee make dist",
-    "start": "coffee test/server.coffee"
+    "start": "coffee react-next-13/server.coffee"
   },
   "repository": {
     "type": "git",
