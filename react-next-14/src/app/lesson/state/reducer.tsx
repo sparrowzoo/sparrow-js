@@ -1,7 +1,11 @@
 import React, {useState} from "react";
-import clickHandler, {i} from "@/app/lesson/state/StateHandler";
 
 export default function Reducer() {
+    function clickHandler() {
+        const [i, setIndex] = useState(1);
+        setIndex(2);
+    }
+
     /**
      * Hooks ——以 use 开头的函数——只能在组件或自定义 Hook 的最顶层调用。
      * 你不能在条件语句、循环语句或其他嵌套函数内调用 Hook。Hook 是函数，
