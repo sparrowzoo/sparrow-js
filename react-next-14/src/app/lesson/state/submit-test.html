@@ -1,0 +1,14 @@
+<html>
+<body>
+<script type="text/javascript">
+    function test(e) {
+        alert("i'm be prevent ")
+        //e.preventDefault();
+    }
+</script>
+<form onsubmit="test();">
+    <input type="text" value="hello">
+    <input onclick="alert(test);" type="submit"/>
+</form>
+</body>
+</html>
