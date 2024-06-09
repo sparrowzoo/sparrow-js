@@ -52,13 +52,14 @@ function UserList() {
 
   const userListCom2 = userList.map((user) => (
     <Avatar
+      key={user.id}
       id={user.id}
       name={user.name}
       avatar={user.avatar}
       desc={user.desc}
     />
   ));
-  return userListCom;
+  return <>userListCom</>;
 }
 
 export default function UserHome() {
