@@ -43,7 +43,7 @@ export default function Gallery() {
           }
         />
         <Li
-          title={"不允许嵌大定义"}
+          title={"不允许嵌套定义"}
           content={
             "组件可以渲染其他组件，但是 请不要嵌套他们的定义" +
             "当子组件需要使用父组件的数据时，你需要 通过 props 的形式进行传递，而不是嵌套定义。"
