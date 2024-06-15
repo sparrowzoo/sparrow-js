@@ -23,9 +23,7 @@ export default function Form() {
     return (
         <> <Counter/>
             <LaterCounter/>
-
             <AliceBob/>
-
             <br/>
             <br/>
             <form onSubmit={(e) => {

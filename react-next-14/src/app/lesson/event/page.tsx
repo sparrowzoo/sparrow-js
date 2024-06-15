@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import StatusBar from "@/app/lesson/event/NetWork";
 
 function Player({
   onPlayer,
@@ -11,14 +12,14 @@ function Player({
   text: string;
 }) {
   return (
-    <input
-      className={"button"}
-      value={text}
-      type={"button"}
-      onClick={(e) => {
-        onPlayer(message);
-      }}
-    />
+        <input
+          className={"button"}
+          value={text}
+          type={"button"}
+          onClick={(e) => {
+            onPlayer(message);
+          }}
+        />
   );
 }
 
@@ -50,7 +51,9 @@ export default function Index() {
   }
 
   return (
-    <div
+      <>
+          <StatusBar/>
+          <div
       onClick={(e) => {
         onPlayer("div");
       }}
@@ -81,5 +84,6 @@ export default function Index() {
         />
       </form>
     </div>
+          </>
   );
 }

@@ -1,16 +1,16 @@
 <html>
 <body>
 <script type="text/javascript">
-    window.onload=function (){
-        console.log("loading");
-    }
+    let guest=0;
+    guest++;
     function test(e) {
         //e.preventDefault();
-        alert("i'm be prevent ");
-        return true;
+        guest++;
+        console.log(guest);
+        //alert("i'm be prevent ")
     }
 </script>
-<form onsubmit="return test(event);">
+<form onsubmit="test(event);">
     <input type="text" value="hello">
     <input type="submit"/>
 </form>
