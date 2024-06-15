@@ -1,14 +1,18 @@
 <html>
 <body>
 <script type="text/javascript">
+    window.onload=function (){
+        console.log("loading");
+    }
     function test(e) {
-        alert("i'm be prevent ")
         //e.preventDefault();
+        alert("i'm be prevent ");
+        return true;
     }
 </script>
-<form onsubmit="test();">
+<form onsubmit="return test(event);">
     <input type="text" value="hello">
-    <input onclick="alert(test);" type="submit"/>
+    <input type="submit"/>
 </form>
 </body>
 </html>

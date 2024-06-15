@@ -2,7 +2,14 @@ import React, {useState} from "react";
 
 export default function Reducer() {
     function clickHandler() {
-        const [i, setIndex] = useState(1);
+        //const [i, setIndex] = useState(1);
+        /**
+         *  React Hook "useState" is called in function "clickHandler"
+         *  that is neither a React function component nor
+         *  a custom React Hook function.
+         *  React component names must start with an uppercase letter.
+         *  React Hook names must start with the word "use"
+         */
         setIndex(2);
     }
 

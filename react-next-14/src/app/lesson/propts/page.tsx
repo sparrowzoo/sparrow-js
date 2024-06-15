@@ -2,6 +2,7 @@
 import React from "react";
 import ChildrenComponent from "@/app/lesson/propts/ChildrenComponent";
 import ChildrenEvent from "@/app/lesson/propts/ChildrenEvent";
+import Image from "next/image";
 
 interface AvatarPropt {
   title: string;
@@ -13,7 +14,7 @@ function Avatar({ title, avatar, desc }: AvatarPropt) {
   return (
     <div>
       <h1>{title}</h1>
-      <img width={100} height={100} alt={" "} src={avatar} />
+      <Image width={100} height={100} alt={" "} src={avatar} />
       <div>{desc}</div>
     </div>
   );
