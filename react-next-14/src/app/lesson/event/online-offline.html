@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>验证windows的online offline</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            function handleOffline() {
+                console.log("handleOffline");
+            }
+            window.addEventListener('offline', handleOffline);
+            console.log("window onload")
+            // addEventListener version
+            window.addEventListener("online", (event) => {
+                console.log("onload online");
+            });
+            // ononline version
+            window.ononline = (event) => {
+                console.log("onload ononline ");
+            };
+        }
+    </script>
+</head>
+<body>
+注意：windows offline online 需要手动修改network 状态 debug
+</body>
+</html>
+

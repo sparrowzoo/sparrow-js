@@ -1,0 +1,18 @@
+<html>
+<body>
+<script type="text/javascript">
+    let guest=0;
+    guest++;
+    function test(e) {
+        //e.preventDefault();
+        guest++;
+        console.log(guest);
+        //alert("i'm be prevent ")
+    }
+</script>
+<form onsubmit="test(event);">
+    <input type="text" value="hello">
+    <input type="submit"/>
+</form>
+</body>
+</html>
