@@ -72,25 +72,17 @@
         "async": false
       }
     },
-    "(app-client)/./src/app/lesson/state/page.tsx": {
+    "(app-client)/./src/app/lesson/react-scss/component/Header/index.tsx": {
       "*": {
-        "id": "(sc_client)/./src/app/lesson/state/page.tsx",
+        "id": "(sc_client)/./src/app/lesson/react-scss/component/Header/index.tsx",
         "name": "*",
         "chunks": [],
         "async": false
       }
     },
-    "(app-client)/./src/app/lesson/reduxjs/toolkit/store/page.tsx": {
+    "(app-client)/./src/app/lesson/react-scss/component/Player/index.tsx": {
       "*": {
-        "id": "(sc_client)/./src/app/lesson/reduxjs/toolkit/store/page.tsx",
-        "name": "*",
-        "chunks": [],
-        "async": false
-      }
-    },
-    "(app-client)/./src/app/swipper/page.tsx": {
-      "*": {
-        "id": "(sc_client)/./src/app/swipper/page.tsx",
+        "id": "(sc_client)/./src/app/lesson/react-scss/component/Player/index.tsx",
         "name": "*",
         "chunks": [],
         "async": false
@@ -263,7 +255,7 @@
       "id": "(app-client)/./node_modules/next/dist/client/image.js",
       "name": "*",
       "chunks": [
-        "app/page:static/chunks/app/page.js"
+        "app/lesson/react-scss/next/page:static/chunks/app/lesson/react-scss/next/page.js"
       ],
       "async": false
     },
@@ -271,7 +263,7 @@
       "id": "(app-client)/./node_modules/next/dist/client/image.js",
       "name": "*",
       "chunks": [
-        "app/page:static/chunks/app/page.js"
+        "app/lesson/react-scss/next/page:static/chunks/app/lesson/react-scss/next/page.js"
       ],
       "async": false
     },
@@ -279,7 +271,7 @@
       "id": "(app-client)/./node_modules/next/dist/shared/lib/head.js",
       "name": "*",
       "chunks": [
-        "app/page:static/chunks/app/page.js"
+        "app/lesson/react-scss/next/page:static/chunks/app/lesson/react-scss/next/page.js"
       ],
       "async": false
     },
@@ -287,40 +279,28 @@
       "id": "(app-client)/./node_modules/next/dist/shared/lib/head.js",
       "name": "*",
       "chunks": [
-        "app/page:static/chunks/app/page.js"
+        "app/lesson/react-scss/next/page:static/chunks/app/lesson/react-scss/next/page.js"
       ],
       "async": false
     },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/state/page.tsx": {
-      "id": "(app-client)/./src/app/lesson/state/page.tsx",
+    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/component/Header/index.tsx": {
+      "id": "(app-client)/./src/app/lesson/react-scss/component/Header/index.tsx",
       "name": "*",
       "chunks": [
-        "app/lesson/state/page:static/chunks/app/lesson/state/page.js"
+        "app/lesson/react-scss/page:static/chunks/app/lesson/react-scss/page.js"
       ],
       "async": false
     },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/reduxjs/toolkit/store/page.tsx": {
-      "id": "(app-client)/./src/app/lesson/reduxjs/toolkit/store/page.tsx",
+    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/component/Player/index.tsx": {
+      "id": "(app-client)/./src/app/lesson/react-scss/component/Player/index.tsx",
       "name": "*",
       "chunks": [
-        "app/lesson/reduxjs/toolkit/store/page:static/chunks/app/lesson/reduxjs/toolkit/store/page.js"
-      ],
-      "async": false
-    },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/swipper/page.tsx": {
-      "id": "(app-client)/./src/app/swipper/page.tsx",
-      "name": "*",
-      "chunks": [
-        "app/swipper/page:static/chunks/app/swipper/page.js"
+        "app/lesson/react-scss/page:static/chunks/app/lesson/react-scss/page.js"
       ],
       "async": false
     }
   },
   "entryCSSFiles": {
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/page": {
-      "modules": [],
-      "files": []
-    },
     "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/layout": {
       "modules": [
         "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/globals.css",
@@ -330,32 +310,29 @@
         "static/css/app/layout.css"
       ]
     },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/state/page": {
-      "modules": [],
-      "files": []
-    },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/reduxjs/toolkit/store/page": {
-      "modules": [],
-      "files": []
-    },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/reduxjs/toolkit/page": {
-      "modules": [],
-      "files": []
-    },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/pure/page": {
-      "modules": [],
-      "files": []
-    },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/course/page": {
-      "modules": [],
-      "files": []
-    },
-    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/swipper/page": {
+    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/next/layout": {
       "modules": [
-        "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/node_modules/swiper/swiper.css"
+        "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/next/next.scss"
       ],
       "files": [
-        "static/css/app/swipper/page.css"
+        "static/css/app/lesson/react-scss/next/layout.css"
+      ]
+    },
+    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/next/page": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/layout": {
+      "modules": [],
+      "files": []
+    },
+    "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/page": {
+      "modules": [
+        "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/node_modules/swiper/swiper.css",
+        "/Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/lesson/react-scss/globals.scss"
+      ],
+      "files": [
+        "static/css/app/lesson/react-scss/page.css"
       ]
     }
   }

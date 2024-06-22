@@ -1,46 +1,32 @@
 {
   "pages": {
-    "/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/page.js"
-    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/lesson/state/page": [
+    "/lesson/react-scss/next/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/lesson/state/page.js"
+      "static/css/app/lesson/react-scss/next/layout.css",
+      "static/chunks/app/lesson/react-scss/next/layout.js"
     ],
-    "/lesson/reduxjs/toolkit/store/page": [
+    "/lesson/react-scss/next/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/lesson/reduxjs/toolkit/store/page.js"
+      "static/chunks/app/lesson/react-scss/next/page.js"
     ],
-    "/lesson/reduxjs/toolkit/page": [
+    "/lesson/react-scss/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/lesson/reduxjs/toolkit/page.js"
+      "static/chunks/app/lesson/react-scss/layout.js"
     ],
-    "/lesson/pure/page": [
+    "/lesson/react-scss/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/lesson/pure/page.js"
-    ],
-    "/course/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/course/page.js"
-    ],
-    "/swipper/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/swipper/page.css",
-      "static/chunks/app/swipper/page.js"
+      "static/css/app/lesson/react-scss/page.css",
+      "static/chunks/app/lesson/react-scss/page.js"
     ]
   }
 }

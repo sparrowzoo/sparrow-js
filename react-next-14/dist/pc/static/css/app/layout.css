@@ -797,6 +797,11 @@ body {
   height: 300px;
 }
 
+.before\:w-\[480px\]::before {
+  content: var(--tw-content);
+  width: 480px;
+}
+
 .before\:w-full::before {
   content: var(--tw-content);
   width: 100%;
@@ -854,6 +859,11 @@ body {
 .after\:h-\[180px\]::after {
   content: var(--tw-content);
   height: 180px;
+}
+
+.after\:w-\[240px\]::after {
+  content: var(--tw-content);
+  width: 240px;
 }
 
 .after\:w-full::after {
