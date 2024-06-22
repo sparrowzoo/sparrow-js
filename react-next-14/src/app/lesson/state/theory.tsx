@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 interface StatePair {
   state: string;
-  setter: any;
+  setter: Function;
 }
 
 //这里实际定义的时侯会隔离组件对象
