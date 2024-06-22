@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/**
+ root 这个CSS 伪类匹配文档树的根元素。对于HTML 来说，:root 表示 元素，除了优先级更高之外，
+ 与html 选择器相同
+ */
+:root {
+  --foreground-light-rgb: 0, 0, 0;
+  --background-light-start-rgb: 255, 255, 255;
+  --background-light-end-rgb: 128, 128, 128;
+
+  --foreground-dark-rgb: 255, 255, 255;
+  --background-dark-start-rgb: 0, 0, 0;
+  --background-dark-end-rgb: 255, 255, 255;
+}
+
+@mixin light {
+  color: rgb(var(--foreground-light-rgb));
+  background: linear-gradient(
+                  to bottom,
+                  transparent,
+                  rgb(var(--background-light-start-rgb))
+  ) rgb(var(--background-light-end-rgb));
+}
+
+.light-scheme {
+  @include light
+}
+
+.dark-scheme {
+  color: rgb(var(--foreground-dark-rgb));
+  background: linear-gradient(
+                  to bottom,
+                  transparent,
+                  rgb(var(--background-dark-start-rgb))
+  ) rgb(var(--background-dark-end-rgb));
+}
+
+/* 监听操作系统主题模式 */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: rgb(var(--foreground-dark-rgb));
+    background: linear-gradient(
+                    to bottom,
+                    transparent,
+                    rgb(var(--background-dark-start-rgb))
+    ) rgb(var(--background-dark-end-rgb));
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  body {
+    color: rgb(var(--foreground-light-rgb));
+    background: linear-gradient(
+                    to bottom,
+                    transparent,
+                    rgb(var(--background-light-start-rgb))
+    ) rgb(var(--background-light-end-rgb));
+  }
+}

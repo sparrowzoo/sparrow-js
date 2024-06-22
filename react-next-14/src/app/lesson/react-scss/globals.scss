@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.header{
+    @apply flex flex-row justify-between w-[100%] bg-[#fff] h-[60px] mt-4 px-20 text-white;
+    background-color: black;
+
+    .left{
+        @apply flex-1 flex flex-row items-center;
+        img{width: 44px;height: 44px;}
+        span{
+            @apply inline-block text-white font-bold;
+        }
+    }
+    .right{
+        @apply flex justify-end;
+     }
+}
+
+
+
+
