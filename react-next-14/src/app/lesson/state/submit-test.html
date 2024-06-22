@@ -1,0 +1,18 @@
+<html>
+<body>
+<script type="text/javascript">
+    window.onload=function (){
+        console.log("loading");
+    }
+    function test(e) {
+        //e.preventDefault();
+        alert("i'm be prevent ");
+        return true;
+    }
+</script>
+<form onsubmit="return test(event);">
+    <input type="text" value="hello">
+    <input type="submit"/>
+</form>
+</body>
+</html>

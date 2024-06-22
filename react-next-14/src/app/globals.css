@@ -17,13 +17,7 @@ h2 {
     font-weight: bold;
 }
 
-input {
-    color: black;
-}
 
-.button {
-    color: white;
-}
 
 :root {
     --foreground-rgb: 0, 0, 0;
@@ -36,6 +30,13 @@ input {
         --foreground-rgb: 255, 255, 255;
         --background-start-rgb: 0, 0, 0;
         --background-end-rgb: 0, 0, 0;
+    }
+    input {
+        color: black;
+    }
+
+    .button {
+        color: white;
     }
 }
 
