@@ -30,7 +30,8 @@
     "lessc": "^1.0.2",
     "purecss": "^1.0.0",
     "requirejs": "^2.3.6",
-    "requirejs-domready": "^2.0.3"
+    "requirejs-domready": "^2.0.3",
+    "sass": "^1.77.6"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
