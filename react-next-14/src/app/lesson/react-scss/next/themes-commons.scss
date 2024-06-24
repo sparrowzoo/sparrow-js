@@ -1,0 +1,40 @@
+$theme-map: null;
+/**
+Warning:
+As of Dart Sass 2.0.0, !global assignments won't be able to declare new variables.
+
+Recommendation: add `$theme-map: null` at the stylesheet root.
+在文件头加个变量定义,该变量一定在 @include themify()上下文内生效
+*/
+$themes:(
+    light:(
+        color:black,
+        background-start-rgb:rgb(214, 219, 220),
+        background-end-rgb: rgb(255, 255, 255)
+    ),
+    dark:(
+        color:white,
+        background-start-rgb: rgb(0, 0, 0),
+        background-end-rgb: rgb(214, 219, 220)
+    )
+);
+
+
+@mixin themify(){
+    @each $theme-name,$theme-properties in $themes{
+        $theme-map:$theme-properties !global;
+        [data-theme="#{$theme-name}"] & {//    <html lang="en" data-theme="dark">
+            //document.documentElement.dataset.theme="dark"
+            //@media (prefers-color-scheme: dark) {
+            //const match=matchMedia('prefers-color-scheme: dark')
+            //match.addEventListener('change',()=>{});
+            //match.matchs 是否匹配
+            @content;
+        }
+    }
+}
+
+@function themed($key){
+    // @debug $theme-map;
+    @return map-get($theme-map, $key )
+}

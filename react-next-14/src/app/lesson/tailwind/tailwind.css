@@ -1,0 +1,62 @@
+/* 
+当前页面自定义样式
+*/
+
+@tailwind base;
+
+/* https://www.w3cschool.cn/tailwind_css/tailwind_css-n7ft3pap.html 
+https://tailwindcss.com/docs/preflight
+*/
+@layer base {
+    h1 {
+      @apply text-2xl;
+    }
+    h2 {
+      @apply text-xl;
+    }
+    h3 {
+      @apply text-lg;
+    }
+    a {
+      @apply text-blue-600 underline;
+    }
+}
+
+/* Utility-First Fundamentals
+优先级最高
+https://tailwindcss.com/docs/utility-first
+*/
+
+@tailwind utilities;
+@layer utilities {
+    h2 {
+      @apply text-xl;
+    }
+    h3 {
+      @apply text-lg;
+    }
+    a {
+      @apply text-blue-600 underline;
+    }
+}
+@tailwind components;
+@layer components {
+    h1 {
+      font-size: 40pt;
+    }
+    h2 {
+        font-size: 30pt;
+    }
+    h3 {
+      @apply text-lg;
+    }
+    a {
+      @apply text-blue-600 underline;
+    }
+}
+
+
+.content{
+    font-size:20pt;
+    color:red;
+}

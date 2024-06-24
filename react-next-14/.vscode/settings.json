@@ -1,0 +1,20 @@
+{
+    "liveSassCompile.settings.formats": [
+        // This is the default.
+        //https://github.com/glenn2223/vscode-live-sass-compiler/blob/HEAD/docs/settings.md#livesasscompilesettingsautoprefix
+        {
+            "format": "expanded",
+            "extensionName": ".css",
+            // null for all three -> denotes the same path as the SASS file
+            "savePath": "./dest",
+            "savePathReplacementPairs": null,
+            "generateMap": false
+        }
+    ],
+    "liveSassCompile.settings.excludeList":[
+        "/**/node_modules/**", 
+        "/.vscode/**"
+    ],
+    "liveSassCompile.settings.showOutputWindowOn":"Debug",
+
+}
