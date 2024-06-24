@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind utilities;
+@import "./themes-commons.scss";
+
+// .text-color-error{
+//    color:themed("color") !important;  
+// }
+
+@layer utilities {
+    body {
+        @include themify() {
+            color: themed("color");
+            background: linear-gradient(to bottom,
+                    transparent,
+                    themed("background-end-rgb")) themed("background-start-rgb");
+            height: 100vh;
+            /* 设置body和html的高度为视口高度的100% */
+        }
+    }
+
+    .test {
+        color: map-get(map-get($themes , "light"), "color");
+    }
+}

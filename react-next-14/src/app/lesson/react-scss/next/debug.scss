@@ -1,0 +1,23 @@
+$font-sizes: 10px + 20px;
+$style: (
+  color: #bdc3c7
+);
+
+.text-color{
+    font-size: large;
+      .test{//.text-color .test 
+        color: rgb(54, 168, 98);
+      }
+      &-test{//.text-color-test
+        font-family: 'Courier New', Courier, monospace;
+      }
+}
+
+
+.container{
+  @debug $style;
+  @debug $font-sizes;
+}
+
+@debug 10em+12em;
+
