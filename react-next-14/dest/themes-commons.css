@@ -1,0 +1,8 @@
+@charset "UTF-8";
+/**
+Warning:
+As of Dart Sass 2.0.0, !global assignments won't be able to declare new variables.
+
+Recommendation: add `$theme-map: null` at the stylesheet root.
+在文件头加个变量定义,该变量一定在 @include themify()上下文内生效
+*/
