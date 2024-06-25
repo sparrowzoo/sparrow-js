@@ -1,7 +1,7 @@
 'use client'
 import {SubmitHandler, useForm, Controller} from 'react-hook-form';
 import {valibotResolver} from '@hookform/resolvers/valibot';
-import {FormSchema, FormData} from './schema'
+import {LoginSchema, FormData} from './schema'
 import {TextField} from "@mui/material";
 import React from "react";
 
@@ -15,7 +15,7 @@ const Page = () => {
         control,
         formState:{errors}
     } = useForm<FormData>({
-        resolver: valibotResolver(FormSchema), // Useful to check TypeScript regressions
+        resolver: valibotResolver(LoginSchema), // Useful to check TypeScript regressions
     });
 
 
