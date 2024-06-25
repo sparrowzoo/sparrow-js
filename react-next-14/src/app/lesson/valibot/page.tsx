@@ -1,15 +1,15 @@
 "use client";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
-import { valibotResolver } from "@hookform/resolvers/valibot";
-import { FormData, FormSchema } from "./schema";
-import { TextField } from "@mui/material";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {valibotResolver} from "@hookform/resolvers/valibot";
+import {FormData, OuterSchema} from "./schema";
 import React from "react";
 
 const Page = () => {
-  const onSubmit: SubmitHandler<FormData> = (data) => {
+  const onSubmit: SubmitHandler<OuterSchema> = (data) => {
     alert(JSON.stringify(data, null, 2));
   };
-  const {
+
+    const {
     register,
     handleSubmit,
     control,
@@ -17,7 +17,7 @@ const Page = () => {
   } = useForm<FormData>({
     //相当于v.parse
     resolver: valibotResolver(
-      FormSchema,
+        OuterSchema,
       //https://valibot.dev/guides/parse-data/
       { abortEarly: true }
     ), // Useful to check TypeScript regressions
@@ -32,24 +32,6 @@ const Page = () => {
       <input {...register("password")} />
       {errors.password && <span role="alert">{errors.password.message}</span>}
       <br />
-      {/*https://react-hook-form.com/advanced-usage#ControlledmixedwithUncontrolledComponents*/}
-      <Controller
-        control={control}
-        name="username"
-        render={({ field: { onChange, onBlur }, formState, fieldState }) => (
-          <>
-            <TextField
-              error={fieldState.invalid}
-              helperText={errors.username?.message}
-              fullWidth
-              onChange={onChange}
-              onBlur={onBlur}
-            />
-            <p>{formState.isSubmitted ? "submitted" : ""}</p>
-            <p>{fieldState.isTouched ? "touched" : ""}</p>
-          </>
-        )}
-      />
       <button type="submit">submit</button>
     </form>
   );
