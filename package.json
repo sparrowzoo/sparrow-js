@@ -14,6 +14,7 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
+    "@mui/system": "^5.15.20",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "code-prettify": "^0.1.0",
