@@ -1,15 +1,15 @@
 "use client";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {valibotResolver} from "@hookform/resolvers/valibot";
-import {FormData, OuterSchema} from "./schema";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { valibotResolver } from "@hookform/resolvers/valibot";
+import { FormData, OuterSchema } from "./schema";
 import React from "react";
 
 const Page = () => {
-  const onSubmit: SubmitHandler<OuterSchema> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     alert(JSON.stringify(data, null, 2));
   };
 
-    const {
+  const {
     register,
     handleSubmit,
     control,
@@ -17,7 +17,7 @@ const Page = () => {
   } = useForm<FormData>({
     //相当于v.parse
     resolver: valibotResolver(
-        OuterSchema,
+      OuterSchema,
       //https://valibot.dev/guides/parse-data/
       { abortEarly: true }
     ), // Useful to check TypeScript regressions
