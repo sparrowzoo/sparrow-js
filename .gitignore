@@ -6,5 +6,6 @@ logs
 .DS_Store
 node_modules
 target
+react-next-14/dist
 
 
