@@ -4,6 +4,7 @@ import {createTheme,ThemeProvider } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 // https://mui.com/material-ui/react-use-media-query/
+// https://github.com/mui/material-ui/pull/39463
 function MyComponent() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
     return <span>{`prefers-color-scheme: dark: ${prefersDarkMode}`}</span>;
