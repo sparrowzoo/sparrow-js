@@ -6,7 +6,7 @@ import { useTheme } from "@/app/useTheme";
 import { Button } from "@mui/material";
 
 function Child({ mode }: { mode: string }) {
-  const colorMode = React.useContext(ToggleModeContext);
+  const colorMode = React.useContext(ModeContext);
   return (
     <Box
       sx={{
@@ -38,18 +38,18 @@ function Child({ mode }: { mode: string }) {
   );
 }
 
-const ToggleModeContext = React.createContext({
+const ModeContext = React.createContext({
   toggleMode: (theme: any) => {},
 });
 export default function Parent() {
   const { currentTheme, toggleMode } = useTheme();
   return (
-    <ToggleModeContext.Provider value={toggleMode}>
+    <ModeContext.Provider value={toggleMode}>
       <ThemeProvider theme={currentTheme}>
         <Child mode={"light"} />
         <Child mode={"dark"} />
-        <Child mode={"OS"} />
+        <Child mode={"os"} />
       </ThemeProvider>
-    </ToggleModeContext.Provider>
+    </ModeContext.Provider>
   );
 }
