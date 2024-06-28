@@ -1,16 +1,55 @@
 "use client";
 import * as React from "react";
+import Box from "@mui/material/Box";
 import { ThemeProvider } from "@mui/material/styles";
-import { darkTheme,lightTheme } from "@/app/theme";
-import { Checkbox } from "@mui/material";
+import { useTheme } from "@/app/useTheme";
+import { Button } from "@mui/material";
 
-export default function CustomStyles() {
+function Child({ mode }: { mode: string }) {
+  const colorMode = React.useContext(ToggleModeContext);
   return (
-      <ThemeProvider theme={darkTheme}>
-          <Checkbox defaultChecked />
-          <ThemeProvider theme={lightTheme}>
-              <Checkbox defaultChecked />
-          </ThemeProvider>
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        bgcolor: "background.default",
+        color: "text.primary",
+        borderRadius: 1,
+        p: 3,
+      }}
+    >
+      <Button
+        value={mode}
+        sx={{
+          ml: 1,
+          bgcolor: "background.default",
+          color: "text.primary",
+        }}
+        onClick={() => {
+          colorMode.toggleMode(mode);
+        }}
+        color="inherit"
+      >
+        {mode}
+      </Button>
+    </Box>
+  );
+}
+
+const ToggleModeContext = React.createContext({
+  toggleMode: (theme: any) => {},
+});
+export default function Parent() {
+  const { currentTheme, toggleMode } = useTheme();
+  return (
+    <ToggleModeContext.Provider value={toggleMode}>
+      <ThemeProvider theme={currentTheme}>
+        <Child mode={"light"} />
+        <Child mode={"dark"} />
+        <Child mode={"OS"} />
       </ThemeProvider>
+    </ToggleModeContext.Provider>
   );
 }
