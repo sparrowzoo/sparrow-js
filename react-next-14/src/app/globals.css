@@ -38,15 +38,10 @@ https://tailwindcss.com/docs/installation
 }
 
 @layer utilities {
-    input {
-        color: rgb(var(--foreground-rgb)) !important;
-    }
-
-    button {
-        color: rgb(var(--foreground-rgb)) !important;
-    }
-
-    .Mui-error {
-        font-size: 100pt;
-    }
+    /*input {*/
+    /*    color: rgb(var(--foreground-rgb)) !important;*/
+    /*}*/
+    /*button {*/
+    /*    color: rgb(var(--foreground-rgb)) !important;*/
+    /*}*/
 }
