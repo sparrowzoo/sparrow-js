@@ -39,7 +39,8 @@
     "@babel/preset-env": "^7.1.0",
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
-    "gulp": "^4.0.2"
+    "gulp": "^4.0.2",
+    "raw-loader": "^4.0.2"
   },
   "description": "windows install node --- https://nodejs.org/en/download/",
   "bugs": {
