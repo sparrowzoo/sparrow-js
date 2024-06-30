@@ -1,3 +1,4 @@
+
 {
   "name": "auto-react-lastest",
   "version": "0.1.0",
@@ -7,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "export": "next export",
-    "lint": "next lint"
+    "lint": "next lint",
+    "copy": "cpy --cwd=scripts playground.template.tsx ../../pages/playground --rename=index.tsx //    https://sparrowzoo.feishu.cn/docx/WDwadlmL3opGnlxXMrlcL0fOn8e"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",

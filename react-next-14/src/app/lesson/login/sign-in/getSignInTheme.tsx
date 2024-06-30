@@ -213,27 +213,11 @@ export default function getSignInTheme(mode: PaletteMode): ThemeOptions {
   return {
     ...getDesignTokens(mode),
     components: {
-      MuiButtonBase: {
-        defaultProps: {
-          disableTouchRipple: true,
-          disableRipple: true,
-        },
-        styleOverrides: {
-          root: {
-            boxSizing: 'border-box',
-            transition: 'all 100ms ease',
-            '&:focus-visible': {
-              outline: `3px solid ${alpha(brand[400], 0.5)}`,
-              outlineOffset: '2px',
-            },
-          },
-        },
-      },
       MuiButton: {
         styleOverrides: {
           root: ({ theme }) => ({
             boxShadow: 'none',
-            borderRadius: theme.shape.borderRadius,
+            // borderRadius: theme.shape.borderRadius,
             textTransform: 'none',
             variants: [
               {
