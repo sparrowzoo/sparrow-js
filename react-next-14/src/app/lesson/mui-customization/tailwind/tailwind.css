@@ -1,0 +1,4 @@
+.button{
+    @apply bg-[#fff] h-[60px] mt-4 text-white;
+    background-color: black;
+}

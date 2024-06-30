@@ -9,6 +9,8 @@ import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
+import { OutlinedInput } from '@mui/material';
+
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Typography from '@mui/material/Typography';
@@ -105,8 +107,8 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 export default function SignIn() {
   const [mode, setMode] = React.useState<PaletteMode>('light');
   const [showCustomTheme, setShowCustomTheme] = React.useState(true);
-  const defaultTheme = createTheme({ palette: { mode } });
-  const SignInTheme = createTheme(getSignInTheme(mode));
+  const defaultTheme = createTheme({ palette: { mode } }); //light dark
+  const SignInTheme = createTheme(getSignInTheme(mode));//light dark
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -230,6 +232,20 @@ export default function SignIn() {
                   variant="outlined"
                   color={emailError ? 'error' : 'primary'}
                   sx={{ ariaLabel: 'email' }}
+                />
+
+                <OutlinedInput
+                    error={emailError}
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="your@email.com"
+                    autoComplete="email"
+                    autoFocus
+                    required
+                    fullWidth
+                    color={emailError ? 'error' : 'primary'}
+                    sx={{ ariaLabel: 'email' }}
                 />
               </FormControl>
               <FormControl>
