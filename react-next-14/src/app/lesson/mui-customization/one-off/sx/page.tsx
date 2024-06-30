@@ -12,7 +12,6 @@ export default function SxProp() {
                 }}
             />
             These class names can't be used as CSS selectors because they are unstable
-
             <Slider
                 defaultValue={30}
                 sx={{
@@ -23,12 +22,8 @@ export default function SxProp() {
                     },
                 }}
             />
-
-
             <Button className="Button">正常的按钮</Button>
-
             <Button disabled className="Button"> Disabled Button</Button>
-
         </>
     );
 }
