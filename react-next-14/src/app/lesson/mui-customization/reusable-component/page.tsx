@@ -3,6 +3,7 @@ import * as React from 'react';
 import Slider, { SliderProps } from '@mui/material/Slider';
 import { alpha, styled } from '@mui/material/styles';
 
+// css in js
 const SuccessSlider = styled(Slider)<SliderProps>(({ theme }) => ({
     width: 300,
     color: theme.palette.success.main,
