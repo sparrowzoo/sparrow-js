@@ -38,7 +38,6 @@ export default function CatFriends() {
             <li
               key={cat.id}
               ref={(node: HTMLLIElement | null) => {
-                debugger;
                 const map: any = getMap();
                 if (node) {
                   map.set(cat.id, node);
