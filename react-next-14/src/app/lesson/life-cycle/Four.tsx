@@ -1,7 +1,7 @@
 import React from "react";
 import FiveParent from "@/app/lesson/life-cycle/FiveParent";
 
-export default React.memo(() => {
+export default React.memo(function Four() {
   function fourHandler(e: any) {
     e.stopPropagation();
   }
