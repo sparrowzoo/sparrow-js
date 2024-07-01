@@ -7,29 +7,24 @@ const ForwardInput = forwardRef((props, ref: any) => {
 ForwardInput.displayName = "自定义Name";
 
 function MyInput(props: any) {
-  return <input {...props} />;
+  return <input value={"Function Component"} {...props} />;
 }
 
 export default function Page() {
-  const inputRef = useRef(null);
+  //定义要控制的标签
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function handleClick() {
     if (inputRef.current) {
-      // @ts-ignore
       inputRef.current.focus();
     }
   }
 
   return (
     <>
-      <p>
-        Warning: Function components cannot be given refs. Attempts to access
-        this ref will fail. Did you mean to use React.forwardRef()?
-      </p>
       <MyInput ref={inputRef} />
       <ForwardInput ref={inputRef} />
-      <br />
-      <input ref={inputRef} />
+      <input value={"Html Origin"} ref={inputRef} />
       <button onClick={handleClick}>聚焦输入框</button>
     </>
   );
