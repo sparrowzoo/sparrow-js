@@ -1,47 +1,76 @@
-/* 使用说明文档 https://www.tailwindcss.cn/docs/installation
-https://tailwindcss.com/docs/installation
-其中 tailwind base 相当于一份重置样式表，包含了最基础的样式。 tailwind components 包含了一些组件类， 组件相当于复合样式，tailwind utilities 包含了工具类，也就是 flex mx-auto 这些内置样式。
-
-这么划分的原因是因为 css 的优先级规则，tailwindcss 全部都是一级样式，
-在类名权重相等的情况，下面的样式可以覆盖上面的样式，
-所以工具类优先，
-组件类次之，
-基础样式兜底，生成的样式顺序尤为重要，所以 上面三句指令的顺序非必须建议不要修改。
-*/
 @tailwind base;
-@tailwind utilities;
+  @tailwind components;
+  @tailwind utilities;
 
-/* https://www.w3cschool.cn/tailwind_css/tailwind_css-n7ft3pap.html */
-@layer base {
+  @layer base {
     :root {
-        --foreground-rgb: 0, 0, 0;
-        --background-start-rgb: 214, 219, 220;
-        --background-end-rgb: 255, 255, 255;
+      --background: 0 0% 100%;
+      --foreground: 224 71.4% 4.1%;
+
+      --card: 0 0% 100%;
+      --card-foreground: 224 71.4% 4.1%;
+
+      --popover: 0 0% 100%;
+      --popover-foreground: 224 71.4% 4.1%;
+
+      --primary: 220.9 39.3% 11%;
+      --primary-foreground: 210 20% 98%;
+
+      --secondary: 220 14.3% 95.9%;
+      --secondary-foreground: 220.9 39.3% 11%;
+
+      --muted: 220 14.3% 95.9%;
+      --muted-foreground: 220 8.9% 46.1%;
+
+      --accent: 220 14.3% 95.9%;
+      --accent-foreground: 220.9 39.3% 11%;
+
+      --destructive: 0 84.2% 60.2%;
+      --destructive-foreground: 210 20% 98%;
+
+      --border: 220 13% 91%;
+      --input: 220 13% 91%;
+      --ring: 224 71.4% 4.1%;
+
+      --radius: 0.5rem;
     }
 
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --foreground-rgb: 255, 253, 253;
-            --background-start-rgb: 0, 0, 0;
-            --background-end-rgb: 214, 219, 220;
-        }
-    }
+    .dark {
+      --background: 224 71.4% 4.1%;
+      --foreground: 210 20% 98%;
 
+      --card: 224 71.4% 4.1%;
+      --card-foreground: 210 20% 98%;
+
+      --popover: 224 71.4% 4.1%;
+      --popover-foreground: 210 20% 98%;
+
+      --primary: 210 20% 98%;
+      --primary-foreground: 220.9 39.3% 11%;
+
+      --secondary: 215 27.9% 16.9%;
+      --secondary-foreground: 210 20% 98%;
+
+      --muted: 215 27.9% 16.9%;
+      --muted-foreground: 217.9 10.6% 64.9%;
+
+      --accent: 215 27.9% 16.9%;
+      --accent-foreground: 210 20% 98%;
+
+      --destructive: 0 62.8% 30.6%;
+      --destructive-foreground: 210 20% 98%;
+
+      --border: 215 27.9% 16.9%;
+      --input: 215 27.9% 16.9%;
+      --ring: 216 12.2% 83.9%;
+    }
+  }
+
+  @layer base {
+    * {
+      @apply border-border;
+    }
     body {
-        color: rgb(var(--foreground-rgb));
-        background: linear-gradient(to bottom,
-        transparent,
-        rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
-        height: 100vh;
-        /* 设置body和html的高度为视口高度的100% */
+      @apply bg-background text-foreground;
     }
-}
-
-@layer utilities {
-    /*input {*/
-    /*    color: rgb(var(--foreground-rgb)) !important;*/
-    /*}*/
-    /*button {*/
-    /*    color: rgb(var(--foreground-rgb)) !important;*/
-    /*}*/
-}
+  }
