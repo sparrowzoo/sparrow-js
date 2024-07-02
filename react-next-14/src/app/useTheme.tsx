@@ -1,5 +1,6 @@
-import { createTheme, ThemeOptions } from "@mui/material/styles";
 import * as React from "react";
+import { createTheme, ThemeOptions } from "@mui/material/styles";
+
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 const lightThemeOptions: ThemeOptions = {
