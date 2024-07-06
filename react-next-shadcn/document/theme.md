@@ -1,24 +1,34 @@
 # Theming
 
+## 中文站
+
+https://www.shadcn.com.cn/docs/theming
 https://ui.shadcn.com/docs/theming
 
 https://ui.shadcn.com/themes
 
 https://ui.shadcn.com/docs/dark-mode/next
 
+## 架构说明
+
+https://zhuanlan.zhihu.com/p/578736019
+https://www.51cto.com/article/778949.html
+
 使用CSS变量或者tailwind utility class
 
 Using **`CSS Variables`** or Tailwind CSS for theming.
-You can choose between using **`CSS variables`** or 
+You can choose between using **`CSS variables`** or
 **`Tailwind CSS utility classes** `for theming.
 
 ## Utility classes
+
 <div className="bg-zinc-950 dark:bg-white" />
 Copy
 To use utility classes for theming 
 
 set `tailwind.cssVariables to false` in your components.json file.
 设置cssVariables 为false
+
 ```
 components.json
 {
@@ -36,12 +46,14 @@ components.json
 }
 }
 ```
+
 ## CSS Variables
 
 设置cssVariables 为true 而且脚手架生成时一定选择true
 <div className="bg-background text-foreground" />
 
 To use CSS variables for theming set `tailwind.cssVariables to true` in your components.json file.
+
 ```
 components.json
 {
