@@ -1,0 +1,27 @@
+@import "inner.css";
+
+.foo {
+    color: red;
+
+    &:hover {
+        color: green;
+    }
+
+    > .bar {
+        color: blue;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        color: cyan;
+    }
+
+    color: pink;
+
+    .bar {
+        color: red;
+        background-color: white;
+        height: 100px;
+        width: 200px;
+        font-size: large;
+    }
+}
