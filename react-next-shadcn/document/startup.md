@@ -1,7 +1,11 @@
 # Next.js
+
 Install and configure Next.js.
+
 ## Create project
+
 Start by creating a new Next.js project using create-next-app:
+
 ```
 npx create-next-app@latest my-app --typescript --tailwind --eslint
 
@@ -16,7 +20,10 @@ npx create-next-app@latest my-app --typescript --tailwind --eslint
 
 Creating a new Next.js app in ~\sparrow\sparrow-js\react-next-shadcn.
 ```
+
+![nextjs-setup.png](nextjs-setup.png)
 相应的在tsconfig.json的配置会生成
+
 ```
  "paths": {
       "@/*": ["./src/*"]
@@ -26,23 +33,31 @@ Creating a new Next.js app in ~\sparrow\sparrow-js\react-next-shadcn.
 ```
 
 ## Run the CLI
+
 Run the shadcn-ui init command to setup your project:
+
 ```
 npx shadcn-ui@latest init
 ```
+
 ## Configure components.json
+
 You will be asked a few questions to configure components.json:
+
 ```
 Which style would you like to use? › Default
 Which color would you like to use as base color? › Slate
 Do you want to use CSS variables for colors? › no / yes
 ```
+
 ## Fonts
+
 I use Inter as the default font. Inter is not required. You can replace it with any other font.
 
 Here's how I configure Inter for Next.js:
 
-###  Import the font in the root layout:
+### Import the font in the root layout:
+
 ```
 import "@/styles/globals.css"
 import { Inter as FontSans } from "next/font/google"
@@ -70,7 +85,8 @@ fontSans.variable
 )
 }
 ```
-###  Configure theme.extend.fontFamily in tailwind.config.js
+
+### Configure theme.extend.fontFamily in tailwind.config.js
 
 ```
 const { fontFamily } = require("tailwindcss/defaultTheme")
@@ -88,9 +104,11 @@ sans: ["var(--font-sans)", ...fontFamily.sans],
 },
 }
 ```
+
 ## App structure
 
 Here's how I structure my Next.js apps. You can use this as a reference:
+
 ```
 .
 ├── app
@@ -122,11 +140,15 @@ The lib folder contains all the utility functions. I have a utils.ts where I def
 The styles folder contains the global CSS.
 
 ## That's it
+
 You can now start adding components to your project.
+
 ```
 npx shadcn-ui@latest add button
 ```
+
 The command above will add the Button component to your project. You can then import it like this:
+
 ```
 import { Button } from "@/components/ui/button"
 
