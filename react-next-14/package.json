@@ -22,11 +22,11 @@
     "clsx": "^2.1.1",
     "formik": "^2.4.6",
     "markdown-to-jsx": "^7.4.7",
-    "react-hook-form": "^7.52.0",
     "next": "14.2.3",
     "raw-loader": "^4.0.2",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.52.0",
     "react-markdown": "^9.0.1",
     "react-redux": "^9.1.1",
     "sass": "^1.77.5",
@@ -37,6 +37,7 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.13",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
