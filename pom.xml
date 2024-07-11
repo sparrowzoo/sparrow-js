@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.sparrowzoo</groupId>
         <artifactId>sparrow-bom</artifactId>
-        <version>1.0.3.1-RELEASE</version>
+        <version>1.0.4-RELEASE</version>
     </parent>
     <packaging>war</packaging>
     <dependencies>
@@ -48,10 +48,6 @@
         </dependency>
         <dependency>
             <groupId>com.sparrowzoo</groupId>
-            <artifactId>sparrow-jedis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-data-source</artifactId>
         </dependency>
         <dependency>
@@ -62,6 +58,32 @@
             <groupId>com.sparrowzoo</groupId>
             <artifactId>sparrow-protocol</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-tables</artifactId>
+            <version>0.21.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.commonmark/commonmark-ext-gfm-strikethrough -->
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-gfm-strikethrough</artifactId>
+            <version>0.21.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.commonmark/commonmark-ext-autolink -->
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-autolink</artifactId>
+            <version>0.21.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.commonmark/commonmark-ext-task-list-items -->
+        <dependency>
+            <groupId>org.commonmark</groupId>
+            <artifactId>commonmark-ext-task-list-items</artifactId>
+            <version>0.21.0</version>
+        </dependency>
+
+
     </dependencies>
 
     <artifactId>sparrow-js</artifactId>
