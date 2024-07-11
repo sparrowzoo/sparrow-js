@@ -14,6 +14,10 @@ const nextConfig = {
                 use: 'raw-loader'
             },
             {
+                test: /\.html$/,
+                use: 'raw-loader'
+            },
+            {
                 test: /\.txt$/,
                 use: 'raw-loader'
             }
