@@ -1,6 +1,5 @@
 package com.sparrow.demo;
 
-import com.sparrow.cache.exception.CacheNotFoundException;
 import com.sparrow.constant.User;
 import com.sparrow.mvc.RequestParameters;
 import com.sparrow.mvc.ViewWithModel;
@@ -9,7 +8,6 @@ import com.sparrow.protocol.*;
 import com.sparrow.protocol.constant.SparrowError;
 import com.sparrow.servlet.ServletContainer;
 import com.sparrow.support.Authenticator;
-import com.sparrow.support.web.ResultAssembler;
 import com.sparrow.support.web.ServletUtility;
 import com.sparrow.vo.HelloVO;
 import org.slf4j.Logger;
@@ -50,7 +48,7 @@ public class HelloController {
     }
 
     @RequestParameters("key")
-    public HelloVO env2(String key) throws BusinessException {
+    public HelloVO env2(String key) {
         return new HelloVO(key);
     }
 
@@ -94,7 +92,7 @@ public class HelloController {
         return ViewWithModel.forward(new HelloVO("jsp page content from server ..."));
     }
 
-    public ViewWithModel login(HttpServletRequest request) throws BusinessException, CacheNotFoundException {
+    public ViewWithModel login(HttpServletRequest request) throws BusinessException {
         LoginUser loginToken = new LoginUser();
         loginToken.setNickName("nick-zhangsan");
         loginToken.setAvatar("http://localhost");
@@ -107,7 +105,7 @@ public class HelloController {
         loginToken.setUserName("zhangsan");
         String sign = authenticator.sign(loginToken, new LoginUserStatus(1, System.currentTimeMillis() + 100000000000L));
         servletContainer.rootCookie(User.PERMISSION, sign, 6);
-        Result result = ResultAssembler.assemble(new Result<>(loginToken, "login_success"));
+        Result result = new Result<>(loginToken, "login_success");
         return ViewWithModel.transit("/login_success", "/", result);
     }
 
