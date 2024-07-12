@@ -4,14 +4,13 @@ export default function page() {
       <h1>用于爆布流图片展示</h1>
       <h1>直接分三列</h1>
       <h2>Adding based on column count(基于列数添加)</h2>
-      <p>
+      <pre>
         Use utilities like columns-2 and columns-3 to set the number of columns
         that should be created for the content within an element. The column
         width will be automatically adjusted to accommodate that number.
-        用象'columns-2
-        columns-3'这样的类来设置列的数量（元素中内容被创建的列数）
+        用象columns-2 columns-3这样的类来设置列的数量（元素中内容被创建的列数）
         内容的列宽会自动调整来适配这个number
-      </p>
+      </pre>
       <div className="columns-3">
         <img className="w-full" src="/columns/1.jpg" />
         <img className="w-full" src="/columns/2.jpg" />

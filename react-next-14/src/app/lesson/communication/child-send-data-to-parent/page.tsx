@@ -5,7 +5,7 @@ function ChildComponent({ sentContent }: { sentContent: any }) {
   return <input onChange={sentContent} />;
 }
 
-export default function page() {
+export default function Page() {
   const [data, setData] = useState("");
 
   function contentChange(e: any) {

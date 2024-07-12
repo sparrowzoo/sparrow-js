@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-export default function page() {
+export default function Page() {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
