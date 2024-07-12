@@ -1,6 +1,7 @@
 {
   "name": "sparrow",
   "version": "1.0.0",
+  "license": "Apache-2.0",
   "main": "dist/sparrow.js",
   "homepage": "http://www.sparrowzoo.net",
   "scripts": {
@@ -12,7 +13,6 @@
     "type": "git",
     "url": "git+https://github.com/sparrowzoo/sparrow-js.git"
   },
-  "license": "Apache-2.0",
   "dependencies": {
     "@mui/system": "^5.15.20",
     "babel-preset-es2015": "^6.24.1",
