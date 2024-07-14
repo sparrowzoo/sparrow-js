@@ -1,0 +1,28 @@
+<style>
+    .father {
+        width: 100%;
+        background-color: rebeccapurple;
+    }
+
+    .son {
+        width: 200px;
+        height: 100px;
+        background-color: palegoldenrod;
+        margin: 0 auto;
+    }
+
+</style>
+<pre>
+    text-align对文本、行内元素、行内块元素生效，对块元素却是无效的。
+    margin：0 auto；
+    对块元素实现水平居中。
+    实现原理：块级元素在水平方向上具有满屏特性，表现为水平方向上占满整个父容器的宽度，所以，当水平方向上padding、border，width都是定值时，margin左右外边距设置为auto，默认会由margin左右平分剩余空间。从而达到水平居中效果。
+
+</pre>
+
+<div class="father">
+    <div class="son">
+
+    </div>
+</div>
+

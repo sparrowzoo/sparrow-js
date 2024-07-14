@@ -1,6 +1,6 @@
 package com.sparrow.markdown;
 
-import com.sun.tools.javac.util.List;
+import com.vdurmont.emoji.EmojiParser;
 import org.commonmark.Extension;
 import org.commonmark.ext.autolink.AutolinkExtension;
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension;
@@ -9,6 +9,9 @@ import org.commonmark.ext.task.list.items.TaskListItemsExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Demo {
@@ -106,11 +109,11 @@ public class Demo {
                 "  B-->D;\n" +
                 "  C-->D;\n" +
                 "```\n";
-        List<Extension> extensions = List.of(
-                TablesExtension.create(),
-                AutolinkExtension.create(),
-                StrikethroughExtension.create(),
-                TaskListItemsExtension.create());
+        List<Extension> extensions = new ArrayList<>();
+        extensions.add(TablesExtension.create());
+        extensions.add(AutolinkExtension.create());
+        extensions.add(StrikethroughExtension.create());
+        extensions.add(TaskListItemsExtension.create());
         Parser parser = Parser.builder()
                 .extensions(extensions)
                 .build();
@@ -120,6 +123,10 @@ public class Demo {
         HtmlRenderer renderer = HtmlRenderer.builder()
                 .extensions(extensions)
                 .build();
-        System.out.println(renderer.render(document));  // "<p>This is <em>Markdown</em></p>\n"
+        String html=renderer.render(document);  // "<p>This is <em>Markdown</em></p>\n"
+
+        String result = EmojiParser.parseToUnicode(html);
+        System.out.println(result);
+// Prints:
     }
 }
