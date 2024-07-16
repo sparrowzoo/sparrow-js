@@ -20,3 +20,13 @@ Nested drawers
 Non-dismissible
 Non-draggable element
 ```
+## 如何解决右侧抽屉的样式问题？
+
+1. 用浏览器查看相关元素的样式，找到原代码中对应的样式。分析每个样式函义。
+2. 定位'inset-x-0' 导致右侧抽屉的样式问题。
+
+## 解决方案：
+1. 直接删除drawer组件的'inset-x-0'样式。
+缺点：改变原始样式，违背开闭原则
+2. 给<DrawerContent className=" bg-white inset-[unset] ">添加样式。
+twMerge 插件帮我们实现覆盖策略，可以覆盖掉原有样式。
