@@ -41,9 +41,9 @@ export default function Page() {
         <div>
             <h1>Horizontal Nav</h1>
             <NavigationMenu.Root orientation="horizontal"
-                                 className="relative z-[1] bg-black flex sm:w-screen w-[200px] justify-center">
+                                 className="relative z-[1] bg-black flex w-screen sm:w-[200px] justify-center">
                 <NavigationMenu.List
-                    className="center shadow-blackA4 m-0 flex sm:flex-row flex-col  list-none rounded-[6px] text-white bg-block p-1 shadow-[0_2px_10px]">
+                    className="center shadow-blackA4 m-0 flex flex-row sm:flex-col  list-none rounded-[6px] text-white bg-block p-1 shadow-[0_2px_10px]">
                     <NavigationMenu.Item>
                         <NavigationMenu.Trigger
                             className="text-violet11 bg-block hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
@@ -53,34 +53,14 @@ export default function Page() {
                             className="data-[motion=from-start]:animate-enterFromLeft bg-block data-[motion=from-end]:animate-enterFromRight data-[motion=to-start]:animate-exitToLeft data-[motion=to-end]:animate-exitToRight absolute top-0 left-0 w-full sm:w-auto">
                             <ul className="one m-0 grid bg-block list-none gap-x-[10px] p-[22px] sm:w-[500px] sm:grid-cols-[0.75fr_1fr]">
                                 <li className="row-span-3 grid">
-                                    <NavigationMenu.Link asChild>
-                                        <a
-                                            className="focus:shadow-violet7 from-purple9 to-indigo9 flex
-                    h-full w-full select-none flex-col justify-end rounded-[6px] bg-gradient-to-b p-[25px] no-underline outline-none focus:shadow-[0_0_0_2px]"
-                                            href="/"
-                                        >
-                                            <svg
-                                                aria-hidden
-                                                width="38"
-                                                height="38"
-                                                viewBox="0 0 25 25"
-                                                fill="white"
-                                            >
-                                                <path
-                                                    d="M12 25C7.58173 25 4 21.4183 4 17C4 12.5817 7.58173 9 12 9V25Z"></path>
-                                                <path d="M12 0H4V8H12V0Z"></path>
-                                                <path
-                                                    d="M17 8C19.2091 8 21 6.20914 21 4C21 1.79086 19.2091 0 17 0C14.7909 0 13 1.79086 13 4C13 6.20914 14.7909 8 17 8Z"></path>
-                                            </svg>
-                                            <div
-                                                className="bg-block mt-4 mb-[7px] text-[18px] font-medium leading-[1.2] text-white">
-                                                Radix Primitives
-                                            </div>
-                                            <p className="text-mauve4 text-[14px] leading-[1.3]">
-                                                Unstyled, accessible components for React.
-                                            </p>
-                                        </a>
-                                    </NavigationMenu.Link>
+
+                                    <div
+                                        className="bg-block mt-4 mb-[7px] text-[18px] font-medium leading-[1.2] text-white">
+                                        Radix Primitives
+                                    </div>
+                                    <p className="text-mauve4 text-[14px] leading-[1.3]">
+                                        Unstyled, accessible components for React.
+                                    </p>
                                 </li>
 
                                 <ListItem title="Stitches" props={{href: "/stitches"}}>
@@ -165,7 +145,8 @@ export default function Page() {
                     </NavigationMenu.Indicator>
                 </NavigationMenu.List>
 
-                <div className="perspective-[2000px] absolute sm:top-full sm:left-0 top-0 left-full flex w-full justify-center">
+                <div
+                    className="perspective-[2000px] absolute top-full left-0 sm:top-0 sm:left-full flex w-full justify-center">
                     <NavigationMenu.Viewport
                         className="data-[state=open]:animate-scaleIn data-[state=closed]:animate-scaleOut relative mt-[10px] h-[var(--radix-navigation-menu-viewport-height)] w-full origin-[top_center] overflow-hidden rounded-[6px] bg-block transition-[width,_height] duration-300 sm:w-[var(--radix-navigation-menu-viewport-width)]"/>
                 </div>
