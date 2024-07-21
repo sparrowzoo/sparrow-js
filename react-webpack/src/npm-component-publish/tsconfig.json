@@ -1,0 +1,70 @@
+{
+  "compileOnSave": true,
+  // do not compile on save不在保存时编译
+  "compilerOptions": {
+    "outDir": "./dist",
+    "sourceMap": true,
+    // generate source map for debugging生成调试用的源码映射
+    "noUnusedLocals": true,
+    // report errors on unused locals报告未使用的局部变量错误
+    "noUnusedParameters": true,
+    // report errors on unused parameters报告未使用的参数错误
+    "strict": true,
+    // enable all strict type-checking options启用所有严格类型检查选项
+    "esModuleInterop": false,
+    // allow default imports from modules with no default export允许从没有默认导出模块的默认导入
+    "allowSyntheticDefaultImports": true,
+    // allow default imports from modules with no default export允许从没有默认导出模块的默认导入
+
+    "moduleResolution": "node",
+    // allow module resolution using node modules允许使用node模块解析
+    "baseUrl": "./",
+    // base directory to resolve non-relative module names基目录解析非相对模块名称
+    "noImplicitAny": true,
+    // enable error reporting for variables without an explicit type注释类型推断
+    "module": "esnext",
+    // specify module code generation指定模块代码生成
+    "target": "es5",
+    // specify ECMAScript target version指定ECMAScript目标版本
+    "allowJs": false,
+    // allow JavaScript files to be compiled允许编译JavaScript文件
+    "declaration": true,
+    // generate .d.ts files for TypeScript projects生成.d.ts文件用于TypeScript项目
+    "declarationDir": "./dist",
+    // specify output directory for generated .d.ts files指定输出目录
+    "declarationMap": true,
+    // generate sourcemaps for .d.ts files生成源码映射文件
+    "strictNullChecks": true,
+    // enable strict null checks启用严格空检查
+    "types": [
+      "node"
+    ],
+    // specify type package names to be included在包含的类型包名称
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    // specify directory where type definitions are located指定类型定义的目录
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    // specify library files to be included在包含的库文件
+    "jsx": "react",
+    // specify JSX code generation指定JSX代码生成
+    "jsxFactory": "React.createElement"
+    // specify JSX factory function指定JSX工厂函数
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/main.ts"
+  ],
+  // include all files in the src directory
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  // exclude node_modules and dist directories
+  "files": [
+    "src/index.ts"
+  ]
+}
