@@ -41,9 +41,9 @@ export default function Page() {
         <div>
             <h1>Horizontal Nav</h1>
             <NavigationMenu.Root orientation="horizontal"
-                                 className="relative z-[1] bg-black flex w-screen sm:w-[200px] justify-center">
+                                 className="relative z-[1] bg-black flex w-screen sm:w-[400px] justify-center">
                 <NavigationMenu.List
-                    className="center shadow-blackA4 m-0 flex flex-row sm:flex-col  list-none rounded-[6px] text-white bg-block p-1 shadow-[0_2px_10px]">
+                    className="center w-full sm:w-[400px] shadow-blackA4 m-0 flex flex-row sm:flex-col  list-none rounded-[6px] text-white bg-block p-1 shadow-[0_2px_10px]">
                     <NavigationMenu.Item>
                         <NavigationMenu.Trigger
                             className="text-violet11 bg-block hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">

@@ -1,13 +1,21 @@
-import React, { useImperativeHandle } from "react";
+import {ForwardedRef, forwardRef, useImperativeHandle, useState} from "react";
+import {CommunicationApi, CommunicationProps} from "@/app/lesson/communication/parent-get-child-state/CommunicationApi";
 
-export default function ChildComponent(props: any, ref: any) {
-  const [childState, setChildState] = React.useState("Hello from child!");
 
-  // 暴露方法给父组件，以便获取子组件内的状态
-  useImperativeHandle(ref, () => ({
-    getChildState: () => childState,
-  }));
-  return (
-    <button onClick={() => setChildState("Updated state")}>Update State</button>
-  );
-}
+const LocationChild = forwardRef<CommunicationApi, CommunicationProps>(
+    (props: CommunicationProps, ref: ForwardedRef<CommunicationApi>) => {
+        const [state, setState] = useState("i from child")
+        useImperativeHandle(ref, () => ({
+            getChildState() {
+                return state;
+            },
+        }));
+        return (
+            <div>
+                <div>{props.data}</div>
+            </div>
+        );
+    });
+
+LocationChild.displayName = "LocationChild";
+export default LocationChild;
