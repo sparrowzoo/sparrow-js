@@ -19,7 +19,6 @@ export const InnerFormSchema = v.object({
     v.minLength(8, "Your password must have 8 characters or more.")
   ),
 });
-type InputForm = v.InferInput<typeof InnerFormSchema>; // { email: string; password: string }
 
 export const OuterSchema = v.pipe(
   InnerFormSchema,
@@ -38,12 +37,18 @@ export const OuterSchema = v.pipe(
   v.forward(
     v.partialCheck(
       [["password"], ["password2"]],
+      //注意这里引用的是输入类型，而不是输出类型
       (input: InputForm) => input.password === input.password2,
       "The two passwords do not match."
     ),
     ["password2"] //错误信息显示的位置
   )
 );
+type InputForm = v.InferInput<typeof InnerFormSchema>;
+// {
+// email: string;
+// password: string
+//}
 export type FormData = v.InferOutput<typeof OuterSchema>; // { email: string; password: string }
 
 // Infer output TypeScript type of login schema
