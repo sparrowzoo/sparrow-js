@@ -7,5 +7,5 @@ logs
 node_modules
 target
 react-next-14/dist
-
-
+radix-ui-primitives
+/radix-ui-primitives/
