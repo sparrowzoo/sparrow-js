@@ -9,8 +9,8 @@ import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormData, OuterSchema } from "./schema";
 import { valibotResolver } from "@hookform/resolvers/valibot";
-
-export function Page() {
+import {ErrorMessage} from "@hookform/error-message";
+ export default function Page() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const onSubmit: SubmitHandler<FormData> = (data) => {
     alert(JSON.stringify(data, null, 2));
@@ -18,9 +18,9 @@ export function Page() {
   const {
     register,
     handleSubmit,
-    control,
     formState: { errors },
   } = useForm<FormData>({
+    mode: "onChange",
     //相当于v.parse
     resolver: valibotResolver(
       OuterSchema,
@@ -41,13 +41,10 @@ export function Page() {
             <Input
               {...register("email")}
               id="email"
-              type="email"
               placeholder="Email"
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              disabled={isLoading}
-              required
             />
             {errors.email && <span role="alert">{errors.email.message}</span>}
           </div>
@@ -60,11 +57,14 @@ export function Page() {
               id="userName"
               type="text"
               placeholder="user name"
-              required
+              autoCapitalize="none"
+              autoComplete="email"
+              autoCorrect="off"
             />
-            {errors.userName && (
-              <span role="alert">{errors.userName.message}</span>
-            )}
+              <ErrorMessage
+                  errors={errors}
+                  name="userName"
+                  render={({ message }) => <p>{message}</p>}/>
           </div>
           <div className="grid gap-1">
             <div className="flex items-center">
@@ -72,13 +72,18 @@ export function Page() {
               <Link href="#" className="ml-auto inline-block text-sm underline">
                 Forgot your password?
               </Link>
+
             </div>
             <Input
               {...register("password")}
               id="password"
               type="password"
-              required
+
             />
+              <ErrorMessage
+                  errors={errors}
+                  name="password"
+                  render={({ message }) => <p>{message}</p>}/>
           </div>
           <div className="grid gap-1">
             <Label htmlFor="confirmPassword">确认密码</Label>
@@ -86,8 +91,11 @@ export function Page() {
               {...register("confirmPassword")}
               id="confirmPassword"
               type="password"
-              required
             />
+              <ErrorMessage
+                  errors={errors}
+                  name="confirmPassword"
+                  render={({ message }) => <span className="text-red-500">{message}</span>}/>
           </div>
 
           <div className="flex-col items-left ">
@@ -99,8 +107,11 @@ export function Page() {
               className="flex-1 w-32"
               id="captcha"
               type="text"
-              required
             />
+              <ErrorMessage
+                  errors={errors}
+                  name="captcha"
+                  render={({ message }) => <span className="text-red-500 text-size-sm">{message}</span>}/>
           </div>
 
           <Button disabled={isLoading}>

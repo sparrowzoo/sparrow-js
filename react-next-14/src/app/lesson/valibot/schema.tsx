@@ -1,7 +1,7 @@
 import * as v from "valibot";
 
 export const InnerFormSchema = v.object({
-  username: v.pipe(v.string(), v.nonEmpty("Please enter your name.")),
+  username: v.pipe(v.string("请输入用户名"), v.nonEmpty("Please enter your name.")),
   email: v.pipe(
     v.string(),
     v.nonEmpty("Please enter your email."),
