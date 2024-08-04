@@ -47,6 +47,7 @@ function RefChildComponent() {
 
 // 父组件
 const ParentComponent = () => {
+    //const childRef=userRef(null);
     const childRef:React.MutableRefObject<CommunicationApi | null> = useRef<CommunicationApi>(null);
     const handleButtonClick = () => {
         if (childRef.current) {// 判断子组件是否挂载
