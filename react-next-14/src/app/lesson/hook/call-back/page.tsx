@@ -5,12 +5,13 @@ type SetStateFn<T> = (prevState?: T) => T;
 export default function Page() {
     console.log("CallBack Page")
     //通过 React.Dispatch<React.SetStateAction<number | undefined>>自定义callback 参数类型
-    const setValue2: React.Dispatch<string> = React.useCallback(
-        (nextValue): string => {
-            return nextValue.toString();
+    const onChange: React.Dispatch<boolean> = React.useCallback(
+        (nextValue): boolean => {
+            return nextValue
         },
         []
     );
+
 
     const setValue: React.Dispatch<React.SetStateAction<number | undefined>> = React.useCallback(
         (nextValue) => {
