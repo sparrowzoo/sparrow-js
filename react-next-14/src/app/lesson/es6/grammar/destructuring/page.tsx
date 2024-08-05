@@ -1,36 +1,27 @@
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+
+type UseControllableStateParams<T> = {
+    prop?: T | undefined;
+    defaultProp?: T | undefined;
+    onChange?: (state: T) => void;
+};
+function useControllableState<T>({
+                                    defaultProp
+                                 }:Omit<UseControllableStateParams<T>, 'prop'|'onChange'>) {
+    //如果传入了 prop，则认为是受控组件，否则是非受控组件
+    const uncontrolledState = React.useState<T | undefined>(defaultProp);
+    const [value] = uncontrolledState;
+}
 
 export default function Page() {
     const [message, setMessage] = useState<string>();
     useEffect(() => {
-        type Person = {
-            name: string;
-            age: number;
-            address: string;
-            phoneNumber: string;
-        };
-        const person: Person = {
-            name: 'John Doe',
-            age: 30,
-            address: '123 Main St',
-            phoneNumber: '555-555-5555'
+        type UseControllableStateParams<T> = {
+            prop?: T | undefined;
+            defaultProp?: T | undefined;
+            onChange?: (state: T) => void;
         };
 
-        type PersonDetails = Pick<Person, 'name' | 'age'>;
-
-
-        const userInfo: PersonDetails = {
-            name: person.name,
-            age: person.age
-        }
-
-// 相当于：
-// type PersonDetails = {
-//     name: string;
-//     age: number;
-// };
-
-        setMessage(userInfo.name);
     }, []);
     return (
         <div>
