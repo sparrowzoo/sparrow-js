@@ -10,9 +10,8 @@ export default function Page() {
             password: string;
         };
 
-        type UserInfoWithoutPassword = Omit<UserInfo, 'password'>;
+        type UserInfoWithoutPassword = Omit<UserInfo, 'password'|'id'>;
         const userInfo: UserInfoWithoutPassword = {
-            id: 1,
             name: "John Doe",
             email: "johndoe@example.com"
         };
