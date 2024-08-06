@@ -4,7 +4,7 @@ export const sculptureList = [
     artist: "Marta Colvin Andrade",
     description:
       "Although Colvin is predominantly known for abstract themes that allude to pre-Hispanic symbols, this gigantic sculpture, an homage to neurosurgery, is one of her most recognizable public art pieces.",
-    url: "https://photo.16pic.com/00/88/14/16pic_8814765_b.jpg",
+    url: "/columns/1.jpg",
     alt: "A bronze statue of two crossed hands delicately holding a human brain in their fingertips.",
   },
   {
@@ -12,7 +12,7 @@ export const sculptureList = [
     artist: "Eduardo Catalano",
     description:
       "This enormous (75 ft. or 23m) silver flower is located in Buenos Aires. It is designed to move, closing its petals in the evening or when strong winds blow and opening them in the morning.",
-    url: "https://photo.16pic.com/00/88/14/16pic_8814765_b.jpg",
+    url: "/columns/2.jpg",
     alt: "A gigantic metallic flower sculpture with reflective mirror-like petals and strong stamens.",
   },
   {
@@ -20,7 +20,7 @@ export const sculptureList = [
     artist: "John Woodrow Wilson",
     description:
       'Wilson was known for his preoccupation with equality, social justice, as well as the essential and spiritual qualities of humankind. This massive (7ft. or 2,13m) bronze represents what he described as "a symbolic Black presence infused with a sense of universal humanity."',
-    url: "https://photo.16pic.com/00/91/47/16pic_9147184_b.jpg",
+    url: "/columns/3.jpg",
     alt: "The sculpture depicting a human head seems ever-present and solemn. It radiates calm and serenity.",
   },
   {
@@ -28,7 +28,7 @@ export const sculptureList = [
     artist: "Unknown Artist",
     description:
       "Located on the Easter Island, there are 1,000 moai, or extant monumental statues, created by the early Rapa Nui people, which some believe represented deified ancestors.",
-    url: "https://photo.16pic.com/00/91/47/16pic_9147184_b.jpg",
+    url: "/columns/4.jpg",
     alt: "Three monumental stone busts with the heads that are disproportionately large with somber faces.",
   },
   {
@@ -36,7 +36,7 @@ export const sculptureList = [
     artist: "Niki de Saint Phalle",
     description:
       "The Nanas are triumphant creatures, symbols of femininity and maternity. Initially, Saint Phalle used fabric and found objects for the Nanas, and later on introduced polyester to achieve a more vibrant effect.",
-    url: "https://photo.16pic.com/00/91/47/16pic_9147184_b.jpg",
+    url: "/columns/5.jpg",
     alt: "A large mosaic sculpture of a whimsical dancing female figure in a colorful costume emanating joy.",
   },
   {
@@ -44,7 +44,7 @@ export const sculptureList = [
     artist: "Barbara Hepworth",
     description:
       "This abstract bronze sculpture is a part of The Family of Man series located at Yorkshire Sculpture Park. Hepworth chose not to create literal representations of the world but developed abstract forms inspired by people and landscapes.",
-    url: "https://photo.16pic.com/00/91/47/16pic_9147184_b.jpg",
+    url: "/columns/6.jpg",
     alt: "A tall sculpture made of three elements stacked on each other reminding of a human figure.",
   },
   {
@@ -52,7 +52,7 @@ export const sculptureList = [
     artist: "Lamidi Olonade Fakeye",
     description:
       "Descended from four generations of woodcarvers, Fakeye's work blended traditional and contemporary Yoruba themes.",
-    url: "https://photo.16pic.com/00/91/47/16pic_9147184_b.jpg",
+    url: "/columns/7.jpg",
     alt: "An intricate wood sculpture of a warrior with a focused face on a horse adorned with patterns.",
   },
   {
@@ -60,7 +60,7 @@ export const sculptureList = [
     artist: "Alina Szapocznikow",
     description:
       "Szapocznikow is known for her sculptures of the fragmented body as a metaphor for the fragility and impermanence of youth and beauty. This sculpture depicts two very realistic large bellies stacked on top of each other, each around five feet (1,5m) tall.",
-    url: "https://photo.16pic.com/00/91/47/16pic_9147184_b.jpg",
+    url: "/columns/8.jpg",
     alt: "The sculpture reminds a cascade of folds, quite different from bellies in classical sculptures.",
   },
   {
@@ -68,7 +68,7 @@ export const sculptureList = [
     artist: "Unknown Artist",
     description:
       "The Terracotta Army is a collection of terracotta sculptures depicting the armies of Qin Shi Huang, the first Emperor of China. The army consisted of more than 8,000 soldiers, 130 chariots with 520 horses, and 150 cavalry horses.",
-    url: "https://photo.16pic.com/00/91/47/16pic_9147184_b.jpg",
+    url: "/columns/9.jpg",
     alt: "12 terracotta sculptures of solemn warriors, each with a unique facial expression and armor.",
   },
   {
