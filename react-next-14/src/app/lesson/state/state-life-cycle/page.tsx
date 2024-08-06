@@ -4,7 +4,7 @@ type OnChangeType<T>=(state: T) => T | undefined;
 type UseControllableStateParams<T> = {
     prop?: T | undefined;
     defaultProp?: T | undefined;
-    onChange?: OnChangeType<T>;
+    onChange: OnChangeType<T>;
 };
 
 function useCallbackRef<T extends (...args: any[]) => any>(callback: T | undefined): T {
