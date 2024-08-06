@@ -12,7 +12,6 @@ function useCallbackRef<T extends (...args: any[]) => any>(
   callback: T | undefined
 ): T {
   const callbackRef = React.useRef(callback);
-
   React.useEffect(() => {
     callbackRef.current = callback;
   });
@@ -29,12 +28,10 @@ function useUncontrolledState<T>({
   onChange,
 }: Omit<UseControllableStateParams<T>, "prop">) {
   console.log("defaultProp" + defaultProp);
-  //只要不手动调用setUncontrolledProp 方法，uncontrolledState 里面的值就不会更新
   const uncontrolledState = React.useState<T | undefined>(defaultProp);
   console.log("uncontrolledState" + uncontrolledState);
   const [value] = uncontrolledState;
   console.log("value" + value);
-  //即使setUncontrolledProp 被调用了 prevValueRef.current 也不会更新
   const prevValueRef = React.useRef(value);
   console.log("prevValueRef.current" + prevValueRef.current);
   //useCallBack
