@@ -1,7 +1,11 @@
 "use client";
-import { useState } from "react";
+import { ChangeEventHandler, useState } from "react";
 
-function ChildComponent({ sentContent }: { sentContent: any }) {
+function ChildComponent({
+  sentContent,
+}: {
+  sentContent: ChangeEventHandler<HTMLInputElement>;
+}) {
   return <input onChange={sentContent} />;
 }
 
