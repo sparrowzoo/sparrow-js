@@ -2,11 +2,10 @@
 const nextConfig = {
     assetPrefix: process.env.NEXT_ASSET_PREFIX,
     images: {
-        domains: ['http://img.sparrowzoo.net']
+        domains: ['http://img.sparrowzoo.net','http://photo.16pic.com']
     },
     // 编译文件的输出目录
     distDir: "dist/pc",
-    output: "export",
     webpack: (config, options) => {
         config.module.rules.push(
             {
