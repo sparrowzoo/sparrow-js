@@ -4,6 +4,7 @@ const nextConfig = {
     images: {
         domains: ['http://img.sparrowzoo.net','http://photo.16pic.com']
     },
+    reactStrictMode: false,
     // 编译文件的输出目录
     distDir: "dist/pc",
     webpack: (config, options) => {
