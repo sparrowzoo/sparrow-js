@@ -25,6 +25,8 @@ function RefChildComponent() {
       <button
         ref={buttonRef} // ref is used to get the bounding client rect of the button
         onPointerEnter={() => {
+          console.log(buttonRef);
+          buttonRef.current;
           const rect = buttonRef.current?.getBoundingClientRect();
           setTargetRect({
             left: rect ? rect.left : 0,
@@ -39,6 +41,7 @@ function RefChildComponent() {
       >
         这里是按钮
       </button>
+      <br />
       {targetRect?.top}
       {targetRect?.left}
       {targetRect?.right}

@@ -29,11 +29,14 @@ const Page = () => {
       { abortEarly: true }
     ), // Useful to check TypeScript regressions
   });
-
+  debugger;
+  const password = register("password", {});
+  const { onChange, onBlur } = password;
+  console.log(password);
   // formState.errors;
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register("email")} />
+      <input {...register("email", { required: true })} />
       {errors.email && <span role="alert">{errors.email.message}</span>}
       <br />
       <input {...register("username")} />
@@ -45,7 +48,7 @@ const Page = () => {
         render={({ message }) => <p>{message}</p>}
       />
       <br />
-      <input {...register("password")} />
+      <input {...password} />
       {errors.password && <span role="alert">{errors.password.message}</span>}
       <br />
       <input {...register("password2")} />
