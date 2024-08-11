@@ -2,9 +2,9 @@ import * as React from "react";
 import BubbleInput from "@/app/lesson/valibot/checkbox-shadcn/BubbleInput";
 import {useControllableState} from "@/app/lesson/valibot/checkbox-shadcn/useControllableState";
 import {useComposedRefs} from "@/app/lesson/valibot/checkbox-shadcn/composeRefs";
+import CheckStatusContext, {CheckedState} from "@/app/lesson/valibot/checkbox-shadcn/CheckBoxContext";
 
 const CHECKBOX_NAME = "Checkbox";
-type CheckedState = boolean | "indeterminate";
 
 type CheckboxElement = React.ElementRef<'button'>;
 type Scope<C = any> = { [scopeName: string]: React.Context<C>[] } | undefined;
@@ -24,6 +24,7 @@ interface CheckboxProps extends Omit<PrimitiveButtonProps, 'checked' | 'defaultC
 
 const RadixCheckBox = React.forwardRef<CheckboxElement, CheckboxProps>(
     (props: ScopedProps<CheckboxProps>, forwardedRef) => {
+
         const {
             __scopeCheckbox,
             name,
@@ -58,8 +59,10 @@ const RadixCheckBox = React.forwardRef<CheckboxElement, CheckboxProps>(
             }
         }, [button, setChecked]);
 
+
         return (
             <>
+                <CheckStatusContext.Provider value={checked}>
                 <button
                     type="button"
                     role="checkbox"
@@ -84,7 +87,7 @@ const RadixCheckBox = React.forwardRef<CheckboxElement, CheckboxProps>(
                                 event.stopPropagation();
                         }
                     }}
-                />
+                ></button>
                 {isFormControl && (
                     <BubbleInput
                         control={button}
@@ -100,6 +103,7 @@ const RadixCheckBox = React.forwardRef<CheckboxElement, CheckboxProps>(
                         style={{transform: "translateX(-100%)"}}
                     />
                 )}
+                    </CheckStatusContext.Provider>
             </>
         );
     }

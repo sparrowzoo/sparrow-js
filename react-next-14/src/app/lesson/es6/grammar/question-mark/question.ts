@@ -4,8 +4,16 @@ interface Person {
     age?: number;// optional property 可选的属性
 }
 
+class Student implements Person {
+    name!: string;//在类中可以定义非空断言
+    age?: number;
+    constructor(name: string, age?: number) {
+        this.name = name;
+        this.age = age;
+    }
+}
 const person1: Person = {name: 'harry'};
-const person2: Person = {name: 'sad', age: 18};
+const person2: Student = {name: "必填", age: 18};
 
 console.log('person1 = ', person1.name, person1.age);
 console.log('person2 = ', person2.name, person2.age);

@@ -35,14 +35,16 @@ const Page = () => {
     const rememberMe = register("rememberMe", {required: true});
     return (
         <>
-            <div>
+            <div onClick={() => {
+                alert("div clicked");
+            }}>
                 <h1>原生复选框</h1>
-
+                <form>
                     {/*<input type="checkbox" {...register("rememberMe", {required: true})} />*/}
-                    <RadixCheckBox id="rememberMe" ref={checkboxRef} className={"w-4 h-4 border-2 border-gray-300 rounded-sm"}
-                                   checked={false}
+                    <RadixCheckBox id="rememberMe" ref={checkboxRef}
+                                   className={"w-4 h-4 border-2 border-gray-300 rounded-sm"}
                                    name="rememberMe">
-                        <CheckboxIndicator showIndicator={false} />
+                        <CheckboxIndicator/>
                     </RadixCheckBox>
 
                     {/*<RadixCheckBox id="rememberMe" ref={checkboxRef} className={"w-4 h-4 border-2 border-gray-300 rounded-sm"}*/}
@@ -51,9 +53,9 @@ const Page = () => {
                     {/*    <CheckboxIndicator showIndicator={true} />*/}
                     {/*</RadixCheckBox>*/}
 
-                    <ErrorMessage errors={errors} name="rememberMe" />
+                    <ErrorMessage errors={errors} name="rememberMe"/>
                     <button onClick={handleSubmit(onSubmit)} type="submit">submit</button>
-
+                </form>
             </div>
         </>
     );
