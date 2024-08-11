@@ -1,5 +1,6 @@
-import React from "react";
+import React, {useContext} from "react";
 import {CheckIcon} from "@radix-ui/react-icons";
+import CheckBoxContext from "@/app/lesson/valibot/checkbox-shadcn/CheckBoxContext";
 
 const INDICATOR_NAME = 'CheckboxIndicator';
 type Scope<C = any> = { [scopeName: string]: React.Context<C>[] } | undefined;
@@ -17,8 +18,8 @@ interface CheckboxIndicatorProps extends PrimitiveSpanProps {
 
 const CheckboxIndicator = React.forwardRef<HTMLSpanElement, CheckboxIndicatorProps>(
     (props: ScopedProps<CheckboxIndicatorProps>, forwardedRef) => {
-        const {showIndicator,__scopeCheckbox, forceMount, ...indicatorProps} = props;
-
+        const showIndicator=useContext(CheckBoxContext);
+        const {__scopeCheckbox, forceMount, ...indicatorProps} = props;
         return (
             <div>
                 {showIndicator && (
