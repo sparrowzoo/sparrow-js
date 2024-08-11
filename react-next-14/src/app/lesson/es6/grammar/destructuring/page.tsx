@@ -1,31 +1,27 @@
-import React, {useEffect, useState} from "react";
-
-type UseControllableStateParams<T> = {
-    prop?: T | undefined;
-    defaultProp?: T | undefined;
-    onChange?: (state: T) => void;
-};
-function useControllableState<T>({
-                                    defaultProp
-                                 }:Omit<UseControllableStateParams<T>, 'prop'|'onChange'>) {
-    //如果传入了 prop，则认为是受控组件，否则是非受控组件
-    const uncontrolledState = React.useState<T | undefined>(defaultProp);
-    const [value] = uncontrolledState;
+interface Person {
+    name: string;
+    age?: number;// optional property 可选的属性
 }
 
-export default function Page() {
-    const [message, setMessage] = useState<string>();
-    useEffect(() => {
-        type UseControllableStateParams<T> = {
-            prop?: T | undefined;
-            defaultProp?: T | undefined;
-            onChange?: (state: T) => void;
-        };
+class Teacher implements Person {
+    name!: string;//在类中可以定义非空断言
+    age?: number;
 
-    }, []);
-    return (
-        <div>
-            <h1>Type Case</h1>
-        </div>
-    )
+    constructor(name: string, age?: number) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+const zhang: Teacher = {name: 'harry'};
+//解构并重命名
+const {name: teacherName, age = 25} = zhang;
+export default function Page() {
+    console.log(teacherName);
+    console.log(age);
+    return <div>
+        <h1>Destructuring</h1>
+        TEACHER NAME:<br/>
+        <p>{teacherName}</p>
+    </div>
 }

@@ -1,3 +1,4 @@
+
 import React from "react";
 
 function Card({ children }: any) {
@@ -20,6 +21,7 @@ function Children() {
 export default function ChildrenComponent() {
   return (
     <Card>
+        {/*https://react.docschina.org/learn/passing-props-to-a-component*/}
       <Children />
       <Children />
     </Card>
