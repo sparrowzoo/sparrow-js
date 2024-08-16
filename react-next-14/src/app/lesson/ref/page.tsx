@@ -8,8 +8,8 @@ export default function Page() {
     const ref = React.createRef<HTMLButtonElement>();
     const ref2 = React.createRef<HTMLButtonElement>();
     //https://react.docschina.org/reference/react-dom/components/common#ref-callback
-    const ref3:RefCallback<HTMLButtonElement>=(node) => setButton(node);
-    const composedRefs = useComposedRefs(ref,ref2,ref3);
+    const ref3: RefCallback<HTMLButtonElement> = (node) => setButton(node);
+    const composedRefs = useComposedRefs(ref, ref2, ref3);
     useEffect(() => {
         console.log(button);
         console.log(Object.is(ref.current, ref2.current));
@@ -18,6 +18,6 @@ export default function Page() {
     }, [button]);
 
     return <>
-       <button ref={composedRefs}>看控制台输出 ,点我没用</button>
+        <button ref={composedRefs}>看控制台输出 ,点我没用</button>
     </>;
 }
