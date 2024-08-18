@@ -1,21 +1,22 @@
+'use client'
 import {useEffect, useState} from "react";
 
 export default function Page() {
     const [message, setMessage] = useState<string>();
     useEffect(() => {
         type UserInfo = {
-            id: number;
+            id?: number;
             name: string;
             email: string;
             password: string;
         };
-
-        type UserInfoWithoutPassword = Omit<UserInfo, 'password'|'id'>;
-        const userInfo: UserInfoWithoutPassword = {
-            name: "John Doe",
-            email: "johndoe@example.com"
+        //相当于自动加?
+        type PasswordIdInfo = Partial<UserInfo>;
+        const userInfo: PasswordIdInfo = {
+            id: 111,
+            password: "johndoe@example.com"
         };
-        setMessage(userInfo.name);
+        setMessage(userInfo.password);
     }, []);
     return (
         <div>
