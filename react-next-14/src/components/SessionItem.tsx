@@ -7,7 +7,7 @@ interface SessionItemProps {
 
 export default function SessionItem(sessionItemProps: SessionItemProps) {
   const headSrc = `/columns/${sessionItemProps.sessionKey}.jpg`;
-  const sessionUrl = `/chat/sessions/session/${sessionItemProps.sessionKey}`;
+  const sessionUrl = `/chat/sessions/session?sessionKey=${sessionItemProps.sessionKey}`;
   return <div className={"flex flex-row"}>
     <img className={"flex w-[30px]"} src={headSrc} />
     <strong className={"flex-1"}><Link href={sessionUrl}>Andrew Alfred {sessionItemProps.sessionKey}</Link></strong>
