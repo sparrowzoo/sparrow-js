@@ -8,11 +8,14 @@ export default function Page() {
       <div>
         <button
           onClick={(e) => {
-            const oldVisible = ref.current.style.visibility;
-            const visible = oldVisible == "hidden" ? "visible" : "hidden";
-            console.log(oldVisible);
-            ref.current.style.visibility = visible;
-            console.log(ref.current.style.visibility);
+            const current: any = ref.current;
+            if (current) {
+              const oldVisible = current.style.visibility;
+              const visible = oldVisible == "hidden" ? "visible" : "hidden";
+              console.log(oldVisible);
+              current.style.visibility = visible;
+              console.log(current.style.visibility);
+            }
           }}
         >
           看不见我visibility
@@ -20,11 +23,14 @@ export default function Page() {
 
         <button
           onClick={(e) => {
-            const oldVisible = ref.current.style.display;
-            const visible = oldVisible == "none" ? "block" : "none";
-            console.log(visible);
-            ref.current.style.display = visible;
-            console.log(ref.current.style.display);
+            const current: any = ref.current;
+            if (current) {
+              const oldVisible = current.style.display;
+              const visible = oldVisible == "none" ? "block" : "none";
+              console.log(visible);
+              current.style.display = visible;
+              console.log(current.style.display);
+            }
           }}
         >
           看不见我display
