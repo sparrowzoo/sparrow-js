@@ -11,7 +11,7 @@ export default function Page() {
         document.body.addEventListener('click', function () {
            console.log('body click');
         });
-        const input = ref.current;
+        const input:any = ref.current;
         // 监听该事件。
         input.addEventListener(
             "click",
@@ -39,7 +39,7 @@ export default function Page() {
         const input = ref.current!;
         const inputProto = window.HTMLInputElement.prototype;
         const descriptor = Object.getOwnPropertyDescriptor(inputProto, 'checked') as PropertyDescriptor;
-        const setChecked = descriptor.set;
+        const setChecked:any = descriptor.set;
         setChecked.call(input, checked);
     }
 

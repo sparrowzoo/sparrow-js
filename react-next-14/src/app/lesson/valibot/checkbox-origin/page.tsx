@@ -15,6 +15,10 @@ const Page = () => {
     alert(JSON.stringify(data, null, 2));
   };
 
+  const onError = (errors: any) => {
+    console.log(errors);
+  };
+
   const {
     register,
     handleSubmit,
@@ -28,11 +32,19 @@ const Page = () => {
       { abortEarly: true }
     ), // Useful to check TypeScript regressions
   });
+
+  function handleClick(event: React.BaseSyntheticEvent | undefined) {
+    debugger;
+    console.log("handleClick");
+    handleSubmit(onSubmit, onError);
+    event?.preventDefault();
+  }
+
   return (
     <>
       <div>
         <h1>原生复选框</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleClick}>
           <input type={"checkbox"} {...register("rememberMe")} />
           <button type="submit">submit</button>
         </form>
