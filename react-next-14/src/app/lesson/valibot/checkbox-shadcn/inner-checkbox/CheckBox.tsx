@@ -34,7 +34,7 @@ const CheckBox = (props: BubbleInputProps) => {
             inputProto,
             "checked"
         ) as PropertyDescriptor;
-        const setChecked = descriptor.set;
+        const setChecked:any = descriptor.set;
         input.indeterminate = isIndeterminate(checked);
         //设置checked 属性
         setChecked.call(input, isIndeterminate(checked) ? false : checked);
