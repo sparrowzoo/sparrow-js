@@ -142,10 +142,6 @@ module.exports = defineConfig({
   devServer: {
     port: port, //端口
     open: true, //是否自动启用浏览器
-    overlay: {
-      warnings: false,
-      errors: true,
-    },
     proxy: {
       "/api/": {
         target: "http://127.0.0.1:7777",
