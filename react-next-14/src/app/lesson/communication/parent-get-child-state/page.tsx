@@ -66,7 +66,8 @@ const ParentComponent = () => {
     }
 
     if (ref.current) {
-      console.log(ref.current.innerHTML);
+      const current:any=ref.current;
+      console.log(current.innerHTML);
     }
   };
 
