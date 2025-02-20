@@ -16,6 +16,7 @@ const Page = () => {
     alert(JSON.stringify(data, null, 2));
   };
 
+  debugger;
   const {
     register,
     handleSubmit,
@@ -29,13 +30,30 @@ const Page = () => {
       { abortEarly: true }
     ), // Useful to check TypeScript regressions
   });
-  debugger;
-  const password = register("password", {});
-  const { onChange, onBlur } = password;
-  console.log(password);
+
+  const { onChange, onBlur, ref, name } = register("password", {});
+  const passwordOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debugger;
+    console.log("passwordOnChange");
+    onChange(event);
+  };
+
+  const passwordOnBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    debugger;
+    console.log("passwordOnBlur");
+    onBlur(event);
+  };
+
+  async function handleClick(event: React.BaseSyntheticEvent | undefined) {
+    debugger;
+    console.log("handleClick");
+    await handleSubmit(onSubmit);
+    event?.preventDefault();
+  }
+
   // formState.errors;
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleClick}>
       <input {...register("email", { required: true })} />
       {errors.email && <span role="alert">{errors.email.message}</span>}
       <br />
@@ -48,7 +66,14 @@ const Page = () => {
         render={({ message }) => <p>{message}</p>}
       />
       <br />
-      <input {...password} />
+      password:
+      <input
+        name={name}
+        onChange={passwordOnChange}
+        ref={ref}
+        onBlur={passwordOnBlur}
+        type="password"
+      />
       {errors.password && <span role="alert">{errors.password.message}</span>}
       <br />
       <input {...register("password2")} />

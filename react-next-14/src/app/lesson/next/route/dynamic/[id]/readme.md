@@ -3,6 +3,8 @@
 When you don't know the exact segment names ahead of time and want to create routes from dynamic data, you can use
 Dynamic Segments that are filled in at request time or prerendered at build time.
 
+所谓的动态路由就是你事先不知道具体的路由，需要在请求时或者在编译时动态的添充。
+
 ### Convention
 
 A Dynamic Segment can be created by wrapping a folder's name in square brackets: [folderName]. For example, [id]
@@ -37,7 +39,7 @@ Generating Static Params
 `The generateStaticParams function can be used in combination with dynamic route segments to statically generate routes
 at build time instead of on-demand at request time.`
 
-在构建时生成不要请求时生成，静态化
+在构建时生成而不是在请求时生成
 
 app/blog/[slug]/page.tsx
 TypeScript
