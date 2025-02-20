@@ -142,7 +142,8 @@ module.exports = defineConfig({
   devServer: {
     port: port, //端口
     open: true, //是否自动启用浏览器
-    //overlay: { //vue3
+    // overlay: {
+    //   vue3
     /**
      * INFO  Starting development server...
      ERROR  ValidationError: Invalid options object. Dev Server has been initialized using an options object that does not match the API schema.
@@ -151,7 +152,7 @@ module.exports = defineConfig({
      */
     //warnings: false,
     //errors: true
-    //},
+    // },
     proxy: {
       "/api/": {
         target: "http://127.0.0.1:7777",
