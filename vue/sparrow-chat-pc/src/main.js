@@ -9,14 +9,14 @@ import "@/assets/style/font.css";
 import { Sparrow } from "../../../source/scripts/sparrow_es.js";
 
 var isProd = process.env.NODE_ENV === "prod";
-
+debugger;
 var root = process.env.VUE_APP_SPARROW_BASE_URL;
 var tokenConfig = {};
 tokenConfig[root] = {
   "login-token": Sparrow.user.getToken,
 };
 Sparrow.ajax.tokenConfig = tokenConfig;
-console.log(process.env.NODE_ENV);
+console.log("env" + process.env.NODE_ENV);
 
 if (!isProd) {
   await import("element-ui/lib/theme-chalk/index.css");
@@ -76,7 +76,8 @@ Vue.prototype.$init = async function () {
 };
 //非登录页面，则初始化用户信息
 //刷新页面时执行
+console.log("url" + window.location.href);
 if (window.location.href.indexOf("/login") < 0) {
-  await vue.$init();
+  //await vue.$init();
 }
 vue.$mount("#app");

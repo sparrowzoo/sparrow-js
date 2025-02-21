@@ -1205,8 +1205,17 @@ Sparrow.ajax = {
   url: null,
   srcElement: null,
   SUCCESS: "0",
+  //绑定XmlHttpRequest对象的事件
   _bindReadyStateChange: function (objXMLHttp, callback) {
     objXMLHttp.onreadystatechange = function () {
+      /**
+       * objXMLHttp.readyState的五种就绪状态：
+       * 0：请求未初始化（还没有调用 open()）
+       * 1：请求已经建立，但是还没有发送（还没有调用 send()）
+       * 2：请求已发送，正在处理中（通常现在可以从响应中获取内容头）
+       * 3：请求在处理中；通常响应中已有部分数据可用了，但是服务器还没有完成响应的生成
+       * 4：响应已完成；您可以获取并使用服务器的响应了。
+       */
       if (objXMLHttp.readyState !== 4) {
         return;
       }
@@ -1248,6 +1257,7 @@ Sparrow.ajax = {
       console.log(objXMLHttp.status + ":未知错误");
     };
   },
+  //从池中获取XMLHttpRequest 对象
   _getInstance: function () {
     for (var i = 0; i < this._objPool.length; i += 1) {
       if (
@@ -1260,6 +1270,7 @@ Sparrow.ajax = {
     this._objPool[this._objPool.length] = this._createObj();
     return this._objPool[this._objPool.length - 1];
   },
+  //创建新XMLHttpRequest
   _createObj: function () {
     var http_request = null;
     if (window.XMLHttpRequest) {
