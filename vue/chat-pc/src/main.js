@@ -7,8 +7,9 @@ import "@/assets/style/base.less";
 import "@/assets/style/font.css";
 import { Sparrow } from "../../../source/scripts/sparrow_es.js";
 
+debugger;
 var isProd = process.env.NODE_ENV === "prod";
-console.log(process.env.NODE_ENV);
+console.log("env:" + process.env.NODE_ENV);
 
 if (!isProd) {
   await import("element-ui/lib/theme-chalk/index.css");
@@ -65,6 +66,6 @@ Vue.prototype.$init = async function () {
 //非登录页面，则初始化用户信息
 //刷新页面时执行
 if (window.location.href.indexOf("/login") < 0) {
-  await vue.$init();
+  //await vue.$init();
 }
 vue.$mount("#app");
