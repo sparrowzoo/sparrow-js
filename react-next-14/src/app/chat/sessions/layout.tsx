@@ -1,6 +1,5 @@
 import * as React from "react";
-import Link from "next/link";
-import SessionList from "@/components/SessionList";
+import SessionItem from "@/components/SessionItem";
 
 export default function ChatLayout({
                                      children
@@ -8,11 +7,13 @@ export default function ChatLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex flex-row">
-      <div className="w-7xl flex flex-col  gap-4 border-2 border-gray-300">
-        <SessionList />
+    <div className="flex flex-row h-full">
+      <div className="w-7xl flex flex-col  gap-4 p-2">
+          <SessionItem sessionKey={"1"} />
+          <SessionItem sessionKey={"2"} />
+          <SessionItem sessionKey={"3"} />
       </div>
-      <div className={"flex-1 border-2 border-gray-300"}>
+      <div className={"flex-1 border-2 border-red-300"}>
         {children}
       </div>
     </div>
