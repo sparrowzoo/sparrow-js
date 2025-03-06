@@ -1,22 +1,23 @@
-import * as React from "react";
-import Link from "next/link";
+import ChatLayout from "@/components/ChatLayout";
+import { Toaster } from "react-hot-toast";
 
-export default function ChatLayout({
-                                     children
-                                   }: Readonly<{
+export default function Layout({
+  children,
+}: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <div className="flex flex-col h-screen">
-      <div className={"flex text-center justify-center items-center w-full h-20 bg-indigo-500 text-white"}>
-      <h1>Welcome to Sparrow Chat!</h1>
+      <Toaster position="top-center" reverseOrder={true} />
+      <div
+        className={
+          "flex text-center justify-center items-center w-full h-20 bg-indigo-500 text-white"
+        }
+      >
+        <h1>Welcome to Sparrow Chat!</h1>
       </div>
       <div className="flex flex-row flex-1 w-full">
-        <div className="w-[20rem] flex flex-col  gap-4 p-4 border-r border-indigo-500">
-          <div className={"bg-cyan-500 text-white p-2 rounded-xl cursor-pointer"}><Link href="/chat">通讯录管理</Link></div>
-          <div className={"bg-cyan-500 text-white p-2 rounded-xl cursor-pointer"}><Link href="/chat/sessions/session">我的会话</Link></div>
-        </div>
-        <div className="flex-1 border-l border-indigo-500"> {children}</div>
+        <ChatLayout>{children}</ChatLayout>
       </div>
     </div>
   );

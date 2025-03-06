@@ -181,7 +181,7 @@ String.prototype.toArrayBuffer = function () {
   for (var i in bytes) {
     array[i] = bytes[i];
   }
-  return array;
+  return array.buffer;
 };
 
 Array.prototype.clear = function () {
