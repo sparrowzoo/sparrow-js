@@ -117,7 +117,7 @@ ImProtocol.prototype.toBytes = function () {
   result.set(contentBytes, offset);
   offset += msgLength;
   result.set(sendTimeBytes, offset);
-  return result;
+  return result.buffer;
 };
 ImProtocol.cancel = function (dataView, buf, callback) {
   var offset = 0;
