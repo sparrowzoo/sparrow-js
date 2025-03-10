@@ -140,7 +140,7 @@ class SparrowWebSocket {
       }
       // 开启一个心跳
       try {
-        console.log("发送心跳" + new Date().getTime());
+        //console.log("发送心跳" + new Date().getTime());
         this.ws.send("PING");
       } catch (e) {
         console.log("heart beat error:" + e);
@@ -189,7 +189,7 @@ class SparrowWebSocket {
   }
 
   private _onMsg() {
-    this.ws.onmessage = (e) => {
+    this.ws.onmessage = async (e) => {
       if (typeof e.data === "string") {
         // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
         if (e.data === "PONG") {
@@ -206,7 +206,8 @@ class SparrowWebSocket {
         this.userValidCallback(result);
         return;
       }
-      this.onMsgCallback(e.data);
+      const buf = await e.data.arrayBuffer();
+      this.onMsgCallback(Protocol.fromBytes(buf));
     };
   }
 }
