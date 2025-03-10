@@ -146,7 +146,7 @@ class Protocol {
     clientSendTime: number
   ): Protocol {
     const protocol: Protocol = new Protocol();
-    const loginUser = JSON.parse(localStorage.getItem("user-info") ?? "");
+    const loginUser = ChatUser.getCurrentUser();
     protocol.version = 1;
     protocol.chatType = Chat.CHAT_TYPE_1_TO_1;
     protocol.messageType = messageType;
