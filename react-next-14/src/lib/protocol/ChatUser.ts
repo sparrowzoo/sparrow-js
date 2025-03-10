@@ -1,4 +1,5 @@
 import ArrayBufferUtils from "@/lib/protocol/ArrayBufferUtils";
+import { USER_INFO_KEY } from "@/lib/EnvUtils";
 
 interface ChatUserWithOffset {
   chatUser: NullableChatUser;
@@ -44,7 +45,7 @@ export default class ChatUser {
   }
 
   public static getCurrentUser() {
-    const loginUser = JSON.parse(sessionStorage.getItem("user-info") ?? "");
+    const loginUser = JSON.parse(sessionStorage.getItem(USER_INFO_KEY) ?? "");
     const userId = loginUser.userId;
     const category = loginUser.category;
     return new ChatUser(userId, category);

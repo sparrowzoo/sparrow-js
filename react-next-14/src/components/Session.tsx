@@ -9,6 +9,7 @@ import ChatUser from "@/lib/protocol/ChatUser";
 import { Message } from "@/lib/protocol/Message";
 import toast from "react-hot-toast";
 import getToken, { removeToken } from "@/lib/TokenUtils";
+import { USER_INFO_KEY } from "@/lib/EnvUtils";
 
 export default function Session() {
   const searchParams = useSearchParams();
@@ -31,7 +32,7 @@ export default function Session() {
       sparrowWebSocket.userValidCallback = (data: Result) => {
         console.log("userValidCallback", JSON.stringify(data));
         if (data.code == "0") {
-          sessionStorage.setItem("user-info", JSON.stringify(data.data));
+          sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
         } else {
           removeToken();
           toast.error(data.message);
