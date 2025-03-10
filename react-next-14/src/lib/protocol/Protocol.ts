@@ -150,7 +150,7 @@ class Protocol {
     protocol.version = 1;
     protocol.chatType = Chat.CHAT_TYPE_1_TO_1;
     protocol.messageType = messageType;
-    protocol.sender = new ChatUser(loginUser.userId, loginUser.category);
+    protocol.sender = loginUser;
     protocol.receiver = receiver;
     protocol.chatSession = ChatSession.create121Session(
       protocol.sender,
