@@ -67,7 +67,6 @@ export default function Session() {
   }
 
   function sendMessage() {
-    sessionStorage.getItem("user-info");
     console.log("containerRef", messageContainerRef.current);
     const receiverId = senderId == "1" ? "2" : "1";
     const protocol = Protocol.create121Chat(
