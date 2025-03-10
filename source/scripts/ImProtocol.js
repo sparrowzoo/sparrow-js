@@ -145,7 +145,6 @@ ImProtocol.parse = async function (blob, callback) {
   //当客户端收到服务端发来的消息时，触发onmessage事件，
   // 参数e.data包含server传递过来的数据
   const buf = await blob.arrayBuffer();
-
   var offset = 0;
   var dataView = new DataView(buf);
   var chatType = dataView.getUint8(offset);

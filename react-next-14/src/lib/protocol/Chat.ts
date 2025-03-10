@@ -1,7 +1,5 @@
 export type ChatType = 0 | 1;
 export type MessageType = 0 | 1;
-export type Version = 1 | 2;
-
 export default class Chat {
   /**
    * 文本消息
