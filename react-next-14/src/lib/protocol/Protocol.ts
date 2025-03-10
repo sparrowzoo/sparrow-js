@@ -1,18 +1,18 @@
 import ChatUser from "@/lib/protocol/ChatUser";
 import ChatSession from "@/lib/protocol/ChatSession";
 import ArrayBufferUtils from "@/lib/protocol/ArrayBufferUtils";
-import Chat, { ChatType, MessageType, Version } from "@/lib/protocol/Chat";
+import Chat, { ChatType, MessageType } from "@/lib/protocol/Chat";
 
 class Protocol {
   constructor() {}
 
-  private _version: Version;
+  private _version: number;
 
-  get version(): Version {
+  get version(): number {
     return this._version;
   }
 
-  set version(value: Version) {
+  set version(value: number) {
     this._version = value;
   }
 
@@ -96,8 +96,46 @@ class Protocol {
     this._serverTime = value;
   }
 
-  public static fromBytes(bytes: Uint8Array): Protocol {
+  public static fromBytes(bytes: ArrayBufferLike): Protocol {
     const protocol: Protocol = new Protocol();
+    const dataView = new DataView(bytes);
+    let offset = 0;
+    protocol.version = dataView.getUint8(offset);
+    const chatType = dataView.getUint8(offset + 1);
+    protocol.chatType = chatType as ChatType;
+    const messageType = dataView.getUint8(offset + 2);
+    protocol.messageType = messageType as MessageType;
+    const senderWithOffset = ChatUser.fromBytes(dataView, offset + 3);
+    protocol.sender = senderWithOffset.chatUser as ChatUser;
+    offset = senderWithOffset.offset;
+    if (chatType === Chat.CHAT_TYPE_1_TO_1) {
+      const receiverWithOffset = ChatUser.fromBytes(dataView, offset);
+      const receiver = receiverWithOffset.chatUser;
+      protocol.receiver = receiver as ChatUser;
+      offset = receiverWithOffset.offset;
+    } else {
+      const sessionLength = dataView.getUint8(offset);
+      offset += 1;
+      const sessionBytes = new Uint8Array(
+        bytes.slice(offset, offset + sessionLength)
+      );
+      const session = sessionBytes.toString();
+      protocol.chatSession = ChatSession.createGroupSession(
+        session
+      ) as ChatSession;
+    }
+    const contentLength = dataView.getUint32(offset);
+    offset += 4;
+    protocol.content = new Uint8Array(
+      bytes.slice(offset, offset + contentLength)
+    );
+    offset += contentLength;
+
+    const clientSendTime = new TextDecoder().decode(
+      new Uint8Array(bytes.slice(offset, bytes.byteLength))
+    ); // 默认 UTF-8 编码
+
+    protocol.clientSendTime = parseInt(clientSendTime, 10);
     return protocol;
   }
 
@@ -204,6 +242,19 @@ class Protocol {
     offset = ArrayBufferUtils.appendBytes(protocol, this.content, offset);
     ArrayBufferUtils.appendBytes(protocol, clientSendTimeBytes, offset);
     return protocol;
+  }
+
+  public getStringContent(): string {
+    return new TextDecoder().decode(this.content); // 默认 UTF-8 编码
+  }
+
+  public isSender() {
+    const currentUser = ChatUser.getCurrentUser();
+    return this.sender.equals(currentUser);
+  }
+
+  public align() {
+    return this.isSender() ? "right" : "left";
   }
 }
 
