@@ -14,7 +14,7 @@ import { USER_INFO_KEY } from "@/lib/EnvUtils";
 export default function Session() {
   const searchParams = useSearchParams();
   const sessionKey = searchParams?.get("sessionKey");
-  const senderId = searchParams?.get("senderId");
+  const [senderId, setSenderId]= useState<string>("");
   const [sparrowWebSocket, setSparrowWebSocket] = useState<SparrowWebSocket>();
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState(new Array<Message>());
@@ -23,6 +23,13 @@ export default function Session() {
   console.log("messageList", JSON.stringify(messageList));
   console.log("message", message);
   useEffect(() => {
+    let senderId = searchParams?.get("senderId");
+    if(!senderId){
+      console.log("SESSION",sessionStorage.getItem(USER_INFO_KEY));
+      const chatUser= ChatUser.getCurrentUser();
+      senderId = chatUser.getId();
+    }
+    setSenderId(senderId as string);
     async function asyncInit() {
       const tokenParam = await getToken(senderId as string, true);
       const sparrowWebSocket = new SparrowWebSocket(
@@ -50,7 +57,7 @@ export default function Session() {
     return () => {
       sparrowWebSocket?.close();
     };
-  }, [senderId]);
+  }, []);
 
   useEffect(() => {
     messageContainerRef.current?.scrollIntoView({
