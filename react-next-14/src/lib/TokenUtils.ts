@@ -1,10 +1,10 @@
 import {
-  API_BASIC_URL,
   NEXT_PUBLIC_TOKEN_PAIRS,
   TOKEN_KEY,
   USER_INFO_KEY,
 } from "@/lib/EnvUtils";
 import toast from "react-hot-toast";
+import { Fetcher } from "@/lib/Fetcher";
 
 function parseTestTokenPairs() {
   const pairsList = NEXT_PUBLIC_TOKEN_PAIRS?.split(",");
@@ -17,21 +17,6 @@ function parseTestTokenPairs() {
   }
   return tokenMap;
 }
-
-const fetchToken = async () => {
-  return new Promise((resolve, reject) => {
-    fetch(API_BASIC_URL + "/chat/v2/get-visitor-token", {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((response) => {
-        resolve(response.json());
-      })
-      .catch((error) => {
-        reject(error);
-      });
-  });
-};
 
 export function removeToken() {
   sessionStorage.removeItem(TOKEN_KEY);
@@ -64,7 +49,7 @@ export default async function getToken(
   if (!generateVisitorToken) {
     return "";
   }
-  await fetchToken()
+  await Fetcher.get("/chat/v2/get-visitor-token", false)
     .then(async (response: Result) => {
       if (response.code == "0") {
         token = response.data;
@@ -79,5 +64,3 @@ export default async function getToken(
     });
   return token;
 }
-
-
