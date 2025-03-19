@@ -1,12 +1,12 @@
 define([
-  'chat-msg',
-  'api',
-  'utils',
-  'indexedDB',
-  'store',
-  'contacts',
-  'system-inform',
-  'contact-service',
+  "chat-msg",
+  "api",
+  "utils",
+  "indexedDB",
+  "store",
+  "contacts",
+  "system-inform",
+  "contact-service",
 ], function (
   chatMsg,
   api,
@@ -45,14 +45,14 @@ define([
   let removeID = null;
 
   // 获取左侧菜单，准备添加点击事件
-  const menu = document.querySelector('.menu');
-  const menuList = menu.querySelectorAll('.menu-item');
+  const menu = document.querySelector(".menu");
+  const menuList = menu.querySelectorAll(".menu-item");
   // 当前激活的菜单项
-  let activeMenu = '0';
+  let activeMenu = "0";
 
   // 给菜单的父元素注册点击事件 事件委托
-  menu.addEventListener('click', async (e) => {
-    activeMenu = e.target.getAttribute('data-menu');
+  menu.addEventListener("click", async (e) => {
+    activeMenu = e.target.getAttribute("data-menu");
     showContentByMenu(activeMenu);
     // 只要点击了左侧菜单 面包屑就重置
     // showCrumbsByIndex(0);
@@ -71,7 +71,7 @@ define([
       currentPage.changePage(MSGCHART);
 
       // 获取焦点
-      const dom = getFocus(['.chat-msg', '.input-content']);
+      const dom = getFocus([".chat-msg", ".input-content"]);
       dom.focus();
     }
     // 系统通知
@@ -86,7 +86,7 @@ define([
 
       // 并且设置全局的page 信息
       currentPage.changePage(SERVICECHART);
-      const dom = getFocus(['.service', '.input-content']);
+      const dom = getFocus([".service", ".input-content"]);
       dom.focus();
     }
   });
@@ -99,30 +99,30 @@ define([
   // 根据 menu 显示对应的主体内容
   function showContentByMenu(activeIndex) {
     // 先将所有的 content 隐藏 然后将 对应的index 的content 显示
-    const conts = document.querySelector('.main').children;
+    const conts = document.querySelector(".main").children;
     for (let i = 0; i < conts.length; i++) {
       if (i == activeIndex) {
-        conts[i].style.display = 'block';
+        conts[i].style.display = "block";
       } else {
-        conts[i].style.display = 'none';
+        conts[i].style.display = "none";
       }
     }
 
     // 激活菜单的样式
     menuList.forEach((ele, index) => {
       if (index == activeMenu) {
-        ele.style.color = '#FFF';
-        ele.style.backgroundColor = '#282d3b';
+        ele.style.color = "#FFF";
+        ele.style.backgroundColor = "#282d3b";
       } else {
-        ele.style.color = '#000';
-        ele.style.backgroundColor = '#f7f7f7';
+        ele.style.color = "#000";
+        ele.style.backgroundColor = "#f7f7f7";
       }
     });
   }
 
   // 如果当前登录的是客服，则取消联系客服模块
   function hideService() {
-    menuList[3].style.display = 'none';
+    menuList[3].style.display = "none";
   }
 
   // 展示首页的好友列表
@@ -146,11 +146,11 @@ define([
 
     // 渲染好友 / 群
     if (contacterObj.users.length !== 0) {
-      createListDom(CHAT_TYPE_1_2_1, contacterObj.users, '.my-friend');
+      createListDom(CHAT_TYPE_1_2_1, contacterObj.users, ".my-friend");
     }
 
     if (contacterObj.quns.length !== 0) {
-      createListDom(CHAT_TYPE_1_2_N, contacterObj.quns, '.my-group');
+      createListDom(CHAT_TYPE_1_2_N, contacterObj.quns, ".my-group");
     }
   }
 
@@ -167,11 +167,11 @@ define([
 
   // 好友列表 / 群 创建DOM 并渲染列表
   function createListDom(type, list, template) {
-    const itemId = type === CHAT_TYPE_1_2_1 ? 'userId' : 'qunId';
-    const itemName = type === CHAT_TYPE_1_2_1 ? 'userName' : 'qunName';
+    const itemId = type === CHAT_TYPE_1_2_1 ? "userId" : "qunId";
+    const itemName = type === CHAT_TYPE_1_2_1 ? "userName" : "qunName";
 
     const contentDiv = document.querySelector(template);
-    const userListTemplate = document.querySelector('#user-list');
+    const userListTemplate = document.querySelector("#user-list");
     const contentItemDiv = userListTemplate.content.cloneNode(true);
     const itemFragment = new DocumentFragment();
     // 生成好友列表
@@ -179,57 +179,57 @@ define([
       // 复制一份 准备根据list 渲染数据
       const copyConItemDiv = contentItemDiv.cloneNode(true);
       // 用户 / 群头像
-      const imgDiv = copyConItemDiv.querySelector('img');
+      const imgDiv = copyConItemDiv.querySelector("img");
       imgDiv.src = item.avatar || item.unitIcon || DEFAULTAVATAR;
       // 国籍 图片
-      const imgFlag = copyConItemDiv.querySelector('.img-flag');
+      const imgFlag = copyConItemDiv.querySelector(".img-flag");
       imgFlag.src = item.flagUrl || DEFAULTFLAG;
       // 用户 / 详细信息
-      const userDiv = copyConItemDiv.querySelectorAll('span');
+      const userDiv = copyConItemDiv.querySelectorAll("span");
       userDiv[0].innerText = item[itemName];
       // 操作按钮
-      const divOperate = copyConItemDiv.querySelector('.operate');
-      divOperate.setAttribute('data-user_id', item[itemId]);
-      divOperate.setAttribute('data-user_name', item[itemName]);
+      const divOperate = copyConItemDiv.querySelector(".operate");
+      divOperate.setAttribute("data-user_id", item[itemId]);
+      divOperate.setAttribute("data-user_name", item[itemName]);
       divOperate.item = item;
       // 群聊需要改变模板
       if (type === CHAT_TYPE_1_2_N) {
-        imgFlag.style.display = 'none';
-        userDiv[1].innerText = '群公告' + item.announcement;
-        const buttonRemove = divOperate.querySelector('button');
-        buttonRemove.innerText = '删除群聊';
+        imgFlag.style.display = "none";
+        userDiv[1].innerText = "群公告" + item.announcement;
+        const buttonRemove = divOperate.querySelector("button");
+        buttonRemove.innerText = "删除群聊";
       }
       // 新的朋友 修改模板
-      if (template === '.new-friend') {
-        const buttons = divOperate.querySelectorAll('button');
-        buttons[0].innerText = '拒绝';
-        buttons[1].innerText = '通过';
+      if (template === ".new-friend") {
+        const buttons = divOperate.querySelectorAll("button");
+        buttons[0].innerText = "拒绝";
+        buttons[1].innerText = "通过";
       }
       itemFragment.appendChild(copyConItemDiv);
     });
     // 先清空父容器，再添加子元素  防止重复添加
-    contentDiv.innerHTML = '';
+    contentDiv.innerHTML = "";
     contentDiv.appendChild(itemFragment);
 
     // 为按钮添加点击事件 注册删除好友 & 聊一下的事件  事件委托
     const btnContainers = document
       .querySelector(template)
-      .querySelectorAll('.operate');
+      .querySelectorAll(".operate");
 
     btnContainers.forEach((ele) => {
-      ele.addEventListener('click', function (e) {
-        if (e.target.getAttribute('data-type') === 'remove') {
+      ele.addEventListener("click", function (e) {
+        if (e.target.getAttribute("data-type") === "remove") {
           if (e.currentTarget.item.members) {
-            removeGroup(e.currentTarget.getAttribute('data-user_id'));
+            removeGroup(e.currentTarget.getAttribute("data-user_id"));
           } else {
             // 当前是删除用户
-            removeUser(e.currentTarget.getAttribute('data-user_id'));
+            removeUser(e.currentTarget.getAttribute("data-user_id"));
           }
         }
-        if (e.target.getAttribute('data-type') === 'chat') {
+        if (e.target.getAttribute("data-type") === "chat") {
           chatBy(
-            e.currentTarget.getAttribute('data-user_id'),
-            e.currentTarget.getAttribute('data-user_name'),
+            e.currentTarget.getAttribute("data-user_id"),
+            e.currentTarget.getAttribute("data-user_name"),
             type,
             this.item.avatar
           );
@@ -257,14 +257,14 @@ define([
     });
     await createMyMsgSessionList(msgHistory);
     createServiceSessionList(serviceHistory);
-    return 'session list 已经初始化完毕';
+    return "session list 已经初始化完毕";
   }
 
   // 获取未读数和最新的msg
   function getUnreadCount(sessionArr) {
     return sessionArr.map((sessionItem) => {
       let unReadCount = -1;
-      let lastMessage = '';
+      let lastMessage = "";
 
       if (sessionItem.lastReadTime) {
         const count = sessionItem.messages.length - 1;
@@ -289,6 +289,7 @@ define([
       return sessionItem;
     });
   }
+
   // 我的消息 session list
   async function createMyMsgSessionList(sessionItem) {
     // 我的消息要区分 好友和 临时会话  通过查通讯录是否为好友区分
@@ -303,7 +304,7 @@ define([
           : DB_STORE_NAME_QUN;
       const keyPath =
         item.chatSession.target === -1
-          ? item.chatSession.sessionKey
+          ? item.chatSession.id
           : item.chatSession.target;
       const session = await DBObject.dbInstance.getData(keyPath, storeNmae);
       if (session) {
@@ -324,7 +325,7 @@ define([
     contactStore.initContact([...listArr, ...temporarySessionList]);
     // 渲染 聊天消息的列表
     showSessionList();
-    return 'ok';
+    return "ok";
   }
 
   // 发送请求 获取临时会话的详细用户信息
@@ -397,8 +398,8 @@ define([
     // 如果没有新朋友 不执行下面的逻辑
     if (data.length === 0) return;
     // createListDom(CHAT_TYPE_1_2_1, res.data, '.new-friend');
-    const contentDiv = document.querySelector('.new-friend');
-    const userListTemplate = document.querySelector('#user-list');
+    const contentDiv = document.querySelector(".new-friend");
+    const userListTemplate = document.querySelector("#user-list");
     const contentItemDiv = userListTemplate.content.cloneNode(true);
     const itemFragment = new DocumentFragment();
     // 生成好友列表
@@ -406,40 +407,40 @@ define([
       // 复制一份 准备根据list 渲染数据
       const copyConItemDiv = contentItemDiv.cloneNode(true);
       // 用户头像
-      const imgDiv = copyConItemDiv.querySelector('img');
+      const imgDiv = copyConItemDiv.querySelector("img");
       imgDiv.src = item.vo.avatar || DEFAULTAVATAR;
       // 国籍 图片
-      const imgFlag = copyConItemDiv.querySelector('.img-flag');
+      const imgFlag = copyConItemDiv.querySelector(".img-flag");
       imgFlag.src = item.vo.flagUrl || DEFAULTFLAG;
       // 用户 / 详细信息
-      const userDiv = copyConItemDiv.querySelectorAll('span');
+      const userDiv = copyConItemDiv.querySelectorAll("span");
       userDiv[0].innerText = item.vo.userName;
       // 操作按钮
       // 判断当前新朋友的状态
       if (item.status === 1) {
         // 当前是已通过申请的好友
-        const divOperate = copyConItemDiv.querySelector('.operate');
-        const divPass = copyConItemDiv.querySelector('.operate-res');
-        divOperate.style.display = 'none';
-        divPass.style.display = 'block';
+        const divOperate = copyConItemDiv.querySelector(".operate");
+        const divPass = copyConItemDiv.querySelector(".operate-res");
+        divOperate.style.display = "none";
+        divPass.style.display = "block";
       } else if (item.status === 2) {
         // 申请状态为已拒绝
-        const divOperate = copyConItemDiv.querySelector('.operate');
-        const divPass = copyConItemDiv.querySelector('.operate-res');
-        divOperate.style.display = 'none';
-        divPass.textContent = '已拒绝';
-        divPass.style.display = 'block';
+        const divOperate = copyConItemDiv.querySelector(".operate");
+        const divPass = copyConItemDiv.querySelector(".operate-res");
+        divOperate.style.display = "none";
+        divPass.textContent = "已拒绝";
+        divPass.style.display = "block";
       } else {
         // 申请未处理状态
-        const divOperate = copyConItemDiv.querySelector('.operate');
+        const divOperate = copyConItemDiv.querySelector(".operate");
         // 将新朋友接口信息保存在dom 元素中
         divOperate.item = item.vo;
         // 将当前申请的id 保存起来 用于发送通过 / 拒绝好友的请求
         divOperate.item.id = item.id;
         // 新的朋友 修改模板
-        const buttons = divOperate.querySelectorAll('button');
-        buttons[0].innerText = '拒绝';
-        buttons[1].innerText = '通过';
+        const buttons = divOperate.querySelectorAll("button");
+        buttons[0].innerText = "拒绝";
+        buttons[1].innerText = "通过";
 
         // 通过按钮，保存这当前申请用户的信息
         applyButtonWeakMap.set(buttons[1], item.vo);
@@ -448,20 +449,20 @@ define([
       itemFragment.appendChild(copyConItemDiv);
     });
     // 先清空父容器，再添加子元素  防止重复添加
-    contentDiv.innerHTML = '';
+    contentDiv.innerHTML = "";
     contentDiv.appendChild(itemFragment);
 
     // 为按钮添加点击事件 注册删除好友 & 聊一下的事件  事件委托
     const btnContainers = document
-      .querySelector('.new-friend')
-      .querySelectorAll('.operate');
+      .querySelector(".new-friend")
+      .querySelectorAll(".operate");
 
     btnContainers.forEach((ele) => {
-      ele.addEventListener('click', function (e) {
-        if (e.target.getAttribute('data-type') === 'remove') {
+      ele.addEventListener("click", function (e) {
+        if (e.target.getAttribute("data-type") === "remove") {
           rejectApply(this.item.id, this);
         }
-        if (e.target.getAttribute('data-type') === 'chat') {
+        if (e.target.getAttribute("data-type") === "chat") {
           passApply(this.item.id, this);
         }
       });
@@ -484,8 +485,8 @@ define([
     const currentSession = getSessionKey(chatType, selfId.value, user_id);
     setTargetId(user_id, username, chatType, avatar, currentSession);
     // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
-    activeMenu = '1';
-    showContentByMenu('1');
+    activeMenu = "1";
+    showContentByMenu("1");
     // 判断 是否和当前用户有session 记录，没有记录 需要新增一个session
     const flag = contactStore.contactList.some((item) => {
       if (chatType == CHAT_TYPE_1_2_1) {
@@ -519,7 +520,7 @@ define([
     getMsgList(user_id, username, chatType);
 
     // 获取焦点
-    const dom = getFocus(['.chat-msg', '.input-content']);
+    const dom = getFocus([".chat-msg", ".input-content"]);
     dom.focus();
   }
 
@@ -528,8 +529,8 @@ define([
     const currentSession = getSessionKey(chatType, selfId.value, user_id);
     setTargetId(user_id, username, chatType, avatar, currentSession);
     // 聊一聊 跳转到 消息页面 需要把左侧菜单设置为第二项活跃
-    activeMenu = '1';
-    showContentByMenu('1');
+    activeMenu = "1";
+    showContentByMenu("1");
 
     // 先判断当前与临时聊天对象是否有session list 也就是是否存在历史记录
     const isExist = contactStore.contactList.some(
@@ -552,26 +553,27 @@ define([
     getMsgList(user_id, username, chatType);
 
     // 获取焦点
-    const dom = getFocus(['.chat-msg', '.input-content']);
+    const dom = getFocus([".chat-msg", ".input-content"]);
     dom.focus();
   }
 
   function removeUser(id) {
-    console.log('remove', id);
+    console.log("remove", id);
     removeID = {
       id,
       type: CHAT_TYPE_1_2_1,
     };
-    document.querySelector('.del-friend').style.display = 'block';
-    document.querySelector('.global-mask').style.display = 'block';
+    document.querySelector(".del-friend").style.display = "block";
+    document.querySelector(".global-mask").style.display = "block";
   }
+
   function removeGroup(id) {
     removeID = {
       id,
       type: CHAT_TYPE_1_2_N,
     };
-    document.querySelector('.del-friend').style.display = 'block';
-    document.querySelector('.global-mask').style.display = 'block';
+    document.querySelector(".del-friend").style.display = "block";
+    document.querySelector(".global-mask").style.display = "block";
   }
 
   // 拒绝好友
@@ -579,23 +581,24 @@ define([
     console.log(dom);
     const params = {
       id,
-      status: '2',
+      status: "2",
     };
     const res = await api.auditFriend(params);
     showResponseMsg(res.msg);
     const divParent = dom.parentNode;
 
-    const divOperate = divParent.querySelector('.operate');
-    const divPass = divParent.querySelector('.operate-res');
-    divOperate.style.display = 'none';
-    divPass.textContent = '已拒绝';
-    divPass.style.display = 'block';
+    const divOperate = divParent.querySelector(".operate");
+    const divPass = divParent.querySelector(".operate-res");
+    divOperate.style.display = "none";
+    divPass.textContent = "已拒绝";
+    divPass.style.display = "block";
   }
+
   // 通过申请
   async function passApply(id, dom) {
     const params = {
       id,
-      status: '1',
+      status: "1",
     };
     const res = await api.auditFriend(params);
     // if (res.code === 200) {
@@ -605,37 +608,38 @@ define([
     if (res.code !== 200) return;
 
     const divParent = dom.parentNode;
-    const divPass = divParent.querySelector('.operate-res');
-    dom.style.display = 'none';
-    divPass.style.display = 'block';
+    const divPass = divParent.querySelector(".operate-res");
+    dom.style.display = "none";
+    divPass.style.display = "block";
 
     // 通过好友申请后，向通讯录中 添加好友，并保存好友到数据库中，并创建session ...
-    const applyBtnDom = dom.querySelectorAll('button')[1];
+    const applyBtnDom = dom.querySelectorAll("button")[1];
     addFriendById(applyButtonWeakMap.get(applyBtnDom));
   }
+
   // 我的好友页面下 三个按钮的点击
   function registerSelectItemClick() {
-    const selItems = document.querySelectorAll('.select-item');
+    const selItems = document.querySelectorAll(".select-item");
     // 切换主体显示内容
     for (let i = 0; i < selItems.length; i++) {
-      selItems[i].addEventListener('click', function (e) {
-        if (e.currentTarget.getAttribute('data-type') === '0') {
+      selItems[i].addEventListener("click", function (e) {
+        if (e.currentTarget.getAttribute("data-type") === "0") {
           // 切换dialog的显示状态
-          const dialog = document.querySelector('.add-friend');
+          const dialog = document.querySelector(".add-friend");
           dialog.style.display =
-            dialog.style.display === 'none' ? 'block' : 'none';
+            dialog.style.display === "none" ? "block" : "none";
           // 控制遮罩层显示
-          document.querySelector('.global-mask').style.display =
+          document.querySelector(".global-mask").style.display =
             dialog.style.display;
         } else {
-          showCardByIndex(e.currentTarget.getAttribute('data-type'));
+          showCardByIndex(e.currentTarget.getAttribute("data-type"));
         }
 
         if (i !== 0) {
           // 取消左侧菜单我的好友的样式
-          const divMyFriend = document.querySelector('.menu-item');
-          divMyFriend.style.color = '#000';
-          divMyFriend.style.backgroundColor = '#f7f7f7';
+          const divMyFriend = document.querySelector(".menu-item");
+          divMyFriend.style.color = "#000";
+          divMyFriend.style.backgroundColor = "#f7f7f7";
         }
       });
     }
@@ -644,12 +648,12 @@ define([
   // 根据点击的索引 展示群 / 新朋友
   function showCardByIndex(index) {
     console.log(index);
-    const divCards = document.querySelector('.content').children;
+    const divCards = document.querySelector(".content").children;
     for (let i = 0; i < divCards.length; i++) {
       if (i == index) {
-        divCards[i].style.display = 'block';
+        divCards[i].style.display = "block";
       } else {
-        divCards[i].style.display = 'none';
+        divCards[i].style.display = "none";
       }
     }
     if (index == 1) {
@@ -661,48 +665,49 @@ define([
 
   // 根据索引 动态显示面包屑的提示文字
   function showCrumbsByIndex(index) {
-    const spanCrumbs = document.querySelector('.change-step');
-    const spanSecondCrumb = document.querySelector('.nav-msg');
-    if (index == '0') {
-      spanSecondCrumb.classList.add('active-nav');
-      spanCrumbs.style.display = 'none';
+    const spanCrumbs = document.querySelector(".change-step");
+    const spanSecondCrumb = document.querySelector(".nav-msg");
+    if (index == "0") {
+      spanSecondCrumb.classList.add("active-nav");
+      spanCrumbs.style.display = "none";
       return;
     }
-    const spanCrumbText = spanCrumbs.querySelector('.active-nav');
-    if (index === '1') {
-      spanCrumbText.innerText = '新的朋友';
-      spanCrumbs.style.display = 'inline';
-      spanSecondCrumb.classList.remove('active-nav');
+    const spanCrumbText = spanCrumbs.querySelector(".active-nav");
+    if (index === "1") {
+      spanCrumbText.innerText = "新的朋友";
+      spanCrumbs.style.display = "inline";
+      spanSecondCrumb.classList.remove("active-nav");
     }
-    if (index === '2') {
-      spanSecondCrumb.classList.remove('active-nav');
-      spanCrumbText.innerText = '我的群聊';
-      spanCrumbs.style.display = 'inline';
+    if (index === "2") {
+      spanSecondCrumb.classList.remove("active-nav");
+      spanCrumbText.innerText = "我的群聊";
+      spanCrumbs.style.display = "inline";
     }
   }
 
   addFriendDialog();
+
   // 添加朋友弹层的申请 取消事件
   function addFriendDialog() {
     const inputSearch = document
-      .querySelector('.add-friend')
-      .querySelector('input');
+      .querySelector(".add-friend")
+      .querySelector("input");
     const divOperateParent = document
-      .querySelector('.add-friend')
-      .querySelector('.operate');
-    divOperateParent.addEventListener('click', async function (e) {
-      if (e.target.getAttribute('data-type') === 'remove') {
+      .querySelector(".add-friend")
+      .querySelector(".operate");
+    divOperateParent.addEventListener("click", async function (e) {
+      if (e.target.getAttribute("data-type") === "remove") {
         // 点击取消
-        console.log('cancel');
-        document.querySelector('.add-friend').style.display = 'none';
-        document.querySelector('.global-mask').style.display = 'none';
+        console.log("cancel");
+        document.querySelector(".add-friend").style.display = "none";
+        document.querySelector(".global-mask").style.display = "none";
       }
-      if (e.target.getAttribute('data-type') === 'chat') {
+      if (e.target.getAttribute("data-type") === "chat") {
         // 点击申请
         // console.log(inputSearch.value);
         addFriendByMobile(inputSearch.value);
       }
-      inputSearch.value = '';
+      inputSearch.value = "";
     });
   }
 
@@ -711,40 +716,40 @@ define([
     const res = await api.getDetailByPhone({
       mobile: mobile,
     });
-    const divAddInput = document.querySelector('.add-input');
-    const divUserDetail = document.querySelector('.search-user-detail');
+    const divAddInput = document.querySelector(".add-input");
+    const divUserDetail = document.querySelector(".search-user-detail");
     if (res.code !== 200) {
       showResponseMsg(res.msg);
       return;
     }
 
-    divAddInput.style.display = 'none';
-    divUserDetail.style.display = 'block';
-    divUserDetail.querySelector('img').src = res.data.avatar || DEFAULTAVATAR;
-    divUserDetail.querySelector('span').textContent = res.data.userName;
+    divAddInput.style.display = "none";
+    divUserDetail.style.display = "block";
+    divUserDetail.querySelector("img").src = res.data.avatar || DEFAULTAVATAR;
+    divUserDetail.querySelector("span").textContent = res.data.userName;
     applyFriendById(res.data.userId);
   }
 
   // 根据id 发送好友申请
   async function applyFriendById(id) {
-    const divAddInput = document.querySelector('.add-input');
-    const divUserDetail = document.querySelector('.search-user-detail');
+    const divAddInput = document.querySelector(".add-input");
+    const divUserDetail = document.querySelector(".search-user-detail");
     // 发送申请请求
-    divUserDetail.querySelector('button').onclick = async function (e) {
+    divUserDetail.querySelector("button").onclick = async function (e) {
       const r = await api.addFriendById({ id });
       showResponseMsg(r.msg);
 
-      document.querySelector('.add-friend').style.display = 'none';
-      document.querySelector('.global-mask').style.display = 'none';
-      divAddInput.style.display = 'block';
-      divUserDetail.style.display = 'none';
+      document.querySelector(".add-friend").style.display = "none";
+      document.querySelector(".global-mask").style.display = "none";
+      divAddInput.style.display = "block";
+      divUserDetail.style.display = "none";
     };
     // 点击关闭图标
-    divUserDetail.querySelector('.iconfont').onclick = function (e) {
-      document.querySelector('.add-friend').style.display = 'none';
-      document.querySelector('.global-mask').style.display = 'none';
-      divAddInput.style.display = 'block';
-      divUserDetail.style.display = 'none';
+    divUserDetail.querySelector(".iconfont").onclick = function (e) {
+      document.querySelector(".add-friend").style.display = "none";
+      document.querySelector(".global-mask").style.display = "none";
+      divAddInput.style.display = "block";
+      divUserDetail.style.display = "none";
     };
   }
 
@@ -753,7 +758,7 @@ define([
     const res = await api.removeFriend({ userId: removeID.id });
     if (res.code === 200) {
       // 删除好友后,
-      removeContactDom('.my-friend', 'userId');
+      removeContactDom(".my-friend", "userId");
     }
     showResponseMsg(res.msg);
   }
@@ -763,25 +768,26 @@ define([
     const res = await api.removeGroup({ groupId: removeID.id });
     if (res.code === 200) {
       // 删除群后,
-      removeContactDom('.my-group', 'qunId');
+      removeContactDom(".my-group", "qunId");
     }
     showResponseMsg(res.msg);
   }
+
   // 删除好友 / 群的 sessionList indexedb 通讯录的数据
   async function removeContactDom(selecter, idType) {
     const parent = document.querySelector(selecter);
-    const DomList = parent.querySelectorAll('.user-item');
+    const DomList = parent.querySelectorAll(".user-item");
     let i = 0;
     // 删除dom 就是删除通讯录列表
     for (let len = DomList.length; i < len; i++) {
-      if (DomList[i].querySelector('.operate').item[idType] == removeID.id) {
+      if (DomList[i].querySelector(".operate").item[idType] == removeID.id) {
         break;
       }
     }
     parent.removeChild(DomList[i]);
 
     // 删除session 列表
-    const chatType = idType === 'qunId' ? CHAT_TYPE_1_2_N : CHAT_TYPE_1_2_1;
+    const chatType = idType === "qunId" ? CHAT_TYPE_1_2_N : CHAT_TYPE_1_2_1;
     const sessionKey = getSessionKey(chatType, selfId.value, removeID.id);
     contactStore.delItem(sessionKey);
 
@@ -793,8 +799,8 @@ define([
         ? DB_STORE_NAME_USER
         : DB_STORE_NAME_QUN;
     const res = await DBObject.dbInstance.deleteData(keyPath, storeName);
-    if (res === 'ok') {
-      console.log('删除成功');
+    if (res === "ok") {
+      console.log("删除成功");
     }
   }
 
@@ -802,7 +808,7 @@ define([
   async function addFriendById(item) {
     // 通讯录 是根据indexedDB保存的用户来渲染的，所以直接保存数据库中就行
     await DBObject.dbInstance.putStoreItem(item, DB_STORE_NAME_USER);
-    console.log('添加成功');
+    console.log("添加成功");
 
     // 添加成功后，新增session list,相当于手动触发聊一下
     chatBy(
@@ -815,24 +821,24 @@ define([
 
   // 删除弹层的取消 / 确认事件
   const btnContainer = document
-    .querySelector('.del-friend')
-    .querySelector('.operate');
-  btnContainer.addEventListener('click', async (e) => {
-    if (e.target.getAttribute('data-type') === 'remove') {
-      console.log('点击取消');
+    .querySelector(".del-friend")
+    .querySelector(".operate");
+  btnContainer.addEventListener("click", async (e) => {
+    if (e.target.getAttribute("data-type") === "remove") {
+      console.log("点击取消");
     } else {
-      console.log('点击确认');
-      document.querySelector('.loading').display = 'block';
+      console.log("点击确认");
+      document.querySelector(".loading").display = "block";
       if (removeID.type === CHAT_TYPE_1_2_1) {
         await removeFriendById();
       } else {
         await removeGroupById();
       }
-      document.querySelector('.loading').display = 'none';
+      document.querySelector(".loading").display = "none";
     }
     removeID = null;
-    document.querySelector('.del-friend').style.display = 'none';
-    document.querySelector('.global-mask').style.display = 'none';
+    document.querySelector(".del-friend").style.display = "none";
+    document.querySelector(".global-mask").style.display = "none";
   });
 
   return {
