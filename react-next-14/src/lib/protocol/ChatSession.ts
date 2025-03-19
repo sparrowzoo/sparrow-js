@@ -12,27 +12,27 @@ export default class ChatSession {
     this._chatType = value;
   }
 
-  private _sessionKey: string;
+  private _id: string;
 
-  get sessionKey(): string {
-    return this._sessionKey;
+  get id(): string {
+    return this._id;
   }
 
-  set sessionKey(value: string) {
-    this._sessionKey = value;
+  set id(value: string) {
+    this._id = value;
   }
 
   public static create121Session(sender: ChatUser, receiver: ChatUser) {
     const chatSession = new ChatSession();
     chatSession.chatType = Chat.CHAT_TYPE_1_TO_1;
-    chatSession.sessionKey = chatSession.generateKey(sender, receiver);
+    chatSession.id = chatSession.generateKey(sender, receiver);
     return chatSession;
   }
 
   public static createGroupSession(sessionKey: string): ChatSession {
     const chatSession = new ChatSession();
     chatSession.chatType = Chat.CHAT_TYPE_GROUP;
-    chatSession.sessionKey = sessionKey;
+    chatSession.id = sessionKey;
     return chatSession;
   }
 
@@ -52,7 +52,7 @@ export default class ChatSession {
       return null;
     }
 
-    const userIdArray: string[] = this._sessionKey.split(Chat.HORIZON_LINE);
+    const userIdArray: string[] = this._id.split(Chat.HORIZON_LINE);
     if (userIdArray.length != 2) {
       return null;
     }
@@ -69,7 +69,7 @@ export default class ChatSession {
 
   public toBytes(): Uint8Array {
     const encoder = new TextEncoder();
-    return encoder.encode(this.sessionKey);
+    return encoder.encode(this._chatType + this.id);
   }
 
   private generateKey(sender: ChatUser, receiver: ChatUser): string {

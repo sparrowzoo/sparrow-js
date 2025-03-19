@@ -1,15 +1,15 @@
 define([
-  'my-friend',
-  'chat-msg',
-  'system-inform',
-  'contact-service',
-  'store',
-  'api',
-  'indexedDB',
-  'websocket',
-  'base64',
-  'sparrow',
-  'sparrowChat',
+  "my-friend",
+  "chat-msg",
+  "system-inform",
+  "contact-service",
+  "store",
+  "api",
+  "indexedDB",
+  "websocket",
+  "base64",
+  "sparrow",
+  "sparrowChat",
 ], function (
   myFriend,
   chatMsg,
@@ -48,21 +48,22 @@ define([
     if (query) {
       // 如果 query 存在 说明当前使用 iframe 嵌套
       // console.log('有参数');
-      const queryArr = query.split('&');
-      const token = queryArr[0].split('=')[1];
-      const selfId = queryArr[1].split('=')[1];
-      localStorage.setItem('token', token);
+      const queryArr = query.split("&");
+      const token = queryArr[0].split("=")[1];
+      const selfId = queryArr[1].split("=")[1];
+      localStorage.setItem("token", token);
       getSelfInfoById(selfId);
       if (queryArr.length === 3) {
         // 当前是临时会话
         isTemporary = true;
-        targetId = queryArr[2].split('=')[1];
+        targetId = queryArr[2].split("=")[1];
       }
     } else {
       // 没有 query 参数 需要手动登录
-      console.log('没有参数');
+      console.log("没有参数");
     }
   }
+
   parseURL();
 
   // 根据 传入的id 获取当前用户详细信息
@@ -71,7 +72,7 @@ define([
     // console.log(data, '当前用户');
     changeSelfId(
       data.userId,
-      data.avatar || 'https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg'
+      data.avatar || "https://img1.imgtp.com/2023/01/29/odnUWlDQ.jpg"
     );
     const isServicer = data.isCustomer === 1;
     // url 登录操作
@@ -92,9 +93,9 @@ define([
 
   // 获取当前用户的历史记录
   async function getSessionHistory(isServicer) {
-    const sessionArr = await getSession('sessions', selfId.value);
+    const sessionArr = await getSession("sessions", selfId.value);
     sessionArr.forEach((item) => {
-      item.session = item.chatSession.sessionKey;
+      item.session = item.chatSession.id;
       DBObject.dbInstance.putStoreItem(item, DB_STORE_NAME_SESSION);
     });
     // console.log('临时会话1');
@@ -122,7 +123,7 @@ define([
     } else {
       serviceStore.init([]);
     }
-    const contacts = await getFrinedList('contacts', selfId.value);
+    const contacts = await getFrinedList("contacts", selfId.value);
 
     // 拿到列表后 渲染我的好友页面
     myFriend.getRelationList(contacts);
@@ -147,23 +148,24 @@ define([
 
   // 加载资源 历史记录 / 好友列表(包括群) / 客服列表
   async function loadResource(isServicer) {
-    controlLoading('flex');
+    controlLoading("flex");
     await getContacts(isServicer);
     await getSessionHistory(isServicer);
-    controlLoading('none');
+    controlLoading("none");
   }
 
   // 控制loading 的显示
   function controlLoading(isShow) {
-    document.querySelector('.loading').style.display = isShow;
+    document.querySelector(".loading").style.display = isShow;
   }
+
   // 手动登录
-  document.querySelector('.login').addEventListener('click', async () => {
+  document.querySelector(".login").addEventListener("click", async () => {
     // 构造请求参数
-    const mobile = document.querySelector('.ws-input').value;
-    const pwa = document.querySelector('.t-selfId').value;
+    const mobile = document.querySelector(".ws-input").value;
+    const pwa = document.querySelector(".t-selfId").value;
     const params = {
-      code: '8888',
+      code: "8888",
       mobile: mobile,
       password: pwa,
     };
@@ -171,7 +173,7 @@ define([
     // console.log(data, '登录');
 
     // 设置token 以及保存当前用户信息
-    localStorage.setItem('token', data.token); // memberInfo
+    localStorage.setItem("token", data.token); // memberInfo
     changeSelfId(data.memberInfo.id, data.memberInfo.portrait || DEFAULTAVATAR);
     const isServicer = data.memberInfo.isCustomer === 1;
     initIM(isServicer);
@@ -180,7 +182,7 @@ define([
   // 初始化 IM
   async function initIM(isServicer) {
     // 建立数据库
-    await DBObject.createIndexedDB(selfId.value, '1');
+    await DBObject.createIndexedDB(selfId.value, "1");
 
     // 建立 ws 连接
     if (ws) {
@@ -189,7 +191,7 @@ define([
     }
 
     // 获取真实的token
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     ws = createWS(token);
 
     //  const isServicer = data.memberInfo.isCustomer === 1;
