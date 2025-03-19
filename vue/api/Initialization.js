@@ -58,7 +58,7 @@ var Initialization = {
     sessions.forEach((session) => {
       var chatSession = session.chatSession;
       const chatType = chatSession.chatType; //1群 0单聊
-      const sessionKey = chatSession.sessionKey; //唯一id，1 2 N群ID
+      const sessionKey = chatSession.id; //唯一id，1 2 N群ID
       var newSession = null;
       if (chatType === vue.$protocol.CHAT_TYPE_1_2_1) {
         //获取对方用户信息

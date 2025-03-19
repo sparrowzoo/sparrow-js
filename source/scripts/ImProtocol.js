@@ -19,7 +19,7 @@ var ImProtocol = function (
   this.msgType = msgType;
   this.sender = sender;
   this.receiver = receiver;
-  this.sessionKey = sessionKey;
+  this.id = sessionKey;
   this.msg = msg;
   this.clientSendTime = clientSendTime;
 };
@@ -223,9 +223,7 @@ ImProtocol.parse = async function (blob, callback) {
 };
 ImProtocol.getOppositeUser = function (vue, session) {
   // 如果有session 则以session 优先否则以queryString 优先
-  var sessionKey = session
-    ? session.chatSession.sessionKey
-    : vue.$route.query.key;
+  var sessionKey = session ? session.chatSession.id : vue.$route.query.key;
   if (Sparrow.isNullOrEmpty(sessionKey)) {
     //会在?token=###&targetUserId=n的url 初始化session 列表的对方id
     //所以以session 优先
