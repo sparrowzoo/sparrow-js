@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Fetcher } from "@/lib/Fetcher";
-import {TOKEN_KEY} from "@/lib/EnvUtils";
+import { setToken } from "@/lib/TokenUtils";
 
 export default function Login() {
   const [userName, setUserName] = useState("");
@@ -13,20 +13,19 @@ export default function Login() {
       JSON.stringify({
         id: userName,
         category: 1,
-      })//必须序列化
-    ).then((res:Result) => {
-        console.log(JSON.stringify(res));
-        sessionStorage.setItem(TOKEN_KEY, res.data);
+      }) //必须序列化
+    ).then((res: Result) => {
+      setToken(res.data);
+      console.log(JSON.stringify(res));
     });
   }
 
   function longHandleLogin() {
     console.log("login", userName);
-    Fetcher.post("/chat/v2/long-login", userName).then((res:Result) => {
-        debugger;
-        console.log(JSON.stringify(res));
-        sessionStorage.setItem(TOKEN_KEY, res.data);
-    });//必须是字符串
+    Fetcher.post("/chat/v2/long-login", userName).then((res: Result) => {
+      setToken(res.data);
+      console.log(JSON.stringify(res));
+    }); //必须是字符串
     //Fetcher.post("/chat/v2/long-login", parseInt(userName,10));//数字不允许
     //Fetcher.post("/chat/v2/long-login", JSON.stringify(userName));//对象不允许
   }

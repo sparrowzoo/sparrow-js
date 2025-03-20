@@ -1,21 +1,38 @@
+"use client";
 import Link from "next/link";
 import * as React from "react";
+import { useEffect, useState } from "react";
+import ChatSession from "@/lib/protocol/ChatSession";
 
 interface SessionItemProps {
   sessionKey: string;
 }
 
 export default function SessionItem(sessionItemProps: SessionItemProps) {
-  const headSrc = `/columns/${sessionItemProps.sessionKey}.jpg`;
+  const chatSession = ChatSession.parse(sessionItemProps.sessionKey);
   const sessionUrl = `/chat/sessions/session?sessionKey=${sessionItemProps.sessionKey}`;
-  return <div className="flex items-center text-left">
-    <Link href={sessionUrl}>
-      <img className={"w-16 h-16 rounded-full mr-4"} src={headSrc} /></Link>
-    <div>
+  const oppositeUser = chatSession?.getOppositeUser();
+  const headSrc = `/columns/${oppositeUser?.getId()}.jpg`;
+
+  const [sessionAvatar, setSessionAvatar] = useState("");
+  useEffect(() => {
+    const chatSession = ChatSession.parse(sessionItemProps.sessionKey);
+    const oppositeUser = chatSession?.getOppositeUser();
+    const avatar = `/columns/${oppositeUser?.getId()}.jpg`;
+    setSessionAvatar(avatar);
+  }, [sessionItemProps.sessionKey]);
+  return (
+    <div className="flex items-center text-left">
       <Link href={sessionUrl}>
-        <strong>Andrew Alfred</strong><br/>
-        <span>Technical advisor</span>
+        <img className={"w-16 h-16 rounded-full mr-4"} src={sessionAvatar} />
       </Link>
+      <div>
+        <Link href={sessionUrl}>
+          <strong>Andrew Alfred</strong>
+          <br />
+          <span>Technical advisor</span>
+        </Link>
+      </div>
     </div>
-  </div>;
+  );
 }

@@ -29,6 +29,21 @@ export default class ChatSession {
     return chatSession;
   }
 
+  public static parse(sessionKey: string) {
+    if (sessionKey == null) {
+      return null;
+    }
+    const chatSession = new ChatSession();
+    const chatType: ChatType = parseInt(
+      sessionKey.substring(0, 1),
+      10
+    ) as ChatType;
+    const id = sessionKey.substring(1);
+    chatSession._chatType = chatType;
+    chatSession.id = id;
+    return chatSession;
+  }
+
   public static createGroupSession(sessionKey: string): ChatSession {
     const chatSession = new ChatSession();
     chatSession.chatType = Chat.CHAT_TYPE_GROUP;
@@ -44,7 +59,8 @@ export default class ChatSession {
     return this._chatType == Chat.CHAT_TYPE_1_TO_1;
   }
 
-  public getOppositeUser(currentUser: ChatUser): ChatUser | null {
+  public getOppositeUser(): ChatUser | null {
+    const currentUser = ChatUser.getCurrentUser();
     if (currentUser == null) {
       return null;
     }

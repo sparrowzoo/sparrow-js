@@ -5,36 +5,27 @@ import ChatItem from "@/components/ChatItem";
 import SparrowWebSocket from "@/lib/SparrowWebSocket";
 import Protocol from "@/lib/protocol/Protocol";
 import Chat from "@/lib/protocol/Chat";
-import ChatUser from "@/lib/protocol/ChatUser";
 import { Message } from "@/lib/protocol/Message";
 import toast from "react-hot-toast";
-import getToken, { removeToken } from "@/lib/TokenUtils";
+import { getToken, removeToken } from "@/lib/TokenUtils";
 import { USER_INFO_KEY } from "@/lib/EnvUtils";
+import ChatSession from "@/lib/protocol/ChatSession";
+import ChatUser from "@/lib/protocol/ChatUser";
 
 export default function Session() {
   const searchParams = useSearchParams();
   const sessionKey = searchParams?.get("sessionKey");
-  const [senderId, setSenderId]= useState<string>("");
   const [sparrowWebSocket, setSparrowWebSocket] = useState<SparrowWebSocket>();
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState(new Array<Message>());
   const messageContainerRef: MutableRefObject<HTMLDivElement | null> =
     useRef(null);
-  console.log("messageList", JSON.stringify(messageList));
-  console.log("message", message);
   useEffect(() => {
-    let senderId = searchParams?.get("senderId");
-    if(!senderId){
-      console.log("SESSION",sessionStorage.getItem(USER_INFO_KEY));
-      const chatUser= ChatUser.getCurrentUser();
-      senderId = chatUser.getId();
-    }
-    setSenderId(senderId as string);
     async function asyncInit() {
-      const tokenParam = await getToken(senderId as string, true);
+      const tokenParam = await getToken(true);
       const sparrowWebSocket = new SparrowWebSocket(
         "ws://localhost:8080/websocket",
-        encodeURIComponent(tokenParam as string)
+        tokenParam as string
       );
       sparrowWebSocket.userValidCallback = (data: Result) => {
         console.log("userValidCallback", JSON.stringify(data));
@@ -74,14 +65,18 @@ export default function Session() {
   }
 
   function sendMessage() {
+    const chatSession = ChatSession.parse(sessionKey as string);
     console.log("containerRef", messageContainerRef.current);
-    const receiverId = senderId == "1" ? "2" : "1";
-    const protocol = Protocol.create121Chat(
-      Chat.TEXT_MESSAGE,
-      new ChatUser(receiverId, 1),
-      message,
-      new Date().getTime()
-    );
+    let protocol;
+    if (chatSession?.chatType == Chat.CHAT_TYPE_1_TO_1) {
+      const oppositeUser = chatSession.getOppositeUser();
+      protocol = Protocol.create121Chat(
+        Chat.TEXT_MESSAGE,
+        oppositeUser as ChatUser,
+        message,
+        new Date().getTime()
+      );
+    }
     putNewMessage(protocol);
     sparrowWebSocket?.sendMessage(protocol);
     setMessage("");
