@@ -1,4 +1,5 @@
 import {
+  API_BASIC_URL,
   SESSION_STORAGE,
   TOKEN_KEY,
   TOKEN_STORAGE,
@@ -29,7 +30,7 @@ async function getToken(generateVisitorToken?: boolean) {
   if (!generateVisitorToken) {
     return "";
   }
-  await Fetcher.get("/chat/v2/get-visitor-token", false)
+  await Fetcher.get("/chat/v2/get-visitor-token.json", false)
     .then(async (response: Result) => {
       if (response.code == "0") {
         token = response.data;
@@ -46,6 +47,7 @@ async function getToken(generateVisitorToken?: boolean) {
 }
 
 function setToken(token: string) {
+  //注意大小写
   if (TOKEN_STORAGE == SESSION_STORAGE) {
     sessionStorage.setItem(TOKEN_KEY, token);
     return;

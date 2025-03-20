@@ -22,6 +22,7 @@ export default function Session() {
     useRef(null);
   useEffect(() => {
     async function asyncInit() {
+      debugger;
       const tokenParam = await getToken(true);
       const sparrowWebSocket = new SparrowWebSocket(
         "ws://localhost:8080/websocket",
