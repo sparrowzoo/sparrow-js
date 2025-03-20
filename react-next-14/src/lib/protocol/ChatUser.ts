@@ -45,7 +45,11 @@ export default class ChatUser {
   }
 
   public static getCurrentUser() {
-    const loginUser = JSON.parse(sessionStorage.getItem(USER_INFO_KEY) ?? "");
+    const userInfo = sessionStorage.getItem(USER_INFO_KEY);
+    if (!userInfo) {
+      return null;
+    }
+    const loginUser = JSON.parse(userInfo);
     const userId = loginUser.userId;
     const category = loginUser.category;
     return new ChatUser(userId, category);

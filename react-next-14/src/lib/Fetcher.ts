@@ -1,4 +1,4 @@
-import getToken from "@/lib/TokenUtils";
+import { getToken } from "@/lib/TokenUtils";
 import { API_BASIC_URL } from "@/lib/EnvUtils";
 import toast from "react-hot-toast";
 
@@ -9,7 +9,7 @@ class Fetcher {
     url = API_BASIC_URL + url;
     let token: string | null = null;
     if (withToken) {
-      token = await getToken(url, false).then((token) => token);
+      token = await getToken(false).then((token) => token);
     }
     return new Promise((resolve, reject) => {
       fetch(url, {
@@ -39,7 +39,7 @@ class Fetcher {
     url = API_BASIC_URL + url;
     let token: string | null = null;
     if (withToken) {
-      token = await getToken("", false).then((token) => token);
+      token = await getToken(false).then((token) => token);
     }
 
     return new Promise((resolve, reject) => {
