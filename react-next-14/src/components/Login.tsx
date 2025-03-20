@@ -22,7 +22,7 @@ export default function Login() {
 
   function longHandleLogin() {
     console.log("login", userName);
-    Fetcher.post("/chat/v2/long-login", userName).then((res: Result) => {
+    Fetcher.post("/chat/v2/long-login.json", userName).then((res: Result) => {
       setToken(res.data);
       console.log(JSON.stringify(res));
     }); //必须是字符串
