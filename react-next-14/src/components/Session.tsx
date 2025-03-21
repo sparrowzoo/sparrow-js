@@ -8,7 +8,7 @@ import Chat from "@/lib/protocol/Chat";
 import { Message } from "@/lib/protocol/Message";
 import toast from "react-hot-toast";
 import { getToken, removeToken } from "@/lib/TokenUtils";
-import { USER_INFO_KEY } from "@/lib/EnvUtils";
+import { USER_INFO_KEY, WEBSOCKET } from "@/lib/EnvUtils";
 import ChatSession from "@/lib/protocol/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 
@@ -25,7 +25,7 @@ export default function Session() {
       debugger;
       const tokenParam = await getToken(true);
       const sparrowWebSocket = new SparrowWebSocket(
-        "ws://localhost:8080/websocket",
+        WEBSOCKET as string,
         tokenParam as string
       );
       sparrowWebSocket.userValidCallback = (data: Result) => {
