@@ -8,6 +8,7 @@ const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY as string;
 
 const SESSION_STORAGE = "SESSION";
 
+const NEXT_ASSET_PREFIX = process.env.NEXT_PUBLIC_ASSET_PREFIX;
 
 export {
   NODE_ENV,
@@ -16,4 +17,5 @@ export {
   TOKEN_STORAGE,
   SESSION_STORAGE,
   USER_INFO_KEY,
+  NEXT_ASSET_PREFIX,
 };
