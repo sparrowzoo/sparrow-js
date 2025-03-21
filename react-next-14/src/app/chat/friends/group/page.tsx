@@ -3,6 +3,7 @@ import * as React from "react";
 import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import ContactItem from "@/components/ContactItem";
+import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
 
 function Group() {
   const searchParams = useSearchParams();
@@ -11,7 +12,7 @@ function Group() {
     console.log("groupId", groupId);
   }, [groupId]);
 
-  const headSrc = `/columns/${groupId}.jpg`;
+  const headSrc = `${NEXT_ASSET_PREFIX}/columns/${groupId}.jpg`;
   // URL -> `/dashboard?search=my-project`
   // `search` -> 'my-project'
   return (
