@@ -45,6 +45,11 @@ export default class ChatUser {
   }
 
   public static getCurrentUser() {
+    if (typeof window === "undefined") {
+      console.error("This component should not render on server");
+      return null;
+    }
+
     const userInfo = sessionStorage.getItem(USER_INFO_KEY);
     if (!userInfo) {
       return null;
