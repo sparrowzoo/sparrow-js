@@ -9,7 +9,7 @@ export default function Login() {
   function handleLogin() {
     console.log("login", userName);
     Fetcher.post(
-      "/chat/v2/login.do",
+      "/chat/v2/login.json",
       JSON.stringify({
         id: userName,
         category: 1,
@@ -23,7 +23,7 @@ export default function Login() {
 
   function longHandleLogin() {
     console.log("login", userName);
-    Fetcher.post("/chat/v2/long-login.do", userName, false).then(
+    Fetcher.post("/chat/v2/long-login.json", userName, false).then(
       (res: Result) => {
         setToken(res.data);
         console.log(JSON.stringify(res));
