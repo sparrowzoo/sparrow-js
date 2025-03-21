@@ -3,6 +3,7 @@ import Link from "next/link";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import ChatSession from "@/lib/protocol/ChatSession";
+import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
 
 interface SessionItemProps {
   sessionKey: string;
@@ -10,7 +11,7 @@ interface SessionItemProps {
 
 export default function SessionItem(sessionItemProps: SessionItemProps) {
   const chatSession = ChatSession.parse(sessionItemProps.sessionKey);
-  const sessionUrl = `/chat/sessions/session?sessionKey=${sessionItemProps.sessionKey}`;
+  const sessionUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${sessionItemProps.sessionKey}`;
   const oppositeUser = chatSession?.getOppositeUser();
   const headSrc = `/columns/${oppositeUser?.getId()}.jpg`;
 
