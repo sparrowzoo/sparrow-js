@@ -9,11 +9,12 @@ export default function Login() {
   function handleLogin() {
     console.log("login", userName);
     Fetcher.post(
-      "/chat/v2/login",
+      "/chat/v2/login.do",
       JSON.stringify({
         id: userName,
         category: 1,
-      }) //必须序列化
+      }),
+      false //必须序列化
     ).then((res: Result) => {
       setToken(res.data);
       console.log(JSON.stringify(res));
@@ -22,10 +23,12 @@ export default function Login() {
 
   function longHandleLogin() {
     console.log("login", userName);
-    Fetcher.post("/chat/v2/long-login.json", userName).then((res: Result) => {
-      setToken(res.data);
-      console.log(JSON.stringify(res));
-    }); //必须是字符串
+    Fetcher.post("/chat/v2/long-login.do", userName, false).then(
+      (res: Result) => {
+        setToken(res.data);
+        console.log(JSON.stringify(res));
+      }
+    ); //必须是字符串
     //Fetcher.post("/chat/v2/long-login", parseInt(userName,10));//数字不允许
     //Fetcher.post("/chat/v2/long-login", JSON.stringify(userName));//对象不允许
   }
