@@ -2,7 +2,7 @@
 import Link from "next/link";
 import * as React from "react";
 import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
-import SparrowImage from "@/components/SparrowImage";
+import { DynamicImage } from "@/components/img/DynamicImage";
 
 interface GroupProps {
   groupId: string;
@@ -14,7 +14,7 @@ export default function GroupItem(groupProps: GroupProps) {
   return (
     <div className="flex items-center text-left">
       <Link href={groupUrl}>
-        <SparrowImage
+        <DynamicImage
           className={"w-16 h-16 rounded-full mr-4"}
           quality={40}
           src={headSrc}

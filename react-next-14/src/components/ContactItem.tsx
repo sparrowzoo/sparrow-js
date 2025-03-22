@@ -1,7 +1,7 @@
 import Link from "next/link";
 import * as React from "react";
 import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
-import SparrowImage from "@/components/SparrowImage";
+import { DynamicImage } from "@/components/img/DynamicImage";
 
 interface ContactProps {
   friendId: string;
@@ -13,7 +13,7 @@ export default function ContactItem(contactProps: ContactProps) {
   return (
     <div className="flex items-center text-left">
       <Link href={contactUrl}>
-        <SparrowImage
+        <DynamicImage
           src={headSrc}
           alt={"header"}
           width={50}

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
 
 // https://nextjs.org/docs/messages/no-img-element
-interface ImageProps {
+export interface ImageProps {
   src: string;
   alt: string;
   width: number;
@@ -13,7 +13,7 @@ interface ImageProps {
   className?: string;
 }
 
-export default function SparrowImage(props: ImageProps) {
+export default function InnerImage(props: ImageProps) {
   const imageSrc = `${NEXT_ASSET_PREFIX}/${props.src}`;
   const imageLoader = ({ src, width, quality }) => {
     return `${src}?w=${width}&q=${quality || 75}`;
@@ -23,7 +23,7 @@ export default function SparrowImage(props: ImageProps) {
       className={props.className}
       loader={imageLoader}
       src={imageSrc}
-      alt="Picture of the author"
+      alt={props.alt}
       width={props.width}
       height={props.height}
       quality={props.quality || 75}
