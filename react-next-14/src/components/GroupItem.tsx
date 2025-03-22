@@ -1,20 +1,27 @@
+"use client";
 import Link from "next/link";
 import * as React from "react";
 import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
-import Image from "next/image";
+import SparrowImage from "@/components/SparrowImage";
 
 interface GroupProps {
   groupId: string;
 }
 
 export default function GroupItem(groupProps: GroupProps) {
-  const headSrc = `${NEXT_ASSET_PREFIX}/columns/${groupProps.groupId}.jpg`;
   const groupUrl = `${NEXT_ASSET_PREFIX}/chat/friends/group?groupId=${groupProps.groupId}`;
+  const headSrc = `/columns/${groupProps.groupId}.jpg`;
   return (
     <div className="flex items-center text-left">
       <Link href={groupUrl}>
-        <Image loading={"lazy"} src={headSrc} alt={"Group"} />
-        {/*<img alt={"Group"} loading={"lazy"} className={"w-16 h-16 rounded-full mr-4"} src={headSrc} />*/}
+        <SparrowImage
+          className={"w-16 h-16 rounded-full mr-4"}
+          quality={40}
+          src={headSrc}
+          alt="Group head"
+          width={50}
+          height={50}
+        />
       </Link>
       <div>
         <Link href={groupUrl}>
