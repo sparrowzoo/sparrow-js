@@ -1,6 +1,7 @@
 import Link from "next/link";
 import * as React from "react";
 import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
+import Image from "next/image";
 
 interface GroupProps {
   groupId: string;
@@ -12,7 +13,8 @@ export default function GroupItem(groupProps: GroupProps) {
   return (
     <div className="flex items-center text-left">
       <Link href={groupUrl}>
-        <img className={"w-16 h-16 rounded-full mr-4"} src={headSrc} />
+        <Image loading={"lazy"} src={headSrc} alt={"Group"} />
+        {/*<img alt={"Group"} loading={"lazy"} className={"w-16 h-16 rounded-full mr-4"} src={headSrc} />*/}
       </Link>
       <div>
         <Link href={groupUrl}>
