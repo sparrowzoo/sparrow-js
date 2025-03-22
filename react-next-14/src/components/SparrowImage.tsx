@@ -3,6 +3,7 @@ import * as React from "react";
 import Image from "next/image";
 import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
 
+// https://nextjs.org/docs/messages/no-img-element
 interface ImageProps {
   src: string;
   alt: string;
