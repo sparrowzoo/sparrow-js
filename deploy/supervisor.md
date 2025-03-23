@@ -1,11 +1,17 @@
 centos 安装
 ---
+
 ```aidl
 yum install -y supervisor
 ```
 
+说明文档
+---
+https://sparrowzoo.feishu.cn/docx/E9X0d5Zt9oSY28x2Hjqcv7e1nLg
+
 config
 ---
+
 ```
 ;[unix_http_server]
 ;file=/tmp/supervisor.sock ;UNIX socket 文件，supervisorctl 会使用
