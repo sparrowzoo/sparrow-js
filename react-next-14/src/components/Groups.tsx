@@ -1,6 +1,7 @@
 import Link from "next/link";
-import GroupItem from "@/components/GroupItem";
 import * as React from "react";
+import ContactItem from "@/components/ContactItem";
+import GroupItem from "@/components/GroupItem";
 
 interface GroupProps {
   groupId: string;
@@ -13,10 +14,14 @@ export default function Groups(groupProps: GroupProps) {
         <Link href="/chat/friends/group">群聊</Link>
       </div>
       <div className={"flex flex-col gap-2"}>
+        <ContactItem friendId={"1"} />
+        <ContactItem friendId={"2"} />
+        <ContactItem friendId={"3"} />
+        <ContactItem friendId={"4"} />
         <GroupItem groupId={"1"} />
-        <GroupItem groupId={"2"} />
-        <GroupItem groupId={"3"} />
-        <GroupItem groupId={"4"} />
+        {/*<GroupItem groupId={"2"} />*/}
+        {/*<GroupItem groupId={"3"} />*/}
+        {/*<GroupItem groupId={"4"} />*/}
       </div>
     </>
   );
