@@ -4,12 +4,13 @@ import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
+import { DynamicImage } from "@/components/img/DynamicImage";
 
 function Contact() {
   const searchParams = useSearchParams();
   const friendId = searchParams?.get("friendId");
 
-  const headSrc = `${NEXT_ASSET_PREFIX}/columns/${friendId}.jpg`;
+  const headSrc = `${NEXT_ASSET_PREFIX}/avatar/${friendId}.jpg`;
   const contactUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${friendId}`;
   // URL -> `/dashboard?search=my-project`
   // `search` -> 'my-project'
@@ -17,7 +18,13 @@ function Contact() {
     <div className={"flex flex-col p-4 bg-white shadow-md"}>
       <div className="flex flex-row items-center text-left">
         <Link href={contactUrl}>
-          <img className={"w-16 h-16 rounded-full mr-4"} src={headSrc} />
+          <DynamicImage
+            className={"w-16 h-16 rounded-full mr-4"}
+            src={headSrc}
+            alt={"Contact Avatar"}
+            width={50}
+            height={50}
+          />
         </Link>
         <div>
           <Link href={contactUrl}>
