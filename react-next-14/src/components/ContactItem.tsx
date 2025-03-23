@@ -8,7 +8,7 @@ interface ContactProps {
 }
 
 export default function ContactItem(contactProps: ContactProps) {
-  const headSrc = `/avatar/${contactProps.friendId}.jpg`;
+  const headSrc = `${NEXT_ASSET_PREFIX}/avatar/${contactProps.friendId}.jpg`;
   const contactUrl = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${contactProps.friendId}`;
   return (
     <div className="flex items-center text-left">
