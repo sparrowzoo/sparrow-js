@@ -3,7 +3,6 @@ import * as React from "react";
 import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import ContactItem from "@/components/ContactItem";
-import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
 import { DynamicImage } from "@/components/img/DynamicImage";
 
 function Group() {
@@ -13,7 +12,7 @@ function Group() {
     console.log("groupId", groupId);
   }, [groupId]);
 
-  const headSrc = `${NEXT_ASSET_PREFIX}/avatar/${groupId}.jpg`;
+  const headSrc = `/avatar/${groupId}.jpg`;
   // URL -> `/dashboard?search=my-project`
   // `search` -> 'my-project'
   return (
