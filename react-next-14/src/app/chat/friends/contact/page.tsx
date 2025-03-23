@@ -10,7 +10,7 @@ function Contact() {
   const searchParams = useSearchParams();
   const friendId = searchParams?.get("friendId");
 
-  const headSrc = `${NEXT_ASSET_PREFIX}/avatar/${friendId}.jpg`;
+  const headSrc = `/avatar/${friendId}.jpg`;
   const contactUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${friendId}`;
   // URL -> `/dashboard?search=my-project`
   // `search` -> 'my-project'
