@@ -10,7 +10,7 @@ interface GroupProps {
 
 export default function GroupItem(groupProps: GroupProps) {
   const groupUrl = `${NEXT_ASSET_PREFIX}/chat/friends/group?groupId=${groupProps.groupId}`;
-  const headSrc = `/avatar/${groupProps.groupId}.jpg`;
+  const headSrc = `${NEXT_ASSET_PREFIX}/avatar/${groupProps.groupId}.jpg`;
   return (
     <div className="flex items-center text-left">
       <Link href={groupUrl}>
