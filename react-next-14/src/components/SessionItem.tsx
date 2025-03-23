@@ -13,13 +13,12 @@ export default function SessionItem(sessionItemProps: SessionItemProps) {
   const chatSession = ChatSession.parse(sessionItemProps.sessionKey);
   const sessionUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${sessionItemProps.sessionKey}`;
   const oppositeUser = chatSession?.getOppositeUser();
-  const headSrc = `/columns/${oppositeUser?.getId()}.jpg`;
 
   const [sessionAvatar, setSessionAvatar] = useState("");
   useEffect(() => {
     const chatSession = ChatSession.parse(sessionItemProps.sessionKey);
     const oppositeUser = chatSession?.getOppositeUser();
-    const avatar = `/columns/${oppositeUser?.getId()}.jpg`;
+    const avatar = `${NEXT_ASSET_PREFIX}/avatar/${oppositeUser?.getId()}.jpg`;
     setSessionAvatar(avatar);
   }, [sessionItemProps.sessionKey]);
   return (
