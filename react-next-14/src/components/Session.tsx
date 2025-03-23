@@ -8,7 +8,7 @@ import Chat from "@/lib/protocol/Chat";
 import { Message } from "@/lib/protocol/Message";
 import toast from "react-hot-toast";
 import { getToken, removeToken } from "@/lib/TokenUtils";
-import { USER_INFO_KEY, WEBSOCKET } from "@/lib/EnvUtils";
+import { NEXT_ASSET_PREFIX, USER_INFO_KEY, WEBSOCKET } from "@/lib/EnvUtils";
 import ChatSession from "@/lib/protocol/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 
@@ -22,7 +22,6 @@ export default function Session() {
     useRef(null);
   useEffect(() => {
     async function asyncInit() {
-      debugger;
       const tokenParam = await getToken(true);
       const sparrowWebSocket = new SparrowWebSocket(
         WEBSOCKET as string,
@@ -93,6 +92,7 @@ export default function Session() {
       >
         {messageList.map((message) => (
           <ChatItem
+            avatar={`${NEXT_ASSET_PREFIX}/avatar/${message.senderName}.jpg`}
             key={message.messageId}
             img={undefined}
             align={message.align}
