@@ -1,3 +1,4 @@
+'use client'
 import InnerImage, { ImageProps } from "@/components/img/InnerImage";
 import React from "react";
 

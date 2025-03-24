@@ -68,19 +68,20 @@ export default class ChatSession {
       return null;
     }
 
-    const userIdArray: string[] = this._id.split(Chat.HORIZON_LINE);
-    if (userIdArray.length != 2) {
-      return null;
+
+    const bigUserCategory=this.id.substring(0,1);
+    const smallUserCategory=this.id.substring(1,2);
+    const bitUserLength=parseInt(this.id.substring(2,4),10);
+    const bigUserId=this.id.substring(4, 4+bitUserLength);
+    const smallUserId=this.id.substring(4+bitUserLength);
+
+    const bigUser=new ChatUser(bigUserId,parseInt(bigUserCategory,10));
+    const smallUser=new ChatUser(smallUserId,parseInt(smallUserCategory,10));
+
+    if(bigUser.equals(currentUser)){
+      return smallUser;
     }
-    const userId1: NullableChatUser = ChatUser.parse(userIdArray[0]);
-    const userId2: NullableChatUser = ChatUser.parse(userIdArray[1]);
-    if (currentUser.equals(userId1)) {
-      return userId2;
-    }
-    if (currentUser.equals(userId2)) {
-      return userId1;
-    }
-    return null;
+    return bigUser;
   }
 
   public toBytes(): Uint8Array {
@@ -92,10 +93,17 @@ export default class ChatSession {
     if (sender == null || receiver == null) {
       return "";
     }
-    //保证从小到大排序
-    if (sender.getId() <= receiver.getId()) {
-      return sender.key + "-" + receiver;
+    let bigUser = sender;
+    let smallUser = receiver;
+    if (sender.getId()<=receiver.getId()) {
+      bigUser = receiver;
+      smallUser = sender;
     }
-    return receiver.key() + "-" + sender.key();
+    let length= (bigUser.getId()+"").length;
+    let len=length+"";
+    if(length<10){
+      len="0"+length;
+    }
+    return bigUser.getCategory()+""+smallUser.getCategory()+""+len+""+bigUser.getId()+smallUser.getId();
   }
 }
