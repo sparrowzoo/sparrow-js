@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import { NEXT_ASSET_PREFIX, USER_INFO_KEY, WEBSOCKET } from "@/lib/EnvUtils";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import SparrowWebSocket from "@/lib/SparrowWebSocket";
 import { getToken, removeToken } from "@/lib/TokenUtils";
 import toast from "react-hot-toast";
 import Protocol from "@/lib/protocol/Protocol";
-import { WebSocketContext } from "@/lib/WebSocketProvider";
+import {WebSocketContext, WebSocketProviderProps} from "@/lib/WebSocketProvider";
 
 export default function ChatLayout({
   children,
@@ -14,6 +14,22 @@ export default function ChatLayout({
   children: React.ReactNode;
 }) {
   const [sparrowWebSocket, setSparrowWebSocket] = useState<SparrowWebSocket>();
+  const [webSocketProps, setWebSocketProps] = useState<WebSocketProviderProps>();
+  const[messageNo, setMessageNo] = useState(0);
+
+  useEffect(() => {
+    if (sparrowWebSocket==null||sparrowWebSocket?.messageNo==0) {
+      return;
+    }
+    const contextProperty:WebSocketProviderProps = {
+      sparrowWebSocket: sparrowWebSocket as SparrowWebSocket,
+      messageNo: sparrowWebSocket?.messageNo as number,
+    };
+    setWebSocketProps(contextProperty);
+  }, [messageNo])
+
+
+
   useEffect(() => {
     async function asyncInit() {
       const tokenParam = await getToken(true);
@@ -34,7 +50,10 @@ export default function ChatLayout({
       sparrowWebSocket.onMsgCallback = (protocol: Protocol) => {
         //https://react.docschina.org/learn/queueing-a-series-of-state-updates
         //putNewMessage(protocol);
+        setMessageNo(sparrowWebSocket.messageNo);
       };
+      sparrowWebSocket.messageNo=1;
+      setMessageNo(sparrowWebSocket.messageNo);
       setSparrowWebSocket(sparrowWebSocket);
     }
 
@@ -44,11 +63,8 @@ export default function ChatLayout({
     };
   }, []);
 
-  const contextValue = useMemo(
-    () => ({ sparrowWebSocket }),
-    [sparrowWebSocket]
-  );
-  if (!sparrowWebSocket) {
+
+  if (!webSocketProps) {
     return <div>loading...</div>;
   }
 
@@ -65,7 +81,7 @@ export default function ChatLayout({
         </div>
       </div>
       <div className="flex-1 border-l border-indigo-500">
-        <WebSocketContext.Provider value={contextValue}>
+        <WebSocketContext.Provider value={webSocketProps as WebSocketProviderProps}>
           {children}
         </WebSocketContext.Provider>
       </div>

@@ -1,6 +1,8 @@
 import { Context, createContext } from "react";
 import SparrowWebSocket from "@/lib/SparrowWebSocket";
 
-export const WebSocketContext: Context<any> = createContext(
-  null as SparrowWebSocket | null
-);
+export interface WebSocketProviderProps {
+    sparrowWebSocket:SparrowWebSocket,
+    messageNo:number
+}
+export const WebSocketContext: Context<WebSocketProviderProps> = createContext(null as any);
