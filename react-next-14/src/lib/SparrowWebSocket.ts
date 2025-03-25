@@ -1,4 +1,6 @@
 import Protocol from "@/lib/protocol/Protocol";
+import MessageContainer from "@/lib/protocol/MessageContainer";
+import { Message } from "@/lib/protocol/Message";
 
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
@@ -34,6 +36,8 @@ class SparrowWebSocket {
   private reconnectionTimer: NodeJS.Timeout;
 
   private connectionTimestamp: number;
+
+  private messageContainer: MessageContainer;
 
   constructor(url: string, token: string) {
     this.url = url;
@@ -80,8 +84,8 @@ class SparrowWebSocket {
     try {
       SparrowWebSocket.connectionStatus = SparrowWebSocket.CONNECTING_STATUS;
       if ("WebSocket" in window) {
-        this.ws = new WebSocket(this.url, [this.token]);
         this.initWindowsFocusEvent();
+        this.ws = new WebSocket(this.url, [this.token]);
         //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
         this.onOpen();
         this._onMsg();
@@ -89,6 +93,8 @@ class SparrowWebSocket {
         this.onError();
       }
     } catch (e) {
+      SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
+
       console.log("链接失败，直接重连", e);
       this.reconnectWebSocket();
     }
@@ -161,6 +167,7 @@ class SparrowWebSocket {
   //发送消息
   public sendMessage(data: Protocol) {
     // 发送到服务器
+    this.messageContainer.putMessage(data.chatSession.key(), new Message(data));
     this.ws.send(data.toBytes());
   }
 
@@ -170,6 +177,10 @@ class SparrowWebSocket {
 
   // 关闭连接
   public close() {
+    if (this.ws == null) {
+      console.log("websocket is null");
+      return;
+    }
     this.ws.close();
   }
 
@@ -207,7 +218,10 @@ class SparrowWebSocket {
         return;
       }
       const buf = await e.data.arrayBuffer();
-      this.onMsgCallback(Protocol.fromBytes(buf));
+      const protocol = Protocol.fromBytes(buf);
+      const message = new Message(protocol);
+      this.messageContainer.putMessage(protocol.chatSession.key(), message);
+      this.onMsgCallback(protocol);
     };
   }
 }

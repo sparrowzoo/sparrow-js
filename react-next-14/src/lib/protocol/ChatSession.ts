@@ -1,5 +1,5 @@
 import Chat, { ChatType } from "@/lib/protocol/Chat";
-import ChatUser, { NullableChatUser } from "@/lib/protocol/ChatUser";
+import ChatUser from "@/lib/protocol/ChatUser";
 
 export default class ChatSession {
   private _chatType: ChatType;
@@ -68,17 +68,19 @@ export default class ChatSession {
       return null;
     }
 
+    const bigUserCategory = this.id.substring(0, 1);
+    const smallUserCategory = this.id.substring(1, 2);
+    const bitUserLength = parseInt(this.id.substring(2, 4), 10);
+    const bigUserId = this.id.substring(4, 4 + bitUserLength);
+    const smallUserId = this.id.substring(4 + bitUserLength);
 
-    const bigUserCategory=this.id.substring(0,1);
-    const smallUserCategory=this.id.substring(1,2);
-    const bitUserLength=parseInt(this.id.substring(2,4),10);
-    const bigUserId=this.id.substring(4, 4+bitUserLength);
-    const smallUserId=this.id.substring(4+bitUserLength);
+    const bigUser = new ChatUser(bigUserId, parseInt(bigUserCategory, 10));
+    const smallUser = new ChatUser(
+      smallUserId,
+      parseInt(smallUserCategory, 10)
+    );
 
-    const bigUser=new ChatUser(bigUserId,parseInt(bigUserCategory,10));
-    const smallUser=new ChatUser(smallUserId,parseInt(smallUserCategory,10));
-
-    if(bigUser.equals(currentUser)){
+    if (bigUser.equals(currentUser)) {
       return smallUser;
     }
     return bigUser;
@@ -89,21 +91,34 @@ export default class ChatSession {
     return encoder.encode(this._chatType + this.id);
   }
 
+  public key(): string {
+    return this.chatType + this.id;
+  }
+
   private generateKey(sender: ChatUser, receiver: ChatUser): string {
     if (sender == null || receiver == null) {
       return "";
     }
     let bigUser = sender;
     let smallUser = receiver;
-    if (sender.getId()<=receiver.getId()) {
+    if (sender.getId() <= receiver.getId()) {
       bigUser = receiver;
       smallUser = sender;
     }
-    let length= (bigUser.getId()+"").length;
-    let len=length+"";
-    if(length<10){
-      len="0"+length;
+    let length = (bigUser.getId() + "").length;
+    let len = length + "";
+    if (length < 10) {
+      len = "0" + length;
     }
-    return bigUser.getCategory()+""+smallUser.getCategory()+""+len+""+bigUser.getId()+smallUser.getId();
+    return (
+      bigUser.getCategory() +
+      "" +
+      smallUser.getCategory() +
+      "" +
+      len +
+      "" +
+      bigUser.getId() +
+      smallUser.getId()
+    );
   }
 }

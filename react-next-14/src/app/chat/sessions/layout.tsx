@@ -9,7 +9,7 @@ export default function ChatLayout({
   return (
     <div className="flex flex-row h-full">
       <div className="w-7xl flex flex-col  gap-4 p-2">
-        <SessionItem sessionKey={"01_1-2_1"} />
+        <SessionItem sessionKey={"0110121"} />
       </div>
       <div className={"flex-1 border-2 border-red-300"}>{children}</div>
     </div>
