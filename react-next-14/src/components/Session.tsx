@@ -21,45 +21,50 @@ export default function Session() {
   const sessionKey = searchParams?.get("sessionKey");
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState(new Array<Message>());
+  const [localMessageNo, setLocalMessageNo] = useState(0);
   const messageContainerRef: MutableRefObject<HTMLDivElement | null> =
     useRef(null);
 
-  const sparrowWebSocket = useContext(WebSocketContext);
+  const {sparrowWebSocket,messageNo} = useContext(WebSocketContext);
+
+  useEffect(() => {
+      if (sessionKey!==undefined && sparrowWebSocket!==undefined) {
+          sparrowWebSocket?.messageContainer.getMessageList(sessionKey as string).then((messageList) => {
+              setMessageList(messageList);
+          });
+      }
+      //https://react.docschina.org/learn/queueing-a-series-of-state-updates
+      // setMessageList((messageList) => [...messageList, new Message(protocol)]);
+  }, [sessionKey, messageNo]);
 
   useEffect(() => {
     messageContainerRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "end",
     });
-  }, [messageList]);
+  }, [messageNo,localMessageNo]);
 
-  function putNewMessage(protocol: Protocol) {
-    //https://react.docschina.org/learn/queueing-a-series-of-state-updates      setMessageList((messageList) => [...messageList, new Message(protocol)]);
-    setMessageList((messageList) => {
-      return [...messageList, new Message(protocol)];
-    });
-  }
+  async function sendMessage() {
+      const chatSession = ChatSession.parse(sessionKey as string);
+      console.log("containerRef", messageContainerRef.current);
+      let protocol;
+      if (chatSession?.chatType == Chat.CHAT_TYPE_1_TO_1) {
+          const oppositeUser = chatSession.getOppositeUser();
+          protocol = Protocol.create121Chat(
+              Chat.TEXT_MESSAGE,
+              oppositeUser as ChatUser,
+              message,
+              new Date().getTime()
+          );
+      }
 
-  function sendMessage() {
-    const chatSession = ChatSession.parse(sessionKey as string);
-    console.log("containerRef", messageContainerRef.current);
-    let protocol;
-    if (chatSession?.chatType == Chat.CHAT_TYPE_1_TO_1) {
-      const oppositeUser = chatSession.getOppositeUser();
-      protocol = Protocol.create121Chat(
-        Chat.TEXT_MESSAGE,
-        oppositeUser as ChatUser,
-        message,
-        new Date().getTime()
-      );
-    }
-    putNewMessage(protocol);
-    sparrowWebSocket?.sendMessage(protocol);
-    setMessage("");
-  }
-
-  if (sparrowWebSocket === null) {
-    return <div>Loading...</div>;
+      sparrowWebSocket?.sendMessage(protocol);
+      const messageList = await sparrowWebSocket?.messageContainer.getMessageList(sessionKey as string);
+      //https://react.docschina.org/learn/queueing-a-series-of-state-updates
+      // setMessageList((messageList) => [...messageList, new Message(protocol)]);
+      setMessageList(messageList);
+      setLocalMessageNo(sparrowWebSocket.messageNo);
+      setMessage("");
   }
 
   return (
