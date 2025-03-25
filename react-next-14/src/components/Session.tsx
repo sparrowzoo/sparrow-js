@@ -1,54 +1,30 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React, { MutableRefObject, useEffect, useRef, useState } from "react";
+import React, {
+  MutableRefObject,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import ChatItem from "@/components/ChatItem";
-import SparrowWebSocket from "@/lib/SparrowWebSocket";
 import Protocol from "@/lib/protocol/Protocol";
 import Chat from "@/lib/protocol/Chat";
 import { Message } from "@/lib/protocol/Message";
-import toast from "react-hot-toast";
-import { getToken, removeToken } from "@/lib/TokenUtils";
-import { NEXT_ASSET_PREFIX, USER_INFO_KEY, WEBSOCKET } from "@/lib/EnvUtils";
+import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
 import ChatSession from "@/lib/protocol/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
+import { WebSocketContext } from "@/lib/WebSocketProvider";
 
 export default function Session() {
   const searchParams = useSearchParams();
   const sessionKey = searchParams?.get("sessionKey");
-  const [sparrowWebSocket, setSparrowWebSocket] = useState<SparrowWebSocket>();
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState(new Array<Message>());
   const messageContainerRef: MutableRefObject<HTMLDivElement | null> =
     useRef(null);
-  useEffect(() => {
-    async function asyncInit() {
-      const tokenParam = await getToken(true);
-      const sparrowWebSocket = new SparrowWebSocket(
-        WEBSOCKET as string,
-        tokenParam as string
-      );
-      sparrowWebSocket.userValidCallback = (data: Result) => {
-        console.log("userValidCallback", JSON.stringify(data));
-        if (data.code == "0") {
-          sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
-        } else {
-          removeToken();
-          toast.error(data.message);
-        }
-      };
-      sparrowWebSocket.connect();
-      sparrowWebSocket.onMsgCallback = (protocol: Protocol) => {
-        //https://react.docschina.org/learn/queueing-a-series-of-state-updates
-        putNewMessage(protocol);
-      };
-      setSparrowWebSocket(sparrowWebSocket);
-    }
 
-    asyncInit();
-    return () => {
-      sparrowWebSocket?.close();
-    };
-  }, []);
+  const sparrowWebSocket = useContext(WebSocketContext);
 
   useEffect(() => {
     messageContainerRef.current?.scrollIntoView({
@@ -80,6 +56,10 @@ export default function Session() {
     putNewMessage(protocol);
     sparrowWebSocket?.sendMessage(protocol);
     setMessage("");
+  }
+
+  if (sparrowWebSocket === null) {
+    return <div>Loading...</div>;
   }
 
   return (
