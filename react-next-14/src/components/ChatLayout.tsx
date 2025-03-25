@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { NEXT_ASSET_PREFIX, USER_INFO_KEY, WEBSOCKET } from "@/lib/EnvUtils";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import SparrowWebSocket from "@/lib/SparrowWebSocket";
 import { getToken, removeToken } from "@/lib/TokenUtils";
 import toast from "react-hot-toast";
