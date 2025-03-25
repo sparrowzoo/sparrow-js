@@ -24,6 +24,7 @@ export default class MessageContainer {
   }
 
   public async getMessageList(sessionKey: string) {
+    console.log("getMessageList", sessionKey);
     let messageList = this.messageMap.get(sessionKey);
     if (messageList == null) {
       messageList = await ChatApi.getMessages(sessionKey);

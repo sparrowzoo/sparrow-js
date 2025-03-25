@@ -37,11 +37,14 @@ class SparrowWebSocket {
 
   private connectionTimestamp: number;
 
-  private messageContainer: MessageContainer;
+  public messageContainer: MessageContainer;
+
+  public messageNo=0;
 
   constructor(url: string, token: string) {
     this.url = url;
     this.token = token;
+    this.messageContainer = new MessageContainer();
   }
 
   public reconnectWebSocket() {
@@ -168,6 +171,7 @@ class SparrowWebSocket {
   public sendMessage(data: Protocol) {
     // 发送到服务器
     this.messageContainer.putMessage(data.chatSession.key(), new Message(data));
+    this.messageNo = this.messageNo + 1;
     this.ws.send(data.toBytes());
   }
 
@@ -221,6 +225,7 @@ class SparrowWebSocket {
       const protocol = Protocol.fromBytes(buf);
       const message = new Message(protocol);
       this.messageContainer.putMessage(protocol.chatSession.key(), message);
+      this.messageNo = this.messageNo + 1;
       this.onMsgCallback(protocol);
     };
   }
