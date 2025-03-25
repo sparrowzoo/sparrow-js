@@ -15,6 +15,7 @@ export default class ChatApi {
 
   static async getMessages(sessionKey: string) {
     let messages;
+    console.log("sessionKey getMessages", sessionKey);
     await Fetcher.post("/chat/v2/messages.json", sessionKey).then(
       async (response: Result) => {
         messages = response.data;
