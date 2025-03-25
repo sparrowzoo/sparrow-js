@@ -113,6 +113,10 @@ class Protocol {
       const receiver = receiverWithOffset.chatUser;
       protocol.receiver = receiver as ChatUser;
       offset = receiverWithOffset.offset;
+      protocol.chatSession = ChatSession.create121Session(
+        protocol.sender,
+        protocol.receiver
+      ) as ChatSession;
     } else {
       const sessionLength = dataView.getUint8(offset);
       offset += 1;
