@@ -9,12 +9,22 @@ interface ChatUserWithOffset {
 export default class ChatUser {
   static readonly CATEGORY_VISITOR = 0;
   static readonly CATEGORY_REGISTER = 1;
-  private id: string;
-  private category: number;
 
   constructor(id: string, category: number) {
-    this.id = id;
-    this.category = category;
+    this._id = id;
+    this._category = category;
+  }
+
+  private _id: string;
+
+  get id(): string {
+    return this._id;
+  }
+
+  private _category: number;
+
+  get category(): number {
+    return this._category;
   }
 
   static fromBytes(dateView: DataView, offset: number): ChatUserWithOffset {
@@ -60,42 +70,32 @@ export default class ChatUser {
     return new ChatUser(userId, category);
   }
 
-  getId(): string {
-    return this.id;
-  }
-
-  getCategory(): number {
-    return this.category;
-  }
-
   getCategoryName(): string {
-    if (this.category == ChatUser.CATEGORY_VISITOR) {
+    if (this._category == ChatUser.CATEGORY_VISITOR) {
       return "访客";
-    } else if (this.category == ChatUser.CATEGORY_REGISTER) {
+    } else if (this._category == ChatUser.CATEGORY_REGISTER) {
       return "注册用户";
     }
     return "未知";
   }
 
   public key(): string {
-    return this.id + "_" + this.category;
+    return this._id + "_" + this._category;
   }
 
   public equals(chatUser: NullableChatUser): boolean {
     if (chatUser == null) {
       return false;
     }
-    return (
-      this.id == chatUser.getId() && this.category == chatUser.getCategory()
-    );
+    return this._id == chatUser.id && this._category == chatUser.category;
   }
 
   /**
    * 用户ID长度(1字节) + 用户ID([用户ID长度个字节]) + 用户类型(1字节)
    */
   public toBytes(): Uint8Array {
-    const idBytes: Uint8Array = ArrayBufferUtils.str2Buffer(this.id + "");
-    const categoryBytes: Uint8Array = new Uint8Array([this.category]);
+    const idBytes: Uint8Array = ArrayBufferUtils.str2Buffer(this._id + "");
+    const categoryBytes: Uint8Array = new Uint8Array([this._category]);
     const bytesLength: number = 1 + idBytes.byteLength + 1;
     let userBytes: Uint8Array = new Uint8Array(bytesLength);
     const idBytesLength: number = idBytes.byteLength;

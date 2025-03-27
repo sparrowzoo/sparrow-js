@@ -5,31 +5,20 @@ import { useEffect, useState } from "react";
 import SparrowWebSocket from "@/lib/SparrowWebSocket";
 import { getToken, removeToken } from "@/lib/TokenUtils";
 import toast from "react-hot-toast";
-import Protocol from "@/lib/protocol/Protocol";
-import {WebSocketContext, WebSocketProviderProps} from "@/lib/WebSocketProvider";
+import {
+  WebSocketContext,
+  WebSocketContextValue,
+} from "@/lib/WebSocketProvider";
+import MessageBroker from "@/lib/protocol/MessageBroker";
 
 export default function ChatLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [sparrowWebSocket, setSparrowWebSocket] = useState<SparrowWebSocket>();
-  const [webSocketProps, setWebSocketProps] = useState<WebSocketProviderProps>();
-  const[messageNo, setMessageNo] = useState(0);
-
-  useEffect(() => {
-    if (sparrowWebSocket==null||sparrowWebSocket?.messageNo==0) {
-      return;
-    }
-    const contextProperty:WebSocketProviderProps = {
-      sparrowWebSocket: sparrowWebSocket as SparrowWebSocket,
-      messageNo: sparrowWebSocket?.messageNo as number,
-    };
-    setWebSocketProps(contextProperty);
-  }, [messageNo])
-
-
-
+  const [webSocketContextValue, setWebSocketContextValue] =
+    useState<WebSocketContextValue>();
+  console.log("渲染ChatLayout");
   useEffect(() => {
     async function asyncInit() {
       const tokenParam = await getToken(true);
@@ -47,27 +36,25 @@ export default function ChatLayout({
         }
       };
       sparrowWebSocket.connect();
-      sparrowWebSocket.onMsgCallback = (protocol: Protocol) => {
-        //https://react.docschina.org/learn/queueing-a-series-of-state-updates
-        //putNewMessage(protocol);
-        setMessageNo(sparrowWebSocket.messageNo);
+      const messageContainer = new MessageBroker(sparrowWebSocket);
+      messageContainer.newMessageSignal = () => {
+        debugger;
+        setWebSocketContextValue(webSocketContextValue?.newReference());
       };
-      sparrowWebSocket.messageNo=1;
-      setMessageNo(sparrowWebSocket.messageNo);
-      setSparrowWebSocket(sparrowWebSocket);
+      setWebSocketContextValue(WebSocketContextValue.create(messageContainer));
     }
 
     asyncInit();
     return () => {
-      sparrowWebSocket?.close();
+      webSocketContextValue?.closeWebSocket();
     };
   }, []);
 
-
-  if (!webSocketProps) {
-    return <div>loading...</div>;
+  if (!webSocketContextValue) {
+    return <div>init context ....</div>;
   }
 
+  console.log("状态变化会重新渲染", webSocketContextValue);
   return (
     <div className="flex flex-row flex-1 w-full">
       <div className="w-[20rem] flex flex-col  gap-4 p-4 border-r border-indigo-500">
@@ -81,7 +68,9 @@ export default function ChatLayout({
         </div>
       </div>
       <div className="flex-1 border-l border-indigo-500">
-        <WebSocketContext.Provider value={webSocketProps as WebSocketProviderProps}>
+        <WebSocketContext.Provider
+          value={webSocketContextValue as WebSocketContextValue}
+        >
           {children}
         </WebSocketContext.Provider>
       </div>

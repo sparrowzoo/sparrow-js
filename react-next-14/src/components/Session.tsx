@@ -8,65 +8,64 @@ import React, {
   useState,
 } from "react";
 import ChatItem from "@/components/ChatItem";
-import Protocol from "@/lib/protocol/Protocol";
-import Chat from "@/lib/protocol/Chat";
-import { Message } from "@/lib/protocol/Message";
-import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
-import ChatSession from "@/lib/protocol/ChatSession";
-import ChatUser from "@/lib/protocol/ChatUser";
 import { WebSocketContext } from "@/lib/WebSocketProvider";
+import Message from "@/lib/protocol/Message";
 
 export default function Session() {
   const searchParams = useSearchParams();
   const sessionKey = searchParams?.get("sessionKey");
   const [message, setMessage] = useState<string>("");
-  const [messageList, setMessageList] = useState(new Array<Message>());
+  const [messageList, setMessageList] = useState<Message[] | undefined>();
+  //为了控制滚动条
   const [localMessageNo, setLocalMessageNo] = useState(0);
   const messageContainerRef: MutableRefObject<HTMLDivElement | null> =
     useRef(null);
 
-  const {sparrowWebSocket,messageNo} = useContext(WebSocketContext);
+  //不要解构，因为解构会useEffect的依赖引用无变化，不会重新渲染
+  const webSocketContextValue = useContext(WebSocketContext);
 
   useEffect(() => {
-      if (sessionKey!==undefined && sparrowWebSocket!==undefined) {
-          sparrowWebSocket?.messageContainer.getMessageList(sessionKey as string).then((messageList) => {
-              setMessageList(messageList);
-          });
-      }
-      //https://react.docschina.org/learn/queueing-a-series-of-state-updates
-      // setMessageList((messageList) => [...messageList, new Message(protocol)]);
-  }, [sessionKey, messageNo]);
+    console.log("sessionKey changed to: ", sessionKey);
+    if (!sessionKey) {
+      return;
+    }
+    const messageContainer = webSocketContextValue.messageBroker;
+    messageContainer
+      .getMessageList(sessionKey as string)
+      .then((messageList) => {
+        setMessageList(messageList);
+        //控制滚动条
+        setLocalMessageNo(messageContainer?.webSocket.increaseTxid());
+      });
+    //https://react.docschina.org/learn/queueing-a-series-of-state-updates
+    // setMessageList((messageList) => [...messageList, new Message(protocol)]);
+  }, [sessionKey, webSocketContextValue]);
 
   useEffect(() => {
     messageContainerRef.current?.scrollIntoView({
       behavior: "smooth",
       block: "end",
     });
-  }, [messageNo,localMessageNo]);
+  }, [localMessageNo]);
 
   async function sendMessage() {
-      const chatSession = ChatSession.parse(sessionKey as string);
-      console.log("containerRef", messageContainerRef.current);
-      let protocol;
-      if (chatSession?.chatType == Chat.CHAT_TYPE_1_TO_1) {
-          const oppositeUser = chatSession.getOppositeUser();
-          protocol = Protocol.create121Chat(
-              Chat.TEXT_MESSAGE,
-              oppositeUser as ChatUser,
-              message,
-              new Date().getTime()
-          );
-      }
-
-      sparrowWebSocket?.sendMessage(protocol);
-      const messageList = await sparrowWebSocket?.messageContainer.getMessageList(sessionKey as string);
-      //https://react.docschina.org/learn/queueing-a-series-of-state-updates
-      // setMessageList((messageList) => [...messageList, new Message(protocol)]);
-      setMessageList(messageList);
-      setLocalMessageNo(sparrowWebSocket.messageNo);
-      setMessage("");
+    const messageContainer = webSocketContextValue.messageBroker;
+    const sparrowWebSocket = messageContainer.webSocket;
+    messageContainer.sendMessage(sessionKey as string, message);
+    const messageList = await messageContainer.getMessageList(
+      sessionKey as string
+    );
+    //https://react.docschina.org/learn/queueing-a-series-of-state-updates
+    // setMessageList((messageList) => [...messageList, new Message(protocol)]);
+    setMessageList(messageList);
+    setLocalMessageNo(sparrowWebSocket.txid);
+    setMessage("");
   }
 
+  if (!messageList) {
+    console.log("messageList is undefined");
+    return <div>Loading...</div>;
+  }
   return (
     <div className={"flex flex-col w-full h-full"}>
       <div>
@@ -76,15 +75,7 @@ export default function Session() {
         className={"overflow-y-scroll h-[25rem] p-4 border-2 border-red-700"}
       >
         {messageList.map((message) => (
-          <ChatItem
-            avatar={`${NEXT_ASSET_PREFIX}/avatar/${message.senderName}.jpg`}
-            key={message.messageId}
-            img={undefined}
-            align={message.align}
-            message={message.content}
-            sender={message.senderName}
-            timestamp={message.sendTime}
-          />
+          <ChatItem message={message} key={message.messageId} />
         ))}
         <div className={"h-[0px] h-[0px]"} ref={messageContainerRef} />
       </div>
