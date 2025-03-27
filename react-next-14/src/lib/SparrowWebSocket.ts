@@ -1,7 +1,3 @@
-import Protocol from "@/lib/protocol/Protocol";
-import MessageContainer from "@/lib/protocol/MessageContainer";
-import { Message } from "@/lib/protocol/Message";
-
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
   public static INACTIVE_STATUS = "inactive";
@@ -14,9 +10,10 @@ class SparrowWebSocket {
   private static connectionStatus: string = SparrowWebSocket.INACTIVE_STATUS;
 
   // 接收到信息后需要执行的事件
-  public onMsgCallback: (data: Protocol) => void;
+  public onMsgCallback: (data: ArrayBufferLike) => void;
   public offlineCallback: (data: { offline: boolean }) => void;
   public userValidCallback: (data: any) => void;
+  public txid = 0;
   private ws: WebSocket;
   // websocket 连接的 url
   private url: string;
@@ -28,23 +25,14 @@ class SparrowWebSocket {
   private heartTimeout = 5000;
   // 重连重试时间 ms
   private reconnectTime = 1000;
-
   private heartTimer: NodeJS.Timeout;
-
   private lastHeartTime: number = 0;
-
   private reconnectionTimer: NodeJS.Timeout;
-
   private connectionTimestamp: number;
-
-  public messageContainer: MessageContainer;
-
-  public messageNo=0;
 
   constructor(url: string, token: string) {
     this.url = url;
     this.token = token;
-    this.messageContainer = new MessageContainer();
   }
 
   public reconnectWebSocket() {
@@ -167,12 +155,15 @@ class SparrowWebSocket {
     clearTimeout(this.reconnectionTimer);
   }
 
+  public increaseTxid(): number {
+    this.txid = this.txid + 1;
+    return this.txid;
+  }
+
   //发送消息
-  public sendMessage(data: Protocol) {
-    // 发送到服务器
-    this.messageContainer.putMessage(data.chatSession.key(), new Message(data));
-    this.messageNo = this.messageNo + 1;
-    this.ws.send(data.toBytes());
+  public sendMessage(data: ArrayBufferLike) {
+    this.increaseTxid();
+    this.ws.send(data);
   }
 
   public reconnectionCallback() {
@@ -222,11 +213,8 @@ class SparrowWebSocket {
         return;
       }
       const buf = await e.data.arrayBuffer();
-      const protocol = Protocol.fromBytes(buf);
-      const message = new Message(protocol);
-      this.messageContainer.putMessage(protocol.chatSession.key(), message);
-      this.messageNo = this.messageNo + 1;
-      this.onMsgCallback(protocol);
+      this.increaseTxid();
+      this.onMsgCallback(buf);
     };
   }
 }

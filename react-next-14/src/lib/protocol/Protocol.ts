@@ -96,7 +96,7 @@ class Protocol {
     this._serverTime = value;
   }
 
-  public static fromBytes(bytes: ArrayBufferLike): Protocol {
+  public static fromBytes(bytes: ArrayBuffer): Protocol {
     const protocol: Protocol = new Protocol();
     const dataView = new DataView(bytes);
     let offset = 0;
@@ -250,15 +250,6 @@ class Protocol {
 
   public getStringContent(): string {
     return new TextDecoder().decode(this.content); // 默认 UTF-8 编码
-  }
-
-  public isSender() {
-    const currentUser = ChatUser.getCurrentUser();
-    return this.sender.equals(currentUser);
-  }
-
-  public align() {
-    return this.isSender() ? "right" : "left";
   }
 }
 
