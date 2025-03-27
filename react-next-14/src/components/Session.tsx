@@ -62,6 +62,7 @@ export default function Session() {
     setMessage("");
   }
 
+
   if (!messageList) {
     console.log("messageList is undefined");
     return <div>Loading...</div>;
