@@ -29,6 +29,13 @@ export default class ChatSession {
     return chatSession;
   }
 
+  public static createSession(chatType: ChatType, id: string) {
+    const chatSession = new ChatSession();
+    chatSession.chatType = chatType;
+    chatSession.id = id;
+    return chatSession;
+  }
+
   public static parse(sessionKey: string) {
     if (sessionKey == null) {
       return null;
@@ -101,24 +108,24 @@ export default class ChatSession {
     }
     let bigUser = sender;
     let smallUser = receiver;
-    if (sender.getId() <= receiver.getId()) {
+    if (sender.id <= receiver.id) {
       bigUser = receiver;
       smallUser = sender;
     }
-    let length = (bigUser.getId() + "").length;
+    let length = (bigUser.id + "").length;
     let len = length + "";
     if (length < 10) {
       len = "0" + length;
     }
     return (
-      bigUser.getCategory() +
+      bigUser.category +
       "" +
-      smallUser.getCategory() +
+      smallUser.category +
       "" +
       len +
       "" +
-      bigUser.getId() +
-      smallUser.getId()
+      bigUser.id +
+      smallUser.id
     );
   }
 }

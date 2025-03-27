@@ -1,8 +1,29 @@
 import { Context, createContext } from "react";
-import SparrowWebSocket from "@/lib/SparrowWebSocket";
+import MessageBroker from "@/lib/protocol/MessageBroker";
 
-export interface WebSocketProviderProps {
-    sparrowWebSocket:SparrowWebSocket,
-    messageNo:number
+/**
+ * 为status 的引用发生变化引发渲染
+ */
+export class WebSocketContextValue {
+  messageBroker: MessageBroker;
+
+  private constructor(messageContainer: MessageBroker) {
+    this.messageBroker = messageContainer;
+  }
+
+  public static create(messageContainer: MessageBroker): WebSocketContextValue {
+    return new WebSocketContextValue(messageContainer);
+  }
+
+  public newReference(): WebSocketContextValue {
+    return new WebSocketContextValue(this.messageBroker);
+  }
+
+  public closeWebSocket(): void {
+    this.messageBroker?.closeWebSocket();
+  }
 }
-export const WebSocketContext: Context<WebSocketProviderProps> = createContext(null as any);
+
+export const WebSocketContext: Context<WebSocketContextValue> = createContext(
+  null as any
+);
