@@ -37,11 +37,12 @@ export default function ChatLayout({
       };
       sparrowWebSocket.connect();
       const messageContainer = new MessageBroker(sparrowWebSocket);
+
+      const localContext = WebSocketContextValue.create(messageContainer);
       messageContainer.newMessageSignal = () => {
-        debugger;
-        setWebSocketContextValue(webSocketContextValue?.newReference());
+        setWebSocketContextValue(localContext?.newReference());
       };
-      setWebSocketContextValue(WebSocketContextValue.create(messageContainer));
+      setWebSocketContextValue(localContext);
     }
 
     asyncInit();
@@ -49,6 +50,7 @@ export default function ChatLayout({
       webSocketContextValue?.closeWebSocket();
     };
   }, []);
+
 
   if (!webSocketContextValue) {
     return <div>init context ....</div>;
