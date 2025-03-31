@@ -12,7 +12,9 @@ class SparrowWebSocket {
   // 接收到信息后需要执行的事件
   public onMsgCallback: (data: ArrayBufferLike) => void;
   public offlineCallback: (data: { offline: boolean }) => void;
-  public userValidCallback: (data: any) => void;
+  public userAuthCallback: (data: any) => void;
+  public monitorStatus: () => [];
+  public monitorStatusCallback: (data: []) => void;
   public txid = 0;
   private ws: WebSocket;
   // websocket 连接的 url
@@ -27,6 +29,8 @@ class SparrowWebSocket {
   private reconnectTime = 1000;
   private heartTimer: NodeJS.Timeout;
   private lastHeartTime: number = 0;
+  private monitorTime: number = 10000;
+  private lastStatusMonitoredTime: number = 0;
   private reconnectionTimer: NodeJS.Timeout;
   private connectionTimestamp: number;
 
@@ -139,6 +143,17 @@ class SparrowWebSocket {
       try {
         //console.log("发送心跳" + new Date().getTime());
         this.ws.send("PING");
+        if (
+          new Date().getTime() - this.lastStatusMonitoredTime >
+          this.monitorTime
+        ) {
+          const contactsStatus = this.monitorStatus();
+          if (contactsStatus.length > 0) {
+            this.ws.send("STATUS|" + JSON.stringify(contactsStatus));
+          } else {
+            this.ws.send("STATUS");
+          }
+        }
       } catch (e) {
         console.log("heart beat error:" + e);
       }
@@ -205,16 +220,32 @@ class SparrowWebSocket {
         }
         //1 对1 聊天时，对方不在线
         if (e.data === "OFFLINE") {
-          this.offlineCallback({ offline: true });
+          if (this.offlineCallback) {
+            this.offlineCallback({ offline: true });
+          }
           return;
         }
         var result = JSON.parse(e.data);
-        this.userValidCallback(result);
+        if (result.instruction == "STATUS") {
+          const contactsStatus = result.data;
+          if (this.monitorStatusCallback) {
+            this.monitorStatusCallback(contactsStatus);
+          }
+          this.lastStatusMonitoredTime = new Date().getTime();
+          return;
+        }
+        if (result.instruction == "AUTH") {
+          if (this.userAuthCallback) {
+            this.userAuthCallback(result);
+          }
+        }
         return;
       }
       const buf = await e.data.arrayBuffer();
       this.increaseTxid();
-      this.onMsgCallback(buf);
+      if (this.onMsgCallback) {
+        this.onMsgCallback(buf);
+      }
     };
   }
 }

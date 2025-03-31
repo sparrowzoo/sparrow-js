@@ -1,15 +1,14 @@
 "use client";
 import Link from "next/link";
-import { NEXT_ASSET_PREFIX, USER_INFO_KEY, WEBSOCKET } from "@/lib/EnvUtils";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { useEffect, useState } from "react";
-import SparrowWebSocket from "@/lib/SparrowWebSocket";
-import { getToken, removeToken } from "@/lib/TokenUtils";
-import toast from "react-hot-toast";
+import { getToken } from "@/common/lib/TokenUtils";
 import {
   WebSocketContext,
   WebSocketContextValue,
 } from "@/lib/WebSocketProvider";
 import MessageBroker from "@/lib/protocol/MessageBroker";
+import ChatApi from "@/lib/ChatApi";
 
 export default function ChatLayout({
   children,
@@ -19,25 +18,13 @@ export default function ChatLayout({
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
   console.log("渲染ChatLayout");
+
   useEffect(() => {
     async function asyncInit() {
-      const tokenParam = await getToken(true);
-      const sparrowWebSocket = new SparrowWebSocket(
-        WEBSOCKET as string,
-        tokenParam as string
-      );
-      sparrowWebSocket.userValidCallback = (data: Result) => {
-        console.log("userValidCallback", JSON.stringify(data));
-        if (data.code == "0") {
-          sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
-        } else {
-          removeToken();
-          toast.error(data.message);
-        }
-      };
-      sparrowWebSocket.connect();
-      const messageContainer = new MessageBroker(sparrowWebSocket);
-
+      const tokenParam = await getToken(() => {
+        return ChatApi.getVisitorToken();
+      });
+      const messageContainer = new MessageBroker(tokenParam as string);
       const localContext = WebSocketContextValue.create(messageContainer);
       messageContainer.newMessageSignal = () => {
         setWebSocketContextValue(localContext?.newReference());
@@ -50,7 +37,6 @@ export default function ChatLayout({
       webSocketContextValue?.closeWebSocket();
     };
   }, []);
-
 
   if (!webSocketContextValue) {
     return <div>init context ....</div>;

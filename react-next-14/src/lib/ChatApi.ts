@@ -1,5 +1,5 @@
-import { Fetcher } from "@/lib/Fetcher";
-import { TOKEN_KEY } from "@/lib/EnvUtils";
+import Fetcher from "@/common/lib/Fetcher";
+import { TOKEN_KEY } from "@/common/lib/Env";
 import ChatSession from "@/lib/protocol/ChatSession";
 import Message from "@/lib/protocol/Message";
 

@@ -1,6 +1,6 @@
 import * as React from "react";
 import Message from "@/lib/protocol/Message";
-import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 
 interface Props {
   message: Message;

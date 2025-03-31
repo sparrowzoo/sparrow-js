@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { Fetcher } from "@/lib/Fetcher";
-import { setToken } from "@/lib/TokenUtils";
+import Fetcher from "@/common/lib/Fetcher";
+import { setToken } from "@/common/lib/TokenUtils";
 
 export default function Login() {
   const [userName, setUserName] = useState("");

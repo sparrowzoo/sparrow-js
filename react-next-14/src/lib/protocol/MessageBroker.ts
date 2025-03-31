@@ -1,23 +1,48 @@
 import ChatApi from "@/lib/ChatApi";
 import Message from "@/lib/protocol/Message";
 import Protocol from "@/lib/protocol/Protocol";
-import SparrowWebSocket from "@/lib/SparrowWebSocket";
+import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
 import ChatSession from "@/lib/protocol/ChatSession";
 import Chat from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
+import { USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
+import { removeToken } from "@/common/lib/TokenUtils";
+import { ContactStatus } from "@/lib/protocol/ContactStatus";
 
 export default class MessageBroker {
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
+  private chatSessions: ChatSession[] | null = null;
 
-  constructor(webSocket: SparrowWebSocket) {
-    this._webSocket = webSocket;
+  constructor(tokenParam: string) {
+    const sparrowWebSocket = new SparrowWebSocket(
+      WEBSOCKET as string,
+      tokenParam as string
+    );
+    sparrowWebSocket.connect();
+    this._webSocket = sparrowWebSocket;
     this._webSocket.onMsgCallback = (buf: ArrayBuffer) => {
       this.websocketMsgCallback(buf);
     };
     this._webSocket.offlineCallback = () => {
       toast.error("消息已推送，对方已离线....");
+    };
+    this._webSocket.userAuthCallback = (data: Result) => {
+      console.log("userValidCallback", JSON.stringify(data));
+      if (data.code == "0") {
+        sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
+      } else {
+        removeToken();
+        toast.error(data.message);
+      }
+    };
+    this._webSocket.monitorStatus = () => {
+      console.log("websocket monitor status");
+      return [];
+    };
+    this._webSocket.monitorStatusCallback = (data: ContactStatus[]) => {
+      console.log("websocket monitor status callback", JSON.stringify(data));
     };
   }
 
@@ -75,5 +100,18 @@ export default class MessageBroker {
     const protocol = Protocol.fromBytes(buf);
     this.putMessage(protocol);
     this.newMessageSignal();
+  }
+
+  public async getChatSessions() {
+    let localSession = this.chatSessions;
+    if (localSession) {
+      return localSession;
+    }
+    await ChatApi.getSessions().then((sessions) => {
+      console.log(sessions.length);
+      localSession = sessions;
+      this.chatSessions = localSession;
+    });
+    return localSession;
   }
 }

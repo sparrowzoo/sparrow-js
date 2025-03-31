@@ -2,7 +2,7 @@
 import Link from "next/link";
 import * as React from "react";
 import ChatSession from "@/lib/protocol/ChatSession";
-import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 
 interface SessionItemProps {
   chatSession: ChatSession;

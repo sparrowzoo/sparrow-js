@@ -1,15 +1,16 @@
 "use client";
 import SessionItem from "@/components/SessionItem";
-import React, { useEffect, useState } from "react";
-import ChatApi from "@/lib/ChatApi";
+import React, { useContext, useEffect, useState } from "react";
 import ChatSession from "@/lib/protocol/ChatSession";
+import { WebSocketContext } from "@/lib/WebSocketProvider";
 
 export default function Sessions() {
   const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const webSocketContextValue = useContext(WebSocketContext);
+  const messageBroker = webSocketContextValue.messageBroker;
   useEffect(() => {
-    ChatApi.getSessions().then((sessions) => {
-      console.log(sessions.length);
-      setSessions(sessions);
+    messageBroker.getChatSessions().then((chatSessions) => {
+      setSessions(chatSessions as ChatSession[]);
     });
   }, []);
   return (

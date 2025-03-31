@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 
 export default function Home() {
   const logo = `${NEXT_ASSET_PREFIX}/vercel.svg`;

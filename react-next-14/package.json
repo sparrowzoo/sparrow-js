@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "copy": "cpy --cwd=scripts playground.template.tsx ../../pages/playground --rename=index.tsx //    https://sparrowzoo.feishu.cn/docx/WDwadlmL3opGnlxXMrlcL0fOn8e"
+    "copy": "cpy ./../common/src/common  ./src/ --parents"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -21,6 +21,8 @@
     "@reduxjs/toolkit": "^2.2.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "cpy": "^11.1.0",
+    "cpy-cli": "^5.0.0",
     "date-fns": "^4.1.0",
     "formik": "^2.4.6",
     "html-loader": "^5.0.0",

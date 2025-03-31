@@ -1,5 +1,5 @@
-import ArrayBufferUtils from "@/lib/protocol/ArrayBufferUtils";
-import { USER_INFO_KEY } from "@/lib/EnvUtils";
+import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
+import { USER_INFO_KEY } from "@/common/lib/Env";
 
 interface ChatUserWithOffset {
   chatUser: NullableChatUser;
