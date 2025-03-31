@@ -1,4 +1,4 @@
-// File: D:\workspace\sparrow\sparrow-js\react-next-14\src\app\chat\sessions\layout.tsx
+// File: /Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-14/src/app/chat/sessions/layout.tsx
 import * as entry from '../../../../../../src/app/chat/sessions/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

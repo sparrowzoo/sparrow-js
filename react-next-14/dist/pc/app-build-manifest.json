@@ -31,15 +31,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/chat/sessions/layout.js"
     ],
+    "/chat/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/chat/login/page.js"
+    ],
     "/chat/friends/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/chat/friends/page.js"
     ],
-    "/_not-found/page": [
+    "/chat/friends/group/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/_not-found/page.js"
+      "static/chunks/app/chat/friends/group/page.js"
     ]
   }
 }
