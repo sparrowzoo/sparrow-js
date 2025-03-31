@@ -3,14 +3,16 @@ import Link from "next/link";
 import * as React from "react";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
+import Group from "@/lib/protocol/contact/Group";
 
 interface GroupProps {
-  groupId: string;
+  qun: Group;
 }
 
 export default function GroupItem(groupProps: GroupProps) {
-  const groupUrl = `${NEXT_ASSET_PREFIX}/chat/friends/group?groupId=${groupProps.groupId}`;
-  const headSrc = `/avatar/${groupProps.groupId}.jpg`;
+    const { qun } = groupProps;
+  const groupUrl = `${NEXT_ASSET_PREFIX}/chat/friends/group?groupId=${qun.qunId}`;
+  const headSrc = qun.avatar;
   return (
     <div className="flex items-center text-left">
       <Link href={groupUrl}>
@@ -25,9 +27,9 @@ export default function GroupItem(groupProps: GroupProps) {
       </Link>
       <div>
         <Link href={groupUrl}>
-          <strong>Andrew Alfred</strong>
+          <strong>{qun.qunName}</strong>
           <br />
-          <span>Technical advisor</span>
+          <span>{qun.nationality}</span>
         </Link>
       </div>
     </div>

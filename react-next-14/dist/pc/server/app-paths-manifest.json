@@ -1,7 +1,5 @@
 {
-  "/chat/login/page": "app/chat/login/page.js",
-  "/chat/friends/page": "app/chat/friends/page.js",
-  "/chat/friends/group/page": "app/chat/friends/group/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/chat/sessions/session/page": "app/chat/sessions/session/page.js",
-  "/chat/friends/contact/page": "app/chat/friends/contact/page.js"
+  "/chat/friends/page": "app/chat/friends/page.js"
 }

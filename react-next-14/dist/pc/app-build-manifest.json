@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/chat/friends/contact/page": [
+    "/chat/friends/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/chat/friends/contact/page.js"
+      "static/chunks/app/chat/friends/page.js"
     ],
     "/chat/friends/layout": [
       "static/chunks/webpack.js",
@@ -21,6 +21,11 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
+    "/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/page.js"
+    ],
     "/chat/sessions/session/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -31,20 +36,15 @@
       "static/chunks/main-app.js",
       "static/chunks/app/chat/sessions/layout.js"
     ],
-    "/chat/login/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/chat/login/page.js"
-    ],
-    "/chat/friends/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/chat/friends/page.js"
-    ],
     "/chat/friends/group/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/chat/friends/group/page.js"
+    ],
+    "/chat/login/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/chat/login/page.js"
     ]
   }
 }

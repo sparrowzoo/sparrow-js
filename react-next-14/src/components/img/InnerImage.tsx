@@ -14,7 +14,10 @@ export interface ImageProps {
 }
 
 export default function InnerImage(props: ImageProps) {
-  const imageSrc = `${NEXT_ASSET_PREFIX}/${props.src}`;
+  let imageSrc = `${props.src}`;
+  if (!imageSrc.startsWith("http://")) {
+    imageSrc = `${NEXT_ASSET_PREFIX}/${imageSrc}`;
+  }
   const imageLoader = ({ src, width, quality }) => {
     return `${src}?w=${width}&q=${quality || 75}`;
   };

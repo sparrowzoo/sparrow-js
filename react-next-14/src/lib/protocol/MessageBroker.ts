@@ -9,11 +9,14 @@ import toast from "react-hot-toast";
 import { USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
 import { removeToken } from "@/common/lib/TokenUtils";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
+import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 
 export default class MessageBroker {
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
   private chatSessions: ChatSession[] | null = null;
+  private contactGroup: ContactGroup | null = null;
+
 
   constructor(tokenParam: string) {
     const sparrowWebSocket = new SparrowWebSocket(
@@ -113,5 +116,26 @@ export default class MessageBroker {
       this.chatSessions = localSession;
     });
     return localSession;
+  }
+
+  public async getContactGroup() {
+    let localGroup = this.contactGroup;
+    if (localGroup) {
+      return localGroup;
+    }
+    await ChatApi.getContacts().then((group) => {
+      console.log(group);
+      localGroup = group;
+      this.contactGroup = localGroup;
+    });
+    return localGroup;
+  }
+
+  public getGroupDetail(groupId: string) {
+    return this.contactGroup?.quns.find((qun) => qun.qunId === groupId);
+  }
+
+  public getContactDetail(userId: number) {
+    return this.contactGroup?.contacts.find((contact) => contact.userId === userId);
   }
 }

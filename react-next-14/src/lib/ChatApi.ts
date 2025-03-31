@@ -2,6 +2,7 @@ import Fetcher from "@/common/lib/Fetcher";
 import { TOKEN_KEY } from "@/common/lib/Env";
 import ChatSession from "@/lib/protocol/ChatSession";
 import Message from "@/lib/protocol/Message";
+import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 
 export default class ChatApi {
   static async getVisitorToken() {
@@ -46,4 +47,16 @@ export default class ChatApi {
     );
     return sessions;
   }
+
+    static async getContacts() {
+        let contactGroup: ContactGroup=new ContactGroup();
+        await Fetcher.get("/contact/contacts.json").then(
+            async (response: Result) => {
+                if(response.data) {
+                    contactGroup = response.data;
+                }
+            }
+        );
+        return contactGroup;
+    }
 }
