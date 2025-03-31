@@ -1,6 +1,5 @@
 import ChatLayout from "@/components/ChatLayout";
 import { Toaster } from "react-hot-toast";
-import Login from "@/components/Login";
 
 export default function Layout({
   children,
@@ -16,7 +15,6 @@ export default function Layout({
         }
       >
         <h1>Welcome to Sparrow Chat!</h1>
-        <Login />
       </div>
       <div className="flex flex-row flex-1 w-full">
         <ChatLayout>{children}</ChatLayout>

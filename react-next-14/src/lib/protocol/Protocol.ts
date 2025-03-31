@@ -1,6 +1,6 @@
 import ChatUser from "@/lib/protocol/ChatUser";
 import ChatSession from "@/lib/protocol/ChatSession";
-import ArrayBufferUtils from "@/lib/protocol/ArrayBufferUtils";
+import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
 import Chat, { ChatType, MessageType } from "@/lib/protocol/Chat";
 
 class Protocol {

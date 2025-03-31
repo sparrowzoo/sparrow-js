@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import Image from "next/image";
-import { NEXT_ASSET_PREFIX } from "@/lib/EnvUtils";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 
 // https://nextjs.org/docs/messages/no-img-element
 export interface ImageProps {

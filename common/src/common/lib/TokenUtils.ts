@@ -3,8 +3,7 @@ import {
   TOKEN_KEY,
   TOKEN_STORAGE,
   USER_INFO_KEY,
-} from "@/lib/EnvUtils";
-import ChatApi from "@/lib/ChatApi";
+} from "@/common/lib/Env";
 
 export function removeToken() {
   sessionStorage.removeItem(TOKEN_KEY);
@@ -12,11 +11,7 @@ export function removeToken() {
   sessionStorage.removeItem(USER_INFO_KEY);
 }
 
-async function getToken(generateVisitorToken?: boolean) {
-  if (generateVisitorToken === undefined || generateVisitorToken === null) {
-    generateVisitorToken = false;
-  }
-
+async function getToken(generateVisitorToken?: () => Promise<string>) {
   let token = sessionStorage.getItem(TOKEN_KEY);
   if (token) {
     return token;
@@ -28,7 +23,7 @@ async function getToken(generateVisitorToken?: boolean) {
   if (!generateVisitorToken) {
     return "";
   }
-  token = await ChatApi.getVisitorToken();
+  token = await generateVisitorToken();
   return token;
 }
 
