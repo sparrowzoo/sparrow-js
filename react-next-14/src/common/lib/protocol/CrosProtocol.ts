@@ -1,6 +1,15 @@
 // 定义消息协议
-export type StorageType = "local" | "session";
-export type CommandType = "get" | "set" | "remove";
+
+export enum CommandType {
+  GET = "get",
+  SET = "set",
+  REMOVE = "remove"
+}
+export enum StorageType{
+  LOCAL = "local",
+  SESSION = "session",
+  AUTOMATIC = "automatic"
+}
 
 export interface StorageRequest {
   storage: StorageType;

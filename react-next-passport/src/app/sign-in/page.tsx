@@ -15,11 +15,19 @@ import CAPTCHA_URL from "@/utils/constant";
 import { ErrorMessage } from "@hookform/error-message";
 import { Checkbox } from "@/components/ui/checkbox";
 import useCaptcha from "@/hook/Captcha";
-import { setToken } from "@/common/lib/TokenUtils";
+import CrosStorage from "@/common/lib/CrosStorage";
+import {useEffect} from "react";
 
 export default function Page() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
+  let crosStorage: CrosStorage | null = null;
+  useEffect(() => {
+    crosStorage = new CrosStorage();
+    return () => {
+      crosStorage?.destroy();
+    };
+  }, []);
   const {
     register,
     setValue,
@@ -46,8 +54,7 @@ export default function Page() {
     setIsLoading(true);
     signIn(data)
       .then((result: Result) => {
-        debugger;
-        setToken(result.data.token);
+        crosStorage?.setToken(result.data.token);
         setIsLoading(false);
         toast.success("恭喜！登录成功，欢迎回来！志哥欢迎您！！！");
         setTimeout(() => {

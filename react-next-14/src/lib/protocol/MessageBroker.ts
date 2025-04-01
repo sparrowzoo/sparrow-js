@@ -7,21 +7,23 @@ import Chat from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
 import { USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
-import { removeToken } from "@/common/lib/TokenUtils";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
+import CrosStorage from "@/common/lib/CrosStorage";
 
 export default class MessageBroker {
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
+  private crosStorage:CrosStorage;
   private chatSessions: ChatSession[] | null = null;
   private contactGroup: ContactGroup | null = null;
 
 
-  constructor(tokenParam: string) {
+  constructor(crosStorage:CrosStorage) {
+    this.crosStorage = crosStorage;
     const sparrowWebSocket = new SparrowWebSocket(
       WEBSOCKET as string,
-      tokenParam as string
+      crosStorage
     );
     sparrowWebSocket.connect();
     this._webSocket = sparrowWebSocket;
@@ -36,7 +38,7 @@ export default class MessageBroker {
       if (data.code == "0") {
         sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
       } else {
-        removeToken();
+        this.crosStorage.removeToken()
         toast.error(data.message);
       }
     };
@@ -92,7 +94,7 @@ export default class MessageBroker {
     if (messageList != null) {
       return messageList;
     }
-    messageList = await ChatApi.getMessages(sessionKey);
+    messageList = await ChatApi.getMessages(sessionKey,this.crosStorage);
     this.messageMap.set(sessionKey, messageList);
     return messageList;
   }
@@ -110,7 +112,7 @@ export default class MessageBroker {
     if (localSession) {
       return localSession;
     }
-    await ChatApi.getSessions().then((sessions) => {
+    await ChatApi.getSessions(this.crosStorage).then((sessions) => {
       console.log(sessions.length);
       localSession = sessions;
       this.chatSessions = localSession;
