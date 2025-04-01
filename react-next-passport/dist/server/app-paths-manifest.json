@@ -1,4 +1,4 @@
 {
-  "/sign-up/page": "app/sign-up/page.js",
-  "/sign-in/page": "app/sign-in/page.js"
+  "/cros-storage/page": "app/cros-storage/page.js",
+  "/cros-storage-demo/page": "app/cros-storage-demo/page.js"
 }
