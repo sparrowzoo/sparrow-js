@@ -1,17 +1,24 @@
-import {
-  StorageRequest,
-  StorageResponse,
-  StorageType,
-} from "@/common/lib/protocol/CrosProtocol";
-import { NEXT_PUBLIC_STORAGE_PROXY, TOKEN_KEY } from "@/common/lib/Env";
+import {CommandType, StorageRequest, StorageResponse, StorageType,} from "@/common/lib/protocol/CrosProtocol";
+import {NEXT_PUBLIC_STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE} from "@/common/lib/Env";
 
 export default class CrosStorage {
   private iframe: HTMLIFrameElement;
   private iframeOrigin: string | undefined;
   private cros: boolean = false;
 
-  constructor() {
-    if (NEXT_PUBLIC_STORAGE_PROXY) {
+  public static getCurrentStorage() {
+    return new CrosStorage(false);
+  }
+
+  public static getCrosStorage() {
+    return new CrosStorage(true);
+  }
+
+  private constructor(cros: Boolean|null =null) {
+    if (!cros) {
+      cros=NEXT_PUBLIC_STORAGE_PROXY?true:false;
+    }
+    if (cros) {
       this.cros = true;
       const iframe = document.createElement("iframe");
       iframe.src = NEXT_PUBLIC_STORAGE_PROXY as string;
@@ -19,7 +26,6 @@ export default class CrosStorage {
       this.iframe = iframe;
       document.body.appendChild(iframe);
       this.iframeOrigin = NEXT_PUBLIC_STORAGE_PROXY;
-      return;
     }
   }
 
@@ -32,7 +38,7 @@ export default class CrosStorage {
 
     return this.request({
       requestId: crypto.randomUUID(),
-      command: "set",
+      command: CommandType.SET,
       storage: storage,
       key,
       value,
@@ -46,7 +52,7 @@ export default class CrosStorage {
     }
     return this.request({
       requestId: crypto.randomUUID(),
-      command: "get",
+      command: CommandType.GET,
       storage: storage,
       key,
     });
@@ -61,7 +67,7 @@ export default class CrosStorage {
     }
     return this.request({
       requestId: crypto.randomUUID(),
-      command: "remove",
+      command: CommandType.REMOVE,
       storage: storage,
       key,
     });
@@ -71,13 +77,29 @@ export default class CrosStorage {
     document.body.removeChild(this.iframe);
   }
 
-  public getToken(storage: StorageType) {
-    return this.get(storage, TOKEN_KEY);
+  public async getToken(storage: StorageType=StorageType.AUTOMATIC, generateVisitorToken:any|null=null) {
+    if(storage === StorageType.AUTOMATIC){
+      storage=(TOKEN_STORAGE === "SESSION" ? StorageType.SESSION:StorageType.LOCAL)
+    }
+    const token = await this.get(storage, TOKEN_KEY);
+    if (token) {
+      return token;
+    }
+    if (generateVisitorToken) {
+      const visitorToken = await generateVisitorToken();
+      await this.setToken(visitorToken);
+      return visitorToken;
+    }
+    return null;
   }
 
-  public setToken(storage: StorageType, token: string) {
+  public setToken(token: string,storage: StorageType=StorageType.AUTOMATIC) {
+    if(storage === StorageType.AUTOMATIC){
+      storage=(TOKEN_STORAGE === "SESSION" ? StorageType.SESSION:StorageType.LOCAL)
+    }
     return this.set(storage, TOKEN_KEY, token);
   }
+
 
   public removeToken(storage: StorageType) {
     return this.remove(storage, TOKEN_KEY);
@@ -89,9 +111,9 @@ export default class CrosStorage {
       // 监听响应
       const handleMessage = (event: MessageEvent<StorageResponse>) => {
         if (
-          !this.iframeOrigin ||
-          this?.iframeOrigin?.indexOf(event.origin) < 0 ||
-          event.data.requestId !== req.requestId
+            !this.iframeOrigin ||
+            this?.iframeOrigin?.indexOf(event.origin) < 0 ||
+            event.data.requestId !== req.requestId
         )
           return;
 

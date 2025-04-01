@@ -1,4 +1,4 @@
 {
-  "/cros-storage/page": "app/cros-storage/page.js",
-  "/cros-storage-demo/page": "app/cros-storage-demo/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/cros-storage/page": "app/cros-storage/page.js"
 }

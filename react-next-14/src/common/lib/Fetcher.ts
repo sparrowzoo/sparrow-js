@@ -1,15 +1,15 @@
-import { getToken } from "@/common/lib/TokenUtils";
 import { API_BASIC_URL } from "@/common/lib/Env";
 import toast from "react-hot-toast";
+import CrosStorage from "@/common/lib/CrosStorage";
 
 //https://nextjs.org/docs/app/getting-started/fetching-data
 // https://developer.mozilla.org/zh-CN/docs/Web/API/Window/fetch
 export default class Fetcher {
-  static async get(url: string, withToken = true, withCookie = false) {
+  static async get(url: string, crosStorage:CrosStorage|null=null, withCookie = false) {
     url = API_BASIC_URL + url;
     let token: string | null = null;
-    if (withToken) {
-      token = await getToken().then((token) => token);
+    if (crosStorage) {
+      token =await crosStorage?.getToken().then((token) => token);
     }
     const options: RequestInit = {
       method: "GET",
@@ -24,32 +24,32 @@ export default class Fetcher {
     }
     return new Promise((resolve, reject) => {
       fetch(url, options)
-        .then(async (response) => {
-          const result = (await response.json()) as any;
-          if (result.code != "0") {
-            toast.error(result?.message);
-            reject(result);
-          } else {
-            resolve(result);
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-          reject(error);
-        });
+          .then(async (response) => {
+            const result = (await response.json()) as any;
+            if (result.code != "0") {
+              toast.error(result?.message);
+              reject(result);
+            } else {
+              resolve(result);
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+            reject(error);
+          });
     });
   }
 
   static async post(
-    url: string,
-    body: any,
-    withToken = true,
-    withCookie = false
+      url: string,
+      body: any,
+      crosStorage:CrosStorage|null=null,
+      withCookie = false
   ) {
     url = API_BASIC_URL + url;
     let token: string | null = null;
-    if (withToken) {
-      token = await getToken().then((token) => token);
+    if (crosStorage) {
+      token = await crosStorage.getToken().then((token) => token);
     }
 
     const options: RequestInit = {
@@ -65,19 +65,19 @@ export default class Fetcher {
     }
     return new Promise((resolve, reject) => {
       fetch(url, options)
-        .then(async (response) => {
-          const result = (await response.json()) as any;
-          if (result.code != "0") {
-            toast.error(result?.message);
-            reject(result);
-          } else {
-            resolve(result);
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-          reject(error);
-        });
+          .then(async (response) => {
+            const result = (await response.json()) as any;
+            if (result.code != "0") {
+              toast.error(result?.message);
+              reject(result);
+            } else {
+              resolve(result);
+            }
+          })
+          .catch((error) => {
+            toast.error(error.message);
+            reject(error);
+          });
     });
   }
 }

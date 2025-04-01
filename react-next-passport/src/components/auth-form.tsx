@@ -15,13 +15,22 @@ import signUp from "@/api/signup";
 import toast, { Toaster } from "react-hot-toast";
 import CAPTCHA_URL from "@/utils/constant";
 import useCaptcha from "@/hook/Captcha";
-import { setToken } from "@/common/lib/TokenUtils";
+import CrosStorage from "@/common/lib/CrosStorage";
+import {useEffect} from "react";
+
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function AuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
+  let crosStorage: CrosStorage | null = null;
+  useEffect(() => {
+    crosStorage = new CrosStorage();
+    return () => {
+      crosStorage?.destroy();
+    };
+  }, []);
   const {
     register,
     handleSubmit,
@@ -42,7 +51,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
     setIsLoading(true);
     signUp(data)
       .then((result: Result) => {
-        setToken(result.data.token);
+        crosStorage?.setToken(result.data.token);
         setIsLoading(false);
         toast.success("恭喜！注册成功，欢迎来到sparrow zoo ,志哥欢迎您！！！");
         setTimeout(() => {
