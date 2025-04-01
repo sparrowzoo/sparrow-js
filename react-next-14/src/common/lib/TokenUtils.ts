@@ -12,6 +12,7 @@ export function removeToken() {
 }
 
 async function getToken(generateVisitorToken?: () => Promise<string>) {
+  document.domain;
   let token = sessionStorage.getItem(TOKEN_KEY);
   if (token) {
     return token;
