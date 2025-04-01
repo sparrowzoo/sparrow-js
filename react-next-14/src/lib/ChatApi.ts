@@ -3,11 +3,12 @@ import { TOKEN_KEY } from "@/common/lib/Env";
 import ChatSession from "@/lib/protocol/ChatSession";
 import Message from "@/lib/protocol/Message";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
+import CrosStorage from "@/common/lib/CrosStorage";
 
 export default class ChatApi {
   static async getVisitorToken() {
     let token;
-    await Fetcher.get("/chat/v2/get-visitor-token.json", false).then(
+    await Fetcher.get("/chat/v2/get-visitor-token.json").then(
       async (response: Result) => {
         token = response.data;
         sessionStorage.setItem(TOKEN_KEY, response.data);
@@ -16,10 +17,10 @@ export default class ChatApi {
     return token;
   }
 
-  static async getMessages(sessionKey: string) {
+  static async getMessages(sessionKey: string,crosStorage:CrosStorage) {
     let messages: Message[] = [];
     console.log("sessionKey getMessages", sessionKey);
-    await Fetcher.post("/chat/v2/messages.json", sessionKey).then(
+    await Fetcher.post("/chat/v2/messages.json", sessionKey,crosStorage).then(
       async (response: Result) => {
         let messageList: Message[] = response.data;
         if (messageList == null) {
@@ -33,9 +34,9 @@ export default class ChatApi {
     return messages;
   }
 
-  static async getSessions() {
+  static async getSessions(crosStorage:CrosStorage) {
     let sessions: ChatSession[] = [];
-    await Fetcher.get("/chat/v2/sessions.json").then(
+    await Fetcher.get("/chat/v2/sessions.json",crosStorage).then(
       async (response: Result) => {
         const chatSessions: ChatSession[] = response.data;
         for (let session of chatSessions) {
@@ -48,9 +49,9 @@ export default class ChatApi {
     return sessions;
   }
 
-    static async getContacts() {
+    static async getContacts(crosStorage:CrosStorage) {
         let contactGroup: ContactGroup=new ContactGroup();
-        await Fetcher.get("/contact/contacts.json").then(
+        await Fetcher.get("/contact/contacts.json",crosStorage).then(
             async (response: Result) => {
                 if(response.data) {
                     contactGroup = response.data;
