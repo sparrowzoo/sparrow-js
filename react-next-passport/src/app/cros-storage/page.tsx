@@ -1,17 +1,25 @@
 "use client";
-import {useEffect} from "react";
-import {CommandType, StorageRequest, StorageResponse, StorageType,} from "@/common/lib/protocol/CrosProtocol";
-import {allowOrigin} from "@/common/lib/Env";
+import { useEffect } from "react";
+import {
+  CommandType,
+  StorageRequest,
+  StorageResponse,
+  StorageType,
+} from "@/common/lib/protocol/CrosProtocol";
+import { allowOrigin } from "@/common/lib/Env";
 
 export default function Page() {
   useEffect(() => {
+    console.info("init cros iframe storage");
     window.addEventListener(
       "message",
       (event: MessageEvent<StorageRequest>) => {
         // 严格验证来源
         if (!allowOrigin(event.origin)) return;
         const storage =
-          event.data.storage ===StorageType.LOCAL ? localStorage : sessionStorage;
+          event.data.storage === StorageType.LOCAL
+            ? localStorage
+            : sessionStorage;
 
         console.log("Received message", JSON.stringify(event.data));
         try {
@@ -44,13 +52,15 @@ export default function Page() {
             value: null,
             error: err instanceof Error ? err.message : "Unknown error",
           };
-          event.source?.postMessage(errorResponse, { targetOrigin: event.origin });
+          event.source?.postMessage(errorResponse, {
+            targetOrigin: event.origin,
+          });
         }
       }
     );
     return () => {
       window.removeEventListener("message", () => {});
-      };
-  },[]);
+    };
+  }, []);
   return <></>;
 }

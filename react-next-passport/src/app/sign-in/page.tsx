@@ -14,20 +14,13 @@ import { Icons } from "@/components/ui/icons";
 import CAPTCHA_URL from "@/utils/constant";
 import { ErrorMessage } from "@hookform/error-message";
 import { Checkbox } from "@/components/ui/checkbox";
-import useCaptcha from "@/hook/Captcha";
-import CrosStorage from "@/common/lib/CrosStorage";
-import {useEffect} from "react";
+import useCaptcha from "@/common/hook/CaptchaHook";
+import useCrosStorage from "@/common/hook/CrosStorageHook";
 
 export default function Page() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
-  let crosStorage: CrosStorage | null = null;
-  useEffect(() => {
-    crosStorage = new CrosStorage();
-    return () => {
-      crosStorage?.destroy();
-    };
-  }, []);
+  let crosStorage = useCrosStorage();
   const {
     register,
     setValue,

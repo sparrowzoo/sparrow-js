@@ -167,10 +167,10 @@ export default class CrosStorage {
               this.iframeOrigin as string
             );
           } catch (e) {
-            setTimeout(send, 1000);
+            setTimeout(send, 1);
           }
         } else {
-          setTimeout(send, 1000);
+          setTimeout(send, 1);
         }
       };
       send();

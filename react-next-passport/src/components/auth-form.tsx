@@ -14,23 +14,15 @@ import { ErrorMessage } from "@hookform/error-message";
 import signUp from "@/api/signup";
 import toast, { Toaster } from "react-hot-toast";
 import CAPTCHA_URL from "@/utils/constant";
-import useCaptcha from "@/hook/Captcha";
-import CrosStorage from "@/common/lib/CrosStorage";
-import {useEffect} from "react";
-
+import useCaptcha from "@/common/hook/CaptchaHook";
+import useCrosStorage from "@/common/hook/CrosStorageHook";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function AuthForm({ className, ...props }: UserAuthFormProps) {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
-  let crosStorage: CrosStorage | null = null;
-  useEffect(() => {
-    crosStorage = new CrosStorage();
-    return () => {
-      crosStorage?.destroy();
-    };
-  }, []);
+  let crosStorage = useCrosStorage();
   const {
     register,
     handleSubmit,
