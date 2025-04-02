@@ -3,9 +3,9 @@ import * as React from "react";
 import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "@/lib/WebSocketProvider";
 import Link from "next/link";
-import GroupItem from "@/components/GroupItem";
-import ContactItem from "@/components/ContactItem";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
+import Contacts from "@/components/Contacts";
+import Groups from "@/components/Groups";
 
 export default function ChatLayout({
   children,
@@ -26,20 +26,11 @@ export default function ChatLayout({
         <div className={"bg-cyan-500 text-white p-2 rounded-xl cursor-pointer"}>
           <Link href="/chat">联系人</Link>
         </div>
-        <div className={"flex flex-col gap-2"}>
-          {contactGroup?.contacts?.map((contact) => (
-            <ContactItem contact={contact} key={contact.userId + ""} />
-          ))}
-        </div>
-
+        <Contacts contacts={contactGroup?.contacts} />
         <div className={"bg-cyan-500 text-white p-2 rounded-xl cursor-pointer"}>
           <Link href="/chat/friends/group">群聊</Link>
         </div>
-        <div className={"flex flex-col gap-2"}>
-          {contactGroup?.quns?.map((qun) => (
-            <GroupItem qun={qun} key={qun.qunId + ""} />
-          ))}
-        </div>
+        <Groups quns={contactGroup?.quns} />
       </div>
       <div className={"flex-1 border-2 border-gray-300"}>{children}</div>
     </div>

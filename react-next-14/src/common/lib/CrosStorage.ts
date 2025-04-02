@@ -1,10 +1,37 @@
-import {CommandType, StorageRequest, StorageResponse, StorageType,} from "@/common/lib/protocol/CrosProtocol";
-import {NEXT_PUBLIC_STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE} from "@/common/lib/Env";
+import {
+  CommandType,
+  StorageRequest,
+  StorageResponse,
+  StorageType,
+} from "@/common/lib/protocol/CrosProtocol";
+import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
 
 export default class CrosStorage {
   private iframe: HTMLIFrameElement;
   private iframeOrigin: string | undefined;
   private cros: boolean = false;
+  private loaded: boolean = false;
+
+  private constructor(cros: Boolean | null = null) {
+    if (cros === false) {
+      return;
+    }
+    this.cros = STORAGE_PROXY ? true : false;
+    if (this.cros == false) {
+      return;
+    }
+    const iframe = document.createElement("iframe");
+    iframe.src = STORAGE_PROXY as string;
+    iframe.style.display = "none";
+    this.iframe = iframe;
+    console.log("append iframe " + STORAGE_PROXY);
+    iframe.addEventListener("load", () => {
+      console.log("iframe loaded");
+      this.loaded = true;
+    });
+    document.body.appendChild(iframe);
+    this.iframeOrigin = STORAGE_PROXY;
+  }
 
   public static getCurrentStorage() {
     return new CrosStorage(false);
@@ -14,24 +41,15 @@ export default class CrosStorage {
     return new CrosStorage();
   }
 
-  private constructor(cros: Boolean|null =null) {
-    if (!cros) {
-      cros=NEXT_PUBLIC_STORAGE_PROXY?true:false;
-    }
-    if (cros) {
-      this.cros = true;
-      const iframe = document.createElement("iframe");
-      iframe.src = NEXT_PUBLIC_STORAGE_PROXY as string;
-      iframe.style.display = "none";
-      this.iframe = iframe;
-      document.body.appendChild(iframe);
-      this.iframeOrigin = NEXT_PUBLIC_STORAGE_PROXY;
-    }
-  }
-
-  public set(storage: StorageType, key: string, value: string) {
+  public set(
+    value: string,
+    key: string = TOKEN_KEY,
+    storage: StorageType = StorageType.AUTOMATIC
+  ) {
+    storage = this.getStorageType(storage);
     if (!this.cros) {
-      const store = storage === "local" ? localStorage : sessionStorage;
+      const store =
+        storage === StorageType.LOCAL ? localStorage : sessionStorage;
       store.setItem(key, value);
       return Promise.resolve(value);
     }
@@ -45,7 +63,11 @@ export default class CrosStorage {
     });
   }
 
-  public get(storage: StorageType, key: string) {
+  public get(
+    key: string = TOKEN_KEY,
+    storage: StorageType = StorageType.AUTOMATIC
+  ) {
+    storage = this.getStorageType(storage);
     if (!this.cros) {
       const store = storage === "local" ? localStorage : sessionStorage;
       return Promise.resolve(store.getItem(key));
@@ -58,9 +80,14 @@ export default class CrosStorage {
     });
   }
 
-  public remove(storage: StorageType, key: string) {
+  public remove(
+    key: string = TOKEN_KEY,
+    storage: StorageType = StorageType.AUTOMATIC
+  ) {
+    storage = this.getStorageType(storage);
     if (!this.cros) {
-      const store = storage === "local" ? localStorage : sessionStorage;
+      const store =
+        storage === StorageType.LOCAL ? localStorage : sessionStorage;
       const value = store.getItem(key);
       store.removeItem(key);
       return Promise.resolve(value);
@@ -77,11 +104,11 @@ export default class CrosStorage {
     document.body.removeChild(this.iframe);
   }
 
-  public async getToken(storage: StorageType=StorageType.AUTOMATIC, generateVisitorToken:any|null=null) {
-    if(storage === StorageType.AUTOMATIC){
-      storage=(TOKEN_STORAGE === "SESSION" ? StorageType.SESSION:StorageType.LOCAL)
-    }
-    const token = await this.get(storage, TOKEN_KEY);
+  public async getToken(
+    storage: StorageType = StorageType.AUTOMATIC,
+    generateVisitorToken: any | null = null
+  ) {
+    const token = await this.get(TOKEN_KEY, storage);
     if (token) {
       return token;
     }
@@ -93,16 +120,20 @@ export default class CrosStorage {
     return null;
   }
 
-  public setToken(token: string,storage: StorageType=StorageType.AUTOMATIC) {
-    if(storage === StorageType.AUTOMATIC){
-      storage=(TOKEN_STORAGE === "SESSION" ? StorageType.SESSION:StorageType.LOCAL)
-    }
-    return this.set(storage, TOKEN_KEY, token);
+  public setToken(token: string, storage: StorageType = StorageType.AUTOMATIC) {
+    return this.set(token, TOKEN_KEY, storage);
   }
 
+  public removeToken(storage: StorageType = StorageType.AUTOMATIC) {
+    return this.remove(TOKEN_KEY, storage);
+  }
 
-  public removeToken(storage: StorageType) {
-    return this.remove(storage, TOKEN_KEY);
+  private getStorageType(storageType: StorageType) {
+    if (storageType === StorageType.AUTOMATIC) {
+      storageType =
+        TOKEN_STORAGE === "SESSION" ? StorageType.SESSION : StorageType.LOCAL;
+    }
+    return storageType;
   }
 
   // 发送请求
@@ -111,9 +142,9 @@ export default class CrosStorage {
       // 监听响应
       const handleMessage = (event: MessageEvent<StorageResponse>) => {
         if (
-            !this.iframeOrigin ||
-            this?.iframeOrigin?.indexOf(event.origin) < 0 ||
-            event.data.requestId !== req.requestId
+          !this.iframeOrigin ||
+          this?.iframeOrigin?.indexOf(event.origin) < 0 ||
+          event.data.requestId !== req.requestId
         )
           return;
 
@@ -126,12 +157,29 @@ export default class CrosStorage {
         }
       };
       window.addEventListener("message", handleMessage);
-      this.iframe.contentWindow?.postMessage(req, this.iframeOrigin as string);
+
+      const send = () => {
+        console.log("send request", this.loaded);
+        if (this.loaded) {
+          try {
+            this.iframe.contentWindow?.postMessage(
+              req,
+              this.iframeOrigin as string
+            );
+          } catch (e) {
+            setTimeout(send, 1000);
+          }
+        } else {
+          setTimeout(send, 1000);
+        }
+      };
+      send();
+
       // 超时处理
-      setTimeout(() => {
-        window.removeEventListener("message", handleMessage);
-        reject(new Error("Request timeout"));
-      }, 5000);
+      // setTimeout(() => {
+      //   window.removeEventListener("message", handleMessage);
+      //   reject(new Error("Request timeout"));
+      // }, 5000);
     });
   }
 }

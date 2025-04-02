@@ -3,7 +3,7 @@ import Message from "@/lib/protocol/Message";
 import Protocol from "@/lib/protocol/Protocol";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
 import ChatSession from "@/lib/protocol/ChatSession";
-import Chat from "@/lib/protocol/Chat";
+import { ChatType, MessageType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
 import { USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
@@ -14,12 +14,11 @@ import CrosStorage from "@/common/lib/CrosStorage";
 export default class MessageBroker {
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
-  private crosStorage:CrosStorage;
+  private crosStorage: CrosStorage;
   private chatSessions: ChatSession[] | null = null;
   private contactGroup: ContactGroup | null = null;
 
-
-  constructor(crosStorage:CrosStorage) {
+  constructor(crosStorage: CrosStorage) {
     this.crosStorage = crosStorage;
     const sparrowWebSocket = new SparrowWebSocket(
       WEBSOCKET as string,
@@ -38,7 +37,7 @@ export default class MessageBroker {
       if (data.code == "0") {
         sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
       } else {
-        this.crosStorage.removeToken()
+        this.crosStorage.removeToken();
         toast.error(data.message);
       }
     };
@@ -75,10 +74,10 @@ export default class MessageBroker {
   public sendMessage(sessionKey: string, content: string): void {
     const chatSession = ChatSession.parse(sessionKey);
     let protocol;
-    if (chatSession?.chatType == Chat.CHAT_TYPE_1_TO_1) {
+    if (chatSession?.chatType == ChatType.CHAT_1_TO_1) {
       const oppositeUser = chatSession.getOppositeUser();
       protocol = Protocol.create121Chat(
-        Chat.TEXT_MESSAGE,
+        MessageType.TEXT_MESSAGE,
         oppositeUser as ChatUser,
         content,
         new Date().getTime()
@@ -94,7 +93,7 @@ export default class MessageBroker {
     if (messageList != null) {
       return messageList;
     }
-    messageList = await ChatApi.getMessages(sessionKey,this.crosStorage);
+    messageList = await ChatApi.getMessages(sessionKey, this.crosStorage);
     this.messageMap.set(sessionKey, messageList);
     return messageList;
   }
@@ -125,7 +124,7 @@ export default class MessageBroker {
     if (localGroup) {
       return localGroup;
     }
-    await ChatApi.getContacts().then((group) => {
+    await ChatApi.getContacts(this.crosStorage).then((group) => {
       console.log(group);
       localGroup = group;
       this.contactGroup = localGroup;
@@ -138,6 +137,8 @@ export default class MessageBroker {
   }
 
   public getContactDetail(userId: number) {
-    return this.contactGroup?.contacts.find((contact) => contact.userId === userId);
+    return this.contactGroup?.contacts.find(
+      (contact) => contact.userId === userId
+    );
   }
 }
