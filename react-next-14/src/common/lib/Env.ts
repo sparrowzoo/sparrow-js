@@ -10,6 +10,8 @@ const NEXT_ASSET_PREFIX = process.env.NEXT_PUBLIC_ASSET_PREFIX;
 const STORAGE_PROXY = process.env.NEXT_PUBLIC_STORAGE_PROXY;
 const CAPTCHA_URL = process.env.NEXT_PUBLIC_CAPTCHA_URL;
 
+const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL;
+
 function allowOrigin(origin: string) {
   const NEXT_PUBLIC_ALLOW_ORIGINS = process.env.NEXT_PUBLIC_ALLOW_ORIGINS;
   if (NEXT_PUBLIC_ALLOW_ORIGINS) {
@@ -30,4 +32,5 @@ export {
   NEXT_ASSET_PREFIX,
   WEBSOCKET,
   CAPTCHA_URL,
+  LOGIN_URL,
 };
