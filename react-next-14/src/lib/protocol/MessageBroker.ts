@@ -6,7 +6,7 @@ import ChatSession from "@/lib/protocol/ChatSession";
 import { ChatType, MessageType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
-import { USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
+import { LOGIN_URL, USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import CrosStorage from "@/common/lib/CrosStorage";
@@ -39,6 +39,9 @@ export default class MessageBroker {
       } else {
         this.crosStorage.removeToken();
         toast.error(data.message);
+        setTimeout(() => {
+          window.location.href = `${LOGIN_URL}?${window.location.href}`;
+        }, 2000);
       }
     };
     this._webSocket.monitorStatus = () => {
@@ -120,6 +123,7 @@ export default class MessageBroker {
   }
 
   public async getContactGroup() {
+    debugger;
     let localGroup = this.contactGroup;
     if (localGroup) {
       return localGroup;

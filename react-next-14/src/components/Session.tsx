@@ -10,6 +10,7 @@ import React, {
 import ChatItem from "@/components/ChatItem";
 import { WebSocketContext } from "@/lib/WebSocketProvider";
 import Message from "@/lib/protocol/Message";
+import LoadingSpinner from "@/common/components/LoadingSpinner";
 
 export default function Session() {
   const searchParams = useSearchParams();
@@ -62,10 +63,9 @@ export default function Session() {
     setMessage("");
   }
 
-
   if (!messageList) {
     console.log("messageList is undefined");
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
   return (
     <div className={"flex flex-col w-full h-full"}>

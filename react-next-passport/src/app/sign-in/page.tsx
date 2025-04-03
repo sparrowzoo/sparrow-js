@@ -16,11 +16,13 @@ import { ErrorMessage } from "@hookform/error-message";
 import { Checkbox } from "@/components/ui/checkbox";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
+import { getQueryString, loginDirect } from "@/common/lib/Navigating";
 
 export default function Page() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
   let crosStorage = useCrosStorage();
+  const directUrl = getQueryString();
   const {
     register,
     setValue,
@@ -51,7 +53,7 @@ export default function Page() {
         setIsLoading(false);
         toast.success("恭喜！登录成功，欢迎回来！志哥欢迎您！！！");
         setTimeout(() => {
-          window.location.href = "/";
+          loginDirect(directUrl as string);
         }, 2000);
       })
       .catch((error: any) => {
