@@ -12,6 +12,16 @@ export default class CrosStorage {
   private cros: boolean = false;
   private loaded: boolean = false;
 
+  private randomUUID() {
+    const hex = '0123456789abcdef';
+    let uuid = '';
+    for (let i = 0; i < 36; i++) {
+      if ([8, 13, 18, 23].includes(i)) uuid += '-';
+      else uuid += hex[Math.floor(Math.random() * 16)];
+    }
+    return uuid;
+  }
+
   private constructor(cros: Boolean | null = null) {
     if (cros === false) {
       return;
@@ -59,7 +69,7 @@ export default class CrosStorage {
     }
 
     return this.request({
-      requestId: crypto.randomUUID(),
+      requestId: this.randomUUID(),
       command: CommandType.SET,
       storage: storage,
       key,
@@ -77,7 +87,7 @@ export default class CrosStorage {
       return Promise.resolve(store.getItem(key));
     }
     return this.request({
-      requestId: crypto.randomUUID(),
+      requestId: this.randomUUID(),
       command: CommandType.GET,
       storage: storage,
       key,
@@ -97,7 +107,7 @@ export default class CrosStorage {
       return Promise.resolve(value);
     }
     return this.request({
-      requestId: crypto.randomUUID(),
+      requestId: this.randomUUID(),
       command: CommandType.REMOVE,
       storage: storage,
       key,

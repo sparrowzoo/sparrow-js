@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import * as React from "react";
 import { useEffect, useState } from "react";
 import {
   WebSocketContext,
@@ -8,6 +9,7 @@ import {
 } from "@/lib/WebSocketProvider";
 import MessageBroker from "@/lib/protocol/MessageBroker";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
+import LoadingSpinner from "@/common/components/LoadingSpinner";
 
 export default function ChatLayout({
   children,
@@ -41,7 +43,7 @@ export default function ChatLayout({
   }, [crosStorage]);
 
   if (!webSocketContextValue) {
-    return <div>init context ....</div>;
+    return <LoadingSpinner />;
   }
 
   console.log("状态变化会重新渲染", webSocketContextValue);
