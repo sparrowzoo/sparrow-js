@@ -1,4 +1,4 @@
-import Chat, { ChatType } from "@/lib/protocol/Chat";
+import { ChatType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 
 export default class ChatSession {
@@ -24,7 +24,7 @@ export default class ChatSession {
 
   public static create121Session(sender: ChatUser, receiver: ChatUser) {
     const chatSession = new ChatSession();
-    chatSession.chatType = Chat.CHAT_TYPE_1_TO_1;
+    chatSession.chatType = ChatType.CHAT_1_TO_1;
     chatSession.id = chatSession.generateKey(sender, receiver);
     return chatSession;
   }
@@ -53,17 +53,17 @@ export default class ChatSession {
 
   public static createGroupSession(sessionKey: string): ChatSession {
     const chatSession = new ChatSession();
-    chatSession.chatType = Chat.CHAT_TYPE_GROUP;
+    chatSession.chatType = ChatType.GROUP;
     chatSession.id = sessionKey;
     return chatSession;
   }
 
   public isGroup(): boolean {
-    return this._chatType == Chat.CHAT_TYPE_GROUP;
+    return this._chatType == ChatType.GROUP;
   }
 
   public isOne2One() {
-    return this._chatType == Chat.CHAT_TYPE_1_TO_1;
+    return this._chatType == ChatType.CHAT_1_TO_1;
   }
 
   public getOppositeUser(): ChatUser | null {
@@ -71,7 +71,7 @@ export default class ChatSession {
     if (currentUser == null) {
       return null;
     }
-    if (this._chatType === Chat.CHAT_TYPE_GROUP) {
+    if (this._chatType === ChatType.GROUP) {
       return null;
     }
 

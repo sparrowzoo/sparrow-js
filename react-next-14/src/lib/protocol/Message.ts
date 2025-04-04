@@ -3,13 +3,16 @@ import ChatSession from "@/lib/protocol/ChatSession";
 import { format } from "date-fns";
 import Protocol from "@/lib/protocol/Protocol";
 
-export type AlignType = "left" | "right";
+export enum AlignType {
+  left = "left",
+  right = "right",
+}
 
 export default class Message {
   constructor() {}
 
   get align(): AlignType {
-    return this.isSender() ? "right" : "left";
+    return this.isSender() ? AlignType.right : AlignType.left;
   }
 
   private _messageId: string;

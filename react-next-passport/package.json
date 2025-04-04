@@ -58,6 +58,8 @@
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.52.2",
     "react-hot-toast": "^2.4.1",
+    "react-useanimations": "^2.10.0",
+    "swr": "^2.3.3",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "valibot": "^0.33.3",
