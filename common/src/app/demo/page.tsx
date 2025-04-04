@@ -10,10 +10,8 @@ import {
 } from "@/common/lib/Env";
 
 import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
-import { useEffect, useState } from "react";
 
 export default function Page() {
-
   return (
     <div>
       <h1>

@@ -1,14 +1,15 @@
 "use client";
 import Link from "next/link";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import * as React from "react";
 import { useEffect, useState } from "react";
 import {
   WebSocketContext,
   WebSocketContextValue,
 } from "@/lib/WebSocketProvider";
 import MessageBroker from "@/lib/protocol/MessageBroker";
-import ChatApi from "@/lib/ChatApi";
-import CrosStorage from "@/common/lib/CrosStorage";
+import useCrosStorage from "@/common/hook/CrosStorageHook";
+import LoadingSpinner from "@/common/components/LoadingSpinner";
 
 export default function ChatLayout({
   children,
@@ -18,17 +19,14 @@ export default function ChatLayout({
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
 
+  let crosStorage = useCrosStorage();
 
   console.log("渲染ChatLayout");
-
   useEffect(() => {
-    let crosStorage: CrosStorage
     async function asyncInit() {
-      let tokenParam: string | undefined;
-       crosStorage =CrosStorage.getCrosStorage();
-      await crosStorage.getToken().then((token) => {
-        tokenParam = token;
-      });
+      if (!crosStorage) {
+        return;
+      }
       const messageContainer = new MessageBroker(crosStorage);
       const localContext = WebSocketContextValue.create(messageContainer);
       messageContainer.newMessageSignal = () => {
@@ -39,10 +37,10 @@ export default function ChatLayout({
 
     asyncInit();
     return () => {
-      crosStorage.destroy();
+      crosStorage?.destroy();
       webSocketContextValue?.closeWebSocket();
     };
-  }, []);
+  }, [crosStorage]);
 
   if (!webSocketContextValue) {
     return <LoadingSpinner />;

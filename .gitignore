@@ -8,3 +8,4 @@ node_modules
 target
 radix-ui-primitives
 /radix-ui-primitives/
+.next

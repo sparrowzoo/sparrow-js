@@ -1,7 +1,7 @@
 import ChatUser from "@/lib/protocol/ChatUser";
 import ChatSession from "@/lib/protocol/ChatSession";
 import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
-import Chat, { ChatType, MessageType } from "@/lib/protocol/Chat";
+import { ChatType, MessageType } from "@/lib/protocol/Chat";
 
 class Protocol {
   constructor() {}
@@ -108,7 +108,7 @@ class Protocol {
     const senderWithOffset = ChatUser.fromBytes(dataView, offset + 3);
     protocol.sender = senderWithOffset.chatUser as ChatUser;
     offset = senderWithOffset.offset;
-    if (chatType === Chat.CHAT_TYPE_1_TO_1) {
+    if (chatType === ChatType.CHAT_1_TO_1) {
       const receiverWithOffset = ChatUser.fromBytes(dataView, offset);
       const receiver = receiverWithOffset.chatUser;
       protocol.receiver = receiver as ChatUser;
@@ -152,7 +152,7 @@ class Protocol {
     const protocol: Protocol = new Protocol();
     const loginUser = ChatUser.getCurrentUser();
     protocol.version = 1;
-    protocol.chatType = Chat.CHAT_TYPE_1_TO_1;
+    protocol.chatType = ChatType.CHAT_1_TO_1;
     protocol.messageType = messageType;
     protocol.sender = loginUser as ChatUser;
     protocol.receiver = receiver;
@@ -166,7 +166,7 @@ class Protocol {
   }
 
   public toBytes(): Uint8Array {
-    if (this.chatType === Chat.CHAT_TYPE_1_TO_1) {
+    if (this.chatType === ChatType.CHAT_1_TO_1) {
       return this.to121Bytes();
     }
     return this.toGroupBytes();
