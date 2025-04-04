@@ -1,3 +1,4 @@
+'use client'
 import {
   CommandType,
   StorageRequest,
@@ -5,6 +6,8 @@ import {
   StorageType,
 } from "@/common/lib/protocol/CrosProtocol";
 import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
+import {Utils} from "@/common/lib/Utils";
+import {getHrefWithoutQueryString} from "@/common/lib/Navigating";
 
 export default class CrosStorage {
   private iframe: HTMLIFrameElement;
@@ -12,15 +15,7 @@ export default class CrosStorage {
   private cros: boolean = false;
   private loaded: boolean = false;
 
-  private randomUUID() {
-    const hex = '0123456789abcdef';
-    let uuid = '';
-    for (let i = 0; i < 36; i++) {
-      if ([8, 13, 18, 23].includes(i)) uuid += '-';
-      else uuid += hex[Math.floor(Math.random() * 16)];
-    }
-    return uuid;
-  }
+
 
   private constructor(cros: Boolean | null = null) {
     if (cros === false) {
@@ -32,17 +27,32 @@ export default class CrosStorage {
     }
     const iframe = document.createElement("iframe");
     iframe.src = STORAGE_PROXY as string;
+    iframe.src=iframe.src+"?"+getHrefWithoutQueryString();
     iframe.style.display = "none";
     this.iframe = iframe;
     console.log("append iframe " + STORAGE_PROXY);
-    iframe.addEventListener("DOMContentLoaded", () => {
-      console.log("iframe DOMContentLoaded");
+
+
+    const handleMessage = (event: MessageEvent<StorageRequest>) => {
+      if (
+          !this.iframeOrigin ||
+          this?.iframeOrigin?.indexOf(event.origin) < 0
+      )
+        return;
       this.loaded = true;
-    });
-    iframe.addEventListener("load", () => {
-      console.log("iframe loaded");
-      this.loaded = true;
-    });
+      window.removeEventListener("message", handleMessage); // 清理监听
+    };
+    window.addEventListener("message", handleMessage);
+
+
+    // iframe.addEventListener("DOMContentLoaded", () => {
+    //   console.log("iframe DOMContentLoaded");
+    //   this.loaded = true;
+    // });
+    // iframe.addEventListener("load", () => {
+    //   console.log("iframe loaded");
+    //   this.loaded = true;
+    // });
     document.body.appendChild(iframe);
     this.iframeOrigin = STORAGE_PROXY;
   }
@@ -69,11 +79,11 @@ export default class CrosStorage {
     }
 
     return this.request({
-      requestId: this.randomUUID(),
+      requestId: Utils.randomUUID(),
       command: CommandType.SET,
       storage: storage,
-      key,
-      value,
+      key: key,
+      value:value,
     });
   }
 
@@ -87,7 +97,7 @@ export default class CrosStorage {
       return Promise.resolve(store.getItem(key));
     }
     return this.request({
-      requestId: this.randomUUID(),
+      requestId: Utils.randomUUID(),
       command: CommandType.GET,
       storage: storage,
       key,
@@ -107,7 +117,7 @@ export default class CrosStorage {
       return Promise.resolve(value);
     }
     return this.request({
-      requestId: this.randomUUID(),
+      requestId: Utils.randomUUID(),
       command: CommandType.REMOVE,
       storage: storage,
       key,
@@ -115,7 +125,9 @@ export default class CrosStorage {
   }
 
   destroy() {
-    document.body.removeChild(this.iframe);
+    if (this.cros) {
+      document.body.removeChild(this.iframe);
+    }
   }
 
   public async getToken(
