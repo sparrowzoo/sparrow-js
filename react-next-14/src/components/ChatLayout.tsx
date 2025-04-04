@@ -45,7 +45,7 @@ export default function ChatLayout({
   }, []);
 
   if (!webSocketContextValue) {
-    return <div>init context ....</div>;
+    return <LoadingSpinner />;
   }
 
   console.log("状态变化会重新渲染", webSocketContextValue);

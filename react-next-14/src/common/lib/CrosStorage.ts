@@ -30,6 +30,7 @@ export default class CrosStorage {
   }
 
   public set(storage: StorageType, key: string, value: string) {
+    storage=this.getStorage(storage);
     if (!this.cros) {
       const store = storage === "local" ? localStorage : sessionStorage;
       store.setItem(key, value);
@@ -46,6 +47,8 @@ export default class CrosStorage {
   }
 
   public get(storage: StorageType, key: string) {
+    storage=this.getStorage(storage);
+
     if (!this.cros) {
       const store = storage === "local" ? localStorage : sessionStorage;
       return Promise.resolve(store.getItem(key));
@@ -58,9 +61,16 @@ export default class CrosStorage {
     });
   }
 
+  private getStorage(storage: StorageType) {
+    if(storage === StorageType.AUTOMATIC){
+      storage=(TOKEN_STORAGE === "SESSION" ? StorageType.SESSION:StorageType.LOCAL)
+    }
+    return storage;
+  }
   public remove(storage: StorageType, key: string) {
+    storage=this.getStorage(storage);
     if (!this.cros) {
-      const store = storage === "local" ? localStorage : sessionStorage;
+      const store = storage === StorageType.LOCAL ? localStorage : sessionStorage;
       const value = store.getItem(key);
       store.removeItem(key);
       return Promise.resolve(value);
@@ -74,7 +84,9 @@ export default class CrosStorage {
   }
 
   destroy() {
-    document.body.removeChild(this.iframe);
+    if (this.cros) {
+      document.body.removeChild(this.iframe);
+    }
   }
 
   public async getToken(storage: StorageType=StorageType.AUTOMATIC, generateVisitorToken:any|null=null) {
