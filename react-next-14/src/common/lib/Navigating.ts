@@ -19,3 +19,15 @@ export function getQueryString() {
   }
   return decodeURIComponent(queryString.substring(1));
 }
+
+export function getHrefWithoutQueryString() {
+  if (typeof window === "undefined") {
+    return null;
+  }
+  const href = window.location.href;
+  const queryStringIndex = href.indexOf("?");
+  if (queryStringIndex === -1) {
+    return href;
+  }
+  return href.substring(0, queryStringIndex);
+}
