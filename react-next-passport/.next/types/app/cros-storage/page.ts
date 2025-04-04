@@ -1,4 +1,4 @@
-// File: /Users/zhanglizhi/workspace/sparrow/sparrow-js/react-next-passport/src/app/cros-storage/page.tsx
+// File: D:\workspace\sparrow\sparrow-js\react-next-passport\src\app\cros-storage\page.tsx
 import * as entry from '../../../../src/app/cros-storage/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

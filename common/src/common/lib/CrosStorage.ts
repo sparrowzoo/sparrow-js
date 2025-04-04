@@ -84,7 +84,9 @@ export default class CrosStorage {
   }
 
   destroy() {
-    document.body.removeChild(this.iframe);
+    if (this.cros) {
+      document.body.removeChild(this.iframe);
+    }
   }
 
   public async getToken(storage: StorageType=StorageType.AUTOMATIC, generateVisitorToken:any|null=null) {

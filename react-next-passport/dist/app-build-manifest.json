@@ -1,10 +1,20 @@
 {
   "pages": {
+    "/sign-up/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sign-up/page.js"
+    ],
     "/layout": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
+    ],
+    "/sign-in/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sign-in/page.js"
     ],
     "/cros-storage/page": [
       "static/chunks/webpack.js",
