@@ -12,16 +12,6 @@ export default class CrosStorage {
   private cros: boolean = false;
   private loaded: boolean = false;
 
-  private randomUUID() {
-    const hex = '0123456789abcdef';
-    let uuid = '';
-    for (let i = 0; i < 36; i++) {
-      if ([8, 13, 18, 23].includes(i)) uuid += '-';
-      else uuid += hex[Math.floor(Math.random() * 16)];
-    }
-    return uuid;
-  }
-
   private constructor(cros: Boolean | null = null) {
     if (cros === false) {
       return;
@@ -127,6 +117,7 @@ export default class CrosStorage {
       return token;
     }
     if (generateVisitorToken) {
+      debugger;
       const visitorToken = await generateVisitorToken();
       await this.setToken(visitorToken);
       return visitorToken;
@@ -140,6 +131,16 @@ export default class CrosStorage {
 
   public removeToken(storage: StorageType = StorageType.AUTOMATIC) {
     return this.remove(TOKEN_KEY, storage);
+  }
+
+  private randomUUID() {
+    const hex = "0123456789abcdef";
+    let uuid = "";
+    for (let i = 0; i < 36; i++) {
+      if ([8, 13, 18, 23].includes(i)) uuid += "-";
+      else uuid += hex[Math.floor(Math.random() * 16)];
+    }
+    return uuid;
   }
 
   private getStorageType(storageType: StorageType) {
