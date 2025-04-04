@@ -14,20 +14,15 @@ import { Icons } from "@/components/ui/icons";
 import CAPTCHA_URL from "@/utils/constant";
 import { ErrorMessage } from "@hookform/error-message";
 import { Checkbox } from "@/components/ui/checkbox";
-import useCaptcha from "@/hook/Captcha";
-import CrosStorage from "@/common/lib/CrosStorage";
-import {useEffect} from "react";
+import useCaptcha from "@/common/hook/CaptchaHook";
+import useCrosStorage from "@/common/hook/CrosStorageHook";
+import { getQueryString, loginDirect } from "@/common/lib/Navigating";
 
 export default function Page() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
-  let crosStorage: CrosStorage | null = null;
-  useEffect(() => {
-    crosStorage =  CrosStorage.getCurrentStorage()
-    return () => {
-      crosStorage?.destroy();
-    };
-  }, []);
+  let crosStorage = useCrosStorage();
+  const directUrl = getQueryString();
   const {
     register,
     setValue,
@@ -58,7 +53,7 @@ export default function Page() {
         setIsLoading(false);
         toast.success("恭喜！登录成功，欢迎回来！志哥欢迎您！！！");
         setTimeout(() => {
-          window.location.href = "/";
+          loginDirect(directUrl as string);
         }, 2000);
       })
       .catch((error: any) => {

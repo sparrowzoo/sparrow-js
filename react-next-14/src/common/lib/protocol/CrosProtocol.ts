@@ -3,7 +3,8 @@
 export enum CommandType {
   GET = "get",
   SET = "set",
-  REMOVE = "remove"
+  REMOVE = "remove",
+  INIT = "init"
 }
 export enum StorageType{
   LOCAL = "local",
