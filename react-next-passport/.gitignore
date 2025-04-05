@@ -10,3 +10,4 @@ radix-ui-primitives
 /radix-ui-primitives/
 .next
 /dist
+/dist/*
