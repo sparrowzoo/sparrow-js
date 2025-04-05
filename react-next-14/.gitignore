@@ -10,3 +10,6 @@ radix-ui-primitives
 /radix-ui-primitives/
 .next
 /dist
+yarn-error.log
+yarn.lock
+package-lock.json
