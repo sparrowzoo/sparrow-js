@@ -28,6 +28,7 @@
     "html-loader": "^5.0.0",
     "lucide-react": "^0.487.0",
     "markdown-to-jsx": "^7.4.7",
+    "motion": "^12.6.3",
     "next": "14.2.5",
     "prettier": "^2.4.1",
     "raw-loader": "^4.0.2",
