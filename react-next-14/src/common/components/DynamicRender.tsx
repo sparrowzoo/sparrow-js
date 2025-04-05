@@ -1,7 +1,7 @@
-
-import React from "react";
 import useSWR from "swr";
+import React from "react";
 import LoadingSpinner from "@/common/components/LoadingSpinner";
+import ErrorShower from "@/common/components/Error";
 
 export const defaultOptions = {
   suspense: false,
@@ -24,9 +24,8 @@ export default function DynamicRender(prop: Prop) {
     options = defaultOptions;
   }
   const { data, isLoading, error } = useSWR(prop.url, prop.fetcher, options);
-  // debugger;
+  debugger;
   if (isLoading) return <LoadingSpinner />;
-  // if (error) return <ErrorShower error={error} />;
-  // return <div>{prop.children(data)}</div>;
-  return <div>DynamicRender</div>;
+  if (error) return <ErrorShower error={error} />;
+  return <div>{prop.children(data)}</div>;
 }
