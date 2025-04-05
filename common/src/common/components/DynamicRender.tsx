@@ -6,7 +6,7 @@ import ErrorShower from "@/common/components/Error";
 export const defaultOptions = {
   suspense: false,
   ssr: false,
-  errorRetryInterval: 100,
+  errorRetryInterval: 1000,
   errorRetryCount: 3,
   // onErrorRetry: () => {},
 };
