@@ -13,6 +13,7 @@
   "dependencies": {
     "date-fns": "^4.1.0",
     "motion": "^12.6.3",
+    "motion-plus": "^0.1.6",
     "next": "^15.2.4",
     "react": "^18",
     "react-dom": "^18",
