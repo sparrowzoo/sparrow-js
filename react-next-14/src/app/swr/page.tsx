@@ -9,9 +9,12 @@ const fetcher = (url): Promise<string> => {
     //   resolve(url);
     // }, 1000);
     setTimeout(() => {
-      reject("Failed to fetch data");
-      //resolve(url);
-    }, 1000);
+      if (Math.random() > 0.5) {
+        reject("Failed to fetch data");
+      } else {
+        resolve("success");
+      }
+    }, 2000);
   });
 };
 
