@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   CommandType,
   StorageRequest,
@@ -6,16 +6,14 @@ import {
   StorageType,
 } from "@/common/lib/protocol/CrosProtocol";
 import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
-import {Utils} from "@/common/lib/Utils";
-import {getHrefWithoutQueryString} from "@/common/lib/Navigating";
+import { Utils } from "@/common/lib/Utils";
+import { getHrefWithoutQueryString } from "@/common/lib/Navigating";
 
 export default class CrosStorage {
   private iframe: HTMLIFrameElement;
   private iframeOrigin: string | undefined;
   private cros: boolean = false;
   private loaded: boolean = false;
-
-
 
   private constructor(cros: Boolean | null = null) {
     if (cros === false) {
@@ -27,23 +25,19 @@ export default class CrosStorage {
     }
     const iframe = document.createElement("iframe");
     iframe.src = STORAGE_PROXY as string;
-    iframe.src=iframe.src+"?"+getHrefWithoutQueryString();
+    iframe.src = iframe.src + "?" + getHrefWithoutQueryString();
     iframe.style.display = "none";
     this.iframe = iframe;
     console.log("append iframe " + STORAGE_PROXY);
 
-
     const handleMessage = (event: MessageEvent<StorageRequest>) => {
-      if (
-          !this.iframeOrigin ||
-          this?.iframeOrigin?.indexOf(event.origin) < 0
-      )
+      if (!this.iframeOrigin || this.iframeOrigin?.indexOf(event.origin) < 0) {
         return;
+      }
       this.loaded = true;
       window.removeEventListener("message", handleMessage); // 清理监听
     };
     window.addEventListener("message", handleMessage);
-
 
     // iframe.addEventListener("DOMContentLoaded", () => {
     //   console.log("iframe DOMContentLoaded");
@@ -83,7 +77,7 @@ export default class CrosStorage {
       command: CommandType.SET,
       storage: storage,
       key: key,
-      value:value,
+      value: value,
     });
   }
 
@@ -125,7 +119,7 @@ export default class CrosStorage {
   }
 
   destroy() {
-    if (this.cros) {
+    if (this.cros && document.body.contains(this.iframe)) {
       document.body.removeChild(this.iframe);
     }
   }
@@ -169,7 +163,7 @@ export default class CrosStorage {
       const handleMessage = (event: MessageEvent<StorageResponse>) => {
         if (
           !this.iframeOrigin ||
-          this?.iframeOrigin?.indexOf(event.origin) < 0 ||
+          this.iframeOrigin?.indexOf(event.origin) < 0 ||
           event.data.requestId !== req.requestId
         )
           return;
