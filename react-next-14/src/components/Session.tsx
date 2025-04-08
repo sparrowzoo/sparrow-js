@@ -14,16 +14,32 @@ import LoadingSpinner from "@/common/components/LoadingSpinner";
 
 export default function Session() {
   const searchParams = useSearchParams();
-  const sessionKey = searchParams?.get("sessionKey");
+  const [sessionKey, setSessionKey] = useState("");
   const [message, setMessage] = useState<string>("");
   const [messageList, setMessageList] = useState<Message[] | undefined>();
   //为了控制滚动条
   const [localMessageNo, setLocalMessageNo] = useState(0);
   const messageContainerRef: MutableRefObject<HTMLDivElement | null> =
     useRef(null);
-
   //不要解构，因为解构会useEffect的依赖引用无变化，不会重新渲染
   const webSocketContextValue = useContext(WebSocketContext);
+
+  function refreshSessionKey() {
+    const sessionKeyFromUrl = searchParams?.get("sessionKey");
+    if (!sessionKeyFromUrl) {
+      webSocketContextValue.messageBroker.getChatSessions().then((sessions) => {
+        if (sessions && sessions.length > 0) {
+          setSessionKey(sessions[0].key());
+        }
+      });
+      return;
+    }
+    if (sessionKeyFromUrl !== sessionKey) {
+      setSessionKey(sessionKeyFromUrl);
+    }
+  }
+
+  refreshSessionKey();
 
   useEffect(() => {
     console.log("sessionKey changed to: ", sessionKey);
