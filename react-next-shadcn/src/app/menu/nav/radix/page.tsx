@@ -5,13 +5,13 @@ import ListItem from "@/app/menu/nav/radix/ListItem";
 
 export default function Page() {
   return (
-    <NavigationMenu.Root className="relative z-[1] flex w-screen justify-center">
+    <NavigationMenu.Root className="relative z-1 flex w-screen justify-center">
       <NavigationMenu.List className="border border-sky-500 center shadow-blackA4 m-0 flex list-none rounded-[6px] bg-background p-1 shadow-[0_2px_10px]">
         <NavigationMenu.Item>
-          <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+          <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-hidden focus:shadow-[0_0_0_2px]">
             Learn{" "}
             <CaretDownIcon
-              className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
+              className="text-violet10 relative top-[1px] transition-transform duration-250 ease-in group-data-[state=open]:-rotate-180"
               aria-hidden
             />
           </NavigationMenu.Trigger>
@@ -21,7 +21,7 @@ export default function Page() {
                 <NavigationMenu.Link asChild>
                   <a
                     className="focus:shadow-violet7 from-purple9 to-indigo9 flex
-                    h-full w-full select-none flex-col justify-end rounded-[6px] bg-gradient-to-b p-[25px] no-underline outline-none focus:shadow-[0_0_0_2px]"
+                    h-full w-full select-none flex-col justify-end rounded-[6px] bg-linear-to-b p-[25px] no-underline outline-hidden focus:shadow-[0_0_0_2px]"
                     href="/"
                   >
                     <svg
@@ -59,10 +59,10 @@ export default function Page() {
         </NavigationMenu.Item>
 
         <NavigationMenu.Item>
-          <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+          <NavigationMenu.Trigger className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-hidden focus:shadow-[0_0_0_2px]">
             Overview{" "}
             <CaretDownIcon
-              className="text-violet10 relative top-[1px] transition-transform duration-[250] ease-in group-data-[state=open]:-rotate-180"
+              className="text-violet10 relative top-[1px] transition-transform duration-250 ease-in group-data-[state=open]:-rotate-180"
               aria-hidden
             />
           </NavigationMenu.Trigger>
@@ -108,14 +108,14 @@ export default function Page() {
 
         <NavigationMenu.Item>
           <NavigationMenu.Link
-            className="text-violet11 hover:bg-violet3 focus:shadow-violet7 block select-none rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none no-underline outline-none focus:shadow-[0_0_0_2px]"
+            className="text-violet11 hover:bg-violet3 focus:shadow-violet7 block select-none rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none no-underline outline-hidden focus:shadow-[0_0_0_2px]"
             href="https://github.com/radix-ui"
           >
             Github
           </NavigationMenu.Link>
         </NavigationMenu.Item>
 
-        <NavigationMenu.Indicator className="data-[state=visible]:animate-fadeIn data-[state=hidden]:animate-fadeOut top-full z-[1] flex h-[10px] items-end justify-center overflow-hidden transition-[width,transform_250ms_ease]">
+        <NavigationMenu.Indicator className="data-[state=visible]:animate-fadeIn data-[state=hidden]:animate-fadeOut top-full z-1 flex h-[10px] items-end justify-center overflow-hidden transition-[width,transform_250ms_ease]">
           <div className="relative top-[70%] h-[10px] w-[10px] rotate-[45deg] rounded-tl-[2px] bg-white" />
         </NavigationMenu.Indicator>
       </NavigationMenu.List>

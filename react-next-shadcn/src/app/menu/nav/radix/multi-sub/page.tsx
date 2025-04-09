@@ -21,7 +21,7 @@ const ListItem = React.forwardRef(
       <NavigationMenu.Link asChild>
         <a
           className={cn(
-            "focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors",
+            "focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-hidden transition-colors",
             className
           )}
           {...props}

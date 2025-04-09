@@ -21,7 +21,7 @@ const ListItem = React.forwardRef(
             <NavigationMenu.Link asChild>
                 <a
                     className={cn(
-                        "focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-none transition-colors",
+                        "focus:shadow-[0_0_0_2px] focus:shadow-violet7 hover:bg-mauve3 block select-none rounded-[6px] p-3 text-[15px] leading-none no-underline outline-hidden transition-colors",
                         className
                     )}
                     {...props}
@@ -41,12 +41,12 @@ export default function Page() {
         <div>
             <h1>Horizontal Nav</h1>
             <NavigationMenu.Root orientation="horizontal"
-                                 className="relative z-[1] bg-black flex w-screen sm:w-[400px] justify-center">
+                                 className="relative z-1 bg-black flex w-screen sm:w-[400px] justify-center">
                 <NavigationMenu.List
                     className="center w-full sm:w-[400px] shadow-blackA4 m-0 flex flex-row sm:flex-col  list-none rounded-[6px] text-white bg-block p-1 shadow-[0_2px_10px]">
                     <NavigationMenu.Item>
                         <NavigationMenu.Trigger
-                            className="text-violet11 bg-block hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+                            className="text-violet11 bg-block hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-hidden focus:shadow-[0_0_0_2px]">
                             Learn{" "}
                         </NavigationMenu.Trigger>
                         <NavigationMenu.Content
@@ -84,7 +84,7 @@ export default function Page() {
 
                     <NavigationMenu.Item>
                         <NavigationMenu.Trigger
-                            className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-none focus:shadow-[0_0_0_2px]">
+                            className="text-violet11 hover:bg-violet3 focus:shadow-violet7 group flex select-none items-center justify-between gap-[2px] rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none outline-hidden focus:shadow-[0_0_0_2px]">
                             Overview{" "}
                         </NavigationMenu.Trigger>
                         <NavigationMenu.Content className="bg-block absolute top-0 left-0 w-full sm:w-auto">
@@ -132,7 +132,7 @@ export default function Page() {
 
                     <NavigationMenu.Item>
                         <NavigationMenu.Link
-                            className="text-violet11  hover:bg-violet3 focus:shadow-violet7 block select-none rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none no-underline outline-none focus:shadow-[0_0_0_2px]"
+                            className="text-violet11  hover:bg-violet3 focus:shadow-violet7 block select-none rounded-[4px] px-3 py-2 text-[15px] font-medium leading-none no-underline outline-hidden focus:shadow-[0_0_0_2px]"
                             href="https://github.com/radix-ui"
                         >
                             Github
@@ -140,7 +140,7 @@ export default function Page() {
                     </NavigationMenu.Item>
 
                     <NavigationMenu.Indicator
-                        className="data-[state=visible]:animate-fadeIn data-[state=hidden]:animate-fadeOut top-full z-[1] flex h-[10px] items-end justify-center overflow-hidden transition-[width,transform_250ms_ease]">
+                        className="data-[state=visible]:animate-fadeIn data-[state=hidden]:animate-fadeOut top-full z-1 flex h-[10px] items-end justify-center overflow-hidden transition-[width,transform_250ms_ease]">
                         <div className="relative top-[70%] h-[10px] w-[10px] rotate-[45deg] rounded-tl-[2px] bg-block"/>
                     </NavigationMenu.Indicator>
                 </NavigationMenu.List>
