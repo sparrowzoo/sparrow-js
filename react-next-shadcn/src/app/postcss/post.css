@@ -1,4 +1,4 @@
-@import "inner.css";
+@import './inner.css';
 
 .foo {
     color: red;
