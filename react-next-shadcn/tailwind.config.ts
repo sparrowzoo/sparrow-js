@@ -1,8 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config = {
-  // type DarkModeStrategy = false | 'media' | 'class' | ['class', string] | 'selector' | ['selector', string] | ['variant', string | string[]];
-  darkMode: "class",
+  darkMode: ["class"],
   content: [
     "./pages/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
@@ -12,7 +11,7 @@ const config = {
   prefix: "",
   theme: {
     container: {
-      center: true,
+      // center: true,
       padding: "2rem",
       screens: {
         "2xl": "1400px",
