@@ -95,3 +95,7 @@ proxy_send_timeout:600
 [supervisor 配置](deploy/supervisor.md)
 https://sparrowzoo.feishu.cn/docx/E9X0d5Zt9oSY28x2Hjqcv7e1nLg
 
+components.json 依赖组件
+---
+注意版本，最新版本可能会改项目结构，导致依赖组件无法安装
+
