@@ -57,7 +57,7 @@ export default function Layout({
       >
         <h1>Welcome to Sparrow Chat!</h1>
       </div>
-      <div className="flex flex-row flex-1 h-full w-full">
+      <div className="flex flex-row flex-1 min-h-0 h-full w-full">
         <div className=" bg-gray-500 w-[4rem] flex flex-col  gap-4 p-2">
           <IconMenu title={"我的"} url={"/chat/my"}>
             {(className) => (
