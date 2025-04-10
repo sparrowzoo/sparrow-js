@@ -109,9 +109,11 @@ export default class ChatSession {
     let bigUser = sender;
     let smallUser = receiver;
     if (sender.id <= receiver.id) {
+      debugger;
       bigUser = receiver;
       smallUser = sender;
     }
+
     let length = (bigUser.id + "").length;
     let len = length + "";
     if (length < 10) {

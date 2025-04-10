@@ -65,7 +65,7 @@ export default class ChatUser {
       return null;
     }
     const loginUser = JSON.parse(userInfo);
-    const userId = loginUser.userId;
+    const userId = loginUser.userId+"";
     const category = loginUser.category;
     return new ChatUser(userId, category);
   }
