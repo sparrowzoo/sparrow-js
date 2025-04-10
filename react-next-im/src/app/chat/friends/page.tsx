@@ -1,3 +1,6 @@
-export default function ContactsPage() {
-  return <div>Contacts Page</div>;
+"use client";
+import * as React from "react";
+
+export default function Page() {
+  return <></>;
 }
