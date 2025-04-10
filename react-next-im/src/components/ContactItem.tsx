@@ -1,39 +1,46 @@
-import Link from "next/link";
 import * as React from "react";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
-import { DynamicImage } from "@/components/img/DynamicImage";
 import ChatSession from "@/lib/protocol/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Contact from "@/lib/protocol/contact/Contact";
+import {
+  SidebarMenuBadge,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import Link from "next/link";
+import { DynamicImage } from "@/components/img/DynamicImage";
 
 interface ContactProps {
   contact: Contact;
 }
 
 export default function ContactItem(contactProps: ContactProps) {
-    const { contact } = contactProps;
-  const headSrc = `/avatar/${contact.userId}.jpg`;
-  const sessionKey=ChatSession.create121Session(ChatUser.getCurrentUser() as ChatUser,new ChatUser(contact.userId+"",ChatUser.CATEGORY_REGISTER)).key();
-  const sessionUrl=`${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${sessionKey}`;
-  //const contactUrl = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${contact.userId}`;
+  const { contact } = contactProps;
+  const avatar = `/avatar/${contact.userId}.jpg`;
+  const sessionKey = ChatSession.create121Session(
+    ChatUser.getCurrentUser() as ChatUser,
+    new ChatUser(contact.userId + "", ChatUser.CATEGORY_REGISTER)
+  ).key();
+  const sessionUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${sessionKey}`;
+  const contactUrl = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${contact.userId}`;
   return (
-    <div className="flex items-center text-left">
-      <Link href={sessionUrl}>
-        <DynamicImage
-          src={headSrc}
-          alt={"header"}
-          width={50}
-          height={50}
-          className={"w-16 h-16 rounded-full mr-4"}
-        />
-      </Link>
-      <div>
-        <Link href={sessionUrl}>
-          <strong>{contact.userName}-{contact.userId}</strong>
-          <br />
-          <span>{contact.nationality}</span>
+    <SidebarMenuItem className={"gap-2"}>
+      <SidebarMenuButton asChild>
+        <Link href={contactUrl}>
+          <DynamicImage
+            src={avatar}
+            alt={"header"}
+            width={0}
+            height={0}
+            className={"w-8 h-8 rounded-full mr-4"}
+          />
+          <span>
+            {contact.userName}-{contact.userId}
+          </span>
         </Link>
-      </div>
-    </div>
+      </SidebarMenuButton>
+      <SidebarMenuBadge>24</SidebarMenuBadge>
+    </SidebarMenuItem>
   );
 }

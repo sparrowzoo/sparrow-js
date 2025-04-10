@@ -1,21 +1,21 @@
 "use client";
 import * as React from "react";
-import {Suspense, useContext, useEffect} from "react";
+import { Suspense, useContext } from "react";
 import { useSearchParams } from "next/navigation";
-import ContactItem from "@/components/ContactItem";
 import { DynamicImage } from "@/components/img/DynamicImage";
-import {WebSocketContext} from "@/lib/WebSocketProvider";
+import { WebSocketContext } from "@/lib/WebSocketProvider";
+import DirectSession from "@/components/DirectSession";
 
 function Group() {
   const searchParams = useSearchParams();
   const groupId = searchParams?.get("groupId");
-    const webSocketContextValue = useContext(WebSocketContext);
-    const messageBroker = webSocketContextValue.messageBroker;
-    const headSrc = `/avatar/${groupId}.jpg`;
-    const groupDetail=messageBroker.getGroupDetail(groupId as string);
-    if(!groupDetail){
-        return <div>Loading...</div>
-    }
+  const webSocketContextValue = useContext(WebSocketContext);
+  const messageBroker = webSocketContextValue.messageBroker;
+  const headSrc = `/avatar/${groupId}.jpg`;
+  const groupDetail = messageBroker.getGroupDetail(groupId as string);
+  if (!groupDetail) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={"flex flex-col p-4 bg-white shadow-md"}>
@@ -39,6 +39,7 @@ function Group() {
       <div className={"flex flex-col gap-2"}>
         <h2>Group members</h2>
       </div>
+      <DirectSession sessionKey={"s"} />
     </div>
   );
 }

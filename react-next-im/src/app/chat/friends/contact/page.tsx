@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
+import DirectSession from "@/components/DirectSession";
 
 function Contact() {
   const searchParams = useSearchParams();
@@ -22,21 +23,22 @@ function Contact() {
             className={"w-16 h-16 rounded-full mr-4"}
             src={headSrc}
             alt={"Contact Avatar"}
-            width={50}
-            height={50}
+            width={0}
+            height={0}
           />
         </Link>
         <div>
           <Link href={contactUrl}>
             <strong>Andrew Alfred {friendId}</strong>
             <br />
-            <span>Technical advisor</span>
+            <span>{"Online"}</span>
           </Link>
         </div>
       </div>
-      <p className={"mt-2 text-gray-500 text-left"}>
+      <p className={"mt-2 text-gray-500 text-left text-sm"}>
         中国共产党的优秀党员,忠诚的共产主义战士,享誉海内外的杰出科学家和我国航天事业的奠基人,中国科学院、中国工程院资深院士,中国人民政治协商会议第六
       </p>
+      <DirectSession sessionKey={"KEY"} />
     </div>
   );
 }
