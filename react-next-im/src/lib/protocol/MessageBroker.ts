@@ -123,7 +123,6 @@ export default class MessageBroker {
   }
 
   public async getContactGroup() {
-    debugger;
     let localGroup = this.contactGroup;
     if (localGroup) {
       return localGroup;

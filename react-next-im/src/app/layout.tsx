@@ -1,5 +1,5 @@
 import "./globals.css";
-import {Metadata, Viewport} from "next";
+import { Metadata, Viewport } from "next";
 import * as React from "react";
 
 export const metadata: Metadata = {
@@ -25,7 +25,13 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body className={"container mx-auto text-center justify-center align-middle content-center w-full "}>{children}</body>
+      <body
+        className={
+          "mx-auto text-center justify-center align-middle content-center w-full "
+        }
+      >
+        {children}
+      </body>
     </html>
   );
 }

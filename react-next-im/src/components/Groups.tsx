@@ -1,24 +1,36 @@
 import GroupItem from "@/components/GroupItem";
 import * as React from "react";
 import Group from "@/lib/protocol/contact/Group";
-import LoadingSpinner from "@/common/components/LoadingSpinner";
+import Link from "next/link";
+import ThreeDotLoading from "@/common/components/ThreeDotLoading";
+import { CollapsibleContent } from "@radix-ui/react-collapsible";
+import { SidebarGroupContent, SidebarMenu } from "@/components/ui/sidebar";
 
 interface GroupsProps {
   quns: Group[] | undefined;
 }
 
 export default function Groups(groupProps: GroupsProps) {
+  console.log(groupProps.quns);
   if (!groupProps.quns) {
-    return <LoadingSpinner />;
+    return <ThreeDotLoading />;
   }
   if (groupProps.quns.length === 0) {
-    return <div className={"text-center text-gray-500"}>暂无群组</div>;
+    return (
+      <Link className={"text-center font-bold text-sm"} href={"/"}>
+        No groups found.
+      </Link>
+    );
   }
   return (
-    <div className={"flex flex-col gap-2"}>
-      {groupProps?.quns?.map((qun) => (
-        <GroupItem qun={qun} key={qun.qunId + ""} />
-      ))}
-    </div>
+    <CollapsibleContent>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {groupProps?.quns?.map((qun) => (
+            <GroupItem qun={qun} key={qun.qunId + ""} />
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </CollapsibleContent>
   );
 }

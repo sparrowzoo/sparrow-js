@@ -1,24 +1,38 @@
+"use client";
 import ContactItem from "@/components/ContactItem";
 import * as React from "react";
 import Contact from "@/lib/protocol/contact/Contact";
-import LoadingSpinner from "@/common/components/LoadingSpinner";
+import { SidebarGroupContent, SidebarMenu } from "@/components/ui/sidebar";
+import { CollapsibleContent } from "@/components/ui/collapsible";
+import Link from "next/link";
+import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 interface ContactsProps {
   contacts: Contact[] | undefined;
 }
 
 export default function Contacts(contactsProps: ContactsProps) {
+  console.log(contactsProps.contacts);
+
   if (!contactsProps.contacts) {
-    return <LoadingSpinner />;
+    return <ThreeDotLoading />;
   }
   if (contactsProps.contacts.length === 0) {
-    return <div className={"text-center text-gray-500"}>快去加好友去</div>;
+    return (
+      <Link className={"text-center font-bold text-sm"} href={"/"}>
+        No contacts found.
+      </Link>
+    );
   }
   return (
-    <div className={"flex flex-col gap-2"}>
-      {contactsProps?.contacts?.map((contact) => (
-        <ContactItem contact={contact} key={contact.userId + ""} />
-      ))}
-    </div>
+    <CollapsibleContent>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          {contactsProps?.contacts?.map((contact) => (
+            <ContactItem contact={contact} key={contact.userId + ""} />
+          ))}
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </CollapsibleContent>
   );
 }
