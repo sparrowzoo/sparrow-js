@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import * as React from "react";
-import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
 import Group from "@/lib/protocol/contact/Group";
 import {
@@ -9,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { format } from "util";
 
 interface GroupProps {
   qun: Group;
@@ -18,7 +19,7 @@ export default function GroupItem(groupProps: GroupProps) {
   const { qun } = groupProps;
 
   const groupUrl = `${NEXT_ASSET_PREFIX}/chat/friends/group?groupId=${qun.qunId}`;
-  const avatar = `${NEXT_ASSET_PREFIX}/avatar/${qun.qunId}.jpg`;
+  const avatar = format(AVATAR_URL, qun.qunId);
   return (
     // <div className="flex items-center text-left">
     //   <Link href={groupUrl}>
@@ -50,12 +51,10 @@ export default function GroupItem(groupProps: GroupProps) {
             height={0}
             className={"w-8 h-8 rounded-full mr-4"}
           />
-          <span>
-            {qun.qunName}-{qun.nationality}
-          </span>
+          <span>{qun.qunName}</span>
         </Link>
       </SidebarMenuButton>
-      <SidebarMenuBadge>24</SidebarMenuBadge>
+      <SidebarMenuBadge></SidebarMenuBadge>
     </SidebarMenuItem>
   );
 }

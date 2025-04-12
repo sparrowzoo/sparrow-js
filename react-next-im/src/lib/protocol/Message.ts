@@ -1,7 +1,8 @@
 import ChatUser from "@/lib/protocol/ChatUser";
-import ChatSession from "@/lib/protocol/ChatSession";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 import { format } from "date-fns";
 import Protocol from "@/lib/protocol/Protocol";
+import { ChatType } from "@/lib/protocol/Chat";
 
 export enum AlignType {
   left = "left",
@@ -10,6 +11,16 @@ export enum AlignType {
 
 export default class Message {
   constructor() {}
+
+  private _timeline: number;
+
+  get timeline() {
+    return this._timeline;
+  }
+
+  set timeline(value) {
+    this._timeline = value;
+  }
 
   get align(): AlignType {
     return this.isSender() ? AlignType.right : AlignType.left;
@@ -85,15 +96,39 @@ export default class Message {
     return message;
   }
 
-  static fromMessage(json: Message): Message {
+  static fromMessage(oldMessage: Message): Message {
     const message = new Message();
-    message._sender = new ChatUser(json.sender.id, json.sender.category);
-    message._receiver = new ChatUser(json.receiver.id, json.receiver.category);
-    message._content = json.content;
-    message._clientSendTime = json.clientSendTime;
-    message._serverTime = json.serverTime;
-    message._messageId = json.clientSendTime + "" + json.sender.id;
+    message._sender = new ChatUser(
+      oldMessage.sender.id,
+      oldMessage.sender.category
+    );
+    debugger;
+    if (oldMessage.session.chatType == ChatType.CHAT_1_TO_1) {
+      message._receiver = new ChatUser(
+        oldMessage.receiver.id,
+        oldMessage.receiver.category
+      );
+      message.session = ChatSession.create121Session(
+        message.sender,
+        message.receiver
+      );
+    } else {
+      message.session = ChatSession.createGroupSession(oldMessage.session.id);
+    }
+    message._content = oldMessage.content;
+    message._clientSendTime = oldMessage.clientSendTime;
+    message._serverTime = oldMessage.serverTime;
+    message._messageId = oldMessage.clientSendTime + "" + oldMessage.sender.id;
     return message;
+  }
+
+  public getTimeline() {
+    const today = new Date();
+    const date = new Date(this._timeline);
+    if (date.getDate() == today.getDate()) {
+      return format(this._timeline, "HH:mm");
+    }
+    return format(this._timeline, "yyyy-MM-dd HH:mm");
   }
 
   public isSender() {

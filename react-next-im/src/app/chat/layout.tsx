@@ -13,6 +13,9 @@ import IconMenu from "@/components/IconMenu";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
+import { format } from "util";
+import ChatUser from "@/lib/protocol/ChatUser";
+import { AVATAR_URL } from "@/common/lib/Env";
 
 export default function Layout({
   children,
@@ -46,6 +49,9 @@ export default function Layout({
   if (!webSocketContextValue) {
     return <ThreeDotLoading />;
   }
+  const currentUser = ChatUser.getCurrentUser();
+  const avatarUrl = format(AVATAR_URL, currentUser?.id);
+  const userHome = "/chat/friends/contact?friendId=" + currentUser?.id;
   console.log("状态变化会重新渲染", webSocketContextValue);
   return (
     <div className="flex flex-col h-screen">
@@ -59,11 +65,11 @@ export default function Layout({
       </div>
       <div className="flex flex-row flex-1 min-h-0 h-full w-full">
         <div className=" bg-gray-500 w-[4rem] flex flex-col  gap-4 p-2">
-          <IconMenu title={"我的"} url={"/chat/my"}>
+          <IconMenu title={"我的"} url={userHome}>
             {(className) => (
               <Image
                 alt={"avatar"}
-                src={"/avatar/1.jpg"}
+                src={avatarUrl}
                 className={cn(className, "rounded-full w-full h-[3rem]")}
                 width={0}
                 height={0}

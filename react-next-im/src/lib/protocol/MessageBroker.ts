@@ -2,7 +2,7 @@ import ChatApi from "@/lib/ChatApi";
 import Message from "@/lib/protocol/Message";
 import Protocol from "@/lib/protocol/Protocol";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
-import ChatSession from "@/lib/protocol/ChatSession";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 import { ChatType, MessageType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
@@ -12,10 +12,10 @@ import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import CrosStorage from "@/common/lib/CrosStorage";
 
 export default class MessageBroker {
+  public chatSessions: ChatSession[] | null = null;
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
   private crosStorage: CrosStorage;
-  private chatSessions: ChatSession[] | null = null;
   private contactGroup: ContactGroup | null = null;
 
   constructor(crosStorage: CrosStorage) {
@@ -71,6 +71,7 @@ export default class MessageBroker {
       messageList = [];
       this.messageMap.set(sessionKey, messageList);
     }
+    this.newSession(sessionKey);
     messageList.push(message);
   }
 
@@ -85,6 +86,13 @@ export default class MessageBroker {
         content,
         new Date().getTime()
       );
+    } else {
+      protocol = Protocol.createGroupChat(
+        sessionKey,
+        MessageType.TEXT_MESSAGE,
+        content,
+        new Date().getTime()
+      );
     }
     this.putMessage(protocol);
     this._webSocket?.sendMessage(protocol.toBytes());
@@ -94,11 +102,11 @@ export default class MessageBroker {
     console.log("getMessageList", sessionKey);
     let messageList = this.messageMap.get(sessionKey);
     if (messageList != null) {
-      return messageList;
+      return this.wrapMessages(messageList);
     }
     messageList = await ChatApi.getMessages(sessionKey, this.crosStorage);
     this.messageMap.set(sessionKey, messageList);
-    return messageList;
+    return this.wrapMessages(messageList);
   }
 
   public newMessageSignal = () => {};
@@ -114,10 +122,13 @@ export default class MessageBroker {
     if (localSession) {
       return localSession;
     }
-    await ChatApi.getSessions(this.crosStorage).then((sessions) => {
-      console.log(sessions.length);
-      localSession = sessions;
-      this.chatSessions = localSession;
+    //会话依赖联系人列表
+    await this.getContactGroup().then(async (group) => {
+      await ChatApi.getSessions(this.crosStorage).then((sessions) => {
+        console.log(sessions.length);
+        localSession = sessions;
+        this.chatSessions = localSession;
+      });
     });
     return localSession;
   }
@@ -125,10 +136,11 @@ export default class MessageBroker {
   public async getContactGroup() {
     let localGroup = this.contactGroup;
     if (localGroup) {
+      console.log("getContactGroup from local " + new Date().getTime());
       return localGroup;
     }
     await ChatApi.getContacts(this.crosStorage).then((group) => {
-      console.log(group);
+      console.log("fetch contact group from server " + new Date().getTime());
       localGroup = group;
       this.contactGroup = localGroup;
     });
@@ -136,12 +148,46 @@ export default class MessageBroker {
   }
 
   public getGroupDetail(groupId: string) {
-    return this.contactGroup?.quns.find((qun) => qun.qunId === groupId);
+    return this.contactGroup?.quns.find((qun) => qun.qunId == groupId);
   }
 
-  public getContactDetail(userId: number) {
-    return this.contactGroup?.contacts.find(
-      (contact) => contact.userId === userId
+  public async getContactDetail(userId: string) {
+    //刷会话页，找不到联系人列表
+    const contactGroup = await this.getContactGroup();
+    return contactGroup?.contacts.find((user) => user.userId == userId);
+  }
+
+  public getContactFromLocal(userId: string) {
+    return this.contactGroup?.contacts.find((user) => user.userId == userId);
+  }
+
+  private wrapMessages(messages: Message[]): Message[] {
+    let preTime = null;
+    const newMessages = [];
+    for (const message of messages) {
+      newMessages.push(message);
+      if (message.clientSendTime - preTime > 1000 * 60 * 5) {
+        const timeline = new Message();
+        timeline.timeline = message.clientSendTime;
+        newMessages.push(timeline);
+      }
+      preTime = message.clientSendTime;
+    }
+    debugger;
+    return newMessages;
+  }
+
+  private newSession(sessionKey: string) {
+    let session = this.chatSessions?.find(
+      (session) => session.key() === sessionKey
     );
+    if (!session) {
+      session = ChatSession.parse(sessionKey) as ChatSession;
+      this.chatSessions?.push(session);
+    }
+    session.lastReadTime = new Date().getTime();
+    this.chatSessions?.sort((a: ChatSession, b: ChatSession) => {
+      return b.lastReadTime - a.lastReadTime;
+    });
   }
 }

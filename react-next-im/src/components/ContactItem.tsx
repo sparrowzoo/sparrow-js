@@ -1,6 +1,6 @@
 import * as React from "react";
-import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
-import ChatSession from "@/lib/protocol/ChatSession";
+import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Contact from "@/lib/protocol/contact/Contact";
 import {
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import { DynamicImage } from "@/components/img/DynamicImage";
+import { format } from "util";
 
 interface ContactProps {
   contact: Contact;
@@ -17,7 +18,7 @@ interface ContactProps {
 
 export default function ContactItem(contactProps: ContactProps) {
   const { contact } = contactProps;
-  const avatar = `/avatar/${contact.userId}.jpg`;
+  const avatar = format(AVATAR_URL, contact.userId);
   const sessionKey = ChatSession.create121Session(
     ChatUser.getCurrentUser() as ChatUser,
     new ChatUser(contact.userId + "", ChatUser.CATEGORY_REGISTER)
@@ -40,7 +41,7 @@ export default function ContactItem(contactProps: ContactProps) {
           </span>
         </Link>
       </SidebarMenuButton>
-      <SidebarMenuBadge>24</SidebarMenuBadge>
+      <SidebarMenuBadge></SidebarMenuBadge>
     </SidebarMenuItem>
   );
 }
