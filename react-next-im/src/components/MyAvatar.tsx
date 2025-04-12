@@ -8,7 +8,7 @@ interface Props {
 
 export default function MyAvatar(props: Props) {
   return (
-    <Avatar>
+    <Avatar className={" w-8 h-8 rounded-full mr-4"}>
       <AvatarImage src={props.src} />
       <AvatarFallback>{props.fallback}</AvatarFallback>
     </Avatar>
