@@ -9,8 +9,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { DynamicImage } from "@/components/img/DynamicImage";
 import { format } from "util";
+import MyAvatar from "@/components/MyAvatar";
 
 interface ContactProps {
   contact: Contact;
@@ -29,13 +29,7 @@ export default function ContactItem(contactProps: ContactProps) {
     <SidebarMenuItem className={"gap-2"}>
       <SidebarMenuButton asChild>
         <Link href={contactUrl}>
-          <DynamicImage
-            src={avatar}
-            alt={"header"}
-            width={0}
-            height={0}
-            className={"w-8 h-8 rounded-full mr-4"}
-          />
+          <MyAvatar fallback={contact?.userName as string} src={avatar} />
           <span>
             {contact.userName}-{contact.userId}
           </span>
