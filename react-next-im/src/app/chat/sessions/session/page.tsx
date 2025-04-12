@@ -2,7 +2,7 @@
 "use client";
 import * as React from "react";
 import { Suspense } from "react";
-import Session from "@/components/Session";
+import Session from "@/components/session/Session";
 import LoadingSpinner from "@/common/components/LoadingSpinner";
 //https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
 export default function SessionPage() {
