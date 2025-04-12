@@ -1,5 +1,5 @@
 import Fetcher from "@/common/lib/Fetcher";
-import ChatSession from "@/lib/protocol/ChatSession";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 import Message from "@/lib/protocol/Message";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import CrosStorage from "@/common/lib/CrosStorage";

@@ -10,45 +10,12 @@ import {
   SidebarGroupLabel,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import {
-  Calendar,
-  ChevronDown,
-  Home,
-  Inbox,
-  Search,
-  Settings,
-} from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import Contacts from "@/components/Contacts";
 import Groups from "@/components/Groups";
+import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
-const items = [
-  {
-    title: "Home",
-    url: "#",
-    icon: Home,
-  },
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-  },
-  {
-    title: "Calendar",
-    url: "#",
-    icon: Calendar,
-  },
-  {
-    title: "Search",
-    url: "#",
-    icon: Search,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
-  },
-];
 export default function ChatLayout({
   children,
 }: Readonly<{
@@ -62,6 +29,9 @@ export default function ChatLayout({
       setContactGroup(contactGroup as ContactGroup);
     });
   }, [messageBroker]);
+  if (!contactGroup) {
+    return <ThreeDotLoading />;
+  }
   return (
     <div className="flex flex-row flex-1">
       <SidebarProvider className={"min-h-full h-full w-auto"}>
