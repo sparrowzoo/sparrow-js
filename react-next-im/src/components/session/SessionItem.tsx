@@ -40,7 +40,6 @@ export default function SessionItem(props: SessionItemProps) {
           <MyAvatar
             fallback={sessionDetail.name}
             src={sessionDetail.avatarUrl}
-            size={40}
           />
           <span>{sessionDetail?.name}</span>
         </Link>
