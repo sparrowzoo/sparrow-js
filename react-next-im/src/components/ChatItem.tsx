@@ -6,6 +6,7 @@ import { format } from "util";
 import { WebSocketContext } from "@/lib/WebSocketProvider";
 import { AVATAR_URL } from "@/common/lib/Env";
 import { Separator } from "@/components/ui/separator";
+import MyAvatar from "@/components/MyAvatar";
 
 interface Props {
   message: Message;
@@ -34,11 +35,7 @@ export default function ChatItem(props: Props) {
   return (
     <div className={alignClass}>
       <div className={"flex flex-row  p-4 rounded-lg"}>
-        <img
-          alt={senderDetail?.userName}
-          className={" w-8 h-8 rounded-full mr-4"}
-          src={avatar}
-        />
+        <MyAvatar fallback={senderDetail?.userName as string} src={avatar} />
         <div className={"flex flex-col text-left"}>
           <span className={"flex-1 text-sm text-gray-900"}>
             {senderDetail?.userName} @{senderDetail?.nationality}
