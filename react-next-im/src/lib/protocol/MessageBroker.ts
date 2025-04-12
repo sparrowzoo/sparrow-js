@@ -162,8 +162,8 @@ export default class MessageBroker {
   }
 
   private wrapMessages(messages: Message[]): Message[] {
-    let preTime = null;
-    const newMessages = [];
+    let preTime: number = 0;
+    const newMessages: Message[] = [];
     for (const message of messages) {
       newMessages.push(message);
       if (message.clientSendTime - preTime > 1000 * 60 * 5) {
