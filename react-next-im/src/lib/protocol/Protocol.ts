@@ -123,10 +123,9 @@ class Protocol {
       const sessionBytes = new Uint8Array(
         bytes.slice(offset, offset + sessionLength)
       );
-      const session = sessionBytes.toString();
-      protocol.chatSession = ChatSession.createGroupSession(
-        session
-      ) as ChatSession;
+      offset += sessionLength;
+      const session = new TextDecoder().decode(sessionBytes);
+      protocol.chatSession = ChatSession.parse(session) as ChatSession;
     }
     const contentLength = dataView.getUint32(offset);
     offset += 4;
