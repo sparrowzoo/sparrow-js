@@ -1,5 +1,5 @@
 import * as React from "react";
-import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Contact from "@/lib/protocol/contact/Contact";
@@ -9,7 +9,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { format } from "util";
 import MyAvatar from "@/components/MyAvatar";
 
 interface ContactProps {
@@ -18,7 +17,6 @@ interface ContactProps {
 
 export default function ContactItem(contactProps: ContactProps) {
   const { contact } = contactProps;
-  const avatar = format(AVATAR_URL, contact.userId);
   const sessionKey = ChatSession.create121Session(
     ChatUser.getCurrentUser() as ChatUser,
     new ChatUser(contact.userId + "", ChatUser.CATEGORY_REGISTER)
@@ -29,7 +27,10 @@ export default function ContactItem(contactProps: ContactProps) {
     <SidebarMenuItem className={"gap-2"}>
       <SidebarMenuButton asChild>
         <Link href={contactUrl}>
-          <MyAvatar fallback={contact?.userName as string} src={avatar} />
+          <MyAvatar
+            fallback={contact?.userName as string}
+            src={contact.avatar}
+          />
           <span>
             {contact.userName}-{contact.userId}
           </span>

@@ -11,7 +11,6 @@ import * as React from "react";
 import signIn from "@/api/signin";
 import toast, { Toaster } from "react-hot-toast";
 import { Icons } from "@/components/ui/icons";
-import CAPTCHA_URL from "@/utils/constant";
 import { ErrorMessage } from "@hookform/error-message";
 import { Checkbox } from "@/components/ui/checkbox";
 import useCaptcha from "@/common/hook/CaptchaHook";
@@ -19,6 +18,7 @@ import useCrosStorage from "@/common/hook/CrosStorageHook";
 import { getQueryString, loginDirect } from "@/common/lib/Navigating";
 
 export default function Page() {
+  debugger;
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
   let crosStorage = useCrosStorage();
@@ -128,7 +128,6 @@ export default function Page() {
                   />
                   <img
                     ref={captchaRef}
-                    src={CAPTCHA_URL}
                     alt="captcha"
                     className="w-16 h-8 cursor-pointer"
                   />
