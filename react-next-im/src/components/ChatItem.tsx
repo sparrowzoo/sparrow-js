@@ -1,10 +1,8 @@
 import * as React from "react";
 import { useContext } from "react";
 import Message from "@/lib/protocol/Message";
-import { format } from "util";
 
 import { WebSocketContext } from "@/lib/WebSocketProvider";
-import { AVATAR_URL } from "@/common/lib/Env";
 import { Separator } from "@/components/ui/separator";
 import MyAvatar from "@/components/MyAvatar";
 
@@ -28,14 +26,19 @@ export default function ChatItem(props: Props) {
   let senderDetail = webSocketContextValue.messageBroker.getContactFromLocal(
     sender.id
   );
-  debugger;
-  const avatar = format(AVATAR_URL, sender.id);
-  const alignProp = align === "left" ? "items-start" : "items-end";
+  const alignProp = align === "left" ? " items-start" : " items-end";
   const alignClass = `flex flex-col ${alignProp}`;
+  const itemAlignClass =
+    align === "left"
+      ? "flex flex-row  p-4 rounded-lg gap-4"
+      : "flex flex-row-reverse  p-4 rounded-lg gap-4";
   return (
     <div className={alignClass}>
-      <div className={"flex flex-row  p-4 rounded-lg"}>
-        <MyAvatar fallback={senderDetail?.userName as string} src={avatar} />
+      <div className={itemAlignClass}>
+        <MyAvatar
+          fallback={senderDetail?.userName as string}
+          src={senderDetail?.avatar as string}
+        />
         <div className={"flex flex-col text-left"}>
           <span className={"flex-1 text-sm text-gray-900"}>
             {senderDetail?.userName} @{senderDetail?.nationality}
