@@ -139,7 +139,7 @@ export default class ChatSession {
         });
     }
     const group = messageBroker.getGroupDetail(this?.id as string);
-    sessionDetail.name = group?.qunName as string;
+    sessionDetail.name = group?.qunName + "群";
     sessionDetail.avatarUrl = format(AVATAR_URL, group?.qunId);
     return sessionDetail;
   }
