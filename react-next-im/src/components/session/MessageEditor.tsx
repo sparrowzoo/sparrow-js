@@ -30,7 +30,7 @@ export default function MessageEditor(senderProps: SenderProps) {
         }}
         onChange={(event) => setMessage(event.target.value)}
         className={
-          "w-full shrink-0  h-[25rem] border border-gray-300 rounded-md p-2"
+          "w-full shrink-0  h-[10rem] border border-gray-300 rounded-md p-2"
         }
       ></textarea>
 

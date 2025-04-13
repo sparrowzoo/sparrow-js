@@ -7,11 +7,16 @@ import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
+  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarProvider,
 } from "@/components/ui/sidebar";
 import { ChevronDown } from "lucide-react";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import Contacts from "@/components/Contacts";
 import Groups from "@/components/Groups";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
@@ -50,7 +55,11 @@ export default function ChatLayout({
                     <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                   </CollapsibleTrigger>
                 </SidebarGroupLabel>
-                <Contacts contacts={contactGroup?.contacts || []} />
+                <CollapsibleContent>
+                  <SidebarGroupContent>
+                    <Contacts contacts={contactGroup?.contacts || []} />
+                  </SidebarGroupContent>
+                </CollapsibleContent>
               </SidebarGroup>
             </Collapsible>
             <Collapsible defaultOpen className="group/collapsible">

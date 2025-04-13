@@ -13,7 +13,6 @@ import { valibotResolver } from "@hookform/resolvers/valibot";
 import { ErrorMessage } from "@hookform/error-message";
 import signUp from "@/api/signup";
 import toast, { Toaster } from "react-hot-toast";
-import CAPTCHA_URL from "@/utils/constant";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 
@@ -145,7 +144,6 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
               />
               <img
                 ref={captchaRef}
-                src={CAPTCHA_URL}
                 alt="captcha"
                 className="w-16 h-8 cursor-pointer"
               />
