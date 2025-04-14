@@ -29,6 +29,8 @@
 <script>
     var htmlUrl = "http://www.sparrowzoo.com/react/12talk";
     $(document).ready(function () {
+        $("#contentContainer").html('<div class="loading">内容加载中...</div>');
+
         // 使用 jQuery 的 .load() 方法
         $("#contentContainer").load(
             htmlUrl,  // 替换为你的HTML文件路径
@@ -39,24 +41,6 @@
                 );
             }
         );
-        // 按钮点击事件绑定
-        $("#loadBtn").click(function () {
-            // 显示加载状态
-            $("#contentContainer").html('<div class="loading">内容加载中...</div>');
-
-            // 使用 jQuery 的 .load() 方法
-            $("#contentContainer").load(
-                htmlUrl,  // 替换为你的HTML文件路径
-                function (response, status, xhr) { // 回调函数
-                    debugger;
-                    if (status === "error") {
-                        $("#contentContainer").html(
-                            '<div class="error">加载失败: ' + response + '</div>'
-                        );
-                    }
-                }
-            );
-        });
     });
 </script>
 </body>
