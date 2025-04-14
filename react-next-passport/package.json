@@ -37,7 +37,6 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tailwindcss/typography": "^0.5.13",
     "autoprefixer": "^10.4.19",
-    "axios": "^1.7.2",
     "bytemd": "^1.21.0",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
