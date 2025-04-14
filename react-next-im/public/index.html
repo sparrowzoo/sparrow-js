@@ -34,11 +34,9 @@
             htmlUrl,  // 替换为你的HTML文件路径
             function (response, status, xhr) { // 回调函数
                 debugger;
-                if (status === "error") {
-                    $("#contentContainer").html(
-                        response
-                    );
-                }
+                $("#contentContainer").html(
+                    response
+                );
             }
         );
         // 按钮点击事件绑定
