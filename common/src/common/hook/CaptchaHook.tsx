@@ -11,8 +11,10 @@ function loadCaptcha(captcha: HTMLImageElement) {
       }, 200);
       return;
     }
-    captcha.style.visibility = "visible";
     captcha.src = `${CAPTCHA_URL}?t=${Math.random()}`;
+    captcha.addEventListener("load", () => {
+      captcha.style.visibility = "visible";
+    });
   });
 }
 
