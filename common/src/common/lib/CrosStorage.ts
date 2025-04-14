@@ -16,6 +16,7 @@ export default class CrosStorage {
   private loaded: boolean = false;
 
   private constructor(cros: Boolean | null = null) {
+    console.log("cros storage init");
     if (cros === false) {
       return;
     }

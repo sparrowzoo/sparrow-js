@@ -17,14 +17,12 @@ import {
 } from "@/lib/WebSocketProvider";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/MessageBroker";
-import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 export default function Page() {
   const contacts: Contact[] = [];
   for (let i = 0; i < 10; i++) {
     const contact = new Contact();
     contact.userName = "Contact " + i;
-    console.log(contact.avatar);
     contact.nationality = "China";
     contact.userId = i + "";
     contact.avatar = format(AVATAR_URL, contact.userId);
@@ -35,7 +33,6 @@ export default function Page() {
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
   let crosStorage = useCrosStorage();
-  console.log("渲染ChatLayout");
   useEffect(() => {
     async function asyncInit() {
       if (!crosStorage) {
@@ -57,8 +54,9 @@ export default function Page() {
   }, [crosStorage]);
 
   if (!webSocketContextValue) {
-    return <ThreeDotLoading />;
+    return <></>;
   }
+  console.log("渲染ChatLayout");
 
   return (
     <WebSocketContext.Provider
@@ -68,6 +66,7 @@ export default function Page() {
         <div className="absolute bottom-20 right-20  ">
           <Popover open={isOpen}>
             <PopoverTrigger
+              asChild={true}
               onClick={() => {
                 setIsOpen(!isOpen);
               }}
