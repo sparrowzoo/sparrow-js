@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>jQuery AJAX 加载示例</title>
+    <meta charset="UTF-8">
+    <!-- 引入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .loading {
+            color: #666;
+            padding: 10px;
+        }
+
+        .error {
+            color: red;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- 触发按钮 -->
+<button id="loadBtn">点击加载内容</button>
+
+<!-- 目标容器 -->
+<div id="contentContainer"></div>
+
+<script>
+    var htmlUrl = "http://www.sparrowzoo.com/react/12talk";
+    $(document).ready(function () {
+        // 按钮点击事件绑定
+        $("#loadBtn").click(function () {
+            // 显示加载状态
+            $("#contentContainer").html('<div class="loading">内容加载中...</div>');
+
+            // 使用 jQuery 的 .load() 方法
+            $("#contentContainer").load(
+                htmlUrl,  // 替换为你的HTML文件路径
+                function (response, status, xhr) { // 回调函数
+                    debugger;
+                    if (status === "error") {
+                        $("#contentContainer").html(
+                            '<div class="error">加载失败: ' + xhr.statusText + '</div>'
+                        );
+                    }
+                }
+            );
+        });
+    });
+</script>
+</body>
+</html>
