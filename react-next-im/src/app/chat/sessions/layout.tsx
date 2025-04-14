@@ -26,7 +26,7 @@ export default function ChatLayout({
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
   useEffect(() => {
-    messageBroker.getChatSessions().then((chatSessions) => {
+    messageBroker.contactContainer.getChatSessions().then((chatSessions) => {
       setSessions(chatSessions as ChatSession[]);
     });
   }, [newSession]);

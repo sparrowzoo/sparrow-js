@@ -5,7 +5,7 @@ import {
   WebSocketContextValue,
 } from "@/lib/WebSocketProvider";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
-import MessageBroker from "@/lib/protocol/MessageBroker";
+import MessageBroker from "@/lib/MessageBroker";
 import * as React from "react";
 import { useEffect, useState } from "react";
 import { CircleUserRound, MessageCircleCode } from "lucide-react";

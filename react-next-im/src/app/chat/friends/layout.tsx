@@ -30,7 +30,7 @@ export default function ChatLayout({
   const messageBroker = webSocketContextValue.messageBroker;
   const [contactGroup, setContactGroup] = useState<ContactGroup>();
   useEffect(() => {
-    messageBroker.getContactGroup().then((contactGroup) => {
+    messageBroker.contactContainer.getContactGroup().then((contactGroup) => {
       setContactGroup(contactGroup as ContactGroup);
     });
   }, [messageBroker]);
