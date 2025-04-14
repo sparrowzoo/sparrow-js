@@ -59,34 +59,38 @@ export default function Page() {
   console.log("渲染ChatLayout");
 
   return (
-    <WebSocketContext.Provider
-      value={webSocketContextValue as WebSocketContextValue}
-    >
-      <div>
-        <div className="absolute bottom-20 right-20  ">
-          <Popover open={isOpen}>
-            <PopoverTrigger
-              asChild={true}
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            >
-              <HeadsetIcon
-                className={"cursor-pointer"}
-                width={64}
-                height={64}
-              />
-            </PopoverTrigger>
-            <PopoverContent side={"top"}>
-              <SidebarProvider className={"min-h-full h-full w-auto"}>
-                <Sidebar className={"relative min-h-full h-full"}>
-                  <Contacts contacts={contacts} />
-                </Sidebar>
-              </SidebarProvider>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-    </WebSocketContext.Provider>
+    <html>
+      <body>
+        <WebSocketContext.Provider
+          value={webSocketContextValue as WebSocketContextValue}
+        >
+          <div>
+            <div className="absolute bottom-20 right-20  ">
+              <Popover open={isOpen}>
+                <PopoverTrigger
+                  asChild={true}
+                  onClick={() => {
+                    setIsOpen(!isOpen);
+                  }}
+                >
+                  <HeadsetIcon
+                    className={"cursor-pointer"}
+                    width={64}
+                    height={64}
+                  />
+                </PopoverTrigger>
+                <PopoverContent side={"top"}>
+                  <SidebarProvider className={"min-h-full h-full w-auto"}>
+                    <Sidebar className={"relative min-h-full h-full"}>
+                      <Contacts contacts={contacts} />
+                    </Sidebar>
+                  </SidebarProvider>
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+        </WebSocketContext.Provider>
+      </body>
+    </html>
   );
 }
