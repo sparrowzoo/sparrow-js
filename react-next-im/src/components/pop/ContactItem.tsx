@@ -15,7 +15,7 @@ export default function ContactItem(contactProps: ContactProps) {
   const { contact } = contactProps;
   return (
     <SidebarMenuItem className={"gap-2"}>
-      <SidebarMenuButton className={"flex flex-row gap-4"}>
+      <SidebarMenuButton asChild={true} className={"flex flex-row gap-4"}>
         <Dialog contact={contact} />
       </SidebarMenuButton>
       <SidebarMenuBadge></SidebarMenuBadge>
