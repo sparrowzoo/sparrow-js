@@ -23,15 +23,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html>
-      <body
-        className={
-          "mx-auto text-center justify-center align-middle content-center w-full "
-        }
-      >
-        {children}
-      </body>
-    </html>
-  );
+  return <>{children}</>;
 }
