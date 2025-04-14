@@ -13,6 +13,7 @@ function loadCaptcha(captcha: HTMLImageElement) {
     }
     captcha.src = `${CAPTCHA_URL}?t=${Math.random()}`;
     captcha.addEventListener("load", () => {
+      console.log("Captcha loaded");
       captcha.style.visibility = "visible";
     });
   });
