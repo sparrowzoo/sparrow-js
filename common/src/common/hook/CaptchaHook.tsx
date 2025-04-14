@@ -12,6 +12,7 @@ function loadCaptcha(captcha: HTMLImageElement) {
       return;
     }
     captcha.src = `${CAPTCHA_URL}?t=${Math.random()}`;
+    console.log("Captcha loading ...");
     captcha.addEventListener("load", () => {
       console.log("Captcha loaded");
       captcha.style.visibility = "visible";
