@@ -39,7 +39,11 @@
                     debugger;
                     if (status === "error") {
                         $("#contentContainer").html(
-                            '<div class="error">加载失败: ' + xhr.statusText + '</div>'
+                            '<div class="error">加载失败: ' + response + '</div>'
+                        );
+                    } else {
+                        $("#contentContainer").html(
+                            '<div class="error">' + response + '</div>'
                         );
                     }
                 }
