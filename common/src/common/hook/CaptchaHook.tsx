@@ -2,15 +2,16 @@ import { useEffect, useRef } from "react";
 import { CAPTCHA_URL } from "@/common/lib/Env";
 import Fetcher from "@/common/lib/Fetcher";
 
-function getSessionId(captcha: HTMLImageElement) {
+function loadCaptcha(captcha: HTMLImageElement) {
   const url = `${CAPTCHA_URL}?session=true&t=${Math.random()}`;
   Fetcher.get(url, null, true).then((res: Result) => {
     if (!res.data) {
       setTimeout(() => {
-        getSessionId(captcha);
+        loadCaptcha(captcha);
       }, 200);
       return;
     }
+    captcha.style.visibility = "visible";
     captcha.src = `${CAPTCHA_URL}?t=${Math.random()}`;
   });
 }
@@ -20,10 +21,11 @@ export default function useCaptcha() {
   useEffect(() => {
     const captcha = captchaRef.current;
     if (captcha) {
+      captcha.style.visibility = "visible";
       captcha.addEventListener("click", () => {
         captcha.src = `${CAPTCHA_URL}?${Math.random()}`;
       });
-      getSessionId(captcha);
+      loadCaptcha(captcha);
     }
   }, []);
   return captchaRef;
