@@ -129,7 +129,7 @@ export default function Page() {
                   <img
                     ref={captchaRef}
                     alt="captcha"
-                    className="w-16 h-8 cursor-pointer"
+                    className="w-16 h-8 cursor-pointer invisible"
                   />
                 </div>
                 <ErrorMessage
