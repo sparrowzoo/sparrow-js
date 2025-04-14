@@ -38,10 +38,6 @@
                     $("#contentContainer").html(
                         '<div class="error">加载失败: ' + response + '</div>'
                     );
-                } else {
-                    $("#contentContainer").html(
-                        '<div class="error">' + response + '</div>'
-                    );
                 }
             }
         );
@@ -58,10 +54,6 @@
                     if (status === "error") {
                         $("#contentContainer").html(
                             '<div class="error">加载失败: ' + response + '</div>'
-                        );
-                    } else {
-                        $("#contentContainer").html(
-                            '<div class="error">' + response + '</div>'
                         );
                     }
                 }
