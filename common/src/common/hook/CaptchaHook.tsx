@@ -15,7 +15,7 @@ function loadCaptcha(captcha: HTMLImageElement) {
     console.log("Captcha loading ...");
     captcha.addEventListener("load", () => {
       console.log("Captcha loaded");
-      captcha.style.visibility = "visible";
+      //captcha.style.visibility = "visible";
     });
   });
 }
