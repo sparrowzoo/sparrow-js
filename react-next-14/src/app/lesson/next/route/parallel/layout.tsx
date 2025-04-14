@@ -22,6 +22,8 @@ export default function Layout({
 
       <div>{isLogin ? team : "没登录啊 兄弟"}</div>
       <div> {children}</div>
+      <div> {team}</div>
+
       <div> {analytics}</div>
     </>
   );
