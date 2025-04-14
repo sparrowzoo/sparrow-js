@@ -17,7 +17,9 @@ function Group() {
   const headSrc = format(AVATAR_URL, groupId);
   const chatSession = ChatSession.createGroupSession(groupId as string);
 
-  const groupDetail = messageBroker.getGroupDetail(groupId as string);
+  const groupDetail = messageBroker.contactContainer.getGroupDetail(
+    groupId as string
+  );
   if (!groupDetail) {
     return <div>Loading...</div>;
   }

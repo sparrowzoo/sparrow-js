@@ -23,9 +23,10 @@ export default function ChatItem(props: Props) {
     );
   }
   const { sender, content, align } = props.message;
-  let senderDetail = webSocketContextValue.messageBroker.getContactFromLocal(
-    sender.id
-  );
+  let senderDetail =
+    webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
+      sender.id
+    );
   const alignProp = align === "left" ? " items-start" : " items-end";
   const alignClass = `flex flex-col ${alignProp}`;
   const itemAlignClass =

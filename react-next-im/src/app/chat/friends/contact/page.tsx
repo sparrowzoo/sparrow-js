@@ -25,9 +25,10 @@ function Contact() {
     receiver
   );
   const contactUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${chatSession.key()}`;
-  const contact = webSocketContextValue.messageBroker.getContactFromLocal(
-    userId as string
-  );
+  const contact =
+    webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
+      userId as string
+    );
 
   return (
     <div className={"flex flex-col p-4 bg-white shadow-md"}>

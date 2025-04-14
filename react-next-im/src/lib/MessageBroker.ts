@@ -8,18 +8,18 @@ import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
 import { LOGIN_URL, USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
-import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import CrosStorage from "@/common/lib/CrosStorage";
+import ContactContainer from "@/lib/protocol/contact/ContactContainer";
 
 export default class MessageBroker {
-  public chatSessions: ChatSession[] | null = null;
+  public contactContainer: ContactContainer;
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
   private crosStorage: CrosStorage;
-  private contactGroup: ContactGroup | null = null;
 
   constructor(crosStorage: CrosStorage) {
     this.crosStorage = crosStorage;
+    this.contactContainer = new ContactContainer(this.crosStorage);
     const sparrowWebSocket = new SparrowWebSocket(
       WEBSOCKET as string,
       crosStorage
@@ -71,7 +71,7 @@ export default class MessageBroker {
       messageList = [];
       this.messageMap.set(sessionKey, messageList);
     }
-    this.newSession(sessionKey);
+    this.contactContainer.newSession(sessionKey);
     messageList.push(message);
   }
 
@@ -117,50 +117,6 @@ export default class MessageBroker {
     this.newMessageSignal();
   }
 
-  public async getChatSessions() {
-    let localSession = this.chatSessions;
-    if (localSession) {
-      return localSession;
-    }
-    //会话依赖联系人列表
-    await this.getContactGroup().then(async (group) => {
-      await ChatApi.getSessions(this.crosStorage).then((sessions) => {
-        console.log(sessions.length);
-        localSession = sessions;
-        this.chatSessions = localSession;
-      });
-    });
-    return localSession;
-  }
-
-  public async getContactGroup() {
-    let localGroup = this.contactGroup;
-    if (localGroup) {
-      console.log("getContactGroup from local " + new Date().getTime());
-      return localGroup;
-    }
-    await ChatApi.getContacts(this.crosStorage).then((group) => {
-      console.log("fetch contact group from server " + new Date().getTime());
-      localGroup = group;
-      this.contactGroup = localGroup;
-    });
-    return localGroup;
-  }
-
-  public getGroupDetail(groupId: string) {
-    return this.contactGroup?.quns.find((qun) => qun.qunId == groupId);
-  }
-
-  public async getContactDetail(userId: string) {
-    //刷会话页，找不到联系人列表
-    const contactGroup = await this.getContactGroup();
-    return contactGroup?.contacts.find((user) => user.userId == userId);
-  }
-
-  public getContactFromLocal(userId: string) {
-    return this.contactGroup?.contacts.find((user) => user.userId == userId);
-  }
-
   private wrapMessages(messages: Message[]): Message[] {
     let preTime: number = 0;
     const newMessages: Message[] = [];
@@ -175,19 +131,5 @@ export default class MessageBroker {
     }
     debugger;
     return newMessages;
-  }
-
-  private newSession(sessionKey: string) {
-    let session = this.chatSessions?.find(
-      (session) => session.key() === sessionKey
-    );
-    if (!session) {
-      session = ChatSession.parse(sessionKey) as ChatSession;
-      this.chatSessions?.push(session);
-    }
-    session.lastReadTime = new Date().getTime();
-    this.chatSessions?.sort((a: ChatSession, b: ChatSession) => {
-      return b.lastReadTime - a.lastReadTime;
-    });
   }
 }
