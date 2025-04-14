@@ -32,8 +32,9 @@
         $("#contentContainer").load(
             htmlUrl,  // 替换为你的HTML文件路径
             function (response, status, xhr) { // 回调函数
-                debugger;
-                $("#contentContainer").html(
+                var parent = $("#contentContainer").parent;
+                parent.removeElementById("contentContainer");
+                parent.html(
                     response
                 );
             }
