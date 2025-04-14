@@ -3,7 +3,7 @@ import ChatUser from "@/lib/protocol/ChatUser";
 import SessionDetail from "@/lib/protocol/session/SessionDetail";
 import { format } from "util";
 import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
-import MessageBroker from "@/lib/protocol/MessageBroker";
+import MessageBroker from "@/lib/MessageBroker";
 
 export default class ChatSession {
   private _lastReadTime: number = 0;
@@ -127,7 +127,7 @@ export default class ChatSession {
     if (this?.isOne2One()) {
       const oppositeUser = this?.getOppositeUser();
       sessionDetail.avatarUrl = format(AVATAR_URL, oppositeUser?.id);
-      return await messageBroker
+      return await messageBroker.contactContainer
         .getContactDetail(oppositeUser?.id as string)
         .then((contact) => {
           if (contact) {
@@ -138,7 +138,9 @@ export default class ChatSession {
           return sessionDetail;
         });
     }
-    const group = messageBroker.getGroupDetail(this?.id as string);
+    const group = messageBroker.contactContainer.getGroupDetail(
+      this?.id as string
+    );
     sessionDetail.name = group?.qunName + "群";
     sessionDetail.avatarUrl = format(AVATAR_URL, group?.qunId);
     return sessionDetail;

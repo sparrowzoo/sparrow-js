@@ -16,7 +16,7 @@ import {
   WebSocketContextValue,
 } from "@/lib/WebSocketProvider";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
-import MessageBroker from "@/lib/protocol/MessageBroker";
+import MessageBroker from "@/lib/MessageBroker";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 export default function Page() {

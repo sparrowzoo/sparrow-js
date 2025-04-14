@@ -14,11 +14,13 @@ export default function Session() {
   function refreshSessionKey() {
     const sessionKeyFromUrl = searchParams?.get("sessionKey");
     if (!sessionKeyFromUrl) {
-      webSocketContextValue.messageBroker.getChatSessions().then((sessions) => {
-        if (sessions && sessions.length > 0) {
-          setSessionKey(sessions[0].key());
-        }
-      });
+      webSocketContextValue.messageBroker.contactContainer
+        .getChatSessions()
+        .then((sessions) => {
+          if (sessions && sessions.length > 0) {
+            setSessionKey(sessions[0].key());
+          }
+        });
       return;
     }
     if (sessionKeyFromUrl !== sessionKey) {
