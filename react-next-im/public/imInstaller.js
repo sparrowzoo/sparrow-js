@@ -44,30 +44,30 @@ loadjQuery(function () {
   }
 
   // 资源重载处理
-  function reloadAssets($container) {
+  function reloadAssets(container) {
     // 处理样式表
-    $container.find('link[rel="stylesheet"]').each(function () {
+    container.find('link[rel="stylesheet"]').each(function () {
       $(this).clone().appendTo("head");
     });
 
     // 处理脚本（保持顺序执行）
-    const scripts = $container.find("script").get();
+    const scripts = container.find("script").get();
     (function loadScript(index) {
       if (index >= scripts.length) return;
 
       const script = scripts[index];
-      const $newScript = $("<script>");
+      const newScript = $("<script>");
 
       if (script.src) {
-        $newScript
+        newScript
           .attr("src", script.src + "?t=" + Date.now())
           .on("load", () => loadScript(index + 1));
       } else {
-        $newScript.text(script.innerHTML);
+        newScript.text(script.innerHTML);
         setTimeout(() => loadScript(index + 1), 0);
       }
 
-      $("body").append($newScript);
+      $("body").append(newScript);
     })(0);
   }
 
