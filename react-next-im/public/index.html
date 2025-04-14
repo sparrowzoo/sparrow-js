@@ -20,21 +20,25 @@
 <body>
 <!-- 目标容器 -->
 <div>
-    <div id="contentContainer"></div>
+    <div>
+        <div id="contentContainer"></div>
+    </div>
 </div>
 
 <script>
     var htmlUrl = "http://www.sparrowzoo.com/react/12talk";
     $(document).ready(function () {
+        var parent = $("#contentContainer").parent();
+        var grandParent = parent.parent();
+
         $("#contentContainer").html('<div class="loading">内容加载中...</div>');
 
         // 使用 jQuery 的 .load() 方法
         $("#contentContainer").load(
             htmlUrl,  // 替换为你的HTML文件路径
             function (response, status, xhr) { // 回调函数
-                var parent = $("#contentContainer").parent();
-                $("#contentContainer").remove();
-                parent.html(
+                parent.remove();
+                grandParent.html(
                     response
                 );
             }
