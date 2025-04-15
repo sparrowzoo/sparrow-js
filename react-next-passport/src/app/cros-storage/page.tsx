@@ -13,13 +13,14 @@ import { getQueryString } from "@/common/lib/Navigating";
 export default function Page() {
   useEffect(() => {
     console.info("init cros iframe storage");
-
+    if (window.parent === window) {
+      console.log("window.opener is null");
+      return;
+    }
     window.addEventListener(
       "message",
       (event: MessageEvent<StorageRequest>) => {
-        debugger;
         console.log("Received message", JSON.stringify(event.data));
-
         // 严格验证来源
         if (!allowOrigin(event.origin)) return;
         const storage =
@@ -73,6 +74,9 @@ export default function Page() {
         command: CommandType.INIT,
       };
       const parentUrl = getQueryString();
+      if (!parentUrl) {
+        return;
+      }
       const send = () => {
         try {
           //这里窗口和URl需要保持一致

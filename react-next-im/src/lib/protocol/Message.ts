@@ -19,6 +19,7 @@ export default class Message {
   }
 
   set timeline(value) {
+    this._messageId = value + "";
     this._timeline = value;
   }
 
