@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext } from "react";
+import { Key, useContext } from "react";
 import Message from "@/lib/protocol/Message";
 
 import { WebSocketContext } from "@/lib/WebSocketProvider";
@@ -8,7 +8,9 @@ import MyAvatar from "@/components/MyAvatar";
 
 interface Props {
   message: Message;
-  key: string;
+  key: Key;
+  //这里的key是React的key属性，用来标识每个组件的唯一性，在列表中必须设置，否则会出现渲染错误。
+  //永远是undefined
 }
 
 export default function ChatItem(props: Props) {
@@ -22,6 +24,7 @@ export default function ChatItem(props: Props) {
       </div>
     );
   }
+  console.log("chat item", props.message.messageId);
   const { sender, content, align } = props.message;
   let senderDetail =
     webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
@@ -34,7 +37,7 @@ export default function ChatItem(props: Props) {
       ? "flex flex-row  p-4 rounded-lg gap-4"
       : "flex flex-row-reverse  p-4 rounded-lg gap-4";
   return (
-    <div className={alignClass}>
+    <div key={props.message.messageId} className={alignClass}>
       <div className={itemAlignClass}>
         <MyAvatar
           fallback={senderDetail?.userName as string}
