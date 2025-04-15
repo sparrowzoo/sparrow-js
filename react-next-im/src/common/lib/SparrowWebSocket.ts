@@ -41,6 +41,9 @@ class SparrowWebSocket {
     this.crosStorage = crosStorage;
   }
 
+  public getHeartStatus() {
+    return SparrowWebSocket.heartStatus;
+  }
   public reconnectWebSocket() {
     //关闭现有链接
     this.close();
@@ -145,7 +148,7 @@ class SparrowWebSocket {
       }
       // 开启一个心跳
       try {
-        //console.log("发送心跳" + new Date().getTime());
+        console.log("发送心跳" + new Date().getTime());
         this.ws.send("PING");
         if (
             new Date().getTime() - this.lastStatusMonitoredTime >

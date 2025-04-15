@@ -1,5 +1,5 @@
 import ChatUser from "@/lib/protocol/ChatUser";
-import ChatSession from "@/lib/protocol/ChatSession";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
 import { ChatType, MessageType } from "@/lib/protocol/Chat";
 
@@ -123,10 +123,9 @@ class Protocol {
       const sessionBytes = new Uint8Array(
         bytes.slice(offset, offset + sessionLength)
       );
-      const session = sessionBytes.toString();
-      protocol.chatSession = ChatSession.createGroupSession(
-        session
-      ) as ChatSession;
+      offset += sessionLength;
+      const session = new TextDecoder().decode(sessionBytes);
+      protocol.chatSession = ChatSession.parse(session) as ChatSession;
     }
     const contentLength = dataView.getUint32(offset);
     offset += 4;
@@ -160,6 +159,24 @@ class Protocol {
       protocol.sender,
       receiver
     );
+    protocol.content = ArrayBufferUtils.str2Buffer(content);
+    protocol.clientSendTime = clientSendTime;
+    return protocol;
+  }
+
+  public static createGroupChat(
+    sessionKey: string,
+    messageType: MessageType,
+    content: string,
+    clientSendTime: number
+  ): Protocol {
+    const protocol: Protocol = new Protocol();
+    protocol.version = 1;
+    protocol.chatType = ChatType.GROUP;
+    const loginUser = ChatUser.getCurrentUser();
+    protocol.sender = loginUser as ChatUser;
+    protocol.messageType = messageType;
+    protocol.chatSession = ChatSession.parse(sessionKey) as ChatSession;
     protocol.content = ArrayBufferUtils.str2Buffer(content);
     protocol.clientSendTime = clientSendTime;
     return protocol;
