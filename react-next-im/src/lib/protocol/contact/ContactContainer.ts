@@ -25,7 +25,7 @@ export default class ContactContainer {
       localGroup = group;
       this.contactGroup = localGroup;
       for (const contact of localGroup.contacts) {
-        this.container.set(contact.userId, contact);
+        this.container.set(contact.userId + "", contact);
       }
     });
     return localGroup;

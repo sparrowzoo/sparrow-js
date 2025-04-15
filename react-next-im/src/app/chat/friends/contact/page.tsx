@@ -25,6 +25,7 @@ function Contact() {
     receiver
   );
   const contactUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${chatSession.key()}`;
+  debugger;
   const contact =
     webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
       userId as string

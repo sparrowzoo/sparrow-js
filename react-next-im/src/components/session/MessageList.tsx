@@ -9,6 +9,7 @@ interface MessageListProps {
 }
 
 export default function MessageList(messageListProp: MessageListProps) {
+  debugger;
   const { messageList, localMessageNo } = messageListProp;
   const messageContainerRef: MutableRefObject<HTMLDivElement | null> =
     useRef(null);
@@ -29,8 +30,9 @@ export default function MessageList(messageListProp: MessageListProps) {
         }
       >
         {messageList.map((message) => (
-          <ChatItem message={message} key={message.messageId} />
+          <ChatItem key={message.messageId} message={message} />
         ))}
+
         <div className={"h-[0px]"} ref={messageContainerRef} />
       </div>
     </>
