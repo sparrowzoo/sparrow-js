@@ -1,6 +1,6 @@
 import * as React from "react";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
-import ChatSession from "@/lib/protocol/ChatSession";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Contact from "@/lib/protocol/contact/Contact";
 import {
@@ -9,7 +9,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-import { DynamicImage } from "@/components/img/DynamicImage";
+import MyAvatar from "@/components/MyAvatar";
 
 interface ContactProps {
   contact: Contact;
@@ -17,7 +17,6 @@ interface ContactProps {
 
 export default function ContactItem(contactProps: ContactProps) {
   const { contact } = contactProps;
-  const avatar = `/avatar/${contact.userId}.jpg`;
   const sessionKey = ChatSession.create121Session(
     ChatUser.getCurrentUser() as ChatUser,
     new ChatUser(contact.userId + "", ChatUser.CATEGORY_REGISTER)
@@ -28,19 +27,16 @@ export default function ContactItem(contactProps: ContactProps) {
     <SidebarMenuItem className={"gap-2"}>
       <SidebarMenuButton asChild>
         <Link href={contactUrl}>
-          <DynamicImage
-            src={avatar}
-            alt={"header"}
-            width={0}
-            height={0}
-            className={"w-8 h-8 rounded-full mr-4"}
+          <MyAvatar
+            fallback={contact?.userName as string}
+            src={contact.avatar}
           />
           <span>
             {contact.userName}-{contact.userId}
           </span>
         </Link>
       </SidebarMenuButton>
-      <SidebarMenuBadge>24</SidebarMenuBadge>
+      <SidebarMenuBadge></SidebarMenuBadge>
     </SidebarMenuItem>
   );
 }

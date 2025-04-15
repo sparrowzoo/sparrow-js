@@ -1,8 +1,11 @@
 import Fetcher from "@/common/lib/Fetcher";
-import ChatSession from "@/lib/protocol/ChatSession";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 import Message from "@/lib/protocol/Message";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import CrosStorage from "@/common/lib/CrosStorage";
+import Contact from "@/lib/protocol/contact/Contact";
+import { format } from "util";
+import { AVATAR_URL } from "@/common/lib/Env";
 
 export default class ChatApi {
   static async getVisitorToken() {
@@ -53,6 +56,17 @@ export default class ChatApi {
       async (response: Result) => {
         if (response.data) {
           contactGroup = response.data;
+          const contacts: Contact[] = contactGroup.contacts;
+          for (let remoteContact of contacts) {
+            if (!remoteContact.avatar) {
+              remoteContact.avatar = format(AVATAR_URL, remoteContact.userId);
+            }
+          }
+          const groups = contactGroup.quns;
+          for (let group of groups) {
+            group.avatar = format(AVATAR_URL, group.qunId);
+          }
+          contactGroup.contacts = contacts;
         }
       }
     );

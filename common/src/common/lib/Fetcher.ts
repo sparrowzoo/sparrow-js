@@ -10,7 +10,9 @@ export default class Fetcher {
     crosStorage: CrosStorage | null = CrosStorage.getCurrentStorage(),
     withCookie = false
   ) {
-    url = API_BASIC_URL + url;
+    if (url.indexOf("http") < 0) {
+      url = API_BASIC_URL + url;
+    }
     let token: string | null = null;
     if (crosStorage) {
       token = await crosStorage?.getToken().then((token) => token);
@@ -19,7 +21,6 @@ export default class Fetcher {
       method: "GET",
       //  credentials: "include", // 允许携带cookie
       headers: {
-        "Content-Type": "application/json",
         Authorization: token as string,
       },
     };
@@ -50,7 +51,9 @@ export default class Fetcher {
     crosStorage: CrosStorage | null = CrosStorage.getCurrentStorage(),
     withCookie = false
   ) {
-    url = API_BASIC_URL + url;
+    if (url.indexOf("http") < 0) {
+      url = API_BASIC_URL + url;
+    }
     let token: string | null = null;
     if (crosStorage) {
       token = await crosStorage.getToken().then((token) => token);

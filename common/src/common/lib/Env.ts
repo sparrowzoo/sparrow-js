@@ -11,6 +11,7 @@ const STORAGE_PROXY = process.env.NEXT_PUBLIC_STORAGE_PROXY;
 const CAPTCHA_URL = process.env.NEXT_PUBLIC_CAPTCHA_URL;
 
 const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL;
+const AVATAR_URL = process.env.NEXT_PUBLIC_AVATAR_URL;
 
 function allowOrigin(origin: string) {
   const NEXT_PUBLIC_ALLOW_ORIGINS = process.env.NEXT_PUBLIC_ALLOW_ORIGINS;
@@ -33,4 +34,5 @@ export {
   WEBSOCKET,
   CAPTCHA_URL,
   LOGIN_URL,
+  AVATAR_URL,
 };
