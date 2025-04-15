@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>jQuery AJAX 加载示例</title>
+    <meta charset="UTF-8">
+    <!-- 引入 jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<!-- 目标容器 -->
+<div>
+    <div>
+        <div id="contentContainer"></div>
+    </div>
+</div>
+
+<script>
+    var htmlUrl = "http://www.sparrowzoo.com/react/12talk";
+    // var htmlUrl = "http://localhost:3001/12talk"
+    $(document).ready(function () {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        var parent = $("#contentContainer").parent();
+        var grandParent = parent.parent();
+
+        $("#contentContainer").html('<div class="loading">内容加载中...</div>');
+
+        $("#contentContainer").load(
+            htmlUrl,  // 替换为你的HTML文件路径
+            function (response, status, xhr) { // 回调函数
+                try {
+                    parent.remove();
+                } catch (e) {
+                    console.log(e);
+                }
+                grandParent.html(
+                    response
+                );
+            }
+        );
+    });
+</script>
+</body>
+</html>

@@ -1,61 +1,67 @@
 export default class Contact {
-    get nationality(): string {
-        return this._nationality;
-    }
+  /**
+   * 国籍
+   */
+  private _nationality: string;
 
-    set nationality(value: string) {
-        this._nationality = value;
-    }
+  get nationality(): string {
+    return this._nationality;
+  }
 
-    get flagUrl(): string {
-        return this._flagUrl;
-    }
+  set nationality(value: string) {
+    this._nationality = value;
+  }
 
-    set flagUrl(value: string) {
-        this._flagUrl = value;
-    }
+  /**
+   * 国旗url
+   */
+  private _flagUrl: string;
 
-    get userId(): number {
-        return this._userId;
-    }
+  get flagUrl(): string {
+    return this._flagUrl;
+  }
 
-    set userId(value: number) {
-        this._userId = value;
-    }
+  set flagUrl(value: string) {
+    this._flagUrl = value;
+  }
 
-    get userName(): string {
-        return this._userName;
-    }
+  /**
+   * 用户id
+   */
+  private _userId: string;
 
-    set userName(value: string) {
-        this._userName = value;
-    }
+  get userId(): string {
+    return this._userId;
+  }
 
-    get avatar(): string {
-        return this._avatar;
-    }
+  set userId(value: string) {
+    //保证userId为字符串
+    this._userId = value + "";
+  }
 
-    set avatar(value: string) {
-        this._avatar = value;
-    }
-    /**
-     * 国籍
-     */
-    private _nationality:string;
-    /**
-     * 国旗url
-     */
-    private _flagUrl:string;
-    /**
-     * 用户id
-     */
-    private _userId:number;
-    /**
-     * 用户名
-     */
-    private _userName:string;
-    /**
-     * 头象
-     */
-    private _avatar:string;
+  /**
+   * 用户名
+   */
+  private _userName: string;
+
+  get userName(): string {
+    return this._userName;
+  }
+
+  set userName(value: string) {
+    this._userName = value;
+  }
+
+  /**
+   * 头象
+   */
+  private _avatar: string;
+
+  get avatar(): string {
+    return this._avatar;
+  }
+
+  set avatar(value: string) {
+    this._avatar = value;
+  }
 }
