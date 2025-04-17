@@ -1,46 +1,37 @@
 "use client";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import MessageSender from "@/components/session/MessageSender";
 import SessionHeader from "@/components/session/SessionHeader";
 import { WebSocketContext } from "@/lib/WebSocketProvider";
-import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 interface SessionProps {
   sessionKey?: string;
 }
-export default function Session(sessionProps: SessionProps) {
-  const searchParams = useSearchParams();
-  const [sessionKey, setSessionKey] = useState(sessionProps.sessionKey);
-  const webSocketContextValue = useContext(WebSocketContext);
 
-  if(sessionKey === undefined) {
-    function refreshSessionKey() {
-      const sessionKeyFromUrl = searchParams?.get("sessionKey");
-      if (!sessionKeyFromUrl) {
-        webSocketContextValue.messageBroker.contactContainer
-            .getChatSessions()
-            .then((sessions) => {
-              if (sessions && sessions.length > 0) {
-                setSessionKey(sessions[0].key());
-              }
-            });
-        return;
-      }
-      if (sessionKeyFromUrl !== sessionKey) {
-        setSessionKey(sessionKeyFromUrl);
-      }
-    }
-    refreshSessionKey();
+export default function Session(sessionProps: SessionProps) {
+  const webSocketContextValue = useContext(WebSocketContext);
+  const searchParams = useSearchParams();
+  let currentSessionKey = sessionProps.sessionKey;
+  // 没有传入sessionKey，从searchParams中获取sessionKey
+  if (!currentSessionKey) {
+    currentSessionKey = searchParams?.get("sessionKey") as string;
   }
-  if (!sessionKey) {
-    return <ThreeDotLoading />;
+
+  if (!currentSessionKey) {
+    currentSessionKey = webSocketContextValue.messageBroker.contactContainer
+      .getDefaultSession()
+      ?.key();
+  }
+
+  if (!currentSessionKey) {
+    return <div>NO SESSION FOUND</div>;
   }
 
   return (
     <div className={"flex flex-col w-full min-h-0 h-full"}>
-      <SessionHeader sessionKey={sessionKey} />
-      <MessageSender sessionKey={sessionKey} />
+      <SessionHeader sessionKey={currentSessionKey} />
+      <MessageSender sessionKey={currentSessionKey} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import ChatItem from "@/components/ChatItem";
+import ChatItem from "@/components/session/MessageItem";
 import React, { MutableRefObject, useEffect, useRef } from "react";
 import Message from "@/lib/protocol/Message";
 

@@ -5,7 +5,7 @@ import { ChatType } from "@/lib/protocol/Chat";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import SessionDetail from "@/lib/protocol/session/SessionDetail";
-import {Wifi, WifiOff} from "lucide-react";
+import { Wifi, WifiOff } from "lucide-react";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
 
 class HeaderDetail {
@@ -23,8 +23,13 @@ export default function SessionHeader(sessionHeaderProps: SessionHeaderProps) {
   const [sessionDetail, setSessionDetail] = useState<SessionDetail>();
   //不要解构，因为解构会useEffect的依赖引用无变化，不会重新渲染
   const webSocketContextValue = useContext(WebSocketContext);
-  const heartStatus = webSocketContextValue.messageBroker.webSocket.getHeartStatus();
+  const [heartStatus, setHeartStatus] = useState<string>();
   useEffect(() => {
+    setInterval(() => {
+      const heartStatus =
+        webSocketContextValue.messageBroker.webSocket.getHeartStatus();
+      setHeartStatus(heartStatus);
+    }, 1000);
     console.log("sessionKey changed to: ", sessionHeaderProps.sessionKey);
     if (!sessionKey) {
       return;
@@ -56,9 +61,14 @@ export default function SessionHeader(sessionHeaderProps: SessionHeaderProps) {
         width={0}
         height={0}
       />{" "}
-      <span className={"text-left text-sm"}>{sessionDetail.name}</span><span>{sessionDetail.sessionKey}</span>
-      {heartStatus ===SparrowWebSocket.ACTIVE_STATUS && <Wifi className={"text-blue-500"} />}
-      {heartStatus ===SparrowWebSocket.INACTIVE_STATUS && <WifiOff className={"text-red-500"} />}
+      <span className={"text-left text-sm"}>{sessionDetail.name}</span>
+      <span>{sessionDetail.sessionKey}</span>
+      {heartStatus === SparrowWebSocket.ACTIVE_STATUS && (
+        <Wifi className={"text-blue-500"} />
+      )}
+      {heartStatus === SparrowWebSocket.INACTIVE_STATUS && (
+        <WifiOff className={"text-red-500"} />
+      )}
     </div>
   );
 }

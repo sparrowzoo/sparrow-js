@@ -3,6 +3,7 @@ import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import ChatApi from "@/lib/ChatApi";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import Contact from "@/lib/protocol/contact/Contact";
+import ChatUser from "@/lib/protocol/ChatUser";
 
 export default class ContactContainer {
   public chatSessions: ChatSession[] | null = null;
@@ -24,6 +25,7 @@ export default class ContactContainer {
       console.log("fetch contact group from server " + new Date().getTime());
       localGroup = group;
       this.contactGroup = localGroup;
+      debugger;
       for (const contact of localGroup.contacts) {
         this.container.set(contact.userId + "", contact);
       }
@@ -35,17 +37,44 @@ export default class ContactContainer {
     return this.contactGroup?.quns.find((qun) => qun.qunId == groupId);
   }
 
-  public async getContactDetail(userId: string) {
+  public async getContactDetail(user: ChatUser) {
+    if (user.isVisitor()) {
+      return Contact.visitor(user);
+    }
+    const userId = user.id;
     if (this.container.has(userId)) {
       return this.container.get(userId);
     }
-    //刷会话页，找不到联系人列表
-    const contactGroup = await this.getContactGroup();
-    return contactGroup?.contacts.find((user) => user.userId == userId);
+    await ChatApi.getUsersByIds(this.crosStorage, [userId])
+      .then((users: Contact[]) => {
+        if (users.length == 0) {
+          this.container.set(userId, Contact.notFound(user));
+          return;
+        }
+        this.container.set(userId, users[0]);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    return this.container.get(userId);
   }
 
-  public getContactFromLocal(userId: string) {
-    return this.container.get(userId);
+  public getContactFromLocal(user: ChatUser) {
+    if (user.isVisitor()) {
+      return Contact.visitor(user);
+    }
+    return this.container.get(user.id);
+  }
+
+  public getLocalSessions() {
+    return this.chatSessions;
+  }
+
+  public getDefaultSession() {
+    if (this.chatSessions && this.chatSessions.length > 0) {
+      return this.chatSessions[0];
+    }
+    return null;
   }
 
   public async getChatSessions() {

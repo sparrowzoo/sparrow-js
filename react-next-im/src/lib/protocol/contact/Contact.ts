@@ -1,3 +1,6 @@
+import ChatUser from "@/lib/protocol/ChatUser";
+import { VISITOR_AVATAR_URL } from "@/common/lib/Env";
+
 export default class Contact {
   /**
    * 国籍
@@ -63,5 +66,25 @@ export default class Contact {
 
   set avatar(value: string) {
     this._avatar = value;
+  }
+
+  public static visitor(user: ChatUser) {
+    const contact = new Contact();
+    contact.userId = user.id;
+    contact.userName = "VISITOR" + user.id;
+    contact.avatar = `${VISITOR_AVATAR_URL}`;
+    contact.flagUrl = "";
+    contact.nationality = "";
+    return contact;
+  }
+
+  public static notFound(user: ChatUser) {
+    const contact = new Contact();
+    contact.userId = user.id;
+    contact.userName = "VISITOR:" + user.id;
+    contact.avatar = `${VISITOR_AVATAR_URL}`;
+    contact.flagUrl = "";
+    contact.nationality = "";
+    return contact;
   }
 }

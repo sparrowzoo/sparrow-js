@@ -10,6 +10,7 @@ import { LOGIN_URL, USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
 import CrosStorage from "@/common/lib/CrosStorage";
 import ContactContainer from "@/lib/protocol/contact/ContactContainer";
+import Result from "@/common/lib/protocol/Result";
 
 export default class MessageBroker {
   public contactContainer: ContactContainer;
@@ -17,12 +18,16 @@ export default class MessageBroker {
   private messageMap: Map<string, Message[]> = new Map();
   private crosStorage: CrosStorage;
 
-  constructor(crosStorage: CrosStorage) {
+  constructor(
+    crosStorage: CrosStorage,
+    visitorGenerator: (() => Promise<string>) | null = null
+  ) {
     this.crosStorage = crosStorage;
     this.contactContainer = new ContactContainer(this.crosStorage);
     const sparrowWebSocket = new SparrowWebSocket(
       WEBSOCKET as string,
-      crosStorage
+      crosStorage,
+      visitorGenerator
     );
     sparrowWebSocket.connect();
     this._webSocket = sparrowWebSocket;

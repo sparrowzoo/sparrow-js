@@ -17,6 +17,7 @@ import {
 } from "@/lib/WebSocketProvider";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/MessageBroker";
+import ChatApi from "@/lib/ChatApi";
 
 export default function Page() {
   const contacts: Contact[] = [];
@@ -38,7 +39,10 @@ export default function Page() {
       if (!crosStorage) {
         return;
       }
-      const messageContainer = new MessageBroker(crosStorage);
+      const messageContainer = new MessageBroker(
+        crosStorage,
+        ChatApi.getVisitorToken
+      );
       const localContext = WebSocketContextValue.create(messageContainer);
       messageContainer.newMessageSignal = () => {
         setWebSocketContextValue(localContext?.newReference());

@@ -63,9 +63,8 @@ export default function Chat({
       disableTransitionOnChange
     >
       <Header />
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-[calc(100vh-80px)]">
         <Toaster position="top-center" reverseOrder={true} />
-
         <div className="flex flex-row flex-1 min-h-0 h-full w-full">
           <div className=" bg-gray-500 w-[4rem] flex flex-col  gap-4 p-2">
             <IconMenu title={"我的"} url={userHome}>

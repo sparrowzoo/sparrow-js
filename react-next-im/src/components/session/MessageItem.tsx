@@ -13,7 +13,7 @@ interface Props {
   //永远是undefined
 }
 
-export default function ChatItem(props: Props) {
+export default function MessageItem(props: Props) {
   const webSocketContextValue = useContext(WebSocketContext);
   debugger;
   if (props.message.timeline > 0) {
@@ -28,7 +28,7 @@ export default function ChatItem(props: Props) {
   const { sender, content, align } = props.message;
   let senderDetail =
     webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
-      sender.id
+      sender
     );
   const alignProp = align === "left" ? " items-start" : " items-end";
   const alignClass = `flex flex-col ${alignProp}`;
@@ -47,9 +47,10 @@ export default function ChatItem(props: Props) {
           <span className={"flex-1 text-sm text-gray-900"}>
             {senderDetail?.userName} @{senderDetail?.nationality}
           </span>
-          <p className={"p-2 rounded-lg text-gray-600 bg-gray-100"}>
-            {content}
-          </p>
+          <p
+            dangerouslySetInnerHTML={{ __html: content }}
+            className={"p-2 rounded-lg text-gray-600 bg-gray-100"}
+          ></p>
         </div>
       </div>
     </div>
