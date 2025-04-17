@@ -1,4 +1,5 @@
 import CrosStorage from "@/common/lib/CrosStorage";
+import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
@@ -35,15 +36,22 @@ class SparrowWebSocket {
   private lastStatusMonitoredTime: number = 0;
   private reconnectionTimer: NodeJS.Timeout;
   private connectionTimestamp: number;
+  private visitorTokenGenerator: null | (() => Promise<string>);
 
-  constructor(url: string, crosStorage:CrosStorage) {
+  constructor(
+    url: string,
+    crosStorage: CrosStorage,
+    visitorTokenGenerator: null
+  ) {
     this.url = url;
     this.crosStorage = crosStorage;
+    this.visitorTokenGenerator = visitorTokenGenerator;
   }
 
   public getHeartStatus() {
     return SparrowWebSocket.heartStatus;
   }
+
   public reconnectWebSocket() {
     //关闭现有链接
     this.close();
@@ -64,13 +72,13 @@ class SparrowWebSocket {
       }
 
       if (
-          SparrowWebSocket.connectionStatus === SparrowWebSocket.CONNECTING_STATUS
+        SparrowWebSocket.connectionStatus === SparrowWebSocket.CONNECTING_STATUS
       ) {
         console.log("正在连接中，不进行重连");
         return;
       }
       if (
-          SparrowWebSocket.connectionStatus === SparrowWebSocket.ACTIVE_STATUS
+        SparrowWebSocket.connectionStatus === SparrowWebSocket.ACTIVE_STATUS
       ) {
         console.log("连接正常，不进行重连");
         return;
@@ -85,14 +93,16 @@ class SparrowWebSocket {
       SparrowWebSocket.connectionStatus = SparrowWebSocket.CONNECTING_STATUS;
       if ("WebSocket" in window) {
         this.initWindowsFocusEvent();
-        this.crosStorage.getToken().then((token) => {
-          this.ws = new WebSocket(this.url, [token]);
-          //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
-          this.onOpen();
-          this._onMsg();
-          this.onClose();
-          this.onError();
-        });
+        this.crosStorage
+          .getToken(StorageType.AUTOMATIC, this.visitorTokenGenerator)
+          .then((token) => {
+            this.ws = new WebSocket(this.url, [token]);
+            //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
+            this.onOpen();
+            this._onMsg();
+            this.onClose();
+            this.onError();
+          });
       }
     } catch (e) {
       SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
@@ -151,8 +161,8 @@ class SparrowWebSocket {
         console.log("发送心跳" + new Date().getTime());
         this.ws.send("PING");
         if (
-            new Date().getTime() - this.lastStatusMonitoredTime >
-            this.monitorTime
+          new Date().getTime() - this.lastStatusMonitoredTime >
+          this.monitorTime
         ) {
           const contactsStatus = this.monitorStatus();
           if (contactsStatus.length > 0) {

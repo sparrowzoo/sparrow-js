@@ -6,9 +6,10 @@ import CrosStorage from "@/common/lib/CrosStorage";
 import Contact from "@/lib/protocol/contact/Contact";
 import { format } from "util";
 import { AVATAR_URL } from "@/common/lib/Env";
+import Result from "@/common/lib/protocol/Result";
 
 export default class ChatApi {
-  static async getVisitorToken() {
+  static async getVisitorToken(): Promise<string> {
     let token;
     await Fetcher.get("/chat/v2/get-visitor-token.json").then(
       async (response: Result) => {
@@ -71,5 +72,33 @@ export default class ChatApi {
       }
     );
     return contactGroup;
+  }
+
+  static async getUsersByIds(
+    crosStorage: CrosStorage,
+    userIds: string[]
+  ): Promise<Contact[] | null> {
+    let users: Contact[] | null = null;
+    await Fetcher.post(
+      "/contact/get-users-by-ids.json",
+      userIds,
+      crosStorage
+    ).then(async (response: Result) => {
+      if (!response.data) {
+        users = [];
+        return;
+      }
+      users = response.data;
+      if (users == null) {
+        users = [];
+        return;
+      }
+      for (let user of users) {
+        if (!user.avatar) {
+          user.avatar = format(AVATAR_URL, user.userId);
+        }
+      }
+    });
+    return users;
   }
 }

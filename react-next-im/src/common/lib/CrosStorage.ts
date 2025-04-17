@@ -131,13 +131,16 @@ export default class CrosStorage {
   ) {
     const token = await this.get(TOKEN_KEY, storage);
     if (token) {
+      console.log("get token from storage", token);
       return token;
     }
     if (generateVisitorToken) {
       const visitorToken = await generateVisitorToken();
       await this.setToken(visitorToken);
+      console.log("generate visitor token", visitorToken);
       return visitorToken;
     }
+    console.log("no token found");
     return null;
   }
 

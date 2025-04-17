@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Fetcher from "@/common/lib/Fetcher";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
+import Result from "@/common/lib/protocol/Result";
 
 export default function Login() {
   const crosStorage = useCrosStorage();

@@ -31,7 +31,9 @@ export default function MessageSender(messageSenderProps: MessageSenderProps) {
     // setMessageList((messageList) => [...messageList, new Message(protocol)]);
     setMessageList(messageList);
     setLocalMessageNo(sparrowWebSocket.txid);
-    setNewSession(sessionKey);
+    if (setNewSession) {
+      setNewSession(sessionKey);
+    }
   }
 
   useEffect(() => {
@@ -49,9 +51,10 @@ export default function MessageSender(messageSenderProps: MessageSenderProps) {
       });
     //https://react.docschina.org/learn/queueing-a-series-of-state-updates
     // setMessageList((messageList) => [...messageList, new Message(protocol)]);
-  }, [sessionKey, webSocketContextValue]);
+  }, [sessionKey, messageSenderProps, webSocketContextValue]);
 
   if (!messageList) {
+    debugger;
     console.log("messageList is undefined");
     return <ThreeDotLoading />;
   }

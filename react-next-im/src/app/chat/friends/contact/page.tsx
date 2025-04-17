@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
-import DirectSession from "@/components/DirectSession";
+import DirectSession from "@/components/session/DirectSession";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { format } from "util";
@@ -15,20 +15,20 @@ function Contact() {
   const searchParams = useSearchParams();
   const webSocketContextValue = useContext(WebSocketContext);
 
-  const userId = searchParams?.get("friendId");
-  const headSrc = format(AVATAR_URL, userId);
+  const friendId = searchParams?.get("friendId");
+  const headSrc = format(AVATAR_URL, friendId);
 
-  const sender = ChatUser.getCurrentUser();
-  const receiver = new ChatUser(userId as string, ChatUser.CATEGORY_REGISTER);
+  const currentUser = ChatUser.getCurrentUser();
+  const friend = new ChatUser(friendId as string, ChatUser.CATEGORY_REGISTER);
   const chatSession = ChatSession.create121Session(
-    sender as ChatUser,
-    receiver
+    currentUser as ChatUser,
+    friend
   );
   const contactUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${chatSession.key()}`;
   debugger;
   const contact =
     webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
-      userId as string
+      friend
     );
 
   return (

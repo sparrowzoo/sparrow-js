@@ -12,6 +12,9 @@ const CAPTCHA_URL = process.env.NEXT_PUBLIC_CAPTCHA_URL;
 
 const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL;
 const AVATAR_URL = process.env.NEXT_PUBLIC_AVATAR_URL;
+const UPLOAD_URL = process.env.NEXT_PUBLIC_UPLOAD_URL;
+
+const VISITOR_AVATAR_URL = process.env.NEXT_PUBLIC_VISITOR_AVATAR_URL;
 
 function allowOrigin(origin: string) {
   const NEXT_PUBLIC_ALLOW_ORIGINS = process.env.NEXT_PUBLIC_ALLOW_ORIGINS;
@@ -35,4 +38,6 @@ export {
   CAPTCHA_URL,
   LOGIN_URL,
   AVATAR_URL,
+  UPLOAD_URL,
+  VISITOR_AVATAR_URL,
 };
