@@ -1,13 +1,14 @@
 "use client";
 import React, { useRef } from "react";
-import {Upload} from "@mui/icons-material";
+import { Upload } from "@mui/icons-material";
+
 function Input() {
   const coverLabelRef = useRef<HTMLLabelElement>(null);
   const getFilesFromEvent = (
     event: React.DragEvent<HTMLElement> | React.ChangeEvent<HTMLInputElement>
   ): Promise<File[]> => {
     return new Promise<File[]>((resolve) => {
-      let items:any = null;
+      let items: any = null;
       if ("dataTransfer" in event) {
         const dt = event.dataTransfer;
         console.log("drage");
@@ -48,7 +49,12 @@ function Input() {
       </label>
       <input
         id={"file-input"}
-        style={{ border: "1px solid", width: "100%", height: "100%" }}
+        style={{
+          border: "1px solid",
+          width: "100%",
+          height: "100%",
+          display: "none",
+        }}
         type="file"
         onChange={(e) => {
           getFilesFromEvent(e);

@@ -127,14 +127,12 @@ export default class ChatSession {
 
     if (this?.isOne2One()) {
       const oppositeUser = this?.getOppositeUser();
-      sessionDetail.avatarUrl = format(AVATAR_URL, oppositeUser?.id);
       return await messageBroker.contactContainer
-        .getContactDetail(oppositeUser?.id as string)
+        .getContactDetail(oppositeUser as ChatUser)
         .then((contact) => {
           if (contact) {
             sessionDetail.name = contact.userName;
-          } else {
-            sessionDetail.name = "访客:" + oppositeUser?.id;
+            sessionDetail.avatarUrl = contact.avatar;
           }
           return sessionDetail;
         });

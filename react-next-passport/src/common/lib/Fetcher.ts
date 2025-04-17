@@ -59,13 +59,14 @@ export default class Fetcher {
       token = await crosStorage.getToken().then((token) => token);
     }
 
+    const data = typeof body === "object" ? JSON.stringify(body) : body;
     const options: RequestInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: token as string,
       },
-      body: body,
+      body: data,
     };
     if (withCookie) {
       options.credentials = "include"; //跨域时携带cookie
