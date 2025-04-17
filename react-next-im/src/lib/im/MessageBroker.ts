@@ -9,11 +9,13 @@ import toast from "react-hot-toast";
 import { LOGIN_URL, USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
 import CrosStorage from "@/common/lib/CrosStorage";
-import ContactContainer from "@/lib/protocol/contact/ContactContainer";
+import ContactContainer from "@/lib/im/ContactContainer";
 import Result from "@/common/lib/protocol/Result";
+import SessionContainer from "@/lib/im/SessionContainer";
 
 export default class MessageBroker {
   public contactContainer: ContactContainer;
+  public sessionContainer:SessionContainer;
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
   private crosStorage: CrosStorage;
@@ -76,7 +78,7 @@ export default class MessageBroker {
       messageList = [];
       this.messageMap.set(sessionKey, messageList);
     }
-    this.contactContainer.newSession(sessionKey);
+    this.sessionContainer.newSession(sessionKey);
     messageList.push(message);
   }
 

@@ -41,7 +41,7 @@ class SparrowWebSocket {
   constructor(
     url: string,
     crosStorage: CrosStorage,
-    visitorTokenGenerator: null
+    visitorTokenGenerator: null | (() => Promise<string>)=null
   ) {
     this.url = url;
     this.crosStorage = crosStorage;

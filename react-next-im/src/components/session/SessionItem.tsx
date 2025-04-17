@@ -32,7 +32,7 @@ export default function SessionItem(props: SessionItemProps) {
   if (!sessionDetail) {
     return <ThreeDotLoading />;
   }
-  debugger;
+
   return (
     <SidebarMenuItem className={"gap-2"}>
       <SidebarMenuButton asChild>
