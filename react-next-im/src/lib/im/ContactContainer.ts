@@ -6,7 +6,6 @@ import Contact from "@/lib/protocol/contact/Contact";
 import ChatUser from "@/lib/protocol/ChatUser";
 
 export default class ContactContainer {
-  public chatSessions: ChatSession[] | null = null;
   private crosStorage: CrosStorage;
   private container: Map<string, Contact> = new Map<string, Contact>();
   private contactGroup: ContactGroup | null = null;
@@ -64,46 +63,5 @@ export default class ContactContainer {
       return Contact.visitor(user);
     }
     return this.container.get(user.id);
-  }
-
-  public getLocalSessions() {
-    return this.chatSessions;
-  }
-
-  public getDefaultSession() {
-    if (this.chatSessions && this.chatSessions.length > 0) {
-      return this.chatSessions[0];
-    }
-    return null;
-  }
-
-  public async getChatSessions() {
-    let localSession = this.chatSessions;
-    if (localSession) {
-      return localSession;
-    }
-    //会话依赖联系人列表
-    await this.getContactGroup().then(async (group) => {
-      await ChatApi.getSessions(this.crosStorage).then((sessions) => {
-        console.log(sessions.length);
-        localSession = sessions;
-        this.chatSessions = localSession;
-      });
-    });
-    return localSession;
-  }
-
-  public newSession(sessionKey: string) {
-    let session = this.chatSessions?.find(
-      (session) => session.key() === sessionKey
-    );
-    if (!session) {
-      session = ChatSession.parse(sessionKey) as ChatSession;
-      this.chatSessions?.push(session);
-    }
-    session.lastReadTime = new Date().getTime();
-    this.chatSessions?.sort((a: ChatSession, b: ChatSession) => {
-      return b.lastReadTime - a.lastReadTime;
-    });
   }
 }
