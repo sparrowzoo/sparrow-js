@@ -3,11 +3,11 @@ import * as React from "react";
 import { Suspense, useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import { DynamicImage } from "@/components/img/DynamicImage";
-import { WebSocketContext } from "@/lib/WebSocketProvider";
-import DirectSession from "@/components/DirectSession";
 import { format } from "util";
 import { AVATAR_URL } from "@/common/lib/Env";
 import ChatSession from "@/lib/protocol/session/ChatSession";
+import { WebSocketContext } from "@/lib/im/WebSocketProvider";
+import DirectSession from "@/components/session/DirectSession";
 
 function Group() {
   const searchParams = useSearchParams();
@@ -46,7 +46,7 @@ function Group() {
       <div className={"flex flex-col gap-2"}>
         <h2>Group members</h2>
       </div>
-      <DirectSession sessionKey={chatSession.key()} />
+      <DirectSession sessionKey={chatSession.sessionKey} />
     </div>
   );
 }

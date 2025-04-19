@@ -5,28 +5,26 @@ export default class Contact {
   /**
    * 国籍
    */
-  private _nationality: string;
-
-  get nationality(): string {
-    return this._nationality;
-  }
-
-  set nationality(value: string) {
-    this._nationality = value;
-  }
+  public nationality: string;
 
   /**
    * 国旗url
    */
-  private _flagUrl: string;
+  public flagUrl: string;
+  /**
+   * 用户名
+   */
+  public userName: string;
 
-  get flagUrl(): string {
-    return this._flagUrl;
-  }
-
-  set flagUrl(value: string) {
-    this._flagUrl = value;
-  }
+  /**
+   * 昵称
+   */
+  public nickName: string;
+  /**
+   * 头象
+   */
+  public avatar: string;
+  public signature: string;
 
   /**
    * 用户id
@@ -37,41 +35,16 @@ export default class Contact {
     return this._userId;
   }
 
-  set userId(value: string) {
+  set userId(value: string | number) {
     //保证userId为字符串
     this._userId = value + "";
-  }
-
-  /**
-   * 用户名
-   */
-  private _userName: string;
-
-  get userName(): string {
-    return this._userName;
-  }
-
-  set userName(value: string) {
-    this._userName = value;
-  }
-
-  /**
-   * 头象
-   */
-  private _avatar: string;
-
-  get avatar(): string {
-    return this._avatar;
-  }
-
-  set avatar(value: string) {
-    this._avatar = value;
   }
 
   public static visitor(user: ChatUser) {
     const contact = new Contact();
     contact.userId = user.id;
     contact.userName = "VISITOR" + user.id;
+    contact.nickName = contact.userName;
     contact.avatar = `${VISITOR_AVATAR_URL}`;
     contact.flagUrl = "";
     contact.nationality = "";
@@ -82,6 +55,7 @@ export default class Contact {
     const contact = new Contact();
     contact.userId = user.id;
     contact.userName = "VISITOR:" + user.id;
+    contact.nickName = contact.nickName;
     contact.avatar = `${VISITOR_AVATAR_URL}`;
     contact.flagUrl = "";
     contact.nationality = "";

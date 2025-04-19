@@ -42,7 +42,6 @@ const handleUpload = async (
       },
     })
     .then((response) => {
-      debugger;
       console.log(response);
       const result: Result = response.data;
       if (result?.code != "0") {
@@ -67,7 +66,6 @@ const handleUpload = async (
 export default function FileUploader(fileUploaderProps: FileUploaderProps) {
   const [uploading, setUploading] = useState<boolean>();
   const [progress, setProgress] = useState<number>(0);
-  console.log(fileUploaderProps.uploadCallback);
   const callbackRef = useCallback(fileUploaderProps.uploadCallback, [
     fileUploaderProps.uploadIcon,
   ]);
@@ -90,7 +88,6 @@ export default function FileUploader(fileUploaderProps: FileUploaderProps) {
         }}
         type="file"
         onChange={(event) => {
-          console.log(callbackRef);
           const files = event.target.files;
           handleUpload(
             fileUploaderProps.url,

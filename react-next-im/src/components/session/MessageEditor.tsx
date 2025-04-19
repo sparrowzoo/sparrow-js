@@ -55,7 +55,6 @@ export default function MessageEditor(senderProps: SenderProps) {
     insertElement(editor, a);
   }
 
-  debugger;
   return (
     <div className="flex flex-col w-full h-fit">
       <div className="flex flex-row items-center justify-start h-[3rem] pl-2 gap-4 border-t-1 border-l-1 border-r-1 border-solid border-gray-500 rounded-t-md ">
@@ -83,7 +82,7 @@ export default function MessageEditor(senderProps: SenderProps) {
           }
         }}
         className={
-          "w-full overflow-y-scroll border-1 border-solid border-gray-500 rounded-b-md text-left shrink-0  h-[12rem] p-2"
+          "text-xs w-full overflow-y-scroll border-1 border-solid border-gray-500 rounded-b-md text-left shrink-0  h-[12rem] p-2"
         }
       ></div>
 

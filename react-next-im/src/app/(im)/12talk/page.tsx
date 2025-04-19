@@ -14,9 +14,10 @@ import React, { useEffect, useState } from "react";
 import {
   WebSocketContext,
   WebSocketContextValue,
-} from "@/lib/WebSocketProvider";
+} from "@/lib/im/WebSocketProvider";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
-import MessageBroker from "@/lib/MessageBroker";
+import MessageBroker from "@/lib/im/MessageBroker";
+import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import ChatApi from "@/lib/ChatApi";
 
 export default function Page() {
@@ -25,8 +26,10 @@ export default function Page() {
     const contact = new Contact();
     contact.userName = "Contact " + i;
     contact.nationality = "China";
-    contact.userId = i + "";
+    contact.userId = i;
+    console.log(contact.userId);
     contact.avatar = format(AVATAR_URL, contact.userId);
+    console.log(contact.avatar);
     contacts.push(contact);
   }
   const [isOpen, setIsOpen] = React.useState(false);
@@ -35,22 +38,22 @@ export default function Page() {
     useState<WebSocketContextValue>();
   let crosStorage = useCrosStorage();
   useEffect(() => {
-    async function asyncInit() {
-      if (!crosStorage) {
-        return;
-      }
-      const messageContainer = new MessageBroker(
-        crosStorage,
-        ChatApi.getVisitorToken
-      );
-      const localContext = WebSocketContextValue.create(messageContainer);
-      messageContainer.newMessageSignal = () => {
-        setWebSocketContextValue(localContext?.newReference());
-      };
-      setWebSocketContextValue(localContext);
+    if (!crosStorage) {
+      return;
     }
 
-    asyncInit();
+    crosStorage
+      .getToken(StorageType.AUTOMATIC, ChatApi.getVisitorToken)
+      .then((token) => {
+        console.log("token", token);
+        const messageBroker = new MessageBroker(crosStorage);
+        const localContext = WebSocketContextValue.create(messageBroker);
+        messageBroker.newMessageSignal = () => {
+          setWebSocketContextValue(localContext?.newReference());
+        };
+        setWebSocketContextValue(localContext);
+        messageBroker.initSessions(contacts);
+      });
     return () => {
       crosStorage?.destroy();
       webSocketContextValue?.closeWebSocket();

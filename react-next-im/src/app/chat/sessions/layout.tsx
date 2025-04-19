@@ -11,9 +11,8 @@ import {
 } from "@/components/ui/sidebar";
 import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { ChevronDown } from "lucide-react";
-import { SessionContext } from "@/lib/SessionProvider";
 import ChatSession from "@/lib/protocol/session/ChatSession";
-import { WebSocketContext } from "@/lib/WebSocketProvider";
+import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 export default function ChatLayout({
@@ -21,15 +20,19 @@ export default function ChatLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [newSession, setNewSession] = useState<string>("");
   const [sessions, setSessions] = useState<ChatSession[]>();
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
   useEffect(() => {
-    messageBroker.contactContainer.getChatSessions().then((chatSessions) => {
+    messageBroker.sessionContainer.getChatSessions().then((chatSessions) => {
+      console.log("chat sessions is ready ....");
+      //只有第一次初始化时有效，再次请求时，列表有变化，但引用没有变化
+      //所以页面不会变化
+      //象列表排序的功能，需要在参数传递之前准备好数据
+      //当前prop发生变化时，会重新渲染子组件
       setSessions(chatSessions as ChatSession[]);
     });
-  }, [newSession]);
+  }, []);
   if (!sessions) {
     return <ThreeDotLoading />;
   }
@@ -57,9 +60,7 @@ export default function ChatLayout({
           </SidebarContent>
         </Sidebar>
       </SidebarProvider>
-      <SessionContext.Provider value={setNewSession}>
-        {children}
-      </SessionContext.Provider>
+      {children}
     </div>
   );
 }

@@ -12,34 +12,36 @@ import CrosStorage from "@/common/lib/CrosStorage";
 import ContactContainer from "@/lib/im/ContactContainer";
 import Result from "@/common/lib/protocol/Result";
 import SessionContainer from "@/lib/im/SessionContainer";
+import Contact from "@/lib/protocol/contact/Contact";
 
 export default class MessageBroker {
   public contactContainer: ContactContainer;
-  public sessionContainer:SessionContainer;
+  public sessionContainer: SessionContainer;
+  public crosStorage: CrosStorage;
+  public webSocket: SparrowWebSocket;
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
-  private crosStorage: CrosStorage;
 
-  constructor(
-    crosStorage: CrosStorage,
-    visitorGenerator: (() => Promise<string>) | null = null
-  ) {
+  constructor(crosStorage: CrosStorage) {
     this.crosStorage = crosStorage;
     this.contactContainer = new ContactContainer(this.crosStorage);
+    this.sessionContainer = new SessionContainer(
+      this.crosStorage,
+      this.contactContainer
+    );
     const sparrowWebSocket = new SparrowWebSocket(
       WEBSOCKET as string,
-      crosStorage,
-      visitorGenerator
+      crosStorage
     );
     sparrowWebSocket.connect();
-    this._webSocket = sparrowWebSocket;
-    this._webSocket.onMsgCallback = (buf: ArrayBuffer) => {
+    this.webSocket = sparrowWebSocket;
+    this.webSocket.onMsgCallback = (buf: ArrayBuffer) => {
       this.websocketMsgCallback(buf);
     };
-    this._webSocket.offlineCallback = () => {
+    this.webSocket.offlineCallback = () => {
       toast.error("消息已推送，对方已离线....");
     };
-    this._webSocket.userAuthCallback = (data: Result) => {
+    this.webSocket.userAuthCallback = (data: Result) => {
       console.log("userValidCallback", JSON.stringify(data));
       if (data.code == "0") {
         sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
@@ -51,35 +53,30 @@ export default class MessageBroker {
         }, 2000);
       }
     };
-    this._webSocket.monitorStatus = () => {
+    this.webSocket.monitorStatus = () => {
       console.log("websocket monitor status");
       return [];
     };
-    this._webSocket.monitorStatusCallback = (data: ContactStatus[]) => {
+    this.webSocket.monitorStatusCallback = (data: ContactStatus[]) => {
       console.log("websocket monitor status callback", JSON.stringify(data));
     };
   }
 
-  private _webSocket: SparrowWebSocket;
-
-  get webSocket(): SparrowWebSocket {
-    return this._webSocket;
-  }
-
   public closeWebSocket() {
-    this._webSocket.close();
+    this.webSocket.close();
   }
 
-  public putMessage(protocol: Protocol): void {
-    const message = Message.fromProtocol(protocol);
-    const sessionKey = protocol.chatSession.key();
+  public async putMessage(message: Message) {
+    const sessionKey = message.session.sessionKey;
     let messageList = this.messageMap.get(sessionKey);
     if (messageList == null) {
       messageList = [];
       this.messageMap.set(sessionKey, messageList);
     }
-    this.sessionContainer.newSession(sessionKey);
     messageList.push(message);
+    await this.sessionContainer.newSession(sessionKey).then(() => {
+      this.sessionContainer.appendLastMessage(message);
+    });
   }
 
   public sendMessage(sessionKey: string, content: string): void {
@@ -101,12 +98,19 @@ export default class MessageBroker {
         new Date().getTime()
       );
     }
-    this.putMessage(protocol);
-    this._webSocket?.sendMessage(protocol.toBytes());
+    const message = Message.fromProtocol(protocol);
+    this.putMessage(message).then(() => {
+      this.sessionContainer.read(message.session);
+    });
+    this.webSocket?.sendMessage(protocol.toBytes());
+    this.newMessageSignal();
   }
 
   public async getMessageList(sessionKey: string) {
     console.log("getMessageList", sessionKey);
+    this.sessionContainer.pullSession(
+      ChatSession.parse(sessionKey) as ChatSession
+    );
     let messageList = this.messageMap.get(sessionKey);
     if (messageList != null) {
       return this.wrapMessages(messageList);
@@ -120,8 +124,16 @@ export default class MessageBroker {
 
   public websocketMsgCallback(buf: ArrayBuffer) {
     const protocol = Protocol.fromBytes(buf);
-    this.putMessage(protocol);
-    this.newMessageSignal();
+    const message = Message.fromProtocol(protocol);
+    this.putMessage(message).then(() => {
+      this.sessionContainer.plusUnreadCount(message);
+      this.newMessageSignal();
+    });
+  }
+
+  public initSessions(contacts: Contact[]) {
+    this?.contactContainer?.initContact(contacts);
+    this?.sessionContainer.initSessions(contacts);
   }
 
   private wrapMessages(messages: Message[]): Message[] {
@@ -130,13 +142,10 @@ export default class MessageBroker {
     for (const message of messages) {
       newMessages.push(message);
       if (message.clientSendTime - preTime > 1000 * 60 * 5) {
-        const timeline = new Message();
-        timeline.timeline = message.clientSendTime;
-        newMessages.push(timeline);
+        newMessages.push(Message.newTimeLine(message.clientSendTime));
       }
       preTime = message.clientSendTime;
     }
-    debugger;
     return newMessages;
   }
 }

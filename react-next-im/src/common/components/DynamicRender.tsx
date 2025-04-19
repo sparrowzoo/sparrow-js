@@ -24,7 +24,6 @@ export default function DynamicRender(prop: Prop) {
     options = defaultOptions;
   }
   const { data, isLoading, error } = useSWR(prop.url, prop.fetcher, options);
-  debugger;
   if (isLoading) return <ThreeDotLoading />;
   if (error) return <ErrorShower error={error} />;
   return <div>{prop.children(data)}</div>;

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import MessageSender from "@/components/session/MessageSender";
 import SessionHeader from "@/components/session/SessionHeader";
-import { WebSocketContext } from "@/lib/WebSocketProvider";
+import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 
 interface SessionProps {
   sessionKey?: string;
@@ -19,9 +19,9 @@ export default function Session(sessionProps: SessionProps) {
   }
 
   if (!currentSessionKey) {
-    currentSessionKey = webSocketContextValue.messageBroker.contactContainer
-      .getDefaultSession()
-      ?.key();
+    currentSessionKey =
+      webSocketContextValue.messageBroker.sessionContainer.getDefaultSession()
+        ?.sessionKey;
   }
 
   if (!currentSessionKey) {

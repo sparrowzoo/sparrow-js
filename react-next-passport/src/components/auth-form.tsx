@@ -15,6 +15,7 @@ import signUp from "@/api/signup";
 import toast, { Toaster } from "react-hot-toast";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
+import Result from "@/common/lib/protocol/Result";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
