@@ -9,7 +9,7 @@ interface MessageListProps {
 }
 
 export default function MessageList(messageListProp: MessageListProps) {
-  debugger;
+  console.log("message list 重渲染");
   const { messageList, localMessageNo } = messageListProp;
   const messageContainerRef: MutableRefObject<HTMLDivElement | null> =
     useRef(null);
@@ -18,7 +18,8 @@ export default function MessageList(messageListProp: MessageListProps) {
   useEffect(() => {
     messageContainerRef.current?.scrollIntoView({
       behavior: "smooth",
-      block: "end",
+      block: "nearest",
+      inline: "center",
     });
   }, [localMessageNo]);
 

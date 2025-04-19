@@ -29,7 +29,7 @@ export default class ChatApi {
           messageList = [];
         }
         for (let message of messageList) {
-          messages.push(Message.fromMessage(message));
+          messages.push(Message.fromMessage(message, sessionKey));
         }
       }
     );
@@ -39,12 +39,11 @@ export default class ChatApi {
   static async getSessions(crosStorage: CrosStorage) {
     let sessions: ChatSession[] = [];
     await Fetcher.get("/chat/v2/sessions.json", crosStorage).then(
-      async (response: Result) => {
+      (response: Result) => {
         const chatSessions: ChatSession[] = response.data;
         for (let session of chatSessions) {
-          sessions.push(
-            ChatSession.createSession(session.chatType, session.id)
-          );
+          const localSession = ChatSession.newLocalSession(session);
+          sessions.push(localSession);
         }
       }
     );

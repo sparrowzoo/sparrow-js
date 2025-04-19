@@ -2,7 +2,7 @@ import * as React from "react";
 import { Key, useContext } from "react";
 import Message from "@/lib/protocol/Message";
 
-import { WebSocketContext } from "@/lib/WebSocketProvider";
+import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import { Separator } from "@/components/ui/separator";
 import MyAvatar from "@/components/MyAvatar";
 
@@ -15,7 +15,6 @@ interface Props {
 
 export default function MessageItem(props: Props) {
   const webSocketContextValue = useContext(WebSocketContext);
-  debugger;
   if (props.message.timeline > 0) {
     return (
       <div className={"text-gray-500 text-sm"}>
@@ -24,14 +23,13 @@ export default function MessageItem(props: Props) {
       </div>
     );
   }
-  console.log("chat item", props.message.messageId);
   const { sender, content, align } = props.message;
   let senderDetail =
-    webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
+    webSocketContextValue.messageBroker.contactContainer.getContactDetail(
       sender
     );
   const alignProp = align === "left" ? " items-start" : " items-end";
-  const alignClass = `flex flex-col ${alignProp}`;
+  const alignClass = `flex h-fit flex-col ${alignProp}`;
   const itemAlignClass =
     align === "left"
       ? "flex flex-row  p-4 rounded-lg gap-4"
@@ -40,16 +38,18 @@ export default function MessageItem(props: Props) {
     <div key={props.message.messageId} className={alignClass}>
       <div className={itemAlignClass}>
         <MyAvatar
+          unread={0}
+          showUnread={false}
           fallback={senderDetail?.userName as string}
           src={senderDetail?.avatar as string}
         />
         <div className={"flex flex-col text-left"}>
-          <span className={"flex-1 text-sm text-gray-900"}>
+          <span className={"flex-1 text-xs text-gray-900"}>
             {senderDetail?.userName} @{senderDetail?.nationality}
           </span>
           <p
             dangerouslySetInnerHTML={{ __html: content }}
-            className={"p-2 rounded-lg text-gray-600 bg-gray-100"}
+            className={"p-2 text-xs rounded-lg text-gray-600 bg-gray-100"}
           ></p>
         </div>
       </div>

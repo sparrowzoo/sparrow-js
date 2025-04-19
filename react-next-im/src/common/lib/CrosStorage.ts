@@ -24,32 +24,7 @@ export default class CrosStorage {
     if (this.cros == false) {
       return;
     }
-    const iframe = document.createElement("iframe");
-    iframe.src = STORAGE_PROXY as string;
-    iframe.src = iframe.src + "?" + getHrefWithoutQueryString();
-    iframe.style.display = "none";
-    this.iframe = iframe;
-    console.log("append iframe " + STORAGE_PROXY);
-
-    const handleMessage = (event: MessageEvent<StorageRequest>) => {
-      if (!this.iframeOrigin || this.iframeOrigin?.indexOf(event.origin) < 0) {
-        return;
-      }
-      this.loaded = true;
-      window.removeEventListener("message", handleMessage); // 清理监听
-    };
-    window.addEventListener("message", handleMessage);
-
-    // iframe.addEventListener("DOMContentLoaded", () => {
-    //   console.log("iframe DOMContentLoaded");
-    //   this.loaded = true;
-    // });
-    // iframe.addEventListener("load", () => {
-    //   console.log("iframe loaded");
-    //   this.loaded = true;
-    // });
-    document.body.appendChild(iframe);
-    this.iframeOrigin = STORAGE_PROXY;
+    this.resetIframe();
   }
 
   public static getCurrentStorage() {
@@ -152,6 +127,36 @@ export default class CrosStorage {
     return this.remove(TOKEN_KEY, storage);
   }
 
+  private resetIframe() {
+    this.destroy();
+    const iframe = document.createElement("iframe");
+    iframe.src = STORAGE_PROXY as string;
+    iframe.src = iframe.src + "?" + getHrefWithoutQueryString();
+    iframe.style.display = "none";
+    this.iframe = iframe;
+    console.log("reset and append iframe " + STORAGE_PROXY);
+
+    const handleMessage = (event: MessageEvent<StorageRequest>) => {
+      if (!this.iframeOrigin || this.iframeOrigin?.indexOf(event.origin) < 0) {
+        return;
+      }
+      this.loaded = true;
+      window.removeEventListener("message", handleMessage); // 清理监听
+    };
+    window.addEventListener("message", handleMessage);
+
+    // iframe.addEventListener("DOMContentLoaded", () => {
+    //   console.log("iframe DOMContentLoaded");
+    //   this.loaded = true;
+    // });
+    // iframe.addEventListener("load", () => {
+    //   console.log("iframe loaded");
+    //   this.loaded = true;
+    // });
+    document.body.appendChild(iframe);
+    this.iframeOrigin = STORAGE_PROXY;
+  }
+
   private getStorageType(storageType: StorageType) {
     if (storageType === StorageType.AUTOMATIC) {
       storageType =
@@ -189,6 +194,9 @@ export default class CrosStorage {
           return;
         }
         try {
+          if (!this.iframe.contentWindow) {
+            this.resetIframe();
+          }
           this.iframe.contentWindow?.postMessage(
             req,
             this.iframeOrigin as string

@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { CAPTCHA_URL } from "@/common/lib/Env";
 import Fetcher from "@/common/lib/Fetcher";
+import Result from "@/common/lib/protocol/Result";
 
 function loadCaptcha(captcha: HTMLImageElement) {
   const url = `${CAPTCHA_URL}?session=true&t=${Math.random()}`;

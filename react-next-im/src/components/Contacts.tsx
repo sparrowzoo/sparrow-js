@@ -8,7 +8,6 @@ import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 interface ContactsProps {
   contacts: Contact[] | undefined;
-
 }
 
 export default function Contacts(contactsProps: ContactsProps) {

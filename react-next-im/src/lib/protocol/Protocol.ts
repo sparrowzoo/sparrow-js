@@ -4,97 +4,15 @@ import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
 import { ChatType, MessageType } from "@/lib/protocol/Chat";
 
 class Protocol {
-  constructor() {}
-
-  private _version: number;
-
-  get version(): number {
-    return this._version;
-  }
-
-  set version(value: number) {
-    this._version = value;
-  }
-
-  private _messageType: MessageType;
-
-  get messageType(): MessageType {
-    return this._messageType;
-  }
-
-  set messageType(value: MessageType) {
-    this._messageType = value;
-  }
-
-  private _chatType: ChatType;
-
-  get chatType(): ChatType {
-    return this._chatType;
-  }
-
-  set chatType(value: ChatType) {
-    this._chatType = value;
-  }
-
-  private _sender: ChatUser;
-
-  get sender(): ChatUser {
-    return this._sender;
-  }
-
-  set sender(value: ChatUser) {
-    this._sender = value;
-  }
-
-  private _receiver: ChatUser;
-
-  get receiver(): ChatUser {
-    return this._receiver;
-  }
-
-  set receiver(value: ChatUser) {
-    this._receiver = value;
-  }
-
-  private _chatSession: ChatSession;
-
-  get chatSession(): ChatSession {
-    return this._chatSession;
-  }
-
-  set chatSession(value: ChatSession) {
-    this._chatSession = value;
-  }
-
-  private _content: Uint8Array;
-
-  get content(): Uint8Array {
-    return this._content;
-  }
-
-  set content(value: Uint8Array) {
-    this._content = value;
-  }
-
-  private _clientSendTime: number;
-
-  get clientSendTime(): number {
-    return this._clientSendTime;
-  }
-
-  set clientSendTime(value: number) {
-    this._clientSendTime = value;
-  }
-
-  private _serverTime: number;
-
-  get serverTime(): number {
-    return this._serverTime;
-  }
-
-  set serverTime(value: number) {
-    this._serverTime = value;
-  }
+  public version: number;
+  public messageType: MessageType;
+  public chatType: ChatType;
+  public sender: ChatUser;
+  public receiver: ChatUser;
+  public chatSession: ChatSession;
+  public content: Uint8Array;
+  public clientSendTime: number;
+  public serverTime: number;
 
   public static fromBytes(bytes: ArrayBuffer): Protocol {
     const protocol: Protocol = new Protocol();
@@ -208,7 +126,7 @@ class Protocol {
     let protocol: Uint8Array = new Uint8Array(capacity);
     offset = ArrayBufferUtils.appendBytes(
       protocol,
-      new Uint8Array([this._version, this.chatType, this.messageType]),
+      new Uint8Array([this.version, this.chatType, this.messageType]),
       offset
     );
     offset = ArrayBufferUtils.appendBytes(protocol, senderBytes, offset);
@@ -245,7 +163,7 @@ class Protocol {
     let protocol: Uint8Array = new Uint8Array(capacity);
     offset = ArrayBufferUtils.appendBytes(
       protocol,
-      new Uint8Array([this._version, this.chatType, this.messageType]),
+      new Uint8Array([this.version, this.chatType, this.messageType]),
       offset
     );
     offset = ArrayBufferUtils.appendBytes(protocol, senderBytes, offset);

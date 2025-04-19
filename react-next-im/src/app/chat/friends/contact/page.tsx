@@ -3,13 +3,13 @@ import * as React from "react";
 import { Suspense, useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { AVATAR_URL } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
 import DirectSession from "@/components/session/DirectSession";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { format } from "util";
-import { WebSocketContext } from "@/lib/WebSocketProvider";
+import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 
 function Contact() {
   const searchParams = useSearchParams();
@@ -24,17 +24,15 @@ function Contact() {
     currentUser as ChatUser,
     friend
   );
-  const contactUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${chatSession.key()}`;
-  debugger;
   const contact =
-    webSocketContextValue.messageBroker.contactContainer.getContactFromLocal(
+    webSocketContextValue.messageBroker.contactContainer.getContactDetail(
       friend
     );
 
   return (
     <div className={"flex flex-col p-4 bg-white shadow-md"}>
       <div className="flex flex-row items-center text-left">
-        <Link href={contactUrl}>
+        <Link href={chatSession.sessionUrl}>
           <DynamicImage
             className={"w-16 h-16 rounded-full mr-4"}
             src={headSrc}
@@ -44,7 +42,7 @@ function Contact() {
           />
         </Link>
         <div>
-          <Link href={contactUrl}>
+          <Link href={chatSession.sessionUrl}>
             <strong>
               {contact?.userName} ID:{contact?.nationality}
             </strong>
@@ -56,7 +54,7 @@ function Contact() {
       <p className={"mt-2 text-gray-500 text-left text-sm"}>
         {contact?.userName}{" "}
       </p>
-      <DirectSession sessionKey={chatSession.key()} />
+      <DirectSession sessionKey={chatSession.sessionKey} />
     </div>
   );
 }

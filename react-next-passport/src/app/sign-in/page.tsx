@@ -15,10 +15,10 @@ import { ErrorMessage } from "@hookform/error-message";
 import { Checkbox } from "@/components/ui/checkbox";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
+import Result from "@/common/lib/protocol/Result";
 import { getQueryString, loginDirect } from "@/common/lib/Navigating";
 
 export default function Page() {
-  debugger;
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
   let crosStorage = useCrosStorage();

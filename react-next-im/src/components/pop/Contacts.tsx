@@ -26,7 +26,7 @@ export default function Contacts(contactsProps: ContactsProps) {
   return (
     <SidebarMenu className={"gap-4"}>
       {contactsProps?.contacts?.map((contact) => (
-        <ContactItem contact={contact} key={contact.userId + ""} />
+        <ContactItem contact={contact} key={contact.userId} />
       ))}
     </SidebarMenu>
   );
