@@ -1,15 +1,11 @@
 "use client";
 import Link from "next/link";
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
 import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { WebSocketContext } from "@/lib/WebSocketProvider";
-import ThreeDotLoading from "@/common/components/ThreeDotLoading";
-import SessionDetail from "@/lib/protocol/session/SessionDetail";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import MyAvatar from "@/components/MyAvatar";
 
@@ -19,29 +15,33 @@ interface SessionItemProps {
 
 export default function SessionItem(props: SessionItemProps) {
   const { chatSession } = props;
-  const [sessionDetail, setSessionDetail] = useState<SessionDetail>();
-  const webSocketContextValue = useContext(WebSocketContext);
-
-  useEffect(() => {
-    chatSession
-      .getSessionDetail(webSocketContextValue.messageBroker)
-      .then((sessionDetail) => {
-        setSessionDetail(sessionDetail);
-      });
-  }, [chatSession]);
-  if (!sessionDetail) {
-    return <ThreeDotLoading />;
-  }
-
+  console.log("session item 重渲染");
   return (
-    <SidebarMenuItem className={"gap-2"}>
+    <SidebarMenuItem>
       <SidebarMenuButton asChild>
-        <Link href={sessionDetail.sessionUrl}>
-          <MyAvatar
-            fallback={sessionDetail.name}
-            src={sessionDetail.avatarUrl}
-          />
-          <span>{sessionDetail?.name}</span>
+        <Link className={"block w-fit h-fit p-0"} href={chatSession.sessionUrl}>
+          <div className="flex flex-row h-10">
+            <MyAvatar
+              unread={chatSession.unreadCount}
+              showUnread={true}
+              fallback={chatSession.name as string}
+              src={chatSession.avatarUrl}
+            />
+            <div
+              className={"flex flex-1 flex-col justify-center items-start ml-2"}
+            >
+              <div className={"flex flex-row w-full text-xs justify-between"}>
+                <span className={"text-xs"}>{chatSession.name}</span>
+                <span>{chatSession.lastMessage?.sendTime}</span>
+              </div>
+              <span
+                title={chatSession.lastMessage?.content}
+                className={"text-gray-400 text-xs truncate  w-[10rem]"}
+              >
+                {chatSession.lastMessage?.content}
+              </span>
+            </div>
+          </div>
         </Link>
       </SidebarMenuButton>
       <SidebarMenuBadge></SidebarMenuBadge>

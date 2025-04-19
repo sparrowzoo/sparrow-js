@@ -1,5 +1,5 @@
 import { Context, createContext } from "react";
-import MessageBroker from "@/lib/MessageBroker";
+import MessageBroker from "@/lib/im/MessageBroker";
 
 /**
  * 为status 的引用发生变化引发渲染

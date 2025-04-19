@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import { WebSocketContext } from "@/lib/WebSocketProvider";
+import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import {
   Sidebar,
@@ -33,7 +33,7 @@ export default function ChatLayout({
     messageBroker.contactContainer.getContactGroup().then((contactGroup) => {
       setContactGroup(contactGroup as ContactGroup);
     });
-  }, [messageBroker]);
+  }, []);
   if (!contactGroup) {
     return <ThreeDotLoading />;
   }

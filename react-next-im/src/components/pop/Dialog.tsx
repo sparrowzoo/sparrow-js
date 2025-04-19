@@ -26,7 +26,12 @@ export default function Dialog(dialogProps: DialogProps) {
   return (
     <Popover>
       <PopoverTrigger className={"w-full flex flex-row gap-4"}>
-        <MyAvatar fallback={contact?.userName as string} src={contact.avatar} />
+        <MyAvatar
+          unread={0}
+          showUnread={false}
+          fallback={contact?.userName as string}
+          src={contact.avatar}
+        />
         <span>{contact.userName}</span>
       </PopoverTrigger>
       <PopoverContent
@@ -39,7 +44,7 @@ export default function Dialog(dialogProps: DialogProps) {
       >
         <SidebarProvider className={"w-fit h-fit min-h-full"}>
           <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
-            <Session sessionKey={chatSession.key()} />
+            <Session sessionKey={chatSession.sessionKey} />
           </Sidebar>
         </SidebarProvider>
       </PopoverContent>

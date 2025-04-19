@@ -38,14 +38,9 @@ class SparrowWebSocket {
   private connectionTimestamp: number;
   private visitorTokenGenerator: null | (() => Promise<string>);
 
-  constructor(
-    url: string,
-    crosStorage: CrosStorage,
-    visitorTokenGenerator: null | (() => Promise<string>)=null
-  ) {
+  constructor(url: string, crosStorage: CrosStorage) {
     this.url = url;
     this.crosStorage = crosStorage;
-    this.visitorTokenGenerator = visitorTokenGenerator;
   }
 
   public getHeartStatus() {
@@ -91,22 +86,20 @@ class SparrowWebSocket {
   public connect() {
     try {
       SparrowWebSocket.connectionStatus = SparrowWebSocket.CONNECTING_STATUS;
+      console.log("开始链接");
       if ("WebSocket" in window) {
         this.initWindowsFocusEvent();
-        this.crosStorage
-          .getToken(StorageType.AUTOMATIC, this.visitorTokenGenerator)
-          .then((token) => {
-            this.ws = new WebSocket(this.url, [token]);
-            //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
-            this.onOpen();
-            this._onMsg();
-            this.onClose();
-            this.onError();
-          });
+        this.crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
+          this.ws = new WebSocket(this.url, [token]);
+          //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
+          this.onOpen();
+          this._onMsg();
+          this.onClose();
+          this.onError();
+        });
       }
     } catch (e) {
       SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
-
       console.log("链接失败，直接重连", e);
       this.reconnectWebSocket();
     }
@@ -158,7 +151,6 @@ class SparrowWebSocket {
       }
       // 开启一个心跳
       try {
-        console.log("发送心跳" + new Date().getTime());
         this.ws.send("PING");
         if (
           new Date().getTime() - this.lastStatusMonitoredTime >
@@ -232,6 +224,8 @@ class SparrowWebSocket {
         // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
         if (e.data === "PONG") {
           this.lastHeartTime = new Date().getTime();
+          console.log("收到心跳 at" + this.lastHeartTime);
+
           SparrowWebSocket.heartStatus = SparrowWebSocket.ACTIVE_STATUS;
           return;
         }

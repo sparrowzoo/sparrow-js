@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import {
   WebSocketContext,
   WebSocketContextValue,
-} from "@/lib/WebSocketProvider";
+} from "@/lib/im/WebSocketProvider";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
-import MessageBroker from "@/lib/MessageBroker";
+import MessageBroker from "@/lib/im/MessageBroker";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { format } from "util";
@@ -29,19 +29,16 @@ export default function Chat({
   let crosStorage = useCrosStorage();
   console.log("渲染ChatLayout");
   useEffect(() => {
-    async function asyncInit() {
-      if (!crosStorage) {
-        return;
-      }
-      const messageContainer = new MessageBroker(crosStorage);
-      const localContext = WebSocketContextValue.create(messageContainer);
-      messageContainer.newMessageSignal = () => {
-        setWebSocketContextValue(localContext?.newReference());
-      };
-      setWebSocketContextValue(localContext);
+    if (!crosStorage) {
+      return;
     }
-
-    asyncInit();
+    const messageBroker = new MessageBroker(crosStorage);
+    const localContext = WebSocketContextValue.create(messageBroker);
+    messageBroker.newMessageSignal = () => {
+      console.log("sessionKey new Message Signal");
+      setWebSocketContextValue(localContext?.newReference());
+    };
+    setWebSocketContextValue(localContext);
     return () => {
       crosStorage?.destroy();
       webSocketContextValue?.closeWebSocket();
