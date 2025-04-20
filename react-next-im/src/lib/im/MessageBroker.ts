@@ -6,13 +6,14 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import { ChatType, MessageType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
-import { LOGIN_URL, USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
+import { USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
 import CrosStorage from "@/common/lib/CrosStorage";
 import ContactContainer from "@/lib/im/ContactContainer";
 import Result from "@/common/lib/protocol/Result";
 import SessionContainer from "@/lib/im/SessionContainer";
 import Contact from "@/lib/protocol/contact/Contact";
+import { redirectToLogin } from "@/common/lib/Navigating";
 
 export default class MessageBroker {
   public contactContainer: ContactContainer;
@@ -49,7 +50,7 @@ export default class MessageBroker {
         this.crosStorage.removeToken();
         toast.error(data.message);
         setTimeout(() => {
-          window.location.href = `${LOGIN_URL}?${window.location.href}`;
+          redirectToLogin();
         }, 2000);
       }
     };
@@ -131,9 +132,19 @@ export default class MessageBroker {
     });
   }
 
-  public initSessions(contacts: Contact[]) {
+  /**
+   * 指定联系人初始化会话 普通用户或者游客
+   * @param contacts
+   */
+  public async initSessionsByContacts(contacts: Contact[]) {
     this?.contactContainer?.initContact(contacts);
-    this?.sessionContainer.initSessions(contacts);
+    await this?.sessionContainer.initSessions(contacts);
+  }
+
+  //平台客服初始化，无联系人
+  public initSessions() {
+    this.contactContainer.initContact([]);
+    return this.sessionContainer.getChatSessions();
   }
 
   private wrapMessages(messages: Message[]): Message[] {

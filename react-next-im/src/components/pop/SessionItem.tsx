@@ -1,22 +1,22 @@
 import * as React from "react";
-import Contact from "@/lib/protocol/contact/Contact";
 import {
   SidebarMenuBadge,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Dialog from "@/components/pop/Dialog";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 
-interface ContactProps {
-  contact: Contact;
+interface SessionProps {
+  chatSession: ChatSession;
 }
 
-export default function ContactItem(contactProps: ContactProps) {
-  const { contact } = contactProps;
+export default function SessionItem(sessionProps: SessionProps) {
+  const { chatSession } = sessionProps;
   return (
     <SidebarMenuItem className={"gap-2"}>
       <SidebarMenuButton asChild={true} className={"flex flex-row gap-4"}>
-        <Dialog contact={contact} />
+        <Dialog session={chatSession} />
       </SidebarMenuButton>
       <SidebarMenuBadge></SidebarMenuBadge>
     </SidebarMenuItem>

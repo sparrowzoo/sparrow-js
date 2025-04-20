@@ -5,6 +5,22 @@ import CrosStorage from "@/common/lib/CrosStorage";
 import Message from "@/lib/protocol/Message";
 import Contact from "@/lib/protocol/contact/Contact";
 import ChatUser from "@/lib/protocol/ChatUser";
+import { UserCategory } from "@/lib/protocol/UserCategory";
+
+export enum SessionType {
+  VISITOR = 0,
+  GROUP = 10,
+  REGISTER = 1,
+  INTERMEDIARY = 2,
+}
+
+export class GroupedSessions {
+  public visitorSessions: ChatSession[] = [];
+  public groupSessions: ChatSession[] = [];
+  public registerSessions: ChatSession[] = [];
+  public agentSessions: ChatSession[] = [];
+  public clientSessions: ChatSession[] = [];
+}
 
 export default class SessionContainer {
   public chatSessions: ChatSession[] | null = null;
@@ -21,10 +37,7 @@ export default class SessionContainer {
     this.chatSessions = [];
     const currentUser = ChatUser.getCurrentUser();
     for (const contact of contacts) {
-      const oppositeUser = new ChatUser(
-        contact.userId,
-        ChatUser.CATEGORY_REGISTER
-      );
+      const oppositeUser = new ChatUser(contact.userId, UserCategory.REGISTER);
       const session = ChatSession.create121Session(
         currentUser as ChatUser,
         oppositeUser
@@ -148,6 +161,34 @@ export default class SessionContainer {
     });
     console.log("return chat sessions ...");
     return this.chatSessions;
+  }
+
+  public async getGroupedSessions(): Promise<GroupedSessions | null> {
+    const sessions = await this.getChatSessions();
+    if (sessions == null) {
+      return null;
+    }
+    const groupedSessions = new GroupedSessions();
+    for (const session of sessions) {
+      if (session.isGroup()) {
+        groupedSessions.groupSessions.push(session);
+        continue;
+      }
+      const oppositeUser = session.getOppositeUser();
+      if (oppositeUser?.isVisitor()) {
+        groupedSessions.visitorSessions.push(session);
+        continue;
+      }
+      if (oppositeUser?.isAgent()) {
+        groupedSessions.agentSessions.push(session);
+        continue;
+      }
+
+      if (oppositeUser?.isClient()) {
+        groupedSessions.clientSessions.push(session);
+      }
+    }
+    return groupedSessions;
   }
 
   public async newSession(sessionKey: string) {

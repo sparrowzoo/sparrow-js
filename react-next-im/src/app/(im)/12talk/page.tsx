@@ -6,7 +6,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import Contact from "@/lib/protocol/contact/Contact";
-import Contacts from "@/components/pop/Contacts";
 import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import { format } from "util";
 import { AVATAR_URL } from "@/common/lib/Env";
@@ -19,6 +18,8 @@ import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/im/MessageBroker";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import ChatApi from "@/lib/ChatApi";
+import Sessions from "@/components/pop/Sessions";
+import ChatSession from "@/lib/protocol/session/ChatSession";
 
 export default function Page() {
   const contacts: Contact[] = [];
@@ -34,6 +35,7 @@ export default function Page() {
   }
   const [isOpen, setIsOpen] = React.useState(false);
 
+  const [sessions, setSessions] = React.useState<ChatSession[]>([]);
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
   let crosStorage = useCrosStorage();
@@ -52,7 +54,11 @@ export default function Page() {
           setWebSocketContextValue(localContext?.newReference());
         };
         setWebSocketContextValue(localContext);
-        messageBroker.initSessions(contacts);
+        messageBroker.initSessionsByContacts(contacts).then(() => {
+          setSessions(
+            messageBroker.sessionContainer.chatSessions as ChatSession[]
+          );
+        });
       });
     return () => {
       crosStorage?.destroy();
@@ -87,7 +93,7 @@ export default function Page() {
             <PopoverContent side={"top"}>
               <SidebarProvider className={"min-h-full h-full w-auto"}>
                 <Sidebar className={"relative min-h-full h-full"}>
-                  <Contacts contacts={contacts} />
+                  <Sessions sessions={sessions} />
                 </Sidebar>
               </SidebarProvider>
             </PopoverContent>

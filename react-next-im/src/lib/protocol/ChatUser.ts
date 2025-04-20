@@ -1,5 +1,6 @@
 import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
 import { USER_INFO_KEY } from "@/common/lib/Env";
+import { UserCategory } from "@/lib/protocol/UserCategory";
 
 interface ChatUserWithOffset {
   chatUser: NullableChatUser;
@@ -7,8 +8,6 @@ interface ChatUserWithOffset {
 }
 
 export default class ChatUser {
-  static readonly CATEGORY_VISITOR = 0;
-  static readonly CATEGORY_REGISTER = 1;
   public id: string;
   public category: number;
   public key: string;
@@ -63,16 +62,15 @@ export default class ChatUser {
   }
 
   public isVisitor(): boolean {
-    return this.category == ChatUser.CATEGORY_VISITOR;
+    return this.category == UserCategory.VISITOR;
   }
 
-  getCategoryName(): string {
-    if (this.category == ChatUser.CATEGORY_VISITOR) {
-      return "访客";
-    } else if (this.category == ChatUser.CATEGORY_REGISTER) {
-      return "注册用户";
-    }
-    return "未知";
+  public isClient(): boolean {
+    return this.category == UserCategory.CLIENT;
+  }
+
+  public isAgent(): boolean {
+    return this.category == UserCategory.AGENT;
   }
 
   public equals(chatUser: NullableChatUser): boolean {
