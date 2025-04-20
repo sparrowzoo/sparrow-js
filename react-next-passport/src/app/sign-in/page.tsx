@@ -16,7 +16,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import Result from "@/common/lib/protocol/Result";
-import { getQueryString, loginDirect } from "@/common/lib/Navigating";
+import { directTo, getQueryString } from "@/common/lib/Navigating";
 
 export default function Page() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
@@ -53,7 +53,7 @@ export default function Page() {
         setIsLoading(false);
         toast.success("恭喜！登录成功，欢迎回来！志哥欢迎您！！！");
         setTimeout(() => {
-          loginDirect(directUrl as string);
+          directTo(directUrl as string);
         }, 2000);
       })
       .catch((error: any) => {

@@ -6,33 +6,40 @@ import {
 import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import MyAvatar from "@/components/MyAvatar";
 import * as React from "react";
-import Contact from "@/lib/protocol/contact/Contact";
 import Session from "@/components/session/Session";
-import ChatUser from "@/lib/protocol/ChatUser";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 
 interface DialogProps {
-  contact: Contact;
+  session: ChatSession;
 }
 
 export default function Dialog(dialogProps: DialogProps) {
-  const { contact } = dialogProps;
-  const currentUser = ChatUser.getCurrentUser();
-  const receiver = new ChatUser(contact.userId, ChatUser.CATEGORY_REGISTER);
-  const chatSession = ChatSession.create121Session(
-    currentUser as ChatUser,
-    receiver
-  );
+  const { session } = dialogProps;
   return (
     <Popover>
       <PopoverTrigger className={"w-full flex flex-row gap-4"}>
-        <MyAvatar
-          unread={0}
-          showUnread={false}
-          fallback={contact?.userName as string}
-          src={contact.avatar}
-        />
-        <span>{contact.userName}</span>
+        <div className="flex flex-row h-10 text-left">
+          <MyAvatar
+            unread={session.unreadCount}
+            showUnread={true}
+            fallback={session.name as string}
+            src={session.avatarUrl}
+          />
+          <div
+            className={"flex flex-1 flex-col justify-center items-start ml-2"}
+          >
+            <div className={"flex flex-row w-full text-xs justify-between"}>
+              <span className={"text-xs"}>{session.name}</span>
+              <span>{session.lastMessage?.sendTime}</span>
+            </div>
+            <span
+              title={session.lastMessage?.content}
+              className={"text-gray-400 text-xs truncate  w-[10rem]"}
+            >
+              {session.lastMessage?.content}
+            </span>
+          </div>
+        </div>
       </PopoverTrigger>
       <PopoverContent
         sideOffset={10}
@@ -44,7 +51,7 @@ export default function Dialog(dialogProps: DialogProps) {
       >
         <SidebarProvider className={"w-fit h-fit min-h-full"}>
           <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
-            <Session sessionKey={chatSession.sessionKey} />
+            <Session sessionKey={session.sessionKey} />
           </Sidebar>
         </SidebarProvider>
       </PopoverContent>
