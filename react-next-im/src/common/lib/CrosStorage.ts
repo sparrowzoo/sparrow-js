@@ -7,7 +7,10 @@ import {
 } from "@/common/lib/protocol/CrosProtocol";
 import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
 import { Utils } from "@/common/lib/Utils";
-import { getHrefWithoutQueryString } from "@/common/lib/Navigating";
+import {
+  getHrefWithoutQueryString,
+  redirectToLogin,
+} from "@/common/lib/Navigating";
 
 export default class CrosStorage {
   private iframe: HTMLIFrameElement;
@@ -102,7 +105,10 @@ export default class CrosStorage {
 
   public async getToken(
     storage: StorageType = StorageType.AUTOMATIC,
-    generateVisitorToken: any | null = null
+    generateVisitorToken:
+      | (() => Promise<string>)
+      | null
+      | "REDIRECT-TO-LOGIN" = null
   ) {
     const token = await this.get(TOKEN_KEY, storage);
     if (token) {
@@ -110,6 +116,10 @@ export default class CrosStorage {
       return token;
     }
     if (generateVisitorToken) {
+      if (generateVisitorToken === "REDIRECT-TO-LOGIN") {
+        redirectToLogin();
+        return null;
+      }
       const visitorToken = await generateVisitorToken();
       await this.setToken(visitorToken);
       console.log("generate visitor token", visitorToken);

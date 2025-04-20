@@ -36,7 +36,6 @@ class SparrowWebSocket {
   private lastStatusMonitoredTime: number = 0;
   private reconnectionTimer: NodeJS.Timeout;
   private connectionTimestamp: number;
-  private visitorTokenGenerator: null | (() => Promise<string>);
 
   constructor(url: string, crosStorage: CrosStorage) {
     this.url = url;

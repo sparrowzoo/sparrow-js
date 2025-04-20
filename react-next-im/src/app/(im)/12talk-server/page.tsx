@@ -5,10 +5,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Contact from "@/lib/protocol/contact/Contact";
-import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
-import { format } from "util";
-import { AVATAR_URL } from "@/common/lib/Env";
 import React, { useEffect, useState } from "react";
 import {
   WebSocketContext,
@@ -17,36 +13,24 @@ import {
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/im/MessageBroker";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
-import ChatApi from "@/lib/ChatApi";
-import Sessions from "@/components/pop/Sessions";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import Server from "@/components/pop/server/Server";
+import ThreeDotLoading from "@/common/components/ThreeDotLoading";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Page() {
-  const contacts: Contact[] = [];
-  for (let i = 0; i < 10; i++) {
-    const contact = new Contact();
-    contact.userName = "Contact " + i;
-    contact.nationality = "China";
-    contact.userId = i;
-    console.log(contact.userId);
-    contact.avatar = format(AVATAR_URL, contact.userId);
-    console.log(contact.avatar);
-    contacts.push(contact);
-  }
   const [isOpen, setIsOpen] = React.useState(false);
-
-  const [sessions, setSessions] = React.useState<ChatSession[]>([]);
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
+  const [groupedSessions, setGroupedSessions] = useState<any>();
   let crosStorage = useCrosStorage();
   useEffect(() => {
     if (!crosStorage) {
       return;
     }
-
     crosStorage
-      .getToken(StorageType.AUTOMATIC, ChatApi.getVisitorToken)
+      .getToken(StorageType.AUTOMATIC, "REDIRECT-TO-LOGIN")
       .then((token) => {
+        debugger;
         console.log("token", token);
         const messageBroker = new MessageBroker(crosStorage);
         const localContext = WebSocketContextValue.create(messageBroker);
@@ -54,10 +38,14 @@ export default function Page() {
           setWebSocketContextValue(localContext?.newReference());
         };
         setWebSocketContextValue(localContext);
-        messageBroker.initSessionsByContacts(contacts).then(() => {
-          setSessions(
-            messageBroker.sessionContainer.chatSessions as ChatSession[]
-          );
+        messageBroker.initSessions().then(() => {
+          console.log("initSessions success");
+          messageBroker.sessionContainer
+            .getGroupedSessions()
+            .then((groupedSessions) => {
+              console.log("groupedSessions", groupedSessions);
+              setGroupedSessions(groupedSessions);
+            });
         });
       });
     return () => {
@@ -66,8 +54,8 @@ export default function Page() {
     };
   }, [crosStorage]);
 
-  if (!webSocketContextValue) {
-    return <></>;
+  if (!groupedSessions) {
+    return <ThreeDotLoading />;
   }
   console.log("渲染ChatLayout");
 
@@ -76,7 +64,7 @@ export default function Page() {
       value={webSocketContextValue as WebSocketContextValue}
     >
       <div>
-        <div className="absolute bottom-20 right-20  ">
+        <div className="absolute bottom-20 right-60  ">
           <Popover open={isOpen}>
             <PopoverTrigger
               asChild={true}
@@ -90,11 +78,9 @@ export default function Page() {
                 height={64}
               />
             </PopoverTrigger>
-            <PopoverContent side={"top"}>
+            <PopoverContent className={"w-fit"} side={"top"}>
               <SidebarProvider className={"min-h-full h-full w-auto"}>
-                <Sidebar className={"relative min-h-full h-full"}>
-                  <Sessions sessions={sessions} />
-                </Sidebar>
+                <Server groupedSessions={groupedSessions} />
               </SidebarProvider>
             </PopoverContent>
           </Popover>
