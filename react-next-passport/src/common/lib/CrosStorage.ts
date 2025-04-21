@@ -145,7 +145,7 @@ export default class CrosStorage {
     }
     const locationUser = sessionStorage.getItem(USER_INFO_KEY);
     if (locationUser) {
-      return null;
+      return LoginUser.getCurrentUser();
     }
     return await this.getToken().then((token) => {
       console.log("token", token);
