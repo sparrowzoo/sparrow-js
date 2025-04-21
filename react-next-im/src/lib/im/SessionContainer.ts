@@ -3,7 +3,6 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import ContactContainer from "@/lib/im/ContactContainer";
 import CrosStorage from "@/common/lib/CrosStorage";
 import Message from "@/lib/protocol/Message";
-import Contact from "@/lib/protocol/contact/Contact";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { UserCategory } from "@/common/lib/UserCategory";
 
@@ -33,11 +32,11 @@ export default class SessionContainer {
     this.contactContainer = contactContainer;
   }
 
-  public async initSessions(contacts: Contact[]) {
+  public async initSessions(contacts: string[]) {
     this.chatSessions = [];
     const currentUser = ChatUser.getCurrentUser();
     for (const contact of contacts) {
-      const oppositeUser = new ChatUser(contact.userId, UserCategory.REGISTER);
+      const oppositeUser = new ChatUser(contact, UserCategory.REGISTER);
       const session = ChatSession.create121Session(
         currentUser as ChatUser,
         oppositeUser
