@@ -16,7 +16,6 @@ import MessageBroker from "@/lib/im/MessageBroker";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import ChatApi from "@/lib/ChatApi";
 import ChatSession from "@/lib/protocol/session/ChatSession";
-import Sessions from "@/components/session/Sessions";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default function Page() {
@@ -81,10 +80,10 @@ export default function Page() {
                 <WebSocketContext.Provider
                   value={webSocketContextValue as WebSocketContextValue}
                 >
-                  <Sessions
-                    triggerType={"POP"}
-                    sessions={sessions as ChatSession[]}
-                  />
+                  {/*<Sessions*/}
+                  {/*  triggerType={"POP"}*/}
+                  {/*  sessions={sessions as ChatSession[]}*/}
+                  {/*/>*/}
                 </WebSocketContext.Provider>
               </Sidebar>
             </SidebarProvider>
