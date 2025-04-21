@@ -1,5 +1,4 @@
 /** @type {import("next").NextConfig} */
-
 const nextConfig = {
     async redirects() {
         return [
@@ -19,6 +18,14 @@ const nextConfig = {
     // 编译文件的输出目录
     distDir: "dist/pc",
     output: "export",
+    exportPathMap: async function () {
+        return {
+            '/': {
+                page: '/12talk',
+                query: {__container: 'content-container'} // 传递容器参数
+            }
+        }
+    },
     webpack: (config, options) => {
         config.module.rules.push(
             {
@@ -34,6 +41,7 @@ const nextConfig = {
                 use: "raw-loader"
             }
         );
+
         return config;
     }
 };
