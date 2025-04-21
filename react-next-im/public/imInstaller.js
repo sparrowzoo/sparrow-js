@@ -16,7 +16,7 @@ function loadjQuery(callback) {
 loadjQuery(function () {
   var root = "./";
   var loading = root + "/loading.gif";
-  var htmlUrl = root + "/12talk";
+  var htmlUrl = root + "/online.html";
 
   function loadHTML(url, containerId) {
     const container = $(`#${containerId}`);
@@ -35,7 +35,8 @@ loadjQuery(function () {
     })
       .done(function (html) {
         container.html(html); // 外部样式不
-        reloadAssets(container);
+        debugger;
+        //reloadAssets(container);
       })
       .fail(function (jqXHR, textStatus) {
         console.error("加载失败:", textStatus);
@@ -71,7 +72,11 @@ loadjQuery(function () {
     })(0);
   }
 
-  $(document).ready(() => {
+  // $(document).ready(() => {
+  //   loadHTML(htmlUrl, "content-container");
+  // });
+  $(window).on("load", function () {
+    console.log("所有资源加载完成！");
     loadHTML(htmlUrl, "content-container");
   });
 });
