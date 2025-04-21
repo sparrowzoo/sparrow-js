@@ -15,17 +15,11 @@ function loadjQuery(callback) {
 // 加载 jQuery 并初始化功能
 loadjQuery(function () {
   var root = "./";
-  var loading = root + "/loading.gif";
-  var htmlUrl = root + "/online.html";
+  var htmlUrl = root + "/12talk";
 
   function loadHTML(url, containerId) {
     const container = $(`#${containerId}`);
     container.css({ position: "absolute", right: "4rem", bottom: "4rem" });
-    var img = new Image();
-    img.src = loading;
-    img.loop = true;
-    img.lazyload = true;
-    container.append(img);
     // 显示加载状态
     $.ajax({
       url: url,
@@ -34,9 +28,11 @@ loadjQuery(function () {
       dataType: "html",
     })
       .done(function (html) {
-        container.html(html); // 外部样式不
+        html = html.replace("</body>", "");
+        html = html.replace("</html>", "");
+        container.append(html); // 外部样式不
         debugger;
-        //reloadAssets(container);
+        reloadAssets(container);
       })
       .fail(function (jqXHR, textStatus) {
         console.error("加载失败:", textStatus);
