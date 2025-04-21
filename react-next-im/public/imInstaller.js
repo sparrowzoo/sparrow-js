@@ -31,7 +31,7 @@ loadjQuery(function () {
         html = html.replace("</body>", "");
         html = html.replace("</html>", "");
         container.append(html); // 外部样式不
-        debugger;
+        //debugger;
         reloadAssets(container);
       })
       .fail(function (jqXHR, textStatus) {
@@ -42,29 +42,28 @@ loadjQuery(function () {
 
   // 资源重载处理
   function reloadAssets(container) {
-    // 处理样式表
+    //处理样式表;
     container.find('link[rel="stylesheet"]').each(function () {
       $(this).clone().appendTo("head");
     });
-
     // 处理脚本（保持顺序执行）
-    // const scripts = container.find("script").get();
-    // (function loadScript(index) {
-    //   if (index >= scripts.length) return;
-    //
-    //   const script = scripts[index];
-    //   const newScript = $("<script>");
-    //
-    //   if (script.src) {
-    //     newScript
-    //       .attr("src", script.src + "?t=" + Date.now())
-    //       .on("load", () => loadScript(index + 1));
-    //   } else {
-    //     newScript.text(script.innerHTML);
-    //     setTimeout(() => loadScript(index + 1), 0);
-    //   }
-    //   $("body").append(newScript);
-    // })(0);
+    const scripts = container.find("script").get();
+    (function loadScript(index) {
+      if (index >= scripts.length) return;
+
+      const script = scripts[index];
+      const newScript = $("<script>");
+
+      if (script.src) {
+        newScript
+          .attr("src", script.src + "?t=" + Date.now())
+          .on("load", () => loadScript(index + 1));
+      } else {
+        newScript.text(script.innerHTML);
+        setTimeout(() => loadScript(index + 1), 0);
+      }
+      $("body").append(newScript);
+    })(0);
   }
 
   // $(document).ready(() => {
