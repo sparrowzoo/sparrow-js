@@ -17,7 +17,6 @@ import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import ChatApi from "@/lib/ChatApi";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import Sessions from "@/components/session/Sessions";
-import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default function Page() {
@@ -30,6 +29,9 @@ export default function Page() {
     useState<WebSocketContextValue>();
   let crosStorage = useCrosStorage();
   useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
     if (!crosStorage) {
       return;
     }
@@ -61,40 +63,34 @@ export default function Page() {
     };
   }, [crosStorage]);
 
-  if (!sessions) {
-    return <ThreeDotLoading />;
-  }
-  console.log("渲染ChatLayout");
-
   return (
-    <WebSocketContext.Provider
-      value={webSocketContextValue as WebSocketContextValue}
-    >
-      <div>
-        <div className="absolute bottom-20 right-20  ">
-          <Popover open={isOpen}>
-            <PopoverTrigger
-              asChild={true}
-              onClick={() => {
-                setIsOpen(!isOpen);
-              }}
-            >
-              <HeadsetIcon
-                className={"cursor-pointer"}
-                width={64}
-                height={64}
-              />
-            </PopoverTrigger>
-            <PopoverContent side={"top"}>
-              <SidebarProvider className={"min-h-full h-full w-auto"}>
-                <Sidebar className={"relative min-h-full h-full"}>
-                  <Sessions triggerType={"POP"} sessions={sessions} />
-                </Sidebar>
-              </SidebarProvider>
-            </PopoverContent>
-          </Popover>
-        </div>
+    <div id="sparrow-chat-container">
+      <div className="absolute bottom-20 right-20  ">
+        <Popover open={isOpen}>
+          <PopoverTrigger
+            asChild={true}
+            onClick={() => {
+              setIsOpen(!isOpen);
+            }}
+          >
+            <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
+          </PopoverTrigger>
+          <PopoverContent side={"top"}>
+            <SidebarProvider className={"min-h-full h-full w-auto"}>
+              <Sidebar className={"relative min-h-full h-full"}>
+                <WebSocketContext.Provider
+                  value={webSocketContextValue as WebSocketContextValue}
+                >
+                  <Sessions
+                    triggerType={"POP"}
+                    sessions={sessions as ChatSession[]}
+                  />
+                </WebSocketContext.Provider>
+              </Sidebar>
+            </SidebarProvider>
+          </PopoverContent>
+        </Popover>
       </div>
-    </WebSocketContext.Provider>
+    </div>
   );
 }
