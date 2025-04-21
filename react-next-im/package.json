@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev -p 3001",
     "build": "next build",
+    "build-12talk": "next build",
     "start": "next start",
     "lint": "next lint",
     "copy": "cpy ./../common/src/common  ./src/ --parents"
