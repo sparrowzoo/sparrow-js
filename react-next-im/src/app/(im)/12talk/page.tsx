@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import { createRoot } from "react-dom/client";
 
-const JQueryComponent = dynamic(() => import("./Demo"), {
+const JQueryComponent = dynamic(() => import("./back"), {
   ssr: false, // 仅客户端渲染
 });
 export default function Page() {
