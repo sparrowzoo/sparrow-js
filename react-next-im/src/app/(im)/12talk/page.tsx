@@ -18,8 +18,10 @@ import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/im/MessageBroker";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import ChatApi from "@/lib/ChatApi";
-import Sessions from "@/components/pop/Sessions";
 import ChatSession from "@/lib/protocol/session/ChatSession";
+import Sessions from "@/components/session/Sessions";
+import ThreeDotLoading from "@/common/components/ThreeDotLoading";
+import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default function Page() {
   const contacts: Contact[] = [];
@@ -34,8 +36,7 @@ export default function Page() {
     contacts.push(contact);
   }
   const [isOpen, setIsOpen] = React.useState(false);
-
-  const [sessions, setSessions] = React.useState<ChatSession[]>([]);
+  const [sessions, setSessions] = React.useState<ChatSession[]>();
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
   let crosStorage = useCrosStorage();
@@ -47,17 +48,22 @@ export default function Page() {
     crosStorage
       .getToken(StorageType.AUTOMATIC, ChatApi.getVisitorToken)
       .then((token) => {
-        console.log("token", token);
-        const messageBroker = new MessageBroker(crosStorage);
-        const localContext = WebSocketContextValue.create(messageBroker);
-        messageBroker.newMessageSignal = () => {
-          setWebSocketContextValue(localContext?.newReference());
-        };
-        setWebSocketContextValue(localContext);
-        messageBroker.initSessionsByContacts(contacts).then(() => {
-          setSessions(
-            messageBroker.sessionContainer.chatSessions as ChatSession[]
-          );
+        //同步token 到本域，方便后续使用getCurrentUser()
+        crosStorage?.locateToken().then((token) => {
+          console.log("token", token);
+          const messageBroker = new MessageBroker(crosStorage);
+          const localContext = WebSocketContextValue.create(messageBroker);
+          messageBroker.newMessageSignal = () => {
+            setWebSocketContextValue(localContext?.newReference());
+          };
+          setWebSocketContextValue(localContext);
+          messageBroker.webSocket.handshakeSuccess = (loginUser: LoginUser) => {
+            messageBroker.initSessionsByContacts(contacts).then(() => {
+              setSessions(
+                messageBroker.sessionContainer.chatSessions as ChatSession[]
+              );
+            });
+          };
         });
       });
     return () => {
@@ -66,8 +72,8 @@ export default function Page() {
     };
   }, [crosStorage]);
 
-  if (!webSocketContextValue) {
-    return <></>;
+  if (!sessions) {
+    return <ThreeDotLoading />;
   }
   console.log("渲染ChatLayout");
 
@@ -93,7 +99,7 @@ export default function Page() {
             <PopoverContent side={"top"}>
               <SidebarProvider className={"min-h-full h-full w-auto"}>
                 <Sidebar className={"relative min-h-full h-full"}>
-                  <Sessions sessions={sessions} />
+                  <Sessions triggerType={"POP"} sessions={sessions} />
                 </Sidebar>
               </SidebarProvider>
             </PopoverContent>

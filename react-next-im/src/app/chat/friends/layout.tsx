@@ -75,7 +75,11 @@ export default function ChatLayout({
                     <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
                   </CollapsibleTrigger>
                 </SidebarGroupLabel>
-                <Groups quns={contactGroup?.quns || []} />
+                <CollapsibleContent>
+                  <SidebarGroupContent>
+                    <Groups quns={contactGroup?.quns || []} />
+                  </SidebarGroupContent>
+                </CollapsibleContent>
               </SidebarGroup>
             </Collapsible>
           </SidebarContent>

@@ -10,6 +10,7 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { format } from "util";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
+import { UserCategory } from "@/common/lib/UserCategory";
 
 function Contact() {
   const searchParams = useSearchParams();
@@ -19,7 +20,7 @@ function Contact() {
   const headSrc = format(AVATAR_URL, friendId);
 
   const currentUser = ChatUser.getCurrentUser();
-  const friend = new ChatUser(friendId as string, ChatUser.CATEGORY_REGISTER);
+  const friend = new ChatUser(friendId as string, UserCategory.REGISTER);
   const chatSession = ChatSession.create121Session(
     currentUser as ChatUser,
     friend
