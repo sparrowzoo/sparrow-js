@@ -8,6 +8,7 @@ import * as React from "react";
 import Session from "@/components/session/Session";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import BaseTrigger from "@/components/session/item/BaseTrigger";
+import { Position } from "@/lib/protocol/ItemProps";
 
 interface DialogProps {
   session: ChatSession;
@@ -18,7 +19,7 @@ export default function PopSessionItemTrigger(dialogProps: DialogProps) {
   return (
     <Popover>
       <PopoverTrigger className={"w-full flex flex-row gap-4"}>
-        <BaseTrigger chatSession={session} />
+        <BaseTrigger unreadPosition={Position.TAIL} chatSession={session} />
       </PopoverTrigger>
       <PopoverContent
         sideOffset={10}

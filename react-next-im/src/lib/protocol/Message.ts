@@ -37,7 +37,7 @@ export default class Message {
     if (date.getDate() == today.getDate()) {
       return format(this.clientSendTime, "HH:mm");
     }
-    return format(this.clientSendTime, "MM/dd/yyyy HH:mm");
+    return format(this.clientSendTime, "MM/dd HH:mm");
   }
 
   static fromProtocol(protocol: Protocol): Message {
