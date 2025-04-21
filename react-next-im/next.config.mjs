@@ -18,6 +18,7 @@ const nextConfig = {
     // 编译文件的输出目录
     distDir: "dist/pc",
     output: "export",
+
     webpack: (config, options) => {
         config.module.rules.push(
             {
