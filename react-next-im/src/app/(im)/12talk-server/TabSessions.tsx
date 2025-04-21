@@ -17,13 +17,13 @@ export default function TabSessions(serverProps: ServerProps) {
         <TabsTrigger value="agent">中介</TabsTrigger>
         <TabsTrigger value="client">客户</TabsTrigger>
       </TabsList>
-      <TabsContent value="visitor">
+      <TabsContent value="visitor" className={"h-[500px] overflow-y-auto"}>
         <Sessions triggerType={"POP"} sessions={visitorSessions} />
       </TabsContent>
-      <TabsContent value="agent">
+      <TabsContent value="agent" className={"h-[500px] overflow-y-auto"}>
         <Sessions triggerType={"POP"} sessions={agentSessions} />
       </TabsContent>
-      <TabsContent value="client">
+      <TabsContent value="client" className={"h-[500px] overflow-y-auto"}>
         <Sessions triggerType={"POP"} sessions={clientSessions} />
       </TabsContent>
     </Tabs>
