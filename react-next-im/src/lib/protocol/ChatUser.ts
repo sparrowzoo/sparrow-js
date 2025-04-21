@@ -1,6 +1,6 @@
 import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
-import { USER_INFO_KEY } from "@/common/lib/Env";
-import { UserCategory } from "@/lib/protocol/UserCategory";
+import LoginUser from "@/common/lib/protocol/LoginUser";
+import { UserCategory } from "@/common/lib/UserCategory";
 
 interface ChatUserWithOffset {
   chatUser: NullableChatUser;
@@ -46,31 +46,11 @@ export default class ChatUser {
   }
 
   public static getCurrentUser() {
-    if (typeof window === "undefined") {
-      console.error("This component should not render on server");
-      return null;
-    }
-
-    const userInfo = sessionStorage.getItem(USER_INFO_KEY);
-    if (!userInfo) {
-      return null;
-    }
-    const loginUser = JSON.parse(userInfo);
-    const userId = loginUser.userId + "";
-    const category = loginUser.category;
-    return new ChatUser(userId, category);
-  }
-
-  public isVisitor(): boolean {
-    return this.category == UserCategory.VISITOR;
-  }
-
-  public isClient(): boolean {
-    return this.category == UserCategory.CLIENT;
-  }
-
-  public isAgent(): boolean {
-    return this.category == UserCategory.AGENT;
+    const loginUser = LoginUser.getCurrentUser();
+    return new ChatUser(
+      loginUser?.userId as string,
+      loginUser?.category as number
+    );
   }
 
   public equals(chatUser: NullableChatUser): boolean {
@@ -98,6 +78,18 @@ export default class ChatUser {
     offset = ArrayBufferUtils.appendBytes(userBytes, idBytes, offset);
     ArrayBufferUtils.appendBytes(userBytes, categoryBytes, offset);
     return userBytes;
+  }
+
+  public isVisitor(): boolean {
+    return this.category == UserCategory.VISITOR;
+  }
+
+  public isClient(): boolean {
+    return this.category == UserCategory.CLIENT;
+  }
+
+  public isAgent(): boolean {
+    return this.category == UserCategory.AGENT;
   }
 }
 

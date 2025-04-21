@@ -9,8 +9,6 @@ import {
   SidebarGroupLabel,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import { Collapsible, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown } from "lucide-react";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
@@ -41,22 +39,16 @@ export default function ChatLayout({
       <SidebarProvider className={"min-h-full h-full w-auto"}>
         <Sidebar className={"relative min-h-full h-full"}>
           <SidebarContent>
-            <Collapsible defaultOpen className="group/collapsible">
-              <SidebarGroup>
-                <SidebarGroupLabel
-                  className={
-                    "border-b-1 rounded-none  border-gray-400 text-black "
-                  }
-                  asChild
-                >
-                  <CollapsibleTrigger>
-                    会话
-                    <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
-                  </CollapsibleTrigger>
-                </SidebarGroupLabel>
-                <Sessions sessions={sessions} />
-              </SidebarGroup>
-            </Collapsible>
+            <SidebarGroup>
+              <SidebarGroupLabel
+                className={
+                  "border-b-1 rounded-none  border-gray-400 text-black "
+                }
+              >
+                会话
+              </SidebarGroupLabel>
+              <Sessions triggerType={"LINK"} sessions={sessions} />
+            </SidebarGroup>
           </SidebarContent>
         </Sidebar>
       </SidebarProvider>

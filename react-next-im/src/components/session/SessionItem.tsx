@@ -1,50 +1,35 @@
 "use client";
-import Link from "next/link";
 import * as React from "react";
-import {
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import ChatSession from "@/lib/protocol/session/ChatSession";
-import MyAvatar from "@/components/MyAvatar";
-
-interface SessionItemProps {
-  chatSession: ChatSession;
-}
+import { SidebarMenuBadge, SidebarMenuItem } from "@/components/ui/sidebar";
+import SessionItemTrigger from "@/components/session/SessionItemTrigger";
+import { Position } from "@/lib/protocol/ItemProps";
+import { Badge } from "@/components/ui/badge";
+import SessionItemProps from "@/components/session/item/SessionItemProps";
 
 export default function SessionItem(props: SessionItemProps) {
   const { chatSession } = props;
   console.log("session item 重渲染");
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild>
-        <Link className={"block w-fit h-fit p-0"} href={chatSession.sessionUrl}>
-          <div className="flex flex-row h-10">
-            <MyAvatar
-              unread={chatSession.unreadCount}
-              showUnread={true}
-              fallback={chatSession.name as string}
-              src={chatSession.avatarUrl}
-            />
-            <div
-              className={"flex flex-1 flex-col justify-center items-start ml-2"}
-            >
-              <div className={"flex flex-row w-full text-xs justify-between"}>
-                <span className={"text-xs"}>{chatSession.name}</span>
-                <span>{chatSession.lastMessage?.sendTime}</span>
-              </div>
-              <span
-                title={chatSession.lastMessage?.content}
-                className={"text-gray-400 text-xs truncate  w-[10rem]"}
-              >
-                {chatSession.lastMessage?.content}
-              </span>
-            </div>
-          </div>
-        </Link>
-      </SidebarMenuButton>
-      <SidebarMenuBadge></SidebarMenuBadge>
+      <SessionItemTrigger
+        unreadPosition={props.unreadPosition}
+        triggerType={props.triggerType}
+        chatSession={chatSession}
+      />
+      <>
+        {chatSession.unreadCount} {chatSession.unreadPosition}
+      </>
+      {chatSession.unreadCount > 0 && props.unreadPosition == Position.TAIL && (
+        <SidebarMenuBadge>
+          <Badge
+            className={
+              "absolute bg-red-500 p-1  text-white z-50 font-bold rounded-full"
+            }
+          >
+            {chatSession.unreadCount > 99 ? "99+" : chatSession.unreadCount}
+          </Badge>
+        </SidebarMenuBadge>
+      )}
     </SidebarMenuItem>
   );
 }

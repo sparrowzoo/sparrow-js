@@ -6,7 +6,7 @@ export default function signUp(signData: FormData) {
   return Fetcher.post(
     "/register/email/shortcut.json",
     signData,
-    CrosStorage.getCurrentStorage(),
+    CrosStorage.getCrosStorage(),
     true
   );
 }

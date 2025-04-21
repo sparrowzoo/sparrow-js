@@ -1,5 +1,10 @@
 import CrosStorage from "@/common/lib/CrosStorage";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
+import Result from "@/common/lib/protocol/Result";
+import { USER_INFO_KEY } from "@/common/lib/Env";
+import LoginUser from "@/common/lib/protocol/LoginUser";
+import toast from "react-hot-toast";
+import { redirectToLogin } from "@/common/lib/Navigating";
 
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
@@ -14,8 +19,9 @@ class SparrowWebSocket {
 
   // 接收到信息后需要执行的事件
   public onMsgCallback: (data: ArrayBufferLike) => void;
+  public handshakeSuccess: (loginUser: LoginUser) => void;
+  public handshakeFail: (data: Result) => void;
   public offlineCallback: (data: { offline: boolean }) => void;
-  public userAuthCallback: (data: any) => void;
   public monitorStatus: () => [];
   public monitorStatusCallback: (data: []) => void;
   public txid = 0;
@@ -40,6 +46,28 @@ class SparrowWebSocket {
   constructor(url: string, crosStorage: CrosStorage) {
     this.url = url;
     this.crosStorage = crosStorage;
+  }
+
+  public userAuthCallback(data: Result) {
+    if (data.code == "0") {
+      sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
+      if (!this.handshakeSuccess) {
+        console.warn("please defined handshakeSuccess callback method  ");
+      } else {
+        this.handshakeSuccess(LoginUser.getCurrentUser() as LoginUser);
+      }
+    } else {
+      this.crosStorage.removeToken().then(() => {
+        toast.error(data.message);
+        if (this.handshakeFail) {
+          this.handshakeFail(data);
+        } else {
+          setTimeout(() => {
+            redirectToLogin();
+          }, 2000);
+        }
+      });
+    }
   }
 
   public getHeartStatus() {
@@ -89,7 +117,7 @@ class SparrowWebSocket {
       if ("WebSocket" in window) {
         this.initWindowsFocusEvent();
         this.crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
-          this.ws = new WebSocket(this.url, [token]);
+          this.ws = new WebSocket(this.url, [token as string]);
           //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
           this.onOpen();
           this._onMsg();

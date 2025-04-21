@@ -4,6 +4,7 @@ import { format } from "util";
 import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import Message from "@/lib/protocol/Message";
 import ContactContainer from "@/lib/im/ContactContainer";
+import { Position } from "@/lib/protocol/ItemProps";
 
 export default class ChatSession {
   // Fields
@@ -13,6 +14,7 @@ export default class ChatSession {
   public avatarUrl: string;
   //发消息和每次拉取时更新已读
   public lastReadTime: number = 0;
+  public unreadPosition: Position = Position.TAIL;
   //接受消息时更新未读和最后一条消息
   public unreadCount: number;
   //收发时更要更新最后一条消息
@@ -109,7 +111,7 @@ export default class ChatSession {
     return this.chatType == ChatType.CHAT_1_TO_1;
   }
 
-  public getOppositeUser(): ChatUser | null {
+  public getOppositeUser() {
     const currentUser = ChatUser.getCurrentUser();
     if (currentUser == null) {
       return null;
@@ -141,12 +143,12 @@ export default class ChatSession {
     return encoder.encode(this.chatType + this.id);
   }
 
-  public fill(contactContainer: ContactContainer) {
+  public async fill(contactContainer: ContactContainer) {
     if (!contactContainer) {
       return;
     }
     if (this?.isOne2One()) {
-      const oppositeUser = this.getOppositeUser();
+      const oppositeUser = await this.getOppositeUser();
       const contact = contactContainer.getContactDetail(
         oppositeUser as ChatUser
       );

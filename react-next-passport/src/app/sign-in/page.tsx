@@ -16,13 +16,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import Result from "@/common/lib/protocol/Result";
-import { directTo, getQueryString } from "@/common/lib/Navigating";
+import { directTo } from "@/common/lib/Navigating";
+import UrlUtils from "@/common/lib/UrlUtils";
 
 export default function Page() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
   let crosStorage = useCrosStorage();
-  const directUrl = getQueryString();
+  const directUrl = UrlUtils.getQueryString();
   const {
     register,
     setValue,

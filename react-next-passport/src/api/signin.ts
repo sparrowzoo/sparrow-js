@@ -6,7 +6,7 @@ export default function signIn(signData: FormData) {
   return Fetcher.post(
     "/shortcut-login.json",
     signData,
-    CrosStorage.getCurrentStorage(),
+    CrosStorage.getCrosStorage(),
     true
   );
 }
