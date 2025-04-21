@@ -5,10 +5,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import Contact from "@/lib/protocol/contact/Contact";
 import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
-import { format } from "util";
-import { AVATAR_URL } from "@/common/lib/Env";
 import React, { useEffect, useState } from "react";
 import {
   WebSocketContext,
@@ -24,17 +21,9 @@ import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default function Page() {
-  const contacts: Contact[] = [];
-  for (let i = 0; i < 10; i++) {
-    const contact = new Contact();
-    contact.userName = "Contact " + i;
-    contact.nationality = "China";
-    contact.userId = i;
-    console.log(contact.userId);
-    contact.avatar = format(AVATAR_URL, contact.userId);
-    console.log(contact.avatar);
-    contacts.push(contact);
-  }
+  const serverIds = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY as string;
+  const contacts: string[] = serverIds.split(",");
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<ChatSession[]>();
   const [webSocketContextValue, setWebSocketContextValue] =

@@ -11,7 +11,6 @@ import { ContactStatus } from "@/lib/protocol/ContactStatus";
 import CrosStorage from "@/common/lib/CrosStorage";
 import ContactContainer from "@/lib/im/ContactContainer";
 import SessionContainer from "@/lib/im/SessionContainer";
-import Contact from "@/lib/protocol/contact/Contact";
 
 export default class MessageBroker {
   public contactContainer: ContactContainer;
@@ -122,8 +121,8 @@ export default class MessageBroker {
    * 指定联系人初始化会话 普通用户或者游客
    * @param contacts
    */
-  public async initSessionsByContacts(contacts: Contact[]) {
-    this?.contactContainer?.initContact(contacts);
+  public async initSessionsByContacts(contacts: string[]) {
+    this?.contactContainer?.initContact([]);
     await this?.sessionContainer.initSessions(contacts);
   }
 
