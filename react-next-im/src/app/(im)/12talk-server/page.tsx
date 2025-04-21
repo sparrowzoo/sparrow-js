@@ -13,9 +13,10 @@ import {
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/im/MessageBroker";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
-import Server from "@/components/pop/server/Server";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import TabSessions from "@/app/(im)/12talk-server/TabSessions";
+import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default function Page() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -30,22 +31,28 @@ export default function Page() {
     crosStorage
       .getToken(StorageType.AUTOMATIC, "REDIRECT-TO-LOGIN")
       .then((token) => {
-        debugger;
-        console.log("token", token);
-        const messageBroker = new MessageBroker(crosStorage);
-        const localContext = WebSocketContextValue.create(messageBroker);
-        messageBroker.newMessageSignal = () => {
-          setWebSocketContextValue(localContext?.newReference());
-        };
-        setWebSocketContextValue(localContext);
-        messageBroker.initSessions().then(() => {
-          console.log("initSessions success");
-          messageBroker.sessionContainer
-            .getGroupedSessions()
-            .then((groupedSessions) => {
-              console.log("groupedSessions", groupedSessions);
-              setGroupedSessions(groupedSessions);
+        //token 个人信息本地化
+        crosStorage?.locateToken().then((loginUser: LoginUser) => {
+          console.log("token", JSON.stringify(loginUser));
+          const messageBroker = new MessageBroker(crosStorage);
+          const localContext = WebSocketContextValue.create(messageBroker);
+          messageBroker.newMessageSignal = () => {
+            setWebSocketContextValue(localContext?.newReference());
+          };
+          setWebSocketContextValue(localContext);
+          //握手成功后初始化
+          messageBroker.webSocket.handshakeSuccess = () => {
+            messageBroker.initSessions().then(() => {
+              console.log("initSessions success");
+              //将session 信息分组
+              messageBroker.sessionContainer
+                .getGroupedSessions()
+                .then((groupedSessions) => {
+                  console.log("groupedSessions", groupedSessions);
+                  setGroupedSessions(groupedSessions);
+                });
             });
+          };
         });
       });
     return () => {
@@ -80,7 +87,7 @@ export default function Page() {
             </PopoverTrigger>
             <PopoverContent className={"w-fit"} side={"top"}>
               <SidebarProvider className={"min-h-full h-full w-auto"}>
-                <Server groupedSessions={groupedSessions} />
+                <TabSessions groupedSessions={groupedSessions} />
               </SidebarProvider>
             </PopoverContent>
           </Popover>

@@ -5,7 +5,7 @@ import CrosStorage from "@/common/lib/CrosStorage";
 import Message from "@/lib/protocol/Message";
 import Contact from "@/lib/protocol/contact/Contact";
 import ChatUser from "@/lib/protocol/ChatUser";
-import { UserCategory } from "@/lib/protocol/UserCategory";
+import { UserCategory } from "@/common/lib/UserCategory";
 
 export enum SessionType {
   VISITOR = 0,

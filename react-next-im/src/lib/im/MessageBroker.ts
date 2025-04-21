@@ -6,14 +6,12 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import { ChatType, MessageType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
-import { USER_INFO_KEY, WEBSOCKET } from "@/common/lib/Env";
+import { WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
 import CrosStorage from "@/common/lib/CrosStorage";
 import ContactContainer from "@/lib/im/ContactContainer";
-import Result from "@/common/lib/protocol/Result";
 import SessionContainer from "@/lib/im/SessionContainer";
 import Contact from "@/lib/protocol/contact/Contact";
-import { redirectToLogin } from "@/common/lib/Navigating";
 
 export default class MessageBroker {
   public contactContainer: ContactContainer;
@@ -41,18 +39,6 @@ export default class MessageBroker {
     };
     this.webSocket.offlineCallback = () => {
       toast.error("消息已推送，对方已离线....");
-    };
-    this.webSocket.userAuthCallback = (data: Result) => {
-      console.log("userValidCallback", JSON.stringify(data));
-      if (data.code == "0") {
-        sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
-      } else {
-        this.crosStorage.removeToken();
-        toast.error(data.message);
-        setTimeout(() => {
-          redirectToLogin();
-        }, 2000);
-      }
     };
     this.webSocket.monitorStatus = () => {
       console.log("websocket monitor status");

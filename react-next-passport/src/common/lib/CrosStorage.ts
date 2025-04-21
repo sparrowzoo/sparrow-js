@@ -5,33 +5,33 @@ import {
   StorageResponse,
   StorageType,
 } from "@/common/lib/protocol/CrosProtocol";
-import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
-import { Utils } from "@/common/lib/Utils";
 import {
-  getHrefWithoutQueryString,
-  redirectToLogin,
-} from "@/common/lib/Navigating";
+  STORAGE_PROXY,
+  TOKEN_KEY,
+  TOKEN_STORAGE,
+  USER_INFO_KEY,
+} from "@/common/lib/Env";
+import { Utils } from "@/common/lib/Utils";
+import UrlUtils from "@/common/lib/UrlUtils";
+import { redirectToLogin } from "@/common/lib/Navigating";
+import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default class CrosStorage {
   private iframe: HTMLIFrameElement;
-  private iframeOrigin: string | undefined;
+  private iframeOrigin: string | undefined = STORAGE_PROXY;
   private cros: boolean = false;
   private loaded: boolean = false;
 
-  private constructor(cros: Boolean | null = null) {
-    console.log("cros storage init");
-    if (cros === false) {
+  private constructor() {
+    if (typeof window === "undefined") {
       return;
     }
-    this.cros = STORAGE_PROXY ? true : false;
-    if (this.cros == false) {
+    console.log("cros storage init");
+    this.cros = UrlUtils.isCros(window.location.href, STORAGE_PROXY as string);
+    if (!this.cros) {
       return;
     }
     this.resetIframe();
-  }
-
-  public static getCurrentStorage() {
-    return new CrosStorage(false);
   }
 
   public static getCrosStorage() {
@@ -137,11 +137,37 @@ export default class CrosStorage {
     return this.remove(TOKEN_KEY, storage);
   }
 
+  //用户基本信息本地化
+  public async locateToken() {
+    //如果不是cros环境，则不进行本地化
+    if (!this.cros) {
+      return null;
+    }
+    const locationUser = sessionStorage.getItem(USER_INFO_KEY);
+    if (locationUser) {
+      return null;
+    }
+    return await this.getToken().then((token) => {
+      console.log("token", token);
+      if (token) {
+        const decodeToken = decodeURIComponent(token);
+        const parts: string[] = decodeToken.split(".");
+        const userInfo: string = parts[0];
+        if (!userInfo) {
+          return null;
+        }
+        const userJson = atob(userInfo);
+        sessionStorage.setItem(USER_INFO_KEY, userJson);
+        return LoginUser.getCurrentUser();
+      }
+    });
+  }
+
   private resetIframe() {
     this.destroy();
     const iframe = document.createElement("iframe");
     iframe.src = STORAGE_PROXY as string;
-    iframe.src = iframe.src + "?" + getHrefWithoutQueryString();
+    iframe.src = iframe.src + "?" + UrlUtils.getHrefWithoutQueryString();
     iframe.style.display = "none";
     this.iframe = iframe;
     console.log("reset and append iframe " + STORAGE_PROXY);

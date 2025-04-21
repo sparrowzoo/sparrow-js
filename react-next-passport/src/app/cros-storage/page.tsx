@@ -8,7 +8,7 @@ import {
 } from "@/common/lib/protocol/CrosProtocol";
 import { allowOrigin } from "@/common/lib/Env";
 import { Utils } from "@/common/lib/Utils";
-import { getQueryString } from "@/common/lib/Navigating";
+import UrlUtils from "@/common/lib/UrlUtils";
 
 export default function Page() {
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function Page() {
         key: "cros-iframe-storage",
         command: CommandType.INIT,
       };
-      const parentUrl = getQueryString();
+      const parentUrl = UrlUtils.getQueryString();
       if (!parentUrl) {
         return;
       }

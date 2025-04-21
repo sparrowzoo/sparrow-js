@@ -7,7 +7,7 @@ import CrosStorage from "@/common/lib/CrosStorage";
 export default class Fetcher {
   static async get(
     url: string,
-    crosStorage: CrosStorage | null = CrosStorage.getCurrentStorage(),
+    crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
     if (url.indexOf("http") < 0) {
@@ -48,7 +48,7 @@ export default class Fetcher {
   static async post(
     url: string,
     body: any,
-    crosStorage: CrosStorage | null = CrosStorage.getCurrentStorage(),
+    crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
     if (url.indexOf("http") < 0) {

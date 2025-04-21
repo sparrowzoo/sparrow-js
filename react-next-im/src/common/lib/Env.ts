@@ -1,4 +1,4 @@
-const USER_INFO_KEY = "user_info";
+const USER_INFO_KEY = "sparrow_user_info";
 const NODE_ENV = process.env.NODE_ENV;
 const API_BASIC_URL = process.env.NEXT_PUBLIC_API;
 

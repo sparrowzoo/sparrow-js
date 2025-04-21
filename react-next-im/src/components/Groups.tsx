@@ -3,8 +3,7 @@ import * as React from "react";
 import Group from "@/lib/protocol/contact/Group";
 import Link from "next/link";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
-import { CollapsibleContent } from "@radix-ui/react-collapsible";
-import { SidebarGroupContent, SidebarMenu } from "@/components/ui/sidebar";
+import { SidebarMenu } from "@/components/ui/sidebar";
 
 interface GroupsProps {
   quns: Group[] | undefined;
@@ -23,14 +22,10 @@ export default function Groups(groupProps: GroupsProps) {
     );
   }
   return (
-    <CollapsibleContent>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          {groupProps?.quns?.map((qun) => (
-            <GroupItem qun={qun} key={qun.qunId + ""} />
-          ))}
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </CollapsibleContent>
+    <SidebarMenu className={"gap-2"}>
+      {groupProps?.quns?.map((qun) => (
+        <GroupItem qun={qun} key={qun.qunId + ""} />
+      ))}
+    </SidebarMenu>
   );
 }
