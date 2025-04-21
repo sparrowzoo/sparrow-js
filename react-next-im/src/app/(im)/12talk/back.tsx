@@ -1,4 +1,3 @@
-"use client";
 import { HeadsetIcon } from "lucide-react";
 import {
   Popover,
@@ -19,7 +18,7 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import Sessions from "@/components/session/Sessions";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 
-export default function Page() {
+function Page() {
   const serverIds = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY as string;
   const contacts: string[] = serverIds.split(",");
 
