@@ -15,11 +15,19 @@ function loadjQuery(callback) {
 // 加载 jQuery 并初始化功能
 loadjQuery(function () {
   var root = "./";
-  var htmlUrl = root + "/12talk";
 
   function loadHTML(url, containerId) {
     const container = $(`#${containerId}`);
-    container.css({ position: "absolute", right: "4rem", bottom: "4rem" });
+    var params = new URL(document.location).searchParams;
+    var right = params.get("r");
+    var bottom = params.get("b");
+    if (!right) {
+      right = "4rem";
+    }
+    if (!bottom) {
+      bottom = "4rem";
+    }
+    container.css({ position: "absolute", right: right, bottom: bottom });
     // 显示加载状态
     $.ajax({
       url: url,
@@ -67,6 +75,8 @@ loadjQuery(function () {
   }
 
   $(document).ready(() => {
+    var params = new URL(document.location).searchParams;
+    var htmlUrl = root + params.get("html");
     loadHTML(htmlUrl, "content-container");
   });
 });

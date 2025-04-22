@@ -24,6 +24,7 @@ export default function Page() {
     useState<WebSocketContextValue>();
   const [groupedSessions, setGroupedSessions] = useState<any>();
   let crosStorage = useCrosStorage();
+
   useEffect(() => {
     if (!crosStorage) {
       return;
@@ -39,7 +40,6 @@ export default function Page() {
           messageBroker.newMessageSignal = () => {
             setWebSocketContextValue(localContext?.newReference());
           };
-          setWebSocketContextValue(localContext);
           //握手成功后初始化
           messageBroker.webSocket.handshakeSuccess = () => {
             messageBroker.initSessions().then(() => {
@@ -53,6 +53,7 @@ export default function Page() {
                 });
             });
           };
+          setWebSocketContextValue(localContext);
         });
       });
     return () => {
@@ -60,6 +61,22 @@ export default function Page() {
       webSocketContextValue?.closeWebSocket();
     };
   }, [crosStorage]);
+
+  useEffect(() => {
+    if (webSocketContextValue) {
+      const messageBroker = webSocketContextValue.messageBroker;
+      messageBroker.initSessions().then(() => {
+        console.log("initSessions success");
+        //将session 信息分组
+        messageBroker.sessionContainer
+          .getGroupedSessions()
+          .then((groupedSessions) => {
+            console.log("groupedSessions", groupedSessions);
+            setGroupedSessions(groupedSessions);
+          });
+      });
+    }
+  }, [webSocketContextValue]);
 
   if (!groupedSessions) {
     return <ThreeDotLoading />;
