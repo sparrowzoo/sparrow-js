@@ -19,7 +19,7 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import Sessions from "@/components/session/Sessions";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 
-export default function Demo() {
+export default function JQuery12Talk() {
   const serverIds = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY as string;
   const contacts: string[] = serverIds.split(",");
 
