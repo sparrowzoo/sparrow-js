@@ -1,11 +1,16 @@
 import ChatUser from "@/lib/protocol/ChatUser";
 import { VISITOR_AVATAR_URL } from "@/common/lib/Env";
+import { UserCategory } from "@/common/lib/UserCategory";
 
 export default class Contact {
   /**
    * 国籍
    */
   public nationality: string;
+  /**
+   * 用户类型
+   */
+  public category: number;
 
   /**
    * 国旗url
@@ -20,6 +25,11 @@ export default class Contact {
    * 昵称
    */
   public nickName: string;
+
+  /**
+   * 英文名
+   */
+  public englishName: string;
   /**
    * 头象
    */
@@ -45,6 +55,8 @@ export default class Contact {
     contact.userId = user.id;
     contact.userName = "VISITOR" + user.id;
     contact.nickName = contact.userName;
+    contact.englishName = contact.userName;
+    contact.category = UserCategory.VISITOR;
     contact.avatar = `${VISITOR_AVATAR_URL}`;
     contact.flagUrl = "";
     contact.nationality = "";
@@ -56,6 +68,8 @@ export default class Contact {
     contact.userId = user.id;
     contact.userName = "VISITOR:" + user.id;
     contact.nickName = contact.nickName;
+    contact.englishName = contact.userName;
+    contact.category = UserCategory.VISITOR;
     contact.avatar = `${VISITOR_AVATAR_URL}`;
     contact.flagUrl = "";
     contact.nationality = "";
