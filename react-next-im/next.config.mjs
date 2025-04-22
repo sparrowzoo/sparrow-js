@@ -18,7 +18,9 @@ const nextConfig = {
     // 编译文件的输出目录
     distDir: "dist/pc",
     output: "export",
-
+    generateBuildId: async () => {
+        return "sparrow";
+    },
     webpack: (config, options) => {
         config.module.rules.push(
             {
@@ -34,7 +36,6 @@ const nextConfig = {
                 use: "raw-loader"
             }
         );
-
         return config;
     }
 };
