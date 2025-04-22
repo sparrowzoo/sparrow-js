@@ -11,8 +11,8 @@ import ChatUser from "@/lib/protocol/ChatUser";
 import { format } from "util";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import { UserCategory } from "@/common/lib/UserCategory";
-
-function Contact() {
+import Contact from "@/lib/protocol/contact/Contact";
+function ContactDetail() {
   const searchParams = useSearchParams();
   const webSocketContextValue = useContext(WebSocketContext);
 
@@ -20,15 +20,14 @@ function Contact() {
   const headSrc = format(AVATAR_URL, friendId);
 
   const currentUser = ChatUser.getCurrentUser();
-  const friend = new ChatUser(friendId as string, UserCategory.REGISTER);
+  let friend = new ChatUser(friendId as string, UserCategory.REGISTER);
+  const  contact=webSocketContextValue.messageBroker.contactContainer.getContactDetail(friend) as Contact;
+  friend=new ChatUser(contact.userId,contact.category);
   const chatSession = ChatSession.create121Session(
     currentUser as ChatUser,
     friend
   );
-  const contact =
-    webSocketContextValue.messageBroker.contactContainer.getContactDetail(
-      friend
-    );
+
 
   return (
     <div className={"flex flex-col p-4 bg-white shadow-md"}>
@@ -63,7 +62,7 @@ function Contact() {
 export default function ContactPage() {
   return (
     <Suspense>
-      <Contact />
+      <ContactDetail />
     </Suspense>
   );
 }
