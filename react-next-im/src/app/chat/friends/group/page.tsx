@@ -25,7 +25,7 @@ function Group() {
   }
 
   return (
-    <div className={"flex flex-col p-4 bg-white shadow-md"}>
+    <div className={"flex flex-col p-4 shadow-md"}>
       <div className="flex flex-row items-center text-left">
         <DynamicImage
           className={"w-16 h-16 rounded-full mr-4"}

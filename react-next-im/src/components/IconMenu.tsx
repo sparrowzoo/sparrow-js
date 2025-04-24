@@ -15,14 +15,14 @@ export default function IconMenu(props: IconMenuProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center w-[3rem] h-[3rem] rounded-full text-center text-white  cursor-pointer",
+        "flex items-center justify-center w-[3rem] h-[3rem] rounded-full text-center text-foreground  cursor-pointer",
         props.className
       )}
     >
       <Link
         className={cn(
           props.className,
-          "focus:text-black active:text-black   hover:text-black"
+          "focus:text-foreground text-gray-500 active:text-foreground   hover:text-foreground"
         )}
         title={props.title}
         href={`${NEXT_ASSET_PREFIX}/${props.url}`}
