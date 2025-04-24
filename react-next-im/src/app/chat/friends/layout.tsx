@@ -45,9 +45,7 @@ export default function ChatLayout({
             <Collapsible defaultOpen className="group/collapsible">
               <SidebarGroup>
                 <SidebarGroupLabel
-                  className={
-                    "border-b-1 rounded-none  border-gray-400 text-black "
-                  }
+                  className={"border-b-1 rounded-none  border-gray-400 "}
                   asChild
                 >
                   <CollapsibleTrigger>
@@ -65,9 +63,7 @@ export default function ChatLayout({
             <Collapsible defaultOpen className="group/collapsible">
               <SidebarGroup>
                 <SidebarGroupLabel
-                  className={
-                    "border-b-1 rounded-none  border-gray-400 text-black "
-                  }
+                  className={"border-b-1 rounded-none  border-gray-400 "}
                   asChild
                 >
                   <CollapsibleTrigger>

@@ -5,54 +5,33 @@ import {
   StorageResponse,
   StorageType,
 } from "@/common/lib/protocol/CrosProtocol";
-import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
+import {
+  STORAGE_PROXY,
+  TOKEN_KEY,
+  TOKEN_STORAGE,
+  USER_INFO_KEY,
+} from "@/common/lib/Env";
 import { Utils } from "@/common/lib/Utils";
-import { getHrefWithoutQueryString } from "@/common/lib/Navigating";
+import UrlUtils from "@/common/lib/UrlUtils";
+import { redirectToLogin } from "@/common/lib/Navigating";
+import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default class CrosStorage {
   private iframe: HTMLIFrameElement;
-  private iframeOrigin: string | undefined;
+  private iframeOrigin: string | undefined = STORAGE_PROXY;
   private cros: boolean = false;
   private loaded: boolean = false;
 
-  private constructor(cros: Boolean | null = null) {
-    if (cros === false) {
+  private constructor() {
+    if (typeof window === "undefined") {
       return;
     }
-    this.cros = STORAGE_PROXY ? true : false;
-    if (this.cros == false) {
+    console.log("cros storage init");
+    this.cros = UrlUtils.isCros(window.location.href, STORAGE_PROXY as string);
+    if (!this.cros) {
       return;
     }
-    const iframe = document.createElement("iframe");
-    iframe.src = STORAGE_PROXY as string;
-    iframe.src = iframe.src + "?" + getHrefWithoutQueryString();
-    iframe.style.display = "none";
-    this.iframe = iframe;
-    console.log("append iframe " + STORAGE_PROXY);
-
-    const handleMessage = (event: MessageEvent<StorageRequest>) => {
-      if (!this.iframeOrigin || this.iframeOrigin?.indexOf(event.origin) < 0) {
-        return;
-      }
-      this.loaded = true;
-      window.removeEventListener("message", handleMessage); // 清理监听
-    };
-    window.addEventListener("message", handleMessage);
-
-    // iframe.addEventListener("DOMContentLoaded", () => {
-    //   console.log("iframe DOMContentLoaded");
-    //   this.loaded = true;
-    // });
-    // iframe.addEventListener("load", () => {
-    //   console.log("iframe loaded");
-    //   this.loaded = true;
-    // });
-    document.body.appendChild(iframe);
-    this.iframeOrigin = STORAGE_PROXY;
-  }
-
-  public static getCurrentStorage() {
-    return new CrosStorage(false);
+    this.resetIframe();
   }
 
   public static getCrosStorage() {
@@ -126,17 +105,27 @@ export default class CrosStorage {
 
   public async getToken(
     storage: StorageType = StorageType.AUTOMATIC,
-    generateVisitorToken: any | null = null
+    generateVisitorToken:
+      | (() => Promise<string>)
+      | null
+      | "REDIRECT-TO-LOGIN" = null
   ) {
     const token = await this.get(TOKEN_KEY, storage);
     if (token) {
+      console.log("get token from storage", token);
       return token;
     }
     if (generateVisitorToken) {
+      if (generateVisitorToken === "REDIRECT-TO-LOGIN") {
+        redirectToLogin();
+        return null;
+      }
       const visitorToken = await generateVisitorToken();
       await this.setToken(visitorToken);
+      console.log("generate visitor token", visitorToken);
       return visitorToken;
     }
+    console.log("no token found");
     return null;
   }
 
@@ -146,6 +135,63 @@ export default class CrosStorage {
 
   public removeToken(storage: StorageType = StorageType.AUTOMATIC) {
     return this.remove(TOKEN_KEY, storage);
+  }
+
+  //用户基本信息本地化
+  public async locateToken() {
+    //如果不是cros环境，则不进行本地化
+    if (!this.cros) {
+      return null;
+    }
+    const locationUser = sessionStorage.getItem(USER_INFO_KEY);
+    if (locationUser) {
+      return LoginUser.getCurrentUser();
+    }
+    return await this.getToken().then((token) => {
+      console.log("token", token);
+      if (token) {
+        const decodeToken = decodeURIComponent(token);
+        const parts: string[] = decodeToken.split(".");
+        const userInfo: string = parts[0];
+        if (!userInfo) {
+          return null;
+        }
+        const userJson = atob(userInfo);
+        sessionStorage.setItem(USER_INFO_KEY, userJson);
+        return LoginUser.getCurrentUser();
+      }
+    });
+  }
+
+  private resetIframe() {
+    this.destroy();
+    const iframe = document.createElement("iframe");
+    iframe.src = STORAGE_PROXY as string;
+    iframe.src = iframe.src + "?" + UrlUtils.getHrefWithoutQueryString();
+    iframe.style.display = "none";
+    this.iframe = iframe;
+    console.log("reset and append iframe " + STORAGE_PROXY);
+
+    const handleMessage = (event: MessageEvent<StorageRequest>) => {
+      console.log("receive message from iframe", event.data);
+      if (!this.iframeOrigin || this.iframeOrigin?.indexOf(event.origin) < 0) {
+        return;
+      }
+      this.loaded = true;
+      window.removeEventListener("message", handleMessage); // 清理监听
+    };
+    window.addEventListener("message", handleMessage);
+
+    // iframe.addEventListener("DOMContentLoaded", () => {
+    //   console.log("iframe DOMContentLoaded");
+    //   this.loaded = true;
+    // });
+    // iframe.addEventListener("load", () => {
+    //   console.log("iframe loaded");
+    //   this.loaded = true;
+    // });
+    document.body.appendChild(iframe);
+    this.iframeOrigin = STORAGE_PROXY;
   }
 
   private getStorageType(storageType: StorageType) {
@@ -185,6 +231,9 @@ export default class CrosStorage {
           return;
         }
         try {
+          if (!this.iframe.contentWindow) {
+            this.resetIframe();
+          }
           this.iframe.contentWindow?.postMessage(
             req,
             this.iframeOrigin as string

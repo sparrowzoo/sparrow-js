@@ -62,9 +62,7 @@ class SparrowWebSocket {
         if (this.handshakeFail) {
           this.handshakeFail(data);
         } else {
-          setTimeout(() => {
-            redirectToLogin();
-          }, 2000);
+          redirectToLogin();
         }
       });
     }
