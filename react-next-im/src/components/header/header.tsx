@@ -10,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ModeToggle } from "@/components/header/mode-toggle";
-import { PASSPORT_ROOT } from "@/common/lib/Env";
+import { PASSPORT_ROOT, WWW_ROOT } from "@/common/lib/Env";
 
 export default function Header() {
   return (
@@ -36,13 +36,13 @@ export default function Header() {
           博客
         </Link>
         <Link
-          href="/chat"
+          href={`${WWW_ROOT}/chat`}
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           IM
         </Link>
         <Link
-          href="/chat/pop"
+          href={`${WWW_ROOT}/chat/pop`}
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           客服体验

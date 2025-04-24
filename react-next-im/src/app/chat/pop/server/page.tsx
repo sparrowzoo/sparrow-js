@@ -2,6 +2,7 @@ import React from "react";
 import GroupedTalk from "@/components/im/GroupedTalk";
 import Link from "next/link";
 import { ArrowBigRightDashIcon } from "lucide-react";
+import { WWW_ROOT } from "@/common/lib/Env";
 
 export default function Page() {
   return (
@@ -12,7 +13,7 @@ export default function Page() {
       <div className={"flex flex-row mt-32"}>
         点击这里
         <ArrowBigRightDashIcon />
-        <Link href="/chat/pop">体验客服客户端</Link>
+        <Link href={`${WWW_ROOT}/chat/pop`}>体验客服客户端</Link>
       </div>
 
       <div className="absolute bottom-20 right-60  ">
