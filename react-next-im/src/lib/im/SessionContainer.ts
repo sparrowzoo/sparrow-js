@@ -4,7 +4,14 @@ import ContactContainer from "@/lib/im/ContactContainer";
 import CrosStorage from "@/common/lib/CrosStorage";
 import Message from "@/lib/protocol/Message";
 import ChatUser from "@/lib/protocol/ChatUser";
-import { UserCategory } from "@/common/lib/UserCategory";
+import UserCategory from "@/common/lib/UserCategory";
+import { format } from "util";
+import {
+  AVATAR_URL,
+  SESSION_CATEGORY_GROUP,
+  SESSION_CATEGORY_NAME_MAPPING,
+} from "@/common/lib/Env";
+import toast from "react-hot-toast";
 
 export enum SessionType {
   VISITOR = 0,
@@ -13,12 +20,15 @@ export enum SessionType {
   INTERMEDIARY = 2,
 }
 
-export class GroupedSessions {
-  public visitorSessions: ChatSession[] = [];
-  public groupSessions: ChatSession[] = [];
-  public registerSessions: ChatSession[] = [];
-  public agentSessions: ChatSession[] = [];
-  public clientSessions: ChatSession[] = [];
+export class GroupedSession {
+  public sessions: ChatSession[] = [];
+  public unreadCount: number = 0;
+  public name: string = "";
+
+  constructor(sessions: ChatSession[], unreadCount: number) {
+    this.sessions = sessions;
+    this.unreadCount = unreadCount;
+  }
 }
 
 export default class SessionContainer {
@@ -36,6 +46,7 @@ export default class SessionContainer {
     this.chatSessions = [];
     const currentUser = ChatUser.getCurrentUser();
     for (const contact of contacts) {
+      //从后台获取用户类别，此时暂不知道用户类型，都暂设为普通用户
       const oppositeUser = new ChatUser(contact, UserCategory.REGISTER);
       const session = ChatSession.create121Session(
         currentUser as ChatUser,
@@ -162,30 +173,39 @@ export default class SessionContainer {
     return this.chatSessions;
   }
 
-  public async getGroupedSessions(): Promise<GroupedSessions | null> {
+  public async getGroupedSessions(
+    currentCategory: number
+  ): Promise<Map<number, GroupedSession> | null> {
     const sessions = await this.getChatSessions();
     if (sessions == null) {
       return null;
     }
-    const groupedSessions = new GroupedSessions();
+    const categories: number[] = SESSION_CATEGORY_GROUP[currentCategory];
+    const categoryMap = SESSION_CATEGORY_NAME_MAPPING;
+    const groupedSessions: Map<number, GroupedSession> = new Map<
+      number,
+      GroupedSession
+    >();
+    if (!categories) {
+      toast.error("您没有权限哟，找志哥~~~");
+      return [];
+    }
+    for (const category of categories) {
+      const currentGroupSession = new GroupedSession([], 0);
+      groupedSessions.set(category, currentGroupSession);
+      currentGroupSession.name = categoryMap[category] as string;
+    }
     for (const session of sessions) {
-      if (session.isGroup()) {
-        groupedSessions.groupSessions.push(session);
-        continue;
-      }
-      const oppositeUser = session.getOppositeUser();
-      if (oppositeUser?.isVisitor()) {
-        groupedSessions.visitorSessions.push(session);
-        continue;
-      }
-      if (oppositeUser?.isAgent()) {
-        groupedSessions.agentSessions.push(session);
-        continue;
-      }
+      const category = session.isGroup()
+        ? 99
+        : (session.getOppositeUser()?.category as number);
 
-      if (oppositeUser?.isClient()) {
-        groupedSessions.clientSessions.push(session);
+      const currentGroupSession = groupedSessions.get(category);
+      if (!currentGroupSession) {
+        continue;
       }
+      currentGroupSession.sessions.push(session);
+      currentGroupSession.unreadCount += session.unreadCount;
     }
     return groupedSessions;
   }
@@ -194,21 +214,66 @@ export default class SessionContainer {
     const session = ChatSession.parse(sessionKey) as ChatSession;
     let localSession = this.getLocalSession(session);
     if (!localSession) {
-      await this.fillSessions([session]).then(() => {
-        console.log("fill from remote ");
-      });
-
-      session.lastReadTime = new Date().getTime();
-      session.unreadCount = 0;
-      console.log("new session last time " + session.lastReadTime);
       if (!this.chatSessions) {
         this.chatSessions = [];
       }
       this.chatSessions?.push(session);
+      await this.fillSessions([session]).then(() => {
+        console.log("fill from remote ");
+      });
+      session.lastReadTime = new Date().getTime();
+      session.unreadCount = 0;
+      console.log("new session last time " + session.lastReadTime);
       this.sort();
     }
   }
 
+  public fill(session: ChatSession) {
+    if (session?.isOne2One()) {
+      const oppositeUser = session.getOppositeUser();
+      const contact = this.contactContainer.getContactDetail(
+        oppositeUser as ChatUser
+      );
+      //获取对方用户类型后重新构建
+      const newOppositeUser = new ChatUser(
+        contact?.userId as string,
+        contact?.category as number
+      );
+      //根据后台的类型重新生成session id
+      const newSession = ChatSession.create121Session(
+        newOppositeUser,
+        ChatUser.getCurrentUser()
+      );
+      session.name = contact?.userName as string;
+      session.avatarUrl = contact?.avatar as string;
+      session.id = newSession.id;
+      return;
+    }
+    const group = this.contactContainer.getGroupDetail(session?.id as string);
+    session.name = group?.qunName + "群";
+    session.avatarUrl = format(AVATAR_URL, group?.qunId);
+  }
+
+  public fetchNewMessageCount() {
+    if (!this.chatSessions) {
+      return 0;
+    }
+    let unreadCount = 0;
+    for (const session of this.chatSessions) {
+      if (session.unreadCount > 0) {
+        unreadCount += session.unreadCount;
+      }
+    }
+    return unreadCount;
+  }
+
+  /**
+   * 该方法支持
+   * 1. 已经存在session列表
+   * 2. 不存在的session列表数据填充(用户类型未知)
+   * @param sessions
+   * @private
+   */
   private async fillSessions(sessions: ChatSession[]) {
     //先从联系人中获取,游客没有联系人
     await this.contactContainer.getContactGroup().then(async (group) => {
@@ -218,7 +283,7 @@ export default class SessionContainer {
       await this.contactContainer.fetchRemoteUsers(userIds);
     });
     for (const session of sessions) {
-      session.fill(this.contactContainer);
+      this.fill(session);
     }
   }
 }

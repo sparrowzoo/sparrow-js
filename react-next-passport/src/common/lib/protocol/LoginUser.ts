@@ -1,5 +1,5 @@
 import { USER_INFO_KEY } from "@/common/lib/Env";
-import { UserCategory } from "@/common/lib/UserCategory";
+import UserCategory from "@/common/lib/UserCategory";
 
 export default class LoginUser {
   public userId: string;
@@ -41,13 +41,5 @@ export default class LoginUser {
 
   public isVisitor(): boolean {
     return this.category == UserCategory.VISITOR;
-  }
-
-  public isClient(): boolean {
-    return this.category == UserCategory.CLIENT;
-  }
-
-  public isAgent(): boolean {
-    return this.category == UserCategory.AGENT;
   }
 }
