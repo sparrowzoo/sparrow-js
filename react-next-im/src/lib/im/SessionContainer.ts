@@ -188,7 +188,7 @@ export default class SessionContainer {
     >();
     if (!categories) {
       toast.error("您没有权限哟，找志哥~~~");
-      return [];
+      return new Map<number, GroupedSession>();
     }
     for (const category of categories) {
       const currentGroupSession = new GroupedSession([], 0);
