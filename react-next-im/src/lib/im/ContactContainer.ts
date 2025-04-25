@@ -37,6 +37,7 @@ export default class ContactContainer {
     if (currentUser?.isVisitor()) {
       return localGroup;
     }
+    console.log("fetching  from server " + new Date().getTime());
     await ChatApi.getContacts(this.crosStorage).then((group) => {
       console.log("fetch contact group from server " + new Date().getTime());
       localGroup = group;
