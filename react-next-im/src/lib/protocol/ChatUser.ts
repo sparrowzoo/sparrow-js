@@ -1,6 +1,6 @@
 import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
 import LoginUser from "@/common/lib/protocol/LoginUser";
-import { UserCategory } from "@/common/lib/UserCategory";
+import UserCategory from "@/common/lib/UserCategory";
 
 interface ChatUserWithOffset {
   chatUser: NullableChatUser;
@@ -13,7 +13,8 @@ export default class ChatUser {
   public key: string;
 
   constructor(id: string, category: number) {
-    this.id = id;
+    // 确保 id 是字符串
+    this.id = id + "";
     this.category = category;
     this.key = this.id + "_" + this.category;
   }
@@ -82,14 +83,6 @@ export default class ChatUser {
 
   public isVisitor(): boolean {
     return this.category == UserCategory.VISITOR;
-  }
-
-  public isClient(): boolean {
-    return this.category == UserCategory.CLIENT;
-  }
-
-  public isAgent(): boolean {
-    return this.category == UserCategory.AGENT;
   }
 }
 

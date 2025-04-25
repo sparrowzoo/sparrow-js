@@ -1,6 +1,6 @@
 import ChatUser from "@/lib/protocol/ChatUser";
 import { VISITOR_AVATAR_URL } from "@/common/lib/Env";
-import { UserCategory } from "@/common/lib/UserCategory";
+import UserCategory from "@/common/lib/UserCategory";
 
 export default class Contact {
   /**

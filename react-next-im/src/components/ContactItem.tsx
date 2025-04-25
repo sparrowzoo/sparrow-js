@@ -13,7 +13,7 @@ export default function ContactItem(contactProps: ContactProps) {
   return (
     <CommonItem
       id={contact.userId}
-      name={contact.nickName}
+      name={contact.nickName ? contact.nickName : contact.userName}
       description={contact.signature}
       link={contactUrl}
       avatar={contact.avatar}

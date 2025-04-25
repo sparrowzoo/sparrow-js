@@ -30,7 +30,9 @@ export default function ChatLayout({
   const messageBroker = webSocketContextValue.messageBroker;
   const [contactGroup, setContactGroup] = useState<ContactGroup>();
   useEffect(() => {
+    console.log("contactGroup .....", contactGroup);
     messageBroker.contactContainer.getContactGroup().then((contactGroup) => {
+      console.log("fetched contactGroup", contactGroup);
       setContactGroup(contactGroup as ContactGroup);
     });
   }, []);
@@ -45,9 +47,7 @@ export default function ChatLayout({
             <Collapsible defaultOpen className="group/collapsible">
               <SidebarGroup>
                 <SidebarGroupLabel
-                  className={
-                    "border-b-1 rounded-none  border-gray-400 text-black "
-                  }
+                  className={"border-b-1 rounded-none  border-gray-400 "}
                   asChild
                 >
                   <CollapsibleTrigger>
@@ -65,9 +65,7 @@ export default function ChatLayout({
             <Collapsible defaultOpen className="group/collapsible">
               <SidebarGroup>
                 <SidebarGroupLabel
-                  className={
-                    "border-b-1 rounded-none  border-gray-400 text-black "
-                  }
+                  className={"border-b-1 rounded-none  border-gray-400 "}
                   asChild
                 >
                   <CollapsibleTrigger>
