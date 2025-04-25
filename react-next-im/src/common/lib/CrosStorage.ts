@@ -173,6 +173,7 @@ export default class CrosStorage {
     console.log("reset and append iframe " + STORAGE_PROXY);
 
     const handleMessage = (event: MessageEvent<StorageRequest>) => {
+      console.log("receive message from iframe", event.data);
       if (!this.iframeOrigin || this.iframeOrigin?.indexOf(event.origin) < 0) {
         return;
       }

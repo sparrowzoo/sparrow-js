@@ -1,4 +1,10 @@
 import CrosStorage from "@/common/lib/CrosStorage";
+import { StorageType } from "@/common/lib/protocol/CrosProtocol";
+import Result from "@/common/lib/protocol/Result";
+import { USER_INFO_KEY } from "@/common/lib/Env";
+import LoginUser from "@/common/lib/protocol/LoginUser";
+import toast from "react-hot-toast";
+import { redirectToLogin } from "@/common/lib/Navigating";
 
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
@@ -13,8 +19,9 @@ class SparrowWebSocket {
 
   // 接收到信息后需要执行的事件
   public onMsgCallback: (data: ArrayBufferLike) => void;
+  public handshakeSuccess: (loginUser: LoginUser) => void;
+  public handshakeFail: (data: Result) => void;
   public offlineCallback: (data: { offline: boolean }) => void;
-  public userAuthCallback: (data: any) => void;
   public monitorStatus: () => [];
   public monitorStatusCallback: (data: []) => void;
   public txid = 0;
@@ -36,9 +43,33 @@ class SparrowWebSocket {
   private reconnectionTimer: NodeJS.Timeout;
   private connectionTimestamp: number;
 
-  constructor(url: string, crosStorage:CrosStorage) {
+  constructor(url: string, crosStorage: CrosStorage) {
     this.url = url;
     this.crosStorage = crosStorage;
+  }
+
+  public userAuthCallback(data: Result) {
+    if (data.code == "0") {
+      sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
+      if (!this.handshakeSuccess) {
+        console.warn("please defined handshakeSuccess callback method  ");
+      } else {
+        this.handshakeSuccess(LoginUser.getCurrentUser() as LoginUser);
+      }
+    } else {
+      this.crosStorage.removeToken().then(() => {
+        toast.error(data.message);
+        if (this.handshakeFail) {
+          this.handshakeFail(data);
+        } else {
+          redirectToLogin();
+        }
+      });
+    }
+  }
+
+  public getHeartStatus() {
+    return SparrowWebSocket.heartStatus;
   }
 
   public reconnectWebSocket() {
@@ -61,13 +92,13 @@ class SparrowWebSocket {
       }
 
       if (
-          SparrowWebSocket.connectionStatus === SparrowWebSocket.CONNECTING_STATUS
+        SparrowWebSocket.connectionStatus === SparrowWebSocket.CONNECTING_STATUS
       ) {
         console.log("正在连接中，不进行重连");
         return;
       }
       if (
-          SparrowWebSocket.connectionStatus === SparrowWebSocket.ACTIVE_STATUS
+        SparrowWebSocket.connectionStatus === SparrowWebSocket.ACTIVE_STATUS
       ) {
         console.log("连接正常，不进行重连");
         return;
@@ -80,10 +111,11 @@ class SparrowWebSocket {
   public connect() {
     try {
       SparrowWebSocket.connectionStatus = SparrowWebSocket.CONNECTING_STATUS;
+      console.log("开始链接");
       if ("WebSocket" in window) {
         this.initWindowsFocusEvent();
-        this.crosStorage.getToken().then((token) => {
-          this.ws = new WebSocket(this.url, [token]);
+        this.crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
+          this.ws = new WebSocket(this.url, [token as string]);
           //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
           this.onOpen();
           this._onMsg();
@@ -93,7 +125,6 @@ class SparrowWebSocket {
       }
     } catch (e) {
       SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
-
       console.log("链接失败，直接重连", e);
       this.reconnectWebSocket();
     }
@@ -145,11 +176,10 @@ class SparrowWebSocket {
       }
       // 开启一个心跳
       try {
-        //console.log("发送心跳" + new Date().getTime());
         this.ws.send("PING");
         if (
-            new Date().getTime() - this.lastStatusMonitoredTime >
-            this.monitorTime
+          new Date().getTime() - this.lastStatusMonitoredTime >
+          this.monitorTime
         ) {
           const contactsStatus = this.monitorStatus();
           if (contactsStatus.length > 0) {
@@ -219,6 +249,8 @@ class SparrowWebSocket {
         // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
         if (e.data === "PONG") {
           this.lastHeartTime = new Date().getTime();
+          console.log("收到心跳 at" + this.lastHeartTime);
+
           SparrowWebSocket.heartStatus = SparrowWebSocket.ACTIVE_STATUS;
           return;
         }

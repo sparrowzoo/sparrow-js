@@ -7,10 +7,12 @@ import CrosStorage from "@/common/lib/CrosStorage";
 export default class Fetcher {
   static async get(
     url: string,
-    crosStorage: CrosStorage | null = CrosStorage.getCurrentStorage(),
+    crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
-    url = API_BASIC_URL + url;
+    if (url.indexOf("http") < 0) {
+      url = API_BASIC_URL + url;
+    }
     let token: string | null = null;
     if (crosStorage) {
       token = await crosStorage?.getToken().then((token) => token);
@@ -19,7 +21,6 @@ export default class Fetcher {
       method: "GET",
       //  credentials: "include", // 允许携带cookie
       headers: {
-        "Content-Type": "application/json",
         Authorization: token as string,
       },
     };
@@ -47,22 +48,25 @@ export default class Fetcher {
   static async post(
     url: string,
     body: any,
-    crosStorage: CrosStorage | null = CrosStorage.getCurrentStorage(),
+    crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
-    url = API_BASIC_URL + url;
+    if (url.indexOf("http") < 0) {
+      url = API_BASIC_URL + url;
+    }
     let token: string | null = null;
     if (crosStorage) {
       token = await crosStorage.getToken().then((token) => token);
     }
 
+    const data = typeof body === "object" ? JSON.stringify(body) : body;
     const options: RequestInit = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: token as string,
       },
-      body: body,
+      body: data,
     };
     if (withCookie) {
       options.credentials = "include"; //跨域时携带cookie

@@ -3,7 +3,6 @@ import ChatUser from "@/lib/protocol/ChatUser";
 import { format } from "util";
 import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import Message from "@/lib/protocol/Message";
-import ContactContainer from "@/lib/im/ContactContainer";
 import { Position } from "@/lib/protocol/ItemProps";
 
 export default class ChatSession {
@@ -141,24 +140,6 @@ export default class ChatSession {
   public toBytes(): Uint8Array {
     const encoder = new TextEncoder();
     return encoder.encode(this.chatType + this.id);
-  }
-
-  public async fill(contactContainer: ContactContainer) {
-    if (!contactContainer) {
-      return;
-    }
-    if (this?.isOne2One()) {
-      const oppositeUser = await this.getOppositeUser();
-      const contact = contactContainer.getContactDetail(
-        oppositeUser as ChatUser
-      );
-      this.name = contact?.userName as string;
-      this.avatarUrl = contact?.avatar as string;
-      return;
-    }
-    const group = contactContainer.getGroupDetail(this?.id as string);
-    this.name = group?.qunName + "群";
-    this.avatarUrl = format(AVATAR_URL, group?.qunId);
   }
 
   private generateId(sender: ChatUser, receiver: ChatUser): string {

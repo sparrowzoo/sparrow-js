@@ -5,13 +5,12 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ModeToggle } from "@/components/header/mode-toggle";
+import { PASSPORT_ROOT, WWW_ROOT } from "@/common/lib/Env";
 
 export default function Header() {
   return (
@@ -37,22 +36,22 @@ export default function Header() {
           博客
         </Link>
         <Link
-          href="#"
+          href={`${WWW_ROOT}/chat`}
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           IM
+        </Link>
+        <Link
+          href={`${WWW_ROOT}/chat/pop`}
+          className="text-muted-foreground transition-colors hover:text-foreground"
+        >
+          客服体验
         </Link>
         <Link
           href="#"
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           商城
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Analytics
         </Link>
       </nav>
       <Sheet>
@@ -124,12 +123,14 @@ export default function Header() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            {/*<DropdownMenuLabel>My Account</DropdownMenuLabel>*/}
+            {/*<DropdownMenuSeparator />*/}
+            <DropdownMenuItem>
+              <a href={`${PASSPORT_ROOT}/avatar-editor`}>设置头象</a>
+            </DropdownMenuItem>
+            {/*<DropdownMenuItem>Support</DropdownMenuItem>*/}
+            {/*<DropdownMenuSeparator />*/}
+            {/*<DropdownMenuItem>Logout</DropdownMenuItem>*/}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

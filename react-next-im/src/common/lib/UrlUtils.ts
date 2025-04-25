@@ -17,6 +17,14 @@ export default class UrlUtils {
     }
   }
 
+  public static getParameter(name: string) {
+    if (typeof document === "undefined") {
+      return null;
+    }
+    var params = new URL(document.location.href).searchParams;
+    return params.get(name);
+  }
+
   public static getQueryString() {
     if (typeof window === "undefined") {
       return null;

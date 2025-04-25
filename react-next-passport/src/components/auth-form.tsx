@@ -6,7 +6,6 @@ import { Icons } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormData, OuterSchema } from "@/schema/sign-up";
 import { valibotResolver } from "@hookform/resolvers/valibot";
@@ -16,6 +15,7 @@ import toast, { Toaster } from "react-hot-toast";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import Result from "@/common/lib/protocol/Result";
+import FindPassword from "@/components/password/Find";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -103,9 +103,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
           <div className="grid gap-1">
             <div className="flex items-center">
               <Label htmlFor="password">密码</Label>
-              <Link href="#" className="ml-auto inline-block text-sm underline">
-                Forgot your password?
-              </Link>
+              <FindPassword />
             </div>
             <Input {...register("password")} id="password" type="password" />
             <ErrorMessage

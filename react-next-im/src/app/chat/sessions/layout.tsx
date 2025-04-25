@@ -41,9 +41,7 @@ export default function ChatLayout({
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel
-                className={
-                  "border-b-1 rounded-none  border-gray-400 text-black "
-                }
+                className={"border-b-1 rounded-none  border-gray-400"}
               >
                 会话
               </SidebarGroupLabel>
