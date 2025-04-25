@@ -22,7 +22,7 @@ export default function Page() {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   useEffect(() => {
-    const token = UrlUtils.getParameter("token");
+    const token = UrlUtils.getQueryString();
     if (token) {
       setToken(token);
     }
