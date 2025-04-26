@@ -3,8 +3,8 @@ import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import Result from "@/common/lib/protocol/Result";
 import { USER_INFO_KEY } from "@/common/lib/Env";
 import LoginUser from "@/common/lib/protocol/LoginUser";
-import toast from "react-hot-toast";
 import { redirectToLogin } from "@/common/lib/Navigating";
+import toast from "react-hot-toast";
 
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
@@ -31,11 +31,11 @@ class SparrowWebSocket {
   // websocket 连接的 token
   private crosStorage: CrosStorage;
   // 心跳间隔时间 ms
-  private heartTime = 1000;
+  private heartTime = 10000;
   // 心跳超时时间 ms
-  private heartTimeout = 5000;
+  private heartTimeout = this.heartTime * 3;
   // 重连重试时间 ms
-  private reconnectTime = 1000;
+  private reconnectTime = 15000;
   private heartTimer: NodeJS.Timeout;
   private lastHeartTime: number = 0;
   private monitorTime: number = 10000;
@@ -58,10 +58,10 @@ class SparrowWebSocket {
       }
     } else {
       this.crosStorage.removeToken().then(() => {
-        toast.error(data.message);
         if (this.handshakeFail) {
           this.handshakeFail(data);
         } else {
+          toast.error("没登录呢，回去登录哈！回来志哥等你！");
           redirectToLogin();
         }
       });

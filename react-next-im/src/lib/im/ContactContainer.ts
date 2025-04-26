@@ -1,6 +1,6 @@
 import CrosStorage from "@/common/lib/CrosStorage";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
-import ChatApi from "@/lib/ChatApi";
+import ChatApi from "@/api/ChatApi";
 import Contact from "@/lib/protocol/contact/Contact";
 import ChatUser from "@/lib/protocol/ChatUser";
 
@@ -91,5 +91,17 @@ export default class ContactContainer {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  public  putJsonContact(contactMap: Map<number, Contact>) {
+    if(contactMap.size<= 0){
+      return;
+    }
+
+    for (const key in contactMap) {
+      if (contactMap.hasOwnProperty(key)) {
+        this.container.set(key+"", contactMap[key]);
+      }
+    }
   }
 }
