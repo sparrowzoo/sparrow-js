@@ -23,7 +23,7 @@ function AuditStatusComp(props: AuditStatusProps) {
         if (isApplying) {
             return <span className={"text-xs text-gray-400"}>待对方确认</span>
         }
-        (<div className={"flex flex-row justify-center items-center text-xs h-full text-gray-400 gap-2 w-80"}>
+        return (<div className={"flex flex-row justify-center items-center text-xs h-full text-gray-400 gap-2 w-80"}>
                 <Button className={"w-12 cursor-pointer p-2"}>同意</Button>
                 <Button className={"w-12 cursor-pointer p-2"}>拒绝</Button>
             </div>
