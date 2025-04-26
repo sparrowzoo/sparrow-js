@@ -1,4 +1,4 @@
-import ChatApi from "@/lib/ChatApi";
+import ChatApi from "@/api/ChatApi";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import ContactContainer from "@/lib/im/ContactContainer";
 import CrosStorage from "@/common/lib/CrosStorage";

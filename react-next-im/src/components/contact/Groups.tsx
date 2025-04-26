@@ -1,4 +1,4 @@
-import GroupItem from "@/components/GroupItem";
+import GroupItem from "@/components/contact/GroupItem";
 import * as React from "react";
 import Group from "@/lib/protocol/contact/Group";
 import Link from "next/link";

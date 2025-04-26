@@ -1,4 +1,4 @@
-import ChatApi from "@/lib/ChatApi";
+import ChatApi from "@/api/ChatApi";
 import Message from "@/lib/protocol/Message";
 import Protocol from "@/lib/protocol/Protocol";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
