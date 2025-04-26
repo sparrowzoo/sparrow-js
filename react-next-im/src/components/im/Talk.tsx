@@ -14,7 +14,7 @@ import {
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/im/MessageBroker";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
-import ChatApi from "@/lib/ChatApi";
+import ChatApi from "@/api/ChatApi";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import Sessions from "@/components/session/Sessions";
 import LoginUser from "@/common/lib/protocol/LoginUser";

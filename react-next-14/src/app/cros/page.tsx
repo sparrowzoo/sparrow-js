@@ -1,5 +1,5 @@
 "use client";
-import ChatApi from "@/lib/ChatApi";
+import ChatApi from "@/api/ChatApi";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 

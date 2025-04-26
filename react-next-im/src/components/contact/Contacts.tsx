@@ -1,5 +1,5 @@
 "use client";
-import ContactItem from "@/components/ContactItem";
+import ContactItem from "@/components/contact/ContactItem";
 import * as React from "react";
 import Contact from "@/lib/protocol/contact/Contact";
 import { SidebarMenu } from "@/components/ui/sidebar";
