@@ -12,20 +12,24 @@ import {AVATAR_URL, NEXT_ASSET_PREFIX} from "@/common/lib/Env";
 import {format} from "util";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
 import Group from "@/lib/protocol/contact/Group";
+import AuditApi from "@/api/AuditApi";
 
 function AuditStatusComp(props: AuditStatusProps) {
+    function agree() {
+        AuditApi.auditQunMember(props.auditId, true)
+    }
+    function reject() {
+        AuditApi.auditQunMember(props.auditId, false);
+    }
+
     const {status, isApplying} = props;
-    console.log(status + "-" + typeof status);
-    console.log(status == AuditStatus.PENDING);
-    console.log(AuditStatus.APPROVED + "-" + typeof AuditStatus.APPROVED);
-    console.log(status + "-" + AuditStatus.APPROVED + "-" + AuditStatus.REJECTED + "-" + AuditStatus.PENDING);
     if (status == AuditStatus.PENDING) {
         if (isApplying) {
             return <span className={"text-xs text-gray-400"}>待对方确认</span>
         }
         return (<div className={"flex flex-row justify-center items-center text-xs h-full text-gray-400 gap-2 w-80"}>
-                <Button className={"w-12 cursor-pointer p-2"}>同意</Button>
-                <Button className={"w-12 cursor-pointer p-2"}>拒绝</Button>
+                <Button onClick={agree} className={"w-12 cursor-pointer p-2"}>同意</Button>
+                <Button onClick={reject} className={"w-12 cursor-pointer p-2"}>拒绝</Button>
             </div>
         )
     }
@@ -44,14 +48,14 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
     const currentUser = ChatUser.getCurrentUser();
     const isApplying = currentUser.id == audit.applyUserId + "";
     const applyUser: Contact = userInfoMap[audit.applyUserId + ""];
-    const userHomeLink = `${NEXT_ASSET_PREFIX}/friends/contact?friendId=${applyUser.userId}`;
+    const userHomeLink = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${applyUser.userId}`;
     const userName = applyUser.nickName || applyUser.userName;
     const avatar = applyUser.avatar || format(`${AVATAR_URL}`, `${applyUser.userId}`);
     const qun: Group = newQunProps.auditWrap.qunMap[audit.businessId];
 
     return (<SidebarMenuItem className={"flex flex-row justify-between items-center w-full h-10 mt-2"}>
             <div className={"flex flex-row  justify-start items-center w-fix h-fit p-0 gap-2"}>
-                <Link className={cn("flex flex-row w-fit h-fit p-0 ml-2 gap-2")} href={userHomeLink}>
+                <Link className={cn("flex flex-row w-64 h-fit p-0 ml-2 gap-2")} href={userHomeLink}>
                     <MyAvatar
                         unread={0}
                         showUnread={false}
@@ -89,7 +93,7 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
                 </div>
             </div>
             <div className={"flex  justify-center items-center text-xs h-full text-gray-400 w-80"}>
-                <AuditStatusComp status={audit.status} isApplying={isApplying}/>
+                <AuditStatusComp auditId={audit.auditId} status={audit.status} isApplying={isApplying}/>
             </div>
         </SidebarMenuItem>
     )

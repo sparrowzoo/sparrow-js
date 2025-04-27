@@ -2,6 +2,7 @@ import Fetcher from "@/common/lib/Fetcher";
 import Result from "@/common/lib/protocol/Result";
 import CrosStorage from "@/common/lib/CrosStorage";
 import AuditWrap from "@/lib/protocol/audit/AuditWrap";
+import toast from "react-hot-toast";
 
 export default class AuditApi {
     public static async getFriendAuditList(): Promise<any> {
@@ -24,5 +25,23 @@ export default class AuditApi {
             }
         );
         return auditWrap;
+    }
+
+
+    public static async auditQunMember(auditId:number,agree:boolean): Promise<any> {
+        let audit={
+            agree: agree,
+            auditId: auditId,
+            reason: ""
+        };
+        const body=JSON.stringify(audit);
+        debugger;
+        await Fetcher.post("/audit/audit-qun-apply.json",body, CrosStorage.getCrosStorage()).then(
+            (response: Result) => {
+                toast.success("操作成功");
+            }
+        ).catch((error: any) => {
+            console.log(error);
+        });
     }
 }
