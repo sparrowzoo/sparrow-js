@@ -45,11 +45,10 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
     const isApplying = currentUser.id == audit.applyUserId + "";
     const newFriendId = isApplying ? audit.auditUserId : audit.applyUserId;
     const newFriend: Contact = userInfoMap[newFriendId];
-    const userHomeLink = `${NEXT_ASSET_PREFIX}/friends/contact?friendId=${newFriend.userId}`;
+    const userHomeLink = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${newFriend.userId}`;
     const userName = newFriend.nickName || newFriend.userName;
     const avatar = newFriend.avatar || format(`${AVATAR_URL}`, `${newFriend.userId}`);
     return (<SidebarMenuItem className={"flex flex-row justify-between items-center w-full h-10 mt-2 "}>
-
 
             <Link className={cn("flex flex-row  gap-2  justify-start items-center ml-2  w-fit h-full p-0")}
                   href={userHomeLink}>
@@ -74,10 +73,8 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
 
                 </div>
             </Link>
-
-
             <div className={"flex  justify-center items-center text-xs h-full text-gray-400 w-80"}>
-                <AuditStatusComp status={audit.status} isApplying={isApplying}/>
+                <AuditStatusComp auditId={audit.auditId} status={audit.status} isApplying={isApplying}/>
             </div>
         </SidebarMenuItem>
     )
