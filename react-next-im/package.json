@@ -32,6 +32,7 @@
     "cpy": "^11.1.0",
     "cpy-cli": "^5.0.0",
     "date-fns": "^4.1.0",
+    "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.487.0",
     "motion": "^12.6.3",
     "motion-plus": "^0.1.6",
