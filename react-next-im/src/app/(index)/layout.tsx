@@ -1,7 +1,6 @@
 import "../globals.css";
 import { Metadata, Viewport } from "next";
 import * as React from "react";
-import Chat from "@/components/Chat";
 import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
@@ -27,13 +26,9 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body
-        className={
-          "mx-auto text-center justify-center align-middle content-center w-full "
-        }
-      >
+      <body>
         <Toaster position="top-center" reverseOrder={true} />
-        <Chat>{children}</Chat>
+        {children}
       </body>
     </html>
   );
