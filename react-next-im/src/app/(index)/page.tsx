@@ -184,56 +184,8 @@ export default function ChatPage() {
           </div>
         </div>
         <div>
-          <h2>企业级项目实战</h2>
-          <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
-            <div className={"block w-200"}>
-              <Carousel className="w-full">
-                <CarouselContent>
-                  {pro.map((img, index) => (
-                    <CarouselItem key={index}>
-                      <div className="p-1">
-                        <Card>
-                          <CardContent className="flex aspect-square items-center justify-center p-6">
-                            <img
-                              src={img}
-                              alt="企业级项目实现"
-                              className="w-full"
-                            />
-                          </CardContent>
-                        </Card>
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-            </div>
-
-            <div className="p-4 m-4">
-              <h2 className="text-3xl font-bold p-4">项目亮点</h2>
-              <div>
-                <ul className="list-disc list-inside gap-4">
-                  <li>真实企业级开发流程，立拍立入职</li>
-                  <li>架构师手把手带你落地</li>
-                  <li>学习群支持</li>
-                  <li>真实上线运营</li>
-                </ul>
-              </div>
-              <h2 className="text-3xl font-bold p-4">项目简介</h2>
-              主要功能
-              <ul className="list-disc list-inside gap-4">
-                <li>TRD 分析，需要共识 3节</li>
-                <li>接口设计 swagger 定义 2节</li>
-                <li>数据库设计共识 5节</li>
-                <li>代码落地 10</li>
-                <li>代码review 10节</li>
-                <li>代码对齐讲解 10节</li>
-                <li>联调测试 5节</li>
-                <li>部署上线 2节</li>
-              </ul>
-            </div>
-          </div>
+          <h2>IM 聊天室</h2>
+          <div className="flex flex-row justify-center items-center gap-4 p-4 m-4"></div>
         </div>
       </div>
     </ThemeProvider>
