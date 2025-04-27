@@ -1,4 +1,4 @@
-import "./globals.css";
+import "../globals.css";
 import { Metadata, Viewport } from "next";
 import * as React from "react";
 import Chat from "@/components/Chat";

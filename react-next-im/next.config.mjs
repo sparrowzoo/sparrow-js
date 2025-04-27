@@ -1,14 +1,14 @@
 /** @type {import("next").NextConfig} */
 const nextConfig = {
-    async redirects() {
-        return [
-            {
-                source: '/',
-                destination: '/chat/friends/contact',
-                permanent: true,
-            }
-        ]
-    },
+    // async redirects() {
+    //     return [
+    //         {
+    //             source: '/',
+    //             destination: '/chat/friends/contact',
+    //             permanent: true,
+    //         }
+    //     ]
+    // },
     assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
     images: {
         domains: ["http://img.sparrowzoo.net", "http://photo.16pic.com"],
