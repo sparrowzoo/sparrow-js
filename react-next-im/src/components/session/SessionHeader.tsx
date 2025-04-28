@@ -22,13 +22,15 @@ export default function SessionHeader(sessionHeaderProps: SessionHeaderProps) {
   const [sessionDetail, setSessionDetail] = useState<ChatSession>();
   //不要解构，因为解构会useEffect的依赖引用无变化，不会重新渲染
   const webSocketContextValue = useContext(WebSocketContext);
-  const [heartStatus, setHeartStatus] = useState<string>();
+  const [heartStatus, setHeartStatus] = useState<string>(
+    SparrowWebSocket.ACTIVE_STATUS
+  );
   useEffect(() => {
     setInterval(() => {
       const heartStatus =
         webSocketContextValue.messageBroker.webSocket.getHeartStatus();
       setHeartStatus(heartStatus);
-    }, 1000);
+    }, webSocketContextValue.messageBroker.webSocket.heartTime);
     console.log("sessionKey changed to: ", sessionHeaderProps.sessionKey);
     const chatSession = ChatSession.parse(sessionKey) as ChatSession;
     webSocketContextValue.messageBroker.sessionContainer

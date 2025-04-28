@@ -2,6 +2,7 @@ import "../globals.css";
 import { Metadata, Viewport } from "next";
 import * as React from "react";
 import { Toaster } from "react-hot-toast";
+import Talk from "@/components/im/Talk";
 
 export const metadata: Metadata = {
   title: "sparrow zoo",
@@ -29,6 +30,9 @@ export default function RootLayout({
       <body>
         <Toaster position="top-center" reverseOrder={true} />
         {children}
+        <div className="fixed bottom-20 right-20  ">
+          <Talk />
+        </div>
       </body>
     </html>
   );

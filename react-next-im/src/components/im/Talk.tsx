@@ -73,7 +73,10 @@ export default function Talk() {
               setIsOpen(!isOpen);
             }}
           >
-            <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
+            <div className="flex cursor-pointer flex-col items-center justify-center w-20 h-20 p-2 rounded-l bg-gray-100 text-gray-500 hover:bg-gray-200">
+              <HeadsetIcon width={64} height={64} />
+              客服
+            </div>
           </PopoverTrigger>
           <PopoverContent side={"top"}>
             <SidebarProvider className={"min-h-full h-full w-auto"}>
