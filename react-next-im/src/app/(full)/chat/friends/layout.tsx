@@ -21,6 +21,7 @@ import Contacts from "@/components/contact/Contacts";
 import Groups from "@/components/contact/Groups";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import Link from "next/link";
+import { WWW_ROOT } from "@/common/lib/Env";
 
 export default function ChatLayout({
   children,
@@ -30,6 +31,7 @@ export default function ChatLayout({
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
   const [contactGroup, setContactGroup] = useState<ContactGroup>();
+  const newFriendUrl = `${WWW_ROOT}/chat/friends/new-friend`;
   useEffect(() => {
     console.log("contactGroup .....", contactGroup);
     messageBroker.contactContainer.getContactGroup().then((contactGroup) => {
@@ -45,9 +47,14 @@ export default function ChatLayout({
       <SidebarProvider className={"min-h-full h-full w-auto"}>
         <Sidebar className={"relative min-h-full h-full"}>
           <SidebarContent>
-            <SidebarGroup >
+            <SidebarGroup>
               <SidebarGroupLabel>
-                <Link className=" text-sm font-bold w-full inline-block text-center" href="/chat/friends/new-friend">新朋友</Link>
+                <Link
+                  className=" text-sm font-bold w-full inline-block text-center"
+                  href={newFriendUrl}
+                >
+                  新朋友
+                </Link>
               </SidebarGroupLabel>
             </SidebarGroup>
 
@@ -87,8 +94,6 @@ export default function ChatLayout({
                 </CollapsibleContent>
               </SidebarGroup>
             </Collapsible>
-
-
           </SidebarContent>
         </Sidebar>
       </SidebarProvider>

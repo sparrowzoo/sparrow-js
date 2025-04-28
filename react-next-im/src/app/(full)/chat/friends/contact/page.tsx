@@ -4,7 +4,6 @@ import { Suspense, useContext } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { AVATAR_URL } from "@/common/lib/Env";
-import { DynamicImage } from "@/components/img/DynamicImage";
 import DirectSession from "@/components/session/DirectSession";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
@@ -12,6 +11,7 @@ import { format } from "util";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import Contact from "@/lib/protocol/contact/Contact";
 import UserCategory from "@/common/lib/UserCategory";
+import MyAvatar from "@/components/MyAvatar";
 
 function ContactDetail() {
   const searchParams = useSearchParams();
@@ -28,6 +28,7 @@ function ContactDetail() {
   const headSrc = contact.avatar
     ? contact.avatar
     : format(AVATAR_URL, friendId);
+  const userName = contact.nickName ? contact.nickName : contact.userName;
   friend = new ChatUser(contact.userId, contact.category);
   const chatSession = ChatSession.create121Session(
     currentUser as ChatUser,
@@ -41,12 +42,11 @@ function ContactDetail() {
     <div className={"flex flex-col p-4 shadow-md"}>
       <div className="flex flex-row items-center text-left">
         <Link href={chatSession.sessionUrl}>
-          <DynamicImage
-            className={"w-16 h-16 rounded-full mr-4"}
+          <MyAvatar
+            unread={0}
+            showUnread={false}
+            fallback={userName}
             src={headSrc}
-            alt={"Contact Avatar"}
-            width={0}
-            height={0}
           />
         </Link>
         <div>
