@@ -11,8 +11,6 @@ interface ContactsProps {
 }
 
 export default function Contacts(contactsProps: ContactsProps) {
-  console.log(contactsProps.contacts);
-
   if (!contactsProps.contacts) {
     return <ThreeDotLoading />;
   }
