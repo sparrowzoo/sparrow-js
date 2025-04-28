@@ -35,7 +35,6 @@ export default class AuditApi {
             reason: ""
         };
         const body=JSON.stringify(audit);
-        debugger;
         await Fetcher.post("/audit/audit-qun-apply.json",body, CrosStorage.getCrosStorage()).then(
             (response: Result) => {
                 toast.success("操作成功");
