@@ -13,7 +13,7 @@ import Link from "next/link";
 import { IoLogoWechat } from "react-icons/io5";
 import { WWW_ROOT } from "@/common/lib/Env";
 
-export default function ChatPage() {
+export default function Page() {
   const ds = [`${WWW_ROOT}/ds.png`, `${WWW_ROOT}/ds2.png`];
   const pro = [
     `${WWW_ROOT}/pro1.png`,
