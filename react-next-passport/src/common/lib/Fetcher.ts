@@ -33,14 +33,20 @@ export default class Fetcher {
           const result = (await response.json()) as any;
           if (result.code != "0") {
             toast.error(result?.message);
-            reject(result);
+            if (reject) {
+              reject(result);
+            }
           } else {
-            resolve(result);
+            if (resolve) {
+              resolve(result);
+            }
           }
         })
         .catch((error) => {
           toast.error(error.message);
-          reject(error);
+          if (reject) {
+            reject(error);
+          }
         });
     });
   }
@@ -77,14 +83,20 @@ export default class Fetcher {
           const result = (await response.json()) as any;
           if (result.code != "0") {
             toast.error(result?.message);
-            reject(result);
+            if (reject) {
+              reject(result);
+            }
           } else {
-            resolve(result);
+            if (resolve) {
+              resolve(result);
+            }
           }
         })
         .catch((error) => {
           toast.error(error.message);
-          reject(error);
+          if (reject) {
+            reject(error);
+          }
         });
     });
   }

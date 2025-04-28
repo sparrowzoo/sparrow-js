@@ -7,11 +7,14 @@ import CommonItem from "@/components/CommonItem";
 
 interface GroupProps {
   qun: Group;
+  link?: boolean;
 }
 
 export default function GroupItem(groupProps: GroupProps) {
-  const { qun } = groupProps;
-  const groupUrl = `${NEXT_ASSET_PREFIX}/chat/friends/group?groupId=${qun.qunId}`;
+  const { qun, link } = groupProps;
+  const groupUrl = link
+    ? `${NEXT_ASSET_PREFIX}/chat/friends/group?groupId=${qun.qunId}`
+    : "script:void(0)";
   const avatar = format(AVATAR_URL, qun.qunId);
   return (
     <CommonItem
