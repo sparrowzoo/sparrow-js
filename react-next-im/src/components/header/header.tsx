@@ -36,7 +36,7 @@ export default function Header() {
           博客
         </Link>
         <Link
-          href={`${WWW_ROOT}/chat`}
+          href={`${WWW_ROOT}/chat/friends`}
           className="text-muted-foreground transition-colors hover:text-foreground"
         >
           IM

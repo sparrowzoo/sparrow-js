@@ -3,8 +3,8 @@ const nextConfig = {
     async redirects() {
         return [
             {
-                source: '/chat',
-                destination: '/chat/friends/contact',
+                source: '/',
+                destination: '/friends/contact',
                 permanent: true,
             }
         ]

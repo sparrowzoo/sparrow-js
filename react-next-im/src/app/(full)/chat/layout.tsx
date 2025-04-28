@@ -1,8 +1,7 @@
-import "../globals.css";
+import "@/app/globals.css";
 import { Metadata, Viewport } from "next";
 import * as React from "react";
 import Chat from "@/components/Chat";
-import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "sparrow zoo",
@@ -25,16 +24,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html>
-      <body
-        className={
-          "mx-auto text-center justify-center align-middle content-center w-full "
-        }
-      >
-        <Toaster position="top-center" reverseOrder={true} />
-        <Chat>{children}</Chat>
-      </body>
-    </html>
-  );
+  return <Chat>{children}</Chat>;
 }
