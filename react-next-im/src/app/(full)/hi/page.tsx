@@ -54,7 +54,7 @@ export default function Page() {
       <div>
         <h2>起步项目【零基础转盘抽奖项目】</h2>
         <div className="flex flex-row justify-center items-center p-4 m-4">
-          <a href="https://lottery.sparrowzoo.com/">
+          <a href="http://lottery.sparrowzoo.com/">
             <img
               className={"w-256"}
               alt="转盘抽奖项目"
