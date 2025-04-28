@@ -50,7 +50,7 @@ export default function ChatPage() {
               <li>每日优鲜搜推团队，负责最大的流量入口</li>
               <li>每日优鲜算法平台搭建，支持公司供应链采销补配业务</li>
               <li>国内某教育平台技术总监</li>
-              <li>现就职于某新零食公司，负责供应链智能补货</li>
+              <li>现就职于某新零售公司，负责供应链智能补货</li>
             </ul>
             <img alt="志哥" className="float-right ..." src="/wexin.png" />
           </div>
