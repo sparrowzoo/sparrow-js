@@ -11,15 +11,23 @@ import { Card, CardContent } from "@/components/ui/card";
 import QunPlaza from "@/components/qun/QunPlaza";
 import Link from "next/link";
 import { IoLogoWechat } from "react-icons/io5";
+import { WWW_ROOT } from "@/common/lib/Env";
 
 export default function ChatPage() {
-  const ds = ["./ds.png", "./ds2.png"];
-  const pro = ["./pro1.png", "./pro2.png", "./pro3.png"];
-
+  const ds = [`${WWW_ROOT}/ds.png`, `${WWW_ROOT}/ds2.png`];
+  const pro = [
+    `${WWW_ROOT}/pro1.png`,
+    `${WWW_ROOT}/pro2.png`,
+    `${WWW_ROOT}/pro3.png`,
+  ];
   return (
     <div className="h-fix w-full p-4 text-gray-500 dark:text-gray-300">
       <article className={"flex flex-row justify-between items-center"}>
-        <img alt="志哥" className="float-left ..." src="/zhige.jpg" />
+        <img
+          alt="志哥"
+          className="float-left ..."
+          src={`${WWW_ROOT}/zhige.jpg`}
+        />
         <div className="p-4 m-4">
           <h2 className="text-3xl font-bold p-4">欢迎来到志哥聊编程</h2>
           <p>
@@ -35,7 +43,11 @@ export default function ChatPage() {
             <li>国内某教育平台技术总监</li>
             <li>现就职于某新零售公司，负责供应链智能补货</li>
           </ul>
-          <img alt="志哥" className="float-right ..." src="/wexin.png" />
+          <img
+            alt="志哥"
+            className="float-right ..."
+            src={`${WWW_ROOT}/wexin.png`}
+          />
         </div>
       </article>
       <h1 className="text-center">这里都有啥??</h1>
@@ -43,7 +55,11 @@ export default function ChatPage() {
         <h2>起步项目【零基础转盘抽奖项目】</h2>
         <div className="flex flex-row justify-center items-center p-4 m-4">
           <a href="https://lottery.sparrowzoo.com/">
-            <img className={"w-256"} alt="转盘抽奖项目" src="/lottery.png" />
+            <img
+              className={"w-256"}
+              alt="转盘抽奖项目"
+              src={`${WWW_ROOT}/lottery.png`}
+            />
           </a>
           <div className="p-4 m-4">
             <h2 className="text-3xl font-bold p-4">项目简介</h2>
@@ -182,7 +198,7 @@ export default function ChatPage() {
             "flex flex-col justify-center items-center gap-4 p-4 m-4 text-3xl"
           }
           title={"进来体验吧!"}
-          href="/chat"
+          href={`${WWW_ROOT}/chat`}
         >
           <IoLogoWechat />
           进来体验吧!
@@ -195,7 +211,11 @@ export default function ChatPage() {
           className={"flex flex-row justify-center items-center gap-4 p-4 m-4"}
         >
           <a href={"https://wx.zsxq.com/group/48848482481288"}>
-            <img alt="知识星球" className="w-100" src="/star-ball.png" />
+            <img
+              alt="知识星球"
+              className="w-100"
+              src={`${WWW_ROOT}/star-ball.png`}
+            />
           </a>
           <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
             内容持续更新中....
