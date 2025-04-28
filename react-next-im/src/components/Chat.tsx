@@ -14,8 +14,6 @@ import IconMenu from "@/components/IconMenu";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { CircleUserRound, MessageCircleCode } from "lucide-react";
-import Header from "@/components/header/header";
-import { ThemeProvider } from "@/components/header/theme-provider";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 
@@ -57,41 +55,33 @@ export default function Chat({
   const avatarUrl = format(AVATAR_URL, currentUser?.userId);
   const userHome = "/chat/friends/contact?friendId=" + currentUser?.userId;
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <Header />
-      <div className="flex flex-col h-[calc(100vh-80px)]">
-        <div className="flex flex-row flex-1 min-h-0 h-full w-full">
-          <div className=" w-[4rem] flex flex-col  gap-4 p-2">
-            <IconMenu title={"我的"} url={userHome}>
-              {(className) => (
-                <Image
-                  alt={"avatar"}
-                  src={avatarUrl}
-                  className={cn(className, "rounded-full w-full h-[3rem]")}
-                  width={0}
-                  height={0}
-                />
-              )}
-            </IconMenu>
-            <IconMenu title={"联系人"} url={"/chat/friends"}>
-              {(className) => <CircleUserRound className={className} />}
-            </IconMenu>
-            <IconMenu title={"消息"} url={"/chat/sessions/session"}>
-              {(className) => <MessageCircleCode className={className} />}
-            </IconMenu>
-          </div>
-          <WebSocketContext.Provider
-            value={webSocketContextValue as WebSocketContextValue}
-          >
-            {children}
-          </WebSocketContext.Provider>
+    <div className="flex flex-col h-[calc(100vh-80px)]">
+      <div className="flex flex-row flex-1 min-h-0 h-full w-full">
+        <div className=" w-[4rem] flex flex-col  gap-4 p-2">
+          <IconMenu title={"我的"} url={userHome}>
+            {(className) => (
+              <Image
+                alt={"avatar"}
+                src={avatarUrl}
+                className={cn(className, "rounded-full w-full h-[3rem]")}
+                width={0}
+                height={0}
+              />
+            )}
+          </IconMenu>
+          <IconMenu title={"联系人"} url={"/chat/friends"}>
+            {(className) => <CircleUserRound className={className} />}
+          </IconMenu>
+          <IconMenu title={"消息"} url={"/chat/sessions/session"}>
+            {(className) => <MessageCircleCode className={className} />}
+          </IconMenu>
         </div>
+        <WebSocketContext.Provider
+          value={webSocketContextValue as WebSocketContextValue}
+        >
+          {children}
+        </WebSocketContext.Provider>
       </div>
-    </ThemeProvider>
+    </div>
   );
 }
