@@ -18,7 +18,6 @@ function ContactDetail() {
   const webSocketContextValue = useContext(WebSocketContext);
 
   const friendId = searchParams?.get("friendId");
-  const headSrc = format(AVATAR_URL, friendId);
 
   const currentUser = ChatUser.getCurrentUser();
   let friend = new ChatUser(friendId as string, UserCategory.REGISTER);
@@ -26,6 +25,9 @@ function ContactDetail() {
     webSocketContextValue.messageBroker.contactContainer.getContactDetail(
       friend
     ) as Contact;
+  const headSrc = contact.avatar
+    ? contact.avatar
+    : format(AVATAR_URL, friendId);
   friend = new ChatUser(contact.userId, contact.category);
   const chatSession = ChatSession.create121Session(
     currentUser as ChatUser,
