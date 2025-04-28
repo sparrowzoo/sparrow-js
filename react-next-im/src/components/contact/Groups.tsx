@@ -24,7 +24,9 @@ export default function Groups(groupProps: GroupsProps) {
   return (
     <SidebarMenu className={"gap-2"}>
       {groupProps?.quns?.map((qun) => (
-        <GroupItem qun={qun} key={qun.qunId + ""} />
+        <SidebarMenuItem>
+          <GroupItem qun={qun} key={qun.qunId + ""} />
+        </SidebarMenuItem>
       ))}
     </SidebarMenu>
   );

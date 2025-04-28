@@ -25,13 +25,13 @@ class SparrowWebSocket {
   public monitorStatus: () => [];
   public monitorStatusCallback: (data: []) => void;
   public txid = 0;
+  // 心跳间隔时间 ms
+  public heartTime = 10000;
   private ws: WebSocket;
   // websocket 连接的 url
   private url: string;
   // websocket 连接的 token
   private crosStorage: CrosStorage;
-  // 心跳间隔时间 ms
-  private heartTime = 10000;
   // 心跳超时时间 ms
   private heartTimeout = this.heartTime * 3;
   // 重连重试时间 ms

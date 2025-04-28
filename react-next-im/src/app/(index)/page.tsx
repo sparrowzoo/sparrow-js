@@ -12,6 +12,9 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import QunPlaza from "@/components/qun/QunPlaza";
+import Link from "next/link";
+import { IoLogoWechat } from "react-icons/io5";
 
 export default function ChatPage() {
   const [loading, setLoading] = React.useState(true);
@@ -31,7 +34,7 @@ export default function ChatPage() {
       disableTransitionOnChange
     >
       <Header />
-      <div className="h-fix w-full text-gray-500 dark:text-gray-300">
+      <div className="h-fix w-full p-4 text-gray-500 dark:text-gray-300">
         <article className={"flex flex-row justify-between items-center"}>
           <img alt="志哥" className="float-left ..." src="/zhige.jpg" />
           <div className="p-4 m-4">
@@ -49,11 +52,12 @@ export default function ChatPage() {
               <li>国内某教育平台技术总监</li>
               <li>现就职于某新零食公司，负责供应链智能补货</li>
             </ul>
+            <img alt="志哥" className="float-right ..." src="/wexin.png" />
           </div>
         </article>
         <h1 className="text-center">这里都有啥??</h1>
         <div>
-          <h2>JAVA零基础入门项目【转盘抽奖项目】</h2>
+          <h2>起步项目【零基础转盘抽奖项目】</h2>
           <div className="flex flex-row justify-center items-center p-4 m-4">
             <a href="https://lottery.sparrowzoo.com/">
               <img className={"w-256"} alt="转盘抽奖项目" src="/lottery.png" />
@@ -89,7 +93,7 @@ export default function ChatPage() {
         </div>
 
         <div>
-          <h2>数据结构与算法课程</h2>
+          <h2>进阶 数据结构与算法课程</h2>
           <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
             <div className={"block w-200"}>
               <Carousel className="w-full">
@@ -185,7 +189,53 @@ export default function ChatPage() {
         </div>
         <div>
           <h2>IM 聊天室</h2>
-          <div className="flex flex-row justify-center items-center gap-4 p-4 m-4"></div>
+          <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
+            <QunPlaza />
+          </div>
+        </div>
+
+        <div>
+          <h2>web 微信</h2>
+          <Link
+            className={
+              "flex flex-col justify-center items-center gap-4 p-4 m-4 text-3xl"
+            }
+            title={"进来体验吧!"}
+            href="/chat"
+          >
+            <IoLogoWechat />
+            进来体验吧!
+          </Link>
+        </div>
+
+        <div>
+          <h2>知识星球</h2>
+          <div
+            className={
+              "flex flex-row justify-center items-center gap-4 p-4 m-4"
+            }
+          >
+            <a href={"https://wx.zsxq.com/group/48848482481288"}>
+              <img alt="知识星球" className="w-100" src="/star-ball.png" />
+            </a>
+            <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
+              内容持续更新中....
+              <a
+                href={
+                  "https://sparrowzoo.feishu.cn/docx/UrHddloNeojIR7xWZFJc1ViRnbe"
+                }
+              >
+                获取学习大纲
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2>敬请期待</h2>
+          <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
+            商城 供应链 搜推 源码 中间件 .....
+          </div>
         </div>
       </div>
     </ThemeProvider>
