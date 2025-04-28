@@ -3,7 +3,7 @@ import * as React from "react";
 import Group from "@/lib/protocol/contact/Group";
 import Link from "next/link";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
-import { SidebarMenu } from "@/components/ui/sidebar";
+import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 
 interface GroupsProps {
   quns: Group[] | undefined;
@@ -24,8 +24,8 @@ export default function Groups(groupProps: GroupsProps) {
   return (
     <SidebarMenu className={"gap-2"}>
       {groupProps?.quns?.map((qun) => (
-        <SidebarMenuItem>
-          <GroupItem qun={qun} key={qun.qunId + ""} />
+        <SidebarMenuItem key={qun.qunId}>
+          <GroupItem qun={qun} />
         </SidebarMenuItem>
       ))}
     </SidebarMenu>
