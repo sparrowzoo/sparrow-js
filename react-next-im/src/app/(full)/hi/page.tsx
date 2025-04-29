@@ -8,12 +8,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
-import QunPlaza from "@/components/qun/QunPlaza";
 import Link from "next/link";
 import { IoLogoWechat } from "react-icons/io5";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
 import Talk from "@/components/im/Talk";
+import QunPlazaCom from "@/components/qun/QunPlaza";
 
 export default function Page() {
   const ds = [`${NEXT_ASSET_PREFIX}/ds.webp`, `${NEXT_ASSET_PREFIX}/ds2.webp`];
@@ -204,7 +204,7 @@ export default function Page() {
       <div>
         <h2>IM 聊天室</h2>
         <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
-          <QunPlaza />
+          <QunPlazaCom />
         </div>
       </div>
 

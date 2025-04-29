@@ -35,13 +35,14 @@ export default function Talk() {
     if (!crosStorage) {
       return;
     }
-
+    debugger;
     crosStorage
       .getToken(StorageType.AUTOMATIC, ChatApi.getVisitorToken)
       .then((token) => {
         //同步token 到本域，方便后续使用getCurrentUser()
         crosStorage?.locateToken().then((token) => {
           console.log("token", token);
+          debugger;
           const messageBroker = new MessageBroker(crosStorage);
           const localContext = WebSocketContextValue.create(messageBroker);
           messageBroker.newMessageSignal = () => {
