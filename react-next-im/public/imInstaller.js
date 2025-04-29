@@ -17,7 +17,10 @@ loadjQuery(function () {
   var root = "./";
 
   function loadHTML(url, containerId) {
-    const container = $(`#${containerId}`);
+    let container = $(`#${containerId}`);
+    if (!container) {
+      container = document.createElement("div");
+    }
     var params = new URL(document.location).searchParams;
     var right = params.get("r");
     var bottom = params.get("b");
