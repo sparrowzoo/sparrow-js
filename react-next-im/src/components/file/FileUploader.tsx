@@ -2,6 +2,7 @@ import React, { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Result from "@/common/lib/protocol/Result";
+import CrosStorage from "@/common/lib/CrosStorage";
 
 interface FileUploaderProps {
   url: string;
@@ -29,6 +30,7 @@ const handleUpload = async (
   const formData = new FormData();
   formData.append("file", file);
   formData.append("pathType", "im");
+  const token = await CrosStorage.getCrosStorage()?.getToken();
   await axios
     .post(url, formData, {
       onUploadProgress: (progressEvent) => {
@@ -39,6 +41,9 @@ const handleUpload = async (
           console.log("上传进度:", percent);
           setProgress(percent);
         }
+      },
+      headers: {
+        Authorization: token,
       },
     })
     .then((response) => {
