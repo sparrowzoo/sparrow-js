@@ -88,26 +88,24 @@ export default function GroupedTalk() {
   console.log("渲染ChatLayout");
 
   return (
-    <div>
-      <Popover open={isOpen}>
-        <PopoverTrigger
-          asChild={true}
-          onClick={() => {
-            setIsOpen(!isOpen);
-          }}
-        >
-          <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
-        </PopoverTrigger>
-        <PopoverContent className={"w-fit"} side={"top"}>
-          <SidebarProvider className={"min-h-full h-full w-auto"}>
-            <WebSocketContext.Provider
-              value={webSocketContextValue as WebSocketContextValue}
-            >
-              <TabSessions groupedSessions={groupedSessions} />
-            </WebSocketContext.Provider>
-          </SidebarProvider>
-        </PopoverContent>
-      </Popover>
-    </div>
+    <Popover open={isOpen}>
+      <PopoverTrigger
+        asChild={true}
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
+      </PopoverTrigger>
+      <PopoverContent className={"w-fit"} side={"top"}>
+        <SidebarProvider className={"min-h-full h-full w-auto"}>
+          <WebSocketContext.Provider
+            value={webSocketContextValue as WebSocketContextValue}
+          >
+            <TabSessions groupedSessions={groupedSessions} />
+          </WebSocketContext.Provider>
+        </SidebarProvider>
+      </PopoverContent>
+    </Popover>
   );
 }
