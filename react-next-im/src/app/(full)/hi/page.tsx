@@ -11,15 +11,15 @@ import { Card, CardContent } from "@/components/ui/card";
 import QunPlaza from "@/components/qun/QunPlaza";
 import Link from "next/link";
 import { IoLogoWechat } from "react-icons/io5";
-import { WWW_ROOT } from "@/common/lib/Env";
+import {NEXT_ASSET_PREFIX} from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
 
 export default function Page() {
-  const ds = [`${WWW_ROOT}/ds.png`, `${WWW_ROOT}/ds2.png`];
+  const ds = [`${NEXT_ASSET_PREFIX}/ds.png`, `${NEXT_ASSET_PREFIX}/ds2.png`];
   const pro = [
-    `${WWW_ROOT}/pro1.png`,
-    `${WWW_ROOT}/pro2.png`,
-    `${WWW_ROOT}/pro3.png`,
+    `${NEXT_ASSET_PREFIX}/pro1.png`,
+    `${NEXT_ASSET_PREFIX}/pro2.png`,
+    `${NEXT_ASSET_PREFIX}/pro3.png`,
   ];
   return (
     <div className="h-fix w-full p-4 text-gray-500 dark:text-gray-300">
@@ -30,7 +30,7 @@ export default function Page() {
           key={"zhige"}
           alt="志哥"
           className="float-left ..."
-          src={`${WWW_ROOT}/zhige.jpg`}
+          src={`${NEXT_ASSET_PREFIX}/zhige.jpg`}
         />
         <div className="p-4 m-4">
           <h2 className="text-3xl font-bold p-4">欢迎来到志哥聊编程</h2>
@@ -53,7 +53,7 @@ export default function Page() {
             key={"wexin"}
             alt="志哥"
             className="float-right ..."
-            src={`${WWW_ROOT}/wexin.png`}
+            src={`${NEXT_ASSET_PREFIX}/wexin.png`}
           />
         </div>
       </article>
@@ -68,7 +68,7 @@ export default function Page() {
               key={"lottery"}
               className={"w-256"}
               alt="转盘抽奖项目"
-              src={`${WWW_ROOT}/lottery.png`}
+              src={`${NEXT_ASSET_PREFIX}/lottery.png`}
             />
           </a>
           <div className="p-4 m-4">
@@ -214,7 +214,7 @@ export default function Page() {
             "flex flex-col justify-center items-center gap-4 p-4 m-4 text-3xl"
           }
           title={"进来体验吧!"}
-          href={`${WWW_ROOT}/chat`}
+          href={`${NEXT_ASSET_PREFIX}/chat`}
         >
           <IoLogoWechat />
           进来体验吧!
@@ -233,7 +233,7 @@ export default function Page() {
               key={"star-ball"}
               alt="知识星球"
               className="w-100"
-              src={`${WWW_ROOT}/star-ball.png`}
+              src={`${NEXT_ASSET_PREFIX}/star-ball.png`}
             />
           </a>
           <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
