@@ -2,7 +2,7 @@ import Talk from "@/components/im/Talk";
 import React from "react";
 import Link from "next/link";
 import { ArrowBigRightDashIcon } from "lucide-react";
-import { WWW_ROOT } from "@/common/lib/Env";
+import {NEXT_ASSET_PREFIX, WWW_ROOT} from "@/common/lib/Env";
 
 export default function Page() {
   return (
@@ -12,7 +12,7 @@ export default function Page() {
       <div className={"flex flex-row mt-32"}>
         点击这里
         <ArrowBigRightDashIcon />
-        <Link href={`${WWW_ROOT}/chat/pop/server`}>体验客服服务端</Link>
+        <Link href={`${NEXT_ASSET_PREFIX}/chat/pop/server`}>体验客服服务端</Link>
       </div>
       <div className="absolute bottom-20 right-60  ">
         <Talk />

@@ -53,7 +53,7 @@ export default function Chat({
     return <ThreeDotLoading />;
   }
   const avatarUrl = format(AVATAR_URL, currentUser?.userId);
-  const userHome = "/chat/friends/contact?friendId=" + currentUser?.userId;
+  const userHome = "chat/friends/contact?friendId=" + currentUser?.userId;
   return (
     <div className="flex flex-col h-[calc(100vh-80px)]">
       <div className="flex flex-row flex-1 min-h-0 h-full w-full">
@@ -69,10 +69,10 @@ export default function Chat({
               />
             )}
           </IconMenu>
-          <IconMenu title={"联系人"} url={"/chat/friends"}>
+          <IconMenu title={"联系人"} url={"chat/friends"}>
             {(className) => <CircleUserRound className={className} />}
           </IconMenu>
-          <IconMenu title={"消息"} url={"/chat/sessions/session"}>
+          <IconMenu title={"消息"} url={"chat/sessions/session"}>
             {(className) => <MessageCircleCode className={className} />}
           </IconMenu>
         </div>
