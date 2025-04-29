@@ -40,7 +40,7 @@ function ContactDetail() {
 
   return (
     <div className={"flex flex-col p-4 shadow-md"}>
-      <div className="flex flex-row items-center text-left">
+      <div className="flex flex-row items-center gap-4 text-left">
         <Link href={chatSession.sessionUrl}>
           <MyAvatar
             unread={0}
@@ -56,10 +56,9 @@ function ContactDetail() {
             </strong>
             <br />
             <label className={"w-10 inline-block"}>帐号</label>
-            <span>{contact.userName}</span>
-            <br />
-            <label className={"w-10 inline-block"}>ID:</label>
-            <span> {contact.userId}</span>
+            <span>
+              {contact.userName} ID:{contact.userId}
+            </span>
           </Link>
         </div>
       </div>
