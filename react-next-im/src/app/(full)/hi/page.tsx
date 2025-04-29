@@ -30,7 +30,7 @@ export default function Page() {
           key={"zhige"}
           alt="志哥"
           className="float-left ..."
-          src={`${NEXT_ASSET_PREFIX}/zhige.jpg`}
+          src={`${NEXT_ASSET_PREFIX}/zhige.webp`}
         />
         <div className="p-4 m-4">
           <h2 className="text-3xl font-bold p-4">欢迎来到志哥聊编程</h2>
