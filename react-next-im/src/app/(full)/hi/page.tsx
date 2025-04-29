@@ -49,7 +49,7 @@ export default function Page() {
           </ul>
           <DynamicImage
             height={0}
-            width={0}
+            width={200}
             key={"wexin"}
             alt="志哥"
             className="float-right ..."
