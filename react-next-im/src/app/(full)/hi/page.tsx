@@ -12,6 +12,7 @@ import QunPlaza from "@/components/qun/QunPlaza";
 import Link from "next/link";
 import { IoLogoWechat } from "react-icons/io5";
 import { WWW_ROOT } from "@/common/lib/Env";
+import { DynamicImage } from "@/components/img/DynamicImage";
 
 export default function Page() {
   const ds = [`${WWW_ROOT}/ds.png`, `${WWW_ROOT}/ds2.png`];
@@ -23,7 +24,10 @@ export default function Page() {
   return (
     <div className="h-fix w-full p-4 text-gray-500 dark:text-gray-300">
       <article className={"flex flex-row justify-between items-center"}>
-        <img
+        <DynamicImage
+          width={0}
+          height={0}
+          key={"zhige"}
           alt="志哥"
           className="float-left ..."
           src={`${WWW_ROOT}/zhige.jpg`}
@@ -43,7 +47,10 @@ export default function Page() {
             <li>国内某教育平台技术总监</li>
             <li>现就职于某新零售公司，负责供应链智能补货</li>
           </ul>
-          <img
+          <DynamicImage
+            height={0}
+            width={0}
+            key={"wexin"}
             alt="志哥"
             className="float-right ..."
             src={`${WWW_ROOT}/wexin.png`}
@@ -55,7 +62,10 @@ export default function Page() {
         <h2>起步项目【零基础转盘抽奖项目】</h2>
         <div className="flex flex-row justify-center items-center p-4 m-4">
           <a href="http://lottery.sparrowzoo.com/">
-            <img
+            <DynamicImage
+              height={0}
+              width={0}
+              key={"lottery"}
               className={"w-256"}
               alt="转盘抽奖项目"
               src={`${WWW_ROOT}/lottery.png`}
@@ -100,7 +110,10 @@ export default function Page() {
                     <div className="p-1">
                       <Card>
                         <CardContent className="flex aspect-square items-center justify-center p-6">
-                          <img
+                          <DynamicImage
+                            height={0}
+                            width={0}
+                            key={index}
                             src={img}
                             alt="数据结构与算法课程"
                             className="w-full"
@@ -143,7 +156,10 @@ export default function Page() {
                     <div className="p-1">
                       <Card>
                         <CardContent className="flex aspect-square items-center justify-center p-6">
-                          <img
+                          <DynamicImage
+                            height={0}
+                            width={0}
+                            key={index}
                             src={img}
                             alt="企业级项目实现"
                             className="w-full"
@@ -211,7 +227,10 @@ export default function Page() {
           className={"flex flex-row justify-center items-center gap-4 p-4 m-4"}
         >
           <a href={"https://wx.zsxq.com/group/48848482481288"}>
-            <img
+            <DynamicImage
+              height={0}
+              width={0}
+              key={"star-ball"}
               alt="知识星球"
               className="w-100"
               src={`${WWW_ROOT}/star-ball.png`}
