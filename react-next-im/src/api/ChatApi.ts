@@ -51,26 +51,42 @@ export default class ChatApi {
   }
 
   static async getContacts(crosStorage: CrosStorage) {
-    let contactGroup: ContactGroup = new ContactGroup();
+    let localContactGroup: ContactGroup = new ContactGroup();
     await Fetcher.get("/contact/contacts.json", crosStorage).then(
       async (response: Result) => {
         if (response.data) {
-          contactGroup = response.data;
-          const contacts: Contact[] = contactGroup.contacts;
-          for (let remoteContact of contacts) {
+          const remoteContactGroup = response.data;
+          const userMap = remoteContactGroup.userMap;
+          localContactGroup.userMap = new Map();
+          for (const userId in userMap) {
+            if (!userMap.hasOwnProperty(userId)) {
+              continue;
+            }
+            const remoteContact = userMap[userId];
             if (!remoteContact.avatar) {
-              remoteContact.avatar = format(AVATAR_URL, remoteContact.userId);
+              remoteContact.avatar = format(AVATAR_URL, userId);
+            }
+            localContactGroup.userMap.set(userId, remoteContact);
+          }
+
+          const contacts: Contact[] = [];
+          for (const contactId of remoteContactGroup.contactIds) {
+            const localContact = localContactGroup.userMap.get(contactId + "");
+            if (localContact) {
+              contacts.push(localContact);
             }
           }
-          const groups = contactGroup.quns;
+          localContactGroup.contacts = contacts;
+
+          const groups = remoteContactGroup.quns;
           for (let group of groups) {
             group.avatar = format(AVATAR_URL, group.qunId);
           }
-          contactGroup.contacts = contacts;
+          localContactGroup.quns = groups;
         }
       }
     );
-    return contactGroup;
+    return localContactGroup;
   }
 
   static async getUsersByIds(

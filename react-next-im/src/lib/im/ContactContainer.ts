@@ -42,8 +42,8 @@ export default class ContactContainer {
       console.log("fetch contact group from server " + new Date().getTime());
       localGroup = group;
       this.contactGroup = localGroup;
-      for (const contact of localGroup.contacts) {
-        this.container.set(contact.userId + "", contact);
+      for (const [userId, contact] of localGroup.userMap) {
+        this.container.set(userId + "", contact);
       }
     });
     return localGroup;
@@ -93,14 +93,14 @@ export default class ContactContainer {
       });
   }
 
-  public  putJsonContact(contactMap: Map<number, Contact>) {
-    if(contactMap.size<= 0){
+  public putJsonContact(contactMap: Map<number, Contact>) {
+    if (contactMap.size <= 0) {
       return;
     }
 
     for (const key in contactMap) {
       if (contactMap.hasOwnProperty(key)) {
-        this.container.set(key+"", contactMap[key]);
+        this.container.set(key, contactMap[key]);
       }
     }
   }
