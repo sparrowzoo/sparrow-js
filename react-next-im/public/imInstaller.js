@@ -17,7 +17,7 @@ loadjQuery(function () {
   var root = "./";
 
   function loadHTML(url, containerId) {
-    let container = $(`#${containerId}`);
+    let container = document.querySelector(`#${containerId}`);
     if (!container) {
       container = document.createElement("div");
     }
