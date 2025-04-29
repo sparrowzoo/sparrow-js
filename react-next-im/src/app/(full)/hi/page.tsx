@@ -25,7 +25,7 @@ export default function Page() {
     <div className="h-fix w-full p-4 text-gray-500 dark:text-gray-300">
       <article className={"flex flex-row justify-between items-center"}>
         <DynamicImage
-          width={0}
+          width={500}
           height={0}
           key={"zhige"}
           alt="志哥"
