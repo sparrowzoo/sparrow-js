@@ -2,7 +2,7 @@ import React from "react";
 import GroupedTalk from "@/components/im/GroupedTalk";
 import Link from "next/link";
 import { ArrowBigRightDashIcon } from "lucide-react";
-import {NEXT_ASSET_PREFIX} from "@/common/lib/Env";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 
 export default function Page() {
   return (
@@ -16,7 +16,7 @@ export default function Page() {
         <Link href={`${NEXT_ASSET_PREFIX}/chat/pop`}>体验客服客户端</Link>
       </div>
 
-      <div className="absolute bottom-20 right-60  ">
+      <div className="fixed bottom-20 right-40  ">
         <GroupedTalk />
       </div>
     </div>
