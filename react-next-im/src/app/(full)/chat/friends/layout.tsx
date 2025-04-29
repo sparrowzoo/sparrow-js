@@ -21,7 +21,7 @@ import Contacts from "@/components/contact/Contacts";
 import Groups from "@/components/contact/Groups";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import Link from "next/link";
-import { WWW_ROOT } from "@/common/lib/Env";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 
 export default function ChatLayout({
   children,
@@ -31,7 +31,7 @@ export default function ChatLayout({
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
   const [contactGroup, setContactGroup] = useState<ContactGroup>();
-  const newFriendUrl = `${WWW_ROOT}/chat/friends/new-friend`;
+  const newFriendUrl = `${NEXT_ASSET_PREFIX}/chat/friends/new-friend`;
   useEffect(() => {
     console.log("contactGroup .....", contactGroup);
     messageBroker.contactContainer.getContactGroup().then((contactGroup) => {
