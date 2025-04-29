@@ -19,7 +19,7 @@ loadjQuery(function () {
   function loadHTML(url, containerId) {
     let container = $(`#${containerId}`);
     if (container.length <= 0) {
-      container = document.createElement("div");
+      container = $("<div>");
     }
     var params = new URL(document.location).searchParams;
     var right = params.get("r");
