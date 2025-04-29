@@ -26,6 +26,7 @@ export default class CrosStorage {
     if (typeof window === "undefined") {
       return;
     }
+    console.log("cros storage ");
     this.cros = UrlUtils.isCros(window.location.href, STORAGE_PROXY as string);
     if (!this.cros) {
       return;
@@ -109,23 +110,28 @@ export default class CrosStorage {
       | null
       | "REDIRECT-TO-LOGIN" = null
   ) {
-    const token = await this.get(TOKEN_KEY, storage);
-    if (token) {
-      console.log(" token exist ", token);
-      return token;
-    }
-    if (generateVisitorToken) {
-      if (generateVisitorToken === "REDIRECT-TO-LOGIN") {
-        redirectToLogin();
-        return null;
-      }
-      const visitorToken = await generateVisitorToken();
-      await this.setToken(visitorToken);
-      console.log("generate visitor token", visitorToken);
-      return visitorToken;
-    }
-    console.log("no token found");
-    return null;
+    return new Promise<any>((resolve, reject) => {
+      this.get(TOKEN_KEY, storage).then((token) => {
+        if (token) {
+          console.log(" token exist ", token);
+          return resolve(token);
+        }
+        if (!generateVisitorToken) {
+          console.log("no token found");
+          return resolve(null);
+        }
+        if (generateVisitorToken === "REDIRECT-TO-LOGIN") {
+          redirectToLogin();
+          return null;
+        }
+        generateVisitorToken().then((visitorToken) => {
+          this.setToken(visitorToken).then(() => {
+            console.log("generate visitor token", visitorToken);
+            resolve(visitorToken);
+          });
+        });
+      });
+    });
   }
 
   public setToken(token: string, storage: StorageType = StorageType.AUTOMATIC) {
@@ -187,12 +193,20 @@ export default class CrosStorage {
           return;
         }
         this.loaded = true;
+        iframe?.setAttribute("loaded", "true");
         window.removeEventListener("message", handleMessage); // 清理监听
       };
       window.addEventListener("message", handleMessage);
       document.body.appendChild(iframe);
     } else {
-      this.loaded = true;
+      //存在，并没有ready 所以写之后无法回调
+      const localIframe = iframe;
+      const timer = setInterval(() => {
+        if (localIframe.getAttribute("loaded") === "true") {
+          clearInterval(timer);
+          this.loaded = true;
+        }
+      }, 100);
     }
     this.iframe = iframe;
     // iframe.addEventListener("DOMContentLoaded", () => {
