@@ -11,11 +11,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import QunPlaza from "@/components/qun/QunPlaza";
 import Link from "next/link";
 import { IoLogoWechat } from "react-icons/io5";
-import {NEXT_ASSET_PREFIX} from "@/common/lib/Env";
+import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
 
 export default function Page() {
-  const ds = [`${NEXT_ASSET_PREFIX}/ds.png`, `${NEXT_ASSET_PREFIX}/ds2.png`];
+  const ds = [`${NEXT_ASSET_PREFIX}/ds.webp`, `${NEXT_ASSET_PREFIX}/ds2.webp`];
   const pro = [
     `${NEXT_ASSET_PREFIX}/pro1.png`,
     `${NEXT_ASSET_PREFIX}/pro2.png`,
