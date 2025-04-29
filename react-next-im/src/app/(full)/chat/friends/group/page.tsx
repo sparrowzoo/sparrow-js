@@ -26,7 +26,7 @@ function Group() {
 
   return (
     <div className={"flex flex-col p-4 shadow-md"}>
-      <div className="flex flex-row items-center text-left">
+      <div className="flex flex-row items-center text-left gap-4">
         <MyAvatar
           unread={0}
           showUnread={false}
