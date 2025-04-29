@@ -18,7 +18,7 @@ loadjQuery(function () {
 
   function loadHTML(url, containerId) {
     let container = $(`#${containerId}`);
-    if (container.length > 0) {
+    if (container.length <= 0) {
       container = document.createElement("div");
     }
     var params = new URL(document.location).searchParams;
