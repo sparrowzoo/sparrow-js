@@ -12,7 +12,6 @@ import UrlUtils from "@/common/lib/UrlUtils";
 
 export default function Page() {
   useEffect(() => {
-    console.info("init cros iframe storage");
     if (window.parent === window) {
       console.log("window.opener is null");
       return;
@@ -20,15 +19,16 @@ export default function Page() {
     window.addEventListener(
       "message",
       (event: MessageEvent<StorageRequest>) => {
-        console.log("Received message", JSON.stringify(event.data));
         // 严格验证来源
-        if (!allowOrigin(event.origin)) return;
+        if (!allowOrigin(event.origin)) {
+          console.error("Invalid origin", event.origin);
+          return;
+        }
         const storage =
           event.data.storage === StorageType.LOCAL
             ? localStorage
             : sessionStorage;
-        debugger;
-        console.log("Received allow origin", JSON.stringify(event.data));
+        console.log("received request from parent", JSON.stringify(event.data));
         try {
           let value: string | null = null;
           switch (event.data.command) {
@@ -72,7 +72,6 @@ export default function Page() {
     );
 
     function sendReadyEvent() {
-      console.log("Sending ready event to parent");
       const req: StorageRequest = {
         storage: StorageType.AUTOMATIC,
         requestId: Utils.randomUUID(),
@@ -88,7 +87,9 @@ export default function Page() {
         try {
           //这里窗口和URl需要保持一致
           window.parent.postMessage(req, parentUrl as string);
+          console.log("sent READY event to parent");
         } catch (e) {
+          console.error("sent READY event to error");
           setTimeout(send, 100);
         }
       };
