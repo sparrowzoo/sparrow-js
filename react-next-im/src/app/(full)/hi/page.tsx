@@ -13,6 +13,7 @@ import Link from "next/link";
 import { IoLogoWechat } from "react-icons/io5";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import { DynamicImage } from "@/components/img/DynamicImage";
+import Talk from "@/components/im/Talk";
 
 export default function Page() {
   const ds = [`${NEXT_ASSET_PREFIX}/ds.webp`, `${NEXT_ASSET_PREFIX}/ds2.webp`];
@@ -53,7 +54,7 @@ export default function Page() {
             key={"wexin"}
             alt="志哥"
             className="float-right ..."
-            src={`${NEXT_ASSET_PREFIX}/wexin.png`}
+            src={`${NEXT_ASSET_PREFIX}/wexin.jpeg`}
           />
         </div>
       </article>
@@ -254,6 +255,9 @@ export default function Page() {
         <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
           商城 供应链 搜推 源码 中间件 .....
         </div>
+      </div>
+      <div className="fixed bottom-20 right-60  ">
+        <Talk />
       </div>
     </div>
   );
