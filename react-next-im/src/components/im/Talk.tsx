@@ -64,36 +64,32 @@ export default function Talk() {
   }, [crosStorage]);
 
   return (
-    <div>
-      <div className="absolute bottom-20 right-20  ">
-        <Popover open={isOpen}>
-          <PopoverTrigger
-            asChild={true}
-            onClick={() => {
-              setIsOpen(!isOpen);
-            }}
-          >
-            <div className="flex cursor-pointer flex-col items-center justify-center w-20 h-20 p-2 rounded-l bg-gray-100 text-gray-500 hover:bg-gray-200">
-              <HeadsetIcon width={64} height={64} />
-              客服
-            </div>
-          </PopoverTrigger>
-          <PopoverContent side={"top"}>
-            <SidebarProvider className={"min-h-full h-full w-auto"}>
-              <Sidebar className={"relative min-h-full h-full"}>
-                <WebSocketContext.Provider
-                  value={webSocketContextValue as WebSocketContextValue}
-                >
-                  <Sessions
-                    triggerType={"POP"}
-                    sessions={sessions as ChatSession[]}
-                  />
-                </WebSocketContext.Provider>
-              </Sidebar>
-            </SidebarProvider>
-          </PopoverContent>
-        </Popover>
-      </div>
-    </div>
+    <Popover open={isOpen}>
+      <PopoverTrigger
+        asChild={true}
+        onClick={() => {
+          setIsOpen(!isOpen);
+        }}
+      >
+        <div className="flex cursor-pointer flex-col items-center justify-center w-20 h-20 p-2 rounded-l bg-gray-100 text-gray-500 hover:bg-gray-200">
+          <HeadsetIcon width={64} height={64} />
+          客服
+        </div>
+      </PopoverTrigger>
+      <PopoverContent side={"top"}>
+        <SidebarProvider className={"min-h-full h-full w-auto"}>
+          <Sidebar className={"relative min-h-full h-full"}>
+            <WebSocketContext.Provider
+              value={webSocketContextValue as WebSocketContextValue}
+            >
+              <Sessions
+                triggerType={"POP"}
+                sessions={sessions as ChatSession[]}
+              />
+            </WebSocketContext.Provider>
+          </Sidebar>
+        </SidebarProvider>
+      </PopoverContent>
+    </Popover>
   );
 }
