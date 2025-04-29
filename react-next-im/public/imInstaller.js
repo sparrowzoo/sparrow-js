@@ -20,6 +20,7 @@ loadjQuery(function () {
     let container = $(`#${containerId}`);
     if (container.length <= 0) {
       container = $("<div>");
+      document.body.appendChild(container[0]);
     }
     var params = new URL(document.location).searchParams;
     var right = params.get("r");
