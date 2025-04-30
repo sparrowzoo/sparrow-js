@@ -115,6 +115,11 @@ class SparrowWebSocket {
       if ("WebSocket" in window) {
         this.initWindowsFocusEvent();
         this.crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
+          if (!token) {
+            toast.error("没登录呢，回去登录哈！回来志哥等你！");
+            redirectToLogin();
+            return;
+          }
           this.ws = new WebSocket(this.url, [token as string]);
           //resolve 或者reject 必须，如果未执行，会导致后续代码不执行
           this.onOpen();

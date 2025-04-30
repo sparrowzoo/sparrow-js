@@ -35,7 +35,7 @@ export default class ContactContainer {
     const currentUser = ChatUser.getCurrentUser();
     //游客没有联系人
     if (currentUser?.isVisitor()) {
-      return localGroup;
+      return new ContactGroup();
     }
     console.log("fetching  from server " + new Date().getTime());
     await ChatApi.getContacts(this.crosStorage).then((group) => {
