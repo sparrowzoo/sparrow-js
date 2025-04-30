@@ -5,6 +5,7 @@ import QunAPI from "@/api/QunApi";
 
 interface QunListProps {
   quns: Group[];
+  link?: boolean;
 }
 
 export default function QunList(qunListProps: QunListProps) {
@@ -19,7 +20,7 @@ export default function QunList(qunListProps: QunListProps) {
           key={qun.qunId}
           className={"flex flex-row gap-4 justify-between items-center"}
         >
-          <GroupItem qun={qun} />
+          <GroupItem link={qunListProps.link} qun={qun} />
           <div>
             <Button
               className={"cursor-pointer"}
