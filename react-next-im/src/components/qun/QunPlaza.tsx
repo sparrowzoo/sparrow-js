@@ -13,7 +13,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function QunPlazaCom() {
+interface QunPlazaComProps {
+  link?: boolean;
+}
+
+export default function QunPlazaCom(qunPlazaComProps: QunPlazaComProps) {
   const [qunPlaza, setQunPlaza] = useState<QunPlaza>();
   useEffect(() => {
     QunApi.getQunList().then((qunPlaza) => {
@@ -35,7 +39,10 @@ export default function QunPlazaCom() {
             <CardDescription>{category.description}</CardDescription>
           </CardHeader>
           <CardContent>
-            <QunList quns={quns.get(categoryId) || []} />
+            <QunList
+              link={qunPlazaComProps.link}
+              quns={quns.get(categoryId) || []}
+            />
           </CardContent>
         </Card>
       ))}

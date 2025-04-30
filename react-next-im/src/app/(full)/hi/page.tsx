@@ -204,10 +204,9 @@ export default function Page() {
       <div>
         <h2>IM 聊天室</h2>
         <div className="flex flex-row justify-center items-center gap-4 p-4 m-4">
-          <QunPlazaCom />
+          <QunPlazaCom link={false} />
         </div>
       </div>
-
       <div>
         <h2>web 微信</h2>
         <Link
