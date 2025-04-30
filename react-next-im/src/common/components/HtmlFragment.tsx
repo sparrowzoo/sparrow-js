@@ -1,17 +1,13 @@
-import dynamic from "next/dynamic";
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 interface HtmlFragmentProps {
-  url: string;
+  DynamicComponent: React.ComponentType<any>;
   containerId: string;
 }
 
 export default function HtmlFragment(htmlFragmentProps: HtmlFragmentProps) {
-  const { url } = htmlFragmentProps;
-  const DynamicComponent = dynamic(() => import(url), {
-    ssr: false, // 仅客户端渲染
-  });
+  const { DynamicComponent } = htmlFragmentProps;
   useEffect(() => {
     // 手动挂载到指定容器
     const container = document.getElementById(htmlFragmentProps.containerId);
