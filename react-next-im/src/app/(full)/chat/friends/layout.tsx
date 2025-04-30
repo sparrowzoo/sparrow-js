@@ -22,6 +22,9 @@ import Groups from "@/components/contact/Groups";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import Link from "next/link";
 import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import ChatUser from "@/lib/protocol/ChatUser";
+import { redirectToLogin } from "@/common/lib/Navigating";
+import toast from "react-hot-toast";
 
 export default function ChatLayout({
   children,
@@ -33,6 +36,12 @@ export default function ChatLayout({
   const [contactGroup, setContactGroup] = useState<ContactGroup>();
   const newFriendUrl = `${NEXT_ASSET_PREFIX}/chat/friends/new-friend`;
   useEffect(() => {
+    const loginUser = ChatUser.getCurrentUser();
+    if (loginUser == null || loginUser.isVisitor()) {
+      toast.error("请先登录哟，回来志哥陪你砍JAVA！");
+      redirectToLogin();
+      return;
+    }
     console.log("contactGroup .....", contactGroup);
     messageBroker.contactContainer.getContactGroup().then((contactGroup) => {
       console.log("fetched contactGroup", contactGroup);
