@@ -185,8 +185,8 @@ export default function Page() {
           <Image
             src="/brand/sparrow2.jpg"
             alt="Image"
-            width="1920"
-            height="1080"
+            width="1200"
+            height="0"
             className="h-full w-full object-cover dark:brightness-[0.8] dark:grayscale"
           />
         </div>
