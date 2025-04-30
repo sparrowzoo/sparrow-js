@@ -1,5 +1,6 @@
+"use client";
 import { useEffect } from "react";
-import {redirectToIndex, redirectToLogin} from "@/common/lib/Navigating";
+import { redirectToIndex } from "@/common/lib/Navigating";
 
 export default function Page() {
   useEffect(() => {
