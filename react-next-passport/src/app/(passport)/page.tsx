@@ -1,7 +1,9 @@
+import { useEffect } from "react";
+import {redirectToIndex, redirectToLogin} from "@/common/lib/Navigating";
+
 export default function Page() {
-  return (
-    <div>
-      <h1>Welcome to React Next Passport</h1>
-    </div>
-  );
+  useEffect(() => {
+    redirectToIndex();
+  }, []);
+  return <></>;
 }

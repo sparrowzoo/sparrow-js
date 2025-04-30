@@ -127,7 +127,7 @@ export default function Header() {
             {/*<DropdownMenuLabel>My Account</DropdownMenuLabel>*/}
             {/*<DropdownMenuSeparator />*/}
             <DropdownMenuItem>
-              <a href={`${PASSPORT_ROOT}/avatar-editor`}>设置头象</a>
+              <a href={`${PASSPORT_ROOT}/avatar-editor`}>设置头像</a>
             </DropdownMenuItem>
             {/*<DropdownMenuItem>Support</DropdownMenuItem>*/}
             {/*<DropdownMenuSeparator />*/}
