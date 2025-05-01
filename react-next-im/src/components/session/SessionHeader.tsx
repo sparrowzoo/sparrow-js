@@ -26,10 +26,12 @@ export default function SessionHeader(sessionHeaderProps: SessionHeaderProps) {
     SparrowWebSocket.ACTIVE_STATUS
   );
   useEffect(() => {
-    setInterval(() => {
-      const heartStatus =
-        webSocketContextValue.messageBroker.webSocket.getHeartStatus();
-      setHeartStatus(heartStatus);
+    setTimeout(() => {
+      setInterval(() => {
+        const heartStatus =
+          webSocketContextValue.messageBroker.webSocket.getHeartStatus();
+        setHeartStatus(heartStatus);
+      }, 1000);
     }, webSocketContextValue.messageBroker.webSocket.heartTime);
     console.log("sessionKey changed to: ", sessionHeaderProps.sessionKey);
     const chatSession = ChatSession.parse(sessionKey) as ChatSession;
