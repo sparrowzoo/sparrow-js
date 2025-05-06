@@ -29,10 +29,6 @@ export default function MessageSearchBar() {
             toast.error("没有更多消息了");
             return;
         }
-        if (localSessionKey == "") {
-            localSessionKey = sessionKey;
-        }
-
         const beginDate = format(date?.from as Date, "yyyy-MM-dd");
         const endDate = format(date?.to as Date, "yyyy-MM-dd");
         MessageApi.queryMessages(
@@ -89,7 +85,7 @@ export default function MessageSearchBar() {
                     globalLoading = true;
                     console.log("handler search messages", loading);
                     setLoading(globalLoading);
-                    handleSearch("", lastId);
+                    handleSearch(sessionKey, lastId);
                 }
             }
         };
