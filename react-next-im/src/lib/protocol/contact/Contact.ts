@@ -11,7 +11,6 @@ export default class Contact {
    * 用户类型
    */
   public category: number;
-
   /**
    * 国旗url
    */
@@ -20,12 +19,10 @@ export default class Contact {
    * 用户名
    */
   public userName: string;
-
   /**
    * 昵称
    */
   public nickName: string;
-
   /**
    * 英文名
    */
@@ -48,6 +45,20 @@ export default class Contact {
   set userId(value: string | number) {
     //保证userId为字符串
     this._userId = value + "";
+  }
+
+  public static fromRemoteJson(json: any): Contact {
+    const contact = new Contact();
+    contact.userId = json.userId;
+    contact.userName = json.userName;
+    contact.nickName = json.nickName;
+    contact.englishName = json.englishName;
+    contact.category = json.category;
+    contact.avatar = json.avatar;
+    contact.flagUrl = json.flagUrl;
+    contact.nationality = json.nationality;
+    contact.signature = json.personalSignature;
+    return contact;
   }
 
   public static visitor(user: ChatUser) {

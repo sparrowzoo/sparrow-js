@@ -44,12 +44,19 @@ export default function MessageItem(props: Props) {
           src={senderDetail?.avatar as string}
         />
         <div className={"flex flex-col text-left"}>
-          <span className={"flex-1 text-xs text-gray-900"}>
+          <span className={" text-xs dark:text-gray-300 light:text-gray-900"}>
+            {props.message.sendTime as string}
+          </span>
+          <span
+            className={"flex-1 text-xs dark:text-gray-300 light:text-gray-900"}
+          >
             {senderDetail?.userName} @{senderDetail?.nationality}
           </span>
           <p
             dangerouslySetInnerHTML={{ __html: content }}
-            className={"p-2 text-xs rounded-lg text-gray-600 bg-gray-100"}
+            className={
+              "p-2 text-xs rounded-lg dark:text-background light:text-gray-900  bg-gray-100"
+            }
           ></p>
         </div>
       </div>

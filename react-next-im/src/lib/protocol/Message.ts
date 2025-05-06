@@ -9,6 +9,7 @@ export enum AlignType {
 }
 
 export default class Message {
+  public sessionKey: string;
   public messageId: string;
   public sender: ChatUser;
   public receiver: ChatUser;
@@ -75,8 +76,10 @@ export default class Message {
     localMessage.content = remoteMessage.content;
     localMessage.clientSendTime = remoteMessage.clientSendTime;
     localMessage.serverTime = remoteMessage.serverTime;
-    localMessage.messageId =
+    localMessage.messageId = remoteMessage.messageId;
+    if (!localMessage.messageId) {
       remoteMessage.clientSendTime + "" + remoteMessage.sender.id;
+    }
     return localMessage;
   }
 
