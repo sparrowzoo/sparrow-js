@@ -33,6 +33,7 @@ export default class MessageApi {
       content: content,
       beginDate: beginDate,
       endDate: endDate,
+      lastMessageId: lastMessageId,
     }).then((response: Result) => {
       let messageWrap = response.data;
       const localMessageWrap = new HistoryMessageWrap();
