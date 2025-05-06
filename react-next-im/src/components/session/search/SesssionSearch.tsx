@@ -1,0 +1,128 @@
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { SearchIcon } from "lucide-react";
+import { useState } from "react";
+import MessageApi from "@/api/MessageApi";
+import { Utils } from "@/common/lib/Utils";
+import SessionMeta from "@/lib/protocol/session/SessionMeta";
+
+interface SessionSearchProp {
+  sessionKey: string;
+  setSessionKey: any;
+}
+
+interface SessionListProp {
+  sessionList: any;
+  setSessionKey: any;
+}
+
+function SessionList(sessionListProp: SessionListProp) {
+  const { sessionList, setSessionKey } = sessionListProp;
+  if (sessionList.length === 0) {
+    return <div>暂无会话，输入条件条件查询会话</div>;
+  }
+  return (
+    <>
+      {new Date().getTime()}
+      <p className="text-sm text-muted-foreground">请选择会话</p>
+      {sessionList.map((sessionMeta: SessionMeta) => (
+        <div
+          className="flex flex-row justify-start text-left items-center pb-2 gap-2 w-fit border-b-1 border-gray-300"
+          key={sessionMeta.sessionKey}
+          onClick={() => {
+            setSessionKey(sessionMeta.sessionKey);
+          }}
+        >
+          <div className="flex flex-col items-start w-30">
+            <span>{sessionMeta.userName}</span>
+            <span>ID:{sessionMeta.userId}-</span>
+            <span className={"truncate w-30"}>
+              昵称:{sessionMeta.userNickName}
+            </span>
+          </div>
+          <span className={"w-4 text-center"}>-</span>
+          <div className="flex flex-col items-start w-30">
+            <span>{sessionMeta.oppositeName}</span>
+            <span>ID:{sessionMeta.oppositeId}-</span>
+            <span className={"truncate w-30"}>
+              昵称:{sessionMeta.oppositeNickName}
+            </span>
+          </div>
+          <span className="w-40">
+            于：{Utils.dateFormat(sessionMeta.gmtCreate)}
+          </span>{" "}
+          会话
+        </div>
+      ))}
+    </>
+  );
+}
+
+export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
+  const { sessionKey, setSessionKey } = sessionSearchProp;
+  const [sessionList, setSessionList] = useState<SessionMeta[]>([]);
+  const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userNickName, setUserNickName] = useState("");
+
+  function searchSession() {
+    MessageApi.querySessions(userId, userName, userNickName).then(
+      (sessions) => {
+        setSessionList(sessions);
+      }
+    );
+  }
+
+  return (
+    <div>
+      <Popover>
+        <PopoverTrigger>
+          <Input
+            className={"w-30"}
+            placeholder={"请选择会话"}
+            value={sessionKey}
+            onChange={(event) => {
+              setSessionKey(event.target.value);
+            }}
+          />
+        </PopoverTrigger>
+        <PopoverContent className="w-fit border-1 border-gray-300 rounded-md p-4">
+          <div className="grid gap-4">
+            <div className="space-y-2">
+              <h4 className="font-medium leading-none">请先选择会话：</h4>
+              <div className={"flex flex-row gap-2 w-120"}>
+                <Input
+                  value={userId}
+                  onChange={(event) => setUserId(event.target.value)}
+                  placeholder={"userId"}
+                />
+                <Input
+                  value={userName}
+                  onChange={(event) => setUserName(event.target.value)}
+                  placeholder={"userName"}
+                />
+                <Input
+                  value={userNickName}
+                  onChange={(event) => setUserNickName(event.target.value)}
+                  placeholder={"userNickName"}
+                />
+                <Button onClick={searchSession}>
+                  <SearchIcon />
+                </Button>
+              </div>
+            </div>
+          </div>
+          <SessionList
+            sessionList={sessionList}
+            setSessionKey={setSessionKey}
+          />
+        </PopoverContent>
+      </Popover>
+    </div>
+  );
+}
