@@ -49,11 +49,11 @@ export default function HistoryMessageItem(props: Props) {
             <span
               onClick={() => {
                 setSessionKey(props.message.session.sessionKey);
-                props.handleSearch(props.message.session.sessionKey);
+                props.handleSearch(props.message.session.sessionKey,0);
               }}
               className={"cursor-pointer"}
             >
-              点击只看【{props.message.session.sessionKey}】的s会话
+              点击只看【{props.message.session.sessionKey}】的会话
             </span>
           </span>
           <p
