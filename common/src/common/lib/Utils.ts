@@ -19,4 +19,10 @@ export class Utils {
     }
     return format(timestamp, "MM/dd HH:mm");
   }
+
+  public static isImage(url: string): boolean {
+    const imageTypes = ["jpg", "jpeg", "png", "gif"];
+    const extension = url.split(".").pop();
+    return imageTypes.includes(extension as string);
+  }
 }

@@ -1,10 +1,11 @@
 import React from "react";
-import { FileUp, ImageUp, Send } from "lucide-react";
+import { FileUp, Send } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import FileUploader from "@/components/file/FileUploader";
 import { getDownloadShower, insertElement } from "@/components/file/FileUtils";
 import { UPLOAD_URL } from "@/common/lib/Env";
+import { Utils } from "@/common/lib/Utils";
 
 interface SenderProps {
   sendMessage: (message: string) => void;
@@ -46,6 +47,10 @@ export default function MessageEditor(senderProps: SenderProps) {
   }
 
   function insertFile(url: string, fileName: string) {
+    if (Utils.isImage(fileName)) {
+      insertImage(url, fileName);
+      return;
+    }
     const editor = editorRef.current;
     if (editor === null) {
       return;
@@ -63,12 +68,6 @@ export default function MessageEditor(senderProps: SenderProps) {
           id={"fileUploader"}
           uploadIcon={<FileUp className={"bg-background"} />}
           uploadCallback={insertFile}
-        />
-        <FileUploader
-          url={uploadUrl}
-          id={"imgUploader"}
-          uploadIcon={<ImageUp className={"bg-background"} />}
-          uploadCallback={insertImage}
         />
       </div>
       <div

@@ -27,8 +27,7 @@ function SessionList(sessionListProp: SessionListProp) {
     return <div>暂无会话，输入条件条件查询会话</div>;
   }
   return (
-    <>
-      {new Date().getTime()}
+    <div className="w-full h-[550px] border-1 border-gray-200 rounded-md overflow-y-auto">
       <p className="text-sm text-muted-foreground">请选择会话</p>
       {sessionList.map((sessionMeta: SessionMeta) => (
         <div
@@ -59,7 +58,7 @@ function SessionList(sessionListProp: SessionListProp) {
           会话
         </div>
       ))}
-    </>
+    </div>
   );
 }
 

@@ -13,7 +13,11 @@ import { AVATAR_URL } from "@/common/lib/Env";
 import IconMenu from "@/components/IconMenu";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { CircleUserRound, MessageCircleCode } from "lucide-react";
+import {
+  CircleUserRound,
+  MessageCircleCode,
+  SquareLibrary,
+} from "lucide-react";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 
@@ -74,6 +78,10 @@ export default function Chat({
           </IconMenu>
           <IconMenu title={"消息"} url={"chat/sessions/session"}>
             {(className) => <MessageCircleCode className={className} />}
+          </IconMenu>
+
+          <IconMenu title={"消息管理"} url={"chat/message-search"}>
+            {(className) => <SquareLibrary className={className} />}
           </IconMenu>
         </div>
         <WebSocketContext.Provider
