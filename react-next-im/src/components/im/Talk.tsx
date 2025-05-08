@@ -20,9 +20,6 @@ import Sessions from "@/components/session/Sessions";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default function Talk() {
-  const serverIds = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY as string;
-  const contacts: string[] = serverIds.split(",");
-
   const [isOpen, setIsOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<ChatSession[]>();
   const [webSocketContextValue, setWebSocketContextValue] =
@@ -35,22 +32,22 @@ export default function Talk() {
     if (!crosStorage) {
       return;
     }
-    debugger;
     crosStorage
       .getToken(StorageType.AUTOMATIC, ChatApi.getVisitorToken)
       .then((token) => {
         //同步token 到本域，方便后续使用getCurrentUser()
         crosStorage?.locateToken().then((token) => {
           console.log("token", token);
-          debugger;
           const messageBroker = new MessageBroker(crosStorage);
           const localContext = WebSocketContextValue.create(messageBroker);
           messageBroker.newMessageSignal = () => {
             setWebSocketContextValue(localContext?.newReference());
           };
           setWebSocketContextValue(localContext);
+
           messageBroker.webSocket.handshakeSuccess = (loginUser: LoginUser) => {
-            messageBroker.initSessionsByContacts(contacts).then(() => {
+            const contacts = loginUser.tenantId;
+            messageBroker.initSessionsByContacts([contacts]).then(() => {
               setSessions(
                 messageBroker.sessionContainer.chatSessions as ChatSession[]
               );
