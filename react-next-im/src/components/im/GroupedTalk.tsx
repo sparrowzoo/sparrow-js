@@ -18,6 +18,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import TabSessions from "@/components/session/TabSessions";
 import ChatUser from "@/lib/protocol/ChatUser";
+import PopSearchTrigger from "@/components/session/search/PopSearchTrigger";
 
 export default function GroupedTalk() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -102,6 +103,7 @@ export default function GroupedTalk() {
           <WebSocketContext.Provider
             value={webSocketContextValue as WebSocketContextValue}
           >
+            <PopSearchTrigger />
             <TabSessions groupedSessions={groupedSessions} />
           </WebSocketContext.Provider>
         </SidebarProvider>
