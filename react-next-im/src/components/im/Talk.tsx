@@ -37,7 +37,6 @@ export default function Talk() {
       .then((token) => {
         //同步token 到本域，方便后续使用getCurrentUser()
         crosStorage?.locateToken().then((token) => {
-          console.log("token", token);
           const messageBroker = new MessageBroker(crosStorage);
           const localContext = WebSocketContextValue.create(messageBroker);
           messageBroker.newMessageSignal = () => {
