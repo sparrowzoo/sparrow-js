@@ -50,7 +50,7 @@ export default function Talk() {
               JSON.stringify(loginUser)
             );
             let contacts = [loginUser.tenantId];
-            if (!loginUser.tenantId || loginUser.tenantId == 0) {
+            if (!loginUser.tenantId || loginUser.tenantId == "0") {
               contacts = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY?.split(
                 ","
               ) as string[];
