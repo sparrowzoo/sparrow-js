@@ -10,6 +10,7 @@ import { useState } from "react";
 import MessageApi from "@/api/MessageApi";
 import { Utils } from "@/common/lib/Utils";
 import SessionMeta from "@/lib/protocol/session/SessionMeta";
+import ChatUser from "@/lib/protocol/ChatUser";
 
 interface SessionSearchProp {
   sessionKey: string;
@@ -68,6 +69,7 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
   const [userNickName, setUserNickName] = useState("");
+  const loginUser = ChatUser.getCurrentUser();
 
   function searchSession() {
     MessageApi.querySessions(userId, userName, userNickName).then(
@@ -95,11 +97,13 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
             <div className="space-y-2">
               <h4 className="font-medium leading-none">请先选择会话：</h4>
               <div className={"flex flex-row gap-2 w-120"}>
-                <Input
-                  value={userId}
-                  onChange={(event) => setUserId(event.target.value)}
-                  placeholder={"userId"}
-                />
+                {loginUser?.isAdmin() && (
+                  <Input
+                    value={userId}
+                    onChange={(event) => setUserId(event.target.value)}
+                    placeholder={"userId"}
+                  />
+                )}
                 <Input
                   value={userName}
                   onChange={(event) => setUserName(event.target.value)}
