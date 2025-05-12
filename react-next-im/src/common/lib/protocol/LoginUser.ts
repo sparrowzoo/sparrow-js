@@ -1,5 +1,8 @@
 import { USER_INFO_KEY } from "@/common/lib/Env";
 import UserCategory from "@/common/lib/UserCategory";
+import CrosStorage from "@/common/lib/CrosStorage";
+import { redirectToLogin } from "@/common/lib/Navigating";
+import toast from "react-hot-toast";
 
 export default class LoginUser {
   public userId: string;
@@ -13,6 +16,16 @@ export default class LoginUser {
   public expireAt: number;
   public extensions: Map<string, any>;
 
+  public static logout() {
+    CrosStorage.getCrosStorage()
+      .removeToken()
+      .then(() => {
+        sessionStorage.removeItem(USER_INFO_KEY);
+        toast.success("您已退出登录!");
+        redirectToLogin();
+      });
+  }
+
   public static getCurrentUser() {
     if (typeof window === "undefined") {
       console.error("This component should not render on server");
@@ -22,7 +35,13 @@ export default class LoginUser {
     if (userJson) {
       return LoginUser.parseLoginJSON(userJson);
     }
-    return null;
+    const loginUser = new LoginUser();
+    loginUser.userId = "visitor";
+    loginUser.category = UserCategory.VISITOR;
+    loginUser.tenantId = "visitor";
+    loginUser.nickName = "访客";
+    loginUser.userName = "visitor";
+    return loginUser;
   }
 
   private static parseLoginJSON(json: string) {
@@ -30,6 +49,7 @@ export default class LoginUser {
     const loginUser = new LoginUser();
     loginUser.userId = loginUserJSON.userId + "";
     loginUser.category = loginUserJSON.category;
+    loginUser.tenantId = loginUserJSON.tenantId + "";
     loginUser.nickName = loginUserJSON.nickName;
     loginUser.userName = loginUserJSON.userName;
     loginUser.avatar = loginUserJSON.avatar;
