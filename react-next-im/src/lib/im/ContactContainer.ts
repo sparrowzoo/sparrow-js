@@ -3,6 +3,8 @@ import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import ChatApi from "@/api/ChatApi";
 import Contact from "@/lib/protocol/contact/Contact";
 import ChatUser from "@/lib/protocol/ChatUser";
+import QunDetailWrap from "@/lib/protocol/contact/QunDetailWrap";
+import QunAPI from "@/api/QunApi";
 
 export default class ContactContainer {
   private crosStorage: CrosStorage;
@@ -11,6 +13,10 @@ export default class ContactContainer {
    * @private
    */
   private container: Map<string, Contact> = new Map<string, Contact>();
+  private groupContainer: Map<string, QunDetailWrap> = new Map<
+    string,
+    QunDetailWrap
+  >();
   private contactGroup: ContactGroup | null = null;
 
   constructor(crosStorage: CrosStorage) {
@@ -51,6 +57,18 @@ export default class ContactContainer {
 
   public getGroupDetail(groupId: string) {
     return this.contactGroup?.quns.find((qun) => qun.qunId == groupId);
+  }
+
+  public async fetchGroupDetail(groupId: string) {
+    if (this.groupContainer.has(groupId)) {
+      return this.groupContainer.get(groupId);
+    }
+    const groupDetail = await QunAPI.qunDetail(groupId);
+    this.groupContainer.set(groupId, groupDetail);
+    for (const [userId, userDetail] of groupDetail.userDicts) {
+      this.container.set(userId, userDetail);
+    }
+    return groupDetail;
   }
 
   /**

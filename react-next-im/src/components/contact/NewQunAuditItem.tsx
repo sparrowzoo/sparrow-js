@@ -9,10 +9,11 @@ import AuditStatusProps from "@/lib/protocol/audit/AuditStatusProps";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Contact from "@/lib/protocol/contact/Contact";
 import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
-import { format } from "util";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
 import Group from "@/lib/protocol/contact/Group";
 import AuditApi from "@/api/AuditApi";
+import { format } from "util";
+import { Utils } from "@/common/lib/Utils";
 
 function AuditStatusComp(props: AuditStatusProps) {
   function agree() {
@@ -109,7 +110,9 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
           <strong className={"text-xs text-gray-400"}>
             申请加入{qun.qunName}群
           </strong>
-          <span className={"text-xs text-gray-400 ml-1"}>2022-03-15 10:00</span>
+          <span className={"text-xs text-gray-400 ml-1"}>
+            {Utils.dateFormat(audit.applyTime)}
+          </span>
         </div>
         <div>
           <MyAvatar

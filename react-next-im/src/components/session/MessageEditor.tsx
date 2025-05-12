@@ -13,7 +13,6 @@ interface SenderProps {
 
 export default function MessageEditor(senderProps: SenderProps) {
   const { sendMessage } = senderProps;
-  const [message, setMessage] = React.useState("");
   const editorRef = React.createRef<HTMLDivElement>();
   const uploadUrl = `${UPLOAD_URL}`;
 
@@ -24,7 +23,6 @@ export default function MessageEditor(senderProps: SenderProps) {
       return;
     }
     sendMessage(message.trim());
-    setMessage("");
   }
 
   function insertImage(url: string, fileName: string) {
@@ -73,7 +71,6 @@ export default function MessageEditor(senderProps: SenderProps) {
       <div
         ref={editorRef}
         contentEditable={"true"}
-        dangerouslySetInnerHTML={{ __html: message }}
         onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
           if (event.code === "Enter") {
             event.preventDefault(); // 阻止默认分段行为

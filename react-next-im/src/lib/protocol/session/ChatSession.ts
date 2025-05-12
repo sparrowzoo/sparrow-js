@@ -159,9 +159,9 @@ export default class ChatSession {
       len = "0" + length;
     }
     return (
-      bigUser.category +
+      bigUser.getSessionCategory() +
       "" +
-      smallUser.category +
+      smallUser.getSessionCategory() +
       "" +
       len +
       "" +

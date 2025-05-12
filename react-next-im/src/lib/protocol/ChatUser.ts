@@ -16,7 +16,7 @@ export default class ChatUser {
     // 确保 id 是字符串
     this.id = id + "";
     this.category = category;
-    this.key = this.id + "_" + this.category;
+    this.key = this.id + "_" + this.getSessionCategory();
   }
 
   static fromBytes(dateView: DataView, offset: number): ChatUserWithOffset {
@@ -54,11 +54,21 @@ export default class ChatUser {
     );
   }
 
+  public getSessionCategory(): number {
+    if (this.category == UserCategory.VISITOR) {
+      return UserCategory.VISITOR;
+    }
+    return UserCategory.REGISTER;
+  }
+
   public equals(chatUser: NullableChatUser): boolean {
     if (chatUser == null) {
       return false;
     }
-    return this.id == chatUser.id && this.category == chatUser.category;
+    if (chatUser.isVisitor()) {
+      return this.id == chatUser.id && this.category == chatUser.category;
+    }
+    return this.id == chatUser.id;
   }
 
   /**
