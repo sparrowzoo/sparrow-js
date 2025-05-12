@@ -45,12 +45,20 @@ export default function Talk() {
           setWebSocketContextValue(localContext);
 
           messageBroker.webSocket.handshakeSuccess = (loginUser: LoginUser) => {
+            console.log(
+              "handshakeSuccess login user is ",
+              JSON.stringify(loginUser)
+            );
             let contacts = [loginUser.tenantId];
             if (!loginUser.tenantId) {
               contacts = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY?.split(
                 ","
               ) as string[];
             }
+            console.log(
+              "handshakeSuccess contacts is ",
+              JSON.stringify(contacts)
+            );
             messageBroker.initSessionsByContacts(contacts).then(() => {
               setSessions(
                 messageBroker.sessionContainer.chatSessions as ChatSession[]
