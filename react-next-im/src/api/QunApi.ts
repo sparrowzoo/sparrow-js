@@ -3,6 +3,7 @@ import Result from "@/common/lib/protocol/Result";
 import QunPlaza from "@/lib/protocol/contact/QunPlaza";
 import Group from "@/lib/protocol/contact/Group";
 import toast from "react-hot-toast";
+import QunDetailWrap from "@/lib/protocol/contact/QunDetailWrap";
 
 export default class QunAPI {
   public static async joinQun(qunId: string) {
@@ -11,6 +12,12 @@ export default class QunAPI {
       reason: "",
     }).then((res: Result) => {
       toast.success("申请成功，请等待审核结果！");
+    });
+  }
+
+  public static async qunDetail(qunId: string) {
+    return Fetcher.get("/qun/detail/" + qunId + ".json").then((res: Result) => {
+      return QunDetailWrap.fromJson(res.data);
     });
   }
 

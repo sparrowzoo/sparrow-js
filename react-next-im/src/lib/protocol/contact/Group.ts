@@ -7,7 +7,6 @@ export default class Group {
   public ownerId: string;
   public ownerName: string;
   public categoryId: number;
-  public categoryName: string;
   public avatar: string;
 
   public static fromJson(json: Group): Group {
@@ -20,7 +19,6 @@ export default class Group {
     group.ownerId = json.ownerId;
     group.ownerName = json.ownerName;
     group.categoryId = json.categoryId;
-    group.categoryName = json.categoryName;
     group.avatar = json.avatar;
     return group;
   }
