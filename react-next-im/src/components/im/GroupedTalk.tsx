@@ -99,7 +99,7 @@ export default function GroupedTalk() {
         <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
       </PopoverTrigger>
       <PopoverContent className={"w-fit"} side={"top"}>
-        <SidebarProvider className={"min-h-full h-full w-auto"}>
+        <SidebarProvider className={"min-h-full h-full w-auto flex flex-col"}>
           <WebSocketContext.Provider
             value={webSocketContextValue as WebSocketContextValue}
           >
