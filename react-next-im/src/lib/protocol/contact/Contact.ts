@@ -1,6 +1,7 @@
 import ChatUser from "@/lib/protocol/ChatUser";
-import { VISITOR_AVATAR_URL } from "@/common/lib/Env";
+import { AVATAR_URL, VISITOR_AVATAR_URL } from "@/common/lib/Env";
 import UserCategory from "@/common/lib/UserCategory";
+import { format } from "util";
 
 export default class Contact {
   /**
@@ -27,11 +28,23 @@ export default class Contact {
    * 英文名
    */
   public englishName: string;
+  public signature: string;
+
   /**
    * 头象
    */
-  public avatar: string;
-  public signature: string;
+  private _avatar: string;
+
+  get avatar(): string {
+    if (this._avatar && this._avatar != "") {
+      return this._avatar;
+    }
+    return format(`${AVATAR_URL}`, this.userId);
+  }
+
+  set avatar(value: string) {
+    this._avatar = value;
+  }
 
   /**
    * 用户id
