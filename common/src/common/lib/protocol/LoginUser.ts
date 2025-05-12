@@ -3,6 +3,7 @@ import UserCategory from "@/common/lib/UserCategory";
 
 export default class LoginUser {
   public userId: string;
+  public tenantId: string;
   public category: number;
   public nickName: string;
   public userName: string;
@@ -29,6 +30,7 @@ export default class LoginUser {
     const loginUser = new LoginUser();
     loginUser.userId = loginUserJSON.userId + "";
     loginUser.category = loginUserJSON.category;
+    loginUser.tenantId = loginUserJSON.tenantId + "";
     loginUser.nickName = loginUserJSON.nickName;
     loginUser.userName = loginUserJSON.userName;
     loginUser.avatar = loginUserJSON.avatar;
