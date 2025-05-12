@@ -17,7 +17,7 @@ export default function MessageItem(props: Props) {
   const webSocketContextValue = useContext(WebSocketContext);
   if (props.message.timeline > 0) {
     return (
-      <div className={"text-gray-500 text-sm"}>
+      <div className={"text-gray-500 text-center text-sm"}>
         {props.message.getTimeline()}
         <Separator />
       </div>

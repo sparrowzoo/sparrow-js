@@ -23,6 +23,7 @@ export default function MessageEditor(senderProps: SenderProps) {
       return;
     }
     sendMessage(message.trim());
+    editorRef.current!.innerText = "";
   }
 
   function insertImage(url: string, fileName: string) {
