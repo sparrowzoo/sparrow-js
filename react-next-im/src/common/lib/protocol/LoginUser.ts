@@ -3,6 +3,7 @@ import UserCategory from "@/common/lib/UserCategory";
 
 export default class LoginUser {
   public userId: string;
+  public tenantId: string;
   public category: number;
   public nickName: string;
   public userName: string;
