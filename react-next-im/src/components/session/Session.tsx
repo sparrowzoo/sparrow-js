@@ -11,6 +11,7 @@ interface SessionProps {
 }
 
 export default function Session(sessionProps: SessionProps) {
+  console.log("Session render with props", sessionProps);
   const webSocketContextValue = useContext(WebSocketContext);
   const searchParams = useSearchParams();
   const [currentSessionKey, setCurrentSessionKey] = useState("");
