@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import { Metadata, Viewport } from "next";
 import * as React from "react";
+import Root from "@/components/Root";
 
 export const metadata: Metadata = {
   title: "sparrow zoo",
@@ -32,7 +33,7 @@ export default function RootLayout({
           "mx-auto text-left justify-center align-middle content-center w-full "
         }
       >
-        {children}
+        <Root>{children}</Root>
       </body>
     </html>
   );

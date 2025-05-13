@@ -93,10 +93,6 @@ export default class MessageBroker {
   }
 
   public async getMessageList(sessionKey: string) {
-    console.log("getMessageList", sessionKey);
-    this.sessionContainer.pullSession(
-      ChatSession.parse(sessionKey) as ChatSession
-    );
     let messageList = this.messageMap.get(sessionKey);
     if (messageList != null) {
       return this.wrapMessages(messageList);

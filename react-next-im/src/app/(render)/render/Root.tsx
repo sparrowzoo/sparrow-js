@@ -7,5 +7,5 @@ export default function Root({
   children: React.ReactNode;
 }>) {
   console.log("Root component rendered");
-  return <>{children}</>;
+  return <div> layout {children}</div>;
 }
