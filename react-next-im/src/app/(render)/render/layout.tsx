@@ -18,11 +18,22 @@ export const viewport: Viewport = {
  * This layout is required and must contain html and body tags,
  * allowing you to modify the initial HTML returned from the server.
  */
-export default function Layout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log("render Root layout rendered");
-  return <div> Render Root Layout{children}</div>;
+  console.log("html layout rendered");
+
+  return (
+    <html>
+      <body
+        className={
+          "mx-auto text-left justify-center align-middle content-center w-full "
+        }
+      >
+        <div className="flex flex-col h-full">{children}</div>
+      </body>
+    </html>
+  );
 }
