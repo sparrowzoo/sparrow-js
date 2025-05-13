@@ -140,7 +140,7 @@ export default class CrosStorage {
   //用户基本信息本地化
   public async locateToken(token = null) {
     if (token) {
-      return LoginUser.parseToken(token);
+      return LoginUser.localize(token);
     }
     //如果不是cros环境，则不进行本地化
     if (!this.cros) {
@@ -155,9 +155,9 @@ export default class CrosStorage {
     return await this.getToken().then((token) => {
       console.log("get cros token ", token);
       if (token) {
-        return LoginUser.parseToken(token);
+        return LoginUser.localize(token);
       }
-      return LoginUser.getCurrentUser();
+      return LoginUser.visitor();
     });
   }
 
