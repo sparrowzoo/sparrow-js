@@ -24,5 +24,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Chat>{children}</Chat>;
+  const ChatLayout = React.memo(() => <Chat>{children}</Chat>);
+  ChatLayout.displayName = "ChatLayout";
+  return ChatLayout;
 }
