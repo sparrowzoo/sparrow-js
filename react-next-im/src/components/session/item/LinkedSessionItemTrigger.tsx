@@ -9,7 +9,11 @@ export default function LinkedSessionTrigger(
 ) {
   const { chatSession } = sessionItemProps;
   return (
-    <Link className={"block w-full h-fit p-0"} href={chatSession.sessionUrl}>
+    <Link
+      className={"block w-full h-fit p-0"}
+      href={chatSession.sessionUrl}
+      shallow={true}
+    >
       <BaseTrigger unreadPosition={Position.TAIL} chatSession={chatSession} />
     </Link>
   );
