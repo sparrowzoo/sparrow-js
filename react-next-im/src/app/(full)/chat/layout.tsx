@@ -1,7 +1,7 @@
 import "@/app/globals.css";
 import { Metadata, Viewport } from "next";
 import * as React from "react";
-import Chat from "@/components/Chat";
+import ChatLayout from "@/components/Chat";
 
 export const metadata: Metadata = {
   title: "sparrow zoo",
@@ -24,7 +24,5 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const ChatLayout = React.memo(() => <Chat>{children}</Chat>);
-  ChatLayout.displayName = "ChatLayout";
-  return ChatLayout;
+  return <ChatLayout>{children}</ChatLayout>;
 }

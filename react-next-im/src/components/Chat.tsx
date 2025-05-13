@@ -21,7 +21,7 @@ import {
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 
-export default function Chat({
+export default function ChatLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
