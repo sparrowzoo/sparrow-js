@@ -10,7 +10,7 @@ interface SessionsProps {
   triggerType: "POP" | "LINK";
 }
 
-export default function Sessions(props: SessionsProps) {
+function Sessions(props: SessionsProps) {
   console.log("Sessions render ....", props);
   if (!props.sessions) {
     return <ThreeDotLoading />;
@@ -27,4 +27,12 @@ export default function Sessions(props: SessionsProps) {
       ))}
     </SidebarMenu>
   );
+}
+
+export default function SessionsMemo(props: SessionsProps) {
+  const SessionMemo = React.memo(() => (
+    <Sessions sessions={props.sessions} triggerType={props.triggerType} />
+  ));
+  SessionMemo.displayName = "SessionsMemo";
+  return <SessionMemo />;
 }
