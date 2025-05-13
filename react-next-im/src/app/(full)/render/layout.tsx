@@ -23,6 +23,6 @@ export default function Layout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  console.log("render  layout rendered");
-  return <>{children}</>;
+  console.log("render Root layout rendered");
+  return <div> Render Root Layout{children}</div>;
 }
