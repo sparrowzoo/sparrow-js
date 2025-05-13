@@ -19,7 +19,9 @@ function P1() {
 }
 
 export default function Page() {
-  <Suspense fallback={<LoadingSpinner />}>
-    <P1 />
-  </Suspense>;
+  return (
+    <Suspense fallback={<LoadingSpinner />}>
+      <P1 />
+    </Suspense>
+  );
 }
