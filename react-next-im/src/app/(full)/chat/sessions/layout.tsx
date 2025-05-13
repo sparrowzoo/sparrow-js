@@ -18,6 +18,7 @@ export default function ChatLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("sessions layout render....");
   const [sessions, setSessions] = useState<ChatSession[]>();
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
