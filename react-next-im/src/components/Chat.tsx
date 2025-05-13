@@ -26,6 +26,7 @@ export default function Chat({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("Chat layout render ....");
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
   const [currentUser, setCurrentUser] = useState<LoginUser>();
