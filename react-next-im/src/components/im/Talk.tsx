@@ -36,7 +36,7 @@ export default function Talk() {
       .getToken(StorageType.AUTOMATIC, ChatApi.getVisitorToken)
       .then((token) => {
         //同步token 到本域，方便后续使用getCurrentUser()
-        crosStorage?.locateToken().then((token) => {
+        crosStorage?.locateToken(token).then((token) => {
           const messageBroker = new MessageBroker(crosStorage);
           const localContext = WebSocketContextValue.create(messageBroker);
           messageBroker.newMessageSignal = () => {
