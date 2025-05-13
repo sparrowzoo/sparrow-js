@@ -44,7 +44,7 @@ export default class LoginUser {
     return loginUser;
   }
 
-  private static parseLoginJSON(json: string) {
+  public static parseLoginJSON(json: string) {
     const loginUserJSON = JSON.parse(json);
     const loginUser = new LoginUser();
     loginUser.userId = loginUserJSON.userId + "";

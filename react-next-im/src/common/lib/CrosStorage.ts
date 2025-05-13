@@ -150,9 +150,11 @@ export default class CrosStorage {
     }
     const locationUser = sessionStorage.getItem(USER_INFO_KEY);
     if (locationUser) {
-      return LoginUser.getCurrentUser();
+      console.log("location user exist ", locationUser);
+      return LoginUser.parseLoginJSON(locationUser);
     }
     return await this.getToken().then((token) => {
+      console.log("get cros token ", token);
       if (token) {
         const decodeToken = decodeURIComponent(token);
         const parts: string[] = decodeToken.split(".");
@@ -162,8 +164,9 @@ export default class CrosStorage {
         }
         const userJson = atob(userInfo);
         sessionStorage.setItem(USER_INFO_KEY, userJson);
-        return LoginUser.getCurrentUser();
+        return LoginUser.parseLoginJSON(userJson);
       }
+      return LoginUser.getCurrentUser();
     });
   }
 
