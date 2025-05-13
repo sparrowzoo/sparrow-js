@@ -1,5 +1,9 @@
-export default function Session() {
-  return <div>Session</div>;
+interface SessionProps {
+  sessionKey?: string;
+}
+
+export default function Session(sessionProps: SessionProps) {
+  return <div>Session {sessionProps.sessionKey}</div>;
 }
 // "use client";
 // import React, { useContext, useEffect, useState } from "react";
