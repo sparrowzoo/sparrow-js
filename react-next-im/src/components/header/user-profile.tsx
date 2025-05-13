@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
-import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import { PASSPORT_ROOT } from "@/common/lib/Env";
 import {
@@ -24,17 +23,11 @@ export default function UserProfile() {
     if (!crosStorage) {
       return;
     }
-    crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
-      if (!token) {
-        console.log("token is null");
-        setLoginUser(LoginUser.getCurrentUser());
-        return;
-      }
-      //同步token 到本域，方便后续使用getCurrentUser()
-      crosStorage?.locateToken().then((token) => {
-        console.log("token located", token);
-        setLoginUser(token as LoginUser);
-      });
+
+    //同步token 到本域，方便后续使用getCurrentUser()
+    crosStorage?.locateToken().then((token) => {
+      console.log("token located", token);
+      setLoginUser(token as LoginUser);
     });
   }, [crosStorage]);
 

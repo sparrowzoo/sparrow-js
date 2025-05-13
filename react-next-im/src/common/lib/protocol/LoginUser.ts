@@ -44,6 +44,18 @@ export default class LoginUser {
     return loginUser;
   }
 
+  public static parseToken(token: string) {
+    const decodeToken = decodeURIComponent(token);
+    const parts: string[] = decodeToken.split(".");
+    const userInfo: string = parts[0];
+    if (!userInfo) {
+      return null;
+    }
+    const userJson = atob(userInfo);
+    sessionStorage.setItem(USER_INFO_KEY, userJson);
+    return LoginUser.parseLoginJSON(userJson);
+  }
+
   public static parseLoginJSON(json: string) {
     const loginUserJSON = JSON.parse(json);
     const loginUser = new LoginUser();
