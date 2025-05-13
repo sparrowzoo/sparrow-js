@@ -44,8 +44,8 @@ export default function Session(sessionProps: SessionProps) {
 
   return (
     <div className={"flex flex-col w-full min-h-0 h-full"}>
-      <SessionHeader sessionKey={currentSessionKey} />
-      <MessageSender sessionKey={currentSessionKey} />
+      {/*<SessionHeader sessionKey={currentSessionKey} />*/}
+      {/*<MessageSender sessionKey={currentSessionKey} />*/}
     </div>
   );
 }
