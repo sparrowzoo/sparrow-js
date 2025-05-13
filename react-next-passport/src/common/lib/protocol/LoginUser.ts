@@ -35,6 +35,10 @@ export default class LoginUser {
     if (userJson) {
       return LoginUser.parseLoginJSON(userJson);
     }
+    return LoginUser.visitor();
+  }
+
+  public static visitor() {
     const loginUser = new LoginUser();
     loginUser.userId = "visitor";
     loginUser.category = UserCategory.VISITOR;
@@ -44,7 +48,7 @@ export default class LoginUser {
     return loginUser;
   }
 
-  public static parseToken(token: string) {
+  public static localize(token: string) {
     const decodeToken = decodeURIComponent(token);
     const parts: string[] = decodeToken.split(".");
     const userInfo: string = parts[0];
