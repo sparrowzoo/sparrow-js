@@ -1,8 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import LoadingSpinner from "@/common/components/LoadingSpinner";
+import Session from "@/components/session/Session";
+import * as React from "react";
+import { Suspense } from "react";
 
-export default function Page() {
+function P1() {
   const searchParams = useSearchParams();
 
   return (
@@ -13,4 +17,10 @@ export default function Page() {
       <Link href="./p1?query=test2">TEST2</Link>
     </div>
   );
+}
+
+export default function Page() {
+  <Suspense fallback={<LoadingSpinner />}>
+    <Session />
+  </Suspense>;
 }
