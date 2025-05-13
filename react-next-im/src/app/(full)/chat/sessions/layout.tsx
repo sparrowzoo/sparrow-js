@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useContext, useEffect, useState } from "react";
-import Sessions from "@/components/session/Sessions";
+import SessionsMemo from "@/components/session/Sessions";
 import {
   Sidebar,
   SidebarContent,
@@ -46,7 +46,7 @@ export default function ChatLayout({
               >
                 会话
               </SidebarGroupLabel>
-              <Sessions triggerType={"LINK"} sessions={sessions} />
+              <SessionsMemo triggerType={"LINK"} sessions={sessions} />
             </SidebarGroup>
           </SidebarContent>
         </Sidebar>
