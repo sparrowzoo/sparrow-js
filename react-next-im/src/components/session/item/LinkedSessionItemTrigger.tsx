@@ -22,7 +22,7 @@ export default function LinkedSessionTrigger(
     messageBroker.sessionContainer.pullSession(
       ChatSession.parse(sessionItemProps.chatSession.sessionKey) as ChatSession
     );
-    //router.push(chatSession.sessionUrl);
+    router.push(chatSession.sessionUrl);
   }
 
   return (
