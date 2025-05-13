@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import LoadingSpinner from "@/common/components/LoadingSpinner";
-import Session from "@/components/session/Session";
 import * as React from "react";
 import { Suspense } from "react";
 
@@ -21,6 +20,6 @@ function P1() {
 
 export default function Page() {
   <Suspense fallback={<LoadingSpinner />}>
-    <Session />
+    <P1 />
   </Suspense>;
 }
