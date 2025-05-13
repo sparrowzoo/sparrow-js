@@ -23,7 +23,7 @@ export default function MyAvatar(props: Props) {
       )}
       <Avatar className={" w-10 h-10 rounded-full"}>
         <AvatarImage src={props.src} />
-        <AvatarFallback>{props.fallback}</AvatarFallback>
+        <AvatarFallback className={"text-sm"}>{props.fallback}</AvatarFallback>
       </Avatar>
     </>
   );
