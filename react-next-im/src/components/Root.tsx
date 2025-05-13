@@ -9,6 +9,7 @@ export default function Root({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("Root component rendered");
   return (
     <>
       <Toaster position="top-center" reverseOrder={true} />
