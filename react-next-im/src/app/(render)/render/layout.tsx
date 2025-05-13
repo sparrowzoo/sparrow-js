@@ -1,6 +1,7 @@
 import "@/app/globals.css";
 import { Metadata, Viewport } from "next";
 import * as React from "react";
+import Root from "@/app/(render)/render/Root";
 
 export const metadata: Metadata = {
   title: "sparrow zoo",
@@ -32,7 +33,9 @@ export default function RootLayout({
           "mx-auto text-left justify-center align-middle content-center w-full "
         }
       >
-        <div className="flex flex-col h-full">{children}</div>
+        <div className="flex flex-col h-full">
+          <Root>{children}</Root>
+        </div>
       </body>
     </html>
   );
