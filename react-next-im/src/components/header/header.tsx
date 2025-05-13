@@ -1,56 +1,15 @@
 "use client";
 import Link from "next/link";
-import { CircleUser, Menu, Package2, Search } from "lucide-react";
+import { Menu, Package2, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ModeToggle } from "@/components/header/mode-toggle";
-import { PASSPORT_ROOT, WWW_ROOT } from "@/common/lib/Env";
-import LoginUser from "@/common/lib/protocol/LoginUser";
-import React, { useEffect } from "react";
-import useCrosStorage from "@/common/hook/CrosStorageHook";
-import { StorageType } from "@/common/lib/protocol/CrosProtocol";
-import ChatApi from "@/api/ChatApi";
-import ThreeDotLoading from "@/common/components/ThreeDotLoading";
+import { WWW_ROOT } from "@/common/lib/Env";
+import React from "react";
+import UserProfile from "@/components/header/user-profile";
 
 export default function Header() {
-  const [loginUser, setLoginUser] = React.useState<LoginUser | null>(null);
-
-  let crosStorage = useCrosStorage();
-  useEffect(() => {
-    if (typeof window === "undefined") {
-      return;
-    }
-    if (!crosStorage) {
-      return;
-    }
-    crosStorage
-      .getToken(StorageType.AUTOMATIC, ChatApi.getVisitorToken)
-      .then((token) => {
-        if (!token) {
-          console.log("token is null");
-          setLoginUser(LoginUser.getCurrentUser());
-          return;
-        }
-        //同步token 到本域，方便后续使用getCurrentUser()
-        crosStorage?.locateToken().then((token) => {
-          console.log("token located", token);
-          setLoginUser(token as LoginUser);
-        });
-      });
-  }, [crosStorage]);
-
-  if (loginUser === null) {
-    return <ThreeDotLoading />;
-  }
-
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
       <nav className="md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 hidden md:w-full">
@@ -152,39 +111,7 @@ export default function Header() {
         <a href={"/playground"}>写文章</a>
 
         <ModeToggle />
-
-        {loginUser?.isVisitor() && (
-          <a href={`${PASSPORT_ROOT}/sign-in`}>Sign In</a>
-        )}
-
-        {!loginUser?.isVisitor() && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="secondary" size="icon" className="rounded-full">
-                <CircleUser className="h-5 w-5" />
-                <span className="sr-only">user account menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {/*<DropdownMenuLabel>My Account</DropdownMenuLabel>*/}
-              {/*<DropdownMenuSeparator />*/}
-              <DropdownMenuItem>
-                <a target={"_blank"} href={`${PASSPORT_ROOT}/avatar-editor`}>
-                  设置头像
-                </a>
-              </DropdownMenuItem>
-              {/*<DropdownMenuItem>Support</DropdownMenuItem>*/}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => {
-                  LoginUser.logout();
-                }}
-              >
-                Logout
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
+        <UserProfile />
       </div>
     </header>
   );
