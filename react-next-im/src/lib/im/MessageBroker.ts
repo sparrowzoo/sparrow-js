@@ -87,9 +87,9 @@ export default class MessageBroker {
     const message = Message.fromProtocol(protocol);
     this.putMessage(message).then(() => {
       this.sessionContainer.read(message.session);
+      this.webSocket?.sendMessage(protocol.toBytes());
+      this.newMessageSignal();
     });
-    this.webSocket?.sendMessage(protocol.toBytes());
-    this.newMessageSignal();
   }
 
   public async getMessageList(sessionKey: string) {
