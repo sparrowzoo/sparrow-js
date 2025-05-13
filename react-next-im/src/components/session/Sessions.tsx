@@ -11,6 +11,7 @@ interface SessionsProps {
 }
 
 export default function Sessions(props: SessionsProps) {
+  console.log("Sessions render ....", props);
   if (!props.sessions) {
     return <ThreeDotLoading />;
   }
