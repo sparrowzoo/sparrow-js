@@ -7,7 +7,7 @@ import BaseTrigger from "@/components/session/item/BaseTrigger";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import { Button } from "@/components/ui/button";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/common/i18n/navigation";
 
 export default function LinkedSessionTrigger(
   sessionItemProps: SessionItemProps

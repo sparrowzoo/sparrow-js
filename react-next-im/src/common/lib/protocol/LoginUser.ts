@@ -1,7 +1,6 @@
 import { USER_INFO_KEY } from "@/common/lib/Env";
 import UserCategory from "@/common/lib/UserCategory";
 import CrosStorage from "@/common/lib/CrosStorage";
-import { redirectToLogin } from "@/common/lib/Navigating";
 import toast from "react-hot-toast";
 
 export default class LoginUser {
@@ -16,12 +15,12 @@ export default class LoginUser {
   public expireAt: number;
   public extensions: Map<string, any>;
 
-  public static logout() {
+  public static logout(redirectToLogin: () => void, message) {
     CrosStorage.getCrosStorage()
       .removeToken()
       .then(() => {
         sessionStorage.removeItem(USER_INFO_KEY);
-        toast.success("您已退出登录!");
+        toast.success(message);
         redirectToLogin();
       });
   }
@@ -31,7 +30,7 @@ export default class LoginUser {
       console.error("This component should not render on server");
       return null;
     }
-    let userJson = sessionStorage.getItem(USER_INFO_KEY);
+    const userJson = sessionStorage.getItem(USER_INFO_KEY);
     if (userJson) {
       return LoginUser.parseLoginJSON(userJson);
     }

@@ -11,8 +11,10 @@ import HistoryMessageWrap from "@/lib/protocol/HistoryMessageWrap";
 import SearchResult from "@/components/session/search/SearchResultt";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import useReachBottom from "@/common/hook/ReachBottomHook";
+import { useTranslations } from "next-intl";
 
 export default function MessageSearchBar() {
+  const t = useTranslations("message-search");
   const [sessionKey, setSessionKey] = useState("");
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -7),
@@ -84,7 +86,7 @@ export default function MessageSearchBar() {
         <Input
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          placeholder={"content"}
+          placeholder={t("content")}
         />
 
         <Button
@@ -107,7 +109,9 @@ export default function MessageSearchBar() {
         />
         {loading && <ThreeDotLoading />}
         {lastId == -1 && (
-          <div className={"text-center text-gray-500 mt-4"}>没有更多消息了</div>
+          <div className={"text-center text-gray-500 mt-4"}>
+            {t("no-more-message")}
+          </div>
         )}
       </div>
     </div>

@@ -20,7 +20,7 @@ export default class MessageBroker {
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
 
-  constructor(crosStorage: CrosStorage) {
+  constructor(crosStorage: CrosStorage, redirectLogin: () => void) {
     this.crosStorage = crosStorage;
     this.contactContainer = new ContactContainer(this.crosStorage);
     this.sessionContainer = new SessionContainer(
@@ -33,6 +33,7 @@ export default class MessageBroker {
     );
     sparrowWebSocket.connect();
     this.webSocket = sparrowWebSocket;
+    sparrowWebSocket.redirectLogin = redirectLogin;
     this.webSocket.onMsgCallback = (buf: ArrayBuffer) => {
       this.websocketMsgCallback(buf);
     };

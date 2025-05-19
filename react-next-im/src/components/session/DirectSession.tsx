@@ -1,9 +1,11 @@
 import * as React from "react";
-import Link from "next/link";
-import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { Link } from "@/common/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function DirectSession(sessionProp: { sessionKey: string }) {
-  const sessionUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${sessionProp.sessionKey}`;
+  const t = useTranslations("ButtonText");
+
+  const sessionUrl: any = `/chat/sessions/session?sessionKey=${sessionProp.sessionKey}`;
   return (
     <div className={"flex flex-row items-center justify-center mt-4"}>
       <Link
@@ -12,7 +14,7 @@ export default function DirectSession(sessionProp: { sessionKey: string }) {
         }
         href={sessionUrl}
       >
-        发消息
+        {t("send")}
       </Link>
     </div>
   );
