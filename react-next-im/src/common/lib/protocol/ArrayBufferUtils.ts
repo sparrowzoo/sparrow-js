@@ -1,6 +1,6 @@
 export default class ArrayBufferUtils {
   static bytes2ArrayBuffer(bytes: number[]): Uint8Array {
-    let array = new Uint8Array(bytes.length);
+    const array = new Uint8Array(bytes.length);
     for (let i = 0; i < array.length; i++) {
       array[i] = bytes[i];
     }
@@ -9,7 +9,7 @@ export default class ArrayBufferUtils {
 
   static str2Buffer(str: string): Uint8Array {
     if (typeof TextEncoder === "undefined") {
-      let bytes: number[] = [];
+      const bytes: number[] = [];
       let c;
       for (let i = 0; i < str.length; i++) {
         c = str.charCodeAt(i);
@@ -38,8 +38,8 @@ export default class ArrayBufferUtils {
   static number2Buffer(num: number): Uint8Array {
     length = 4;
     //只支持32位以下数字，32位以上会有精度问题
-    var bytes: number[] = [];
-    var i = length;
+    const bytes: number[] = [];
+    let i = length;
     do {
       //console.log(number.toString(2));
       bytes[--i] = num & 255;

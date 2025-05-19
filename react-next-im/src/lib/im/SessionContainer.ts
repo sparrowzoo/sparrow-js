@@ -250,7 +250,7 @@ export default class SessionContainer {
       return;
     }
     const group = this.contactContainer.getGroupDetail(session?.id as string);
-    session.name = group?.qunName + "群";
+    session.name = group?.qunName as string;
     session.avatarUrl = format(AVATAR_URL, group?.qunId);
   }
 

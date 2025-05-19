@@ -1,14 +1,15 @@
-"use client";
 import * as React from "react";
 import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "@/components/header/theme-provider";
-import Header from "@/components/header/header";
+import Header from "@/common/components/header/header";
+import { ThemeProvider } from "@/common/components/header/theme-provider";
 
-export default function Root({
+export default async function Root({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("Root component rendered");
+
   return (
     <>
       <Toaster position="top-center" reverseOrder={true} />
@@ -18,7 +19,7 @@ export default function Root({
         enableSystem
         disableTransitionOnChange
       >
-        <Header />
+        <Header showProfile={true} />
         {children}
       </ThemeProvider>
     </>

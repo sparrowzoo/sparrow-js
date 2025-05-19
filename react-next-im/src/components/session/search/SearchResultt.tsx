@@ -1,6 +1,7 @@
 import React from "react";
 import HistoryMessageWrap from "@/lib/protocol/HistoryMessageWrap";
 import HistoryMessageItem from "@/components/session/search/HistoryMessageItem";
+import { useTranslations } from "next-intl";
 
 interface SearchResultProps {
   messageWrap: HistoryMessageWrap;
@@ -8,9 +9,11 @@ interface SearchResultProps {
 }
 
 export default function SearchResult(searchResultProps: SearchResultProps) {
+  const t = useTranslations("message-search");
+
   const { messageWrap, handleSearch } = searchResultProps;
   if (!messageWrap || messageWrap.historyMessages.length === 0) {
-    return <div>No results found</div>;
+    return <></>;
   }
   return (
     <div className={"w-full"}>

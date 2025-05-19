@@ -20,12 +20,21 @@ import {
 } from "lucide-react";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
+import { useTranslations } from "next-intl";
+import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
+import useNavigating from "@/common/hook/NavigatingHook";
+import toast from "react-hot-toast";
 
-export default function Chat({
+export default function ChatLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log("Chat layout render ....");
+  const { redirectToLogin } = useNavigating();
+  const t = useTranslations("Navigation");
+  const authTranslator = useTranslations("Auth");
+
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
   const [currentUser, setCurrentUser] = useState<LoginUser>();
@@ -36,16 +45,29 @@ export default function Chat({
     }
 
     crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
-      const messageBroker = new MessageBroker(crosStorage);
-      const localContext = WebSocketContextValue.create(messageBroker);
-      messageBroker.newMessageSignal = () => {
-        console.log("sessionKey new Message Signal");
-        setWebSocketContextValue(localContext?.newReference());
-      };
-      messageBroker.webSocket.handshakeSuccess = (loginUser: LoginUser) => {
-        setCurrentUser(loginUser);
-      };
-      setWebSocketContextValue(localContext);
+      if (!token) {
+        toast.error(authTranslator("token-not-found"));
+        redirectToLogin();
+        return;
+      }
+      crosStorage?.locateToken(token).then((loginUser) => {
+        if (loginUser?.isVisitor()) {
+          toast.error(authTranslator("token-is-visitor"));
+          redirectToLogin();
+          return;
+        }
+        SparrowWebSocket.translate = authTranslator;
+        const messageBroker = new MessageBroker(crosStorage, redirectToLogin);
+        const localContext = WebSocketContextValue.create(messageBroker);
+        messageBroker.newMessageSignal = () => {
+          console.log("sessionKey new Message Signal");
+          setWebSocketContextValue(localContext?.newReference());
+        };
+        messageBroker.webSocket.handshakeSuccess = (loginUser: LoginUser) => {
+          setCurrentUser(loginUser);
+        };
+        setWebSocketContextValue(localContext);
+      });
     });
     return () => {
       crosStorage?.destroy();
@@ -57,12 +79,12 @@ export default function Chat({
     return <ThreeDotLoading />;
   }
   const avatarUrl = format(AVATAR_URL, currentUser?.userId);
-  const userHome = "chat/friends/contact?friendId=" + currentUser?.userId;
+  const userHome = "/chat/friends/contact?friendId=" + currentUser?.userId;
   return (
     <div className="flex flex-col h-[calc(100vh-80px)]">
       <div className="flex flex-row flex-1 min-h-0 h-full w-full">
         <div className=" w-[4rem] flex flex-col  gap-4 p-2">
-          <IconMenu title={"我的"} url={userHome}>
+          <IconMenu title={t("my")} url={userHome}>
             {(className) => (
               <Image
                 alt={"avatar"}
@@ -73,14 +95,14 @@ export default function Chat({
               />
             )}
           </IconMenu>
-          <IconMenu title={"联系人"} url={"chat/friends"}>
+          <IconMenu title={t("contact")} url={"/chat/friends"}>
             {(className) => <CircleUserRound className={className} />}
           </IconMenu>
-          <IconMenu title={"消息"} url={"chat/sessions/session"}>
+          <IconMenu title={t("session")} url={"/chat/sessions/session"}>
             {(className) => <MessageCircleCode className={className} />}
           </IconMenu>
 
-          <IconMenu title={"消息管理"} url={"chat/message-search"}>
+          <IconMenu title={t("message-manage")} url={"/chat/message-search"}>
             {(className) => <SquareLibrary className={className} />}
           </IconMenu>
         </div>

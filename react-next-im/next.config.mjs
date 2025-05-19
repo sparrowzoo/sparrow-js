@@ -1,3 +1,5 @@
+import createNextIntlPlugin from "next-intl/plugin";
+
 /** @type {import("next").NextConfig} */
 const nextConfig = {
     // async redirects() {
@@ -39,4 +41,15 @@ const nextConfig = {
         return config;
     }
 };
-export default nextConfig;
+//const withNextIntl = createNextIntlPlugin('./src/common/i18n/request.ts');
+
+const withNextIntl = createNextIntlPlugin({
+    requestConfig: './src/common/i18n/request.ts',
+    experimental: {
+        createMessagesDeclaration: './messages/en.json'
+    }
+});
+export default withNextIntl(nextConfig);
+// export default nextConfig;
+
+

@@ -1,3 +1,5 @@
+import createNextIntlPlugin from "next-intl/plugin";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     assetPrefix: process.env.NEXT_ASSET_PREFIX,
@@ -27,4 +29,10 @@ const nextConfig = {
         return config
     },
 };
-export default nextConfig;
+const withNextIntl = createNextIntlPlugin({
+    requestConfig: './src/common/i18n/request.ts',
+    experimental: {
+        createMessagesDeclaration: './messages/en.json'
+    }
+});
+export default withNextIntl(nextConfig);

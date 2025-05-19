@@ -2,16 +2,22 @@ import React from "react";
 import { FileUp, Send } from "lucide-react";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
-import FileUploader from "@/components/file/FileUploader";
-import { getDownloadShower, insertElement } from "@/components/file/FileUtils";
+import FileUploader from "@/common/components/file/FileUploader";
+import {
+  getDownloadShower,
+  insertElement,
+} from "@/common/components/file/FileUtils";
 import { UPLOAD_URL } from "@/common/lib/Env";
 import { Utils } from "@/common/lib/Utils";
+import { useTranslations } from "next-intl";
 
 interface SenderProps {
   sendMessage: (message: string) => void;
 }
 
 export default function MessageEditor(senderProps: SenderProps) {
+  const t = useTranslations("ButtonText");
+
   const { sendMessage } = senderProps;
   const editorRef = React.createRef<HTMLDivElement>();
   const uploadUrl = `${UPLOAD_URL}`;
@@ -92,7 +98,7 @@ export default function MessageEditor(senderProps: SenderProps) {
           className={"cursor-pointer"}
           onClick={(event) => localSendMessage()}
         >
-          发送
+          {t("send")}
           <Send />
         </Button>
       </div>
