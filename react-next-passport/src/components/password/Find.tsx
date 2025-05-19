@@ -17,32 +17,36 @@ import * as React from "react";
 import PasswordApi from "@/api/password";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 export default function FindPassword() {
+  const t = useTranslations("Passport.find-password");
   const [email, setEmail] = React.useState("");
   const [sending, setSending] = React.useState(false);
 
   function findPasswordHandler(event: React.FormEvent<HTMLButtonElement>) {
     event.preventDefault();
     if (!email) {
-      toast.error("请输入注册的邮箱地址");
+      toast.error(t("input-email-to-find-password"));
       return;
     }
     setSending(true);
-    PasswordApi.findPassword(email)?.finally(() => setSending(false));
+    PasswordApi.findPassword(email, t)?.finally(() => setSending(false));
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Link href="#" className="ml-auto inline-block text-sm underline">
-          Forgot your password?
+          {t("forgot-password")}
         </Link>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>找回密码</DialogTitle>
-          <DialogDescription>请输入您注册的邮箱地址</DialogDescription>
+          <DialogTitle>{t("find-password")}</DialogTitle>
+          <DialogDescription>
+            {t("input-email-to-find-password")}
+          </DialogDescription>
         </DialogHeader>
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
@@ -58,14 +62,14 @@ export default function FindPassword() {
             size="sm"
             className="px-3"
           >
-            <span className="sr-only">发送邮件</span>
+            <span className="sr-only">{t("send-find-password-email")}</span>
             {sending ? <ThreeDotLoading /> : <SendIcon />}
           </Button>
         </div>
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
             <Button type="button" variant="secondary">
-              Close
+              {t("close")}
             </Button>
           </DialogClose>
         </DialogFooter>

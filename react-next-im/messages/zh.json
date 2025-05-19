@@ -1,0 +1,64 @@
+{
+  "LocaleLayout": {
+    "title": "麻雀窝"
+  },
+  "LocaleSwitcher": {
+    "label": "切换至中文",
+    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unbekannt}}"
+  },
+  "Header": {
+    "index": "首页",
+    "blog": "博客",
+    "im": "IM",
+    "client-server": "客服",
+    "shop": "商城",
+    "playground": "写文章",
+    "theme-toggle": "切换皮肤",
+    "light-mode": "亮色",
+    "dark-mode": "暗黑",
+    "system-mode": "系统",
+    "avatar-setting": "头像设置",
+    "logout": "登出",
+    "sign-in": "登录",
+    "sign-up": "注册",
+    "logout-success": "您已退出登录!"
+  },
+  "Navigation": {
+    "contact": "联系人",
+    "session": "会话",
+    "message-manage": "消息管理",
+    "my": "我的"
+  },
+  "Contact": {
+    "new-friends": "新好友",
+    "my-friends": "我的好友",
+    "my-groups": "我的群组"
+  },
+  "Auth": {
+    "token-not-found": "无访问权限，请先登录哟",
+    "token-is-visitor": "游客无访问权限，请先登录哟",
+    "shake-hands-no-login": "握手失败，请先登录哟，回来志哥陪你砍JAVA！",
+    "user_token_abnormal": "请先登录哟，回来志哥陪你砍JAVA！"
+  },
+  "ButtonText": {
+    "send": "发送",
+    "apply-join-group": "申请加入"
+  },
+  "message-search": {
+    "content": "聊天内容",
+    "session-placeholder": "请选择会话",
+    "user-id": "用户ID",
+    "user-name": "用户名",
+    "user-nickname": "用户昵称",
+    "no-session-matched": "未找到匹配的会话",
+    "select-session-title": "选择会话",
+    "nick-name": "昵称",
+    "session": "会话",
+    "at": " 在 ",
+    "no-more-message": "没有更多消息了",
+    "to": " 对 ",
+    "in-group": " 在群里 ",
+    "say": " 说 ",
+    "only-see": " 点击这里只看 "
+  }
+}

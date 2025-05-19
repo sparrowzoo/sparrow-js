@@ -1,0 +1,64 @@
+{
+  "LocaleLayout": {
+    "title": "sparrow zoo"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language to \uD83C\uDDFA\uD83C\uDDF8 English",
+    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unknown}}"
+  },
+  "Header": {
+    "index": "Home",
+    "blog": "Blog",
+    "im": "IM",
+    "client-server": "Client Server",
+    "shop": "Shop",
+    "playground": "Write Blog",
+    "theme-toggle": "Toggle Theme",
+    "light-mode": "Light Mode",
+    "dark-mode": "Dark Mode",
+    "system-mode": "System Mode",
+    "avatar-setting": "Avatar Setting",
+    "logout": "Logout",
+    "sign-in": "Sign In",
+    "sign-up": "Sign Up",
+    "logout-success": "Logout success"
+  },
+  "Navigation": {
+    "contact": "Contact",
+    "session": "Session",
+    "message-manage": "Message Manage",
+    "my": "My"
+  },
+  "Contact": {
+    "new-friends": "New Friends",
+    "my-friends": "My Friends",
+    "my-groups": "My Groups"
+  },
+  "Auth": {
+    "token-not-found": "token not found, please sign in",
+    "token-is-visitor": "token is visitor, please sign in again",
+    "shake-hands-no-login": "websocket connection failed, please sign in again",
+    "user_token_abnormal": "user token abnormal！"
+  },
+  "ButtonText": {
+    "send": "Send",
+    "apply-join-group": "Join Group"
+  },
+  "message-search": {
+    "content": "message content",
+    "session-placeholder": "Select Session",
+    "user-id": "user id",
+    "user-name": "user name",
+    "user-nickname": "user nickname",
+    "no-session-matched": "No session matched",
+    "select-session-title": "Select Session",
+    "nick-name": "Nickname",
+    "session": "conversation",
+    "at": " At ",
+    "no-more-message": "No more message",
+    "to": " To ",
+    "in-group": " In group ",
+    "say": " Said ",
+    "only-see": " Click here to see only "
+  }
+}

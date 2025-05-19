@@ -18,8 +18,10 @@ import LoginUser from "@/common/lib/protocol/LoginUser";
 import TabSessions from "@/components/session/TabSessions";
 import ChatUser from "@/lib/protocol/ChatUser";
 import PopSearchTrigger from "@/components/session/search/PopSearchTrigger";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 export default function GroupedTalk() {
+  const { redirectToLogin } = useNavigating();
   const [isOpen, setIsOpen] = React.useState(false);
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
@@ -34,7 +36,7 @@ export default function GroupedTalk() {
     //token 个人信息本地化
     crosStorage?.locateToken().then((loginUser: LoginUser) => {
       console.log("token", JSON.stringify(loginUser));
-      const messageBroker = new MessageBroker(crosStorage);
+      const messageBroker = new MessageBroker(crosStorage, redirectToLogin);
       const localContext = WebSocketContextValue.create(messageBroker);
       messageBroker.newMessageSignal = () => {
         setWebSocketContextValue(localContext?.newReference());

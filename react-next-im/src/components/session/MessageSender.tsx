@@ -36,8 +36,8 @@ export default function MessageSender(messageSenderProps: MessageSenderProps) {
     );
     //https://react.docschina.org/learn/queueing-a-series-of-state-updates
     // setMessageList((messageList) => [...messageList, new Message(protocol)]);
-    setMessageList(messageList);
-    setLocalMessageNo(sparrowWebSocket.txid);
+    //setMessageList(messageList);
+    //setLocalMessageNo(sparrowWebSocket.txid);
   }
 
   useEffect(() => {

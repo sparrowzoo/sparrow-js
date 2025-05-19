@@ -7,6 +7,7 @@ import CrosStorage from "@/common/lib/CrosStorage";
 export default class Fetcher {
   static async get(
     url: string,
+    translate: (key: string) => string,
     crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
@@ -32,7 +33,7 @@ export default class Fetcher {
         .then(async (response) => {
           const result = (await response.json()) as any;
           if (result.code != "0") {
-            toast.error(result?.message);
+            toast.error(translate(result.key));
             if (reject) {
               reject(result);
             }
@@ -54,6 +55,7 @@ export default class Fetcher {
   static async post(
     url: string,
     body: any,
+    translate: (key: string) => string,
     crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
@@ -82,7 +84,7 @@ export default class Fetcher {
         .then(async (response) => {
           const result = (await response.json()) as any;
           if (result.code != "0") {
-            toast.error(result?.message);
+            toast.error(translate(result.key));
             if (reject) {
               reject(result);
             }

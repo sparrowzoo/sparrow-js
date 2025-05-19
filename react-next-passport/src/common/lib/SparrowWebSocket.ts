@@ -3,13 +3,14 @@ import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import Result from "@/common/lib/protocol/Result";
 import { USER_INFO_KEY } from "@/common/lib/Env";
 import LoginUser from "@/common/lib/protocol/LoginUser";
-import { redirectToLogin } from "@/common/lib/Navigating";
 import toast from "react-hot-toast";
 
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
   public static INACTIVE_STATUS = "inactive";
   public static CONNECTING_STATUS = "connecting";
+  public static translate: (i18nKey: string) => string;
+
   //窗口的焦点状态，active 状态则可以执行重连，否则继续重试，直到获取窗口焦点
   private static activeStatus: string = SparrowWebSocket.INACTIVE_STATUS;
   //心跳状态 inactive 未探测到心跳，active 心跳正常
@@ -21,6 +22,7 @@ class SparrowWebSocket {
   public onMsgCallback: (data: ArrayBufferLike) => void;
   public handshakeSuccess: (loginUser: LoginUser) => void;
   public handshakeFail: (data: Result) => void;
+  public redirectLogin: () => void;
   public offlineCallback: (data: { offline: boolean }) => void;
   public monitorStatus: () => [];
   public monitorStatusCallback: (data: []) => void;
@@ -61,8 +63,8 @@ class SparrowWebSocket {
         if (this.handshakeFail) {
           this.handshakeFail(data);
         } else {
-          toast.error("没登录呢，回去登录哈！回来志哥等你！");
-          redirectToLogin();
+          toast.error(SparrowWebSocket.translate(data.key));
+          this.redirectLogin();
         }
       });
     }
@@ -116,8 +118,8 @@ class SparrowWebSocket {
         this.initWindowsFocusEvent();
         this.crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
           if (!token) {
-            toast.error("没登录呢，回去登录哈！回来志哥等你！");
-            redirectToLogin();
+            toast.error(SparrowWebSocket.translate("shake-hands-no-login"));
+            this.redirectLogin();
             return;
           }
           this.ws = new WebSocket(this.url, [token as string]);
@@ -159,7 +161,7 @@ class SparrowWebSocket {
   public onError() {
     this.ws.onerror = (e) => {
       // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
-      console.log("连接出错");
+      console.log("连接出错", e);
       SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
       this.reconnectWebSocket();
     };
@@ -171,7 +173,7 @@ class SparrowWebSocket {
     this.stopHeartBeat();
     this.lastHeartTime = new Date().getTime();
     this.heartTimer = setInterval(() => {
-      var heartDiff = new Date().getTime() - this.lastHeartTime;
+      const heartDiff = new Date().getTime() - this.lastHeartTime;
       // 如果超过两个周期未拿到心跳，说明超时
       if (heartDiff > this.heartTimeout) {
         console.log("超时重连 heart diff {}", heartDiff);
@@ -266,7 +268,7 @@ class SparrowWebSocket {
           }
           return;
         }
-        var result = JSON.parse(e.data);
+        const result = JSON.parse(e.data);
         if (result.instruction == "STATUS") {
           const contactsStatus = result.data;
           if (this.monitorStatusCallback) {
