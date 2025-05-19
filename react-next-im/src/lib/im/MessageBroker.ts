@@ -20,7 +20,7 @@ export default class MessageBroker {
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
 
-  constructor(crosStorage: CrosStorage) {
+  constructor(crosStorage: CrosStorage, redirectLogin: () => void) {
     this.crosStorage = crosStorage;
     this.contactContainer = new ContactContainer(this.crosStorage);
     this.sessionContainer = new SessionContainer(
@@ -33,6 +33,7 @@ export default class MessageBroker {
     );
     sparrowWebSocket.connect();
     this.webSocket = sparrowWebSocket;
+    sparrowWebSocket.redirectLogin = redirectLogin;
     this.webSocket.onMsgCallback = (buf: ArrayBuffer) => {
       this.websocketMsgCallback(buf);
     };
@@ -87,16 +88,12 @@ export default class MessageBroker {
     const message = Message.fromProtocol(protocol);
     this.putMessage(message).then(() => {
       this.sessionContainer.read(message.session);
+      this.webSocket?.sendMessage(protocol.toBytes());
+      this.newMessageSignal();
     });
-    this.webSocket?.sendMessage(protocol.toBytes());
-    this.newMessageSignal();
   }
 
   public async getMessageList(sessionKey: string) {
-    console.log("getMessageList", sessionKey);
-    this.sessionContainer.pullSession(
-      ChatSession.parse(sessionKey) as ChatSession
-    );
     let messageList = this.messageMap.get(sessionKey);
     if (messageList != null) {
       return this.wrapMessages(messageList);

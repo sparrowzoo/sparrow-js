@@ -14,16 +14,13 @@ function loadjQuery(callback) {
 
 // 加载 jQuery 并初始化功能
 loadjQuery(function () {
-  var root = "./";
-
-  function loadHTML(url, containerId) {
+  function loadHTML(url, containerId, params) {
     let container = $(`#${containerId}`);
     if (container.length <= 0) {
       container = $("<div>");
       container.attr("id", containerId);
       document.body.appendChild(container[0]);
     }
-    var params = new URL(document.location).searchParams;
     var right = params.get("r");
     var bottom = params.get("b");
     if (!right) {
@@ -80,8 +77,9 @@ loadjQuery(function () {
   }
 
   $(document).ready(() => {
-    var params = new URL(document.location).searchParams;
-    var htmlUrl = root + params.get("html");
-    loadHTML(htmlUrl, "content-container");
+    var src = document.getElementById("talk-script").src;
+    var params = new URL(src).searchParams;
+    var htmlUrl = params.get("html");
+    loadHTML(htmlUrl, "content-container", params);
   });
 });

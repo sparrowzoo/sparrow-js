@@ -1,0 +1,68 @@
+{
+  "LocaleLayout": {
+    "title": "麻雀窝"
+  },
+  "LocaleSwitcher": {
+    "label": "切换至中文",
+    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unbekannt}}"
+  },
+  "Header": {
+    "index": "首页",
+    "blog": "博客",
+    "im": "IM",
+    "client-server": "客服",
+    "shop": "商城",
+    "playground": "写文章",
+    "theme-toggle": "切换皮肤",
+    "light-mode": "亮色",
+    "dark-mode": "暗黑",
+    "system-mode": "系统",
+    "avatar-setting": "头像设置",
+    "logout": "登出",
+    "sign-in": "登录",
+    "sign-up": "注册"
+  },
+  "Passport": {
+    "sign-in": {
+      "sign-in": "登录",
+      "username": "用户名/邮箱",
+      "user_password_error": "密码错误",
+      "user_name_not_exist": "帐号不存在",
+      "sign-in-title": "登录",
+      "sign-in-title2": "帐号、邮箱登录",
+      "sign-in-success": "登录成功 !",
+      "to-sign-up": "还未注册?",
+      "sign-up": "注册",
+      "sign-in-with-wechat": "微信登录",
+      "remember-me": "记住我",
+      "password": "密码",
+      "captcha": "验证码"
+    },
+    "find-password": {
+      "forgot-password": "忘记密码?",
+      "input-email-to-find-password": "请输入您注册的email",
+      "find-password": "找回密码",
+      "send-find-password-email": "发送",
+      "close": "关闭",
+      "global_validate_code_error": "验证码输入错误",
+      "system_server_error": "系统异常,请稍后重试!"
+    },
+    "sign-up": {
+      "sign-up": "注册",
+      "sign-up-success": "恭喜，注册成功 !",
+      "sign-up-title": "注册",
+      "email": "email",
+      "username": "用户名",
+      "password-confirm": "确认密码",
+      "continue-with": "Or continue with",
+      "to-sign-in": "已有帐号? ",
+      "sign-in": "登录",
+      "user_email_exist": "邮箱已被占用",
+      "user_name_exist": "用户名被占用",
+      "global_validate_code_error": "验放码错误，检查后重试",
+      "system_server_error": "系统错误，请稍后重试",
+      "password": "密码",
+      "captcha": "验证码"
+    }
+  }
+}

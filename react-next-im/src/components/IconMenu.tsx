@@ -1,13 +1,12 @@
 "use client";
-import Link from "next/link";
-import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Link } from "@/common/i18n/navigation";
 
 interface IconMenuProps {
   children: (className: any) => React.ReactNode;
   title: string;
-  url: string;
+  url: any;
   className?: string;
 }
 
@@ -25,7 +24,7 @@ export default function IconMenu(props: IconMenuProps) {
           "focus:text-foreground text-gray-500 active:text-foreground   hover:text-foreground"
         )}
         title={props.title}
-        href={`${NEXT_ASSET_PREFIX}/${props.url}`}
+        href={props.url}
       >
         {props.children("w-[2rem] h-[2rem]")}
       </Link>

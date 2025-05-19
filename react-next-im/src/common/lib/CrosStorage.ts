@@ -5,12 +5,7 @@ import {
   StorageResponse,
   StorageType,
 } from "@/common/lib/protocol/CrosProtocol";
-import {
-  STORAGE_PROXY,
-  TOKEN_KEY,
-  TOKEN_STORAGE,
-  USER_INFO_KEY,
-} from "@/common/lib/Env";
+import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
 import { Utils } from "@/common/lib/Utils";
 import UrlUtils from "@/common/lib/UrlUtils";
 import { redirectToLogin } from "@/common/lib/Navigating";
@@ -143,27 +138,26 @@ export default class CrosStorage {
   }
 
   //用户基本信息本地化
-  public async locateToken() {
+  public async locateToken(token = null) {
+    if (token) {
+      return LoginUser.localize(token);
+    }
     //如果不是cros环境，则不进行本地化
     if (!this.cros) {
       return null;
     }
-    const locationUser = sessionStorage.getItem(USER_INFO_KEY);
-    if (locationUser) {
-      return LoginUser.getCurrentUser();
-    }
+    //这里可能存在之前本地化的token
+    // const locationUser = sessionStorage.getItem(USER_INFO_KEY);
+    // if (locationUser) {
+    //   console.log("location user exist ", locationUser);
+    //   return LoginUser.parseLoginJSON(locationUser);
+    // }
     return await this.getToken().then((token) => {
+      console.log("get cros token ", token);
       if (token) {
-        const decodeToken = decodeURIComponent(token);
-        const parts: string[] = decodeToken.split(".");
-        const userInfo: string = parts[0];
-        if (!userInfo) {
-          return null;
-        }
-        const userJson = atob(userInfo);
-        sessionStorage.setItem(USER_INFO_KEY, userJson);
-        return LoginUser.getCurrentUser();
+        return LoginUser.localize(token);
       }
+      return LoginUser.visitor();
     });
   }
 
