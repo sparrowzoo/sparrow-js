@@ -16,6 +16,7 @@ interface DialogProps {
 
 export default function PopSessionItemTrigger(dialogProps: DialogProps) {
   const { session } = dialogProps;
+  // const [open, setOpen] = useState(false);
   return (
     <Popover>
       <PopoverTrigger className={"w-full flex flex-row gap-4"}>

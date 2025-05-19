@@ -1,8 +1,8 @@
-import Link from "next/link";
 import MyAvatar from "@/components/MyAvatar";
 import * as React from "react";
 import ItemProps from "@/lib/protocol/ItemProps";
 import { cn } from "@/lib/utils";
+import { Link } from "@/common/i18n/navigation";
 
 export default function CommonItem(itemProps: ItemProps) {
   return (
