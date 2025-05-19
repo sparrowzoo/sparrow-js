@@ -1,7 +1,7 @@
 import { ChatType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { format } from "util";
-import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { AVATAR_URL } from "@/common/lib/Env";
 import Message from "@/lib/protocol/Message";
 import { Position } from "@/lib/protocol/ItemProps";
 
@@ -21,9 +21,9 @@ export default class ChatSession {
   public isPulled: boolean = false;
   private _sessionUrl: string;
 
-  get sessionUrl(): string {
+  get sessionUrl(): any {
     if (this._sessionUrl == null) {
-      this._sessionUrl = `${NEXT_ASSET_PREFIX}/chat/sessions/session?sessionKey=${this.sessionKey}`;
+      this._sessionUrl = `/chat/sessions/session?sessionKey=${this.sessionKey}`;
     }
     return this._sessionUrl;
   }

@@ -3,6 +3,7 @@ import { Key } from "react";
 import Message from "@/lib/protocol/Message";
 import MyAvatar from "@/components/MyAvatar";
 import HistoryMessageWrap from "@/lib/protocol/HistoryMessageWrap";
+import { useTranslations } from "next-intl";
 
 interface Props {
   message: Message;
@@ -14,6 +15,8 @@ interface Props {
 }
 
 export default function HistoryMessageItem(props: Props) {
+  const t = useTranslations("message-search");
+
   const { sender, content, receiver } = props.message;
   const senderDetail = props.messageWrap.userMap.get(sender.id);
   const receiverDetail = props.messageWrap.userMap.get(receiver?.id);
@@ -34,33 +37,36 @@ export default function HistoryMessageItem(props: Props) {
             " flex flex-row text-xs dark:text-gray-300 light:text-gray-900"
           }
         >
-          {senderDetail?.userName} 于{props.message.sendTime as string}
+          {senderDetail?.userName} {t("at")}
+          {props.message.sendTime as string}
           {props.message.session.isGroup() && (
             <>
-              在
+              {t("in-group")}【
               {
                 props.messageWrap.qunMaps[props.message.session.sessionKey]
                   ?.qunName
               }
-              群里说:
+              】{t("say")}
             </>
           )}
           {!props.message.session.isGroup() && (
-            <>对{receiverDetail?.userName}说：</>
+            <>
+              {t("to")} {receiverDetail?.userName} {t("say")}
+            </>
           )}
           <span
             onClick={() => {
               props.handleSearch(props.message.session.sessionKey, 0);
             }}
-            className={"cursor-pointer"}
+            className={"cursor-pointer pl-2"}
           >
-            点击只看【{props.message.session.sessionKey}】的会话
+            {t("only-see")}【{props.message.session.sessionKey}】{t("session")}
           </span>
         </span>
         <p
           dangerouslySetInnerHTML={{ __html: content }}
           className={
-            "p-2 text-xs rounded-lg dark:text-background light:text-gray-900  bg-gray-100"
+            "p-2 text-xs rounded-lg dark:text-foreground light:text-gray-900"
           }
         ></p>
       </div>

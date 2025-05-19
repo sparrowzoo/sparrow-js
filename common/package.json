@@ -1,33 +1,45 @@
 {
-  "name": "sparrow-common",
-  "version": "0.1.1",
-  "license": "Apache-2.0",
+  "name": "common",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "copy": "https://github.com/sindresorhus/cpy-cli"
+    "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.13",
+    "@radix-ui/react-dropdown-menu": "^2.1.14",
+    "@radix-ui/react-slot": "^1.2.2",
+    "axios": "^1.9.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "data-fns": "^1.1.0",
     "date-fns": "^4.1.0",
-    "motion": "^12.6.3",
-    "motion-plus": "^0.1.6",
-    "next": "^15.2.4",
-    "react": "^18",
-    "react-dom": "^18",
-    "react-hot-toast": "^2.4.1",
+    "lucide-react": "^0.511.0",
+    "motion-plus": "^0.1.9",
+    "next": "15.3.2",
+    "next-intl": "^4.1.0",
+    "next-themes": "^0.4.6",
+    "postcss": "^8.5.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.5.2",
     "react-loader-spinner": "^6.1.6",
-    "swr": "^2.3.3"
+    "swr": "^2.3.3",
+    "tailwind-merge": "^3.3.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4.1.7",
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "eslint": "^8",
-    "eslint-config-next": "14.1.0",
-    "tailwindcss": "^3.3.0",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.2",
+    "tailwindcss": "^4.1.7",
+    "tw-animate-css": "^1.3.0",
     "typescript": "^5"
   }
 }

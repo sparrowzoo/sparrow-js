@@ -13,16 +13,18 @@ import { ErrorMessage } from "@hookform/error-message";
 import signUp from "@/api/signup";
 import toast, { Toaster } from "react-hot-toast";
 import useCaptcha from "@/common/hook/CaptchaHook";
-import useCrosStorage from "@/common/hook/CrosStorageHook";
 import Result from "@/common/lib/protocol/Result";
-import FindPassword from "@/components/password/Find";
+import { Link } from "@/common/i18n/navigation";
+import { useTranslations } from "next-intl";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function AuthForm({ className, ...props }: UserAuthFormProps) {
+  const t = useTranslations("Passport.sign-up");
+  const { redirectToLogin } = useNavigating();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const captchaRef = useCaptcha();
-  let crosStorage = useCrosStorage();
   const {
     register,
     handleSubmit,
@@ -41,14 +43,12 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
     event: React.BaseSyntheticEvent | undefined
   ) => {
     setIsLoading(true);
-    signUp(data)
+    signUp(data, t)
       .then((result: Result) => {
-        crosStorage?.setToken(result.data.token);
         setIsLoading(false);
-        toast.success("恭喜！注册成功，欢迎来到sparrow zoo ,志哥欢迎您！！！");
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 2000);
+        toast.success(t("sign-up-success"));
+        debugger;
+        redirectToLogin(false);
       })
       .catch((error) => {
         console.error(error.message);
@@ -63,7 +63,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
         <div className="grid gap-2">
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
-              邮箱
+              {t("email-placeholder")}
             </Label>
             <Input
               {...register("email")}
@@ -72,7 +72,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              placeholder="请输入邮箱"
+              placeholder={t("email")}
             />
             <ErrorMessage
               errors={errors}
@@ -84,13 +84,13 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
           </div>
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="userName">
-              用户名
+              {t("username")}
             </Label>
             <Input
               {...register("userName")}
               id="userName"
               type="text"
-              placeholder="请输入用户名"
+              placeholder={t("username")}
             />
             <ErrorMessage
               errors={errors}
@@ -102,8 +102,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
           </div>
           <div className="grid gap-1">
             <div className="flex items-center">
-              <Label htmlFor="password">密码</Label>
-              <FindPassword />
+              <Label htmlFor="password"> {t("password")}</Label>
             </div>
             <Input {...register("password")} id="password" type="password" />
             <ErrorMessage
@@ -115,7 +114,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
             />
           </div>
           <div className="grid gap-1">
-            <Label htmlFor="passwordConfirm">确认密码</Label>
+            <Label htmlFor="passwordConfirm">{t("password-confirm")}</Label>
             <Input
               {...register("passwordConfirm")}
               id="passwordConfirm"
@@ -132,7 +131,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
 
           <div className="flex-col items-left ">
             <Label className="w-32" htmlFor="captcha">
-              验证码
+              {t("captcha")}
             </Label>
             <div className="flex flex-row items-left">
               <Input
@@ -160,7 +159,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
             {isLoading && (
               <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Sign In with Email
+            {t("sign-up")}
           </Button>
         </div>
       </form>
@@ -170,7 +169,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
         </div>
         <div className="relative flex justify-center text-xs uppercase">
           <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
+            {t("continue-with")}
           </span>
         </div>
       </div>
@@ -182,6 +181,13 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
         )}{" "}
         GitHub
       </Button>
+
+      <div className="mt-4 text-center text-sm">
+        {t("to-sign-in")}
+        <Link href="/sign-in" className="underline">
+          {t("sign-in")}
+        </Link>
+      </div>
     </div>
   );
 }

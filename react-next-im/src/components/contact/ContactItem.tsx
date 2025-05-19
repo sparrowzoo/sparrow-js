@@ -1,5 +1,4 @@
 import * as React from "react";
-import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
 import Contact from "@/lib/protocol/contact/Contact";
 import CommonItem from "@/components/CommonItem";
 import { SidebarMenuItem } from "@/components/ui/sidebar";
@@ -10,7 +9,7 @@ interface ContactProps {
 
 export default function ContactItem(contactProps: ContactProps) {
   const { contact } = contactProps;
-  const contactUrl = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${contact.userId}`;
+  const contactUrl = `/chat/friends/contact?friendId=${contact.userId}`;
   return (
     <SidebarMenuItem>
       <CommonItem

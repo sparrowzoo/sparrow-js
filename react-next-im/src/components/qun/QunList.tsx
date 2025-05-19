@@ -2,6 +2,7 @@ import Group from "@/lib/protocol/contact/Group";
 import GroupItem from "@/components/contact/GroupItem";
 import { Button } from "@/components/ui/button";
 import QunAPI from "@/api/QunApi";
+import { useTranslations } from "next-intl";
 
 interface QunListProps {
   quns: Group[];
@@ -9,6 +10,8 @@ interface QunListProps {
 }
 
 export default function QunList(qunListProps: QunListProps) {
+  const t = useTranslations("ButtonText");
+
   function handleClick(qun: Group) {
     QunAPI.joinQun(qun.qunId);
   }
@@ -27,7 +30,7 @@ export default function QunList(qunListProps: QunListProps) {
               onClick={() => handleClick(qun)}
               variant="outline"
             >
-              申请加入
+              {t("apply-join-group")}
             </Button>
           </div>
         </div>
