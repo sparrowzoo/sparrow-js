@@ -19,8 +19,10 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import Sessions from "@/components/session/Sessions";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import useNavigating from "@/common/hook/NavigatingHook";
+import { useTranslations } from "next-intl";
 
 export default function Talk() {
+  const t = useTranslations("ClientServer");
   const { redirectToLogin } = useNavigating();
   const [isOpen, setIsOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<ChatSession[]>();
@@ -85,7 +87,7 @@ export default function Talk() {
       >
         <div className="flex cursor-pointer flex-col items-center justify-center w-20 h-20 p-2 rounded-l bg-gray-100 text-gray-500 hover:bg-gray-200">
           <HeadsetIcon width={64} height={64} />
-          客服
+          {t("title")}
         </div>
       </PopoverTrigger>
       <PopoverContent side={"top"}>

@@ -19,6 +19,8 @@ export default class ChatSession {
   //收发时更要更新最后一条消息
   public lastMessage: Message;
   public isPulled: boolean = false;
+  //是否弹出状态
+  public pop = false;
   private _sessionUrl: string;
 
   get sessionUrl(): any {

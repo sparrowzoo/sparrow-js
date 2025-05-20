@@ -22,6 +22,7 @@ export const routing = defineRouting({
     "/chat/sessions/session": "/chat/sessions/session",
     "/shop": "/shop",
     "/pop": "/pop",
+    "/pop/server": "/pop/server",
     "/blog": "/blog",
     "/chat/friends/new-friend": "/chat/friends/new-friend",
     "/playground": "/playground",
