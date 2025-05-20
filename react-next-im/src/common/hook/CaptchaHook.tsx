@@ -5,7 +5,7 @@ import Result from "@/common/lib/protocol/Result";
 
 function loadCaptcha(captcha: HTMLImageElement) {
   const url = `${CAPTCHA_URL}?session=true&t=${Math.random()}`;
-  Fetcher.get(url, null, true).then((res: Result) => {
+  Fetcher.get(url, null as any, null, true).then((res: Result) => {
     if (!res.data) {
       setTimeout(() => {
         loadCaptcha(captcha);
