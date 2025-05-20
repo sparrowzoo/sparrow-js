@@ -19,8 +19,10 @@ import TabSessions from "@/components/session/TabSessions";
 import ChatUser from "@/lib/protocol/ChatUser";
 import PopSearchTrigger from "@/components/session/search/PopSearchTrigger";
 import useNavigating from "@/common/hook/NavigatingHook";
+import { useTranslations } from "next-intl";
 
 export default function GroupedTalk() {
+  const t = useTranslations("ClientServer");
   const { redirectToLogin } = useNavigating();
   const [isOpen, setIsOpen] = React.useState(false);
   const [webSocketContextValue, setWebSocketContextValue] =
@@ -93,7 +95,10 @@ export default function GroupedTalk() {
           setIsOpen(!isOpen);
         }}
       >
-        <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
+        <div className={"flex flex-col items-center justify-center"}>
+          <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
+          {t("title")}
+        </div>
       </PopoverTrigger>
       <PopoverContent className={"w-fit"} side={"top"}>
         <SidebarProvider className={"min-h-full h-full w-auto flex flex-col"}>
