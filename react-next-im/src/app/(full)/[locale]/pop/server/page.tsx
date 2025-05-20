@@ -1,9 +1,8 @@
 "use client";
 import React from "react";
 import GroupedTalk from "@/components/im/GroupedTalk";
-import Link from "next/link";
 import { ArrowBigRightDashIcon } from "lucide-react";
-import { NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { Link } from "@/common/i18n/navigation";
 
 export default function Page() {
   return (
@@ -14,7 +13,7 @@ export default function Page() {
       <div className={"flex flex-row mt-32"}>
         点击这里
         <ArrowBigRightDashIcon />
-        <Link href={`${NEXT_ASSET_PREFIX}/pop`}>体验客服客户端</Link>
+        <Link href={"/pop"}>体验客服客户端</Link>
       </div>
 
       <div className="fixed bottom-20 right-40  ">

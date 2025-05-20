@@ -8,8 +8,11 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import MessageSearchBar from "@/components/session/search/MessageSearchBar";
 import ChatUser from "@/lib/protocol/ChatUser";
+import { useTranslations } from "next-intl";
 
 export default function PopSearchTrigger() {
+  const t = useTranslations("ClientServer");
+
   const [isOpen, setIsOpen] = React.useState(false);
   const currentUser = ChatUser.getCurrentUser();
   if (!currentUser || !currentUser.isAdmin()) {
@@ -26,7 +29,7 @@ export default function PopSearchTrigger() {
             setIsOpen(!isOpen);
           }}
         >
-          聊天记录管理
+          {t("message-record-manage")}
         </Button>
       </PopoverTrigger>
       <PopoverContent

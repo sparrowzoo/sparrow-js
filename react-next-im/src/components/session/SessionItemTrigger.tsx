@@ -4,7 +4,7 @@ import PopSessionItemTrigger from "@/components/session/item/PopSessionItemTrigg
 import LinkedSessionTrigger from "@/components/session/item/LinkedSessionItemTrigger";
 
 export default function SessionItemTrigger(sessionItemProps: SessionItemProps) {
-  const chatSession = sessionItemProps.chatSession;
+  const { chatSession } = sessionItemProps;
   if (sessionItemProps.triggerType == "POP") {
     return <PopSessionItemTrigger session={chatSession} />;
   }

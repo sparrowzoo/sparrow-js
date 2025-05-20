@@ -63,6 +63,13 @@ declare const messages: {
     "in-group": " In group ",
     "say": " Said ",
     "only-see": " Click here to see only "
+  },
+  "ClientServer": {
+    "title": "Server",
+    "message-record-manage": "Message Record Manage",
+    "visitor": "Visitor",
+    "student": "Student",
+    "affiliate": "Affiliate"
   }
 };
 export default messages;

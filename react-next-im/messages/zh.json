@@ -60,5 +60,12 @@
     "in-group": " 在群里 ",
     "say": " 说 ",
     "only-see": " 点击这里只看 "
+  },
+  "ClientServer": {
+    "title": "客服",
+    "message-record-manage": "消息记录管理",
+    "visitor": "游客",
+    "student": "学生",
+    "affiliate": "中介"
   }
 }
