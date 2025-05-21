@@ -51,11 +51,11 @@ export default function PopSessionItemTrigger(dialogProps: DialogProps) {
         align={"center"}
       >
         <SidebarProvider className={"w-fit h-fit min-h-full"}>
-          <Draggable>
+
             <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
               <Session sessionKey={session.sessionKey} />
             </Sidebar>
-          </Draggable>
+
         </SidebarProvider>
       </PopoverContent>
     </Popover>
