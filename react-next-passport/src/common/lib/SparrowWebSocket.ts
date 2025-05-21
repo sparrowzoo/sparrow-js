@@ -47,6 +47,7 @@ class SparrowWebSocket {
   constructor(url: string, translate: Translator) {
     this.url = url;
     this.translate = translate;
+    this.crosStorage = CrosStorage.getCrosStorage();
   }
 
   public userAuthCallback(data: Result) {
