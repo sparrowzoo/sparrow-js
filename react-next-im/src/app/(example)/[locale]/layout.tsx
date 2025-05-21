@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ReactNode } from "react";
 import "@/app/globals.css";
 import { routing } from "@/i18n/routing";
+import Root from "@/components/Root";
 
 type Props = {
   children: ReactNode;
@@ -24,7 +25,7 @@ export async function generateMetadata(props: Omit<Props, "children">) {
   };
 }
 
-export default async function LocaleLayout({ children, params }: Props) {
+export default async function RootLayout({ children, params }: Props) {
   // Ensure that the incoming `locale` is valid
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
@@ -36,8 +37,14 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   return (
     <html className="h-full" lang={locale}>
-      <body className={"flex h-full flex-col"}>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+      <body
+        className={
+          "mx-auto text-left justify-center align-middle content-center w-full "
+        }
+      >
+        <NextIntlClientProvider>
+          <Root>{children}</Root>
+        </NextIntlClientProvider>
       </body>
     </html>
   );
