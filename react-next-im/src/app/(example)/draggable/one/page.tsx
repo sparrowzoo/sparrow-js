@@ -23,7 +23,7 @@ function StandaloneDraggable() {
       {...attributes}
     >
       <div>
-        <h1 {...listeners}>Drag me</h1>
+        <h1 {...listeners}>Drag me 【这里不影响输入】</h1>
         <input
           className="border-1 border-gray-300 rounded-md px-2 py-1 w-full"
           type="text"
