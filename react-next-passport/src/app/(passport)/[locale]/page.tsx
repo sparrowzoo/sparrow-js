@@ -1,10 +1,11 @@
 "use client";
 import { useEffect } from "react";
-import { redirectToIndex } from "@/common/lib/Navigating";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 export default function Page() {
+  const Navigations = useNavigating();
   useEffect(() => {
-    redirectToIndex();
+    Navigations.redirectToIndex();
   }, []);
   return <></>;
 }

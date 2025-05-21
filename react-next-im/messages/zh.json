@@ -34,17 +34,13 @@
     "my-friends": "我的好友",
     "my-groups": "我的群组"
   },
-  "Auth": {
+  "MessageBroker": {
     "token-not-found": "无访问权限，请先登录哟",
     "token-is-visitor": "游客无访问权限，请先登录哟",
     "shake-hands-no-login": "握手失败，请先登录哟，回来志哥陪你砍JAVA！",
     "user_token_abnormal": "请先登录哟，回来志哥陪你砍JAVA！"
   },
-  "ButtonText": {
-    "send": "发送",
-    "apply-join-group": "申请加入"
-  },
-  "message-search": {
+  "MessageSearch": {
     "content": "聊天内容",
     "session-placeholder": "请选择会话",
     "user-id": "用户ID",

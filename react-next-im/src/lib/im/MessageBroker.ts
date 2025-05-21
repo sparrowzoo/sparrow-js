@@ -8,28 +8,28 @@ import ChatUser from "@/lib/protocol/ChatUser";
 import toast from "react-hot-toast";
 import { WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
-import CrosStorage from "@/common/lib/CrosStorage";
 import ContactContainer from "@/lib/im/ContactContainer";
 import SessionContainer from "@/lib/im/SessionContainer";
+import { Translator } from "@/common/lib/TranslatorType";
 
 export default class MessageBroker {
   public contactContainer: ContactContainer;
   public sessionContainer: SessionContainer;
-  public crosStorage: CrosStorage;
+  public translator: Translator;
   public webSocket: SparrowWebSocket;
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
 
-  constructor(crosStorage: CrosStorage, redirectLogin: () => void) {
-    this.crosStorage = crosStorage;
-    this.contactContainer = new ContactContainer(this.crosStorage);
+  constructor(translator: Translator, redirectLogin: () => void) {
+    this.translator = translator;
+    this.contactContainer = new ContactContainer(this.translator);
     this.sessionContainer = new SessionContainer(
-      this.crosStorage,
+      this.translator,
       this.contactContainer
     );
     const sparrowWebSocket = new SparrowWebSocket(
       WEBSOCKET as string,
-      crosStorage
+      this.translator
     );
     sparrowWebSocket.connect();
     this.webSocket = sparrowWebSocket;
@@ -38,7 +38,9 @@ export default class MessageBroker {
       this.websocketMsgCallback(buf);
     };
     this.webSocket.offlineCallback = () => {
-      toast.error("消息已推送，对方已离线....");
+      if (this.translator) {
+        toast.error(this.translator("offline"));
+      }
     };
     this.webSocket.monitorStatus = () => {
       console.log("websocket monitor status");
@@ -98,7 +100,7 @@ export default class MessageBroker {
     if (messageList != null) {
       return this.wrapMessages(messageList);
     }
-    messageList = await ChatApi.getMessages(sessionKey, this.crosStorage);
+    messageList = await ChatApi.getMessages(sessionKey, this.translator);
     this.messageMap.set(sessionKey, messageList);
     return this.wrapMessages(messageList);
   }

@@ -6,14 +6,16 @@ import AuditWrap from "@/lib/protocol/audit/AuditWrap";
 import AuditApi from "@/api/AuditApi";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
+import { useTranslations } from "next-intl";
 
 export default function NewQunAudits() {
+  const t = useTranslations("Contact.Audit");
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
 
   const [auditWrap, setAuditWrap] = useState<AuditWrap>();
   useEffect(() => {
-    AuditApi.getGroupAuditList().then((auditWrap) => {
+    AuditApi.getGroupAuditList(t).then((auditWrap) => {
       setAuditWrap(auditWrap);
       messageBroker.contactContainer.putJsonContact(auditWrap.contactMap);
     });

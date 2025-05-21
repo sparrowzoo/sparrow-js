@@ -14,7 +14,7 @@ import useReachBottom from "@/common/hook/ReachBottomHook";
 import { useTranslations } from "next-intl";
 
 export default function MessageSearchBar() {
-  const t = useTranslations("message-search");
+  const t = useTranslations("MessageSearch");
   const [sessionKey, setSessionKey] = useState("");
   const [date, setDate] = React.useState<DateRange | undefined>({
     from: addDays(new Date(), -7),
@@ -42,7 +42,8 @@ export default function MessageSearchBar() {
       content,
       beginDate,
       endDate,
-      localLastId
+      localLastId,
+      t
     ).then((currentHistoryMessageWrap) => {
       //将历史消息合并
       let mergedMessageWrap = messageWrap as HistoryMessageWrap;

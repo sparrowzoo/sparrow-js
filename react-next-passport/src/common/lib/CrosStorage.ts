@@ -8,7 +8,6 @@ import {
 import { STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE } from "@/common/lib/Env";
 import { Utils } from "@/common/lib/Utils";
 import UrlUtils from "@/common/lib/UrlUtils";
-import { redirectToLogin } from "@/common/lib/Navigating";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default class CrosStorage {
@@ -30,7 +29,8 @@ export default class CrosStorage {
   }
 
   public static getCrosStorage() {
-    return new CrosStorage();
+    const crosStorage = new CrosStorage();
+    return crosStorage;
   }
 
   public set(
@@ -100,10 +100,7 @@ export default class CrosStorage {
 
   public async getToken(
     storage: StorageType = StorageType.AUTOMATIC,
-    generateVisitorToken:
-      | (() => Promise<string>)
-      | null
-      | "REDIRECT-TO-LOGIN" = null
+    generateVisitorToken: (() => Promise<string>) | null = null
   ) {
     return new Promise<any>((resolve, reject) => {
       this.get(TOKEN_KEY, storage).then((token) => {
@@ -114,10 +111,6 @@ export default class CrosStorage {
         if (!generateVisitorToken) {
           console.log("no token found");
           return resolve(null);
-        }
-        if (generateVisitorToken === "REDIRECT-TO-LOGIN") {
-          redirectToLogin();
-          return null;
         }
         generateVisitorToken().then((visitorToken) => {
           this.setToken(visitorToken).then(() => {

@@ -23,6 +23,7 @@ import { useTranslations } from "next-intl";
 
 export default function Talk() {
   const t = useTranslations("ClientServer");
+  const translator = useTranslations("MessageBroker");
   const { redirectToLogin } = useNavigating();
   const [isOpen, setIsOpen] = React.useState(false);
   const [sessions, setSessions] = React.useState<ChatSession[]>();
@@ -41,7 +42,7 @@ export default function Talk() {
       .then((token) => {
         //同步token 到本域，方便后续使用getCurrentUser()
         crosStorage?.locateToken(token).then((token) => {
-          const messageBroker = new MessageBroker(crosStorage, redirectToLogin);
+          const messageBroker = new MessageBroker(translator, redirectToLogin);
           const localContext = WebSocketContextValue.create(messageBroker);
           messageBroker.newMessageSignal = () => {
             setWebSocketContextValue(localContext?.newReference());

@@ -10,13 +10,18 @@ export default class MessageApi {
   public static async querySessions(
     userId: string,
     userName: string,
-    userNickName: string
+    userNickName: string,
+    translator: (key: string) => string
   ): Promise<SessionMeta[]> {
-    return await Fetcher.post("/chat/v2/session-list.json", {
-      userId: userId,
-      userName: userName,
-      userNickName: userNickName,
-    }).then((res: Result) => {
+    return await Fetcher.post(
+      "/chat/v2/session-list.json",
+      {
+        userId: userId,
+        userName: userName,
+        userNickName: userNickName,
+      },
+      translator
+    ).then((res: Result) => {
       return res?.data;
     });
   }
@@ -26,15 +31,20 @@ export default class MessageApi {
     content: string,
     beginDate: string,
     endDate: string,
-    lastMessageId: number
+    lastMessageId: number,
+    translator: (key: string) => string
   ): Promise<HistoryMessageWrap> {
-    return await Fetcher.post("/chat/v2/query-history-messages.json", {
-      sessionKey: sessionKey,
-      content: content,
-      beginDate: beginDate,
-      endDate: endDate,
-      lastMessageId: lastMessageId,
-    }).then((response: Result) => {
+    return await Fetcher.post(
+      "/chat/v2/query-history-messages.json",
+      {
+        sessionKey: sessionKey,
+        content: content,
+        beginDate: beginDate,
+        endDate: endDate,
+        lastMessageId: lastMessageId,
+      },
+      translator
+    ).then((response: Result) => {
       let messageWrap = response.data;
       const localMessageWrap = new HistoryMessageWrap();
       let messages: Message[] = [];

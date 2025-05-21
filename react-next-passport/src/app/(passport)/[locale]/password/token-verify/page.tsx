@@ -15,8 +15,12 @@ import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import UrlUtils from "@/common/lib/UrlUtils";
 import PasswordApi from "@/api/password";
+import { useTranslations } from "next-intl";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 export default function Page() {
+  const Navigations = useNavigating();
+  const t = useTranslations("Passport.PasswordTokenVerify");
   const [token, setToken] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -31,45 +35,46 @@ export default function Page() {
   function resetHandler() {
     const errors: string[] = [];
     if (token == "") {
-      errors.push("请从您的邮箱链接跳转至该页面");
+      errors.push(t("token-not-found"));
     }
     if (password == "") {
-      errors.push("请输入新密码");
+      errors.push(t("new-password"));
     } else {
       const regExp = new RegExp(
         /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/
       );
       if (!regExp.test(password)) {
-        errors.push("密码格式错误");
+        errors.push(t("password-format-error"));
       }
     }
     if (confirmPassword == "") {
-      errors.push("请确认新密码");
+      errors.push(t("confirm-password-not-empty"));
     }
     if (password != confirmPassword) {
-      errors.push("新密码和确认密码不一致");
+      errors.push(t("password-not-match"));
     }
 
     if (errors.length > 0) {
       toast.error(errors.join("\n"));
       return;
     }
-    PasswordApi.resetPassword(password, token);
+    PasswordApi.resetPassword(password, token, t).then(() => {
+      toast.success(t("password-reset-success"));
+      Navigations.redirectToLogin();
+    });
   }
 
   return (
     <Card className="w-[450px]">
       <CardHeader>
-        <CardTitle>重置密码</CardTitle>
-        <CardDescription>
-          密码格式 至少8个字符，至少1个字母，1个数字和1个特殊字符
-        </CardDescription>
+        <CardTitle>{t("password-reset-title")}</CardTitle>
+        <CardDescription>{t("password-reset-description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid w-full items-center gap-4">
           <div className="flex flex-row items-center justify-center space-y-1.5">
             <Label className={"w-1/5 inline-block"} htmlFor="newPassword">
-              新密码
+              {t("new-password-title")}
             </Label>
             <Input
               type={"password"}
@@ -78,12 +83,12 @@ export default function Page() {
                 setPassword(event.target.value);
               }}
               id="newPassword"
-              placeholder="请输入新密码"
+              placeholder={t("new-password")}
             />
           </div>
           <div className="flex flex-row items-center justify-center space-y-1.5">
             <Label className={"w-1/5 inline-block"} htmlFor="configmPassword">
-              确认密码
+              {t("confirm-password-title")}
             </Label>
             <Input
               type={"password"}
@@ -92,13 +97,13 @@ export default function Page() {
                 setConfirmPassword(event.target.value);
               }}
               id="configmPassword"
-              placeholder="请输入确认密码"
+              placeholder={t("confirm-password-title")}
             />
           </div>
         </div>
       </CardContent>
       <CardFooter className="flex justify-end">
-        <Button onClick={resetHandler}>确认</Button>
+        <Button onClick={resetHandler}>{t("confirm")}</Button>
       </CardFooter>
     </Card>
   );

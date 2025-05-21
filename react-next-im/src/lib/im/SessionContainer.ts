@@ -1,7 +1,6 @@
 import ChatApi from "@/api/ChatApi";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import ContactContainer from "@/lib/im/ContactContainer";
-import CrosStorage from "@/common/lib/CrosStorage";
 import Message from "@/lib/protocol/Message";
 import ChatUser from "@/lib/protocol/ChatUser";
 import UserCategory from "@/common/lib/UserCategory";
@@ -12,6 +11,7 @@ import {
   SESSION_CATEGORY_NAME_MAPPING,
 } from "@/common/lib/Env";
 import toast from "react-hot-toast";
+import { Translator } from "@/common/lib/TranslatorType";
 
 export enum SessionType {
   VISITOR = 0,
@@ -35,10 +35,10 @@ export default class SessionContainer {
   public chatSessions: ChatSession[] | null = null;
   public currentSession: ChatSession;
   private contactContainer: ContactContainer;
-  private crosStorage: CrosStorage;
+  private translator: Translator;
 
-  constructor(crosStorage: CrosStorage, contactContainer: ContactContainer) {
-    this.crosStorage = crosStorage;
+  constructor(translator: Translator, contactContainer: ContactContainer) {
+    this.translator = translator;
     this.contactContainer = contactContainer;
   }
 
@@ -162,7 +162,7 @@ export default class SessionContainer {
       }
       return this.chatSessions;
     }
-    await ChatApi.getSessions(this.crosStorage).then(async (sessions) => {
+    await ChatApi.getSessions(this.translator).then(async (sessions) => {
       console.log(sessions.length);
       this.chatSessions = sessions;
       await this.fillSessions(this.chatSessions).then(() => {

@@ -21,7 +21,6 @@ import {
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import { StorageType } from "@/common/lib/protocol/CrosProtocol";
 import { useTranslations } from "next-intl";
-import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
 import useNavigating from "@/common/hook/NavigatingHook";
 import toast from "react-hot-toast";
 
@@ -33,7 +32,7 @@ export default function ChatLayout({
   console.log("Chat layout render ....");
   const { redirectToLogin } = useNavigating();
   const t = useTranslations("Navigation");
-  const authTranslator = useTranslations("Auth");
+  const translator = useTranslations("MessageBroker");
 
   const [webSocketContextValue, setWebSocketContextValue] =
     useState<WebSocketContextValue>();
@@ -46,18 +45,17 @@ export default function ChatLayout({
 
     crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
       if (!token) {
-        toast.error(authTranslator("token-not-found"));
+        toast.error(translator("token-not-found"));
         redirectToLogin();
         return;
       }
       crosStorage?.locateToken(token).then((loginUser) => {
         if (loginUser?.isVisitor()) {
-          toast.error(authTranslator("token-is-visitor"));
+          toast.error(translator("token-is-visitor"));
           redirectToLogin();
           return;
         }
-        SparrowWebSocket.translate = authTranslator;
-        const messageBroker = new MessageBroker(crosStorage, redirectToLogin);
+        const messageBroker = new MessageBroker(translator, redirectToLogin);
         const localContext = WebSocketContextValue.create(messageBroker);
         messageBroker.newMessageSignal = () => {
           console.log("sessionKey new Message Signal");

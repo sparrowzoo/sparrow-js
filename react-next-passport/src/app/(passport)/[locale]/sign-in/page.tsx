@@ -15,13 +15,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import Result from "@/common/lib/protocol/Result";
-import { redirectTo } from "@/common/lib/Navigating";
 import UrlUtils from "@/common/lib/UrlUtils";
 import FindPassword from "@/components/password/Find";
 import { Link } from "@/common/i18n/navigation";
 import { useTranslations } from "next-intl";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 export default function Page() {
+  const { redirectTo } = useNavigating();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const t = useTranslations("Passport.sign-in");
 

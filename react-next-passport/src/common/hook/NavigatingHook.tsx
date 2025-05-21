@@ -7,33 +7,38 @@ import { useLocale } from "next-intl";
 export default function useNavigating() {
   const locale = useLocale();
 
-  function redirectToIndex(timeout: number = 2000) {
-    if (typeof window === "undefined") {
-      return;
+  class Navigations {
+    public static redirectToIndex(timeout: number = 2000) {
+      if (typeof window === "undefined") {
+        return;
+      }
+      const url = `${WWW_ROOT}/${locale}/`;
+      setTimeout(() => {
+        window.location.href = url;
+      }, timeout);
     }
-    const url = `${WWW_ROOT}/${locale}/`;
-    setTimeout(() => {
-      window.location.href = url;
-    }, timeout);
+
+    public static redirectTo(directUrl: string) {
+      if (directUrl) {
+        window.location.href = directUrl;
+        return;
+      }
+      Navigations.redirectToIndex();
+    }
+
+    public static redirectToLogin(
+      withRef: boolean = true,
+      timeout: number = 2000
+    ) {
+      let url = `${PASSPORT_ROOT}/${locale}${LOGIN_URL}`;
+      if (withRef) {
+        url += `?${window.location.href}`;
+      }
+      setTimeout(() => {
+        window.location.href = url;
+      }, timeout);
+    }
   }
 
-  function redirectTo(directUrl: string) {
-    if (directUrl) {
-      window.location.href = directUrl;
-      return;
-    }
-    redirectToIndex();
-  }
-
-  function redirectToLogin(withRef: boolean = true, timeout: number = 2000) {
-    let url = `${PASSPORT_ROOT}/${locale}${LOGIN_URL}`;
-    if (withRef) {
-      url += `?${window.location.href}`;
-    }
-    setTimeout(() => {
-      window.location.href = url;
-    }, timeout);
-  }
-
-  return { redirectTo, redirectToIndex, redirectToLogin };
+  return Navigations;
 }

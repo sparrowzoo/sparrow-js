@@ -24,7 +24,7 @@ interface SessionListProp {
 }
 
 function SessionList(sessionListProp: SessionListProp) {
-  const t = useTranslations("message-search");
+  const t = useTranslations("MessageSearch");
   const { sessionList, setSessionKey } = sessionListProp;
   if (sessionList.length === 0) {
     return <div>{t("no-session-matched")}</div>;
@@ -64,7 +64,7 @@ function SessionList(sessionListProp: SessionListProp) {
 }
 
 export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
-  const t = useTranslations("message-search");
+  const t = useTranslations("MessageSearch");
 
   const { sessionKey, setSessionKey } = sessionSearchProp;
   const [sessionList, setSessionList] = useState<SessionMeta[]>([]);
@@ -74,7 +74,7 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
   const loginUser = ChatUser.getCurrentUser();
 
   function searchSession() {
-    MessageApi.querySessions(userId, userName, userNickName).then(
+    MessageApi.querySessions(userId, userName, userNickName, t).then(
       (sessions) => {
         setSessionList(sessions);
       }

@@ -2,27 +2,36 @@ import Fetcher from "@/common/lib/Fetcher";
 import Result from "@/common/lib/protocol/Result";
 import QunPlaza from "@/lib/protocol/contact/QunPlaza";
 import Group from "@/lib/protocol/contact/Group";
-import toast from "react-hot-toast";
 import QunDetailWrap from "@/lib/protocol/contact/QunDetailWrap";
 
 export default class QunAPI {
-  public static async joinQun(qunId: string) {
-    Fetcher.post("/audit/join-qun.json", {
-      qunId: qunId,
-      reason: "",
-    }).then((res: Result) => {
-      toast.success("申请成功，请等待审核结果！");
-    });
+  public static async joinQun(
+    qunId: string,
+    translator: (key: string) => string
+  ) {
+    return Fetcher.post(
+      "/audit/join-qun.json",
+      {
+        qunId: qunId,
+        reason: "",
+      },
+      translator
+    );
   }
 
-  public static async qunDetail(qunId: string) {
-    return Fetcher.get("/qun/detail/" + qunId + ".json").then((res: Result) => {
-      return QunDetailWrap.fromJson(res.data);
-    });
+  public static async qunDetail(
+    qunId: string,
+    translator: null | ((key: string) => string) = null
+  ) {
+    return Fetcher.get("/qun/detail/" + qunId + ".json", translator).then(
+      (res: Result) => {
+        return QunDetailWrap.fromJson(res.data);
+      }
+    );
   }
 
-  public static async getQunList() {
-    return await Fetcher.get("/qun/plaza.json")
+  public static async getQunList(translator: (key: string) => string) {
+    return await Fetcher.get("/qun/plaza.json", translator)
       .then((res: Result) => {
         const qunPlaza = new QunPlaza();
         const remoteData = res.data;
