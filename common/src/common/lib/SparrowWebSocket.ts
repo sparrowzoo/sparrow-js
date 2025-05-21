@@ -4,20 +4,19 @@ import Result from "@/common/lib/protocol/Result";
 import { USER_INFO_KEY } from "@/common/lib/Env";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import toast from "react-hot-toast";
+import { Translator } from "@/common/lib/TranslatorType";
 
 class SparrowWebSocket {
   public static ACTIVE_STATUS = "active";
   public static INACTIVE_STATUS = "inactive";
   public static CONNECTING_STATUS = "connecting";
-  public static translate: (i18nKey: string) => string;
-
   //窗口的焦点状态，active 状态则可以执行重连，否则继续重试，直到获取窗口焦点
   private static activeStatus: string = SparrowWebSocket.INACTIVE_STATUS;
   //心跳状态 inactive 未探测到心跳，active 心跳正常
   private static heartStatus: string = SparrowWebSocket.INACTIVE_STATUS;
   //连接状态 inactive 未连接，connecting 正在连接，active 连接正常
   private static connectionStatus: string = SparrowWebSocket.INACTIVE_STATUS;
-
+  public translate: Translator;
   // 接收到信息后需要执行的事件
   public onMsgCallback: (data: ArrayBufferLike) => void;
   public handshakeSuccess: (loginUser: LoginUser) => void;
@@ -45,9 +44,10 @@ class SparrowWebSocket {
   private reconnectionTimer: NodeJS.Timeout;
   private connectionTimestamp: number;
 
-  constructor(url: string, crosStorage: CrosStorage) {
+  constructor(url: string, translate: Translator) {
     this.url = url;
-    this.crosStorage = crosStorage;
+    this.translate = translate;
+    this.crosStorage = CrosStorage.getCrosStorage();
   }
 
   public userAuthCallback(data: Result) {
@@ -63,7 +63,7 @@ class SparrowWebSocket {
         if (this.handshakeFail) {
           this.handshakeFail(data);
         } else {
-          toast.error(SparrowWebSocket.translate(data.key));
+          toast.error(this.translate ? this.translate(data.key) : data.message);
           this.redirectLogin();
         }
       });
@@ -118,7 +118,9 @@ class SparrowWebSocket {
         this.initWindowsFocusEvent();
         this.crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
           if (!token) {
-            toast.error(SparrowWebSocket.translate("shake-hands-no-login"));
+            if (this.translate) {
+              toast.error(this.translate("shake-hands-no-login"));
+            }
             this.redirectLogin();
             return;
           }

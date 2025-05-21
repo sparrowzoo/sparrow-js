@@ -31,7 +31,11 @@ export default function FindPassword() {
       return;
     }
     setSending(true);
-    PasswordApi.findPassword(email, t)?.finally(() => setSending(false));
+    PasswordApi.findPassword(email, t)
+      .then(() => {
+        toast.success(t("password-reset-email-sent"));
+      })
+      .finally(() => setSending(false));
   }
 
   return (

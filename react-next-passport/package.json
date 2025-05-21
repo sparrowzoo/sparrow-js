@@ -59,6 +59,7 @@
     "react-dnd": "^14.0.2",
     "react-dnd-html5-backend": "^14.0.0",
     "react-dom": "^18",
+    "react-draggable": "^4.4.6",
     "react-dropzone": "^14.3.8",
     "react-hook-form": "^7.52.2",
     "react-hot-toast": "^2.4.1",

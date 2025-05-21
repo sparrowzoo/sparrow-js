@@ -1,9 +1,9 @@
 import GroupItem from "@/components/contact/GroupItem";
 import * as React from "react";
 import Group from "@/lib/protocol/contact/Group";
-import Link from "next/link";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
+import { Link } from "@/common/i18n/navigation";
 
 interface GroupsProps {
   quns: Group[] | undefined;

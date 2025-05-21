@@ -12,15 +12,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useTranslations } from "next-intl";
 
 interface QunPlazaComProps {
   link?: boolean;
 }
 
 export default function QunPlazaCom(qunPlazaComProps: QunPlazaComProps) {
+  const t = useTranslations("Contact.Audit");
   const [qunPlaza, setQunPlaza] = useState<QunPlaza>();
   useEffect(() => {
-    QunApi.getQunList().then((qunPlaza) => {
+    QunApi.getQunList(t).then((qunPlaza) => {
       setQunPlaza(qunPlaza);
     });
   }, []);
@@ -33,7 +35,7 @@ export default function QunPlazaCom(qunPlazaComProps: QunPlazaComProps) {
   return (
     <div className={"w-full h-fit flex flex-row gap-4 p-4"}>
       {Array.from(categories).map(([categoryId, category]) => (
-        <Card key={categoryId} className="w-[350px]">
+        <Card key={categoryId} className="w-[400px]">
           <CardHeader>
             <CardTitle>{category.categoryName}</CardTitle>
             <CardDescription>{category.description}</CardDescription>

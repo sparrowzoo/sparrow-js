@@ -1,13 +1,15 @@
 import { API_BASIC_URL } from "@/common/lib/Env";
 import toast from "react-hot-toast";
 import CrosStorage from "@/common/lib/CrosStorage";
+import Result from "@/common/lib/protocol/Result";
+import { Translator } from "@/common/lib/TranslatorType";
 
 //https://nextjs.org/docs/app/getting-started/fetching-data
 // https://developer.mozilla.org/zh-CN/docs/Web/API/Window/fetch
 export default class Fetcher {
   static async get(
     url: string,
-    translate: (key: string) => string,
+    translate: Translator = null,
     crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
@@ -28,34 +30,24 @@ export default class Fetcher {
     if (withCookie) {
       options.credentials = "include"; //跨域时携带cookie
     }
-    return new Promise((resolve, reject) => {
-      fetch(url, options)
-        .then(async (response) => {
-          const result = (await response.json()) as any;
-          if (result.code != "0") {
-            toast.error(translate(result.key));
-            if (reject) {
-              reject(result);
-            }
-          } else {
-            if (resolve) {
-              resolve(result);
-            }
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-          if (reject) {
-            reject(error);
-          }
-        });
-    });
+    return fetch(url, options)
+      .then(async (response) => {
+        const result = (await response.json()) as Result;
+        if (result.code != "0") {
+          toast.error(translate ? translate(result.key) : result.message);
+        }
+        return result;
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        return Promise.reject(error);
+      });
   }
 
   static async post(
     url: string,
     body: any,
-    translate: (key: string) => string,
+    translator: Translator = null,
     crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
     withCookie = false
   ) {
@@ -79,27 +71,19 @@ export default class Fetcher {
     if (withCookie) {
       options.credentials = "include"; //跨域时携带cookie
     }
-    return new Promise((resolve, reject) => {
-      fetch(url, options)
-        .then(async (response) => {
-          const result = (await response.json()) as any;
-          if (result.code != "0") {
-            toast.error(translate(result.key));
-            if (reject) {
-              reject(result);
-            }
-          } else {
-            if (resolve) {
-              resolve(result);
-            }
-          }
-        })
-        .catch((error) => {
-          toast.error(error.message);
-          if (reject) {
-            reject(error);
-          }
-        });
-    });
+    return fetch(url, options)
+      .then(async (response) => {
+        const result = (await response.json()) as Result;
+        if (result.code != "0") {
+          toast.error(translator ? translator(result.key) : result.message);
+          return result;
+        } else {
+          return result;
+        }
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        return Promise.reject(error);
+      });
   }
 }

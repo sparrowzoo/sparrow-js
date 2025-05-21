@@ -35,19 +35,30 @@ declare const messages: {
   "Contact": {
     "new-friends": "New Friends",
     "my-friends": "My Friends",
-    "my-groups": "My Groups"
+    "my-groups": "My Groups",
+    "Audit": {
+      "agree-success": "Agreement Success ",
+      "reject-success": "Reject Success ",
+      "agree": "Agree",
+      "reject": "Reject",
+      "rejected": "Rejected",
+      "approved": "Approved",
+      "applying": "Applying,Waiting for approval",
+      "apply-join-group": "Apply Join Group",
+      "apply-join-group-success": "Apply to join group success"
+    }
   },
-  "Auth": {
+  "MessageBroker": {
     "token-not-found": "token not found, please sign in",
     "token-is-visitor": "token is visitor, please sign in again",
     "shake-hands-no-login": "websocket connection failed, please sign in again",
-    "user_token_abnormal": "user token abnormal！"
-  },
-  "ButtonText": {
+    "user_token_abnormal": "user token abnormal！",
+    "message_empty": "Message can't be empty!",
     "send": "Send",
-    "apply-join-group": "Join Group"
+    "offline": "message sent, but receiver is Offline",
+    "account": "Account"
   },
-  "message-search": {
+  "MessageSearch": {
     "content": "message content",
     "session-placeholder": "Select Session",
     "user-id": "user id",

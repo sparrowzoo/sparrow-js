@@ -16,7 +16,7 @@ interface SenderProps {
 }
 
 export default function MessageEditor(senderProps: SenderProps) {
-  const t = useTranslations("ButtonText");
+  const t = useTranslations("MessageBroker");
 
   const { sendMessage } = senderProps;
   const editorRef = React.createRef<HTMLDivElement>();
@@ -25,7 +25,7 @@ export default function MessageEditor(senderProps: SenderProps) {
   async function localSendMessage() {
     const message = editorRef.current?.innerHTML;
     if (message === undefined || message.trim() === "") {
-      toast.error("别发空消息呀");
+      toast.error(t("message_empty"));
       return;
     }
     sendMessage(message.trim());

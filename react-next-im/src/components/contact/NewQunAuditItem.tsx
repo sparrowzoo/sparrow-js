@@ -14,20 +14,28 @@ import Group from "@/lib/protocol/contact/Group";
 import AuditApi from "@/api/AuditApi";
 import { format } from "util";
 import { Utils } from "@/common/lib/Utils";
+import { useTranslations } from "next-intl";
+import toast from "react-hot-toast";
 
 function AuditStatusComp(props: AuditStatusProps) {
+  const t = useTranslations("Contact.Audit");
+
   function agree() {
-    AuditApi.auditQunMember(props.auditId, true);
+    AuditApi.auditQunMember(props.auditId, true, t).then(() => {
+      toast.success(t("agree-success"));
+    });
   }
 
   function reject() {
-    AuditApi.auditQunMember(props.auditId, false);
+    AuditApi.auditQunMember(props.auditId, false, t).then(() => {
+      toast.success(t("reject-success"));
+    });
   }
 
   const { status, isApplying } = props;
   if (status == AuditStatus.PENDING) {
     if (isApplying) {
-      return <span className={"text-xs text-gray-400"}>待对方确认</span>;
+      return <span className={"text-xs text-gray-400"}>{t("applying")}</span>;
     }
     return (
       <div
@@ -36,23 +44,24 @@ function AuditStatusComp(props: AuditStatusProps) {
         }
       >
         <Button onClick={agree} className={"w-12 cursor-pointer p-2"}>
-          同意
+          {t("agree")}
         </Button>
         <Button onClick={reject} className={"w-12 cursor-pointer p-2"}>
-          拒绝
+          {t("reject")}
         </Button>
       </div>
     );
   }
   if (status == AuditStatus.REJECTED) {
-    return <span className={"text-xs text-gray-400"}>拒绝</span>;
+    return <span className={"text-xs text-gray-400"}>{t("rejected")}</span>;
   }
   if (status == AuditStatus.APPROVED) {
-    return <span className={"text-xs text-gray-400"}>已同意</span>;
+    return <span className={"text-xs text-gray-400"}>{t("approved")}</span>;
   }
 }
 
 export default function NewQunAuditItem(newQunProps: AuditItemProps) {
+  const t = useTranslations("Contact.Audit");
   const userInfoMap = newQunProps.auditWrap.contactMap;
   const audit = newQunProps.audit;
   const currentUser = ChatUser.getCurrentUser();
@@ -108,7 +117,7 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
           }
         >
           <strong className={"text-xs text-gray-400"}>
-            申请加入{qun.qunName}群
+            {t("apply-to-group")}:{qun.qunName}
           </strong>
           <span className={"text-xs text-gray-400 ml-1"}>
             {Utils.dateFormat(audit.applyTime)}
@@ -123,7 +132,7 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
           />
         </div>
         <div>
-          <span className={"text-xs text-gray-400 ml-1"}>找志哥</span>
+          <span className={"text-xs text-gray-400 ml-1"}></span>
         </div>
       </div>
       <div
