@@ -1,7 +1,7 @@
 "use client";
 import { DndContext, useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Move } from "lucide-react";
 
 interface DraggableContainerProps {
@@ -11,13 +11,14 @@ interface DraggableContainerProps {
   children: React.ReactNode;
 }
 
-let lastPosition = {};
+let initPosition = {};
 
 function DraggableContainer(draggableProps: DraggableContainerProps) {
   const draggingRef = React.useRef<HTMLDivElement>(null);
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: "box",
   });
+  useEffect(() => {}, []);
   const { children, dragging, x, y } = draggableProps;
   let mergedStyles = {};
   if (transform) {

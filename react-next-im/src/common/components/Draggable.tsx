@@ -1,15 +1,14 @@
 "use client";
 import { DndContext, DragStartEvent, useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Move } from "lucide-react";
 
 interface DraggableContainerProps {
-  x: number;
-  y: number;
+  position: Position;
   dragged: boolean;
   children: React.ReactNode;
-  setFixedPosition: any;
+  setInitPosition: any;
 }
 
 function DraggableContainer(draggableProps: DraggableContainerProps) {
@@ -17,20 +16,32 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: "box",
   });
-  const { children, dragged, x, y, setFixedPosition } = draggableProps;
+  const [localPosition, setLocalPosition] = useState<Position>(null);
+  useEffect(() => {
+    if (draggingRef.current) {
+      const position = {
+        left: draggingRef.current.offsetLeft,
+        top: draggingRef.current.offsetTop,
+      };
+      setLocalPosition(position);
+      console.log("dragging " + JSON.stringify(position));
+      setInitPosition(position);
+    }
+  }, []);
+  const { children, dragged, position, setInitPosition } = draggableProps;
   let mergedStyles = {};
   if (transform) {
-    transform.x += x;
-    transform.y += y;
+    transform.x += position ? position.left : (localPosition?.left as number);
+    transform.y += position ? position.top : (localPosition?.top as number);
     mergedStyles = {
       transform: CSS.Transform.toString(transform),
     };
   } else {
-    if (dragged) {
+    if (dragged && position) {
       mergedStyles = {
         position: "fixed",
-        left: `${x}px`,
-        top: `${y}px`,
+        left: `${position.left}px`,
+        top: `${position.top}px`,
       };
     }
   }
@@ -56,8 +67,7 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
       }}
       {...attributes}
     >
-      {JSON.stringify(mergedStyles)} {x}
-      {y}
+      {JSON.stringify(mergedStyles)}
       <div ref={draggingRef} className={"invisible"} {...listeners}>
         <Move />
         drag me
@@ -71,8 +81,12 @@ interface DraggableProps {
   children: React.ReactNode;
 }
 
+type Position = { left: number; top: number } | null;
+
 export default function Draggable(props: DraggableProps) {
-  const [fixedPosition, setFixedPosition] = useState({ left: 0, top: 0 });
+  const [fixedPosition, setFixedPosition] = useState<Position>(null);
+  const [initPosition, setInitPosition] = useState<Position>(null);
+
   const [dragged, setDragged] = useState(false);
 
   return (
@@ -82,15 +96,19 @@ export default function Draggable(props: DraggableProps) {
       }}
       onDragEnd={(e) => {
         setFixedPosition((prev) => {
-          return { left: prev.left + e.delta.x, top: prev.top + e.delta.y };
+          const left = prev?.left ? prev.left : initPosition?.left;
+          const top = prev?.top ? prev.top : initPosition?.top;
+          if (left && top) {
+            return { left: left + e.delta.x, top: top + e.delta.y };
+          }
+          return null;
         });
         setDragged(true);
       }}
     >
       <DraggableContainer
-        x={fixedPosition.left}
-        y={fixedPosition.top}
-        setFixedPosition={setFixedPosition}
+        position={fixedPosition}
+        setInitPosition={setInitPosition}
         dragged={dragged}
       >
         {props.children}
