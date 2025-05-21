@@ -30,7 +30,7 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
       debugger;
       console.log("dragging init " + JSON.stringify(position));
       setInitPosition(position);
-      container.style.position = "fixed";
+      container.style.position = "absolute";
       container.style.left = `${position.left}px`;
       container.style.top = `${position.top}px`;
       //setInit(true);
