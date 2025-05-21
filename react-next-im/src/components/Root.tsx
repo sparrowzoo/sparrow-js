@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Toaster } from "react-hot-toast";
-import Header from "@/common/components/header/header";
 import { ThemeProvider } from "@/common/components/header/theme-provider";
+import Header from "@/common/components/header/header";
 
 export default async function Root({
   children,

@@ -16,23 +16,23 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: "box",
   });
-  const [localPosition, setLocalPosition] = useState<Position>(null);
   useEffect(() => {
     if (draggingRef.current) {
       const position = {
         left: draggingRef.current.offsetLeft,
         top: draggingRef.current.offsetTop,
       };
-      setLocalPosition(position);
       console.log("dragging " + JSON.stringify(position));
-      setInitPosition(position);
+      //setInitPosition(position);
     }
   }, []);
   const { children, dragged, position, setInitPosition } = draggableProps;
   let mergedStyles = {};
   if (transform) {
-    transform.x += position ? position.left : (localPosition?.left as number);
-    transform.y += position ? position.top : (localPosition?.top as number);
+    if (position) {
+      transform.x += position?.left;
+      transform.y += position?.top;
+    }
     mergedStyles = {
       transform: CSS.Transform.toString(transform),
     };
@@ -84,9 +84,10 @@ interface DraggableProps {
 type Position = { left: number; top: number } | null;
 
 export default function Draggable(props: DraggableProps) {
-  const [fixedPosition, setFixedPosition] = useState<Position>(null);
-  const [initPosition, setInitPosition] = useState<Position>(null);
-
+  const [fixedPosition, setFixedPosition] = useState<Position>({
+    left: 0,
+    top: 1000,
+  });
   const [dragged, setDragged] = useState(false);
 
   return (
@@ -96,19 +97,19 @@ export default function Draggable(props: DraggableProps) {
       }}
       onDragEnd={(e) => {
         setFixedPosition((prev) => {
-          const left = prev?.left ? prev.left : initPosition?.left;
-          const top = prev?.top ? prev.top : initPosition?.top;
+          const left = prev?.left;
+          const top = prev?.top;
           if (left && top) {
             return { left: left + e.delta.x, top: top + e.delta.y };
           }
-          return null;
+          return { left: e.delta.x, top: e.delta.y };
         });
         setDragged(true);
       }}
     >
       <DraggableContainer
         position={fixedPosition}
-        setInitPosition={setInitPosition}
+        setInitPosition={setFixedPosition}
         dragged={dragged}
       >
         {props.children}
