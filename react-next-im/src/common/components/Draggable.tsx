@@ -13,22 +13,24 @@ interface DraggableContainerProps {
 
 function DraggableContainer(draggableProps: DraggableContainerProps) {
   const draggingRef = React.useRef<HTMLDivElement>(null);
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: "box",
-  });
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: "box",
+    });
   useEffect(() => {
     if (draggingRef.current) {
+      const rect = draggingRef.current.getBoundingClientRect();
       const position = {
-        left: draggingRef.current.offsetLeft,
-        top: draggingRef.current.offsetTop,
+        left: rect.left + window.scrollX,
+        top: rect.top + window.scrollY,
       };
       console.log("dragging " + JSON.stringify(position));
-      //setInitPosition(position);
+      setInitPosition(position);
     }
   }, []);
   const { children, dragged, position, setInitPosition } = draggableProps;
   let mergedStyles = {};
-  if (transform) {
+  if (isDragging) {
     if (position) {
       transform.x += position?.left;
       transform.y += position?.top;
@@ -39,7 +41,7 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
   } else {
     if (dragged && position) {
       mergedStyles = {
-        position: "fixed",
+        position: "absolute",
         left: `${position.left}px`,
         top: `${position.top}px`,
       };
@@ -86,7 +88,7 @@ type Position = { left: number; top: number } | null;
 export default function Draggable(props: DraggableProps) {
   const [fixedPosition, setFixedPosition] = useState<Position>({
     left: 0,
-    top: 1000,
+    top: 0,
   });
   const [dragged, setDragged] = useState(false);
 
