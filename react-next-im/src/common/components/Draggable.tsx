@@ -1,7 +1,7 @@
 "use client";
 import { DndContext, DragStartEvent, useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Move } from "lucide-react";
 
 interface DraggableContainerProps {
@@ -13,47 +13,57 @@ interface DraggableContainerProps {
 
 function DraggableContainer(draggableProps: DraggableContainerProps) {
   const draggingRef = React.useRef<HTMLDivElement>(null);
+  const [init, setInit] = useState(false);
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: "box",
     });
-  useEffect(() => {
-    if (draggingRef.current) {
-      const rect = draggingRef.current.getBoundingClientRect();
+
+  function initPosition() {
+    if (!init) {
+      const container = document.getElementById("box");
+      const rect = container.getBoundingClientRect();
       const position = {
-        left: rect.left + window.scrollX,
-        top: rect.top + window.scrollY,
+        left: rect.left,
+        top: rect.top,
       };
-      console.log("dragging " + JSON.stringify(position));
+      debugger;
+      console.log("dragging init " + JSON.stringify(position));
       setInitPosition(position);
+      container.style.position = "fixed";
+      container.style.left = `${position.left}px`;
+      container.style.top = `${position.top}px`;
+      //setInit(true);
     }
-  }, []);
+  }
+
   const { children, dragged, position, setInitPosition } = draggableProps;
   let mergedStyles = {};
-  if (isDragging) {
-    if (position) {
-      transform.x += position?.left;
-      transform.y += position?.top;
-    }
+  if (transform) {
+    transform.x += position?.left;
+    transform.y += position?.top;
     mergedStyles = {
       transform: CSS.Transform.toString(transform),
+      position: "transform",
     };
   } else {
-    if (dragged && position) {
+    if (position && init) {
       mergedStyles = {
-        position: "absolute",
+        position: "fixed",
         left: `${position.left}px`,
         top: `${position.top}px`,
       };
     }
   }
 
+  console.log("dragging init function ....", JSON.stringify(mergedStyles));
   return (
     <div
       onMouseOver={() => {
         if (draggingRef.current) {
           draggingRef.current.style.visibility = "visible";
         }
+        initPosition();
       }}
       onMouseOut={() => {
         if (draggingRef.current) {
@@ -69,8 +79,11 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
       }}
       {...attributes}
     >
-      {JSON.stringify(mergedStyles)}
-      <div ref={draggingRef} className={"invisible"} {...listeners}>
+      <div
+        ref={draggingRef}
+        className={"invisible flex flex-row"}
+        {...listeners}
+      >
         <Move />
         drag me
       </div>
@@ -95,7 +108,7 @@ export default function Draggable(props: DraggableProps) {
   return (
     <DndContext
       onDragStart={(e: DragStartEvent) => {
-        console.log("drag start " + JSON.stringify(fixedPosition));
+        console.log("dragging start " + JSON.stringify(fixedPosition));
       }}
       onDragEnd={(e) => {
         setFixedPosition((prev) => {
