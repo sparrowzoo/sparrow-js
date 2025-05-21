@@ -43,6 +43,7 @@
       "input-email-to-find-password": "请输入您注册的email",
       "find-password": "找回密码",
       "send-find-password-email": "发送",
+      "password-reset-email-sent": "密码重置邮件已发送，请注意查收",
       "close": "关闭",
       "global_validate_code_error": "验证码输入错误",
       "system_server_error": "系统异常,请稍后重试!"

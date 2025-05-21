@@ -1,26 +1,26 @@
-import CrosStorage from "@/common/lib/CrosStorage";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import ChatApi from "@/api/ChatApi";
 import Contact from "@/lib/protocol/contact/Contact";
 import ChatUser from "@/lib/protocol/ChatUser";
 import QunDetailWrap from "@/lib/protocol/contact/QunDetailWrap";
 import QunAPI from "@/api/QunApi";
+import { Translator } from "@/common/lib/TranslatorType";
 
 export default class ContactContainer {
-  private crosStorage: CrosStorage;
   /**
    * key: userId, value: Contact
    * @private
    */
   private container: Map<string, Contact> = new Map<string, Contact>();
+  private translator: Translator = null;
   private groupContainer: Map<string, QunDetailWrap> = new Map<
     string,
     QunDetailWrap
   >();
   private contactGroup: ContactGroup | null = null;
 
-  constructor(crosStorage: CrosStorage) {
-    this.crosStorage = crosStorage;
+  constructor(translator: Translator) {
+    this.translator = translator;
   }
 
   public initContact(contacts: Contact[]) {
@@ -44,7 +44,7 @@ export default class ContactContainer {
       return new ContactGroup();
     }
     console.log("fetching  from server " + new Date().getTime());
-    await ChatApi.getContacts(this.crosStorage).then((group) => {
+    await ChatApi.getContacts(this.translator).then((group) => {
       console.log("fetch contact group from server " + new Date().getTime());
       localGroup = group;
       this.contactGroup = localGroup;
@@ -63,7 +63,7 @@ export default class ContactContainer {
     if (this.groupContainer.has(groupId)) {
       return this.groupContainer.get(groupId);
     }
-    const groupDetail = await QunAPI.qunDetail(groupId);
+    const groupDetail = await QunAPI.qunDetail(groupId, this.translator);
     this.groupContainer.set(groupId, groupDetail);
     for (const [userId, userDetail] of groupDetail.userDicts) {
       this.container.set(userId, userDetail);
@@ -100,7 +100,7 @@ export default class ContactContainer {
     if (remoteUsers.length == 0) {
       return;
     }
-    await ChatApi.getUsersByIds(this.crosStorage, remoteUsers)
+    await ChatApi.getUsersByIds(remoteUsers, this.translator)
       .then((users: Contact[]) => {
         for (const user of users) {
           this.container.set(user.userId + "", user);

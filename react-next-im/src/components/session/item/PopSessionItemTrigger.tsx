@@ -11,6 +11,7 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import BaseTrigger from "@/components/session/item/BaseTrigger";
 import { Position } from "@/lib/protocol/ItemProps";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
+import Draggable from "@/common/components/Draggable";
 
 interface DialogProps {
   session: ChatSession;
@@ -50,9 +51,11 @@ export default function PopSessionItemTrigger(dialogProps: DialogProps) {
         align={"center"}
       >
         <SidebarProvider className={"w-fit h-fit min-h-full"}>
-          <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
-            <Session sessionKey={session.sessionKey} />
-          </Sidebar>
+          <Draggable>
+            <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
+              <Session sessionKey={session.sessionKey} />
+            </Sidebar>
+          </Draggable>
         </SidebarProvider>
       </PopoverContent>
     </Popover>

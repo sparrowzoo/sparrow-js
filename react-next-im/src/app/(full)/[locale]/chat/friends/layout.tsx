@@ -30,8 +30,6 @@ export default function ChatLayout({
   children: React.ReactNode;
 }>) {
   const t = useTranslations("Contact");
-  const toastTranslation = useTranslations("ToastMessage");
-
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
   const [contactGroup, setContactGroup] = useState<ContactGroup>();

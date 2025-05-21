@@ -15,7 +15,7 @@ interface Props {
 }
 
 export default function HistoryMessageItem(props: Props) {
-  const t = useTranslations("message-search");
+  const t = useTranslations("MessageSearch");
 
   const { sender, content, receiver } = props.message;
   const senderDetail = props.messageWrap.userMap.get(sender.id);

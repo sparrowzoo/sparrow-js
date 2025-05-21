@@ -12,8 +12,11 @@ import Contact from "@/lib/protocol/contact/Contact";
 import UserCategory from "@/common/lib/UserCategory";
 import MyAvatar from "@/components/MyAvatar";
 import { Link } from "@/common/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 function ContactDetail() {
+  const t = useTranslations("MessageBroker");
+
   const searchParams = useSearchParams();
   const webSocketContextValue = useContext(WebSocketContext);
 
@@ -55,9 +58,9 @@ function ContactDetail() {
               {contact?.nickName} {contact?.nationality}
             </strong>
             <br />
-            <label className={"w-10 inline-block"}>帐号</label>
+            <label className={"w-fit inline-block"}>{t("account")}:</label>
             <span>
-              {contact.userName} ID:{contact.userId}
+              {contact.userName} 【ID{contact.userId}】
             </span>
           </Link>
         </div>

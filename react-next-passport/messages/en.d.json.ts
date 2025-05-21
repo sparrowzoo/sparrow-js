@@ -48,9 +48,23 @@ declare const messages: {
       "input-email-to-find-password": "Please input your email to find password",
       "find-password": "Find Password",
       "send-find-password-email": "Send Email",
+      "password-reset-email-sent": "Password reset email sent, please check your email",
       "close": "Close",
       "global_validate_code_error": "Captcha error, please try again input",
       "system_server_error": "System error, please try again later"
+    },
+    "PasswordTokenVerify": {
+      "token-not-found": "Token not found",
+      "new-password": "please input your new password",
+      "password-format-error": "Password format error, please input again",
+      "confirm-password-not-empty": "Please confirm your password",
+      "password-not-match": "Password not match",
+      "password-reset-success": "Password reset success, please login again",
+      "password-reset-title": "Reset Password",
+      "password-reset-description": "Minimum 8 characters with at least 1 letter, 1 number, and 1 special character ($, @, !, %, *, #, ?, &).",
+      "new-password-title": "New Password",
+      "confirm-password-title": "Confirm Password",
+      "confirm": "Confirm"
     },
     "sign-up": {
       "sign-up": "Sign Up",
@@ -68,6 +82,9 @@ declare const messages: {
       "system_server_error": "System error, please try again later",
       "password": "Password",
       "captcha": "Captcha"
+    },
+    "AvatarUploader": {
+      "upload-success": "Upload Success !"
     }
   }
 };
