@@ -2,12 +2,11 @@
 import { DndContext, DragStartEvent, useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import React, { useState } from "react";
-import { Move } from "lucide-react";
 
 interface DraggableContainerProps {
   position: Position;
   dragged: boolean;
-  children: React.ReactNode;
+  children: (data: DraggableProps) => React.ReactNode;
   setInitPosition: any;
 }
 
@@ -30,9 +29,9 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
       debugger;
       console.log("dragging init " + JSON.stringify(position));
       setInitPosition(position);
-      container.style.position = "absolute";
-      container.style.left = `${position.left}px`;
-      container.style.top = `${position.top}px`;
+      // container.style.position = "absolute";
+      // container.style.left = `${position.left}px`;
+      // container.style.top = `${position.top}px`;
       //setInit(true);
     }
   }
@@ -47,7 +46,7 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
       position: "transform",
     };
   } else {
-    if (position && init) {
+    if (position) {
       mergedStyles = {
         position: "fixed",
         left: `${position.left}px`,
@@ -56,6 +55,19 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
     }
   }
 
+  interface DraggableProps {
+    onMouseOver: any;
+    onMouseOut: any;
+    attributes: any[];
+    listeners: any[];
+  }
+
+  const childDraggableProps: DraggableProps = {
+    onMouseOut: () => {},
+    onMouseOver: () => {},
+    ...attributes,
+    ...listeners,
+  };
   console.log("dragging init function ....", JSON.stringify(mergedStyles));
   return (
     <div
@@ -78,16 +90,9 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
         ...mergedStyles,
       }}
       {...attributes}
+      {...listeners}
     >
-      <div
-        ref={draggingRef}
-        className={"invisible flex flex-row"}
-        {...listeners}
-      >
-        <Move />
-        drag me
-      </div>
-      {children}
+      {children(childDraggableProps)}
     </div>
   );
 }
@@ -127,7 +132,7 @@ export default function Draggable(props: DraggableProps) {
         setInitPosition={setFixedPosition}
         dragged={dragged}
       >
-        {props.children}
+        {props.children(props)}
       </DraggableContainer>
     </DndContext>
   );
