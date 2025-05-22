@@ -5,42 +5,23 @@ import React, { useState } from "react";
 
 interface DraggableContainerProps {
   position: Position;
-  dragged: boolean;
-  children: (data: DraggableProps) => React.ReactNode;
-  setInitPosition: any;
+  children: React.ReactNode;
 }
 
 function DraggableContainer(draggableProps: DraggableContainerProps) {
   const draggingRef = React.useRef<HTMLDivElement>(null);
-  const [init, setInit] = useState(false);
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: "box",
     });
 
-  function initPosition() {
-    if (!init) {
-      const container = document.getElementById("box");
-      const rect = container.getBoundingClientRect();
-      const position = {
-        left: rect.left,
-        top: rect.top,
-      };
-      debugger;
-      console.log("dragging init " + JSON.stringify(position));
-      setInitPosition(position);
-      // container.style.position = "absolute";
-      // container.style.left = `${position.left}px`;
-      // container.style.top = `${position.top}px`;
-      //setInit(true);
-    }
-  }
-
-  const { children, dragged, position, setInitPosition } = draggableProps;
+  const { children, position } = draggableProps;
   let mergedStyles = {};
   if (transform) {
-    transform.x += position?.left;
-    transform.y += position?.top;
+    if (position) {
+      transform.x += position?.left;
+      transform.y += position?.top;
+    }
     mergedStyles = {
       transform: CSS.Transform.toString(transform),
       position: "transform",
@@ -55,33 +36,9 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
     }
   }
 
-  interface DraggableProps {
-    onMouseOver: any;
-    onMouseOut: any;
-    attributes: any[];
-    listeners: any[];
-  }
-
-  const childDraggableProps: DraggableProps = {
-    onMouseOut: () => {},
-    onMouseOver: () => {},
-    ...attributes,
-    ...listeners,
-  };
   console.log("dragging init function ....", JSON.stringify(mergedStyles));
   return (
     <div
-      onMouseOver={() => {
-        if (draggingRef.current) {
-          draggingRef.current.style.visibility = "visible";
-        }
-        initPosition();
-      }}
-      onMouseOut={() => {
-        if (draggingRef.current) {
-          draggingRef.current.style.visibility = "hidden";
-        }
-      }}
       className={"w-fit h-fit"}
       id={"box"}
       ref={setNodeRef}
@@ -90,9 +47,8 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
         ...mergedStyles,
       }}
       {...attributes}
-      {...listeners}
     >
-      {children(childDraggableProps)}
+      {children}
     </div>
   );
 }
@@ -132,7 +88,7 @@ export default function Draggable(props: DraggableProps) {
         setInitPosition={setFixedPosition}
         dragged={dragged}
       >
-        {props.children(props)}
+        {props.children}
       </DraggableContainer>
     </DndContext>
   );
