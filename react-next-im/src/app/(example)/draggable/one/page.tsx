@@ -1,45 +1,87 @@
 "use client";
-import { DndContext, useDraggable } from "@dnd-kit/core";
+import React, { useState } from "react";
+import {
+  DndContext,
+  DragStartEvent,
+  MouseSensor,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import React from "react";
 
-function StandaloneDraggable() {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: "standalone-box",
+type Position = { left: number; top: number } | null;
+
+export default function Draggable() {
+  const [fixedPosition, setFixedPosition] = useState<Position>({
+    left: 100,
+    top: 100,
   });
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 }, // 移动5px才触发拖拽
+    })
+  );
+
+  const { attributes, listeners, setNodeRef, transform, isDragging } =
+    useDraggable({
+      id: "box",
+    });
+  let mergedStyles = {};
+  if (transform) {
+    console.log("dragging init function ....", JSON.stringify(transform));
+
+    //表示挪动了多少距离
+    //结合transform case 示例更好理解
+    if (fixedPosition) {
+      transform.x += fixedPosition?.left;
+      transform.y += fixedPosition?.top;
+    }
+    mergedStyles = {
+      transform: CSS.Transform.toString(transform),
+      position: "transform",
+    };
+  } else {
+    if (fixedPosition) {
+      mergedStyles = {
+        position: "fixed",
+        left: `${fixedPosition.left}px`,
+        top: `${fixedPosition.top}px`,
+      };
+    }
+  }
 
   return (
-    <div
-      ref={setNodeRef}
-      style={{
-        position: "fixed",
-        left: transform?.x,
-        top: transform?.y,
-        transform: CSS.Translate.toString(transform),
-        cursor: "grab",
-        backgroundColor: "lightblue",
-        padding: "20px",
+    <DndContext
+      sensors={sensors}
+      onDragStart={(e: DragStartEvent) => {
+        console.log("dragging start " + JSON.stringify(fixedPosition));
       }}
-      {...attributes}
+      onDragEnd={(e) => {
+        setFixedPosition((prev) => {
+          const left = prev?.left;
+          const top = prev?.top;
+          if (left && top) {
+            return { left: left + e.delta.x, top: top + e.delta.y };
+          }
+          return { left: e.delta.x, top: e.delta.y };
+        });
+      }}
     >
       <div>
-        <h1 {...listeners}>Drag me</h1>
-        <input
-          className="border-1 border-gray-300 rounded-md px-2 py-1 w-full"
-          type="text"
-          onMouseDown={(e) => e.stopPropagation()}
-          onClick={(e) => e.stopPropagation()}
-        />
-        <button onClick={() => console.log("clicked")}>Drag me</button>
+        <div
+          className={"w-fit h-fit fixed left-0 top-0"}
+          id={"box"}
+          ref={setNodeRef}
+          style={{
+            cursor: "grab",
+            ...mergedStyles,
+          }}
+          {...attributes}
+        >
+          <h1 {...listeners}>未封装示例 Draggable</h1>
+        </div>
       </div>
-    </div>
-  );
-}
-
-export default function DraggablePage() {
-  return (
-    <DndContext onDragStart={() => console.log("drag start")}>
-      <StandaloneDraggable />
     </DndContext>
   );
 }
