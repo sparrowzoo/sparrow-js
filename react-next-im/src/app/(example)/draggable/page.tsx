@@ -1,6 +1,13 @@
 "use client";
 import React, { useState } from "react";
-import { DndContext, DragStartEvent, useDraggable } from "@dnd-kit/core";
+import {
+  DndContext,
+  DragStartEvent,
+  MouseSensor,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
 interface DraggableContainerProps {
@@ -49,6 +56,7 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
         ...mergedStyles,
       }}
       {...listeners}
+      {...attributes}
     >
       <h1>未封装示例 Draggable</h1>
       {children}
@@ -63,9 +71,15 @@ export default function Draggable() {
     left: 100,
     top: 100,
   });
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 }, // 移动5px才触发拖拽
+    })
+  );
 
   return (
     <DndContext
+      sensors={sensors}
       onDragStart={(e: DragStartEvent) => {
         console.log("dragging start " + JSON.stringify(fixedPosition));
       }}
@@ -80,12 +94,30 @@ export default function Draggable() {
         });
       }}
     >
-      <div
-        className={
-          "w-[500px] h-[500px] bg-gray-200 fixed z-10 top-[100px] left-[100px]"
-        }
-      >
-        <DraggableContainer position={fixedPosition}>Hello</DraggableContainer>
+      <div className={"w-[500px] h-[500px] fixed top-[100px] left-[100px]"}>
+        <DraggableContainer position={fixedPosition}>
+          <div className={" bg-blue-50 w-[200px]"}>
+            <h1>Draggable</h1>
+            <p>
+              在React
+              DnD框架中，对话框内按钮事件失效通常与事件冒泡、拖拽传感器配置或组件层级有关。
+              使用DnD-Kit时，拖拽事件可能优先于点击事件触发。可通过设置activationConstraint参数，让拖拽仅在移动一定距离后触发：
+              useSensors
+            </p>
+            <input
+              className={"w-full p-2 border border-gray-300"}
+              type="text"
+            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                console.log("button click");
+              }}
+            >
+              按钮
+            </button>
+          </div>
+        </DraggableContainer>
       </div>
     </DndContext>
   );
