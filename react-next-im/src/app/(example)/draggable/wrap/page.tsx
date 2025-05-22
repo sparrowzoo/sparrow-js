@@ -9,16 +9,13 @@ import {
     useSensors,
 } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-
-
-
-
+import AsChild from "@/common/components/AsChild";
 
 type DraggableContainerProps= {
     position: Position;
     asChild?: boolean;
     children?: React.ReactNode;
-} & React.ComponentPropsWithoutRef<"div">;
+}
 
 function DraggableContainer(draggableProps: DraggableContainerProps) {
     const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -52,32 +49,15 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
         }
     }
 
-    if (asChild) {
-        const child = React.Children.only(children) as React.ReactElement;
-        return cloneElement(child, {
-            ...props,
-            ...child.props,
-            className: `${props.className || ""} ${
-                child.props.className || ""
-            }`.trim(),
-        });
-    }
 
-    return (
-
-        <div
-            className={"w-fit h-fit fixed left-0 top-0"}
-            id={"box"}
-            ref={setNodeRef}
-            style={{
-                cursor: "grab",
-                ...mergedStyles,
-            }}
-            {...listeners}
-            {...attributes}
-        >
-            {children}
-        </div>
+    return (<AsChild asChild={true} className={"w-fit h-fit fixed left-0 top-0"}
+                     id={"box"}
+                     style={{
+                         cursor: "grab",
+                         ...mergedStyles,
+                     }}
+                     {...listeners}
+                     {...attributes}>{children}</AsChild>
     );
 }
 
@@ -115,10 +95,13 @@ export default function Draggable() {
                 <DraggableContainer position={fixedPosition}>
                     <div className={" bg-blue-50 w-[200px]"}>
                         <h1>Draggable</h1>
-                        <p>
+                        <p className={"w-[300px]"}>
                             在React
-                            DnD框架中，对话框内按钮事件失效通常与事件冒泡、拖拽传感器配置或组件层级有关。
-                            使用DnD-Kit时，拖拽事件可能优先于点击事件触发。可通过设置activationConstraint参数，让拖拽仅在移动一定距离后触发：
+                            DnD框架中，对话框内按钮事件失效通常与事件冒泡、
+                            拖拽传感器配置或组件层级有关。
+                            使用DnD-Kit时，拖拽事件可能优先于点击事件触发。
+                            可通过设置activationConstraint参数，
+                            让拖拽仅在移动一定距离后触发：
                             useSensors
                         </p>
                         <input
