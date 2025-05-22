@@ -50,6 +50,7 @@ export default function Draggable() {
       };
     }
   }
+  debugger;
 
   return (
     <DndContext
@@ -68,18 +69,18 @@ export default function Draggable() {
         });
       }}
     >
-      <div>
+      <div ref={setNodeRef}>
         <div
           className={"w-fit h-fit fixed left-0 top-0"}
           id={"box"}
-          ref={setNodeRef}
           style={{
             cursor: "grab",
             ...mergedStyles,
           }}
           {...attributes}
+          {...listeners}
         >
-          <h1 {...listeners}>未封装示例 Draggable</h1>
+          <h1>未封装示例 Draggable</h1>
         </div>
       </div>
     </DndContext>

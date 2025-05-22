@@ -21,6 +21,7 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
       id: "box",
     });
 
+  debugger;
   const { position, children } = draggableProps;
   let mergedStyles = {};
   if (transform) {
