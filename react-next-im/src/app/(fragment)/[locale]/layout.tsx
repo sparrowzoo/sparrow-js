@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
+import { hasLocale, Locale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import * as React from "react";
 import { ReactNode } from "react";
@@ -39,18 +39,15 @@ export default async function RootLayout({ children, params }: Props) {
 
   return (
     <>
-      <NextIntlClientProvider>
-        {" "}
-        <Toaster position="top-center" reverseOrder={true} />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-        </ThemeProvider>
-      </NextIntlClientProvider>
+      <Toaster position="top-center" reverseOrder={true} />
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        disableTransitionOnChange
+      >
+        {children}
+      </ThemeProvider>
     </>
   );
 }
