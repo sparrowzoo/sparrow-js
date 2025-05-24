@@ -35,11 +35,12 @@ export default class Fetcher {
         const result = (await response.json()) as Result;
         if (result.code != "0") {
           toast.error(translate ? translate(result.key) : result.message);
+          return Promise.reject(result);
         }
         return result;
       })
       .catch((error) => {
-        toast.error(error.message);
+        console.error(error);
         return Promise.reject(error);
       });
   }
@@ -76,13 +77,13 @@ export default class Fetcher {
         const result = (await response.json()) as Result;
         if (result.code != "0") {
           toast.error(translator ? translator(result.key) : result.message);
-          return result;
+          return Promise.reject(result);
         } else {
           return result;
         }
       })
       .catch((error) => {
-        toast.error(error.message);
+        console.error(error);
         return Promise.reject(error);
       });
   }

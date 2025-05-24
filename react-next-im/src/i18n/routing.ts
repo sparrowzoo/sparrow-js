@@ -17,6 +17,10 @@ export const routing = defineRouting({
       en: `${PASSPORT_ROOT}/en/sign-up`,
       zh: `${PASSPORT_ROOT}/zh/sign-up`,
     },
+    "/avatar-editor": {
+      en: `${PASSPORT_ROOT}/en/avatar-editor`,
+      zh: `${PASSPORT_ROOT}/zh/avatar-editor`,
+    },
     "/chat/friends": "/chat/friends",
     "/chat/friends/contact": "chat/friends/contact",
     "/chat/sessions/session": "/chat/sessions/session",

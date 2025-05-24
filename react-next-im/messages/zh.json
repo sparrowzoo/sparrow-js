@@ -32,13 +32,30 @@
   "Contact": {
     "new-friends": "新好友",
     "my-friends": "我的好友",
-    "my-groups": "我的群组"
+    "my-groups": "我的群组",
+    "Audit": {
+      "agree-success": "已同意 ",
+      "reject-success": "已拒绝 ",
+      "agree": "同意",
+      "reject": "拒绝",
+      "rejected": "已拒绝",
+      "approved": "已同意",
+      "applying": "已申请，请等待审核",
+      "apply-to-group": "申请加入群",
+      "apply-join-group": "申请加群",
+      "apply-join-group-success": "加群申请成功!",
+      "user_is_member": "您已是该群成员，无需申请"
+    }
   },
   "MessageBroker": {
     "token-not-found": "无访问权限，请先登录哟",
     "token-is-visitor": "游客无访问权限，请先登录哟",
     "shake-hands-no-login": "握手失败，请先登录哟，回来志哥陪你砍JAVA！",
-    "user_token_abnormal": "请先登录哟，回来志哥陪你砍JAVA！"
+    "user_token_abnormal": "请先登录哟，回来志哥陪你砍JAVA！",
+    "message_empty": "别发空消息哟!",
+    "send": "发送",
+    "offline": "消息已发送，但对方不在线",
+    "account": "帐号"
   },
   "MessageSearch": {
     "content": "聊天内容",
