@@ -66,6 +66,19 @@
       "system_server_error": "系统错误，请稍后重试",
       "password": "密码",
       "captcha": "验证码"
+    },
+    "PasswordTokenVerify": {
+      "token-not-found": "token 不存在，请从邮箱链接点击进入！",
+      "new-password": "请输入新密码",
+      "password-format-error": "密码格式错误，请输入8-20位字符，至少包含1个字母，1个数字，1个特殊字符($, @, !, %, *, #, ?, &)",
+      "confirm-password-not-empty": "请确认密码",
+      "password-not-match": "两次密码输入不一致",
+      "password-reset-success": "密码重置成功，请重新登录！",
+      "password-reset-title": "密码重置",
+      "password-reset-description": "密码格式：至少包含1个字母，1个数字，1个特殊字符($, @, !, %, *, #, ?, &)",
+      "new-password-title": "新密码",
+      "confirm-password-title": "确认密码",
+      "confirm": "确认"
     }
   },
   "AvatarUploader": {
