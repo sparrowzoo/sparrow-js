@@ -12,6 +12,7 @@ import { Utils } from "@/common/lib/Utils";
 import SessionMeta from "@/lib/protocol/session/SessionMeta";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { useTranslations } from "next-intl";
+import Draggable from "@/common/components/Draggable";
 
 interface SessionSearchProp {
   sessionKey: string;
@@ -94,38 +95,40 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
             }}
           />
         </PopoverTrigger>
-        <PopoverContent className="w-fit border-1 border-gray-300 rounded-md p-4">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <div className={"flex flex-row gap-2 w-120"}>
-                {loginUser?.isAdmin() && (
+        <Draggable asChild={true}>
+          <PopoverContent className="w-fit border-1 border-gray-300 rounded-md p-4">
+            <div className="grid gap-4">
+              <div className="space-y-2">
+                <div className={"flex flex-row gap-2 w-120"}>
+                  {loginUser?.isAdmin() && (
+                    <Input
+                      value={userId}
+                      onChange={(event) => setUserId(event.target.value)}
+                      placeholder={t("user-id")}
+                    />
+                  )}
                   <Input
-                    value={userId}
-                    onChange={(event) => setUserId(event.target.value)}
-                    placeholder={t("user-id")}
+                    value={userName}
+                    onChange={(event) => setUserName(event.target.value)}
+                    placeholder={t("user-name")}
                   />
-                )}
-                <Input
-                  value={userName}
-                  onChange={(event) => setUserName(event.target.value)}
-                  placeholder={t("user-name")}
-                />
-                <Input
-                  value={userNickName}
-                  onChange={(event) => setUserNickName(event.target.value)}
-                  placeholder={t("user-nickname")}
-                />
-                <Button onClick={searchSession}>
-                  <SearchIcon />
-                </Button>
+                  <Input
+                    value={userNickName}
+                    onChange={(event) => setUserNickName(event.target.value)}
+                    placeholder={t("user-nickname")}
+                  />
+                  <Button onClick={searchSession}>
+                    <SearchIcon />
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-          <SessionList
-            sessionList={sessionList}
-            setSessionKey={setSessionKey}
-          />
-        </PopoverContent>
+            <SessionList
+              sessionList={sessionList}
+              setSessionKey={setSessionKey}
+            />
+          </PopoverContent>
+        </Draggable>
       </Popover>
     </div>
   );
