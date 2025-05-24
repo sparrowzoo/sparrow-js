@@ -63,7 +63,7 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
         <div className="grid gap-2">
           <div className="grid gap-1">
             <Label className="sr-only" htmlFor="email">
-              {t("email-placeholder")}
+              {t("email")}
             </Label>
             <Input
               {...register("email")}
