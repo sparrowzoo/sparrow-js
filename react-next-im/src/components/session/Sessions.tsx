@@ -10,7 +10,7 @@ interface SessionsProps {
   triggerType: "POP" | "LINK";
 }
 
-function Sessions(props: SessionsProps) {
+export default function Sessions(props: SessionsProps) {
   console.log("Sessions render ....", props);
   if (!props.sessions) {
     return <ThreeDotLoading />;
@@ -28,11 +28,12 @@ function Sessions(props: SessionsProps) {
     </SidebarMenu>
   );
 }
+//会导致页面重新渲染，为什么？
 
-export default function SessionsMemo(props: SessionsProps) {
-  const SessionMemo = React.memo(() => (
-    <Sessions sessions={props.sessions} triggerType={props.triggerType} />
-  ));
-  SessionMemo.displayName = "SessionsMemo";
-  return <SessionMemo />;
-}
+// export default function SessionsMemo(props: SessionsProps) {
+//   const SessionMemo = React.memo(() => (
+//     <Sessions sessions={props.sessions} triggerType={props.triggerType} />
+//   ));
+//   SessionMemo.displayName = "SessionsMemo";
+//   return <SessionMemo />;
+// }

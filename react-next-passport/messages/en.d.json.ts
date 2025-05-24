@@ -82,10 +82,28 @@ declare const messages: {
       "system_server_error": "System error, please try again later",
       "password": "Password",
       "captcha": "Captcha"
-    },
-    "AvatarUploader": {
-      "upload-success": "Upload Success !"
     }
+  },
+  "AvatarUploader": {
+    "upload-success": "Upload Success !",
+    "system_server_error": "System error, please try again later",
+    "image_not_found": "Image not found,please upload image",
+    "preview": "Preview",
+    "settings": "Settings",
+    "dragging-image-to-upload": "Drag image to upload",
+    "click": "Click",
+    "upload-image": "Upload Image",
+    "width": "Width",
+    "height": "Height",
+    "scale": "Scale",
+    "show-grid": "Show Grid",
+    "border-radius": "Border Radius",
+    "rotate-scale": "Rotate Scale",
+    "background-color": "Background Color",
+    "border-color": "Border Color",
+    "opacity": "Opacity",
+    "save": "Save",
+    "or": "Or"
   }
 };
 export default messages;

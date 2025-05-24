@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import MessageSearchBar from "@/components/session/search/MessageSearchBar";
 import ChatUser from "@/lib/protocol/ChatUser";
 import { useTranslations } from "next-intl";
+import Draggable from "@/common/components/Draggable";
 
 export default function PopSearchTrigger() {
   const t = useTranslations("ClientServer");
@@ -32,20 +33,22 @@ export default function PopSearchTrigger() {
           {t("message-record-manage")}
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        sideOffset={10}
-        className={"w-fit h-fit"}
-        alignOffset={0}
-        draggable={"true"}
-        side={"left"}
-        align={"center"}
-      >
-        <SidebarProvider className={"w-fit h-fit min-h-full"}>
-          <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
-            <MessageSearchBar />
-          </Sidebar>
-        </SidebarProvider>
-      </PopoverContent>
+      <Draggable asChild={true}>
+        <PopoverContent
+          sideOffset={10}
+          className={"w-fit h-fit"}
+          alignOffset={0}
+          draggable={"true"}
+          side={"left"}
+          align={"center"}
+        >
+          <SidebarProvider className={"w-fit h-fit min-h-full"}>
+            <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
+              <MessageSearchBar />
+            </Sidebar>
+          </SidebarProvider>
+        </PopoverContent>
+      </Draggable>
     </Popover>
   );
 }

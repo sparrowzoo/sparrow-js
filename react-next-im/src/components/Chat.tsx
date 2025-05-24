@@ -30,6 +30,7 @@ export default function ChatLayout({
   children: React.ReactNode;
 }>) {
   console.log("Chat layout render ....");
+
   const { redirectToLogin } = useNavigating();
   const t = useTranslations("Navigation");
   const translator = useTranslations("MessageBroker");

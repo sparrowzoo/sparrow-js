@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
-import { PASSPORT_ROOT } from "@/common/lib/Env";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,9 +55,9 @@ export default function UserProfile() {
         {/*<DropdownMenuLabel>My Account</DropdownMenuLabel>*/}
         {/*<DropdownMenuSeparator />*/}
         <DropdownMenuItem>
-          <a target={"_blank"} href={`${PASSPORT_ROOT}/avatar-editor`}>
+          <Link target={"_blank"} href={`/avatar-editor`}>
             {t("avatar-setting")}
-          </a>
+          </Link>
         </DropdownMenuItem>
         {/*<DropdownMenuItem>Support</DropdownMenuItem>*/}
         <DropdownMenuSeparator />

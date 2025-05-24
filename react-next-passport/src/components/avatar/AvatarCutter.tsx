@@ -18,17 +18,20 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import toast from "react-hot-toast";
+import { useTranslations } from "next-intl";
 
 interface UploadProps {
   saveAvatar: (avatar: string, clientFileName: string) => void;
 }
 
 const AvatarCutter = (uploadProps: UploadProps) => {
+  const t = useTranslations("AvatarUploader");
+
   function localSaveAvatar() {
     const img = editor.current?.getImage().toDataURL();
     editor;
     if (!img) {
-      toast.error("请先裁剪头像");
+      toast.error(`${t("image_not_found")}`);
       return;
     }
     uploadProps.saveAvatar(img, clientName);
@@ -206,7 +209,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
         </Dropzone>
         <div>
           <Button onClick={preview}>
-            Preview
+            {t("preview")}
             <ArrowRightToLine />
           </Button>
         </div>
@@ -229,20 +232,22 @@ const AvatarCutter = (uploadProps: UploadProps) => {
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>设置</CardTitle>
+          <CardTitle>{t("settings")}</CardTitle>
           <CardDescription
             className={"flex items-center justify-start gap-2 flex-row"}
           >
-            请将图片拖至上文图片
-            <ArrowBigUp className={"bg-accent-foreground text-background"} /> 或
-            点击
+            {t("dragging-image-to-upload")}
+            <ArrowBigUp
+              className={"bg-accent-foreground text-background"}
+            />{" "}
+            {t("or")} {t("click")}
             <label
               className={
                 "flex flex-row items-center justify-start cursor-pointer text-background  bg-accent-foreground py-2 px-4 rounded-md text-sm"
               }
               htmlFor="imgAvatarUploader"
             >
-              上传图片
+              {t("upload-image")}
               <UploadIcon />
             </label>
           </CardDescription>
@@ -251,7 +256,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
         <CardContent className={"flex flex-col gap-2"}>
           <div className={"flex flex-row items-center justify-start gap-2"}>
             <label className={"text-sm font-bold inline-block w-14"}>
-              宽度
+              {t("width")}
             </label>
             <input
               name="scale"
@@ -265,7 +270,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
           </div>
           <div className={"flex flex-row items-center justify-start gap-2"}>
             <label className={"text-sm font-bold inline-block w-14"}>
-              高度
+              {t("height")}
             </label>
             <input
               name="scale"
@@ -279,7 +284,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
           </div>
           <div className={"flex flex-row items-center justify-start gap-2"}>
             <label className={"text-sm font-bold inline-block w-14"}>
-              缩放
+              {t("scale")}
             </label>
             <input
               name="scale"
@@ -293,7 +298,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
           </div>
           <div className={"flex flex-row items-center justify-start gap-2"}>
             <label className={"text-sm font-bold inline-block w-14"}>
-              显示网格
+              {t("show-grid")}
             </label>
             <input
               type="checkbox"
@@ -303,7 +308,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
           </div>
           <div className={"flex flex-row items-center justify-start gap-2"}>
             <label className={"text-sm font-bold inline-block w-14"}>
-              边框孤度
+              {t("border-radius")}
             </label>
             <input
               name="scale"
@@ -317,7 +322,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
           </div>
           <div className={"flex flex-row items-center justify-start gap-2"}>
             <label className={"text-sm font-bold inline-block w-14"}>
-              旋转
+              {t("rotate-scale")}
             </label>
             <input
               name="rotation"
@@ -340,7 +345,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
             <>
               <div className={"flex flex-row items-center justify-start gap-2"}>
                 <label className={"text-sm font-bold inline-block w-14"}>
-                  背景色
+                  {t("background-color")}
                 </label>
                 <input
                   name="backgroundColor"
@@ -352,7 +357,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
 
               <div className={"flex flex-row items-center justify-start gap-2"}>
                 <label className={"text-sm font-bold inline-block w-14"}>
-                  边框色
+                  {t("border-color")}
                 </label>
                 <input
                   name="borderColor"
@@ -360,7 +365,8 @@ const AvatarCutter = (uploadProps: UploadProps) => {
                   value={state.borderColor.slice(0, 7)}
                   onChange={handleBorderColorChange}
                 />
-                透明度:
+
+                {t("opacity")}
                 <input
                   className={"bg-accent-foreground text-background"}
                   name="borderOpacity"
@@ -382,7 +388,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
             </>
           )}
           <div className={"flex flex-row items-center justify-center gap-2"}>
-            <Button onClick={localSaveAvatar}>保存</Button>
+            <Button onClick={localSaveAvatar}>{t("save")}</Button>
           </div>
         </CardContent>
       </Card>
