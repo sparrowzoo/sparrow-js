@@ -56,14 +56,11 @@ loadjQuery(function () {
     container.find('link[rel="stylesheet"]').each(function () {
       $(this).clone().appendTo("head");
     });
+
+    container.find("script").each(function () {
+      $(this).clone().appendTo("body");
+    });
     // 处理脚本（保持顺序执行）
-    const scripts = container.find("script").get();
-    for (const index in scripts) {
-      const script = scripts[index];
-      const newScript = $("<script>");
-      newScript.attr("src", script.src + "?t=" + Date.now());
-      $("body").append(newScript);
-    }
     // (function loadScript(index) {
     //   if (index >= scripts.length) return;
     //
