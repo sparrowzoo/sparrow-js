@@ -57,7 +57,9 @@ loadjQuery(function () {
       $(this).clone().appendTo("head");
     });
 
-    //处理脚本（保持顺序执行）
+    // 处理脚本（保持顺序执行）
+    const scripts = container.find("script").get();
+
     (function loadScript(index) {
       debugger;
       if (index >= scripts.length) return;
