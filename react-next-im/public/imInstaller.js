@@ -70,7 +70,9 @@ loadjQuery(function () {
       if (script.src) {
         newScript
           .attr("src", script.src + "?t=" + Date.now())
-          .on("load", () => loadScript(index + 1));
+          .addEventListener("load", () => {
+            loadScript(index + 1);
+          });
       } else {
         newScript.text(script.innerHTML);
         setTimeout(() => loadScript(index + 1), 0);
