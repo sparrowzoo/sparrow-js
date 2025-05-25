@@ -1,5 +1,5 @@
 import { useTranslations } from "next-intl";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -11,6 +11,12 @@ import { Input } from "@/components/ui/input";
 
 export default function Hello() {
   const t = useTranslations("MessageBroker");
+  const [load, setLoad] = useState(false);
+  useEffect(() => {
+    console.log("Hello");
+    setLoad(true);
+  }, []);
+  if (!load) return <div>Loading...</div>;
   return (
     <div>
       <h1>Hello</h1>
