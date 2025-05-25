@@ -68,15 +68,17 @@ loadjQuery(function () {
       const newScript = $("<script>");
 
       if (script.src) {
-        $("<script>", {
-          src: script.src + "?t=" + Date.now(),
-        })
-          .appendTo("body")
-          .on("load", function () {
-            console.log("Script loaded successfully!");
-            // 在这里执行脚本加载完成后的操作
-            loadScript(index + 1);
-          });
+        const script = document.createElement("script");
+        script.src = script.src + "?t=" + Date.now();
+        script.onload = function () {
+          loadScript(index + 1);
+          console.log("Script loaded successfully!");
+        };
+        script.onerror = function () {
+          loadScript(index);
+          console.error("加载失败，请检查网络或 CDN 状态");
+        };
+        document.body.appendChild(script);
       } else {
         newScript.text(script.innerHTML);
         setTimeout(() => loadScript(index + 1), 0);
