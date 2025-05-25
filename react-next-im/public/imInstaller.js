@@ -68,16 +68,19 @@ loadjQuery(function () {
       const newScript = $("<script>");
 
       if (script.src) {
-        newScript
-          .attr("src", script.src + "?t=" + Date.now())
-          .addEventListener("load", () => {
+        $("<script>", {
+          src: script.src + "?t=" + Date.now(),
+        })
+          .appendTo("body")
+          .on("load", function () {
+            console.log("Script loaded successfully!");
+            // 在这里执行脚本加载完成后的操作
             loadScript(index + 1);
           });
       } else {
         newScript.text(script.innerHTML);
         setTimeout(() => loadScript(index + 1), 0);
       }
-      $("body").append(newScript);
     })(0);
   }
 
