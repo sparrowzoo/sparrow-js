@@ -1,12 +1,10 @@
 import { notFound } from "next/navigation";
-import { hasLocale, Locale } from "next-intl";
+import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import * as React from "react";
 import { ReactNode } from "react";
 import "@/app/globals.css";
 import { routing } from "@/i18n/routing";
-import { Toaster } from "react-hot-toast";
-import { ThemeProvider } from "next-themes";
 
 type Props = {
   children: ReactNode;
@@ -37,17 +35,5 @@ export default async function RootLayout({ children, params }: Props) {
   // Enable static rendering
   setRequestLocale(locale);
 
-  return (
-    <>
-      <Toaster position="top-center" reverseOrder={true} />
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="dark"
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
-    </>
-  );
+  return <NextIntlClientProvider>{children}</NextIntlClientProvider>;
 }

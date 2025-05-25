@@ -1,16 +1,11 @@
 "use client";
 import React from "react";
-import HtmlFragment from "@/common/components/HtmlFragment";
-import dynamic from "next/dynamic";
+import Hello from "@/components/Hello";
 
-const DynamicComponent = dynamic(() => import("@/components/im/Talk"), {
-  ssr: false, // 仅客户端渲染
-});
-export default function Page() {
+export default async function Page() {
   return (
-    <HtmlFragment
-      DynamicComponent={DynamicComponent}
-      containerId={"content-container"}
-    />
-  );
+    <>
+      <Hello />
+    </>
+  ); // 返回空值，避免自动生成默认 div
 }
