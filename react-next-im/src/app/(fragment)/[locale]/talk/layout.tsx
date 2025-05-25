@@ -1,13 +1,17 @@
 import { notFound } from "next/navigation";
-import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
+import { hasLocale, Locale } from "next-intl";
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from "next-intl/server";
 import * as React from "react";
-import { ReactNode } from "react";
 import "@/app/globals.css";
 import { routing } from "@/i18n/routing";
+import ClientComponent from "@/app/(fragment)/[locale]/talk/ClientComponent";
 
 type Props = {
-  children: ReactNode;
+  children: React.ReactNode;
   params: Promise<{ locale: Locale }>;
 };
 
@@ -29,11 +33,17 @@ export default async function RootLayout({ children, params }: Props) {
   // Ensure that the incoming `locale` is valid
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
-    notFound();
+    return notFound();
   }
-
   // Enable static rendering
   setRequestLocale(locale);
+  const messages: Record<string, any> = await getMessages(locale as any);
 
-  return <NextIntlClientProvider>{children}</NextIntlClientProvider>;
+  return (
+    <ClientComponent
+      containerId={"content-container"}
+      locale={locale}
+      messages={messages}
+    ></ClientComponent>
+  );
 }
