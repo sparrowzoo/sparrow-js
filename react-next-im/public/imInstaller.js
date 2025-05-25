@@ -59,7 +59,6 @@ loadjQuery(function () {
     // 处理脚本（保持顺序执行）
     const scripts = container.find("script").get();
     for (const script in scripts) {
-      const script = scripts[index];
       const newScript = $("<script>");
       newScript.attr("src", script.src + "?t=" + Date.now());
       $("body").append(newScript);
