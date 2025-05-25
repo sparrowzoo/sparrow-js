@@ -1,4 +1,6 @@
 import { useTranslations } from "next-intl";
+import React from "react";
+import Talk from "@/components/im/Talk";
 
 export default function Hello() {
   const t = useTranslations("MessageBroker");
@@ -6,8 +8,7 @@ export default function Hello() {
     <div>
       <h1>Hello</h1>
       {t("account")}
-
-      {/*<Talk />*/}
+      <Talk />
     </div>
   );
 }
