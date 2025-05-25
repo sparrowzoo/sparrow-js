@@ -58,7 +58,7 @@ loadjQuery(function () {
     });
 
     container.find("script").each(function () {
-      $(this).clone().appendTo("body");
+      $(this).clone().appendTo("head");
     });
     // 处理脚本（保持顺序执行）
     // (function loadScript(index) {
