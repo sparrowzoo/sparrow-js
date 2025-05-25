@@ -4,7 +4,7 @@ function loadjQuery(callback) {
     return;
   }
   const script = document.createElement("script");
-  script.src = "https://code.jquery.com/jquery-3.7.1.min.js";
+  script.src = "https://code.jquery.com/jquery-3.7.1.min.js?t"+new Date().getTime();
   script.onload = callback;
   script.onerror = function () {
     console.error("加载失败，请检查网络或 CDN 状态");
@@ -65,23 +65,19 @@ loadjQuery(function () {
       if (index >= scripts.length) return;
 
       const script = scripts[index];
-      const newScript = $("<script>");
 
       if (script.src) {
-        const script = document.createElement("script");
-        script.src = script.src + "?t=" + Date.now();
-        script.onload = function () {
+        const newScript = document.createElement("script");
+        newScript.src = script.src + "?t=" + Date.now();
+        newScript.onload = function () {
           loadScript(index + 1);
           console.log("Script loaded successfully!");
         };
-        script.onerror = function () {
+        newScript.onerror = function () {
           loadScript(index);
           console.error("加载失败，请检查网络或 CDN 状态");
         };
-        document.body.appendChild(script);
-      } else {
-        newScript.text(script.innerHTML);
-        setTimeout(() => loadScript(index + 1), 0);
+        document.body.appendChild(newScript);
       }
     })(0);
   }
