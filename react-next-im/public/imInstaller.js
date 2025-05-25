@@ -4,7 +4,8 @@ function loadjQuery(callback) {
     return;
   }
   const script = document.createElement("script");
-  script.src = "https://code.jquery.com/jquery-3.7.1.min.js?t"+new Date().getTime();
+  script.src =
+    "https://code.jquery.com/jquery-3.7.1.min.js?t" + new Date().getTime();
   script.onload = callback;
   script.onerror = function () {
     console.error("加载失败，请检查网络或 CDN 状态");
@@ -58,28 +59,28 @@ loadjQuery(function () {
     });
 
     // 处理脚本（保持顺序执行）
-    const scripts = container.find("script").get();
-
-    (function loadScript(index) {
-      debugger;
-      if (index >= scripts.length) return;
-
-      const script = scripts[index];
-
-      if (script.src) {
-        const newScript = document.createElement("script");
-        newScript.src = script.src + "?t=" + Date.now();
-        newScript.onload = function () {
-          loadScript(index + 1);
-          console.log("Script loaded successfully!");
-        };
-        newScript.onerror = function () {
-          loadScript(index);
-          console.error("加载失败，请检查网络或 CDN 状态");
-        };
-        document.body.appendChild(newScript);
-      }
-    })(0);
+    //   const scripts = container.find("script").get();
+    //
+    //   (function loadScript(index) {
+    //     debugger;
+    //     if (index >= scripts.length) return;
+    //
+    //     const script = scripts[index];
+    //
+    //     if (script.src) {
+    //       const newScript = document.createElement("script");
+    //       newScript.src = script.src + "?t=" + Date.now();
+    //       newScript.onload = function () {
+    //         loadScript(index + 1);
+    //         console.log("Script loaded successfully!");
+    //       };
+    //       newScript.onerror = function () {
+    //         loadScript(index);
+    //         console.error("加载失败，请检查网络或 CDN 状态");
+    //       };
+    //       document.body.appendChild(newScript);
+    //     }
+    //   })(0);
   }
 
   $(document).ready(() => {
