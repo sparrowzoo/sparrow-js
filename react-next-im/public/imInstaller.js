@@ -57,23 +57,23 @@ loadjQuery(function () {
       $(this).clone().appendTo("head");
     });
     // 处理脚本（保持顺序执行）
-    // const scripts = container.find("script").get();
-    // (function loadScript(index) {
-    //   if (index >= scripts.length) return;
-    //
-    //   const script = scripts[index];
-    //   const newScript = $("<script>");
-    //
-    //   if (script.src) {
-    //     newScript
-    //       .attr("src", script.src + "?t=" + Date.now())
-    //       .on("load", () => loadScript(index + 1));
-    //   } else {
-    //     newScript.text(script.innerHTML);
-    //     setTimeout(() => loadScript(index + 1), 0);
-    //   }
-    //   $("body").append(newScript);
-    // })(0);
+    const scripts = container.find("script").get();
+    (function loadScript(index) {
+      if (index >= scripts.length) return;
+
+      const script = scripts[index];
+      const newScript = $("<script>");
+
+      if (script.src) {
+        newScript
+          .attr("src", script.src + "?t=" + Date.now())
+          .on("load", () => loadScript(index + 1));
+      } else {
+        newScript.text(script.innerHTML);
+        setTimeout(() => loadScript(index + 1), 0);
+      }
+      $("body").append(newScript);
+    })(0);
   }
 
   $(document).ready(() => {
