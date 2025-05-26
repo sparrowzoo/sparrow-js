@@ -2,16 +2,16 @@
 import { NextIntlClientProvider } from "next-intl";
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import Talk from "@/components/im/Talk";
 
 type Props = {
   locale: string;
   messages: Record<string, any>;
+  DynamicComponent: React.ComponentType<any>;
   containerId: string;
 };
 //https://next-intl.dev/docs/usage/configuration#server-client-components
-export default function ClientComponent(props: Props) {
-  const { locale, messages, containerId } = props;
+export default function HtmlFragment(props: Props) {
+  const { locale, messages, containerId, DynamicComponent } = props;
   useEffect(() => {
     // 手动挂载到指定容器
     const container = document.getElementById(containerId);
@@ -19,7 +19,7 @@ export default function ClientComponent(props: Props) {
       const root = createRoot(container);
       root.render(
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Talk />
+          <DynamicComponent />
         </NextIntlClientProvider>
       );
     }

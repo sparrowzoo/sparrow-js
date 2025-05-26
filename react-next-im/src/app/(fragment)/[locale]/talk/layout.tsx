@@ -8,7 +8,8 @@ import {
 import * as React from "react";
 import "@/app/globals.css";
 import { routing } from "@/i18n/routing";
-import ClientComponent from "@/app/(fragment)/[locale]/talk/ClientComponent";
+import HtmlFragment from "@/common/components/i18n/HtmlFragement";
+import Talk from "@/components/im/Talk";
 
 type Props = {
   children: React.ReactNode;
@@ -40,10 +41,11 @@ export default async function RootLayout({ children, params }: Props) {
   const messages: Record<string, any> = await getMessages(locale as any);
 
   return (
-    <ClientComponent
+    <HtmlFragment
       containerId={"content-container"}
       locale={locale}
       messages={messages}
-    ></ClientComponent>
+      DynamicComponent={Talk}
+    ></HtmlFragment>
   );
 }
