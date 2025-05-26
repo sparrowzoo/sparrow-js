@@ -31,5 +31,6 @@ export const routing = defineRouting({
       en: `${WWW_ROOT}/en/shop`,
       zh: `${WWW_ROOT}/zh/shop`,
     },
+    "/avatar-editor": "/avatar-editor",
   },
 });

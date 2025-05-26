@@ -41,8 +41,10 @@
       "rejected": "Rejected",
       "approved": "Approved",
       "applying": "Applying,Waiting for approval",
+      "apply-to-group": "Join group",
       "apply-join-group": "Apply Join Group",
-      "apply-join-group-success": "Apply to join group success"
+      "apply-join-group-success": "Apply to join group success",
+      "user_is_member": "you are member of this group,do not apply again"
     }
   },
   "MessageBroker": {
