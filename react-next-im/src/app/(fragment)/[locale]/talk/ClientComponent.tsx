@@ -9,6 +9,7 @@ type Props = {
   messages: Record<string, any>;
   containerId: string;
 };
+//https://next-intl.dev/docs/usage/configuration#server-client-components
 export default function ClientComponent(props: Props) {
   const { locale, messages, containerId } = props;
   useEffect(() => {
