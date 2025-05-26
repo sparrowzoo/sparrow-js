@@ -9,7 +9,7 @@ import * as React from "react";
 import "@/app/globals.css";
 import { routing } from "@/i18n/routing";
 import HtmlFragment from "@/common/components/i18n/HtmlFragement";
-import Talk from "@/components/im/Talk";
+import GroupedTalk from "@/components/im/GroupedTalk";
 
 type Props = {
   children: React.ReactNode;
@@ -45,7 +45,7 @@ export default async function RootLayout({ children, params }: Props) {
       containerId={"content-container"}
       locale={locale}
       messages={messages}
-      DynamicComponent={Talk}
+      DynamicComponent={GroupedTalk}
     ></HtmlFragment>
   );
 }
