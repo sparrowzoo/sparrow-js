@@ -1,8 +1,8 @@
 "use client";
 import { NextIntlClientProvider } from "next-intl";
 import React, { useEffect } from "react";
-import Hello from "@/components/Hello";
 import { createRoot } from "react-dom/client";
+import Talk from "@/components/im/Talk";
 
 type Props = {
   locale: string;
@@ -19,7 +19,7 @@ export default function ClientComponent(props: Props) {
       const root = createRoot(container);
       root.render(
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <Hello />
+          <Talk />
         </NextIntlClientProvider>
       );
     }
