@@ -11,6 +11,7 @@ export class Uploader {
       clientFileName: clientFileName,
       base64Content: base64,
     };
+    debugger;
     return Fetcher.post("/base64-upload.json", body, translator);
   }
 }

@@ -1,13 +1,18 @@
 import { notFound } from "next/navigation";
-import { hasLocale, Locale, NextIntlClientProvider } from "next-intl";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ReactNode } from "react";
+import { hasLocale, Locale } from "next-intl";
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from "next-intl/server";
+import * as React from "react";
 import "@/app/globals.css";
 import { routing } from "@/i18n/routing";
-import Root from "@/components/Root";
+import HtmlFragment from "@/common/components/i18n/HtmlFragement";
+import Talk from "@/components/im/Talk";
 
 type Props = {
-  children: ReactNode;
+  children: React.ReactNode;
   params: Promise<{ locale: Locale }>;
 };
 
@@ -29,17 +34,18 @@ export default async function RootLayout({ children, params }: Props) {
   // Ensure that the incoming `locale` is valid
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) {
-    notFound();
+    return notFound();
   }
-
   // Enable static rendering
   setRequestLocale(locale);
+  const messages: Record<string, any> = await getMessages(locale as any);
 
   return (
-    <>
-      <NextIntlClientProvider>
-        <Root>{children}</Root>
-      </NextIntlClientProvider>
-    </>
+    <HtmlFragment
+      containerId={"content-container"}
+      locale={locale}
+      messages={messages}
+      DynamicComponent={Talk}
+    ></HtmlFragment>
   );
 }
