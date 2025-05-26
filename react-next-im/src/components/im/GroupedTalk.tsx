@@ -23,6 +23,7 @@ import { useTranslations } from "next-intl";
 
 export default function GroupedTalk() {
   const t = useTranslations("ClientServer");
+  const translator = useTranslations("MessageBroker");
   const { redirectToLogin } = useNavigating();
   const [isOpen, setIsOpen] = React.useState(false);
   const [webSocketContextValue, setWebSocketContextValue] =
@@ -38,7 +39,7 @@ export default function GroupedTalk() {
     //token 个人信息本地化
     crosStorage?.locateToken().then((loginUser: LoginUser) => {
       console.log("token", JSON.stringify(loginUser));
-      const messageBroker = new MessageBroker(crosStorage, redirectToLogin);
+      const messageBroker = new MessageBroker(translator, redirectToLogin);
       const localContext = WebSocketContextValue.create(messageBroker);
       messageBroker.newMessageSignal = () => {
         setWebSocketContextValue(localContext?.newReference());

@@ -1,78 +1,93 @@
 "use client";
-import { DndContext, DragStartEvent, useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import React, { useState } from "react";
+import {
+  DndContext,
+  DragStartEvent,
+  MouseSensor,
+  useDraggable,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { CSS, Transform } from "@dnd-kit/utilities";
+import AsChild from "@/common/components/AsChild";
 
-interface DraggableContainerProps {
+type DraggableContainerProps = {
   position: Position;
-  children: React.ReactNode;
-}
+  asChild?: boolean;
+  children?: React.ReactNode;
+};
 
 function DraggableContainer(draggableProps: DraggableContainerProps) {
-  const draggingRef = React.useRef<HTMLDivElement>(null);
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
       id: "box",
     });
-
-  const { children, position } = draggableProps;
+  const { position, children, asChild, ...props } = draggableProps;
   let mergedStyles = {};
-  if (transform) {
-    if (position) {
-      transform.x += position?.left;
-      transform.y += position?.top;
-    }
-    mergedStyles = {
-      transform: CSS.Transform.toString(transform),
-      position: "transform",
+  let localTransform: Transform | null;
+  if (!transform) {
+    //说明初始化或者拖拽结束
+    localTransform = {
+      x: position.left,
+      y: position.top,
+      scaleX: 1,
+      scaleY: 1,
     };
   } else {
-    if (position) {
-      mergedStyles = {
-        position: "fixed",
-        left: `${position.left}px`,
-        top: `${position.top}px`,
-      };
-    }
+    //表示拖拽中....
+    //表示挪动了多少距离
+    //结合transform case 示例更好理解
+    localTransform = {
+      x: transform.x + position.left,
+      y: transform.y + position.top,
+      scaleX: 1,
+      scaleY: 1,
+    };
   }
+  mergedStyles = {
+    transform: CSS.Transform.toString(localTransform),
+  };
 
-  console.log("dragging init function ....", JSON.stringify(mergedStyles));
   return (
-    <div
-      className={"w-fit h-fit"}
-      id={"box"}
-      ref={setNodeRef}
+    <AsChild
+      asChild={true}
       style={{
         cursor: "grab",
         ...mergedStyles,
       }}
+      {...listeners}
       {...attributes}
     >
       {children}
-    </div>
+    </AsChild>
   );
 }
 
-interface DraggableProps {
-  children: React.ReactNode;
-}
+type Position = { left: number; top: number };
 
-type Position = { left: number; top: number } | null;
-
-export default function Draggable(props: DraggableProps) {
-  const [fixedPosition, setFixedPosition] = useState<Position>({
+type DraggableProps = {
+  asChild?: boolean;
+  children?: React.ReactNode;
+};
+export default function Draggable(draggableProps: DraggableProps) {
+  const [position, setPosition] = useState<Position>({
     left: 0,
     top: 0,
   });
-  const [dragged, setDragged] = useState(false);
+  const sensors = useSensors(
+    useSensor(MouseSensor, {
+      activationConstraint: { distance: 5 }, // 移动5px才触发拖拽
+    })
+  );
 
   return (
     <DndContext
+      sensors={sensors}
       onDragStart={(e: DragStartEvent) => {
-        console.log("dragging start " + JSON.stringify(fixedPosition));
+        console.log("dragging start " + JSON.stringify(position));
       }}
       onDragEnd={(e) => {
-        setFixedPosition((prev) => {
+        setPosition((prev) => {
           const left = prev?.left;
           const top = prev?.top;
           if (left && top) {
@@ -80,15 +95,10 @@ export default function Draggable(props: DraggableProps) {
           }
           return { left: e.delta.x, top: e.delta.y };
         });
-        setDragged(true);
       }}
     >
-      <DraggableContainer
-        position={fixedPosition}
-        setInitPosition={setFixedPosition}
-        dragged={dragged}
-      >
-        {props.children}
+      <DraggableContainer asChild={draggableProps.asChild} position={position}>
+        {draggableProps.children}
       </DraggableContainer>
     </DndContext>
   );

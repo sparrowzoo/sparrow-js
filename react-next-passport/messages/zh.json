@@ -36,7 +36,9 @@
       "sign-in-with-wechat": "微信登录",
       "remember-me": "记住我",
       "password": "密码",
-      "captcha": "验证码"
+      "captcha": "验证码",
+      "global_validate_code_error": "验证码输入错误",
+      "system_server_error": "系统异常,请稍后重试!"
     },
     "find-password": {
       "forgot-password": "忘记密码?",
@@ -64,6 +66,40 @@
       "system_server_error": "系统错误，请稍后重试",
       "password": "密码",
       "captcha": "验证码"
+    },
+    "PasswordTokenVerify": {
+      "token-not-found": "token 不存在，请从邮箱链接点击进入！",
+      "new-password": "请输入新密码",
+      "password-format-error": "密码格式错误，请输入8-20位字符，至少包含1个字母，1个数字，1个特殊字符($, @, !, %, *, #, ?, &)",
+      "confirm-password-not-empty": "请确认密码",
+      "password-not-match": "两次密码输入不一致",
+      "password-reset-success": "密码重置成功，请重新登录！",
+      "password-reset-title": "密码重置",
+      "password-reset-description": "密码格式：至少包含1个字母，1个数字，1个特殊字符($, @, !, %, *, #, ?, &)",
+      "new-password-title": "新密码",
+      "confirm-password-title": "确认密码",
+      "confirm": "确认"
     }
+  },
+  "AvatarUploader": {
+    "upload-success": "头象上传成功 !",
+    "system_server_error": "系统错误，请稍后重试",
+    "image_not_found": "请先上传图片",
+    "preview": "预览",
+    "settings": "设置",
+    "dragging-image-to-upload": "拖拽图片到此处上传",
+    "click": "点击",
+    "upload-image": "上传图片",
+    "width": "宽度",
+    "height": "高度",
+    "scale": "缩放",
+    "show-grid": "显示网格",
+    "border-radius": "圆角",
+    "rotate-scale": "旋转",
+    "background-color": "背景色",
+    "border-color": "边框色",
+    "opacity": "透明度",
+    "save": "保存",
+    "or": "或"
   }
 }
