@@ -7,35 +7,23 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { SidebarTrigger } from "@/components/ui/sidebar";
-import React, { useEffect } from "react";
-import { Separator } from "@/components/ui/separator";
+import React, { useContext } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { AdminContext } from "@/lib/admin/AdminContextProvider";
+import { useRouter } from "@/common/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
 export default function Page() {
   const router = useRouter();
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      console.log("路由跳转至:", url);
-    };
-  }, [router]);
+  const adminContext = useContext(AdminContext);
+
   return (
     <>
-      <Button onClick={() => router.push("/dashboard")}>Dashboard</Button>
-      <br />
-      <Button onClick={() => router.push("/about")}>About</Button>
-
-      <Button onClick={() => router.back()}>Back</Button>
-
       <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
-        <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="mr-2 h-4"></Separator>
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
@@ -67,7 +55,24 @@ export default function Page() {
         </ResizablePanelGroup>
       </div>
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-        <div className="aspect-video rounded-xl bg-muted/50"></div>
+        <div className="aspect-video rounded-xl bg-muted/50">
+          <Button
+            onClick={() => {
+              adminContext.adminBroker.access("/dashboard", router);
+            }}
+          >
+            Dashboard
+          </Button>
+          <br />
+          <Button
+            onClick={() => {
+              adminContext.adminBroker.access("/access-history", router);
+            }}
+          >
+            Access History
+          </Button>
+          <Button onClick={() => router.back()}>Back</Button>
+        </div>
         <div className="aspect-video rounded-xl bg-muted/50"></div>
         <div className="aspect-video rounded-xl bg-muted/50"></div>
       </div>
