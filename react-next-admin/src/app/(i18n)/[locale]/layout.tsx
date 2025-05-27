@@ -4,8 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import React, { ReactNode } from "react";
 import "@/app/globals.css";
 import { routing } from "@/i18n/routing";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/app/components/app-sidebar";
+import AdminRootLayout from "@/components/root-layout";
 
 type Props = {
   children: ReactNode;
@@ -45,10 +44,7 @@ export default async function RootLayout({ children, params }: Props) {
         }
       >
         <NextIntlClientProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarInset>{children}</SidebarInset>
-          </SidebarProvider>
+          <AdminRootLayout>{children}</AdminRootLayout>
         </NextIntlClientProvider>
       </body>
     </html>
