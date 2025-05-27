@@ -7,7 +7,7 @@ export const routing = defineRouting({
   pathnames: {
     "/": "/",
     "/dashboard": "/dashboard",
-    "/about": "/about",
+    "/access-history": "/access-history",
     "/sign-in": {
       en: `${PASSPORT_ROOT}/en/sign-in`,
       zh: `${PASSPORT_ROOT}/zh/sign-in`,
