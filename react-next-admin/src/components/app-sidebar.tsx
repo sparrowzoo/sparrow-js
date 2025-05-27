@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useContext } from "react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,8 +12,9 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { VersionSwitcher } from "@/app/components/version-switcher";
-
+import { VersionSwitcher } from "@/components/version-switcher";
+import { useRouter } from "@/common/i18n/navigation";
+import { AdminContext } from "@/lib/admin/AdminContextProvider";
 
 const data = {
   versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
@@ -23,11 +25,11 @@ const data = {
       items: [
         {
           title: "Dashboard",
-          url: "/zh/dashboard",
+          url: "/dashboard",
         },
         {
           title: "About",
-          url: "/zh/about",
+          url: "/access-history",
         },
       ],
     },
@@ -36,8 +38,8 @@ const data = {
       url: "#",
       items: [
         {
-          title: "Routing",
-          url: "#",
+          title: "Menu",
+          url: "/menu",
         },
         {
           title: "Data Fetching",
@@ -146,6 +148,8 @@ const data = {
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const adminContext = useContext(AdminContext);
+  const router = useRouter();
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -163,8 +167,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
+                    <SidebarMenuButton
+                      variant={"outline"}
+                      onClick={() => {
+                        adminContext.adminBroker.access(item.url, router);
+                      }}
+                      isActive={item.isActive}
+                    >
+                      {item.title}
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
