@@ -1,0 +1,37 @@
+{
+  "name": "sparrow",
+  "private": true,
+  "scripts": {
+    "ssr": "node ./src/ssr",
+    "dev": "webpack-dev-server --mode development",
+    "build": "webpack --mode production"
+  },
+  "version": "1.0.0",
+  "main": "main.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@babel/core": "^7.27.3",
+    "@babel/preset-env": "^7.27.2",
+    "babel": "^6.23.0",
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-cli": "^3.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^5.0.0",
+    "gulp-uglify": "^3.0.2",
+    "less": "^4.3.0",
+    "plugins": "^0.4.2"
+  },
+  "dependencies": {
+    "code-prettify": "^0.1.0",
+    "echarts": "^5.6.0",
+    "gulp-load-plugins": "^2.0.8",
+    "requirejs": "^2.3.7",
+    "requirejs-domready": "^2.0.3"
+  }
+}
