@@ -13,7 +13,7 @@ export default function HtmlFragment(htmlFragmentProps: HtmlFragmentProps) {
     const container = document.getElementById(htmlFragmentProps.containerId);
     if (container) {
       const root = createRoot(container);
-      root.render(<DynamicComponent />);
+      root.render(<DynamicComponent table={htmlFragmentProps} />);
     }
   }, []);
   return null; // 返回空值，避免自动生成默认 div
