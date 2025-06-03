@@ -55,6 +55,7 @@ declare const messages: {
     "token-is-visitor": "token is visitor, please sign in again",
     "shake-hands-no-login": "websocket connection failed, please sign in again",
     "user_token_abnormal": "user token abnormal！",
+    "user_token_expired": "token expired, please sign in again",
     "message_empty": "Message can't be empty!",
     "send": "Send",
     "offline": "message sent, but receiver is Offline",
