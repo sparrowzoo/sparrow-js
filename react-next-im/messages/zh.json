@@ -52,6 +52,7 @@
     "token-is-visitor": "游客无访问权限，请先登录哟",
     "shake-hands-no-login": "握手失败，请先登录哟，回来志哥陪你砍JAVA！",
     "user_token_abnormal": "请先登录哟，回来志哥陪你砍JAVA！",
+    "user_token_expired": "登录会话已过期",
     "message_empty": "别发空消息哟!",
     "send": "发送",
     "offline": "消息已发送，但对方不在线",
