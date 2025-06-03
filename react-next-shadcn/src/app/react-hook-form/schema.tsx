@@ -10,12 +10,13 @@ export const InnerFormSchema = v.object({
     userName: v.pipe(
         v.string("请输入用户名2"),
         v.nonEmpty("请输入用户名"),
-        v.minLength(6,"用户名只能包含字母、数字、下划线和中文")
+        v.minLength(6, "用户名只能包含字母、数字、下划线和中文")
     ),
     password: v.pipe(
         v.string(),
         v.nonEmpty("Please enter your password."),
-        v.minLength(8, "Your password must have 8 characters or more.")
+        v.minLength(8, "Your password must have 8 characters or more."),
+        v.maxLength(20, "Your password must have 20 characters"),
     ),
 
     confirmPassword: v.pipe(
