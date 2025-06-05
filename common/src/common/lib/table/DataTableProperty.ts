@@ -18,7 +18,6 @@ export default interface DataTableProps<
     filterColumn?: boolean;
     SearchComponent?: React.ComponentType<any>;
     OperationComponent?: React.ComponentType<any>;
-
 }
 
 export interface SearchProps<TData> {

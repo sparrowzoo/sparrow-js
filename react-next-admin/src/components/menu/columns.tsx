@@ -1,4 +1,4 @@
-import {ColumnDef} from "@tanstack/react-table";
+import {ColumnDef, filterFns} from "@tanstack/react-table";
 import * as React from "react";
 import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import CheckBoxCell from "@/common/components/table/cell/check-box";
@@ -35,14 +35,18 @@ export const columns: ColumnDef<Payment>[] = [
     },
     {
         accessorKey: "status",
-        header: "Status",
+        header: NormalHeader({
+            showSort: true,
+            showFilter: true,
+            columnTitle: "Status"
+        } as ColumnOperationProps),
         cell: NormalCell("status"),
     },
     {
         accessorKey: "email",
         header: NormalHeader({
-            showSort: true,
-            showFilter: true,
+            showSort: false,
+            showFilter: false,
             columnTitle: "Email"
         } as ColumnOperationProps),
         cell: NormalCell("email"),
@@ -50,8 +54,9 @@ export const columns: ColumnDef<Payment>[] = [
     },
     {
         accessorKey: "amount",
-        header: NormalHeader({columnTitle: "Amount", showFilter: true} as ColumnOperationProps),
-        cell: CurrencyCell("amount", "currency"),
+        header: NormalHeader({columnTitle: "Amount", showSort: true} as ColumnOperationProps),
+        cell: NormalCell("amount"),
+        filterFn:filterFns.includesString
     },
     {
         id: "actions",
