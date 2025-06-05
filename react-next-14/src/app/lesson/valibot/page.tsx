@@ -26,7 +26,7 @@ const Page = () => {
         resolver: valibotResolver(
             OuterSchema,
             //https://valibot.dev/guides/parse-data/
-            {abortEarly: true}
+            {abortEarly: true, lang: "zh-CN"}
         ), // Useful to check TypeScript regressions
     });
 
@@ -58,9 +58,9 @@ const Page = () => {
             email:<input {...register("email", {required: true})} />
             {errors.email && <span role="alert">{errors.email.message}</span>}
             <br/>
-            age:<input {...register("age")} />
+            age:
+            <input {...register("age")} />
             {errors.age && <span role="alert">{errors.age.message}</span>}
-            {/*{!errors.age && <span role="alert"><Check/></span>}*/}
 
             <ErrorMessage errors={errors} name="age"/>
             <ErrorMessage

@@ -11,7 +11,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import * as React from "react";
-import {BasicData} from "@/lib/DataTableProperty";
+import {BasicData} from "@/common/lib/table/DataTableProperty";
 
 export interface App extends BasicData<App> {
     id: number | string;
