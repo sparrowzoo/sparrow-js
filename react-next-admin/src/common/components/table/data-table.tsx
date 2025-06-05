@@ -79,11 +79,6 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
         }
     }
 
-    table.getCenterRows().forEach((row) => {
-        row.getIsSelected();
-        row.getValue("id");
-    });
-
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
@@ -115,22 +110,21 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <>
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={row.getIsSelected() && "selected"}
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext()
-                                                )}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
-                                </>
+                            table.getRowModel().rows.map((row, index) => (
+
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
                             ))
                         ) : (
                             <EmptyRow columns={columns}/>

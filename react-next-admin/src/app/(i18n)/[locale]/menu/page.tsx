@@ -7,7 +7,7 @@ import Search from "@/components/menu/search";
 
 const data: Payment[] = [
     {
-        id: "m5gr84i9",
+        id: "1",
         amount: 316,
         status: "success",
         email: "ken99@example.com",
@@ -64,7 +64,7 @@ const data: Payment[] = [
         ],
     },
     {
-        id: "3u1reuv4",
+        id: "2",
         amount: 242,
         status: "success",
         email: "Abe45@example.com",
@@ -72,7 +72,7 @@ const data: Payment[] = [
 
     },
     {
-        id: "derv1ws0",
+        id: "3",
         amount: 837,
         status: "processing",
         email: "Monserrat44@example.com",
@@ -80,7 +80,7 @@ const data: Payment[] = [
 
     },
     {
-        id: "5kma53ae",
+        id: "4",
         amount: 874,
         status: "success",
         email: "Silas22@example.com",
@@ -88,7 +88,7 @@ const data: Payment[] = [
 
     },
     {
-        id: "bhqecj4p",
+        id: "5",
         amount: 721,
         status: "failed",
         email: "carmella@example.com",

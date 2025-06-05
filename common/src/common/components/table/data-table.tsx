@@ -79,11 +79,6 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
         }
     }
 
-    table.getCenterRows().forEach((row) => {
-        row.getIsSelected();
-        row.getValue("id");
-    });
-
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
