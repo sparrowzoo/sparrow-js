@@ -1,14 +1,11 @@
-import type { NextConfig } from "next";
+import type {NextConfig} from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+    /* config options here */
 };
 
 const withNextIntl = createNextIntlPlugin({
-  requestConfig: "./src/common/i18n/request.ts",
-  experimental: {
-    createMessagesDeclaration: "./messages/en.json",
-  },
+    requestConfig: "./src/common/i18n/manual-auto-split-request.ts",
 });
 export default withNextIntl(nextConfig);

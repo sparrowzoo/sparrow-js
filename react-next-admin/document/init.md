@@ -23,3 +23,10 @@ yarn add cpy
     "copy": "cpy ./../common/src/common  ./src/ --parents"
 ```
 
+# 安装组件
+
+```shell
+yarn shadcn add input //最新版本
+npx shadcn-ui@latest add table //
+```
+

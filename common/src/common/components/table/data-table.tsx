@@ -2,30 +2,31 @@
 
 import * as React from "react";
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
-  TableState,
-  Updater,
-  useReactTable,
-  VisibilityState,
+    ColumnDef,
+    ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getExpandedRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    SortingState,
+    TableState,
+    Updater,
+    useReactTable,
+    VisibilityState,
 } from "@tanstack/react-table";
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import DataTableProps, {BasicData} from "@/lib/DataTableProperty";
-import ColumnFilter from "@/components/table/column-filter";
-import {EmptyRow} from "@/components/table/empty-row";
+import DataTableProps, {BasicData} from "@/common/lib/table/DataTableProperty";
+import ColumnFilter from "@/common/components/table/column-filter";
+import {EmptyRow} from "@/common/components/table/empty-row";
 
 export function DataTable<TData extends BasicData<TData>, TValue>({
                                                                       columns,
                                                                       data,
                                                                       filterColumn,
                                                                       SearchComponent,
+                                                                      OperationComponent
                                                                   }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -87,6 +88,10 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
         <div className="w-full">
             <div className="flex items-center py-4">
                 {SearchComponent && <SearchComponent table={table}/>}
+            </div>
+
+            <div className="flex items-center py-4">
+                {OperationComponent && <OperationComponent table={table}/>}
             </div>
             <div className="rounded-md border">
                 <Table>
