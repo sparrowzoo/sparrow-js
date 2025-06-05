@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {App, columns} from "@/components/app/columns";
-import {DataTable} from "@/components/table/data-table";
+import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/app/search";
 
 const data: App[] = [

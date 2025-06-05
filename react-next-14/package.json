@@ -13,7 +13,6 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
-    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^5.15.19",
     "@mui/material": "^5.15.20",
@@ -46,7 +45,7 @@
     "swr": "^2.3.3",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
-    "valibot": "^0.33.3",
+    "valibot": "^1.1.0",
     "yup": "^1.4.0"
   },
   "devDependencies": {

@@ -1,0 +1,27 @@
+{
+  "LocaleLayout": {
+    "title": "sparrow admin",
+    "description": "A React Admin Dashboard with Next.js"
+  },
+  "LocaleSwitcher": {
+    "label": "Change language to \uD83C\uDDFA\uD83C\uDDF8 English",
+    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unknown}}"
+  },
+  "Header": {
+    "index": "Home",
+    "blog": "Blog",
+    "im": "IM",
+    "client-server": "Client Server",
+    "shop": "Shop",
+    "playground": "Write Blog",
+    "theme-toggle": "Toggle Theme",
+    "light-mode": "Light Mode",
+    "dark-mode": "Dark Mode",
+    "system-mode": "System Mode",
+    "avatar-setting": "Avatar Setting",
+    "logout": "Logout",
+    "sign-in": "Sign In",
+    "sign-up": "Sign Up",
+    "logout-success": "Logout success"
+  }
+}
