@@ -29,9 +29,11 @@ function InnerColumnOperation({column, showFilter, showSort}: ColumnOperationPro
                     <DropdownMenuItem><Input
                         placeholder="Filter emails..."
                         value={(column?.getFilterValue() as string) ?? ""}
-                        onChange={(event) =>
-                            column?.setFilterValue(event.target.value)
-                        }
+                        onChange={(event) =>{
+                            console.log(column.columnDef.filterFn);
+                            console.log(column.getAutoFilterFn());
+                            column?.setFilterValue(event.target.value);
+                        }}
                         onClick={(event) => event.stopPropagation()}
                         className="max-w-sm"
                     /></DropdownMenuItem>
