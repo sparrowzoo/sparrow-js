@@ -4,6 +4,8 @@ import * as React from "react";
 import {columns, Payment} from "@/components/menu/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/menu/search";
+import Operation from "@/components/menu/operation";
+import {useState} from "react";
 
 const data: Payment[] = [
     {
@@ -98,13 +100,17 @@ const data: Payment[] = [
 ];
 
 export default function DataTableDemo() {
+
+    const [dataState, setDataState]=useState(data);
     return (
         <div className="w-full">
             <DataTable
                 SearchComponent={Search}
-                data={data}
+                OperationComponent={Operation}
+                data={dataState}
                 columns={columns}
                 filterColumn={true}
+                setData={setDataState}
             ></DataTable>
         </div>
     );

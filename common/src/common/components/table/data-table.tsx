@@ -111,7 +111,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-                                <>
+
                                     <TableRow
                                         key={row.id}
                                         data-state={row.getIsSelected() && "selected"}
@@ -125,7 +125,6 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                             </TableCell>
                                         ))}
                                     </TableRow>
-                                </>
                             ))
                         ) : (
                             <EmptyRow columns={columns}/>

@@ -1,6 +1,7 @@
 import {ColumnDef} from "@tanstack/react-table";
 import React from "react";
 import {Table} from "@tanstack/table-core";
+import {Payment} from "@/components/menu/columns";
 
 export interface BasicData<TData> {
     id: number | string;
@@ -16,13 +17,14 @@ export default interface DataTableProps<
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     filterColumn?: boolean;
-    SearchComponent?: React.ComponentType<any>;
+    SearchComponent?: React.ComponentType<SearchProps<TData>>;
     OperationComponent?: React.ComponentType<any>;
-
+    setData :React.Dispatch<React.SetStateAction<TData[]>>
 }
 
 export interface SearchProps<TData> {
     table: Table<TData>;
+    setData :React.Dispatch<React.SetStateAction<TData[]>>
 }
 
 export interface EmptyRowProps<TData, TValue> {

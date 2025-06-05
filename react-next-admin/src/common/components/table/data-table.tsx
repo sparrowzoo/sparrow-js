@@ -26,7 +26,8 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                                                       data,
                                                                       filterColumn,
                                                                       SearchComponent,
-                                                                      OperationComponent
+                                                                      OperationComponent,
+    setData
                                                                   }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -82,7 +83,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
-                {SearchComponent && <SearchComponent table={table}/>}
+                {SearchComponent && <SearchComponent setData={setData} table={table}/>}
             </div>
 
             <div className="flex items-center py-4">
@@ -110,21 +111,21 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row, index) => (
+                            table.getRowModel().rows.map((row) => (
 
-                                <TableRow
-                                    key={row.id}
-                                    data-state={row.getIsSelected() && "selected"}
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={row.getIsSelected() && "selected"}
+                                    >
+                                        {row.getVisibleCells().map((cell) => (
+                                            <TableCell key={cell.id}>
+                                                {flexRender(
+                                                    cell.column.columnDef.cell,
+                                                    cell.getContext()
+                                                )}
+                                            </TableCell>
+                                        ))}
+                                    </TableRow>
                             ))
                         ) : (
                             <EmptyRow columns={columns}/>
