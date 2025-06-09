@@ -1,11 +1,12 @@
 "use client";
 
 import * as React from "react";
+import {useState} from "react";
 import {columns, Payment} from "@/components/menu/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/menu/search";
 import Operation from "@/components/menu/operation";
-import {useState} from "react";
+import EditPage from "@/components/menu/edit";
 
 const data: Payment[] = [
     {
@@ -99,14 +100,16 @@ const data: Payment[] = [
     },
 ];
 
-export default function DataTableDemo() {
+export default function Page() {
 
-    const [dataState, setDataState]=useState(data);
+    const [dataState, setDataState] = useState(data);
     return (
         <div className="w-full">
             <DataTable
                 SearchComponent={Search}
                 OperationComponent={Operation}
+                EditComponent={EditPage}
+                primary={"id"}
                 data={dataState}
                 columns={columns}
                 filterColumn={true}

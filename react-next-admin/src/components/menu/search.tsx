@@ -1,20 +1,17 @@
 import {Input} from "@/components/ui/input";
 import * as React from "react";
 import {Payment} from "@/components/menu/columns";
-import {SearchProps} from "@/common/lib/table/DataTableProperty";
+import {TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {Button} from "@/components/ui/button";
 
-export default function Search({table,setData}: SearchProps<Payment>) {
+export default function Search({table, setData}: TableOperationProps<Payment>) {
     const data: Payment[] = [
-
-
         {
             id: "3",
             amount: 837,
             status: "processing",
             email: "Monserrat44@example.com",
             currency: "USD",
-
         },
         {
             id: "4",
@@ -22,7 +19,6 @@ export default function Search({table,setData}: SearchProps<Payment>) {
             status: "success",
             email: "Silas22@example.com",
             currency: "USD",
-
         },
         {
             id: "5",
@@ -36,14 +32,14 @@ export default function Search({table,setData}: SearchProps<Payment>) {
 
 
     return (<>
-        <Input
-            placeholder="Filter emails..."
-            className="max-w-sm"
-        />
-    <Input
-        placeholder="Filter emails..."
-        className="max-w-sm"
-    />
+            <Input
+                placeholder="Filter emails..."
+                className="max-w-sm"
+            />
+            <Input
+                placeholder="Filter emails..."
+                className="max-w-sm"
+            />
             <Button onClick={() => setData(data)} variant="ghost" className="ml-2">搜索</Button>
         </>
     );

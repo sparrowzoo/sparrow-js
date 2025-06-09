@@ -4,11 +4,10 @@ import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTablePrope
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal-cell";
 import {NormalHeader} from "@/common/components/table/header/normal-header";
-import CurrencyCell from "@/common/components/table/cell/currency";
 import TreeCell from "@/common/components/table/cell/tree";
 import {EmptyHeader} from "@/common/components/table/header/empty";
-import OperationCell from "@/common/components/table/cell/operation";
 import CheckboxHeader from "@/common/components/table/header/check-box";
+import CurrencyCell from "@/common/components/table/cell/currency";
 
 export interface Payment extends BasicData<Payment> {
     id: number | string;
@@ -55,13 +54,12 @@ export const columns: ColumnDef<Payment>[] = [
     {
         accessorKey: "amount",
         header: NormalHeader({columnTitle: "Amount", showSort: true} as ColumnOperationProps),
-        cell: NormalCell("amount"),
-        filterFn:filterFns.includesString
+        cell: CurrencyCell("amount", "currency"),
+        filterFn: filterFns.includesString,
     },
     {
         id: "actions",
         header: "Actions",
-        enableHiding: false,
-        cell: OperationCell
+        enableHiding: false
     },
 ];

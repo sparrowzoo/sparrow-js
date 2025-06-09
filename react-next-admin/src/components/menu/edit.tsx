@@ -3,17 +3,30 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
 import React from "react";
 import ErrorMessage from "@/common/components/i18n/ErrorMessage";
-import {FormData, FormSchema} from "@/lib/schema/menu/schema";
+import {FormData, FormSchema} from "@/schema/menu/schema";
+import {Button} from "@/components/ui/button";
+import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Label} from "@/components/ui/label";
+import {Input} from "@/components/ui/input";
+import MenuApi from "@/api/auto/menu";
+import toast from "react-hot-toast";
+import {RowEditProps} from "@/common/lib/table/DataTableProperty";
 
-const Page = () => {
+export default function EditPage({id}: RowEditProps) {
+    const translate = (key: string) => {
+        return "zhangsan";
+    }
+
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        console.log(data);
-        event?.preventDefault();
-        console.log(event);
-        alert(JSON.stringify(data, null, 2));
+        alert(id);
+        MenuApi.save(data, translate).then(
+            (res) => {
+                toast.success("操作成功！");
+            }
+        )
     };
 
     const {
@@ -39,17 +52,29 @@ const Page = () => {
     return (
         //正确
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className={"flex flex-row items-center justify-start"}>
-                <label>age:</label>
-                <input {...register("age")} />
-                {touchedFields.age}
-                {/*{isSubmitted && !errors.age && <span role="alert"><Check/></span>}*/}
-                <ErrorMessage submitted={isSubmitted}
-                              message={errors.age?.message}
-                />
+            <DialogHeader>
+                <DialogTitle>Edit profile</DialogTitle>
+                <DialogDescription>
+                    Make changes to your profile here. Click save when you&apos;re
+                    done.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col">
+                <div className="flex flex-row justify-start items-center mb-4">
+                    <Label className={"justify-end w-[8rem]"} htmlFor="name-1">kw全国各地</Label>
+                    <Input className={"w-[16rem]"}  {...register("age")}/>
+
+                    <ErrorMessage messageClass={"text-sm flex-1 text-red-500"} submitted={isSubmitted}
+                                  message={errors.age?.message}
+                    />
+                </div>
             </div>
-            <button type="submit">submit</button>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="outline">Cancel</Button>
+                </DialogClose>
+                <Button type="submit">Save changes</Button>
+            </DialogFooter>
         </form>
     );
 };
-export default Page;
