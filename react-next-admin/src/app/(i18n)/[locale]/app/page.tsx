@@ -3,7 +3,6 @@
 import * as React from "react";
 import {App, columns} from "@/components/app/columns";
 import {DataTable} from "@/common/components/table/data-table";
-import Search from "@/components/app/search";
 
 const data: App[] = [
     {
@@ -36,7 +35,6 @@ export default function DataTableDemo() {
         <div className="w-full">
             <div className="rounded-md border">
                 <DataTable
-                    SearchComponent={Search}
                     data={data}
                     columns={columns}
                     filterColumn={true}

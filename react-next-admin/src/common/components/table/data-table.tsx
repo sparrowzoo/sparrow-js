@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import {
+    Cell,
     ColumnDef,
     ColumnFiltersState,
     flexRender,
@@ -16,18 +17,21 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
+import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import DataTableProps, {BasicData} from "@/common/lib/table/DataTableProperty";
 import ColumnFilter from "@/common/components/table/column-filter";
 import {EmptyRow} from "@/common/components/table/empty-row";
+import CellRenderer from "@/common/components/table/cell-render";
 
 export function DataTable<TData extends BasicData<TData>, TValue>({
                                                                       columns,
                                                                       data,
+                                                                      setData,
+                                                                      primary,
                                                                       filterColumn,
                                                                       SearchComponent,
                                                                       OperationComponent,
-    setData
+                                                                      EditComponent
                                                                   }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -83,7 +87,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
-                {SearchComponent && <SearchComponent setData={setData} table={table}/>}
+                {SearchComponent && setData && <SearchComponent setData={setData} table={table}/>}
             </div>
 
             <div className="flex items-center py-4">
@@ -113,19 +117,15 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
 
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={row.getIsSelected() && "selected"}
-                                    >
-                                        {row.getVisibleCells().map((cell) => (
-                                            <TableCell key={cell.id}>
-                                                {flexRender(
-                                                    cell.column.columnDef.cell,
-                                                    cell.getContext()
-                                                )}
-                                            </TableCell>
-                                        ))}
-                                    </TableRow>
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell: Cell<TData, TValue>) => (
+                                        <CellRenderer key={cell.id} cell={cell} EditComponent={EditComponent}
+                                                      primary={primary}/>
+                                    ))}
+                                </TableRow>
                             ))
                         ) : (
                             <EmptyRow columns={columns}/>

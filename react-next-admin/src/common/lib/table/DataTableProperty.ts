@@ -1,7 +1,6 @@
-import {ColumnDef} from "@tanstack/react-table";
+import {Cell, CellContext, ColumnDef} from "@tanstack/react-table";
 import React from "react";
 import {Table} from "@tanstack/table-core";
-import {Payment} from "@/components/menu/columns";
 
 export interface BasicData<TData> {
     id: number | string;
@@ -16,15 +15,18 @@ export default interface DataTableProps<
 > {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    primary?: string;
+    setData?: React.Dispatch<React.SetStateAction<TData[]>>;
     filterColumn?: boolean;
-    SearchComponent?: React.ComponentType<SearchProps<TData>>;
+    SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<any>;
-    setData :React.Dispatch<React.SetStateAction<TData[]>>
+    EditComponent?: React.ComponentType<RowEditProps>;
+
 }
 
-export interface SearchProps<TData> {
+export interface TableOperationProps<TData> {
     table: Table<TData>;
-    setData :React.Dispatch<React.SetStateAction<TData[]>>
+    setData: React.Dispatch<React.SetStateAction<TData[]>>;
 }
 
 export interface EmptyRowProps<TData, TValue> {
@@ -38,3 +40,16 @@ export interface ColumnOperationProps {
     showFilter?: boolean;
     showSort?: boolean;
 }
+
+export interface RowEditProps {
+    id: string | number;
+    cellContext: CellContext<any, any>;
+}
+
+export interface RowOperationProps {
+    EditComponent?: React.ComponentType<RowEditProps>;
+    primary: string;
+    cell: Cell<any, any>
+}
+
+export type IDENTITY = string | number;
