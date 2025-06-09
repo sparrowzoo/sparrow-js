@@ -6,6 +6,6 @@ const nextConfig: NextConfig = {
 };
 
 const withNextIntl = createNextIntlPlugin({
-    requestConfig: "./src/common/i18n/manual-auto-split-request.ts",
+    requestConfig: "./src/common/i18n/multi-request.ts",
 });
 export default withNextIntl(nextConfig);
