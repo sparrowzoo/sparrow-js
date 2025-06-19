@@ -3,7 +3,7 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
 import React from "react";
 import ErrorMessage from "@/common/components/i18n/ErrorMessage";
-import {FormData, FormSchema} from "@/schema/menu/schema";
+import {FormData, FormSchema} from "@/schema/menu";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Label} from "@/components/ui/label";

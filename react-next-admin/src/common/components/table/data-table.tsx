@@ -3,7 +3,6 @@
 import * as React from "react";
 import {
     Cell,
-    ColumnDef,
     ColumnFiltersState,
     flexRender,
     getCoreRowModel,
@@ -19,7 +18,6 @@ import {
 } from "@tanstack/react-table";
 import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import DataTableProps, {BasicData} from "@/common/lib/table/DataTableProperty";
-import ColumnFilter from "@/common/components/table/column-filter";
 import {EmptyRow} from "@/common/components/table/empty-row";
 import CellRenderer from "@/common/components/table/cell-render";
 
@@ -27,18 +25,19 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                                                       columns,
                                                                       data,
                                                                       setData,
+                                                                      hiddenColumns,
                                                                       primary,
-                                                                      filterColumn,
                                                                       SearchComponent,
                                                                       OperationComponent,
                                                                       EditComponent
                                                                   }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
+
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     );
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>({});
+        React.useState<VisibilityState>(hiddenColumns);
     const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
@@ -68,21 +67,6 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
             rowSelection,
         },
     });
-
-    if (filterColumn) {
-        const fieldSettingColumn: ColumnDef<TData, TValue> = {
-            id: "filter-column",
-            enableHiding: false,
-            header: () => {
-                return <ColumnFilter table={table}/>;
-            },
-        };
-        if (
-            columns.findIndex((column) => column.id === fieldSettingColumn.id) <= 0
-        ) {
-            columns.push(fieldSettingColumn);
-        }
-    }
 
     return (
         <div className="w-full">
