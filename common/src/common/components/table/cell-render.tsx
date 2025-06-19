@@ -4,7 +4,7 @@ import {RowOperationProps} from "@/common/lib/table/DataTableProperty";
 import OperationCell from "@/common/components/table/cell/operation";
 
 export default function CellRenderer({cell, primary, EditComponent}: RowOperationProps) {
-    if (cell.column.columnDef.id == "actions") {
+    if (cell.column.columnDef.cell == "Actions") {
         return <TableCell key={cell.id}>
             <OperationCell primary={primary} EditComponent={EditComponent} cell={cell}/>
         </TableCell>
