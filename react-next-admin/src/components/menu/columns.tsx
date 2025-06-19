@@ -3,11 +3,13 @@ import * as React from "react";
 import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal-cell";
-import {NormalHeader} from "@/common/components/table/header/normal-header";
+import {NormalHeader} from "@/common/components/table/header/normal";
 import TreeCell from "@/common/components/table/cell/tree";
 import {EmptyHeader} from "@/common/components/table/header/empty";
 import CheckboxHeader from "@/common/components/table/header/check-box";
 import CurrencyCell from "@/common/components/table/cell/currency";
+import ColumnFilter from "@/common/components/table/header/column-filter";
+import PlainTextHeader from "@/common/components/table/header/plain-text";
 
 export interface Payment extends BasicData<Payment> {
     id: number | string;
@@ -29,7 +31,6 @@ export const columns: ColumnDef<Payment>[] = [
         id: "select",
         header: CheckboxHeader,
         cell: CheckBoxCell,
-        enableSorting: false,
         enableHiding: false,
     },
     {
@@ -37,7 +38,8 @@ export const columns: ColumnDef<Payment>[] = [
         header: NormalHeader({
             showSort: true,
             showFilter: true,
-            columnTitle: "Status"
+            columnTitle: "status",
+            i18nPrefix: "menu",
         } as ColumnOperationProps),
         cell: NormalCell("status"),
     },
@@ -55,11 +57,17 @@ export const columns: ColumnDef<Payment>[] = [
         accessorKey: "amount",
         header: NormalHeader({columnTitle: "Amount", showSort: true} as ColumnOperationProps),
         cell: CurrencyCell("amount", "currency"),
-        filterFn: filterFns.includesString,
+        filterFn: filterFns.includesString
     },
     {
         id: "actions",
-        header: "Actions",
-        enableHiding: false
+        header: PlainTextHeader({columnTitle: "actions", i18nPrefix: "menu"} as ColumnOperationProps),
+        enableHiding: false,
+        cell: "Actions"
     },
+    {
+        id: "filter-column",
+        enableHiding: false,
+        header: ColumnFilter
+    }
 ];

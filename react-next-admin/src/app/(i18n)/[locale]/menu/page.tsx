@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import {useState} from "react";
 import {columns, Payment} from "@/components/menu/columns";
@@ -106,13 +105,13 @@ export default function Page() {
     return (
         <div className="w-full">
             <DataTable
+                hiddenColumns={{status: false}}
                 SearchComponent={Search}
                 OperationComponent={Operation}
                 EditComponent={EditPage}
                 primary={"id"}
                 data={dataState}
                 columns={columns}
-                filterColumn={true}
                 setData={setDataState}
             ></DataTable>
         </div>

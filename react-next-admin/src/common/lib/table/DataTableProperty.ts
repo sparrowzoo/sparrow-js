@@ -16,12 +16,11 @@ export default interface DataTableProps<
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     primary?: string;
+    hiddenColumns?: {};
     setData?: React.Dispatch<React.SetStateAction<TData[]>>;
-    filterColumn?: boolean;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<any>;
     EditComponent?: React.ComponentType<RowEditProps>;
-
 }
 
 export interface TableOperationProps<TData> {
@@ -36,6 +35,7 @@ export interface EmptyRowProps<TData, TValue> {
 
 export interface ColumnOperationProps {
     columnTitle: string;
+    i18nPrefix?: string;
     column: any;
     showFilter?: boolean;
     showSort?: boolean;
