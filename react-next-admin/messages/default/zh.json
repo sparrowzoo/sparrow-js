@@ -1,4 +1,31 @@
 {
+  "GlobalForum": {
+    "add": "添加",
+    "edit": "编辑",
+    "delete": "删除",
+    "submit": "提交",
+    "cancel": "取消",
+    "save": "保存",
+    "close": "关闭",
+    "confirm": "确认",
+    "search": "搜索",
+    "filter": "过滤",
+    "clear": "清除",
+    "view": "查看",
+    "more": "更多",
+    "all": "全部",
+    "none": "无",
+    "yes": "是",
+    "no": "否",
+    "loading": "加载中",
+    "error": "错误",
+    "operation-success": "成功",
+    "warning": "警告",
+    "info": "信息",
+    "next": "下一步",
+    "previous": "上一步",
+    "back": "返回"
+  },
   "LocaleLayout": {
     "title": "麻雀窝",
     "description": "基于React的Next.js Admin Dashboard模板"

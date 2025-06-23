@@ -3,7 +3,7 @@ import * as React from "react";
 import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal-cell";
-import {NormalHeader} from "@/common/components/table/header/normal";
+import NormalHeader from "@/common/components/table/header/normal";
 import TreeCell from "@/common/components/table/cell/tree";
 import {EmptyHeader} from "@/common/components/table/header/empty";
 import CheckboxHeader from "@/common/components/table/header/check-box";
