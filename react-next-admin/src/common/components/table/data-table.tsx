@@ -37,7 +37,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
         []
     );
     const [columnVisibility, setColumnVisibility] =
-        React.useState<VisibilityState>(hiddenColumns);
+        React.useState<VisibilityState>(hiddenColumns as VisibilityState);
     const [rowSelection, setRowSelection] = React.useState({});
 
     const table = useReactTable({
@@ -107,7 +107,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                 >
                                     {row.getVisibleCells().map((cell: Cell<TData, TValue>) => (
                                         <CellRenderer key={cell.id} cell={cell} EditComponent={EditComponent}
-                                                      primary={primary}/>
+                                                      primary={primary as string}/>
                                     ))}
                                 </TableRow>
                             ))
