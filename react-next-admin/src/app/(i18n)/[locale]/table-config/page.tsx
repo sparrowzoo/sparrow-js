@@ -9,14 +9,12 @@ import Operation from "@/components/table-config/operation";
 import EditPage from "@/components/table-config/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import TableConfigApi from "@/api/auto/table-config";
+import {useTranslations} from "next-intl";
 
-const translate = (key: string) => {
-    return "zhangsan";
-}
+
 export default function Page() {
-
+const  translate=useTranslations("TableConfig.ErrorMessage")
 const [dataState, setDataState] = useState<TableConfig[] | undefined>();
-
     useEffect(() => {
         TableConfigApi.search({}, translate).then(
             (res) => {
@@ -33,10 +31,9 @@ const [dataState, setDataState] = useState<TableConfig[] | undefined>();
                 SearchComponent={Search}
                 OperationComponent={Operation}
                 EditComponent={EditPage}
-                primary={"$primary_key"}
+                primary={"id"}
                 data={dataState.list}
                 columns={columns}
-                filterColumn={true}
                 setData={setDataState}
             ></DataTable>
         </div>
