@@ -2,23 +2,21 @@
 
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {columns} from "@/components/project-config/columns";
+import {columns, ProjectConfig} from "@/components/project-config/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/project-config/search";
 import Operation from "@/components/project-config/operation";
 import EditPage from "@/components/project-config/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import ProjectConfigApi from "@/api/auto/project-config";
+import {useTranslations} from "next-intl";
 
-const translate = (key: string) => {
-    return "zhangsan";
-}
+
 export default function Page() {
-
-    const [dataState, setDataState] = useState<any>();
-
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
+    const [dataState, setDataState] = useState<ProjectConfig[] | undefined>();
     useEffect(() => {
-        ProjectConfigApi.search({}, translate).then(
+        ProjectConfigApi.search({}, errorTranslate).then(
             (res) => {
                 setDataState(res.data)
             }
@@ -34,9 +32,8 @@ export default function Page() {
                 OperationComponent={Operation}
                 EditComponent={EditPage}
                 primary={"$primary_key"}
-                data={dataState?.list}
+                data={dataState.list}
                 columns={columns}
-                filterColumn={true}
                 setData={setDataState}
             ></DataTable>
         </div>

@@ -1,0 +1,11 @@
+{
+  "name": "Project Name",
+  "validate": {
+    "email": {
+      "empty": "Please enter your email address",
+      "invalid": "Please enter a valid email address",
+      "taken": "This email address is already taken"
+    }
+  },
+  "actions": "Actions"
+}

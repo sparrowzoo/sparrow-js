@@ -10,19 +10,20 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import MenuApi from "@/api/auto/menu";
 import toast from "react-hot-toast";
+import {useTranslations} from "next-intl";
 
 export default function AddPage() {
-    const translate = (key: string) => {
-        return "zhangsan";
-    }
+    const globalTranslate = useTranslations("GlobalForum");
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
+
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
         debugger;
-        MenuApi.save(data, translate).then(
+        MenuApi.save(data, errorTranslate).then(
             (res) => {
-                toast.success("操作成功！");
+                toast.success(globalTranslate("operation-success"));
             }
         )
     };
@@ -51,10 +52,8 @@ export default function AddPage() {
         //正确
         <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>${globalTranslate("add")}</DialogTitle>
                 <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re
-                    done.
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
@@ -70,9 +69,9 @@ export default function AddPage() {
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline">${globalTranslate("cancel")}</Button>
                 </DialogClose>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit">${globalTranslate("save")}</Button>
             </DialogFooter>
         </form>
     );
