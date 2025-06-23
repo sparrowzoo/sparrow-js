@@ -15,3 +15,4 @@ const NormalHeader = ({showFilter, showSort, columnTitle, i18nPrefix}: ColumnOpe
     }
 };
 export default NormalHeader;
+
