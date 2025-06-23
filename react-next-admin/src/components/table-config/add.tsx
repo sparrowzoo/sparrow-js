@@ -2,8 +2,8 @@
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
 import React from "react";
+import crateScheme from "@/schema/project-config";
 import ErrorMessage from "@/common/components/i18n/ErrorMessage";
-import {FormData, FormSchema} from "@/schema/table-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Label} from "@/components/ui/label";
@@ -15,6 +15,8 @@ export default function Page() {
     const translate = (key: string) => {
         return "zhangsan";
     }
+    const {FormSchema, FormData} = crateScheme(translate);
+
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
