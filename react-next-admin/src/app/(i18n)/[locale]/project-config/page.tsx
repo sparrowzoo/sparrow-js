@@ -13,8 +13,8 @@ import {useTranslations} from "next-intl";
 
 
 export default function Page() {
-    const translate = useTranslations("ProjectConfig.ErrorMessage")
-    const [dataState, setDataState] = useState<ProjectConfig[] | undefined>();
+const  translate=useTranslations("ProjectConfig.ErrorMessage")
+const [dataState, setDataState] = useState<ProjectConfig[] | undefined>();
     useEffect(() => {
         ProjectConfigApi.search({}, translate).then(
             (res) => {
