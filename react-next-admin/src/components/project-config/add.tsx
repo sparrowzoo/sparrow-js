@@ -3,26 +3,27 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
 import React from "react";
 import ErrorMessage from "@/common/components/i18n/ErrorMessage";
-import {FormData, FormSchema} from "@/schema/project-config";
+import {FormData, FormSchema} from "@/schema/menu";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
-import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
+import {useTranslations} from "next-intl";
+import ProjectConfigApi from "@/api/auto/project-config";
 
-export default function Page() {
-    const translate = (key: string) => {
-        return "zhangsan";
-    }
+export default function AddPage() {
+    const globalTranslate = useTranslations("GlobalForum");
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
+
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
         debugger;
-        ProjectConfigApi.save(data, translate).then(
+        ProjectConfigApi.save(data, errorTranslate).then(
             (res) => {
-                toast.success("操作成功！");
+                toast.success(globalTranslate("operation-success"));
             }
         )
     };
@@ -51,10 +52,8 @@ export default function Page() {
         //正确
         <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>{globalTranslate("add")}</DialogTitle>
                 <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re
-                    done.
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
@@ -70,9 +69,9 @@ export default function Page() {
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline">{globalTranslate("cancel")}</Button>
                 </DialogClose>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit">{globalTranslate("save")}</Button>
             </DialogFooter>
         </form>
     );
