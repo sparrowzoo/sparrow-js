@@ -35,28 +35,9 @@ export const InnerFormSchema = v.object({
 
 export const OuterSchema = InnerFormSchema;
 type InputForm = v.InferInput<typeof InnerFormSchema>;
-//等价于
-// type InputForm = {
-//     age: string;
-// }
-// const inputForm: InputForm = {
-//     age: 18,
-//     userName: "zhangsan"
-// };
 
 
 export type FormData = v.InferOutput<typeof InnerFormSchema>; // { email: string; password: string }
-
-// const formDate: FormData = {
-//     age: 18
-// }
-
-// Infer output TypeScript type of login schema
-//等价于
-// type FormData = {
-//     age: number;
-// }
-
 
 console.log("看后台输出 pipe method:", v.pipe(v.string()));
 console.log("看后台输出 string schema:", v.string());
