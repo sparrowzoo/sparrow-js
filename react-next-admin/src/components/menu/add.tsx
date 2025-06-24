@@ -13,7 +13,7 @@ import toast from "react-hot-toast";
 import {useTranslations} from "next-intl";
 
 export default function AddPage() {
-    const globalTranslate = useTranslations("GlobalForum");
+    const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
 
     const onSubmit: SubmitHandler<FormData> = (

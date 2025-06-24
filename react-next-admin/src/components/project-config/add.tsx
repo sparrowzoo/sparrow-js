@@ -3,28 +3,32 @@ import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
 import React from "react";
 import crateScheme from "@/schema/project-config";
-import ErrorMessage from "@/common/components/i18n/ErrorMessage";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
 import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
+import * as v from "valibot";
+import {useTranslations} from "next-intl";
+import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
+
 
 export default function Page() {
-    const translate = (key: string) => {
-        return "zhangsan";
-    }
-    const {FormSchema, FormData} = crateScheme(translate);
+    const globalTranslate = useTranslations("GlobalForm");
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+    const pageTranslate = useTranslations("ProjectConfig")
+    const validateTranslate = useTranslations("ProjectConfig.validate")
+
+    const FormSchema = crateScheme(validateTranslate);
+    type FormData = v.InferOutput<typeof FormSchema>;
+
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        debugger;
-        ProjectConfigApi.save(data, translate).then(
+        ProjectConfigApi.save(data, errorTranslate).then(
             (res) => {
-                toast.success("操作成功！");
+                toast.success(globalTranslate("save") + globalTranslate("operation-success"));
             }
         )
     };
@@ -53,27 +57,42 @@ export default function Page() {
         //正确
         <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>{globalTranslate("add")}</DialogTitle>
                 <DialogDescription>
-
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
-                <div className="flex flex-row justify-start items-center mb-4">
-                    <Label className={"justify-end w-[8rem]"} htmlFor="name-1">kw全国各地</Label>
-                    <Input className={"w-[16rem]"}  {...register("age")}/>
+                <ValidatableInput {...register("name")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.name?.message}
+                                  fieldPropertyName={"name"}/>
 
-                    <ErrorMessage messageClass={"text-sm flex-1 text-red-500"} submitted={isSubmitted}
-                                  message={errors.age?.message}
-                    />
-                </div>
+                <ValidatableInput {...register("chineseName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.name?.message}
+                                  fieldPropertyName={"chineseName"}/>
+
+                <ValidatableInput {...register("description")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.name?.message}
+                                  fieldPropertyName={"description"}/>
+
 
             </div>
             <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline">{globalTranslate("cancel")}</Button>
                 </DialogClose>
-                <Button type="submit">Save changes</Button>
+                <Button type="submit">{globalTranslate("save")}</Button>
             </DialogFooter>
         </form>
     );

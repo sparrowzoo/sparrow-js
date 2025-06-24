@@ -99,33 +99,7 @@ const formData: FormData = {
 
 console.log(v.string());
 console.log(v.email());
-// Infer output TypeScript type of login schema
-//等价于
-// export type FormData = {
-//     username: string;
-//     password: string;
-//     // password2: string;
-//     email: string;
-// };
 
-// Throws error for `email` and `password`
-//  v.parse(FormSchema, {
-//   username: "zh_harry",
-//   email: "zh_harry@163.com",
-//   password: "11111111",
-// });
-
-// v.parse(OuterSchema, {
-//     email: "jane@example.com",
-//     password: "12345678",
-//     username: "zh_harry",
-//     password2: "12345678",
-// });
-
-//let StringSchema = v.union([v.literal(""), v.pipe(v.string(), v.email())]);
-// StringSchema = v.literal("") || v.pipe(v.string(), v.email());
-//https://valibot.dev/api/union/
-//Schema to validate an URL or empty string.
 const StringSchema = v.union([v.literal(""), v.pipe(v.string(), v.email())]);
 v.parse(StringSchema, ""); // 'hello'
 v.parse(StringSchema, "22@163.com"); // 'hello'
