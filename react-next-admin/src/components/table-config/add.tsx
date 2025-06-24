@@ -10,21 +10,27 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import TableConfigApi from "@/api/auto/table-config";
 import toast from "react-hot-toast";
+import * as v from "valibot";
+import {useTranslations} from "next-intl";
+
+
 
 export default function Page() {
-    const translate = (key: string) => {
-        return "zhangsan";
-    }
-    const {FormSchema, FormData} = crateScheme(translate);
+    const errorTranslate = useTranslations("TableConfig.ErrorMessage")
+    const pageTranslate = useTranslations("TableConfig")
+    const validateTranslate = useTranslations("TableConfig.validate")
+
+    const FormSchema = crateScheme(translate);
+    type FormData = v.InferOutput<typeof FormSchema>;
+
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        debugger;
-        TableConfigApi.save(data, translate).then(
+        TableConfigApi.save(data, errorTranslate).then(
             (res) => {
-                toast.success("操作成功！");
+                toast.success(pageTranslate("save")+pageTranslate("operation-success"));
             }
         )
     };
@@ -53,7 +59,7 @@ export default function Page() {
         //正确
         <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>{pageTranslate("add")}</DialogTitle>
                 <DialogDescription>
 
                 </DialogDescription>
@@ -69,12 +75,12 @@ export default function Page() {
                 </div>
 
             </div>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="submit">Save changes</Button>
-            </DialogFooter>
+             <DialogFooter>
+                            <DialogClose asChild>
+                                <Button variant="outline">{pageTranslate("cancel")}</Button>
+                            </DialogClose>
+                            <Button type="submit">{pageTranslate("save")}</Button>
+             </DialogFooter>
         </form>
     );
 };

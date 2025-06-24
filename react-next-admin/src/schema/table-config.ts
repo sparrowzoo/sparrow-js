@@ -3,8 +3,9 @@ function createSchema(translate:(key:string)=>string) {
     const InnerFormSchema = v.object({
         
     });
+    //扩展提示
     const FormSchema = InnerFormSchema;
-    type FormData = v.InferOutput<typeof FormSchema>;
-    return {FormSchema, FormData}
+    //type FormData = v.InferOutput<typeof FormSchema>;
+    return FormSchema
 }
 export default createSchema;
