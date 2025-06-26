@@ -59,34 +59,79 @@ export default function Page() {
             <DialogHeader>
                 <DialogTitle>{globalTranslate("add")}</DialogTitle>
                 <DialogDescription>
+
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
+                <ValidatableInput {...register("id")}
+                                  type={"hidden"}
+                                  fieldPropertyName={"id"}/>
                 <ValidatableInput {...register("name")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.name?.message}
                                   fieldPropertyName={"name"}/>
-
+                <ValidatableInput {...register("frontendName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"frontendName"}/>
                 <ValidatableInput {...register("chineseName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.name?.message}
                                   fieldPropertyName={"chineseName"}/>
-
+                <ValidatableInput {...register("i18n")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"i18n"}/>
                 <ValidatableInput {...register("description")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.name?.message}
                                   fieldPropertyName={"description"}/>
-
-
+                <ValidatableInput {...register("modulePrefix")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"modulePrefix"}/>
+                <ValidatableInput {...register("scanPackage")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"scanPackage"}/>
+                <ValidatableInput {...register("architectures")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"architectures"}/>
+                <ValidatableInput {...register("config")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"config"}/>
+                <ValidatableInput {...register("wrapWithParent")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"wrapWithParent"}/>
+                <ValidatableInput {...register("scaffold")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  fieldPropertyName={"scaffold"}/>
             </div>
             <DialogFooter>
                 <DialogClose asChild>
