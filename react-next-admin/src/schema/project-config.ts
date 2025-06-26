@@ -2,7 +2,15 @@ import * as v from "valibot";
 function createSchema(translate:(key:string)=>string) {
     const InnerFormSchema = v.object({
         id:
-v.number()
+v.union([v.literal(""),v.pipe(
+ v.string(),
+v.check((val) => {return /^\d+$/.test(val);},translate("id.check-message")),
+v.transform((input): number | string => {return parseInt(input,10);}))
+], (issue) => {        if (issue.issues) {
+            return issue.issues[issue.issues.length - 1].message;
+        }
+        return "";
+    })
 ,name:
 v.string()
 ,frontendName:
