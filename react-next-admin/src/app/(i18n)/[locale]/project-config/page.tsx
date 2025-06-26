@@ -17,10 +17,10 @@ export default function Page() {
     const [dataState, setDataState] = useState<ProjectConfig[] | undefined>();
     useEffect(() => {
         ProjectConfigApi.search({}, errorTranslate).then(
-            (res) => {
-                setDataState(res.data)
-            }
-        )
+                                              (res) => {
+                                                  setDataState(res.data)
+                                              }
+                                          )
     }, [])
     if (!dataState) {
         return <ThreeDotLoading/>
