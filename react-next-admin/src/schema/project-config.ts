@@ -2,63 +2,29 @@ import * as v from "valibot";
 function createSchema(translate:(key:string)=>string) {
     const InnerFormSchema = v.object({
         id:
-v.any()
+v.number()
 ,name:
-v.union([v.literal(""),v.pipe(
- v.string(),
- v.minLength(5, translate("name.min-length-message")),
-v.maxLength(30, translate("name.max-length-message")))
-], (issue) => {        if (issue.issues) {
-            return issue.issues[issue.issues.length - 1].message;
-        }
-        return "";
-    })
+v.string()
 ,frontendName:
-v.union([v.literal(""),v.pipe(
- v.string(),
- v.minLength(5, translate("frontendName.min-length-message")),
-v.maxLength(30, translate("frontendName.max-length-message")))
-], (issue) => {        if (issue.issues) {
-            return issue.issues[issue.issues.length - 1].message;
-        }
-        return "";
-    })
+v.string()
 ,chineseName:
-v.union([v.literal(""),v.pipe(
- v.string(),
- v.minLength(5, translate("chineseName.min-length-message")),
-v.maxLength(30, translate("chineseName.max-length-message")))
-], (issue) => {        if (issue.issues) {
-            return issue.issues[issue.issues.length - 1].message;
-        }
-        return "";
-    })
+v.string()
+,i18n:
+v.boolean()
 ,description:
-v.union([v.literal(""),v.pipe(
- v.string(),
- v.minLength(5, translate("description.min-length-message")),
-v.maxLength(30, translate("description.max-length-message")))
-], (issue) => {        if (issue.issues) {
-            return issue.issues[issue.issues.length - 1].message;
-        }
-        return "";
-    })
+v.string()
 ,modulePrefix:
-v.any()
+v.string()
 ,scanPackage:
-v.any()
+v.string()
 ,architectures:
-v.any()
+v.string()
 ,config:
-v.any()
+v.string()
 ,wrapWithParent:
-v.any()
+v.boolean()
 ,scaffold:
-v.any()
-,actions:
-v.any()
-,filters:
-v.any()
+v.string()
 
     });
     //扩展提示

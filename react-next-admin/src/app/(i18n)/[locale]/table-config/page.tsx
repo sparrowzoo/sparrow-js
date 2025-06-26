@@ -1,84 +1,41 @@
 "use client";
-import {SubmitHandler, useForm} from "react-hook-form";
-import {valibotResolver} from "@hookform/resolvers/valibot";
-import React from "react";
-import crateScheme from "@/schema/project-config";
-import ErrorMessage from "@/common/components/i18n/ErrorMessage";
-import {Button} from "@/components/ui/button";
-import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import TableConfigApi from "@/api/auto/table-config";
-import toast from "react-hot-toast";
-import * as v from "valibot";
+
+import * as React from "react";
+import {useEffect, useState} from "react";
+import {columns, TableConfig} from "@/components/table-config/columns";
+import {DataTable} from "@/common/components/table/data-table";
+import Search from "@/components/table-config/search";
+import Operation from "@/components/table-config/operation";
+import EditPage from "@/components/table-config/edit";
+import ThreeDotLoading from "@/common/components/ThreeDotLoading";
+import ProjectConfigApi from "@/api/auto/table-config";
+import {useTranslations} from "next-intl";
 
 
 export default function Page() {
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
-    const pageTranslate = useTranslations("TableConfig")
-    const validateTranslate = useTranslations("TableConfig.validate")
-
-    const FormSchema = crateScheme(translate);
-    type FormData = v.InferOutput<typeof FormSchema>;
-
-
-    const onSubmit: SubmitHandler<FormData> = (
-        data: FormData,
-        event: React.BaseSyntheticEvent | undefined
-    ) => {
-        TableConfigApi.save(data, translate).then(
-            (res) => {
-                toast.success(pageTranslate("save")+pageTranslate("operation-success"));
-            }
-        )
-    };
-
-    const {
-        register,
-        handleSubmit,
-        control,
-        formState: {
-            errors,
-            isSubmitted,
-            touchedFields
-        },
-    } = useForm<FormData>({
-        //相当于v.parse
-        resolver: valibotResolver(
-            FormSchema,
-            //https://valibot.dev/guides/parse-data/
-            {abortEarly: false, lang: "zh-CN"}
-        ),
-    });
-
-
-    // formState.errors;
+    const [dataState, setDataState] = useState<TableConfig[] | undefined>();
+    useEffect(() => {
+        TableConfigApi.search({}, errorTranslate).then(
+                                              (res) => {
+                                                  setDataState(res.data)
+                                              }
+                                          )
+    }, [])
+    if (!dataState) {
+        return <ThreeDotLoading/>
+    }
     return (
-        //正确
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogHeader>
-                <DialogTitle>{pageTranslate("add")}</DialogTitle>
-                <DialogDescription>
-
-                </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col">
-                <div className="flex flex-row justify-start items-center mb-4">
-                    <Label className={"justify-end w-[8rem]"} htmlFor="name-1">kw全国各地</Label>
-                    <Input className={"w-[16rem]"}  {...register("age")}/>
-
-                    <ErrorMessage messageClass={"text-sm flex-1 text-red-500"} submitted={isSubmitted}
-                                  message={errors.age?.message}
-                    />
-                </div>
-
-            </div>
-             <DialogFooter>
-                            <DialogClose asChild>
-                                <Button variant="outline">{pageTranslate("cancel")}</Button>
-                            </DialogClose>
-                            <Button type="submit">{pageTranslate("save")}</Button>
-             </DialogFooter>
-        </form>
+        <div className="w-full">
+            <DataTable
+                SearchComponent={Search}
+                OperationComponent={Operation}
+                EditComponent={EditPage}
+                primary={"id"}
+                data={dataState.list}
+                columns={columns}
+                setData={setDataState}
+            ></DataTable>
+        </div>
     );
-};
+}
