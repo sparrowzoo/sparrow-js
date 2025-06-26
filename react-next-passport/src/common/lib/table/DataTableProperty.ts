@@ -1,6 +1,7 @@
 import {Cell, CellContext, ColumnDef} from "@tanstack/react-table";
 import React from "react";
 import {Table} from "@tanstack/table-core";
+import {VisibilityState} from "@tanstack/table-core/src/features/ColumnVisibility";
 
 export interface BasicData<TData> {
     id: number | string;
@@ -16,7 +17,7 @@ export default interface DataTableProps<
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     primary?: string;
-    hiddenColumns?: {};
+    hiddenColumns?: VisibilityState | (() => VisibilityState);
     setData?: React.Dispatch<React.SetStateAction<TData[]>>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<any>;

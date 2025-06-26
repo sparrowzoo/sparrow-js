@@ -1,4 +1,5 @@
 import * as React from "react";
 
-export const EmptyHeader = () => null;
+const EmptyHeader = () => null;
+export default EmptyHeader;
 
