@@ -59,10 +59,9 @@ export default function EditPage({id,cellContext}: RowEditProps) {
         //正确
         <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-                <DialogTitle>Edit profile</DialogTitle>
+                <DialogTitle>{globalTranslate("edit")}</DialogTitle>
                 <DialogDescription>
-                    Make changes to your profile here. Click save when you&apos;re
-                    done.
+
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
