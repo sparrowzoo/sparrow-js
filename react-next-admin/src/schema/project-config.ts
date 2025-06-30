@@ -12,27 +12,54 @@ v.transform((input): number | string => {return parseInt(input,10);}))
         return "";
     })
 ,name:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("name.empty-message")))
+
 ,frontendName:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("frontendName.empty-message")))
+
 ,chineseName:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("chineseName.empty-message")))
+
 ,i18n:
 v.boolean()
 ,description:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("description.empty-message")))
+
 ,modulePrefix:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("modulePrefix.empty-message")))
+
 ,scanPackage:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("scanPackage.empty-message")))
+
 ,architectures:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("architectures.empty-message")))
+
 ,config:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("config.empty-message")))
+
 ,wrapWithParent:
 v.boolean()
 ,scaffold:
-v.string()
+v.pipe(
+ v.string(),
+v.nonEmpty(translate("scaffold.empty-message")))
+
 
     });
     //扩展提示
