@@ -27,9 +27,11 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                                                       setData,
                                                                       hiddenColumns,
                                                                       primary,
+                                                                      tableName,
                                                                       SearchComponent,
                                                                       OperationComponent,
-                                                                      EditComponent
+                                                                      EditComponent,
+                                                                      deleteHandler
                                                                   }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -106,8 +108,9 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell: Cell<TData, TValue>) => (
-                                        <CellRenderer key={cell.id} cell={cell} EditComponent={EditComponent}
-                                                      primary={primary as string}/>
+                                        <CellRenderer deleteHandler={deleteHandler} key={cell.id} cell={cell}
+                                                      EditComponent={EditComponent}
+                                                      primary={primary as string} tableName={tableName}/>
                                     ))}
                                 </TableRow>
                             ))

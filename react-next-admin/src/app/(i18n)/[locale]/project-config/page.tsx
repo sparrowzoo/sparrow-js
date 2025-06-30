@@ -10,10 +10,12 @@ import EditPage from "@/components/project-config/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
-
+import toast from "react-hot-toast";
 
 export default function Page() {
-    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
+    const globalTranslate = useTranslations("GlobalForm");
+
     const [dataState, setDataState] = useState<ProjectConfig[] | undefined>();
     useEffect(() => {
         ProjectConfigApi.search({}, errorTranslate).then(
@@ -22,7 +24,15 @@ export default function Page() {
                                               }
                                            ).catch(()=>{});
 
-    }, [])
+    }, []);
+
+
+      const deleteHandler= (id: number) => {
+            ProjectConfigApi.delete(id, errorTranslate).then(()=>{
+                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
+            }).catch(()=>{});
+        }
+
     if (!dataState) {
         return <ThreeDotLoading/>
     }
@@ -36,6 +46,8 @@ export default function Page() {
                 data={dataState.list}
                 columns={columns}
                 setData={setDataState}
+                tableName={"ProjectConfig"}
+                deleteHandler={deleteHandler}
             ></DataTable>
         </div>
     );

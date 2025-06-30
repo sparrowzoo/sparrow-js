@@ -18,13 +18,22 @@ export default class ProjectConfigApi {
         return Fetcher.post("/project/config/save.json", body, translator);
     }
 
-    public static  delete(
+    public static  batchDelete(
         params: IDENTITY[],
         translator: (key: string) => string
     ): Promise<any> {
         const body = JSON.stringify(params);
         return Fetcher.post("/project/config/delete.json", body, translator);
     }
+
+       public static  delete(
+            id: IDENTITY,
+            translator: (key: string) => string
+        ): Promise<any> {
+            const body = JSON.stringify([id]);
+            return Fetcher.post("/project/config/delete.json", body, translator);
+        }
+
 
     public static  disable(
         params: IDENTITY[],

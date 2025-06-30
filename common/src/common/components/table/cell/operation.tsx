@@ -14,8 +14,10 @@ import {RowOperationProps} from "@/common/lib/table/DataTableProperty";
 import Draggable from "@/common/components/Draggable";
 import {useTranslations} from "next-intl";
 
-const OperationCell = ({primary, EditComponent, cell}: RowOperationProps) => {
-    const globalTranslate = useTranslations("GlobalForm")
+const OperationCell = ({primary,tableName, EditComponent, cell,deleteHandler}: RowOperationProps) => {
+
+    const globalTranslate = useTranslations("GlobalForm");
+    const errorTranslate = useTranslations(tableName+".ErrorMessage");
     const original = cell.getContext().row.original;
 
 
@@ -53,6 +55,7 @@ const OperationCell = ({primary, EditComponent, cell}: RowOperationProps) => {
                 <DropdownMenuItem>
                     <Button onClick={(e) => {
                         e.stopPropagation();
+                        deleteHandler(original[primary],errorTranslate);
                     }} variant="outline">{globalTranslate("delete")}</Button>
                 </DropdownMenuItem>
             </DropdownMenuContent>

@@ -7,12 +7,16 @@ import AddPage from "@/components/project-config/add";
 import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
 import {getSelectedIds} from "@/common/lib/table/TableUtils";
+import {useTranslations} from "next-intl";
+
 
 export default function Operation({table}: TableOperationProps<ProjectConfig>) {
+    const globalTranslate = useTranslations("GlobalForm");
+
     return (<div className="flex justify-between gap-4">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button variant="outline">新增</Button>
+                    <Button variant="outline">{globalTranslate("add")}</Button>
                 </DialogTrigger>
                 <DialogContent className="w-[800px] sm:max-w-[625px]">
                     <AddPage/>
@@ -21,12 +25,12 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
             <Button onClick={() => {
                 const translate = () => "";
                 const selectedIds = getSelectedIds(table);
-                ProjectConfigApi.delete(selectedIds, translate).then(
+                ProjectConfigApi.batchDelete(selectedIds, translate).then(
                     (res) => {
-                        toast.success("操作成功！");
+                        toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
                     }
                 )
-            }} variant="outline">删除</Button>
+            }} variant="outline">{globalTranslate("delete")}</Button>
         </div>
     );
 }
