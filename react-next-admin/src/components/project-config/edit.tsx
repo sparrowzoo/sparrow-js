@@ -6,29 +6,33 @@ import ErrorMessage from "@/common/components/i18n/ErrorMessage";
 import crateScheme from "@/schema/project-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
 import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
 import {RowEditProps} from "@/common/lib/table/DataTableProperty";
+import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
+import {useTranslations} from "next-intl";
+import * as v from "valibot";
 
-export default function EditPage({id}: RowEditProps) {
-    const translate = (key: string) => {
-        return "zhangsan";
-    }
+export default function EditPage({id,cellContext}: RowEditProps) {
+     const globalTranslate = useTranslations("GlobalForm");
+        const errorTranslate = useTranslations("TableConfig.ErrorMessage")
+        const pageTranslate = useTranslations("TableConfig")
+        const validateTranslate = useTranslations("TableConfig.validate")
+        const FormSchema = crateScheme(validateTranslate);
+        type FormData = v.InferOutput<typeof FormSchema>;
+        const original = cellContext.row.original;
 
-    const {FormSchema, FormData} = crateScheme(translate);
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
         alert(id);
-        ProjectConfigApi.save(data, translate).then(
+        ProjectConfigApi.save(data, errorTranslate).then(
             (res) => {
                 toast.success("操作成功！");
             }
-        )
+        ).catch(()=>{});
     };
 
     const {
@@ -62,21 +66,82 @@ export default function EditPage({id}: RowEditProps) {
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
-                <div className="flex flex-row justify-start items-center mb-4">
-                    <Label className={"justify-end w-[8rem]"} htmlFor="name-1">kw全国各地</Label>
-                    <Input className={"w-[16rem]"}  {...register("age")}/>
-
-                    <ErrorMessage messageClass={"text-sm flex-1 text-red-500"} submitted={isSubmitted}
-                                  message={errors.age?.message}
-                    />
-                </div>
+                <ValidatableInput {...register("id")}
+                                  type={"hidden"}
+                                  fieldPropertyName={"id"}/>
+<ValidatableInput defaultValue={original.name} {...register("name")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
+<ValidatableInput defaultValue={original.frontendName} {...register("frontendName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.frontendName?.message}                                  fieldPropertyName={"frontendName"}/>
+<ValidatableInput defaultValue={original.chineseName} {...register("chineseName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
+<ValidatableInput defaultChecked={original.i18n} {...register("i18n")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"i18n"}/>
+<ValidatableInput defaultValue={original.description} {...register("description")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.description?.message}                                  fieldPropertyName={"description"}/>
+<ValidatableInput defaultValue={original.modulePrefix} {...register("modulePrefix")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.modulePrefix?.message}                                  fieldPropertyName={"modulePrefix"}/>
+<ValidatableInput defaultValue={original.scanPackage} {...register("scanPackage")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.scanPackage?.message}                                  fieldPropertyName={"scanPackage"}/>
+<ValidatableInput defaultValue={original.architectures} {...register("architectures")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.architectures?.message}                                  fieldPropertyName={"architectures"}/>
+<ValidatableInput defaultValue={original.config} {...register("config")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.config?.message}                                  fieldPropertyName={"config"}/>
+<ValidatableInput defaultChecked={original.wrapWithParent} {...register("wrapWithParent")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"wrapWithParent"}/>
+<ValidatableInput defaultValue={original.scaffold} {...register("scaffold")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.scaffold?.message}                                  fieldPropertyName={"scaffold"}/>
             </div>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button variant="outline">Cancel</Button>
-                </DialogClose>
-                <Button type="submit">Save changes</Button>
-            </DialogFooter>
+           <DialogFooter>
+                                       <DialogClose asChild>
+                                           <Button variant="outline">{globalTranslate("cancel")}</Button>
+                                       </DialogClose>
+                                       <Button type="submit">{globalTranslate("save")}</Button>
+                        </DialogFooter>
         </form>
     );
 };
