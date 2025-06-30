@@ -12,12 +12,9 @@ import * as React from "react";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import {RowOperationProps} from "@/common/lib/table/DataTableProperty";
 import Draggable from "@/common/components/Draggable";
-import {useTranslations} from "next-intl";
 
 const OperationCell = ({primary, EditComponent, cell}: RowOperationProps) => {
-    const globalTranslate = useTranslations("GlobalForm")
     const original = cell.getContext().row.original;
-
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -27,7 +24,12 @@ const OperationCell = ({primary, EditComponent, cell}: RowOperationProps) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuLabel></DropdownMenuLabel>
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                    onClick={() => navigator.clipboard.writeText(original[primary || "id"])}
+                >
+                    Copy payment ID
+                </DropdownMenuItem>
                 <DropdownMenuSeparator/>
                 {EditComponent &&
                     <DropdownMenuItem>
@@ -35,7 +37,7 @@ const OperationCell = ({primary, EditComponent, cell}: RowOperationProps) => {
                             <DialogTrigger asChild>
                                 <Button onClick={(e) => {
                                     e.stopPropagation();
-                                }} variant="outline">{globalTranslate("edit")}</Button>
+                                }} variant="outline">新增</Button>
                             </DialogTrigger>
                             <Draggable>
                                 <DialogContent onClick={(e) => {
@@ -49,11 +51,7 @@ const OperationCell = ({primary, EditComponent, cell}: RowOperationProps) => {
                         </Dialog>
                     </DropdownMenuItem>
                 }
-                <DropdownMenuItem>
-                    <Button onClick={(e) => {
-                        e.stopPropagation();
-                    }} variant="outline">{globalTranslate("delete")}</Button>
-                </DropdownMenuItem>
+                <DropdownMenuItem>Delete</DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
     );
