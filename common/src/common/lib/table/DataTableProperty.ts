@@ -17,11 +17,13 @@ export default interface DataTableProps<
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     primary?: string;
+    tableName?:string;
     hiddenColumns?: VisibilityState | (() => VisibilityState);
     setData?: React.Dispatch<React.SetStateAction<TData[]>>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<any>;
     EditComponent?: React.ComponentType<RowEditProps>;
+    deleteHandler: (id:IDENTITY) => void;
 }
 
 export interface TableOperationProps<TData> {
@@ -50,7 +52,9 @@ export interface RowEditProps {
 export interface RowOperationProps {
     EditComponent?: React.ComponentType<RowEditProps>;
     primary: string;
-    cell: Cell<any, any>
+    tableName?:string;
+    cell: Cell<any, any>,
+    deleteHandler?: (id:IDENTITY) => void;
 }
 
 export type IDENTITY = string | number;
