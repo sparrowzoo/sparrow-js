@@ -18,6 +18,7 @@ const OperationCell = ({primary, EditComponent, cell}: RowOperationProps) => {
     const globalTranslate = useTranslations("GlobalForm")
     const original = cell.getContext().row.original;
 
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
