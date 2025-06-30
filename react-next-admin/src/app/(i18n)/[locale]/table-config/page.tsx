@@ -8,7 +8,7 @@ import Search from "@/components/table-config/search";
 import Operation from "@/components/table-config/operation";
 import EditPage from "@/components/table-config/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
-import ProjectConfigApi from "@/api/auto/table-config";
+import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
 
 
@@ -20,7 +20,8 @@ export default function Page() {
                                               (res) => {
                                                   setDataState(res.data)
                                               }
-                                          )
+                                           ).catch(()=>{});
+
     }, [])
     if (!dataState) {
         return <ThreeDotLoading/>

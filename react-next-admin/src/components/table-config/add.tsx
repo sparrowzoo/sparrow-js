@@ -2,7 +2,7 @@
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
 import React from "react";
-import crateScheme from "@/schema/project-config";
+import crateScheme from "@/schema/table-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import TableConfigApi from "@/api/auto/table-config";
@@ -32,7 +32,7 @@ export default function Page() {
             (res) => {
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
-        )
+        ).catch(()=>{});
     };
 
     const {
@@ -65,7 +65,87 @@ export default function Page() {
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
-                
+                <ValidatableInput {...register("id")}
+                                  type={"hidden"}
+                                  fieldPropertyName={"id"}/>
+<ValidatableInput  {...register("projectId")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.projectId?.message}                                  fieldPropertyName={"projectId"}/>
+<ValidatableInput  {...register("primaryKey")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.primaryKey?.message}                                  fieldPropertyName={"primaryKey"}/>
+<ValidatableInput  {...register("tableName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.tableName?.message}                                  fieldPropertyName={"tableName"}/>
+<ValidatableInput  {...register("className")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.className?.message}                                  fieldPropertyName={"className"}/>
+<ValidatableInput  {...register("description")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.description?.message}                                  fieldPropertyName={"description"}/>
+<ValidatableInput  {...register("locked")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"locked"}/>
+<ValidatableInput  {...register("checkable")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.checkable?.message}                                  fieldPropertyName={"checkable"}/>
+<ValidatableInput  {...register("rowMenu")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.rowMenu?.message}                                  fieldPropertyName={"rowMenu"}/>
+<ValidatableInput  {...register("columnFilter")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.columnFilter?.message}                                  fieldPropertyName={"columnFilter"}/>
+<ValidatableInput  {...register("statusCommand")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"statusCommand"}/>
+<ValidatableInput  {...register("columnConfigs")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.columnConfigs?.message}                                  fieldPropertyName={"columnConfigs"}/>
+<ValidatableInput  {...register("source")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.source?.message}                                  fieldPropertyName={"source"}/>
+<ValidatableInput  {...register("sourceCode")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.sourceCode?.message}                                  fieldPropertyName={"sourceCode"}/>
             </div>
              <DialogFooter>
                             <DialogClose asChild>

@@ -32,7 +32,7 @@ export default function Page() {
             (res) => {
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
-        )
+        ).catch(()=>{});
     };
 
     const {
@@ -68,72 +68,72 @@ export default function Page() {
                 <ValidatableInput {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
-<ValidatableInput {...register("name")}
+<ValidatableInput  {...register("name")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"name"}/>
-<ValidatableInput {...register("frontendName")}
+                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
+<ValidatableInput  {...register("frontendName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"frontendName"}/>
-<ValidatableInput {...register("chineseName")}
+                                  errorMessage={errors.frontendName?.message}                                  fieldPropertyName={"frontendName"}/>
+<ValidatableInput  {...register("chineseName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"chineseName"}/>
-<ValidatableInput {...register("i18n")}
+                                  errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
+<ValidatableInput  {...register("i18n")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"i18n"}/>
-<ValidatableInput {...register("description")}
+<ValidatableInput  {...register("description")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"description"}/>
-<ValidatableInput {...register("modulePrefix")}
+                                  errorMessage={errors.description?.message}                                  fieldPropertyName={"description"}/>
+<ValidatableInput  {...register("modulePrefix")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"modulePrefix"}/>
-<ValidatableInput {...register("scanPackage")}
+                                  errorMessage={errors.modulePrefix?.message}                                  fieldPropertyName={"modulePrefix"}/>
+<ValidatableInput  {...register("scanPackage")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"scanPackage"}/>
-<ValidatableInput {...register("architectures")}
+                                  errorMessage={errors.scanPackage?.message}                                  fieldPropertyName={"scanPackage"}/>
+<ValidatableInput  {...register("architectures")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"architectures"}/>
-<ValidatableInput {...register("config")}
+                                  errorMessage={errors.architectures?.message}                                  fieldPropertyName={"architectures"}/>
+<ValidatableInput  {...register("config")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"config"}/>
-<ValidatableInput {...register("wrapWithParent")}
+                                  errorMessage={errors.config?.message}                                  fieldPropertyName={"config"}/>
+<ValidatableInput  {...register("wrapWithParent")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"wrapWithParent"}/>
-<ValidatableInput {...register("scaffold")}
+<ValidatableInput  {...register("scaffold")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"scaffold"}/>
+                                  errorMessage={errors.scaffold?.message}                                  fieldPropertyName={"scaffold"}/>
             </div>
              <DialogFooter>
                             <DialogClose asChild>
