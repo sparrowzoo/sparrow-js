@@ -21,7 +21,7 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
             <Button onClick={() => {
                 const translate = () => "";
                 const selectedIds = getSelectedIds(table);
-                ProjectConfigApi.save(selectedIds, translate).then(
+                ProjectConfigApi.delete(selectedIds, translate).then(
                     (res) => {
                         toast.success("操作成功！");
                     }

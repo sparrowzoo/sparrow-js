@@ -20,7 +20,8 @@ export default function Page() {
                                               (res) => {
                                                   setDataState(res.data)
                                               }
-                                          )
+                                           ).catch(()=>{});
+
     }, [])
     if (!dataState) {
         return <ThreeDotLoading/>
