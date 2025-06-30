@@ -145,7 +145,7 @@ cell:"Actions",
 enableHiding: false
 },{
 id: "filter-column",
-header: ColumnFilter,
+header: ColumnFilter({i18nPrefix: "ProjectConfig"} as ColumnOperationProps),
 cell:"",
 enableHiding: false
 }
