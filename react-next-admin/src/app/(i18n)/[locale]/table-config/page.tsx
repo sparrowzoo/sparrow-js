@@ -43,12 +43,13 @@ export default function Page() {
             <DataTable
                 SearchComponent={Search}
                 OperationComponent={Operation}
-                EditComponent={EditPage}
+                tableName={"TableConfig"}
                 primary={"id"}
+                i18n={true}
                 data={dataState.list}
                 columns={columns}
                 setData={setDataState}
-                tableName={"ProjectConfig"}
+                EditComponent={EditPage}
                 deleteHandler={deleteHandler}
             ></DataTable>
         </div>

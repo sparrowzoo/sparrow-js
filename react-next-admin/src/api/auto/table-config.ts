@@ -10,7 +10,15 @@ export default class TableConfigApi {
         return Fetcher.post("/table/config/search.json", body, translator);
     }
 
-    public static  save(
+    public static projectIdList(
+        query: {},
+        translator: (key: string) => string
+    ): Promise<any> {
+        const body = JSON.stringify(query);
+        return Fetcher.post("/project/config/list.json", body, translator);
+    }
+
+    public static save(
         params: {},
         translator: (key: string) => string
     ): Promise<any> {
@@ -18,7 +26,7 @@ export default class TableConfigApi {
         return Fetcher.post("/table/config/save.json", body, translator);
     }
 
-    public static  batchDelete(
+    public static batchDelete(
         params: IDENTITY[],
         translator: (key: string) => string
     ): Promise<any> {
@@ -26,16 +34,16 @@ export default class TableConfigApi {
         return Fetcher.post("/table/config/delete.json", body, translator);
     }
 
-       public static  delete(
-            id: IDENTITY,
-            translator: (key: string) => string
-        ): Promise<any> {
-            const body = JSON.stringify([id]);
-            return Fetcher.post("/table/config/delete.json", body, translator);
-        }
+    public static delete(
+        id: IDENTITY,
+        translator: (key: string) => string
+    ): Promise<any> {
+        const body = JSON.stringify([id]);
+        return Fetcher.post("/table/config/delete.json", body, translator);
+    }
 
 
-    public static  disable(
+    public static disable(
         params: IDENTITY[],
         translator: (key: string) => string
     ): Promise<any> {
@@ -43,7 +51,7 @@ export default class TableConfigApi {
         return Fetcher.post("/table/config/disable.json", body, translator);
     }
 
-    public static  enable(
+    public static enable(
         params: IDENTITY[],
         translator: (key: string) => string
     ): Promise<any> {
