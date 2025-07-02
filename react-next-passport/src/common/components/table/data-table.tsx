@@ -27,9 +27,12 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                                                       setData,
                                                                       hiddenColumns,
                                                                       primary,
+                                                                      tableName,
+                                                                      i18n,
                                                                       SearchComponent,
                                                                       OperationComponent,
-                                                                      EditComponent
+                                                                      EditComponent,
+                                                                      deleteHandler
                                                                   }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -60,6 +63,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
             return row.subRows?.length > 0;
         },
         getExpandedRowModel: getExpandedRowModel(),
+        meta: {primary: primary as string, tableName: tableName as string, i18n: i18n},
         state: {
             sorting,
             columnFilters,
@@ -75,7 +79,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
             </div>
 
             <div className="flex items-center py-4">
-                {OperationComponent && <OperationComponent table={table}/>}
+                {OperationComponent && setData && <OperationComponent setData={setData} table={table}/>}
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -106,8 +110,8 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell: Cell<TData, TValue>) => (
-                                        <CellRenderer key={cell.id} cell={cell} EditComponent={EditComponent}
-                                                      primary={primary as string}/>
+                                        <CellRenderer deleteHandler={deleteHandler} key={cell.id} cell={cell}
+                                                      EditComponent={EditComponent}/>
                                     ))}
                                 </TableRow>
                             ))

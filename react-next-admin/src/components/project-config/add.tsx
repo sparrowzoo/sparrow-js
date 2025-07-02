@@ -65,9 +65,12 @@ export default function Page() {
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
-                <ValidatableInput {...register("id")}
+                <ValidatableInput  {...register("id")}
                                   type={"hidden"}
-                                  fieldPropertyName={"id"}/>
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.id?.message}                                  fieldPropertyName={"id"}/>
 <ValidatableInput  {...register("name")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
