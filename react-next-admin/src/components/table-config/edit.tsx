@@ -13,24 +13,23 @@ import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
 
-export default function EditPage({id,cellContext}: RowEditProps) {
+export default function EditPage({id,cell}: RowEditProps<any,any>) {
      const globalTranslate = useTranslations("GlobalForm");
         const errorTranslate = useTranslations("TableConfig.ErrorMessage")
         const pageTranslate = useTranslations("TableConfig")
         const validateTranslate = useTranslations("TableConfig.validate")
         const FormSchema = crateScheme(validateTranslate);
         type FormData = v.InferOutput<typeof FormSchema>;
-        const original = cellContext.row.original;
+        const original = cell.getContext().row.original;
 
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        alert(id);
         TableConfigApi.save(data, errorTranslate).then(
             (res) => {
-                toast.success("操作成功！");
+                toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
         ).catch(()=>{});
     };

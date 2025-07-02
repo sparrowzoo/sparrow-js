@@ -6,13 +6,13 @@ import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import AddPage from "@/components/project-config/add";
 import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
-import {getSelectedIds} from "@/common/lib/table/TableUtils";
+import {getSelectedIds, removeRowByPrimary} from "@/common/lib/table/TableUtils";
 import {useTranslations} from "next-intl";
 
 
-export default function Operation({table}: TableOperationProps<ProjectConfig>) {
+export default function Operation({table, setData}: TableOperationProps<ProjectConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
-
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
     return (<div className="flex justify-between gap-4">
             <Dialog>
                 <DialogTrigger asChild>
@@ -23,14 +23,45 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
                 </DialogContent>
             </Dialog>
             <Button onClick={() => {
-                const translate = () => "";
                 const selectedIds = getSelectedIds(table);
-                ProjectConfigApi.batchDelete(selectedIds, translate).then(
+                if (selectedIds.length === 0) {
+                    toast(globalTranslate("no-record-checked"));
+                    return;
+                }
+                ProjectConfigApi.batchDelete(selectedIds, errorTranslate).then(
                     (res) => {
-                        toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
+                        setData(removeRowByPrimary(selectedIds, table));
+                        toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
                     }
                 )
             }} variant="outline">{globalTranslate("delete")}</Button>
+
+            <Button onClick={() => {
+                const selectedIds = getSelectedIds(table);
+                if (selectedIds.length === 0) {
+                    toast(globalTranslate("no-record-checked"));
+                    return;
+                }
+                ProjectConfigApi.enable(selectedIds, errorTranslate).then(
+                    (res) => {
+                        toast.success(globalTranslate("enable") + globalTranslate("operation-success"));
+                    }
+                )
+            }} variant="outline">{globalTranslate("enable")}</Button>
+
+
+            <Button onClick={() => {
+                const selectedIds = getSelectedIds(table);
+                if (selectedIds.length === 0) {
+                    toast(globalTranslate("no-record-checked"));
+                    return;
+                }
+                ProjectConfigApi.disable(selectedIds, errorTranslate).then(
+                    (res) => {
+                        toast.success(globalTranslate("disable") + globalTranslate("operation-success"));
+                    }
+                )
+            }} variant="outline">{globalTranslate("disable")}</Button>
         </div>
     );
 }

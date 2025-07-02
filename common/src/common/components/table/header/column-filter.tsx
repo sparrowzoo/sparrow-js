@@ -7,13 +7,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
 import {Columns3Cog} from "lucide-react";
-import {ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import {useTranslations} from "next-intl";
 
 
-const ColumnFilter = ({i18nPrefix}: ColumnOperationProps) => {
+const ColumnFilter = () => {
     return ({table, column}) => {
-        const t = useTranslations(i18nPrefix);
+        const tableName = table?.options.meta?.tableName;
+        const i18n = table?.options.meta.i18n;
+        const t = useTranslations(tableName);
+
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -34,7 +36,7 @@ const ColumnFilter = ({i18nPrefix}: ColumnOperationProps) => {
                                     checked={column.getIsVisible()}
                                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                                 >
-                                    {i18nPrefix ? t(column.id) : column.id}
+                                    {i18n ? t(column.id) : column.id}
                                 </DropdownMenuCheckboxItem>
                             );
                         })}

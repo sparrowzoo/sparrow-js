@@ -12,6 +12,8 @@ import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
 
+
+
 export default function Page() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
@@ -41,12 +43,13 @@ export default function Page() {
             <DataTable
                 SearchComponent={Search}
                 OperationComponent={Operation}
-                EditComponent={EditPage}
+                tableName={"ProjectConfig"}
                 primary={"id"}
+                i18n={true}
                 data={dataState.list}
                 columns={columns}
                 setData={setDataState}
-                tableName={"ProjectConfig"}
+                EditComponent={EditPage}
                 deleteHandler={deleteHandler}
             ></DataTable>
         </div>

@@ -37,12 +37,12 @@ status:string;
 export const columns: ColumnDef<TableConfig>[] = [
 {
 accessorKey: "id",
-header: PlainTextHeader({columnTitle: "", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "ID"} as ColumnOperationProps),
 cell: NormalCell("id"),
 enableHiding: true
 },{
 accessorKey: "projectId",
-header: PlainTextHeader({columnTitle: "项目ID", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "项目ID"} as ColumnOperationProps),
 cell: NormalCell("projectId"),
 enableHiding: true
 },{
@@ -52,112 +52,112 @@ cell: CheckBoxCell,
 enableHiding: false
 },{
 accessorKey: "primaryKey",
-header: PlainTextHeader({columnTitle: "主键", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "主键"} as ColumnOperationProps),
 cell: NormalCell("primaryKey"),
 enableHiding: true
 },{
 accessorKey: "tableName",
-header: PlainTextHeader({columnTitle: "表名", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "表名"} as ColumnOperationProps),
 cell: NormalCell("tableName"),
 enableHiding: true
 },{
 accessorKey: "className",
-header: PlainTextHeader({columnTitle: "类名", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "类名"} as ColumnOperationProps),
 cell: NormalCell("className"),
 enableHiding: true
 },{
 accessorKey: "description",
-header: PlainTextHeader({columnTitle: "描述", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "描述"} as ColumnOperationProps),
 cell: NormalCell("description"),
 enableHiding: true
 },{
 accessorKey: "locked",
-header: PlainTextHeader({columnTitle: "是否锁定", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "是否锁定"} as ColumnOperationProps),
 cell: NormalCell("locked"),
 enableHiding: true
 },{
 accessorKey: "checkable",
-header: PlainTextHeader({columnTitle: "是否可勾选", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "是否可勾选"} as ColumnOperationProps),
 cell: NormalCell("checkable"),
 enableHiding: true
 },{
 accessorKey: "rowMenu",
-header: PlainTextHeader({columnTitle: "是否显示行操作", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "是否显示行操作"} as ColumnOperationProps),
 cell: NormalCell("rowMenu"),
 enableHiding: true
 },{
 accessorKey: "columnFilter",
-header: PlainTextHeader({columnTitle: "是否显示列过滤器", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "是否显示列过滤器"} as ColumnOperationProps),
 cell: NormalCell("columnFilter"),
 enableHiding: true
 },{
 accessorKey: "statusCommand",
-header: PlainTextHeader({columnTitle: "是否显示状态命令", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "是否显示状态命令"} as ColumnOperationProps),
 cell: NormalCell("statusCommand"),
 enableHiding: true
 },{
 accessorKey: "columnConfigs",
-header: PlainTextHeader({columnTitle: "列配置", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "列配置"} as ColumnOperationProps),
 cell: NormalCell("columnConfigs"),
 enableHiding: true
 },{
 accessorKey: "source",
-header: PlainTextHeader({columnTitle: "数据源", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "数据源"} as ColumnOperationProps),
 cell: NormalCell("source"),
 enableHiding: true
 },{
 accessorKey: "sourceCode",
-header: PlainTextHeader({columnTitle: "上传源代码", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "上传源代码"} as ColumnOperationProps),
 cell: NormalCell("sourceCode"),
 enableHiding: true
 },{
 accessorKey: "createUserName",
-header: PlainTextHeader({columnTitle: "创建人", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "创建人"} as ColumnOperationProps),
 cell: NormalCell("createUserName"),
 enableHiding: true
 },{
 accessorKey: "createUserId",
-header: PlainTextHeader({columnTitle: "创建人ID", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "创建人ID"} as ColumnOperationProps),
 cell: NormalCell("createUserId"),
 enableHiding: true
 },{
 accessorKey: "modifiedUserId",
-header: PlainTextHeader({columnTitle: "更新人ID", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "更新人ID"} as ColumnOperationProps),
 cell: NormalCell("modifiedUserId"),
 enableHiding: true
 },{
 accessorKey: "modifiedUserName",
-header: PlainTextHeader({columnTitle: "更新人", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "更新人"} as ColumnOperationProps),
 cell: NormalCell("modifiedUserName"),
 enableHiding: true
 },{
 accessorKey: "gmtCreate",
-header: PlainTextHeader({columnTitle: "创建时间", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "创建时间"} as ColumnOperationProps),
 cell: NormalCell("gmtCreate"),
 enableHiding: true
 },{
 accessorKey: "gmtModified",
-header: PlainTextHeader({columnTitle: "更新时间", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "更新时间"} as ColumnOperationProps),
 cell: NormalCell("gmtModified"),
 enableHiding: true
 },{
 accessorKey: "deleted",
-header: PlainTextHeader({columnTitle: "是否删除", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "是否删除"} as ColumnOperationProps),
 cell: NormalCell("deleted"),
 enableHiding: true
 },{
 accessorKey: "status",
-header: PlainTextHeader({columnTitle: "STATUS", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "STATUS"} as ColumnOperationProps),
 cell: NormalCell("status"),
 enableHiding: true
 },{
 id: "actions",
-header: PlainTextHeader({columnTitle: "操作", i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "操作"} as ColumnOperationProps),
 cell:"Actions",
 enableHiding: false
 },{
 id: "filter-column",
-header: ColumnFilter({i18nPrefix: "TableConfig"} as ColumnOperationProps),
+header: ColumnFilter(),
 cell:"",
 enableHiding: false
 }
