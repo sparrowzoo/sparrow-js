@@ -64,9 +64,12 @@ export default function EditPage({id,cell}: RowEditProps<any,any>) {
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
-                <ValidatableInput {...register("id")}
+                <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
-                                  fieldPropertyName={"id"}/>
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.id?.message}                                  fieldPropertyName={"id"}/>
 <ValidatableInput defaultValue={original.name} {...register("name")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
@@ -85,7 +88,7 @@ export default function EditPage({id,cell}: RowEditProps<any,any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
-<ValidatableInput defaultChecked={original.i18n} {...register("i18n")}
+<ValidatableInput defaultValue={original.i18n} {...register("i18n")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
@@ -121,7 +124,7 @@ export default function EditPage({id,cell}: RowEditProps<any,any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.config?.message}                                  fieldPropertyName={"config"}/>
-<ValidatableInput defaultChecked={original.wrapWithParent} {...register("wrapWithParent")}
+<ValidatableInput defaultValue={original.wrapWithParent} {...register("wrapWithParent")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
