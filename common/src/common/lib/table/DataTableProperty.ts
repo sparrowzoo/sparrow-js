@@ -1,4 +1,4 @@
-import {Cell, CellContext, ColumnDef} from "@tanstack/react-table";
+import {Cell, ColumnDef} from "@tanstack/react-table";
 import React from "react";
 import {Table} from "@tanstack/table-core";
 import {VisibilityState} from "@tanstack/table-core/src/features/ColumnVisibility";
@@ -17,13 +17,14 @@ export default interface DataTableProps<
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     primary?: string;
-    tableName?:string;
+    tableName?: string;
+    i18n: boolean;
     hiddenColumns?: VisibilityState | (() => VisibilityState);
     setData?: React.Dispatch<React.SetStateAction<TData[]>>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
-    OperationComponent?: React.ComponentType<any>;
-    EditComponent?: React.ComponentType<RowEditProps>;
-    deleteHandler: (id:IDENTITY) => void;
+    OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
+    EditComponent?: React.ComponentType<RowEditProps<TData, TValue>>;
+    deleteHandler: (id: IDENTITY) => void;
 }
 
 export interface TableOperationProps<TData> {
@@ -31,30 +32,22 @@ export interface TableOperationProps<TData> {
     setData: React.Dispatch<React.SetStateAction<TData[]>>;
 }
 
-export interface EmptyRowProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[];
-}
-
 
 export interface ColumnOperationProps {
     columnTitle: string;
-    i18nPrefix?: string;
-    column: any;
     showFilter?: boolean;
     showSort?: boolean;
 }
 
-export interface RowEditProps {
+export interface RowEditProps<TData, TValue> {
     id: string | number;
-    cellContext: CellContext<any, any>;
+    cell: Cell<TData, TValue>,
 }
 
-export interface RowOperationProps {
-    EditComponent?: React.ComponentType<RowEditProps>;
-    primary: string;
-    tableName?:string;
-    cell: Cell<any, any>,
-    deleteHandler?: (id:IDENTITY) => void;
+export interface RowOperationProps<TData, TValue> {
+    EditComponent?: React.ComponentType<RowEditProps<TData, TValue>>;
+    cell: Cell<TData, TValue>,
+    deleteHandler?: (id: IDENTITY) => void;
 }
 
 export type IDENTITY = string | number;

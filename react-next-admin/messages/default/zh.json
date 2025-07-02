@@ -3,6 +3,8 @@
     "add": "添加",
     "edit": "编辑",
     "delete": "删除",
+    "enable": "启用",
+    "disable": "禁用",
     "submit": "提交",
     "cancel": "取消",
     "save": "保存",
@@ -24,7 +26,8 @@
     "info": "信息",
     "next": "下一步",
     "previous": "上一步",
-    "back": "返回"
+    "back": "返回",
+    "no-record-checked": "请选择要操作的记录！"
   },
   "LocaleLayout": {
     "title": "麻雀窝",
