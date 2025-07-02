@@ -64,9 +64,12 @@ export default function EditPage({id,cell}: RowEditProps<any,any>) {
                 </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col">
-                <ValidatableInput {...register("id")}
+                <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
-                                  fieldPropertyName={"id"}/>
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.id?.message}                                  fieldPropertyName={"id"}/>
 <ValidatableInput defaultValue={original.projectId} {...register("projectId")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
@@ -97,7 +100,7 @@ export default function EditPage({id,cell}: RowEditProps<any,any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.description?.message}                                  fieldPropertyName={"description"}/>
-<ValidatableInput defaultChecked={original.locked} {...register("locked")}
+<ValidatableInput defaultValue={original.locked} {...register("locked")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
@@ -121,7 +124,7 @@ export default function EditPage({id,cell}: RowEditProps<any,any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.columnFilter?.message}                                  fieldPropertyName={"columnFilter"}/>
-<ValidatableInput defaultChecked={original.statusCommand} {...register("statusCommand")}
+<ValidatableInput defaultValue={original.statusCommand} {...register("statusCommand")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}

@@ -6,11 +6,11 @@ import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import AddPage from "@/components/project-config/add";
 import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
-import {getSelectedIds, removeRowByPrimary} from "@/common/lib/table/TableUtils";
+import {getSelectedIds} from "@/common/lib/table/TableUtils";
 import {useTranslations} from "next-intl";
 
 
-export default function Operation({table, setData}: TableOperationProps<ProjectConfig>) {
+export default function Operation({table}: TableOperationProps<ProjectConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
     return (<div className="flex justify-between gap-4">
@@ -25,43 +25,42 @@ export default function Operation({table, setData}: TableOperationProps<ProjectC
             <Button onClick={() => {
                 const selectedIds = getSelectedIds(table);
                 if (selectedIds.length === 0) {
-                    toast(globalTranslate("no-record-checked"));
-                    return;
+                                    toast(globalTranslate("no-record-checked"));
+                                    return;
                 }
                 ProjectConfigApi.batchDelete(selectedIds, errorTranslate).then(
                     (res) => {
-                        setData(removeRowByPrimary(selectedIds, table));
-                        toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
+                        toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
                     }
                 )
             }} variant="outline">{globalTranslate("delete")}</Button>
 
             <Button onClick={() => {
-                const selectedIds = getSelectedIds(table);
-                if (selectedIds.length === 0) {
-                    toast(globalTranslate("no-record-checked"));
-                    return;
-                }
-                ProjectConfigApi.enable(selectedIds, errorTranslate).then(
-                    (res) => {
-                        toast.success(globalTranslate("enable") + globalTranslate("operation-success"));
-                    }
-                )
-            }} variant="outline">{globalTranslate("enable")}</Button>
+                            const selectedIds = getSelectedIds(table);
+                            if (selectedIds.length === 0) {
+                                                toast(globalTranslate("no-record-checked"));
+                                                return;
+                            }
+                            ProjectConfigApi.enable(selectedIds, errorTranslate).then(
+                                (res) => {
+                                    toast.success(globalTranslate("enable")+globalTranslate("operation-success"));
+                                }
+                            )
+                        }} variant="outline">{globalTranslate("enable")}</Button>
 
 
-            <Button onClick={() => {
-                const selectedIds = getSelectedIds(table);
-                if (selectedIds.length === 0) {
-                    toast(globalTranslate("no-record-checked"));
-                    return;
-                }
-                ProjectConfigApi.disable(selectedIds, errorTranslate).then(
-                    (res) => {
-                        toast.success(globalTranslate("disable") + globalTranslate("operation-success"));
-                    }
-                )
-            }} variant="outline">{globalTranslate("disable")}</Button>
+                        <Button onClick={() => {
+                                        const selectedIds = getSelectedIds(table);
+                                        if (selectedIds.length === 0) {
+                                                            toast(globalTranslate("no-record-checked"));
+                                                            return;
+                                        }
+                                        ProjectConfigApi.disable(selectedIds, errorTranslate).then(
+                                            (res) => {
+                                                toast.success(globalTranslate("disable")+globalTranslate("operation-success"));
+                                            }
+                                        )
+                                    }} variant="outline">{globalTranslate("disable")}</Button>
         </div>
     );
 }
