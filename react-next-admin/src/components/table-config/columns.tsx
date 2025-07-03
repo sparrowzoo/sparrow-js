@@ -158,7 +158,7 @@ enableHiding: false
 },{
 id: "filter-column",
 header: ColumnFilter(),
-cell:"",
+cell:'',
 enableHiding: false
 }
 ];
