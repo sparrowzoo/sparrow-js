@@ -1,7 +1,1 @@
-[
-  "default",
-  "ProjectConfig",
-  "TableConfig",
-  "menu",
-  "ColumnConfig"
-]
+["default","ProjectConfig","ColumnConfig","TableConfig","menu"]
