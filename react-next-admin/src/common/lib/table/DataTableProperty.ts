@@ -24,7 +24,7 @@ export default interface DataTableProps<
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
     EditComponent?: React.ComponentType<RowEditProps<TData, TValue>>;
-    deleteHandler: (id: IDENTITY) => void;
+    deleteHandler?: (id: IDENTITY) => void;
 }
 
 export interface TableOperationProps<TData> {
