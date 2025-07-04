@@ -1,7 +1,7 @@
 import {Checkbox} from "@/components/ui/checkbox";
 import * as React from "react";
 
-const CheckBoxCell: React.FC<{ row: any }> = ({row}) => (
+const CheckBoxCell = ({row}) => (
     <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}

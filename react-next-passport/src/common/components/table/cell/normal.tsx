@@ -6,7 +6,7 @@ const NormalCell = (field: string) => {
         if (typeof value === "boolean") {
             return <div className="uppercase">{value.toString()}</div>
         }
-        return <div className="lowercase">{row.getValue(field)}</div>
+        return <div>{row.getValue(field)}</div>
     }
 }
 export default NormalCell;
