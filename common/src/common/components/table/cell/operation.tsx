@@ -10,14 +10,17 @@ import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import * as React from "react";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
-import {RowOperationProps} from "@/common/lib/table/DataTableProperty";
 import Draggable from "@/common/components/Draggable";
 import {useTranslations} from "next-intl";
+import {CellContext} from "@tanstack/table-core";
 
-const OperationCell = ({EditComponent, cell, deleteHandler}: RowOperationProps<any, any>) => {
+const OperationCell = ({cell}: CellContext<any, any>) => {
     const globalTranslate = useTranslations("GlobalForm");
+    const table = cell.getContext()?.table;
     const original = cell.getContext().row.original;
-    const primary = cell.getContext()?.table?.options?.meta?.primary;
+    const primary = table?.options?.meta?.primary;
+    const EditComponent = table.options.meta?.EditComponent;
+    const deleteHandler = table.options.meta?.deleteHandler;
 
     return (
 

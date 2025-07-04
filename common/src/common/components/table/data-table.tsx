@@ -16,10 +16,9 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
-import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import DataTableProps, {BasicData} from "@/common/lib/table/DataTableProperty";
 import {EmptyRow} from "@/common/components/table/empty-row";
-import CellRenderer from "@/common/components/table/cell-render";
 
 export function DataTable<TData extends BasicData<TData>, TValue>({
                                                                       columns,
@@ -63,7 +62,14 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
             return row.subRows?.length > 0;
         },
         getExpandedRowModel: getExpandedRowModel(),
-        meta: {primary: primary as string, tableName: tableName as string, i18n: i18n},
+        meta: {
+            primary: primary as string,
+            tableName: tableName as string,
+            i18n: i18n,
+            setData: setData,
+            deleteHandler: deleteHandler,
+            EditComponent: EditComponent
+        },
         state: {
             sorting,
             columnFilters,
@@ -75,11 +81,11 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
     return (
         <div className="w-full">
             <div className="flex items-center py-4">
-                {SearchComponent && setData && <SearchComponent setData={setData} table={table}/>}
+                {SearchComponent && <SearchComponent table={table}/>}
             </div>
 
             <div className="flex items-center py-4">
-                {OperationComponent && setData && <OperationComponent setData={setData} table={table}/>}
+                {OperationComponent && <OperationComponent table={table}/>}
             </div>
             <div className="rounded-md border">
                 <Table>
@@ -110,8 +116,12 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                     data-state={row.getIsSelected() && "selected"}
                                 >
                                     {row.getVisibleCells().map((cell: Cell<TData, TValue>) => (
-                                        <CellRenderer deleteHandler={deleteHandler} key={cell.id} cell={cell}
-                                                      EditComponent={EditComponent}/>
+                                        <TableCell key={cell.id}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        </TableCell>
                                     ))}
                                 </TableRow>
                             ))
