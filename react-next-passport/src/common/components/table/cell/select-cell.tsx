@@ -18,7 +18,7 @@ const SelectCell = (field: string, width?: number) => {
     return ({row, cell}) => {
         const translator = useTranslations("Enums")
         const fieldValue = row.getValue(field) || "";
-        const meta = cell.getContext().table.options.meta as MyTableMeta<any, any>;
+        const meta = cell.getContext().table.options.meta as MyTableMeta<any>;
         const dictionary = meta.result.data.dictionary[field];
         const [value, setValue] = useState(fieldValue);
         useEffect(() => {

@@ -14,11 +14,11 @@ import Draggable from "@/common/components/Draggable";
 import {useTranslations} from "next-intl";
 import {CellContextProps, MyTableMeta} from "@/common/lib/table/DataTableProperty";
 
-const OperationCell = ({cellContext}: CellContextProps<any, any>) => {
+const OperationCell = ({cellContext}: CellContextProps<any>) => {
     const globalTranslate = useTranslations("GlobalForm");
     const table = cellContext?.table;
     const original = cellContext.row.original;
-    const meta = table?.options?.meta as MyTableMeta<any, any>;
+    const meta = table?.options?.meta as MyTableMeta<any>;
     const primary = meta.primary;
     const EditComponent = meta.EditComponent;
     const width = meta.editorWidth;

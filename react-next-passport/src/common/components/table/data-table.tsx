@@ -21,20 +21,20 @@ import DataTableProps, {BasicData, MyTableMeta} from "@/common/lib/table/DataTab
 import {EmptyRow} from "@/common/components/table/empty-row";
 import CellRenderer from "@/common/components/table/cell-render";
 
-export function DataTable<TData extends BasicData<TData>, TValue>({
-                                                                      columns,
-                                                                      result,
-                                                                      setData,
-                                                                      hiddenColumns,
-                                                                      primary,
-                                                                      tableName,
-                                                                      i18n,
-                                                                      SearchComponent,
-                                                                      OperationComponent,
-                                                                      EditComponent,
-                                                                      deleteHandler,
-                                                                      editorWidth
-                                                                  }: DataTableProps<TData, TValue>) {
+export function DataTable<TData extends BasicData<TData>>({
+                                                              columns,
+                                                              result,
+                                                              setData,
+                                                              hiddenColumns,
+                                                              primary,
+                                                              tableName,
+                                                              i18n,
+                                                              SearchComponent,
+                                                              OperationComponent,
+                                                              EditComponent,
+                                                              deleteHandler,
+                                                              editorWidth
+                                                          }: DataTableProps<TData>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -73,7 +73,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
             EditComponent: EditComponent,
             editorWidth: editorWidth,
             result: result,
-        } as MyTableMeta<TData, TValue>,
+        } as MyTableMeta<TData>,
         state: {
             sorting,
             columnFilters,
@@ -118,7 +118,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                 >
-                                    {row.getVisibleCells().map((cell: Cell<TData, TValue>) => (
+                                    {row.getVisibleCells().map((cell: Cell<TData, string>) => (
                                         <CellRenderer key={cell.id} cellContext={cell.getContext()}/>
                                     ))}
                                 </TableRow>
