@@ -11,8 +11,7 @@ const NormalHeader = ({showFilter, showSort, columnTitle}: ColumnOperationProps)
         const title = i18n ? t(column.id) : columnTitle;
 
         return (<>
-                <ColumnOperation columnTitle={title} showFilter={showFilter} showSort={showSort}
-                                 column={column}/></>
+                <ColumnOperation columnTitle={title} showFilter={showFilter} showSort={showSort}/></>
         );
     }
 };

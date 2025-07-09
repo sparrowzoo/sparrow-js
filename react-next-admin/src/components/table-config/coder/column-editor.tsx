@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import {useEffect, useState} from "react";
-import {ColumnConfig, columns} from "@/components/coder/columns";
+import {ColumnConfig, columns} from "@/components/table-config/coder/columns";
 import {DataTable} from "@/common/components/table/data-table";
 // import CoderApi from "@/api/auto/coder-config";
 import {useTranslations} from "next-intl";
@@ -14,19 +14,18 @@ import {getOriginalData} from "@/common/lib/table/TableUtils";
 
 function SaveButton({table}: TableOperationProps<ColumnConfig>) {
     const setData = table.options.meta?.setData;
-
-    return (<><Button onClick={() => {
+    return (<div className={"border-1 border-red-700"}><Button onClick={() => {
             const originalData = getOriginalData(table);
             console.log(JSON.stringify(originalData));
         }}>保存</Button>
             <Button onClick={() => {
                 const originalData = getOriginalData(table);
                 setData(originalData.sort((a, b) => a.sort - b.sort));
-            }}>sort</Button></>
+            }}>sort</Button></div>
     )
 }
 
-export default function Page() {
+export default function ColumnEditor() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
 
@@ -49,8 +48,7 @@ export default function Page() {
         return <ThreeDotLoading/>
     }
     return (
-        <div className="w-full">
-
+        <div className="w-full border-2 border-gray-200 rounded-md">
             <DataTable
                 tableName={"ColumnConfig"}
                 primary={"id"}

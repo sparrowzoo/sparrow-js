@@ -1,4 +1,6 @@
+import {IDENTITY} from "@/common/lib/protocol/Identity";
+
 export default interface KeyValue {
-    key: string;
+    key: IDENTITY;
     value: string;
 }

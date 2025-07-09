@@ -16,23 +16,25 @@ import {
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
-import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import DataTableProps, {BasicData} from "@/common/lib/table/DataTableProperty";
+import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
+import DataTableProps, {BasicData, MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {EmptyRow} from "@/common/components/table/empty-row";
+import CellRenderer from "@/common/components/table/cell-render";
 
-export function DataTable<TData extends BasicData<TData>, TValue>({
-                                                                      columns,
-                                                                      data,
-                                                                      setData,
-                                                                      hiddenColumns,
-                                                                      primary,
-                                                                      tableName,
-                                                                      i18n,
-                                                                      SearchComponent,
-                                                                      OperationComponent,
-                                                                      EditComponent,
-                                                                      deleteHandler
-                                                                  }: DataTableProps<TData, TValue>) {
+export function DataTable<TData extends BasicData<TData>>({
+                                                              columns,
+                                                              result,
+                                                              setData,
+                                                              hiddenColumns,
+                                                              primary,
+                                                              tableName,
+                                                              i18n,
+                                                              SearchComponent,
+                                                              OperationComponent,
+                                                              EditComponent,
+                                                              deleteHandler,
+                                                              editorWidth
+                                                          }: DataTableProps<TData>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -46,7 +48,7 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
         onStateChange(updater: Updater<TableState>): void {
         },
         renderFallbackValue: undefined,
-        data,
+        data: result.data.list,
         enableSubRowSelection: true,
         getSubRows: (row) => row.subRows || [],
         columns,
@@ -68,8 +70,10 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
             i18n: i18n,
             setData: setData,
             deleteHandler: deleteHandler,
-            EditComponent: EditComponent
-        },
+            EditComponent: EditComponent,
+            editorWidth: editorWidth,
+            result: result,
+        } as MyTableMeta<TData>,
         state: {
             sorting,
             columnFilters,
@@ -110,23 +114,17 @@ export function DataTable<TData extends BasicData<TData>, TValue>({
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
-
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                 >
-                                    {row.getVisibleCells().map((cell: Cell<TData, TValue>) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
+                                    {row.getVisibleCells().map((cell: Cell<TData, string>) => (
+                                        <CellRenderer key={cell.id} cellContext={cell.getContext()}/>
                                     ))}
                                 </TableRow>
                             ))
                         ) : (
-                            <EmptyRow columns={columns}/>
+                            <EmptyRow columnSize={columns.length}/>
                         )}
                     </TableBody>
                 </Table>

@@ -1,29 +1,33 @@
 import * as React from "react";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
+import {Input} from "@/components/ui/input";
 import {Checkbox} from "@/components/ui/checkbox";
 
-const InputCell = (field: string, type: string) => {
-
+const InputCell = (field: string, type: string, width?: number) => {
+    const className = width ? `w-${width}` : "w-fit";
     return ({row}) => {
-        const [value, setValue] = useState(row.original[field]);
+        const fieldValue = row.getValue(field) || "";
+        const [value, setValue] = useState(fieldValue);
         useEffect(() => {
-            setValue(row.original[field]);
-        }, [row.original[field]]);
+            setValue(fieldValue);
+        }, [fieldValue]);
         if (type === "checkbox") {
-            return <Checkbox
-                defaultValue={value}
-                onCheckedChange={(value) => {
-                    setValue(value);
-                    row.original[field] = value;
-                }}
-                aria-label="Select row"
+            return <Checkbox value={value}
+                             onCheckedChange={(value) => {
+                                 debugger;
+                                 console.log("log ", value);
+                                 setValue(value);
+                                 row.original[field] = value;
+                             }}
+                             aria-label="Select row"
             />
         }
 
-        return (<><input onChange={(event) => {
+        return (<><Input onChange={(event) => {
             row.original[field] = event.target.value;
             setValue(event.target.value);
-        }} className={"w-fit"} type={type} value={value}/>
+            console.log("log ", value);
+        }} className={className} type={type} value={value}/>
         </>);
     }
 }
