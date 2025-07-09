@@ -11,6 +11,8 @@ import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
+import Result, {PagerResult} from "@/common/lib/protocol/Result";
+
 
 
 
@@ -18,11 +20,11 @@ export default function Page() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
 
-    const [dataState, setDataState] = useState<ProjectConfig[] | undefined>();
+    const [dataState, setDataState] = useState<Result<PagerResult<ProjectConfig>> | undefined>();
     useEffect(() => {
         ProjectConfigApi.search({}, errorTranslate).then(
                                               (res) => {
-                                                  setDataState(res.data)
+                                                  setDataState(res)
                                               }
                                            ).catch(()=>{});
 
@@ -40,13 +42,13 @@ export default function Page() {
     }
     return (
         <div className="w-full">
-            <DataTable
+            <DataTable<ProjectConfig>
                 SearchComponent={Search}
                 OperationComponent={Operation}
                 tableName={"ProjectConfig"}
                 primary={"id"}
                 i18n={true}
-                data={dataState.list}
+                result={dataState}
                 columns={columns}
                 setData={setDataState}
                 EditComponent={EditPage}

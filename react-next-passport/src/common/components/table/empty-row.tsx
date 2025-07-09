@@ -1,15 +1,15 @@
-import { TableCell, TableRow } from "@/components/ui/table";
+import {TableCell, TableRow} from "@/components/ui/table";
 import * as React from "react";
-import { EmptyRowProps } from "@/lib/DataTableProperty";
+import {EmptyRowProps} from "@/common/lib/table/DataTableProperty";
 
 export function EmptyRow<TData, TValue>({
-  columns,
-}: EmptyRowProps<TData, TValue>) {
-  return (
-    <TableRow>
-      <TableCell colSpan={columns.length} className="h-24 text-center">
-        No results.
-      </TableCell>
-    </TableRow>
-  );
+                                            columnSize,
+                                        }: EmptyRowProps) {
+    return (
+        <TableRow>
+            <TableCell colSpan={columnSize} className="h-24 text-center">
+                No results.
+            </TableCell>
+        </TableRow>
+    );
 }
