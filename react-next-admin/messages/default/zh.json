@@ -53,5 +53,20 @@
     "sign-in": "登录",
     "sign-up": "注册",
     "logout-success": "您已退出登录!"
+  },
+  "Enums": {
+    "CellType": {
+      "check_box": "选择框",
+      "normal": "普通",
+      "tree": "树形",
+      "operation": "操作"
+    },
+    "ColumnType": {
+      "action": "操作菜单",
+      "check": "选择框",
+      "filter": "筛选",
+      "tree": "树形",
+      "normal": "普通"
+    }
   }
 }

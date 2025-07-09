@@ -9,19 +9,22 @@ import {
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import * as React from "react";
-import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import Draggable from "@/common/components/Draggable";
 import {useTranslations} from "next-intl";
-import {CellContext} from "@tanstack/table-core";
+import {CellContextProps, MyTableMeta} from "@/common/lib/table/DataTableProperty";
 
-const OperationCell = ({cell}: CellContext<any, any>) => {
+const OperationCell = ({cellContext}: CellContextProps<any>) => {
     const globalTranslate = useTranslations("GlobalForm");
-    const table = cell.getContext()?.table;
-    const original = cell.getContext().row.original;
-    const primary = table?.options?.meta?.primary;
-    const EditComponent = table.options.meta?.EditComponent;
-    const deleteHandler = table.options.meta?.deleteHandler;
+    const table = cellContext?.table;
+    const original = cellContext.row.original;
+    const meta = table?.options?.meta as MyTableMeta<any>;
+    const primary = meta.primary;
+    const EditComponent = meta.EditComponent;
+    const width = meta.editorWidth;
+    const className = "sm:max-w-fit w-fit";
 
+    const deleteHandler = meta.deleteHandler;
     return (
 
         <DropdownMenu>
@@ -37,18 +40,19 @@ const OperationCell = ({cell}: CellContext<any, any>) => {
                 {EditComponent &&
                     <DropdownMenuItem>
                         <Dialog>
-                            <DialogTrigger asChild>
-                                <Button onClick={(e) => {
-                                    e.stopPropagation();
-                                }} variant="outline">{globalTranslate("edit")}</Button>
-                            </DialogTrigger>
+                            <DialogTitle>
+                                <DialogTrigger asChild>
+                                    <Button onClick={(e) => {
+                                        e.stopPropagation();
+                                    }} variant="outline">{globalTranslate("edit")}</Button>
+                                </DialogTrigger>
+                            </DialogTitle>
                             <Draggable>
                                 <DialogContent onClick={(e) => {
                                     e.stopPropagation();
                                 }
-                                } className="w-[800px] sm:max-w-[625px]">
-                                    <EditComponent cell={cell}
-                                                   id={original[primary]}></EditComponent>
+                                } className={className}>
+                                    <EditComponent cellContext={cellContext}></EditComponent>
                                 </DialogContent>
                             </Draggable>
                         </Dialog>

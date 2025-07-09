@@ -13,7 +13,7 @@ import * as React from "react";
 import {ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 
 
-function InnerColumnOperation({column, showFilter, showSort}: ColumnOperationProps) {
+function InnerColumnOperation({showFilter, showSort, columnTitle, column}: ColumnOperationProps) {
     if (showFilter) {
         return (
             <DropdownMenu>
