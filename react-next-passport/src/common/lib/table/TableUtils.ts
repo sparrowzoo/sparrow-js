@@ -1,5 +1,5 @@
 import {Table} from "@tanstack/table-core";
-import {IDENTITY} from "@/common/lib/table/DataTableProperty";
+import {IDENTITY} from "@/common/lib/protocol/Identity";
 
 export function getSelectedIds(table: Table<any>) {
     // @ts-ignore
