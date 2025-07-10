@@ -55,18 +55,54 @@
     "logout-success": "您已退出登录!"
   },
   "Enums": {
-    "CellType": {
-      "check_box": "选择框",
-      "normal": "普通",
-      "tree": "树形",
-      "operation": "操作"
+    "CELL_TYPE": {
+      "CHECK_BOX": "选择框",
+      "NORMAL": "普通",
+      "TREE": "树形",
+      "OPERATION": "操作"
     },
-    "ColumnType": {
-      "action": "操作菜单",
-      "check": "选择框",
-      "filter": "筛选",
-      "tree": "树形",
-      "normal": "普通"
+    "COLUMN_TYPE": {
+      "ACTION": "操作菜单",
+      "CHECK": "选择框",
+      "FILTER": "筛选",
+      "TREE": "树形",
+      "NORMAL": "普通"
+    },
+    "HEADER_TYPE": {
+      "CHECK_BOX": "选择",
+      "COLUMN_FILTER": "过滤",
+      "NORMAL": "标准",
+      "NORMAL_SORT": "标准(可排序)",
+      "NORMAL_FILTER": "标准(可过滤)",
+      "NORMAL_SORT_FILTER": "标准(可过滤,可排序)",
+      "PLAIN_TEXT": "操作",
+      "EMPTY": "空白"
+    },
+    "DATASOURCE_TYPE": {
+      "NULL": "文本输入",
+      "DICTIONARY": "字典",
+      "TABLE": "表格",
+      "ENUM": "枚举"
+    },
+    "ControlType": {
+      "LABEL": "标签",
+      "LINK": "超链接",
+      "INPUT_TEXT": "文本",
+      "INPUT_HIDDEN": "隐藏",
+      "INPUT_PASSWORD": "密码",
+      "TEXT_AREA": "多行文本",
+      "SELECT": "下拉框",
+      "RADIO_LIST": "单选框列表",
+      "CHECK_BOX_LIST": "多选框列表",
+      "CODE": "代码编辑器",
+      "EDITOR": "富文本编辑器",
+      "DATE": "日期",
+      "DATE_HHMMSS": "时间",
+      "CHECK_BOX": "选择框",
+      "RADIO": "单选框",
+      "FILE": "文件上传",
+      "ENABLE_DISABLE": "启用禁用",
+      "IMAGE": "图片"
     }
   }
 }

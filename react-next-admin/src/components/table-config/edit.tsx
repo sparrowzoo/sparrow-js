@@ -13,7 +13,7 @@ import * as v from "valibot";
 import {CellContextProps} from "@/common/lib/table/DataTableProperty";
 
 
-export default function EditPage({cellContext}: CellContextProps<any,any>) {
+export default function EditPage({cellContext}: CellContextProps<any>) {
      const globalTranslate = useTranslations("GlobalForm");
         const errorTranslate = useTranslations("TableConfig.ErrorMessage")
         const pageTranslate = useTranslations("TableConfig")
