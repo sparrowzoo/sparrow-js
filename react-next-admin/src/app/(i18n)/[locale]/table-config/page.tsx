@@ -12,6 +12,7 @@ import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import Editor from "@/components/table-config/editor";
 
 
 
@@ -51,7 +52,7 @@ export default function Page() {
                 result={dataState}
                 columns={columns}
                 setData={setDataState}
-                EditComponent={EditPage}
+                EditComponent={Editor}
                 deleteHandler={deleteHandler}
             ></DataTable>
         </div>

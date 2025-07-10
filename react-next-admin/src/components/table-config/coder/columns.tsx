@@ -5,6 +5,7 @@ import NormalCell from "@/common/components/table/cell/normal";
 import PlainTextHeader from "@/common/components/table/header/plain-text";
 import InputCell from "@/common/components/table/cell/input-cell";
 import SortableCell from "@/common/components/table/cell/sortable";
+import SelectCell from "@/common/components/table/cell/select-cell";
 
 export interface ColumnConfig extends BasicData<ColumnConfig> {
     tableClassName: string;
@@ -103,7 +104,7 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     }, {
         accessorKey: "dataSourceType",
         header: PlainTextHeader({columnTitle: "数据源类型"} as ColumnOperationProps),
-        cell: InputCell("dataSourceType", "text", 8),
+        cell: SelectCell("dataSourceType", "DATASOURCE_TYPE"),
         enableHiding: true
     }, {
         accessorKey: "dataSourceParams",
@@ -113,22 +114,22 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     }, {
         accessorKey: "columnType",
         header: PlainTextHeader({columnTitle: "列类型"} as ColumnOperationProps),
-        cell: NormalCell("columnType"),
+        cell: SelectCell("columnType","COLUMN_TYPE"),
         enableHiding: true
     }, {
         accessorKey: "headerType",
         header: PlainTextHeader({columnTitle: "表头类型"} as ColumnOperationProps),
-        cell: NormalCell("headerType"),
+        cell: SelectCell("headerType","HEADER_TYPE"),
         enableHiding: true
     }, {
         accessorKey: "cellType",
         header: PlainTextHeader({columnTitle: "单元格类型"} as ColumnOperationProps),
-        cell: NormalCell("cellType"),
+        cell: SelectCell("cellType","CELL_TYPE"),
         enableHiding: true
     }, {
         accessorKey: "controlType",
         header: PlainTextHeader({columnTitle: "控件类型"} as ColumnOperationProps),
-        cell: NormalCell("controlType"),
+        cell: SelectCell("controlType","CONTROL_TYPE"),
         enableHiding: true
     }
 ];
