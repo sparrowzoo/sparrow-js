@@ -4,7 +4,7 @@ import EditPage from "@/components/table-config/edit";
 import ColumnEditor from "@/components/table-config/coder/column-editor";
 import {CellContextProps} from "@/common/lib/table/DataTableProperty";
 
-export default function Editor({cellContext}: CellContextProps<any, any>) {
+export default function Editor({cellContext}: CellContextProps<any>) {
     return <Tabs defaultValue="basic" className="w-[1000px]">
         <TabsList>
             <TabsTrigger value="basic">基础信息</TabsTrigger>
