@@ -27,6 +27,8 @@ export default interface DataTableProps<
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
     editorWidth?: number;
     deleteHandler?: (id: IDENTITY) => void;
+    RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
+
 }
 
 export interface TableOperationProps<TData> {
@@ -48,6 +50,7 @@ export interface MyTableMeta<TData> extends TableMeta<TData> {
     editorWidth: number,
     deleteHandler?: (id: IDENTITY) => void;
     result: Result<PagerResult<TData>>;
+    RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
 }
 
 

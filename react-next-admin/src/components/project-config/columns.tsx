@@ -17,7 +17,6 @@ chineseName:string;
 i18n:boolean; 
 description:string; 
 modulePrefix:string; 
-scanPackage:string; 
 architectures:string; 
 config:string; 
 wrapWithParent:boolean; 
@@ -72,11 +71,6 @@ enableHiding: true
 accessorKey: "modulePrefix",
 header: PlainTextHeader({columnTitle: "模块前缀"} as ColumnOperationProps),
 cell: NormalCell("modulePrefix"),
-enableHiding: true
-},{
-accessorKey: "scanPackage",
-header: PlainTextHeader({columnTitle: "扫描的包路径"} as ColumnOperationProps),
-cell: NormalCell("scanPackage"),
 enableHiding: true
 },{
 accessorKey: "architectures",
@@ -146,7 +140,7 @@ enableHiding: false
 },{
 id: "filter-column",
 header: ColumnFilter(),
-cell:'',
+cell:"",
 enableHiding: false
 }
 ];

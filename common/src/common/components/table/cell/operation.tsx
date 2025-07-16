@@ -9,10 +9,10 @@ import {
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import * as React from "react";
-import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
-import Draggable from "@/common/components/Draggable";
 import {useTranslations} from "next-intl";
 import {CellContextProps, MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import PopItem from "@/common/components/table/cell/pop-operation-item";
+
 
 const OperationCell = ({cellContext}: CellContextProps<any>) => {
     const globalTranslate = useTranslations("GlobalForm");
@@ -22,12 +22,11 @@ const OperationCell = ({cellContext}: CellContextProps<any>) => {
     const primary = meta.primary;
     const EditComponent = meta.EditComponent;
     const width = meta.editorWidth;
-    const className = "sm:max-w-fit w-fit";
-
+    const RowOperationComponents = meta.RowOperationComponents;
     const deleteHandler = meta.deleteHandler;
     return (
 
-        <DropdownMenu>
+        <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">
                     <span className="sr-only">Open menu</span>
@@ -37,33 +36,19 @@ const OperationCell = ({cellContext}: CellContextProps<any>) => {
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel></DropdownMenuLabel>
                 <DropdownMenuSeparator/>
-                {EditComponent &&
-                    <DropdownMenuItem>
-                        <Dialog>
-                            <DialogTitle>
-                                <DialogTrigger asChild>
-                                    <Button onClick={(e) => {
-                                        e.stopPropagation();
-                                    }} variant="outline">{globalTranslate("edit")}</Button>
-                                </DialogTrigger>
-                            </DialogTitle>
-                            <Draggable>
-                                <DialogContent onClick={(e) => {
-                                    e.stopPropagation();
-                                }
-                                } className={className}>
-                                    <EditComponent cellContext={cellContext}></EditComponent>
-                                </DialogContent>
-                            </Draggable>
-                        </Dialog>
-                    </DropdownMenuItem>
-                }
+                <PopItem ItemComponent={EditComponent} cellContext={cellContext} displayText={globalTranslate("edit")}/>
                 <DropdownMenuItem>
                     <Button onClick={(e) => {
                         e.stopPropagation();
                         deleteHandler(original[primary]);
-                    }} variant="outline">{globalTranslate("delete")}</Button>
+                    }}>{globalTranslate("delete")}</Button>
                 </DropdownMenuItem>
+                {RowOperationComponents?.map((Item, index) => {
+                    return <DropdownMenuItem key={index}>
+                        <Item key={index} cellContext={cellContext}/>
+                    </DropdownMenuItem>
+                })
+                }
             </DropdownMenuContent>
         </DropdownMenu>
     );

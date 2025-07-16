@@ -14,6 +14,7 @@ export interface FormHookInputProps<TFieldValues extends FieldValues>
     errorMessage?: string,
     isSubmitted?: boolean,
     keyValues?: KeyValue[],
+    readonly?: boolean,
 }
 
 const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps<FieldValues>>(
@@ -25,6 +26,7 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps<F
          isSubmitted,
          type,
          className,
+         readonly,
          ...props
      }, ref) => {
         if (type === "hidden") {
@@ -43,15 +45,19 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps<F
                 <Label
                     className={"justify-end w-[8rem]"}>{pageTranslate?.(fieldPropertyName) || fieldPropertyName}</Label>
                 <div className={"flex-1"}>
-                    <input
-                        name={fieldPropertyName}
-                        type={type}
-                        className={cn(
-                            defaultClazz,
-                            className
-                        )}
-                        ref={ref}
-                        {...props}
+                    <input onKeyDown={(e) => {
+                        e.stopPropagation();
+                    }
+                    }
+                           name={fieldPropertyName}
+                           type={type}
+                           className={cn(
+                               defaultClazz,
+                               className
+                           )}
+                           readOnly={readonly}
+                           ref={ref}
+                           {...props}
                     />
                 </div>
                 <div className={"w-[10rem]"}>

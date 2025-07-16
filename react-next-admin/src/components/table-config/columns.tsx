@@ -22,7 +22,7 @@ rowMenu:number;
 columnFilter:number; 
 statusCommand:boolean; 
 columnConfigs:string; 
-source:string; 
+source:number; 
 sourceCode:string; 
 createUserName:string; 
 createUserId:number; 
@@ -158,7 +158,7 @@ enableHiding: false
 },{
 id: "filter-column",
 header: ColumnFilter(),
-cell:'',
+cell:"",
 enableHiding: false
 }
 ];
