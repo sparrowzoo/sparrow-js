@@ -33,7 +33,8 @@ export function DataTable<TData extends BasicData<TData>>({
                                                               OperationComponent,
                                                               EditComponent,
                                                               deleteHandler,
-                                                              editorWidth
+                                                              editorWidth,
+                                                              RowOperationComponents
                                                           }: DataTableProps<TData>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -73,6 +74,7 @@ export function DataTable<TData extends BasicData<TData>>({
             EditComponent: EditComponent,
             editorWidth: editorWidth,
             result: result,
+            RowOperationComponents: RowOperationComponents,
         } as MyTableMeta<TData>,
         state: {
             sorting,

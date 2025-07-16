@@ -14,7 +14,7 @@ export default function Editor({cellContext}: CellContextProps<any>) {
             <EditPage cellContext={cellContext}/>
         </TabsContent>
         <TabsContent value="columns">
-            <ColumnEditor/>
+            <ColumnEditor cellContext={cellContext}/>
         </TabsContent>
     </Tabs>
 }

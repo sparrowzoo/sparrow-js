@@ -64,20 +64,16 @@ v.transform((input): number | string => {return parseInt(input,10);}))
 ,statusCommand:
 v.boolean()
 ,columnConfigs:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("columnConfigs.empty-message")))
-
+v.string()
 ,source:
 v.pipe(
  v.string(),
-v.nonEmpty(translate("source.empty-message")))
+v.nonEmpty(translate("source.empty-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("source.check-message")),
+v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,sourceCode:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("sourceCode.empty-message")))
-
+v.string()
 
     });
     //扩展提示

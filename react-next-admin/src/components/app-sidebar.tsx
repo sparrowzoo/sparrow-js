@@ -42,8 +42,8 @@ const data = {
                     url: "/menu",
                 },
                 {
-                    title: "Data Fetching",
-                    url: "#",
+                    title: "Projects",
+                    url: "/project-config",
                     isActive: true,
                 },
                 {

@@ -17,7 +17,7 @@ const SelectCell = (field: string, enumName: string, width?: number) => {
     const className = width ? `w-${width}` : "w-fit";
     return ({row, cell}) => {
         debugger;
-        const translator = useTranslations("Enums."+enumName)
+        const translator = useTranslations("Enums." + enumName)
         const fieldValue = row.getValue(field) || "";
         const meta = cell.getContext().table.options.meta as MyTableMeta<any>;
         const dictionary = meta.result.data.dictionary[enumName];

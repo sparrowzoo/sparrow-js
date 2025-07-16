@@ -29,37 +29,20 @@ v.nonEmpty(translate("chineseName.empty-message")))
 ,i18n:
 v.boolean()
 ,description:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("description.empty-message")))
-
+v.string()
 ,modulePrefix:
 v.pipe(
  v.string(),
 v.nonEmpty(translate("modulePrefix.empty-message")))
 
-,scanPackage:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("scanPackage.empty-message")))
-
 ,architectures:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("architectures.empty-message")))
-
+v.string()
 ,config:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("config.empty-message")))
-
+v.string()
 ,wrapWithParent:
 v.boolean()
 ,scaffold:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("scaffold.empty-message")))
-
+v.string()
 
     });
     //扩展提示

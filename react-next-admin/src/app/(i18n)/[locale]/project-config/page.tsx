@@ -12,6 +12,7 @@ import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import RowOperations from "@/components/project-config/row-operations";
 
 
 
@@ -53,6 +54,7 @@ export default function Page() {
                 setData={setDataState}
                 EditComponent={EditPage}
                 deleteHandler={deleteHandler}
+                RowOperationComponents={[RowOperations]}
             ></DataTable>
         </div>
     );
