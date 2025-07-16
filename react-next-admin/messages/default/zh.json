@@ -27,7 +27,8 @@
     "next": "下一步",
     "previous": "上一步",
     "back": "返回",
-    "no-record-checked": "请选择要操作的记录！"
+    "no-record-checked": "请选择要操作的记录！",
+    "table": "表"
   },
   "LocaleLayout": {
     "title": "麻雀窝",

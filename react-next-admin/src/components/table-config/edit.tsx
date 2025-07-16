@@ -8,6 +8,8 @@ import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle}
 import TableConfigApi from "@/api/auto/table-config";
 import toast from "react-hot-toast";
 import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
+import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
+
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
 import {CellContextProps} from "@/common/lib/table/DataTableProperty";
@@ -66,88 +68,83 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
             <div className="flex flex-col">
                 <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.id?.message}                                  fieldPropertyName={"id"}/>
-<ValidatableInput defaultValue={original.projectId} {...register("projectId")}
+                                  fieldPropertyName={"id"}/>
+<ValidatableInput readonly={true} defaultValue={original.projectId} {...register("projectId")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.projectId?.message}                                  fieldPropertyName={"projectId"}/>
-<ValidatableInput defaultValue={original.primaryKey} {...register("primaryKey")}
+<ValidatableInput readonly={true} defaultValue={original.primaryKey} {...register("primaryKey")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.primaryKey?.message}                                  fieldPropertyName={"primaryKey"}/>
-<ValidatableInput defaultValue={original.tableName} {...register("tableName")}
+<ValidatableInput readonly={true} defaultValue={original.tableName} {...register("tableName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.tableName?.message}                                  fieldPropertyName={"tableName"}/>
-<ValidatableInput defaultValue={original.className} {...register("className")}
+<ValidatableInput readonly={true} defaultValue={original.className} {...register("className")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.className?.message}                                  fieldPropertyName={"className"}/>
-<ValidatableInput defaultValue={original.description} {...register("description")}
+<ValidatableInput readonly={false} defaultValue={original.description} {...register("description")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.description?.message}                                  fieldPropertyName={"description"}/>
-<ValidatableInput defaultValue={original.locked} {...register("locked")}
+<ValidatableInput readonly={false} defaultChecked={original.locked} {...register("locked")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"locked"}/>
-<ValidatableInput defaultValue={original.checkable} {...register("checkable")}
+<ValidatableInput readonly={false} defaultValue={original.checkable} {...register("checkable")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.checkable?.message}                                  fieldPropertyName={"checkable"}/>
-<ValidatableInput defaultValue={original.rowMenu} {...register("rowMenu")}
+<ValidatableInput readonly={false} defaultValue={original.rowMenu} {...register("rowMenu")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.rowMenu?.message}                                  fieldPropertyName={"rowMenu"}/>
-<ValidatableInput defaultValue={original.columnFilter} {...register("columnFilter")}
+<ValidatableInput readonly={false} defaultValue={original.columnFilter} {...register("columnFilter")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.columnFilter?.message}                                  fieldPropertyName={"columnFilter"}/>
-<ValidatableInput defaultValue={original.statusCommand} {...register("statusCommand")}
+<ValidatableInput readonly={false} defaultChecked={original.statusCommand} {...register("statusCommand")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"statusCommand"}/>
-<ValidatableInput defaultValue={original.columnConfigs} {...register("columnConfigs")}
-                                  type={"text"}
+<ValidatableTextArea readonly={false} defaultValue={original.columnConfigs} {...register("columnConfigs")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.columnConfigs?.message}                                  fieldPropertyName={"columnConfigs"}/>
-<ValidatableInput defaultValue={original.source} {...register("source")}
+                                                                    fieldPropertyName={"columnConfigs"}/>
+<ValidatableInput readonly={false} defaultValue={original.source} {...register("source")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.source?.message}                                  fieldPropertyName={"source"}/>
-<ValidatableInput defaultValue={original.sourceCode} {...register("sourceCode")}
-                                  type={"text"}
+<ValidatableTextArea readonly={false} defaultValue={original.sourceCode} {...register("sourceCode")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.sourceCode?.message}                                  fieldPropertyName={"sourceCode"}/>
+                                                                    fieldPropertyName={"sourceCode"}/>
             </div>
            <DialogFooter>
                                        <DialogClose asChild>

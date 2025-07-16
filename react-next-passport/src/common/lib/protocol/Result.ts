@@ -1,9 +1,9 @@
 export default interface Result<Data> {
     code: string;
-    message: string;
+    message?: string;
     data: Data;
-    key: string;
-    instruction: string;
+    key?: string;
+    instruction?: string;
 }
 
 export interface PagerResult<T> {

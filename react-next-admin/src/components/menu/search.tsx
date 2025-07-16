@@ -4,7 +4,7 @@ import {Payment} from "@/components/menu/columns";
 import {TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {Button} from "@/components/ui/button";
 
-export default function Search({table, setData}: TableOperationProps<Payment>) {
+export default function Search({table}: TableOperationProps<Payment>) {
     const data: Payment[] = [
         {
             id: "3",
