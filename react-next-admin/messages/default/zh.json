@@ -61,20 +61,21 @@
     "logout-success": "您已退出登录!"
   },
   "Enums": {
-    "CELL_TYPE": {
+    "cellType": {
       "CHECK_BOX": "选择框",
       "NORMAL": "普通",
       "TREE": "树形",
-      "OPERATION": "操作"
+      "OPERATION": "操作",
+      "CURRENCY": "币种"
     },
-    "COLUMN_TYPE": {
+    "columnType": {
       "ACTION": "操作菜单",
       "CHECK": "选择框",
       "FILTER": "筛选",
       "TREE": "树形",
       "NORMAL": "普通"
     },
-    "HEADER_TYPE": {
+    "headerType": {
       "CHECK_BOX": "选择",
       "COLUMN_FILTER": "过滤",
       "NORMAL": "标准",
@@ -84,13 +85,13 @@
       "PLAIN_TEXT": "操作",
       "EMPTY": "空白"
     },
-    "DATASOURCE_TYPE": {
+    "datasourceType": {
       "NULL": "文本输入",
       "DICTIONARY": "字典",
       "TABLE": "表格",
       "ENUM": "枚举"
     },
-    "ControlType": {
+    "controlType": {
       "LABEL": "标签",
       "LINK": "超链接",
       "INPUT_TEXT": "文本",
