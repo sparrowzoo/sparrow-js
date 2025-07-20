@@ -102,9 +102,9 @@ export const columns: ColumnDef<ColumnConfig>[] = [
         cell: InputCell("validateType", "text", 8),
         enableHiding: true
     }, {
-        accessorKey: "dataSourceType",
+        accessorKey: "datasourceType",
         header: PlainTextHeader({columnTitle: "数据源类型"} as ColumnOperationProps),
-        cell: SelectCell("dataSourceType", "DATASOURCE_TYPE"),
+        cell: SelectCell("datasourceType"),
         enableHiding: true
     }, {
         accessorKey: "dataSourceParams",
@@ -114,22 +114,22 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     }, {
         accessorKey: "columnType",
         header: PlainTextHeader({columnTitle: "列类型"} as ColumnOperationProps),
-        cell: SelectCell("columnType","COLUMN_TYPE"),
+        cell: SelectCell("columnType"),
         enableHiding: true
     }, {
         accessorKey: "headerType",
         header: PlainTextHeader({columnTitle: "表头类型"} as ColumnOperationProps),
-        cell: SelectCell("headerType","HEADER_TYPE"),
+        cell: SelectCell("headerType"),
         enableHiding: true
     }, {
         accessorKey: "cellType",
         header: PlainTextHeader({columnTitle: "单元格类型"} as ColumnOperationProps),
-        cell: SelectCell("cellType","CELL_TYPE"),
+        cell: SelectCell("cellType"),
         enableHiding: true
     }, {
         accessorKey: "controlType",
         header: PlainTextHeader({columnTitle: "控件类型"} as ColumnOperationProps),
-        cell: SelectCell("controlType","CONTROL_TYPE"),
+        cell: SelectCell("controlType"),
         enableHiding: true
     }
 ];

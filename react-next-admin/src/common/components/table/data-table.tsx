@@ -20,6 +20,7 @@ import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/
 import DataTableProps, {BasicData, MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {EmptyRow} from "@/common/components/table/empty-row";
 import CellRenderer from "@/common/components/table/cell-render";
+import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 
 export function DataTable<TData extends BasicData<TData>>({
                                                               columns,
@@ -35,7 +36,8 @@ export function DataTable<TData extends BasicData<TData>>({
                                                               deleteHandler,
                                                               initHandler,
                                                               RowOperationComponents,
-                                                              parent
+                                                              parent,
+                                                              paginationParam
                                                           }: DataTableProps<TData>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -46,6 +48,10 @@ export function DataTable<TData extends BasicData<TData>>({
         React.useState<VisibilityState>(hiddenColumns as VisibilityState);
     const [rowSelection, setRowSelection] = React.useState({});
 
+    const localPagination = paginationParam || {pageIndex: 0, pageSize: 10}
+    const [pagination, setPagination] = React.useState<PaginationState>({
+        ...localPagination,
+    });
     const table = useReactTable({
         onStateChange(updater: Updater<TableState>): void {
         },
@@ -83,6 +89,7 @@ export function DataTable<TData extends BasicData<TData>>({
             columnFilters,
             columnVisibility,
             rowSelection,
+            pagination
         },
     });
 

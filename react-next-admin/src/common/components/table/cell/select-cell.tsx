@@ -12,15 +12,14 @@ import {
 import {useTranslations} from "next-intl";
 import {MyTableMeta} from "@/common/lib/table/DataTableProperty";
 
-const SelectCell = (field: string, enumName: string, width?: number) => {
-
+const SelectCell = (field: string,width?: number) => {
     const className = width ? `w-${width}` : "w-fit";
     return ({row, cell}) => {
         debugger;
-        const translator = useTranslations("Enums." + enumName)
+        const translator = useTranslations("Enums." + field)
         const fieldValue = row.getValue(field) || "";
         const meta = cell.getContext().table.options.meta as MyTableMeta<any>;
-        const dictionary = meta.result.data.dictionary[enumName];
+        const dictionary = meta.result.data.dictionary[field];
         const [value, setValue] = useState(fieldValue);
         useEffect(() => {
             setValue(fieldValue);

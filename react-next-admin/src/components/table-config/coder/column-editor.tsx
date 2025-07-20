@@ -29,7 +29,11 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
     const meta = cellContext.table.options.meta as MyTableMeta<ColumnConfig>;
     const result = meta.result;
     const original = cellContext.row.original;
-    const dataState = JSON.parse(original.columnConfigs) as ColumnConfig[];
+    let dataState = JSON.parse(original.columnConfigs) as ColumnConfig[];
+    const filteringIds=['check-box','actions','filter'];
+    dataState=dataState.filter((item) => {
+        return filteringIds.indexOf(item.propertyName)<0
+    })
     const pagerResult: PagerResult<ColumnConfig> = {
         list: dataState,
         recordTotal: dataState.length,
@@ -40,7 +44,7 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
         data: pagerResult
     } as Result<PagerResult<ColumnConfig>>;
     return (
-        <div className="w-full border-2 border-gray-200 rounded-md">
+        <div className="h-[calc(100vh-80px)] overflow-y-auto">
             <DataTable<ColumnConfig>
                 initHandler={() => {
                 }}
@@ -52,6 +56,7 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
                 result={columnResult}
                 columns={columns}
                 OperationComponent={SaveButton}
+                paginationParam={{pageIndex: 0, pageSize: columnResult.data.list.length}}
             ></DataTable>
         </div>
     );
