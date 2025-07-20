@@ -5,7 +5,7 @@ import KeyValue from "@/common/lib/protocol/KeyValue";
 import {Textarea} from "@/components/ui/textarea";
 
 export interface FormHookInputProps
-    extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+    extends React.InputHTMLAttributes<HTMLTextAreaElement> {
     pageTranslate?: (key: string) => string,
     validateTranslate?: (key: string) => string,
     fieldPropertyName: string,

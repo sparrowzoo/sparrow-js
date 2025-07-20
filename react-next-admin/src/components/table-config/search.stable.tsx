@@ -1,10 +1,10 @@
 import {Input} from "@/components/ui/input";
 import * as React from "react";
 import {useState} from "react";
-import {ProjectConfig} from "@/components/project-config/columns";
+import {TableConfig} from "@/components/table-config/columns";
 import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {Button} from "@/components/ui/button";
-import ProjectConfigApi from "@/api/auto/project-config";
+import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
 
 type TableConfigQuery = {
@@ -12,19 +12,19 @@ type TableConfigQuery = {
     tableClass: string;
 }
 
-export default function Search({table}: TableOperationProps<ProjectConfig>) {
-    const meta = table.options.meta as MyTableMeta<ProjectConfig>;
-    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+export default function Search({table}: TableOperationProps<TableConfig>) {
+    const meta = table.options.meta as MyTableMeta<TableConfig>;
+    const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const setDataState = meta.setData;
-    const [projectConfigQuery, setProjectConfigQuery] = useState<ProjectConfigQuery>()
+    const [tableConfigQuery, setTableConfigQuery] = useState<TableConfigQuery>()
 
     if (setDataState == null) {
         return <>setDataState is not defined</>
     }
 
     const searchHandler = () => {
-        meta.searchCondition = projectConfigQuery;
-        ProjectConfigApi.search(projectConfigQuery, errorTranslate).then(
+        meta.searchCondition = tableConfigQuery;
+        TableConfigApi.search(tableConfigQuery, errorTranslate).then(
             (res) => {
                 setDataState(res)
             }
@@ -34,8 +34,8 @@ export default function Search({table}: TableOperationProps<ProjectConfig>) {
 
 
     return (<>
-            <Input value={projectConfigQuery?.tableName || ""} onChange={(e) => {
-                setProjectConfigQuery((prevState) => {
+            <Input value={tableConfigQuery?.tableName || ""} onChange={(e) => {
+                setTableConfigQuery((prevState) => {
                     return {
                         ...prevState,
                         tableName: e.target.value

@@ -6,7 +6,7 @@ import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import AddPage from "@/components/table-config/add";
 import TableConfigApi from "@/api/auto/table-config";
 import toast from "react-hot-toast";
-import {getSelectedIds} from "@/common/lib/table/TableUtils";
+import TableUtils from "@/common/lib/table/TableUtils";
 import {useTranslations} from "next-intl";
 
 
@@ -23,7 +23,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                 </DialogContent>
             </Dialog>
             <Button onClick={() => {
-                const selectedIds = getSelectedIds(table);
+                const selectedIds = TableUtils.getSelectedIds(table);
                 if (selectedIds.length === 0) {
                                     toast(globalTranslate("no-record-checked"));
                                     return;
@@ -36,7 +36,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
             }} variant="outline">{globalTranslate("delete")}</Button>
 
             <Button onClick={() => {
-                            const selectedIds = getSelectedIds(table);
+                            const selectedIds = TableUtils.getSelectedIds(table);
                             if (selectedIds.length === 0) {
                                                 toast(globalTranslate("no-record-checked"));
                                                 return;
@@ -50,7 +50,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
 
 
                         <Button onClick={() => {
-                                        const selectedIds = getSelectedIds(table);
+                                        const selectedIds = TableUtils.getSelectedIds(table);
                                         if (selectedIds.length === 0) {
                                                             toast(globalTranslate("no-record-checked"));
                                                             return;

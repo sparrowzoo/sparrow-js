@@ -55,17 +55,14 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
     });
 
 
-    // formState.errors;
     return (
-        //正确
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogHeader>
-                <DialogTitle>{globalTranslate("edit")}</DialogTitle>
-                <DialogDescription>
-
-                </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col">
+             <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+                        <DialogHeader>
+                            <DialogTitle>{globalTranslate("edit")}</DialogTitle>
+                            <DialogDescription>
+                            </DialogDescription>
+                        </DialogHeader>
+            <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
                 <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
@@ -129,7 +126,7 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"statusCommand"}/>
-<ValidatableTextArea readonly={false} defaultValue={original.columnConfigs} {...register("columnConfigs")}
+<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.columnConfigs} {...register("columnConfigs")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
@@ -140,7 +137,7 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.source?.message}                                  fieldPropertyName={"source"}/>
-<ValidatableTextArea readonly={false} defaultValue={original.sourceCode} {...register("sourceCode")}
+<ValidatableTextArea className={"w-80 h-60"} readonly={true} defaultValue={original.sourceCode} {...register("sourceCode")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}

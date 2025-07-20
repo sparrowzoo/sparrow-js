@@ -33,8 +33,9 @@ export function DataTable<TData extends BasicData<TData>>({
                                                               OperationComponent,
                                                               EditComponent,
                                                               deleteHandler,
-                                                              editorWidth,
-                                                              RowOperationComponents
+                                                              initHandler,
+                                                              RowOperationComponents,
+                                                              parent
                                                           }: DataTableProps<TData>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
 
@@ -71,10 +72,11 @@ export function DataTable<TData extends BasicData<TData>>({
             i18n: i18n,
             setData: setData,
             deleteHandler: deleteHandler,
+            initHandler: initHandler,
             EditComponent: EditComponent,
-            editorWidth: editorWidth,
             result: result,
             RowOperationComponents: RowOperationComponents,
+            parent: parent
         } as MyTableMeta<TData>,
         state: {
             sorting,
@@ -86,11 +88,10 @@ export function DataTable<TData extends BasicData<TData>>({
 
     return (
         <div className="w-full">
-            <div className="flex items-center py-4">
+            <div className="flex items-center h-fit">
                 {SearchComponent && <SearchComponent table={table}/>}
             </div>
-
-            <div className="flex items-center py-4">
+            <div className="flex items-center h-fit">
                 {OperationComponent && <OperationComponent table={table}/>}
             </div>
             <div className="rounded-md border">
