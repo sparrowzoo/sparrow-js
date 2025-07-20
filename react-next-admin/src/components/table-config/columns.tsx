@@ -41,15 +41,15 @@ header: PlainTextHeader({columnTitle: "ID"} as ColumnOperationProps),
 cell: NormalCell("id"),
 enableHiding: true
 },{
-accessorKey: "projectId",
-header: PlainTextHeader({columnTitle: "项目ID"} as ColumnOperationProps),
-cell: NormalCell("projectId"),
-enableHiding: true
-},{
 id: "select",
 header: CheckboxHeader,
 cell: CheckBoxCell,
 enableHiding: false
+},{
+accessorKey: "projectId",
+header: PlainTextHeader({columnTitle: "项目ID"} as ColumnOperationProps),
+cell: NormalCell("projectId"),
+enableHiding: true
 },{
 accessorKey: "primaryKey",
 header: PlainTextHeader({columnTitle: "主键"} as ColumnOperationProps),
@@ -77,17 +77,17 @@ cell: NormalCell("locked"),
 enableHiding: true
 },{
 accessorKey: "checkable",
-header: PlainTextHeader({columnTitle: "是否可勾选"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "选择"} as ColumnOperationProps),
 cell: NormalCell("checkable"),
 enableHiding: true
 },{
 accessorKey: "rowMenu",
-header: PlainTextHeader({columnTitle: "是否显示行操作"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "行菜单"} as ColumnOperationProps),
 cell: NormalCell("rowMenu"),
 enableHiding: true
 },{
 accessorKey: "columnFilter",
-header: PlainTextHeader({columnTitle: "是否显示列过滤器"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "列过滤器"} as ColumnOperationProps),
 cell: NormalCell("columnFilter"),
 enableHiding: true
 },{
@@ -96,19 +96,9 @@ header: PlainTextHeader({columnTitle: "是否显示状态命令"} as ColumnOpera
 cell: NormalCell("statusCommand"),
 enableHiding: true
 },{
-accessorKey: "columnConfigs",
-header: PlainTextHeader({columnTitle: "列配置"} as ColumnOperationProps),
-cell: NormalCell("columnConfigs"),
-enableHiding: true
-},{
 accessorKey: "source",
-header: PlainTextHeader({columnTitle: "数据源"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "类来源"} as ColumnOperationProps),
 cell: NormalCell("source"),
-enableHiding: true
-},{
-accessorKey: "sourceCode",
-header: PlainTextHeader({columnTitle: "上传源代码"} as ColumnOperationProps),
-cell: NormalCell("sourceCode"),
 enableHiding: true
 },{
 accessorKey: "createUserName",

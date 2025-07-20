@@ -1,46 +1,51 @@
 import {Input} from "@/components/ui/input";
 import * as React from "react";
+import {useState} from "react";
 import {ProjectConfig} from "@/components/project-config/columns";
-import {TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {Button} from "@/components/ui/button";
+import ProjectConfigApi from "@/api/auto/project-config";
+import {useTranslations} from "next-intl";
 
-export default function Search({table, setData}: TableOperationProps<ProjectConfig>) {
-    const data: ProjectConfig[] = [
-        {
-            id: "3",
-            amount: 837,
-            status: "processing",
-            email: "Monserrat44@example.com",
-            currency: "USD",
-        },
-        {
-            id: "4",
-            amount: 874,
-            status: "success",
-            email: "Silas22@example.com",
-            currency: "USD",
-        },
-        {
-            id: "5",
-            amount: 721,
-            status: "failed",
-            email: "carmella@example.com",
-            currency: "USD",
+type TableConfigQuery = {
+    tableName: string;
+    tableClass: string;
+}
 
-        },
-    ];
+export default function Search({table}: TableOperationProps<ProjectConfig>) {
+    const meta = table.options.meta as MyTableMeta<ProjectConfig>;
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+    const setDataState = meta.setData;
+    const [projectConfigQuery, setProjectConfigQuery] = useState<ProjectConfigQuery>()
+
+    if (setDataState == null) {
+        return <>setDataState is not defined</>
+    }
+
+    const searchHandler = () => {
+        meta.searchCondition = projectConfigQuery;
+        ProjectConfigApi.search(projectConfigQuery, errorTranslate).then(
+            (res) => {
+                setDataState(res)
+            }
+        ).catch(() => {
+        });
+    };
 
 
     return (<>
-            <Input
-                placeholder="Filter emails..."
-                className="max-w-sm"
+            <Input value={projectConfigQuery?.tableName || ""} onChange={(e) => {
+                setProjectConfigQuery((prevState) => {
+                    return {
+                        ...prevState,
+                        tableName: e.target.value
+                    } as TableConfigQuery
+                })
+            }}
+                   placeholder="tableName ..."
+                   className="max-w-sm"
             />
-            <Input
-                placeholder="Filter emails..."
-                className="max-w-sm"
-            />
-            <Button onClick={() => setData(data)} variant="ghost" className="ml-2">搜索</Button>
+            <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">搜索</Button>
         </>
     );
 }

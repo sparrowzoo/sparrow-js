@@ -38,6 +38,11 @@
     "label": "切换至中文",
     "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unbekannt}}"
   },
+  "ErrorMessage": {
+    "system_server_error": "系统错误，请稍侯再试...",
+    "global_parameter_null": "参数不能为空...",
+    "class_not_found": "找不到类..."
+  },
   "Header": {
     "index": "首页",
     "blog": "博客",

@@ -22,14 +22,17 @@ export default function Page() {
     const globalTranslate = useTranslations("GlobalForm");
 
     const [dataState, setDataState] = useState<Result<PagerResult<ProjectConfig>> | undefined>();
-    useEffect(() => {
-        ProjectConfigApi.search({}, errorTranslate).then(
-                                              (res) => {
-                                                  setDataState(res)
-                                              }
-                                           ).catch(()=>{});
-
-    }, []);
+    const init = () => {
+                ProjectConfigApi.search({}, errorTranslate).then(
+                    (res) => {
+                        setDataState(res)
+                    }
+                ).catch(() => {
+                });
+            };
+            useEffect(() => {
+                init();
+            }, []);
 
 
       const deleteHandler= (id: number) => {
@@ -54,6 +57,7 @@ export default function Page() {
                 setData={setDataState}
                 EditComponent={EditPage}
                 deleteHandler={deleteHandler}
+                initHandler={init}
                 RowOperationComponents={[RowOperations]}
             ></DataTable>
         </div>

@@ -12,7 +12,7 @@ export default function RowOperations({cellContext}: CellContextProps<TableConfi
     const row = cellContext.row.original;
     const router = useRouter();
     //return <Button onClick={() => {
-    //    router.push({pathname: "/****", query: {id: row[primary]}});
+    //    router.push({pathname: "/table-config", query: {projectId: row[primary]}});
     //}
     //}>{globalTranslate("table")}</Button>
     return null;

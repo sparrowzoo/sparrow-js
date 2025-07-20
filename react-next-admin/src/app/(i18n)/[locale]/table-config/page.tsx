@@ -6,41 +6,54 @@ import {columns, TableConfig} from "@/components/table-config/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/table-config/search";
 import Operation from "@/components/table-config/operation";
-import EditPage from "@/components/table-config/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
 import RowOperations from "@/components/table-config/row-operations";
-
-
+import {useSearchParams} from "next/navigation";
+import KeyValue from "@/common/lib/protocol/KeyValue";
+import TableEdit from "@/components/table-config/table-edit";
 
 
 export default function Page() {
     const errorTranslate = useTranslations("TableConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
-
     const [dataState, setDataState] = useState<Result<PagerResult<TableConfig>> | undefined>();
-    useEffect(() => {
+    const searchParams = useSearchParams();
+    const projectId = searchParams.get("projectId");
+    if (projectId == null) {
+        return <div>Project Not Found !</div>
+    }
+    const init = () => {
         TableConfigApi.search({}, errorTranslate).then(
-                                              (res) => {
-                                                  setDataState(res)
-                                              }
-                                           ).catch(()=>{});
-
+            (res) => {
+                setDataState(res)
+            }
+        ).catch(() => {
+        });
+    };
+    useEffect(() => {
+        init();
     }, []);
 
 
-      const deleteHandler= (id: number) => {
-            TableConfigApi.delete(id, errorTranslate).then(()=>{
-                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
-            }).catch(()=>{});
-        }
+    const deleteHandler = (id: number) => {
+        TableConfigApi.delete(id, errorTranslate).then(() => {
+            toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
+        }).catch(() => {
+        });
+    }
 
     if (!dataState) {
         return <ThreeDotLoading/>
     }
+    debugger;
+    const projectDictionaries = dataState.data.dictionary["projectId"] as KeyValue[];
+    const parent = projectDictionaries.find((e) => {
+        return e.key == projectId;
+    })
     return (
         <div className="w-full">
             <DataTable<TableConfig>
@@ -52,8 +65,10 @@ export default function Page() {
                 result={dataState}
                 columns={columns}
                 setData={setDataState}
-                EditComponent={EditPage}
+                EditComponent={TableEdit}
                 deleteHandler={deleteHandler}
+                initHandler={init}
+                parent={parent}
                 RowOperationComponents={[RowOperations]}
             ></DataTable>
         </div>
