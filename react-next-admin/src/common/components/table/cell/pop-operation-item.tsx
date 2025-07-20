@@ -1,5 +1,5 @@
 import {DropdownMenuItem} from "@/components/ui/dropdown-menu";
-import {Dialog, DialogContent, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
 import Draggable from "@/common/components/Draggable";
 import * as React from "react";
@@ -18,18 +18,17 @@ export default function PopItem({cellContext, ItemComponent, displayText}: PopIt
     }
     return <DropdownMenuItem>
         <Dialog>
-            <DialogTitle>
-                <DialogTrigger asChild>
-                    <Button onClick={(e) => {
-                        e.stopPropagation();
-                    }}>{displayText}</Button>
-                </DialogTrigger>
-            </DialogTitle>
+            <DialogTrigger asChild>
+                <Button onClick={(e) => {
+                    e.stopPropagation();
+                }}>{displayText}</Button>
+            </DialogTrigger>
+
             <Draggable>
                 <DialogContent onClick={(e) => {
                     e.stopPropagation();
                 }
-                } className={"sm:max-w-fit w-fit"}>
+                } className={"sm:max-w-fit w-fit p-0 m-0 h-fit"}>
                     <ItemComponent cellContext={cellContext}></ItemComponent>
                 </DialogContent>
             </Draggable>

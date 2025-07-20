@@ -55,17 +55,14 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
     });
 
 
-    // formState.errors;
     return (
-        //正确
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <DialogHeader>
-                <DialogTitle>{globalTranslate("edit")}</DialogTitle>
-                <DialogDescription>
-
-                </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col">
+             <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+                        <DialogHeader>
+                            <DialogTitle>{globalTranslate("edit")}</DialogTitle>
+                            <DialogDescription>
+                            </DialogDescription>
+                        </DialogHeader>
+            <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
                 <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
@@ -93,7 +90,7 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"i18n"}/>
-<ValidatableTextArea readonly={false} defaultValue={original.description} {...register("description")}
+<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.description} {...register("description")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
@@ -110,7 +107,7 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"architectures"}/>
-<ValidatableTextArea readonly={false} defaultValue={original.config} {...register("config")}
+<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.config} {...register("config")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}

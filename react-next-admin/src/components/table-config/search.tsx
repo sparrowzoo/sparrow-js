@@ -1,46 +1,51 @@
 import {Input} from "@/components/ui/input";
 import * as React from "react";
+import {useState} from "react";
 import {TableConfig} from "@/components/table-config/columns";
-import {TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {Button} from "@/components/ui/button";
+import TableConfigApi from "@/api/auto/table-config";
+import {useTranslations} from "next-intl";
 
-export default function Search({table, setData}: TableOperationProps<TableConfig>) {
-    const data: TableConfig[] = [
-        {
-            id: "3",
-            amount: 837,
-            status: "processing",
-            email: "Monserrat44@example.com",
-            currency: "USD",
-        },
-        {
-            id: "4",
-            amount: 874,
-            status: "success",
-            email: "Silas22@example.com",
-            currency: "USD",
-        },
-        {
-            id: "5",
-            amount: 721,
-            status: "failed",
-            email: "carmella@example.com",
-            currency: "USD",
+type TableConfigQuery = {
+    tableName: string;
+    tableClass: string;
+}
 
-        },
-    ];
+export default function Search({table}: TableOperationProps<TableConfig>) {
+    const meta = table.options.meta as MyTableMeta<TableConfig>;
+    const errorTranslate = useTranslations("TableConfig.ErrorMessage")
+    const setDataState = meta.setData;
+    const [tableConfigQuery, setTableConfigQuery] = useState<TableConfigQuery>()
+
+    if (setDataState == null) {
+        return <>setDataState is not defined</>
+    }
+
+    const searchHandler = () => {
+        meta.searchCondition = tableConfigQuery;
+        TableConfigApi.search(tableConfigQuery, errorTranslate).then(
+            (res) => {
+                setDataState(res)
+            }
+        ).catch(() => {
+        });
+    };
 
 
     return (<>
-            <Input
-                placeholder="Filter emails..."
-                className="max-w-sm"
+            <Input value={tableConfigQuery?.tableName || ""} onChange={(e) => {
+                setTableConfigQuery((prevState) => {
+                    return {
+                        ...prevState,
+                        tableName: e.target.value
+                    } as TableConfigQuery
+                })
+            }}
+                   placeholder="tableName ..."
+                   className="max-w-sm"
             />
-            <Input
-                placeholder="Filter emails..."
-                className="max-w-sm"
-            />
-            <Button onClick={() => setData(data)} variant="ghost" className="ml-2">搜索</Button>
+            <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">搜索</Button>
         </>
     );
 }

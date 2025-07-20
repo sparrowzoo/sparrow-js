@@ -38,15 +38,15 @@ header: PlainTextHeader({columnTitle: "ID"} as ColumnOperationProps),
 cell: NormalCell("id"),
 enableHiding: true
 },{
-accessorKey: "name",
-header: PlainTextHeader({columnTitle: "项目名称"} as ColumnOperationProps),
-cell: NormalCell("name"),
-enableHiding: true
-},{
 id: "select",
 header: CheckboxHeader,
 cell: CheckBoxCell,
 enableHiding: false
+},{
+accessorKey: "name",
+header: PlainTextHeader({columnTitle: "项目名称"} as ColumnOperationProps),
+cell: NormalCell("name"),
+enableHiding: true
 },{
 accessorKey: "frontendName",
 header: PlainTextHeader({columnTitle: "前端项目名称"} as ColumnOperationProps),
@@ -63,11 +63,6 @@ header: PlainTextHeader({columnTitle: "是否支持国际化"} as ColumnOperatio
 cell: NormalCell("i18n"),
 enableHiding: true
 },{
-accessorKey: "description",
-header: PlainTextHeader({columnTitle: "项目描述"} as ColumnOperationProps),
-cell: NormalCell("description"),
-enableHiding: true
-},{
 accessorKey: "modulePrefix",
 header: PlainTextHeader({columnTitle: "模块前缀"} as ColumnOperationProps),
 cell: NormalCell("modulePrefix"),
@@ -76,11 +71,6 @@ enableHiding: true
 accessorKey: "architectures",
 header: PlainTextHeader({columnTitle: "代码架构"} as ColumnOperationProps),
 cell: NormalCell("architectures"),
-enableHiding: true
-},{
-accessorKey: "config",
-header: PlainTextHeader({columnTitle: "脚手架配置"} as ColumnOperationProps),
-cell: NormalCell("config"),
 enableHiding: true
 },{
 accessorKey: "wrapWithParent",

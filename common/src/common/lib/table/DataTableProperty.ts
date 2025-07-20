@@ -21,14 +21,14 @@ export default interface DataTableProps<
     tableName?: string;
     i18n: boolean;
     hiddenColumns?: VisibilityState | (() => VisibilityState);
-    setData?: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
+    setData: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
-    editorWidth?: number;
     deleteHandler?: (id: IDENTITY) => void;
+    initHandler: () => void;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
-
+    parent?: {};
 }
 
 export interface TableOperationProps<TData> {
@@ -41,16 +41,19 @@ export interface CellContextProps<TData> {
 
 export interface MyTableMeta<TData> extends TableMeta<TData> {
     primary: string,
+    parent: {},
     tableName: string,
     i18n: boolean,
-    setData?: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
+    setData: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
-    editorWidth: number,
     deleteHandler?: (id: IDENTITY) => void;
+    initHandler: () => void;
     result: Result<PagerResult<TData>>;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
+    searchCondition?: any;
+
 }
 
 
