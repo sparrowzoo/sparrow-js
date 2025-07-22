@@ -60,10 +60,10 @@
     "sign-up": "注册",
     "logout-success": "您已退出登录!"
   },
-  "Enums": {
+  "KVS": {
     "cellType": {
       "CHECK_BOX": "选择框",
-      "NORMAL": "普通",
+      "NORMAL": "标准",
       "TREE": "树形",
       "OPERATION": "操作",
       "CURRENCY": "币种"
@@ -73,7 +73,7 @@
       "CHECK": "选择框",
       "FILTER": "筛选",
       "TREE": "树形",
-      "NORMAL": "普通"
+      "NORMAL": "标准"
     },
     "headerType": {
       "CHECK_BOX": "选择",
@@ -110,6 +110,30 @@
       "FILE": "文件上传",
       "ENABLE_DISABLE": "启用禁用",
       "IMAGE": "图片"
+    },
+    "searchType": {
+      "EQUAL": "等于",
+      "PREFIX_LIKE": "前缀匹配",
+      "SUFFIX_LIKE": "后缀匹配",
+      "LIKE": "模糊匹配",
+      "DATE_RANGE": "日期范围",
+      "LESS": "小于",
+      "LESS_EQUAL": "小于等于",
+      "GREATER": "大于",
+      "GREATER_EQUAL": "大于等于",
+      "BETWEEN": "介于",
+      "NOT_EQUAL": "不等于"
+    },
+    "validateType": {
+      "string": "字符串",
+      "digital": "数字",
+      "email": "邮箱",
+      "mobile": "手机号",
+      "tel": "电话号",
+      "regex": "正则",
+      "idCard": "身份证号",
+      "nullable": "无",
+      "chineseCharacters": "中文字符"
     }
   }
 }

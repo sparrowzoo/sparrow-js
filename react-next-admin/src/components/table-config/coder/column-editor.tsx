@@ -30,9 +30,9 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
     const result = meta.result;
     const original = cellContext.row.original;
     let dataState = JSON.parse(original.columnConfigs) as ColumnConfig[];
-    const filteringIds=['check-box','actions','filter'];
-    dataState=dataState.filter((item) => {
-        return filteringIds.indexOf(item.propertyName)<0
+    const filteringIds = ['check-box', 'actions', 'filter', 'createUserName', 'createUserId', 'modifiedUserId', 'modifiedUserName', 'gmtCreate', 'gmtModified', 'deleted', 'status'];
+    dataState = dataState.filter((item) => {
+        return filteringIds.indexOf(item.propertyName) < 0
     })
     const pagerResult: PagerResult<ColumnConfig> = {
         list: dataState,
