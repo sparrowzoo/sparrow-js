@@ -27,6 +27,7 @@ const SelectCell = (field: string, i18n?: boolean) => {
         return (
             <Select>
                 <SelectTrigger className={className} onChange={(event) => {
+                    debugger;
                     row.original[field] = event.currentTarget.accessKey
                     setValue(event.currentTarget.accessKey);
                     console.log("log ", value);
