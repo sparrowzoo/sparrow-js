@@ -37,28 +37,28 @@ export interface ColumnConfig extends BasicData<ColumnConfig> {
 export const columns: ColumnDef<ColumnConfig>[] = [
     {
         accessorKey: "sort",
-        header: PlainTextHeader({columnTitle: "排序"} as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "序号"} as ColumnOperationProps),
         cell: SortableCell("sort"),
         enableHiding: true
     },
     {
         accessorKey: "propertyName",
-        header: PlainTextHeader({columnTitle: "属性名"} as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "名称"} as ColumnOperationProps),
         cell: NormalCell("propertyName"),
         enableHiding: true
     }, {
         accessorKey: "chineseName",
         header: PlainTextHeader({columnTitle: "中文名"} as ColumnOperationProps),
-        cell: InputCell("chineseName", "text", 16),
+        cell: InputCell("chineseName", "text", 20),
         enableHiding: true
     }, {
         accessorKey: "javaType",
-        header: PlainTextHeader({columnTitle: "java类型"} as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "类型"} as ColumnOperationProps),
         cell: NormalCell("javaType"),
         enableHiding: true
     }, {
         accessorKey: "enableHidden",
-        header: PlainTextHeader({columnTitle: "是否隐藏"} as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "可隐藏"} as ColumnOperationProps),
         cell: InputCell("enableHidden", "checkbox"),
         enableHiding: true
     }, {
@@ -83,53 +83,53 @@ export const columns: ColumnDef<ColumnConfig>[] = [
         enableHiding: true
     }, {
         accessorKey: "allowNull",
-        header: PlainTextHeader({columnTitle: "允许为空"} as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "可为空"} as ColumnOperationProps),
         cell: InputCell("allowNull", "checkbox"),
         enableHiding: true
     }, {
         accessorKey: "placeholder",
-        header: PlainTextHeader({columnTitle: "提示信息"} as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "Placeholder"} as ColumnOperationProps),
         cell: InputCell("placeholder", "text", 16),
         enableHiding: true
     }, {
         accessorKey: "searchType",
         header: PlainTextHeader({columnTitle: "查询方式"} as ColumnOperationProps),
-        cell: InputCell("searchType", "text", 8),
+        cell: SelectCell("searchType", true),
         enableHiding: true
     }, {
         accessorKey: "validateType",
         header: PlainTextHeader({columnTitle: "验证类型"} as ColumnOperationProps),
-        cell: InputCell("validateType", "text", 8),
+        cell: SelectCell("validateType", true),
         enableHiding: true
     }, {
         accessorKey: "datasourceType",
         header: PlainTextHeader({columnTitle: "数据源类型"} as ColumnOperationProps),
-        cell: SelectCell("datasourceType"),
+        cell: SelectCell("datasourceType", true),
         enableHiding: true
     }, {
         accessorKey: "dataSourceParams",
         header: PlainTextHeader({columnTitle: "数据源参数"} as ColumnOperationProps),
-        cell: InputCell("dataSourceParams", "text", 8),
+        cell: InputCell("dataSourceParams", "text", 16),
         enableHiding: true
     }, {
         accessorKey: "columnType",
         header: PlainTextHeader({columnTitle: "列类型"} as ColumnOperationProps),
-        cell: SelectCell("columnType"),
+        cell: SelectCell("columnType", true),
         enableHiding: true
     }, {
         accessorKey: "headerType",
-        header: PlainTextHeader({columnTitle: "表头类型"} as ColumnOperationProps),
-        cell: SelectCell("headerType"),
+        header: PlainTextHeader({columnTitle: "表头"} as ColumnOperationProps),
+        cell: SelectCell("headerType", true),
         enableHiding: true
     }, {
         accessorKey: "cellType",
-        header: PlainTextHeader({columnTitle: "单元格类型"} as ColumnOperationProps),
-        cell: SelectCell("cellType"),
+        header: PlainTextHeader({columnTitle: "单元格"} as ColumnOperationProps),
+        cell: SelectCell("cellType", true),
         enableHiding: true
     }, {
         accessorKey: "controlType",
-        header: PlainTextHeader({columnTitle: "控件类型"} as ColumnOperationProps),
-        cell: SelectCell("controlType"),
+        header: PlainTextHeader({columnTitle: "控件"} as ColumnOperationProps),
+        cell: SelectCell("controlType", true),
         enableHiding: true
     }
 ];
