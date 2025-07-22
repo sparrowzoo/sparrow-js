@@ -9,19 +9,29 @@ import {CellContextProps, MyTableMeta, TableOperationProps} from "@/common/lib/t
 import TableUtils from "@/common/lib/table/TableUtils";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
 import {TableConfig} from "@/components/table-config/columns";
+import TableConfigApi from "@/api/auto/table-config";
+import toast from "react-hot-toast";
+import {useTranslations} from "next-intl";
 
 
 function SaveButton({table}: TableOperationProps<ColumnConfig>) {
     const meta = table.options.meta as MyTableMeta<ColumnConfig>
     const setData = meta.setData;
+    const parent = meta.parent as TableConfig;
+    const errorTranslate = useTranslations("TableConfig.ErrorMessage")
+    const globalTranslate = useTranslations("GlobalForm");
+
     return (<div className={"border-1 border-red-700"}><Button onClick={() => {
             const originalData = TableUtils.getOriginalData(table);
-            console.log(JSON.stringify(originalData));
-        }}>保存</Button>
-            <Button onClick={() => {
-                const originalData = TableUtils.getOriginalData(table);
-                //setData(originalData.sort((a, b) => a.sort - b.sort));
-            }}>sort</Button></div>
+            parent.columnConfigs = JSON.stringify(originalData);
+            debugger;
+            TableConfigApi.save(parent, errorTranslate).then(
+                (res) => {
+                    toast.success(globalTranslate("save")+globalTranslate("operation-success"));
+                }
+            ).catch(()=>{});
+
+        }}>保存</Button></div>
     )
 }
 
@@ -56,6 +66,7 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
                 result={columnResult}
                 columns={columns}
                 OperationComponent={SaveButton}
+                parent={original}
                 paginationParam={{pageIndex: 0, pageSize: columnResult.data.list.length}}
             ></DataTable>
         </div>

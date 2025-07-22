@@ -20,17 +20,27 @@ const SelectCell = (field: string, i18n?: boolean) => {
 
         let currentItem = Utils.getValue(dictionary, value);
         if (!currentItem) {
-            currentItem = dictionary[0];
+            try {
+                currentItem = dictionary[0];
+                if (!currentItem) {
+                    debugger;
+                    console.error("Dictionary item not found for field " + field + " with value " + value)
+                }
+            } catch (e) {
+                debugger;
+                console.error("Dictionary item not found for field " + field + " with value " + value)
+            }
         }
-        const displayText = translator ? translator(currentItem.value) : currentItem.value;
+        const displayText = translator ? translator(currentItem.value, {defaultValue: currentItem.value}) : currentItem.value;
 
         return (
-            <Select>
-                <SelectTrigger className={className} onChange={(event) => {
-                    row.original[field] = event.currentTarget.accessKey
-                    setValue(event.currentTarget.accessKey);
-                    console.log("log ", value);
-                }}>
+            <Select onValueChange={((value) => {
+                debugger;
+                row.original[field] = value;
+                setValue(value);
+                console.log("log ", value);
+            })}>
+                <SelectTrigger className={className}>
                     <SelectValue
                         placeholder={displayText} key={value}/>
                 </SelectTrigger>
@@ -39,8 +49,8 @@ const SelectCell = (field: string, i18n?: boolean) => {
                         {/*<SelectLabel>{translator(dictionary[value].value)}</SelectLabel>*/}
                         {
                             dictionary?.map((item) => {
-                                return <SelectItem
-                                    value={item.key as string}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
+                                return <SelectItem key={item.key} accessKey={item.key}
+                                                   value={item.key as string}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
                             })
                         }
                     </SelectGroup>

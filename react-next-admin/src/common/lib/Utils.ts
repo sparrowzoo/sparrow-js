@@ -28,6 +28,7 @@ export class Utils {
     }
 
     public static getValue(dictionary: KeyValue[], key: string): KeyValue | undefined {
+        debugger;
         if (!dictionary) {
             return undefined;
         }
