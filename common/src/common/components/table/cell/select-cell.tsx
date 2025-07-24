@@ -25,13 +25,13 @@ const SelectCell = (field: string, i18n?: boolean) => {
         const displayText = translator ? translator(currentItem.value, {defaultValue: currentItem.value}) : currentItem.value;
 
         return (
-            <Select>
-                <SelectTrigger className={className} onChange={(event) => {
-                    debugger;
-                    row.original[field] = event.currentTarget.accessKey
-                    setValue(event.currentTarget.accessKey);
-                    console.log("log ", value);
-                }}>
+            <Select onValueChange={(value) => {
+                row.original[field] = value;
+                setValue(value);
+                console.log("log ", value);
+            }
+            }>
+                <SelectTrigger className={className}>
                     <SelectValue
                         placeholder={displayText} key={value}/>
                 </SelectTrigger>

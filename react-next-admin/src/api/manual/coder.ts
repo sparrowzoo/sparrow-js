@@ -29,4 +29,17 @@ export default class CoderApi {
         const body = JSON.stringify(query);
         return Fetcher.post("/coder/init-by-local.json", body, translator);
     }
+
+    public static generate(
+        projectId: IDENTITY,
+        tableNames: any[],
+        translator: (key: string) => string
+    ): Promise<any> {
+        const query = {
+            projectId: projectId,
+            tableNames: tableNames
+        };
+        const body = JSON.stringify(query);
+        return Fetcher.post("/coder/generate.json", body, translator);
+    }
 }

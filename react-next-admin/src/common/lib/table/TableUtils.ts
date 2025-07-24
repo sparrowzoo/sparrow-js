@@ -13,6 +13,15 @@ class TableUtils {
         return ids;
     }
 
+    static getSelectedFields = (table: Table<any>, field: string) => {
+        // @ts-ignore
+        const values: IDENTITY[] = [];
+        table.getSelectedRowModel().rows.forEach(row => {
+            values.push(row.original[field] as IDENTITY);
+        });
+        return values;
+    }
+
 
     static getOriginalData = (table: Table<any>) => {
         const originalData: any[] = [];
