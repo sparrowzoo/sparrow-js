@@ -11,7 +11,6 @@ import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
-import RowOperations from "@/components/table-config/row-operations";
 import {useSearchParams} from "next/navigation";
 import KeyValue from "@/common/lib/protocol/KeyValue";
 import TableEdit from "@/components/table-config/table-edit";
@@ -49,28 +48,29 @@ export default function Page() {
     if (!dataState) {
         return <ThreeDotLoading/>
     }
-    debugger;
     const projectDictionaries = dataState.data.dictionary["projectId"] as KeyValue[];
     const parent = projectDictionaries.find((e) => {
         return e.key == projectId;
     })
-    return (
-        <div className="w-full">
-            <DataTable<TableConfig>
-                SearchComponent={Search}
-                OperationComponent={Operation}
-                tableName={"TableConfig"}
-                primary={"id"}
-                i18n={true}
-                result={dataState}
-                columns={columns}
-                setData={setDataState}
-                EditComponent={TableEdit}
-                deleteHandler={deleteHandler}
-                initHandler={init}
-                parent={parent}
-                RowOperationComponents={[RowOperations]}
-            ></DataTable>
-        </div>
+    return (<>
+            <h1 className="text-3xl font-bold mb-4">项目 - {parent?.value}</h1>
+            <div className="w-full">
+                <DataTable<TableConfig>
+                    SearchComponent={Search}
+                    OperationComponent={Operation}
+                    tableName={"TableConfig"}
+                    primary={"id"}
+                    i18n={true}
+                    result={dataState}
+                    columns={columns}
+                    setData={setDataState}
+                    EditComponent={TableEdit}
+                    deleteHandler={deleteHandler}
+                    initHandler={init}
+                    parent={parent}
+                    RowOperationComponents={[]}
+                ></DataTable>
+            </div>
+        </>
     );
 }

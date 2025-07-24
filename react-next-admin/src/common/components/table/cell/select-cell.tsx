@@ -20,26 +20,17 @@ const SelectCell = (field: string, i18n?: boolean) => {
 
         let currentItem = Utils.getValue(dictionary, value);
         if (!currentItem) {
-            try {
-                currentItem = dictionary[0];
-                if (!currentItem) {
-                    debugger;
-                    console.error("Dictionary item not found for field " + field + " with value " + value)
-                }
-            } catch (e) {
-                debugger;
-                console.error("Dictionary item not found for field " + field + " with value " + value)
-            }
+            currentItem = dictionary[0];
         }
         const displayText = translator ? translator(currentItem.value, {defaultValue: currentItem.value}) : currentItem.value;
 
         return (
-            <Select onValueChange={((value) => {
-                debugger;
+            <Select onValueChange={(value) => {
                 row.original[field] = value;
                 setValue(value);
                 console.log("log ", value);
-            })}>
+            }
+            }>
                 <SelectTrigger className={className}>
                     <SelectValue
                         placeholder={displayText} key={value}/>
@@ -49,8 +40,8 @@ const SelectCell = (field: string, i18n?: boolean) => {
                         {/*<SelectLabel>{translator(dictionary[value].value)}</SelectLabel>*/}
                         {
                             dictionary?.map((item) => {
-                                return <SelectItem key={item.key} accessKey={item.key}
-                                                   value={item.key as string}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
+                                return <SelectItem
+                                    value={item.key as string}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
                             })
                         }
                     </SelectGroup>
