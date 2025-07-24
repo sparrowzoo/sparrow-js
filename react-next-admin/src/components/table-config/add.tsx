@@ -12,11 +12,12 @@ import * as v from "valibot";
 import {useTranslations} from "next-intl";
 import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
 import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
+import {DialogCloseProps} from "@/common/lib/table/DataTableProperty";
 
 
 
 
-export default function Page() {
+export default function Page({callbackHandler}: DialogCloseProps) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const pageTranslate = useTranslations("TableConfig")
@@ -32,6 +33,7 @@ export default function Page() {
     ) => {
         TableConfigApi.save(data, errorTranslate).then(
             (res) => {
+                callbackHandler();
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
         ).catch(()=>{});
