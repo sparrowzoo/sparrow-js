@@ -70,3 +70,7 @@ export interface EmptyRowProps {
     columnSize: number;
 }
 
+export interface DialogCloseProps{
+    callbackHandler: () => void;
+}
+
