@@ -28,7 +28,10 @@
     "previous": "上一步",
     "back": "返回",
     "no-record-checked": "请选择要操作的记录！",
-    "table": "表"
+    "table": "项目表",
+    "clear-scaffold": "清除脚手架",
+    "init-scaffold": "初始化脚手架",
+    "generate-code": "生成代码"
   },
   "LocaleLayout": {
     "title": "麻雀窝",

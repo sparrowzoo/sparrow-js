@@ -12,9 +12,9 @@ import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
-import RowOperations from "@/components/project-config/row-operations";
-
-
+import TableConfigs from "@/components/project-config/operations/table-configs";
+import ClearScaffold from "@/components/project-config/operations/clear";
+import InitScaffold from "@/components/project-config/operations/init";
 
 
 export default function Page() {
@@ -23,23 +23,24 @@ export default function Page() {
 
     const [dataState, setDataState] = useState<Result<PagerResult<ProjectConfig>> | undefined>();
     const init = () => {
-                ProjectConfigApi.search({}, errorTranslate).then(
-                    (res) => {
-                        setDataState(res)
-                    }
-                ).catch(() => {
-                });
-            };
-            useEffect(() => {
-                init();
-            }, []);
+        ProjectConfigApi.search({}, errorTranslate).then(
+            (res) => {
+                setDataState(res)
+            }
+        ).catch(() => {
+        });
+    };
+    useEffect(() => {
+        init();
+    }, []);
 
 
-      const deleteHandler= (id: number) => {
-            ProjectConfigApi.delete(id, errorTranslate).then(()=>{
-                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
-            }).catch(()=>{});
-        }
+    const deleteHandler = (id: number) => {
+        ProjectConfigApi.delete(id, errorTranslate).then(() => {
+            toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
+        }).catch(() => {
+        });
+    }
 
     if (!dataState) {
         return <ThreeDotLoading/>
@@ -58,7 +59,7 @@ export default function Page() {
                 EditComponent={EditPage}
                 deleteHandler={deleteHandler}
                 initHandler={init}
-                RowOperationComponents={[RowOperations]}
+                RowOperationComponents={[TableConfigs, ClearScaffold, InitScaffold]}
             ></DataTable>
         </div>
     );
