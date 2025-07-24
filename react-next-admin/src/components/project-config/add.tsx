@@ -1,3 +1,4 @@
+
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -11,11 +12,12 @@ import * as v from "valibot";
 import {useTranslations} from "next-intl";
 import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
 import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
+import {DialogCloseProps} from "@/common/lib/table/DataTableProperty";
 
 
 
 
-export default function Page() {
+export default function Page({callbackHandler}: DialogCloseProps) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
     const pageTranslate = useTranslations("ProjectConfig")
@@ -31,6 +33,7 @@ export default function Page() {
     ) => {
         ProjectConfigApi.save(data, errorTranslate).then(
             (res) => {
+                callbackHandler();
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
         ).catch(()=>{});
