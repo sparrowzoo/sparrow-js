@@ -1,3 +1,4 @@
+
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -15,14 +16,14 @@ import * as v from "valibot";
 import {CellContextProps} from "@/common/lib/table/DataTableProperty";
 
 
-export default function EditPage({cellContext, callbackHandler}: CellContextProps<any>) {
-    const globalTranslate = useTranslations("GlobalForm");
-    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
-    const pageTranslate = useTranslations("ProjectConfig")
-    const validateTranslate = useTranslations("ProjectConfig.validate")
-    const FormSchema = crateScheme(validateTranslate);
-    type FormData = v.InferOutput<typeof FormSchema>;
-    const original = cellContext.row.original;
+export default function EditPage({cellContext,callbackHandler}: CellContextProps<any>) {
+     const globalTranslate = useTranslations("GlobalForm");
+        const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+        const pageTranslate = useTranslations("ProjectConfig")
+        const validateTranslate = useTranslations("ProjectConfig.validate")
+        const FormSchema = crateScheme(validateTranslate);
+        type FormData = v.InferOutput<typeof FormSchema>;
+        const original = cellContext.row.original;
 
 
     const onSubmit: SubmitHandler<FormData> = (
@@ -31,13 +32,10 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
     ) => {
         ProjectConfigApi.save(data, errorTranslate).then(
             (res) => {
-                if (callbackHandler) {
-                    callbackHandler();
-                }
-                toast.success(globalTranslate("save") + globalTranslate("operation-success"));
+                if(callbackHandler){callbackHandler();}
+                toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
-        ).catch(() => {
-        });
+        ).catch(()=>{});
     };
 
     const {
@@ -60,66 +58,81 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
 
 
     return (
-        <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
-            <DialogHeader>
-                <DialogTitle>{globalTranslate("edit")}</DialogTitle>
-                <DialogDescription>
-                </DialogDescription>
-            </DialogHeader>
+             <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+                        <DialogHeader>
+                            <DialogTitle>{globalTranslate("edit")}</DialogTitle>
+                            <DialogDescription>
+                            </DialogDescription>
+                        </DialogHeader>
             <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
                 <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
-                <ValidatableInput readonly={false} defaultValue={original.name} {...register("name")}
+<ValidatableInput readonly={false} defaultValue={original.name} {...register("name")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
-                <ValidatableInput readonly={false} defaultValue={original.frontendName} {...register("frontendName")}
+                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
+<ValidatableInput readonly={false} defaultValue={original.frontendName} {...register("frontendName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.frontendName?.message} fieldPropertyName={"frontendName"}/>
-                <ValidatableInput readonly={false} defaultValue={original.chineseName} {...register("chineseName")}
+                                  errorMessage={errors.frontendName?.message}                                  fieldPropertyName={"frontendName"}/>
+<ValidatableInput readonly={false} defaultValue={original.chineseName} {...register("chineseName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.chineseName?.message} fieldPropertyName={"chineseName"}/>
-                <ValidatableInput readonly={false} defaultChecked={original.i18n} {...register("i18n")}
+                                  errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
+<ValidatableInput readonly={false} defaultChecked={original.i18n} {...register("i18n")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  fieldPropertyName={"i18n"}/>
-                <ValidatableTextArea className={"w-80 h-60"} readonly={false}
-                                     defaultValue={original.description} {...register("description")}
-                                     isSubmitted={isSubmitted}
-                                     pageTranslate={pageTranslate}
-                                     validateTranslate={validateTranslate}
-                                     fieldPropertyName={"description"}/>
-                <ValidatableInput readonly={false} defaultValue={original.modulePrefix} {...register("modulePrefix")}
+                                                                    fieldPropertyName={"i18n"}/>
+<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.description} {...register("description")}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"description"}/>
+<ValidatableInput readonly={false} defaultValue={original.modulePrefix} {...register("modulePrefix")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.modulePrefix?.message} fieldPropertyName={"modulePrefix"}/>
-                <ValidatableInput readonly={false}
-                                  defaultChecked={original.wrapWithParent} {...register("wrapWithParent")}
+                                  errorMessage={errors.modulePrefix?.message}                                  fieldPropertyName={"modulePrefix"}/>
+<ValidatableInput readonly={false} defaultValue={original.architectures} {...register("architectures")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"architectures"}/>
+<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.config} {...register("config")}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"config"}/>
+<ValidatableInput readonly={false} defaultChecked={original.wrapWithParent} {...register("wrapWithParent")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  fieldPropertyName={"wrapWithParent"}/>
+                                                                    fieldPropertyName={"wrapWithParent"}/>
+<ValidatableInput readonly={false} defaultValue={original.scaffold} {...register("scaffold")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"scaffold"}/>
             </div>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button variant="outline">{globalTranslate("cancel")}</Button>
-                </DialogClose>
-                <Button type="submit">{globalTranslate("save")}</Button>
-            </DialogFooter>
+           <DialogFooter>
+                                       <DialogClose asChild>
+                                           <Button variant="outline">{globalTranslate("cancel")}</Button>
+                                       </DialogClose>
+                                       <Button type="submit">{globalTranslate("save")}</Button>
+                        </DialogFooter>
         </form>
     );
 };
