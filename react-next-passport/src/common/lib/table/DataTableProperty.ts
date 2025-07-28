@@ -30,7 +30,7 @@ export default interface DataTableProps<
     initHandler: () => void;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
     parent?: {};
-    paginationParam?:PaginationState
+    paginationParam?: PaginationState
 }
 
 export interface TableOperationProps<TData> {
@@ -39,6 +39,7 @@ export interface TableOperationProps<TData> {
 
 export interface CellContextProps<TData> {
     cellContext: CellContext<TData, string>;
+    callbackHandler?: () => void;
 }
 
 export interface MyTableMeta<TData> extends TableMeta<TData> {
@@ -54,8 +55,8 @@ export interface MyTableMeta<TData> extends TableMeta<TData> {
     initHandler: () => void;
     result: Result<PagerResult<TData>>;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
-    searchCondition?: any;
-    paginationParam?:PaginationState
+    searchCondition?: SearchCondition;
+    setSearchCondition: React.Dispatch<React.SetStateAction<SearchCondition> | undefined>;
 }
 
 
@@ -68,5 +69,14 @@ export interface ColumnOperationProps {
 
 export interface EmptyRowProps {
     columnSize: number;
+}
+
+export interface DialogCloseProps {
+    callbackHandler: () => void;
+}
+
+export interface SearchCondition {
+    pageIndex?: number
+    pageSize?: number
 }
 

@@ -5,6 +5,7 @@ import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTablePrope
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal";
 import CheckboxHeader from "@/common/components/table/header/check-box";
+import UnixTimestampCell from "@/common/components/table/cell/unix-timestamp";
 import OperationCell from "@/common/components/table/cell/operation";
 import ColumnFilter from "@/common/components/table/header/column-filter";
 import PlainTextHeader from "@/common/components/table/header/plain-text";
@@ -44,7 +45,7 @@ enableHiding: true
 },{
 id: "select",
 header: CheckboxHeader,
-cell: CheckBoxCell,
+cell:CheckBoxCell,
 enableHiding: false
 },{
 accessorKey: "projectId",
@@ -124,12 +125,12 @@ enableHiding: true
 },{
 accessorKey: "gmtCreate",
 header: PlainTextHeader({columnTitle: "创建时间"} as ColumnOperationProps),
-cell: NormalCell("gmtCreate"),
+cell: UnixTimestampCell("gmtCreate"),
 enableHiding: true
 },{
 accessorKey: "gmtModified",
 header: PlainTextHeader({columnTitle: "更新时间"} as ColumnOperationProps),
-cell: NormalCell("gmtModified"),
+cell: UnixTimestampCell("gmtModified"),
 enableHiding: true
 },{
 accessorKey: "deleted",
