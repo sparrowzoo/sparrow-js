@@ -15,6 +15,7 @@ type TableConfigQuery = {
 export default function Search({table}: TableOperationProps<TableConfig>) {
     const meta = table.options.meta as MyTableMeta<TableConfig>;
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
+
     const setDataState = meta.setData;
     const [tableConfigQuery, setTableConfigQuery] = useState<TableConfigQuery>()
 
@@ -23,7 +24,6 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
     }
 
     const searchHandler = () => {
-        meta.searchCondition = tableConfigQuery;
         TableConfigApi.search(tableConfigQuery, errorTranslate).then(
             (res) => {
                 setDataState(res)

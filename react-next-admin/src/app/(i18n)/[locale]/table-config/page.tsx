@@ -68,6 +68,7 @@ export default function Page() {
                     deleteHandler={deleteHandler}
                     initHandler={init}
                     parent={parent}
+                    defaultPager={{pageNo: 1, pageSize: 10}}
                     RowOperationComponents={[]}
                 ></DataTable>
             </div>

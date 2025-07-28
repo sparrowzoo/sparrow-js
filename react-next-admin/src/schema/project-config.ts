@@ -36,8 +36,14 @@ v.pipe(
  v.string(),
 v.nonEmpty("不允许为空"))
 
+,architectures:
+v.string()
+,config:
+v.string()
 ,wrapWithParent:
 v.boolean()
+,scaffold:
+v.string()
 
     });
     //扩展提示
