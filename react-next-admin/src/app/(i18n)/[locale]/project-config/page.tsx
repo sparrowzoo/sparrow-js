@@ -25,7 +25,7 @@ export default function Page() {
     const init = () => {
         ProjectConfigApi.search({}, errorTranslate).then(
             (res) => {
-                setDataState(res)
+                setDataState(res);
             }
         ).catch(() => {
         });

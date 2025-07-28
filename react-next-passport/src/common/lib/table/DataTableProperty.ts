@@ -4,7 +4,6 @@ import {CellContext, Table} from "@tanstack/table-core";
 import {VisibilityState} from "@tanstack/table-core/src/features/ColumnVisibility";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
-import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 
 export interface BasicData<TData> {
     id: number | string;
@@ -29,8 +28,8 @@ export default interface DataTableProps<
     deleteHandler?: (id: IDENTITY) => void;
     initHandler: () => void;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
-    parent?: {};
-    paginationParam?: PaginationState
+    parent?: {},
+    defaultPager?: SimplePager;
 }
 
 export interface TableOperationProps<TData> {
@@ -53,10 +52,11 @@ export interface MyTableMeta<TData> extends TableMeta<TData> {
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
     deleteHandler?: (id: IDENTITY) => void;
     initHandler: () => void;
+    searchHandler: (pager: SimplePager) => void;
     result: Result<PagerResult<TData>>;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
-    searchCondition?: SearchCondition;
-    setSearchCondition: React.Dispatch<React.SetStateAction<SearchCondition> | undefined>;
+    pager: SimplePager;
+    setPager: React.Dispatch<React.SetStateAction<SimplePager> | undefined>;
 }
 
 
@@ -75,8 +75,8 @@ export interface DialogCloseProps {
     callbackHandler: () => void;
 }
 
-export interface SearchCondition {
-    pageIndex?: number
+export interface SimplePager {
+    pageNo?: number
     pageSize?: number
 }
 
