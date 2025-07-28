@@ -1,12 +1,17 @@
 import * as React from "react";
 
-const NormalCell = (field: string) => {
+const NormalCell = (field: string, width?: number, handler: (value: any) => string = null) => {
+    const widthClass = width ? `w-${width}` : "w-fit";
     return ({row}) => {
-        const value = row.getValue(field);
-        if (typeof value === "boolean") {
-            return <div className="uppercase">{value.toString()}</div>
+        let value = row.getValue(field);
+        if (handler) {
+            value = handler(value);
         }
-        return <div>{row.getValue(field)}</div>
+        if (typeof value === "boolean") {
+            const className = `uppercase ${widthClass}`;
+            return <div className={className}>{value.toString()}</div>
+        }
+        return <div className={widthClass}>{value}</div>
     }
 }
 export default NormalCell;

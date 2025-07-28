@@ -59,6 +59,7 @@ export default function Page() {
                 EditComponent={EditPage}
                 deleteHandler={deleteHandler}
                 initHandler={init}
+                defaultPager={{pageNo: 1, pageSize: 100}}
                 RowOperationComponents={[TableConfigs, ClearScaffold, InitScaffold]}
             ></DataTable>
         </div>
