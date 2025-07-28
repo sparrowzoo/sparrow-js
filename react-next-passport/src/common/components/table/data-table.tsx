@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import {useState} from "react";
 import {
     Cell,
     ColumnFiltersState,
@@ -17,10 +18,22 @@ import {
     VisibilityState,
 } from "@tanstack/react-table";
 import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import DataTableProps, {BasicData, MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import DataTableProps, {BasicData, MyTableMeta, SearchCondition} from "@/common/lib/table/DataTableProperty";
 import {EmptyRow} from "@/common/components/table/empty-row";
 import CellRenderer from "@/common/components/table/cell-render";
 import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink
+} from "@/common/components/table/pagination";
+import {Button} from "@/components/ui/button";
+
+function PaginationNext(props: { onClick: () => void, href: string }) {
+    return null;
+}
 
 export function DataTable<TData extends BasicData<TData>>({
                                                               columns,
@@ -36,11 +49,10 @@ export function DataTable<TData extends BasicData<TData>>({
                                                               deleteHandler,
                                                               initHandler,
                                                               RowOperationComponents,
-                                                              parent,
-                                                              paginationParam
+                                                              parent
                                                           }: DataTableProps<TData>) {
+    const [searchCondition, setSearchCondition] = useState<SearchCondition>();
     const [sorting, setSorting] = React.useState<SortingState>([]);
-
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
     );
@@ -48,9 +60,9 @@ export function DataTable<TData extends BasicData<TData>>({
         React.useState<VisibilityState>(hiddenColumns as VisibilityState);
     const [rowSelection, setRowSelection] = React.useState({});
 
-    const localPagination = paginationParam || {pageIndex: 0, pageSize: 10}
     const [pagination, setPagination] = React.useState<PaginationState>({
-        ...localPagination,
+        pageIndex: 0,
+        pageSize: 99999,
     });
     const table = useReactTable({
         onStateChange(updater: Updater<TableState>): void {
@@ -82,7 +94,9 @@ export function DataTable<TData extends BasicData<TData>>({
             EditComponent: EditComponent,
             result: result,
             RowOperationComponents: RowOperationComponents,
-            parent: parent
+            parent: parent,
+            searchCondition,
+            setSearchCondition
         } as MyTableMeta<TData>,
         state: {
             sorting,
@@ -138,6 +152,51 @@ export function DataTable<TData extends BasicData<TData>>({
                         )}
                     </TableBody>
                 </Table>
+            </div>
+            <div>
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <Button
+                                onClick={() => table.firstPage()}
+                                disabled={!table.getCanPreviousPage()}
+                            >
+                                {'<<'}
+                            </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+
+                            <Button
+                                onClick={() => table.previousPage()}
+                                disabled={!table.getCanPreviousPage()}
+                            >
+                                {'<'}
+                            </Button>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationLink onClick={() => {
+                                alert(0)
+                            }} href="#">1</PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationLink href="#" isActive>
+                                2
+                            </PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationLink href="#">3</PaginationLink>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationEllipsis/>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationNext onClick={() => table.nextPage()} href="#"/>
+                        </PaginationItem>
+                        <PaginationItem>
+                            <PaginationNext onClick={() => table.nextPage()} href="#"/>
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
             </div>
         </div>
     );

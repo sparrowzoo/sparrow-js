@@ -39,57 +39,66 @@ export const columns: ColumnDef<ColumnConfig>[] = [
         accessorKey: "sort",
         header: PlainTextHeader({columnTitle: "序号"} as ColumnOperationProps),
         cell: SortableCell("sort"),
-        enableHiding: true
+        enableHiding: false
     },
     {
         accessorKey: "propertyName",
         header: PlainTextHeader({columnTitle: "名称"} as ColumnOperationProps),
-        cell: NormalCell("propertyName"),
-        enableHiding: true
+        cell: NormalCell("propertyName", 20),
+        enableHiding: false
     }, {
         accessorKey: "chineseName",
         header: PlainTextHeader({columnTitle: "中文名"} as ColumnOperationProps),
         cell: InputCell("chineseName", "text", 20),
-        enableHiding: true
+        enableHiding: false
     }, {
         accessorKey: "javaType",
         header: PlainTextHeader({columnTitle: "类型"} as ColumnOperationProps),
-        cell: NormalCell("javaType"),
-        enableHiding: true
+        cell: NormalCell("javaType", undefined, (value: any) => {
+            return value.replace("java.lang.", "")
+        }),
+        enableHiding: false
     }, {
         accessorKey: "enableHidden",
         header: PlainTextHeader({columnTitle: "可隐藏"} as ColumnOperationProps),
         cell: InputCell("enableHidden", "checkbox"),
-        enableHiding: true
+        enableHiding: false
     }, {
         accessorKey: "defaultHidden",
-        header: PlainTextHeader({columnTitle: "默认隐藏"} as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "隐藏"} as ColumnOperationProps),
         cell: InputCell("defaultHidden", "checkbox"),
-        enableHiding: true
+        enableHiding: false
     }, {
         accessorKey: "showInEdit",
         header: PlainTextHeader({columnTitle: "编辑"} as ColumnOperationProps),
         cell: InputCell("showInEdit", "checkbox"),
-        enableHiding: true
+        enableHiding: false
     }, {
         accessorKey: "showInList",
         header: PlainTextHeader({columnTitle: "列表"} as ColumnOperationProps),
         cell: InputCell("showInList", "checkbox"),
-        enableHiding: true
+        enableHiding: false
     }, {
         accessorKey: "showInSearch",
         header: PlainTextHeader({columnTitle: "搜索"} as ColumnOperationProps),
         cell: InputCell("showInSearch", "checkbox"),
-        enableHiding: true
+        enableHiding: false
     }, {
         accessorKey: "allowNull",
         header: PlainTextHeader({columnTitle: "可为空"} as ColumnOperationProps),
         cell: InputCell("allowNull", "checkbox"),
-        enableHiding: true
-    }, {
+        enableHiding: false
+    },
+    {
+        accessorKey: "readOnly",
+        header: PlainTextHeader({columnTitle: "只读"} as ColumnOperationProps),
+        cell: InputCell("readOnly", "checkbox"),
+        enableHiding: false
+    },
+    {
         accessorKey: "placeholder",
         header: PlainTextHeader({columnTitle: "Placeholder"} as ColumnOperationProps),
-        cell: InputCell("placeholder", "text", 16),
+        cell: InputCell("placeholder", "text", 8),
         enableHiding: true
     }, {
         accessorKey: "searchType",
@@ -104,12 +113,12 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     }, {
         accessorKey: "datasourceType",
         header: PlainTextHeader({columnTitle: "数据源类型"} as ColumnOperationProps),
-        cell: SelectCell("datasourceType", true),
+        cell: SelectCell("datasourceType", true, true),
         enableHiding: true
     }, {
-        accessorKey: "dataSourceParams",
+        accessorKey: "datasourceParams",
         header: PlainTextHeader({columnTitle: "数据源参数"} as ColumnOperationProps),
-        cell: InputCell("dataSourceParams", "text", 16),
+        cell: InputCell("datasourceParams", "text", 20),
         enableHiding: true
     }, {
         accessorKey: "columnType",

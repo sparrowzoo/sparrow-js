@@ -25,6 +25,7 @@
     "clsx": "^2.1.1",
     "data-fns": "^1.1.0",
     "date-fns": "^4.1.0",
+    "dayjs": "^1.11.13",
     "lucide-react": "^0.513.0",
     "motion-plus": "^0.1.9",
     "next": "15.3.2",

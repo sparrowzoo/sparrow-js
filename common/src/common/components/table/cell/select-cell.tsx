@@ -5,7 +5,7 @@ import {useTranslations} from "next-intl";
 import {MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {Utils} from "@/common/lib/Utils";
 
-const SelectCell = (field: string, i18n?: boolean) => {
+const SelectCell = (field: string, i18n?: boolean, readOnly: boolean = false) => {
     const className = "w-fit";
     return ({row, cell}) => {
         debugger;
@@ -20,15 +20,21 @@ const SelectCell = (field: string, i18n?: boolean) => {
 
         let currentItem = Utils.getValue(dictionary, value);
         if (!currentItem) {
-            currentItem = dictionary[0];
+            if (dictionary.length == 0) {
+                console.error("field is not found " + field);
+            } else {
+                currentItem = dictionary[0];
+            }
         }
         const displayText = translator ? translator(currentItem.value, {defaultValue: currentItem.value}) : currentItem.value;
 
+        if (readOnly) {
+            return <div>{displayText}</div>
+        }
         return (
             <Select onValueChange={(value) => {
                 row.original[field] = value;
                 setValue(value);
-                console.log("log ", value);
             }
             }>
                 <SelectTrigger className={className}>
@@ -40,8 +46,8 @@ const SelectCell = (field: string, i18n?: boolean) => {
                         {/*<SelectLabel>{translator(dictionary[value].value)}</SelectLabel>*/}
                         {
                             dictionary?.map((item) => {
-                                return <SelectItem
-                                    value={item.key as string}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
+                                return <SelectItem key={item.key}
+                                                   value={item.key as string}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
                             })
                         }
                     </SelectGroup>

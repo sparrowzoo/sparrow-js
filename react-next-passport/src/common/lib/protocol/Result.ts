@@ -6,9 +6,10 @@ export default interface Result<Data> {
     instruction?: string;
 }
 
+
+
 export interface PagerResult<T> {
     recordTotal: number;
     list: T[];
     dictionary: Map<String, Object>;
 }
-

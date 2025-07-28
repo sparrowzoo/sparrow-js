@@ -45,20 +45,24 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps<F
                 <Label
                     className={"justify-end w-[8rem]"}>{pageTranslate?.(fieldPropertyName) || fieldPropertyName}</Label>
                 <div className={"flex-1"}>
-                    <input onKeyDown={(e) => {
+                    <input onFocus={(e) => {
+                        //阻止文本自动选中
                         e.stopPropagation();
-                    }
-                    }
+                    }}
+                           onKeyDown={(e) => {
+                               //阻止对话框自动关闭
+                               e.stopPropagation();
+                           }
+                           }
                            name={fieldPropertyName}
                            type={type}
                            className={cn(
                                defaultClazz,
                                className
                            )}
-                           readOnly={readonly}
+                           readOnly={type === "label" ? true : readonly}
                            ref={ref}
-                           {...props}
-                    />
+                           {...props}></input>
                 </div>
                 <div className={"w-[10rem]"}>
                     <ErrorMessage messageClass={"text-sm text-red-500"}

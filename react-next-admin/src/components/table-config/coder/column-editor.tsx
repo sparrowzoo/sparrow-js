@@ -21,15 +21,15 @@ function SaveButton({table}: TableOperationProps<ColumnConfig>) {
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const globalTranslate = useTranslations("GlobalForm");
 
-    return (<div className={"border-1 border-red-700"}><Button onClick={() => {
+    return (<div><Button onClick={() => {
             const originalData = TableUtils.getOriginalData(table);
             parent.columnConfigs = JSON.stringify(originalData);
-            debugger;
             TableConfigApi.save(parent, errorTranslate).then(
                 (res) => {
-                    toast.success(globalTranslate("save")+globalTranslate("operation-success"));
+                    toast.success(globalTranslate("save") + globalTranslate("operation-success"));
                 }
-            ).catch(()=>{});
+            ).catch(() => {
+            });
 
         }}>保存</Button></div>
     )
@@ -54,7 +54,7 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
         data: pagerResult
     } as Result<PagerResult<ColumnConfig>>;
     return (
-        <div className="h-[calc(100vh-80px)] overflow-y-auto">
+        <div className="h-[calc(100vh-80px)] w-[calc(100vw-80px)] overflow-auto">
             <DataTable<ColumnConfig>
                 initHandler={() => {
                 }}

@@ -12,10 +12,8 @@ const InputCell = (field: string, type: string, width?: number) => {
             setValue(fieldValue);
         }, [fieldValue]);
         if (type === "checkbox") {
-            return <Checkbox value={value}
+            return <Checkbox checked={value} value={value}
                              onCheckedChange={(value) => {
-                                 debugger;
-                                 console.log("log ", value);
                                  setValue(value);
                                  row.original[field] = value;
                              }}
@@ -23,10 +21,12 @@ const InputCell = (field: string, type: string, width?: number) => {
             />
         }
 
-        return (<><Input onChange={(event) => {
+        return (<><Input onKeyDown={(e) => {
+            e.stopPropagation();
+        }
+        } onChange={(event) => {
             row.original[field] = event.target.value;
             setValue(event.target.value);
-            console.log("log ", value);
         }} className={className} type={type} value={value}/>
         </>);
     }

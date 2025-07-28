@@ -21,11 +21,9 @@ const OperationCell = ({cellContext}: CellContextProps<any>) => {
     const meta = table?.options?.meta as MyTableMeta<any>;
     const primary = meta.primary;
     const EditComponent = meta.EditComponent;
-    const width = meta.editorWidth;
     const RowOperationComponents = meta.RowOperationComponents;
     const deleteHandler = meta.deleteHandler;
     return (
-
         <DropdownMenu modal={false}>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="h-8 w-8 p-0">

@@ -64,7 +64,7 @@ function InnerColumnOperation({showFilter, showSort, columnTitle, column}: Colum
 
 export default function ColumnOperation(props: ColumnOperationProps) {
     return <div className={"flex flex-row justify-start items-center"}>
-        {props.columnTitle && <div className="text-gray-500 text-sm">{props.columnTitle}</div>}
+        {props.columnTitle && <div className="text-sm">{props.columnTitle}</div>}
         <InnerColumnOperation {...props} />
     </div>
 }
