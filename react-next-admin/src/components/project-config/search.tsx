@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {useState} from "react";
 import {ProjectConfig} from "@/components/project-config/columns";
@@ -7,12 +6,13 @@ import {Button} from "@/components/ui/button";
 import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
 import SearchInput from "@/common/components/forms/SearchInput";
+import SearchSelect from "@/common/components/forms/search-select";
 
 
 type ProjectConfigQuery = {
     name: string;
-frontendName: string;
-chineseName: string;
+    frontendName: string;
+    chineseName: string;
 }
 
 export default function Search({table}: TableOperationProps<ProjectConfig>) {
@@ -38,16 +38,20 @@ export default function Search({table}: TableOperationProps<ProjectConfig>) {
 
 
     return (<>
-            <SearchInput value={projectConfigQuery?.name||""} 
-propertyName={"name"} pageTranslate={pageTranslate} 
-setSearchCondition={setProjectConfigQuery}/>
-<SearchInput value={projectConfigQuery?.frontendName||""} 
-propertyName={"frontendName"} pageTranslate={pageTranslate} 
-setSearchCondition={setProjectConfigQuery}/>
-<SearchInput value={projectConfigQuery?.chineseName||""} 
-propertyName={"chineseName"} pageTranslate={pageTranslate} 
-setSearchCondition={setProjectConfigQuery}/>
-            <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
+            <SearchInput value={projectConfigQuery?.name || ""}
+                         propertyName={"name"} pageTranslate={pageTranslate}
+                         setSearchCondition={setProjectConfigQuery}/>
+            <SearchInput value={projectConfigQuery?.frontendName || ""}
+                         propertyName={"frontendName"} pageTranslate={pageTranslate}
+                         setSearchCondition={setProjectConfigQuery}/>
+            <SearchInput value={projectConfigQuery?.chineseName || ""}
+                         propertyName={"chineseName"} pageTranslate={pageTranslate}
+                         setSearchCondition={setProjectConfigQuery}/>
+            <SearchSelect propertyName={"status"} pageTranslate={pageTranslate}
+                          setSearchCondition={setProjectConfigQuery}
+                          dictionary={meta.result.data.dictionary['status']}/>
+            <Button onClick={() => searchHandler()} variant="ghost"
+                    className="ml-2">{globalTranslate('search')}</Button>
         </>
     );
 }
