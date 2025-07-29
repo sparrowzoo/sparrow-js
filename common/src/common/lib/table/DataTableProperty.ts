@@ -1,9 +1,10 @@
 import {Column, ColumnDef, TableMeta} from "@tanstack/react-table";
-import React from "react";
+import React, {Dispatch, SetStateAction} from "react";
 import {CellContext, Table} from "@tanstack/table-core";
 import {VisibilityState} from "@tanstack/table-core/src/features/ColumnVisibility";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import KeyValue from "@/common/lib/protocol/KeyValue";
 
 export interface BasicData<TData> {
     id: number | string;
@@ -78,5 +79,13 @@ export interface DialogCloseProps {
 export interface SimplePager {
     pageNo?: number
     pageSize?: number
+}
+
+export interface SearchInputProps<T> {
+    value?: string;
+    propertyName: string;
+    pageTranslate: (key: string) => string;
+    setSearchCondition: Dispatch<SetStateAction<T>>;
+    dictionary?: KeyValue[];
 }
 
