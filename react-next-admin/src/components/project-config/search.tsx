@@ -12,7 +12,7 @@ import SearchInput from "@/common/components/forms/SearchInput";
 type ProjectConfigQuery = {
     name: string;
 frontendName: string;
-chineseName: string;
+chineseName: string;git 
 }
 
 export default function Search({table}: TableOperationProps<ProjectConfig>) {
