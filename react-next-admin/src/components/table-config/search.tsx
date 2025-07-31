@@ -1,4 +1,4 @@
-import {Input} from "@/components/ui/input";
+
 import * as React from "react";
 import {useState} from "react";
 import {TableConfig} from "@/components/table-config/columns";
@@ -6,16 +6,24 @@ import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProp
 import {Button} from "@/components/ui/button";
 import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
+import SearchInput from "@/common/components/forms/SearchInput";
+import SearchSelect from "@/common/components/forms/search-select";
+
+
 
 type TableConfigQuery = {
-    tableName: string;
-    tableClass: string;
+    projectId: number;
+primaryKey: string;
+tableName: string;
+className: string;
+status: number;
 }
 
 export default function Search({table}: TableOperationProps<TableConfig>) {
     const meta = table.options.meta as MyTableMeta<TableConfig>;
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
-
+    const pageTranslate = useTranslations("TableConfig")
+    const globalTranslate = useTranslations("GlobalForm");
     const setDataState = meta.setData;
     const [tableConfigQuery, setTableConfigQuery] = useState<TableConfigQuery>()
 
@@ -34,18 +42,20 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
 
 
     return (<>
-            <Input value={tableConfigQuery?.tableName || ""} onChange={(e) => {
-                setTableConfigQuery((prevState) => {
-                    return {
-                        ...prevState,
-                        tableName: e.target.value
-                    } as TableConfigQuery
-                })
-            }}
-                   placeholder="tableName ..."
-                   className="max-w-sm"
-            />
-            <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">搜索</Button>
+            <SearchInput value={tableConfigQuery?.projectId||""} 
+propertyName={"projectId"} pageTranslate={pageTranslate} 
+setSearchCondition={setTableConfigQuery}/>
+<SearchInput value={tableConfigQuery?.primaryKey||""} 
+propertyName={"primaryKey"} pageTranslate={pageTranslate} 
+setSearchCondition={setTableConfigQuery}/>
+<SearchInput value={tableConfigQuery?.tableName||""} 
+propertyName={"tableName"} pageTranslate={pageTranslate} 
+setSearchCondition={setTableConfigQuery}/>
+<SearchInput value={tableConfigQuery?.className||""} 
+propertyName={"className"} pageTranslate={pageTranslate} 
+setSearchCondition={setTableConfigQuery}/>
+<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
+            <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
         </>
     );
 }

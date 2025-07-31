@@ -5,6 +5,7 @@ import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTablePrope
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal";
 import CheckboxHeader from "@/common/components/table/header/check-box";
+import NormalHeader from "@/common/components/table/header/normal";
 import UnixTimestampCell from "@/common/components/table/cell/unix-timestamp";
 import OperationCell from "@/common/components/table/cell/operation";
 import ColumnFilter from "@/common/components/table/header/column-filter";
@@ -51,12 +52,22 @@ cell: NormalCell("name"),
 enableHiding: true
 },{
 accessorKey: "frontendName",
-header: PlainTextHeader({columnTitle: "前端项目名称"} as ColumnOperationProps),
+header: NormalHeader({
+            showSort: true,
+            showFilter: true,
+            columnTitle: "前端项目名称",
+        } as ColumnOperationProps),
+filterFn: filterFns.includesString,
 cell: NormalCell("frontendName"),
 enableHiding: true
 },{
 accessorKey: "chineseName",
-header: PlainTextHeader({columnTitle: "项目中文名称"} as ColumnOperationProps),
+header: NormalHeader({
+            showSort: true,
+            showFilter: true,
+            columnTitle: "项目中文名称",
+        } as ColumnOperationProps),
+filterFn: filterFns.includesString,
 cell: NormalCell("chineseName"),
 enableHiding: true
 },{
