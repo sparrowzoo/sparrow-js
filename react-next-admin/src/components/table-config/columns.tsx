@@ -5,6 +5,7 @@ import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTablePrope
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal";
 import CheckboxHeader from "@/common/components/table/header/check-box";
+import NormalHeader from "@/common/components/table/header/normal";
 import UnixTimestampCell from "@/common/components/table/cell/unix-timestamp";
 import OperationCell from "@/common/components/table/cell/operation";
 import ColumnFilter from "@/common/components/table/header/column-filter";
@@ -26,6 +27,8 @@ statusCommand:boolean;
 columnConfigs:string; 
 source:number; 
 sourceCode:string; 
+pageSize:number; 
+onlyAccessSelf:boolean; 
 createUserName:string; 
 createUserId:number; 
 modifiedUserId:number; 
@@ -54,17 +57,32 @@ cell: NormalCell("projectId"),
 enableHiding: true
 },{
 accessorKey: "primaryKey",
-header: PlainTextHeader({columnTitle: "主键"} as ColumnOperationProps),
+header: NormalHeader({
+            showSort: true,
+            showFilter: true,
+            columnTitle: "主键",
+        } as ColumnOperationProps),
+filterFn: filterFns.includesString,
 cell: NormalCell("primaryKey"),
 enableHiding: true
 },{
 accessorKey: "tableName",
-header: PlainTextHeader({columnTitle: "表名"} as ColumnOperationProps),
+header: NormalHeader({
+            showSort: true,
+            showFilter: true,
+            columnTitle: "表名",
+        } as ColumnOperationProps),
+filterFn: filterFns.includesString,
 cell: NormalCell("tableName"),
 enableHiding: true
 },{
 accessorKey: "className",
-header: PlainTextHeader({columnTitle: "类名"} as ColumnOperationProps),
+header: NormalHeader({
+            showSort: true,
+            showFilter: true,
+            columnTitle: "类名",
+        } as ColumnOperationProps),
+filterFn: filterFns.includesString,
 cell: NormalCell("className"),
 enableHiding: true
 },{
@@ -101,6 +119,16 @@ enableHiding: true
 accessorKey: "source",
 header: PlainTextHeader({columnTitle: "类来源"} as ColumnOperationProps),
 cell: NormalCell("source"),
+enableHiding: true
+},{
+accessorKey: "pageSize",
+header: PlainTextHeader({columnTitle: "分页大小"} as ColumnOperationProps),
+cell: NormalCell("pageSize"),
+enableHiding: true
+},{
+accessorKey: "onlyAccessSelf",
+header: PlainTextHeader({columnTitle: "只看自己"} as ColumnOperationProps),
+cell: NormalCell("onlyAccessSelf"),
 enableHiding: true
 },{
 accessorKey: "createUserName",

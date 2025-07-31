@@ -145,6 +145,18 @@ export default function Page({callbackHandler}: DialogCloseProps) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"sourceCode"}/>
+<ValidatableInput readonly={false}  {...register("pageSize")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.pageSize?.message}                                  fieldPropertyName={"pageSize"}/>
+<ValidatableInput readonly={false}  {...register("onlyAccessSelf")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"onlyAccessSelf"}/>
             </div>
              <DialogFooter>
                             <DialogClose asChild>

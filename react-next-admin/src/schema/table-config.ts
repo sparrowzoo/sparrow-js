@@ -75,6 +75,15 @@ v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,sourceCode:
 v.string()
+,pageSize:
+v.pipe(
+ v.string(),
+v.nonEmpty("不允许为空"),
+v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.transform((input): number | string => {return parseInt(input,10);}))
+
+,onlyAccessSelf:
+v.boolean()
 
     });
     //扩展提示
