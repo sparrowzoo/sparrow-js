@@ -147,6 +147,11 @@
       "idCard": "身份证号",
       "nullable": "无",
       "chineseCharacters": "中文字符"
+    },
+    "status": {
+      "ENABLE": "可用",
+      "DISABLE": "不可用",
+      "all": "全部"
     }
   }
 }
