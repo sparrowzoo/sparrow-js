@@ -38,7 +38,7 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     {
         accessorKey: "sort",
         header: PlainTextHeader({columnTitle: "序号"} as ColumnOperationProps),
-        cell: SortableCell("sort"),
+        cell: SortableCell("sort",),
         enableHiding: false
     },
     {
@@ -98,7 +98,7 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     {
         accessorKey: "placeholder",
         header: PlainTextHeader({columnTitle: "Placeholder"} as ColumnOperationProps),
-        cell: InputCell("placeholder", "text", 8),
+        cell: InputCell("placeholder", "text", 20),
         enableHiding: true
     }, {
         accessorKey: "searchType",
@@ -118,7 +118,7 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     }, {
         accessorKey: "datasourceParams",
         header: PlainTextHeader({columnTitle: "数据源参数"} as ColumnOperationProps),
-        cell: InputCell("datasourceParams", "text", 20),
+        cell: NormalCell("datasourceParams"),
         enableHiding: true
     }, {
         accessorKey: "columnType",

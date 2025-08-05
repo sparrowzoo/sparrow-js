@@ -68,25 +68,25 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                 <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={original.projectId} {...register("projectId")}
+<ValidatableInput readonly={true} defaultValue={original.projectId} {...register("projectId")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.projectId?.message}                                  fieldPropertyName={"projectId"}/>
-<ValidatableInput readonly={false} defaultValue={original.primaryKey} {...register("primaryKey")}
+<ValidatableInput readonly={true} defaultValue={original.primaryKey} {...register("primaryKey")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.primaryKey?.message}                                  fieldPropertyName={"primaryKey"}/>
-<ValidatableInput readonly={false} defaultValue={original.tableName} {...register("tableName")}
+<ValidatableInput readonly={true} defaultValue={original.tableName} {...register("tableName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.tableName?.message}                                  fieldPropertyName={"tableName"}/>
-<ValidatableInput readonly={false} defaultValue={original.className} {...register("className")}
+<ValidatableInput readonly={true} defaultValue={original.className} {...register("className")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
@@ -133,13 +133,13 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"columnConfigs"}/>
-<ValidatableInput readonly={false} defaultValue={original.source} {...register("source")}
-                                  type={"text"}
+<ValidatableInput readonly={true} defaultValue={original.source} {...register("source")}
+                                  type={"select"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.source?.message}                                  fieldPropertyName={"source"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.sourceCode} {...register("sourceCode")}
+<ValidatableTextArea className={"w-80 h-60"} readonly={true} defaultValue={original.sourceCode} {...register("sourceCode")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
