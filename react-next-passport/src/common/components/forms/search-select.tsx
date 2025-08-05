@@ -29,7 +29,7 @@ export default function SearchSelect<T>({
             <SelectContent>
                 <SelectGroup>
                     <SelectItem key={-1}
-                                value={"all"}>{displayText}</SelectItem>
+                                value={"-1"}>{displayText}</SelectItem>
                     {
 
                         dictionary?.map((item) => {

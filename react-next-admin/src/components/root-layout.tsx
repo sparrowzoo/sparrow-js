@@ -51,7 +51,7 @@ export default function AdminRootLayout({
                     <AppSidebar/>
                     <SidebarInset>
                         <Header showProfile={true}/>
-                        {children}
+                        <div className={"w-full p-2"}>{children}</div>
                     </SidebarInset>
                 </SidebarProvider>
             </ThemeProvider>

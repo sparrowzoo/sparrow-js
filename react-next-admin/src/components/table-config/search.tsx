@@ -2,18 +2,17 @@
 import * as React from "react";
 import {useState} from "react";
 import {TableConfig} from "@/components/table-config/columns";
-import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import {MyTableMeta,SimplePager, TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {Button} from "@/components/ui/button";
 import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
 import SearchInput from "@/common/components/forms/SearchInput";
 import SearchSelect from "@/common/components/forms/search-select";
+import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 
 
-
-type TableConfigQuery = {
-    primaryKey: string;
-tableName: string;
+interface TableConfigQuery extends SimplePager{
+    tableName: string;
 className: string;
 status: number;
 }
@@ -24,27 +23,31 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
     const pageTranslate = useTranslations("TableConfig")
     const globalTranslate = useTranslations("GlobalForm");
     const setDataState = meta.setData;
-    const [tableConfigQuery, setTableConfigQuery] = useState<TableConfigQuery>()
+    const [tableConfigQuery, setTableConfigQuery] = useState<TableConfigQuery>({} as TableConfigQuery)
 
     if (setDataState == null) {
         return <>setDataState is not defined</>
     }
 
-    const searchHandler = () => {
-        TableConfigApi.search(tableConfigQuery, errorTranslate).then(
-            (res) => {
-                setDataState(res)
+    const searchHandler = (page?: PaginationState) => {
+            if (!page) {
+                page = {pageIndex: 0, pageSize: table.getState().pagination.pageSize}
+                table.setPagination(page);
             }
-        ).catch(() => {
-        });
-    };
+            tableConfigQuery.pageNo = page?.pageIndex;
+            tableConfigQuery.pageSize = page?.pageSize;
+            TableConfigApi.search(tableConfigQuery, errorTranslate).then(
+                (res) => {
+                    setDataState(res)
+                }
+            ).catch(() => {
+            });
+        };
+    meta.searchHandler=searchHandler;
 
 
-    return (<>
-            <SearchInput value={tableConfigQuery?.primaryKey||""} 
-propertyName={"primaryKey"} pageTranslate={pageTranslate} 
-setSearchCondition={setTableConfigQuery}/>
-<SearchInput value={tableConfigQuery?.tableName||""} 
+    return (<div className="flex flex-row flex-wrap gap-4">
+            <SearchInput value={tableConfigQuery?.tableName||""} 
 propertyName={"tableName"} pageTranslate={pageTranslate} 
 setSearchCondition={setTableConfigQuery}/>
 <SearchInput value={tableConfigQuery?.className||""} 
@@ -52,6 +55,6 @@ propertyName={"className"} pageTranslate={pageTranslate}
 setSearchCondition={setTableConfigQuery}/>
 <SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
             <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
-        </>
+        </div>
     );
 }

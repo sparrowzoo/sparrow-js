@@ -69,25 +69,25 @@ export default function Page({callbackHandler}: DialogCloseProps) {
                 <ValidatableInput  {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false}  {...register("projectId")}
+<ValidatableInput readonly={true}  {...register("projectId")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.projectId?.message}                                  fieldPropertyName={"projectId"}/>
-<ValidatableInput readonly={false}  {...register("primaryKey")}
+<ValidatableInput readonly={true}  {...register("primaryKey")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.primaryKey?.message}                                  fieldPropertyName={"primaryKey"}/>
-<ValidatableInput readonly={false}  {...register("tableName")}
+<ValidatableInput readonly={true}  {...register("tableName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.tableName?.message}                                  fieldPropertyName={"tableName"}/>
-<ValidatableInput readonly={false}  {...register("className")}
+<ValidatableInput readonly={true}  {...register("className")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
@@ -129,11 +129,6 @@ export default function Page({callbackHandler}: DialogCloseProps) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"statusCommand"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false}  {...register("columnConfigs")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"columnConfigs"}/>
 <ValidatableInput readonly={false}  {...register("source")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
