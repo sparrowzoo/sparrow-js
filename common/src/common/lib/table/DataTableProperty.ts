@@ -5,6 +5,7 @@ import {VisibilityState} from "@tanstack/table-core/src/features/ColumnVisibilit
 import {IDENTITY} from "@/common/lib/protocol/Identity";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
 import KeyValue from "@/common/lib/protocol/KeyValue";
+import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 
 export interface BasicData<TData> {
     id: number | string;
@@ -30,7 +31,7 @@ export default interface DataTableProps<
     initHandler: () => void;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
     parent?: {},
-    defaultPager?: SimplePager;
+    defaultPager?: PaginationState;
 }
 
 export interface TableOperationProps<TData> {
@@ -53,11 +54,9 @@ export interface MyTableMeta<TData> extends TableMeta<TData> {
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
     deleteHandler?: (id: IDENTITY) => void;
     initHandler: () => void;
-    searchHandler: (pager: SimplePager) => void;
+    searchHandler: (pager: PaginationState | undefined) => void;
     result: Result<PagerResult<TData>>;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
-    pager: SimplePager;
-    setPager: React.Dispatch<React.SetStateAction<SimplePager> | undefined>;
 }
 
 

@@ -5,7 +5,6 @@ import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTablePrope
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal";
 import CheckboxHeader from "@/common/components/table/header/check-box";
-import NormalHeader from "@/common/components/table/header/normal";
 import UnixTimestampCell from "@/common/components/table/cell/unix-timestamp";
 import OperationCell from "@/common/components/table/cell/operation";
 import ColumnFilter from "@/common/components/table/header/column-filter";
@@ -57,32 +56,17 @@ cell: NormalCell("projectId"),
 enableHiding: true
 },{
 accessorKey: "primaryKey",
-header: NormalHeader({
-            showSort: true,
-            showFilter: true,
-            columnTitle: "主键",
-        } as ColumnOperationProps),
-filterFn: filterFns.includesString,
+header: PlainTextHeader({columnTitle: "主键"} as ColumnOperationProps),
 cell: NormalCell("primaryKey"),
 enableHiding: true
 },{
 accessorKey: "tableName",
-header: NormalHeader({
-            showSort: true,
-            showFilter: true,
-            columnTitle: "表名",
-        } as ColumnOperationProps),
-filterFn: filterFns.includesString,
+header: PlainTextHeader({columnTitle: "表名"} as ColumnOperationProps),
 cell: NormalCell("tableName"),
 enableHiding: true
 },{
 accessorKey: "className",
-header: NormalHeader({
-            showSort: true,
-            showFilter: true,
-            columnTitle: "类名",
-        } as ColumnOperationProps),
-filterFn: filterFns.includesString,
+header: PlainTextHeader({columnTitle: "类名"} as ColumnOperationProps),
 cell: NormalCell("className"),
 enableHiding: true
 },{
@@ -167,7 +151,7 @@ cell: NormalCell("deleted"),
 enableHiding: true
 },{
 accessorKey: "status",
-header: PlainTextHeader({columnTitle: "STATUS"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "状态"} as ColumnOperationProps),
 cell: NormalCell("status"),
 enableHiding: true
 },{

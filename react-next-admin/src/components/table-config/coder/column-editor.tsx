@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import {useState} from "react";
 import {ColumnConfig, columns} from "@/components/table-config/coder/columns";
 import {DataTable} from "@/common/components/table/data-table";
 // import CoderApi from "@/api/auto/coder-config";
@@ -31,7 +32,7 @@ function SaveButton({table}: TableOperationProps<ColumnConfig>) {
             ).catch(() => {
             });
 
-        }}>保存</Button></div>
+        }}>{globalTranslate("save")}</Button></div>
     )
 }
 
@@ -53,21 +54,21 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
         code: "0",
         data: pagerResult
     } as Result<PagerResult<ColumnConfig>>;
+    const [data, setData] = useState(columnResult);
     return (
         <div className="h-[calc(100vh-80px)] w-[calc(100vw-80px)] overflow-auto">
             <DataTable<ColumnConfig>
                 initHandler={() => {
                 }}
-                setData={(data) => {
-                }}
+                setData={setData}
                 tableName={"ColumnConfig"}
                 primary={"id"}
                 i18n={true}
-                result={columnResult}
+                result={data}
                 columns={columns}
                 OperationComponent={SaveButton}
                 parent={original}
-                paginationParam={{pageIndex: 0, pageSize: columnResult.data.list.length}}
+                defaultPager={{pageIndex: 0, pageSize: -1}}
             ></DataTable>
         </div>
     );
