@@ -39,7 +39,9 @@
       "last": "尾页",
       "total": "共 {total} 条",
       "page": "第 {page} 页",
-      "size": "每页 {size} 条"
+      "size": "每页 {size} 条",
+      "next-page-not-found": "没有下一页了",
+      "previous-page-not-found": "没有上一页了"
     }
   },
   "LocaleLayout": {
@@ -151,6 +153,12 @@
     "status": {
       "ENABLE": "可用",
       "DISABLE": "不可用",
+      "all": "全部"
+    },
+    "gender": {
+      "NULL": "未知",
+      "MALE": "男",
+      "FEMALE": "女",
       "all": "全部"
     }
   }

@@ -57,12 +57,7 @@ cell: NormalCell("projectId"),
 enableHiding: true
 },{
 accessorKey: "primaryKey",
-header: NormalHeader({
-            showSort: true,
-            showFilter: true,
-            columnTitle: "主键",
-        } as ColumnOperationProps),
-filterFn: filterFns.includesString,
+header: PlainTextHeader({columnTitle: "主键"} as ColumnOperationProps),
 cell: NormalCell("primaryKey"),
 enableHiding: true
 },{
@@ -167,7 +162,7 @@ cell: NormalCell("deleted"),
 enableHiding: true
 },{
 accessorKey: "status",
-header: PlainTextHeader({columnTitle: "STATUS"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "状态"} as ColumnOperationProps),
 cell: NormalCell("status"),
 enableHiding: true
 },{

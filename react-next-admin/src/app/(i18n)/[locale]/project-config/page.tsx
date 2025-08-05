@@ -46,7 +46,7 @@ export default function Page() {
         return <ThreeDotLoading/>
     }
     return (
-        <div className="w-full">
+        <div className="w-full p-2">
             <DataTable<ProjectConfig>
                 SearchComponent={Search}
                 OperationComponent={Operation}
@@ -59,7 +59,7 @@ export default function Page() {
                 EditComponent={EditPage}
                 deleteHandler={deleteHandler}
                 initHandler={init}
-                defaultPager={{pageNo: 1, pageSize: 100}}
+                defaultPager={{pageIndex: 0, pageSize: -1}}
                 RowOperationComponents={[TableConfigs, ClearScaffold, InitScaffold]}
             ></DataTable>
         </div>
