@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import {useState} from "react";
 import {
     Cell,
     ColumnFiltersState,
@@ -9,7 +8,6 @@ import {
     getCoreRowModel,
     getExpandedRowModel,
     getFilteredRowModel,
-    getPaginationRowModel,
     getSortedRowModel,
     SortingState,
     TableState,
@@ -18,7 +16,7 @@ import {
     VisibilityState,
 } from "@tanstack/react-table";
 import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
-import DataTableProps, {BasicData, MyTableMeta, SimplePager} from "@/common/lib/table/DataTableProperty";
+import DataTableProps, {BasicData, MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {EmptyRow} from "@/common/components/table/empty-row";
 import CellRenderer from "@/common/components/table/cell-render";
 import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
@@ -45,11 +43,7 @@ export function DataTable<TData extends BasicData<TData>>({
                                                               parent,
                                                               defaultPager
                                                           }: DataTableProps<TData>) {
-    let pagerState = defaultPager;
-    if (!defaultPager) {
-        pagerState = {pageNo: 1, pageSize: 10}
-    }
-    const [pager, setPager] = useState<SimplePager>(pagerState);
+
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
         []
@@ -58,10 +52,9 @@ export function DataTable<TData extends BasicData<TData>>({
         React.useState<VisibilityState>(hiddenColumns as VisibilityState);
     const [rowSelection, setRowSelection] = React.useState({});
 
-    //本地分页 不要动
     const [pagination, setPagination] = React.useState<PaginationState>({
-        pageIndex: 0,
-        pageSize: 99999,
+        pageIndex: defaultPager.pageIndex,
+        pageSize: defaultPager.pageSize,
     });
     const table = useReactTable({
         onStateChange(updater: Updater<TableState>): void {
@@ -74,7 +67,9 @@ export function DataTable<TData extends BasicData<TData>>({
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        manualPagination: true,
+        rowCount: result.data.recordTotal,
+        onPaginationChange: setPagination,
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
@@ -94,8 +89,6 @@ export function DataTable<TData extends BasicData<TData>>({
             result: result,
             RowOperationComponents: RowOperationComponents,
             parent: parent,
-            pager: pager,
-            setPager: setPager
         } as MyTableMeta<TData>,
         state: {
             sorting,
@@ -105,12 +98,14 @@ export function DataTable<TData extends BasicData<TData>>({
             pagination
         },
     });
+    //会导致排序过滤失效
+    // table.getPrePaginationRowModel = () => {
+    //     return table.getCoreRowModel();
+    // };
     return (
         <div className="w-full">
-            <div className="flex items-center h-fit">
-                {SearchComponent && <SearchComponent table={table}/>}
-            </div>
-            <div className="flex items-center h-fit">
+            {SearchComponent && <SearchComponent table={table}/>}
+            <div className="flex items-center h-fit mt-2 mb-2">
                 {OperationComponent && <OperationComponent table={table}/>}
             </div>
             <div className="rounded-md border">
@@ -151,7 +146,8 @@ export function DataTable<TData extends BasicData<TData>>({
                     </TableBody>
                 </Table>
             </div>
-            <Pager table={table}/>
+
+            {table.getState().pagination.pageSize > 0 && <Pager table={table}/>}
         </div>
     );
 }

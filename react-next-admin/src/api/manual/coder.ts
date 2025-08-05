@@ -27,7 +27,7 @@ export default class CoderApi {
             sourceCode: sourceCode
         };
         const body = JSON.stringify(query);
-        return Fetcher.post("/coder/init-by-local.json", body, translator);
+        return Fetcher.post("/coder/init-by-jpa.json", body, translator);
     }
 
     public static generate(
@@ -41,5 +41,19 @@ export default class CoderApi {
         };
         const body = JSON.stringify(query);
         return Fetcher.post("/coder/generate.json", body, translator);
+    }
+
+    public static initScaffold(
+        projectId: IDENTITY,
+        translator: (key: string) => string
+    ): Promise<any> {
+        return Fetcher.post("/coder/init-scaffold.json", projectId, translator);
+    }
+
+    public static clearScaffold(
+        projectId: IDENTITY,
+        translator: (key: string) => string
+    ): Promise<any> {
+        return Fetcher.post("/coder/clear.json", projectId, translator);
     }
 }
