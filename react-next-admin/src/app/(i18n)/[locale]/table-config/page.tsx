@@ -22,11 +22,12 @@ export default function Page() {
     const [dataState, setDataState] = useState<Result<PagerResult<TableConfig>> | undefined>();
     const searchParams = useSearchParams();
     const projectId = searchParams.get("projectId");
+    const pagination = {pageIndex: 0, pageSize: 2};
     if (projectId == null) {
         return <div>Project Not Found !</div>
     }
     const init = () => {
-        TableConfigApi.search({}, errorTranslate).then(
+        TableConfigApi.search({...pagination, projectId: projectId}, errorTranslate).then(
             (res) => {
                 setDataState(res)
             }
@@ -68,7 +69,7 @@ export default function Page() {
                     deleteHandler={deleteHandler}
                     initHandler={init}
                     parent={parent}
-                    defaultPager={{pageNo: 1, pageSize: 10}}
+                    defaultPager={pagination}
                     RowOperationComponents={[]}
                 ></DataTable>
             </div>

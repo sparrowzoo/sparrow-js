@@ -5,7 +5,7 @@ function createSchema(translate:(key:string)=>string) {
         id:
 v.union([v.literal(""),v.pipe(
  v.string(),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.check((val) => {return /^\d+$/.test(val);},translate("id.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 ], (issue) => {        if (issue.issues) {
             return issue.issues[issue.issues.length - 1].message;
@@ -15,62 +15,60 @@ v.transform((input): number | string => {return parseInt(input,10);}))
 ,projectId:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.nonEmpty(translate("projectId.empty-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("projectId.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,primaryKey:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("primaryKey.empty-message")))
 
 ,tableName:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("tableName.empty-message")))
 
 ,className:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("className.empty-message")))
 
 ,description:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("description.empty-message")))
 
 ,locked:
 v.boolean()
 ,checkable:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.nonEmpty(translate("checkable.empty-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("checkable.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,rowMenu:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.nonEmpty(translate("rowMenu.empty-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("rowMenu.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,columnFilter:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.nonEmpty(translate("columnFilter.empty-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("columnFilter.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,statusCommand:
 v.boolean()
-,columnConfigs:
-v.string()
 ,source:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.nonEmpty(translate("source.empty-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("source.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,sourceCode:
@@ -78,8 +76,8 @@ v.string()
 ,pageSize:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.nonEmpty(translate("pageSize.empty-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("pageSize.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,onlyAccessSelf:

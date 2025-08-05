@@ -47,17 +47,17 @@ cell:CheckBoxCell,
 enableHiding: false
 },{
 accessorKey: "name",
-header: PlainTextHeader({columnTitle: "项目名称"} as ColumnOperationProps),
+header: NormalHeader({
+            showSort: true,
+            showFilter: true,
+            columnTitle: "项目名称",
+        } as ColumnOperationProps),
+filterFn: filterFns.includesString,
 cell: NormalCell("name"),
 enableHiding: true
 },{
 accessorKey: "frontendName",
-header: NormalHeader({
-            showSort: true,
-            showFilter: true,
-            columnTitle: "前端项目名称",
-        } as ColumnOperationProps),
-filterFn: filterFns.includesString,
+header: PlainTextHeader({columnTitle: "前端项目名称"} as ColumnOperationProps),
 cell: NormalCell("frontendName"),
 enableHiding: true
 },{
@@ -132,7 +132,7 @@ cell: NormalCell("deleted"),
 enableHiding: true
 },{
 accessorKey: "status",
-header: PlainTextHeader({columnTitle: "STATUS"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "状态"} as ColumnOperationProps),
 cell: NormalCell("status"),
 enableHiding: true
 },{
