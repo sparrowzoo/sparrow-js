@@ -12,8 +12,7 @@ import SearchSelect from "@/common/components/forms/search-select";
 
 
 type TableConfigQuery = {
-    projectId: number;
-primaryKey: string;
+    primaryKey: string;
 tableName: string;
 className: string;
 status: number;
@@ -42,10 +41,7 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
 
 
     return (<>
-            <SearchInput value={tableConfigQuery?.projectId||""} 
-propertyName={"projectId"} pageTranslate={pageTranslate} 
-setSearchCondition={setTableConfigQuery}/>
-<SearchInput value={tableConfigQuery?.primaryKey||""} 
+            <SearchInput value={tableConfigQuery?.primaryKey||""} 
 propertyName={"primaryKey"} pageTranslate={pageTranslate} 
 setSearchCondition={setTableConfigQuery}/>
 <SearchInput value={tableConfigQuery?.tableName||""} 
