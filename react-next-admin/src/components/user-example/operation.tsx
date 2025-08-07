@@ -1,20 +1,20 @@
 import * as React from "react";
-import {ProjectConfig} from "@/components/project-config/columns";
+import {UserExample} from "@/components/user-example/columns";
 import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
-import AddPage from "@/components/project-config/add";
-import ProjectConfigApi from "@/api/auto/project-config";
+import AddPage from "@/components/user-example/add";
+import UserExampleApi from "@/api/auto/user-example";
 import toast from "react-hot-toast";
 import TableUtils from "@/common/lib/table/TableUtils";
 import {useTranslations} from "next-intl";
 
 
-export default function Operation({table}: TableOperationProps<ProjectConfig>) {
+export default function Operation({table}: TableOperationProps<UserExample>) {
     const globalTranslate = useTranslations("GlobalForm");
-    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+    const errorTranslate = useTranslations("UserExample.ErrorMessage")
     const [open, setOpen] = React.useState(false);
-    const meta = table.options.meta as MyTableMeta<ProjectConfig>;
+    const meta = table.options.meta as MyTableMeta<UserExample>;
 
     const initHandler = meta.initHandler;
     const setData = meta.setData;
@@ -31,7 +31,7 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
                     <Button onClick={() => setOpen(true)} variant="outline">{globalTranslate("add")}</Button>
                 </DialogTrigger>
                 <DialogContent className="w-[800px] sm:max-w-[625px]">
-                    <AddPage callbackHandler={callbackHandler}/>
+                    <AddPage table={table} callbackHandler={callbackHandler}/>
                 </DialogContent>
             </Dialog>
             <Button onClick={() => {
@@ -40,7 +40,7 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                ProjectConfigApi.batchDelete(selectedIds, errorTranslate).then(
+                UserExampleApi.batchDelete(selectedIds, errorTranslate).then(
                     (res) => {
                         const datas = TableUtils.removeRowByPrimary(selectedIds, table);
                         result.data.list = datas;
@@ -57,7 +57,7 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                ProjectConfigApi.enable(selectedIds, errorTranslate).then(
+                UserExampleApi.enable(selectedIds, errorTranslate).then(
                     (res) => {
                         const datas = TableUtils.batchEnable(selectedIds, table, "status");
                         result.data.list = datas;
@@ -75,7 +75,7 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                ProjectConfigApi.disable(selectedIds, errorTranslate).then(
+                UserExampleApi.disable(selectedIds, errorTranslate).then(
                     (res) => {
                         const datas = TableUtils.batchDisable(selectedIds, table, "status");
                         result.data.list = datas;
