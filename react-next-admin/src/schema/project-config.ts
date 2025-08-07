@@ -36,8 +36,14 @@ v.pipe(
  v.string(),
 v.nonEmpty(translate("modulePrefix.empty-message")))
 
+,architectures:
+v.string()
+,config:
+v.string()
 ,wrapWithParent:
 v.boolean()
+,scaffold:
+v.string()
 
     });
     //扩展提示
