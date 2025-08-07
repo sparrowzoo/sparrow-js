@@ -154,6 +154,12 @@
       "ENABLE": "可用",
       "DISABLE": "不可用",
       "all": "全部"
+    },
+    "gender": {
+      "NULL": "未知",
+      "MALE": "男",
+      "FEMALE": "女",
+      "all": "全部"
     }
   }
 }
