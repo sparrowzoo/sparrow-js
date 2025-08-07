@@ -27,7 +27,7 @@ function InnerColumnOperation({showFilter, showSort, columnTitle, column}: Colum
                     <DropdownMenuLabel>Actions</DropdownMenuLabel>
                     <DropdownMenuSeparator/>
                     <DropdownMenuItem><Input
-                        placeholder="Filter emails..."
+                        placeholder=""
                         value={(column?.getFilterValue() as string) ?? ""}
                         onChange={(event) =>
                             column?.setFilterValue(event.target.value)
