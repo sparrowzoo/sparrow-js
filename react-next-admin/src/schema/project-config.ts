@@ -5,7 +5,7 @@ function createSchema(translate:(key:string)=>string) {
         id:
 v.union([v.literal(""),v.pipe(
  v.string(),
-v.check((val) => {return /^\d+$/.test(val);},"请输入正确的数字"),
+v.check((val) => {return /^\d+$/.test(val);},translate("id.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 ], (issue) => {        if (issue.issues) {
             return issue.issues[issue.issues.length - 1].message;
@@ -15,17 +15,17 @@ v.transform((input): number | string => {return parseInt(input,10);}))
 ,name:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("name.empty-message")))
 
 ,frontendName:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("frontendName.empty-message")))
 
 ,chineseName:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("chineseName.empty-message")))
 
 ,i18n:
 v.boolean()
@@ -34,16 +34,10 @@ v.string()
 ,modulePrefix:
 v.pipe(
  v.string(),
-v.nonEmpty("不允许为空"))
+v.nonEmpty(translate("modulePrefix.empty-message")))
 
-,architectures:
-v.string()
-,config:
-v.string()
 ,wrapWithParent:
 v.boolean()
-,scaffold:
-v.string()
 
     });
     //扩展提示

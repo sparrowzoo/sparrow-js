@@ -128,18 +128,13 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"statusCommand"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.columnConfigs} {...register("columnConfigs")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"columnConfigs"}/>
-<ValidatableInput readonly={true} defaultValue={original.source} {...register("source")}
-                                  type={"select"}
+<ValidatableInput readonly={false} defaultValue={original.source} {...register("source")}
+                                  type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.source?.message}                                  fieldPropertyName={"source"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={true} defaultValue={original.sourceCode} {...register("sourceCode")}
+<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.sourceCode} {...register("sourceCode")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
