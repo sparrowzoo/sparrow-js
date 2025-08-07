@@ -103,12 +103,29 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.modulePrefix?.message}                                  fieldPropertyName={"modulePrefix"}/>
+<ValidatableInput readonly={false} defaultValue={original.architectures} {...register("architectures")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"architectures"}/>
+<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.config} {...register("config")}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"config"}/>
 <ValidatableInput readonly={false} defaultChecked={original.wrapWithParent} {...register("wrapWithParent")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"wrapWithParent"}/>
+<ValidatableInput readonly={false} defaultValue={original.scaffold} {...register("scaffold")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                                                    fieldPropertyName={"scaffold"}/>
             </div>
            <DialogFooter>
                                        <DialogClose asChild>
