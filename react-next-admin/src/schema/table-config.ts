@@ -64,6 +64,8 @@ v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,statusCommand:
 v.boolean()
+,columnConfigs:
+v.string()
 ,source:
 v.pipe(
  v.string(),

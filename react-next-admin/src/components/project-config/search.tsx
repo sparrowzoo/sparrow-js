@@ -12,10 +12,7 @@ import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 
 
 interface ProjectConfigQuery extends SimplePager{
-    name: string;
-frontendName: string;
-chineseName: string;
-status: number;
+    status: number;
 }
 
 export default function Search({table}: TableOperationProps<ProjectConfig>) {
@@ -48,16 +45,7 @@ export default function Search({table}: TableOperationProps<ProjectConfig>) {
 
 
     return (<div className="flex flex-row flex-wrap gap-4">
-            <SearchInput value={projectConfigQuery?.name||""} 
-propertyName={"name"} pageTranslate={pageTranslate} 
-setSearchCondition={setProjectConfigQuery}/>
-<SearchInput value={projectConfigQuery?.frontendName||""} 
-propertyName={"frontendName"} pageTranslate={pageTranslate} 
-setSearchCondition={setProjectConfigQuery}/>
-<SearchInput value={projectConfigQuery?.chineseName||""} 
-propertyName={"chineseName"} pageTranslate={pageTranslate} 
-setSearchCondition={setProjectConfigQuery}/>
-<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setProjectConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
+            <SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setProjectConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
             <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
         </div>
     );
