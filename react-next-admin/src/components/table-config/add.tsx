@@ -129,18 +129,13 @@ export default function Page({callbackHandler}: DialogCloseProps) {
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"statusCommand"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false}  {...register("columnConfigs")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"columnConfigs"}/>
-<ValidatableInput readonly={true}  {...register("source")}
-                                  type={"select"}
+<ValidatableInput readonly={false}  {...register("source")}
+                                  type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.source?.message}                                  fieldPropertyName={"source"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={true}  {...register("sourceCode")}
+<ValidatableTextArea className={"w-80 h-60"} readonly={false}  {...register("sourceCode")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
