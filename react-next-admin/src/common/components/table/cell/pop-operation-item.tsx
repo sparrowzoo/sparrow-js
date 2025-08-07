@@ -35,7 +35,7 @@ export default function PopItem({cellContext, ItemComponent, displayText}: PopIt
             <DialogContent onClick={(e) => {
                 e.stopPropagation();
             }
-            } className={"sm:max-w-fit w-fit p-0 m-0 h-fit"}>
+            } className={"sm:max-w-fit w-fit p-2 m-0 h-fit"}>
                 <ItemComponent callbackHandler={callback} cellContext={cellContext}></ItemComponent>
             </DialogContent>
         </Dialog>

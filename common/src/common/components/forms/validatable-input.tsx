@@ -4,7 +4,6 @@ import {cn} from "@/lib/utils"
 import {FieldValues} from "react-hook-form/dist/types/fields";
 import {Label} from "@/components/ui/label";
 import ErrorMessage from "@/common/components/i18n/ErrorMessage";
-import KeyValue from "@/common/lib/protocol/KeyValue";
 
 export interface FormHookInputProps<TFieldValues extends FieldValues>
     extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -13,7 +12,6 @@ export interface FormHookInputProps<TFieldValues extends FieldValues>
     fieldPropertyName: string,
     errorMessage?: string,
     isSubmitted?: boolean,
-    keyValues?: KeyValue[],
     readonly?: boolean,
 }
 
