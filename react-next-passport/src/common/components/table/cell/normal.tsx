@@ -14,8 +14,14 @@ const NormalCell = (field: string, width?: number, handler?: (value: any) => str
         const dictionary = meta.result.data.dictionary[field];
         if (dictionary) {
             let currentItem = Utils.getValue(dictionary, value);
-            const translator = useTranslations("KVS." + field);
-            value = meta.i18n ? translator(currentItem.value) : currentItem.value;
+            if (currentItem) {
+                const translator = useTranslations("KVS");
+                if (meta.i18n && translator.has(field)) {
+                    value = translator(field + "." + currentItem.value);
+                } else {
+                    value = currentItem.value;
+                }
+            }
         }
         if (typeof value === "boolean") {
             const className = `uppercase ${widthClass}`;

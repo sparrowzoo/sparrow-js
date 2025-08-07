@@ -43,10 +43,7 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps<F
                 <Label
                     className={"justify-end w-[8rem]"}>{pageTranslate?.(fieldPropertyName) || fieldPropertyName}</Label>
                 <div className={"flex-1"}>
-                    <input onFocus={(e) => {
-                        //阻止文本自动选中
-                        e.stopPropagation();
-                    }}
+                    <input
                            onKeyDown={(e) => {
                                //阻止对话框自动关闭
                                e.stopPropagation();

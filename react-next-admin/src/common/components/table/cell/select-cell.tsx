@@ -32,7 +32,7 @@ const SelectCell = (field: string, i18n?: boolean, readOnly: boolean = false) =>
             return <div>{displayText}</div>
         }
         return (
-            <Select defaultValue={fieldValue} onValueChange={(value) => {
+            <Select defaultValue={fieldValue.toString()} onValueChange={(value) => {
                 row.original[field] = value;
             }
             }>
@@ -42,7 +42,6 @@ const SelectCell = (field: string, i18n?: boolean, readOnly: boolean = false) =>
                 </SelectTrigger>
                 <SelectContent>
                     <SelectGroup>
-                        {/*<SelectLabel>{translator(dictionary[value].value)}</SelectLabel>*/}
                         {
                             dictionary?.map((item) => {
                                 let displayText = item.value;
@@ -50,7 +49,7 @@ const SelectCell = (field: string, i18n?: boolean, readOnly: boolean = false) =>
                                     displayText = translator(field + "." + item.value);
                                 }
                                 return <SelectItem key={item.key}
-                                                   value={displayText}></SelectItem>
+                                                   value={item.key.toString()}>{displayText}</SelectItem>
                             })
                         }
                     </SelectGroup>
