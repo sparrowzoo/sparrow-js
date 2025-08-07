@@ -10,14 +10,16 @@ import TableConfigApi from "@/api/auto/table-config";
 import toast from "react-hot-toast";
 import * as v from "valibot";
 import {useTranslations} from "next-intl";
+import {ValidatableSelect} from "@/common/components/forms/validatable-select";
 import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
 import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
-import {DialogCloseProps} from "@/common/lib/table/DataTableProperty";
+import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {TableConfig} from "@/components/table-config/columns";
 
 
 
 
-export default function Page({callbackHandler}: DialogCloseProps) {
+export default function Page({callbackHandler, table}: TableOperationProps<TableConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const pageTranslate = useTranslations("TableConfig")
@@ -25,6 +27,8 @@ export default function Page({callbackHandler}: DialogCloseProps) {
 
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
+    const meta = table.options.meta as MyTableMeta<TableConfig>;
+
 
 
     const onSubmit: SubmitHandler<FormData> = (
@@ -43,6 +47,8 @@ export default function Page({callbackHandler}: DialogCloseProps) {
         register,
         handleSubmit,
         control,
+        setValue,
+        getValues,
         formState: {
             errors,
             isSubmitted,
