@@ -36,6 +36,7 @@ export default interface DataTableProps<
 
 export interface TableOperationProps<TData> {
     table: Table<TData>;
+    callbackHandler: () => void;
 }
 
 export interface CellContextProps<TData> {
@@ -69,10 +70,6 @@ export interface ColumnOperationProps {
 
 export interface EmptyRowProps {
     columnSize: number;
-}
-
-export interface DialogCloseProps {
-    callbackHandler: () => void;
 }
 
 export interface SimplePager {
