@@ -10,9 +10,8 @@ import TableConfigApi from "@/api/auto/table-config";
 import toast from "react-hot-toast";
 import * as v from "valibot";
 import {useTranslations} from "next-intl";
-import {ValidatableSelect} from "@/common/components/forms/validatable-select";
-import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
-import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
+import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
+import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {TableConfig} from "@/components/table-config/columns";
 
@@ -135,7 +134,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Table
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"statusCommand"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false}  {...register("columnConfigs")}
+<ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("columnConfigs")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
@@ -146,7 +145,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Table
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.source?.message}                                  fieldPropertyName={"source"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false}  {...register("sourceCode")}
+<ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("sourceCode")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}

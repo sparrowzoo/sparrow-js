@@ -22,6 +22,7 @@ tel:string;
 idCard:string; 
 gender:number; 
 age:number; 
+projectId:number; 
 createUserName:string; 
 createUserId:number; 
 modifiedUserId:number; 
@@ -87,6 +88,11 @@ enableHiding: true
 accessorKey: "age",
 header: PlainTextHeader({columnTitle: "年龄"} as ColumnOperationProps),
 cell: NormalCell("age"),
+enableHiding: true
+},{
+accessorKey: "projectId",
+header: PlainTextHeader({columnTitle: "项目"} as ColumnOperationProps),
+cell: NormalCell("projectId"),
 enableHiding: true
 },{
 accessorKey: "createUserName",

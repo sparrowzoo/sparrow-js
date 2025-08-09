@@ -34,11 +34,12 @@ const ValidatableSelect = React.forwardRef<HTMLInputElement, FormHookSelectProps
         let currentItem = Utils.getValue(dictionary, defaultValue);
         if (!currentItem) {
             currentItem = dictionary[0];
-            defaultValueStr=currentItem.key.toString();
+            defaultValueStr = currentItem.key.toString();
         }
-        let displayText =currentItem.value;
+        let displayText = currentItem.value;
         const translator = useTranslations("KVS");
-        if(translator.has(fieldPropertyName)){
+        const i18n = translator.has(fieldPropertyName);
+        if (i18n) {
             displayText = translator(fieldPropertyName + "." + currentItem.value);
         }
 
@@ -65,7 +66,7 @@ const ValidatableSelect = React.forwardRef<HTMLInputElement, FormHookSelectProps
                                 {
                                     dictionary?.map((item) => {
                                         let displayText = item.value;
-                                        if (translator.has(fieldPropertyName)) {
+                                        if (i18n) {
                                             displayText = translator(fieldPropertyName + "." + item.value);
                                         }
                                         return <SelectItem key={item.key}

@@ -6,7 +6,7 @@ import {MyTableMeta,SimplePager, TableOperationProps} from "@/common/lib/table/D
 import {Button} from "@/components/ui/button";
 import UserExampleApi from "@/api/auto/user-example";
 import {useTranslations} from "next-intl";
-import SearchInput from "@/common/components/forms/SearchInput";
+import SearchInput from "@/common/components/forms/search-input";
 import SearchSelect from "@/common/components/forms/search-select";
 import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 

@@ -38,29 +38,25 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps<F
         const defaultClazz = isTextInput ? "flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50" : "";
 
         return (
-
             <div className="flex flex-row justify-start items-center mb-4 gap-2">
                 <Label
                     className={"justify-end w-[8rem]"}>{pageTranslate?.(fieldPropertyName) || fieldPropertyName}</Label>
                 <div className={"flex-1"}>
-                    <input onFocus={(e) => {
-                        //阻止文本自动选中
-                        e.stopPropagation();
-                    }}
-                           onKeyDown={(e) => {
-                               //阻止对话框自动关闭
-                               e.stopPropagation();
-                           }
-                           }
-                           name={fieldPropertyName}
-                           type={type}
-                           className={cn(
-                               defaultClazz,
-                               className
-                           )}
-                           readOnly={type === "label" ? true : readonly}
-                           ref={ref}
-                           {...props}></input>
+                           <input
+                               onKeyDown={(e) => {
+                                   //阻止对话框自动关闭
+                                   e.stopPropagation();
+                               }
+                               }
+                               name={fieldPropertyName}
+                               type={type}
+                               className={cn(
+                                   defaultClazz,
+                                   className
+                               )}
+                               readOnly={type === "label" ? true : readonly}
+                               ref={ref}
+                               {...props}></input>
                 </div>
                 <div className={"w-[10rem]"}>
                     <ErrorMessage messageClass={"text-sm text-red-500"}

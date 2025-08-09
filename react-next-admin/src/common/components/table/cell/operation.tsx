@@ -9,6 +9,7 @@ import {
 import {Button} from "@/components/ui/button";
 import {MoreHorizontal} from "lucide-react";
 import * as React from "react";
+import {useState} from "react";
 import {useTranslations} from "next-intl";
 import {CellContextProps, MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import PopItem from "@/common/components/table/cell/pop-operation-item";
@@ -23,10 +24,14 @@ const OperationCell = ({cellContext}: CellContextProps<any>) => {
     const EditComponent = meta.EditComponent;
     const RowOperationComponents = meta.RowOperationComponents;
     const deleteHandler = meta.deleteHandler;
+    const [open, setOpen] = useState(false);
     return (
-        <DropdownMenu modal={false}>
+        <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="h-8 w-8 p-0">
+                <Button onMouseOver={(e) => {
+                    e.stopPropagation();
+                    setOpen(true);
+                }} variant="ghost" className="h-8 w-8 p-0">
                     <span className="sr-only">Open menu</span>
                     <MoreHorizontal/>
                 </Button>

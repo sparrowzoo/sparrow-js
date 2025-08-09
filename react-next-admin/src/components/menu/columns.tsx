@@ -45,13 +45,9 @@ export const columns: ColumnDef<Payment>[] = [
     },
     {
         accessorKey: "email",
-        header: NormalHeader({
-            showSort: false,
-            showFilter: false,
-            columnTitle: "Email"
-        } as ColumnOperationProps),
+        header: PlainTextHeader({columnTitle: "Email"} as ColumnOperationProps),
         cell: NormalCell("email"),
-        enableHiding: false,
+        enableHiding: true
     },
     {
         accessorKey: "amount",
@@ -67,7 +63,8 @@ export const columns: ColumnDef<Payment>[] = [
     },
     {
         id: "filter-column",
-        enableHiding: false,
-        header: ColumnFilter
+        header: ColumnFilter(),
+        cell: "",
+        enableHiding: false
     }
 ];

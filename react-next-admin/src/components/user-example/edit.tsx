@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -9,38 +8,38 @@ import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle}
 import UserExampleApi from "@/api/auto/user-example";
 import toast from "react-hot-toast";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
-import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
 import {ValidatableSelect} from "@/common/components/forms/validatable-select";
+import {ValidatableDate} from "@/common/components/forms/validatable-date";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
-import {CellContextProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {CellContextProps, MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {UserExample} from "@/components/user-example/columns";
 
 
-
-export default function EditPage({cellContext,callbackHandler}: CellContextProps<any>) {
-     const globalTranslate = useTranslations("GlobalForm");
-        const errorTranslate = useTranslations("UserExample.ErrorMessage")
-        const pageTranslate = useTranslations("UserExample")
-        const validateTranslate = useTranslations("UserExample.validate")
-        const FormSchema = crateScheme(validateTranslate);
-        type FormData = v.InferOutput<typeof FormSchema>;
-        const original = cellContext.row.original;
-         const meta = cellContext.table.options.meta as MyTableMeta<UserExample>;
-
+export default function EditPage({cellContext, callbackHandler}: CellContextProps<any>) {
+    const globalTranslate = useTranslations("GlobalForm");
+    const errorTranslate = useTranslations("UserExample.ErrorMessage")
+    const pageTranslate = useTranslations("UserExample")
+    const validateTranslate = useTranslations("UserExample.validate")
+    const FormSchema = crateScheme(validateTranslate);
+    type FormData = v.InferOutput<typeof FormSchema>;
+    const original = cellContext.row.original;
+    const meta = cellContext.table.options.meta as MyTableMeta<UserExample>;
 
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        debugger;
         UserExampleApi.save(data, errorTranslate).then(
             (res) => {
-                if(callbackHandler){callbackHandler();}
-                toast.success(globalTranslate("save")+globalTranslate("operation-success"));
+                if (callbackHandler) {
+                    callbackHandler();
+                }
+                toast.success(globalTranslate("save") + globalTranslate("operation-success"));
             }
-        ).catch(()=>{});
+        ).catch(() => {
+        });
     };
 
     const {
@@ -65,73 +64,76 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
 
 
     return (
-             <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
-                        <DialogHeader>
-                            <DialogTitle>{globalTranslate("edit")}</DialogTitle>
-                            <DialogDescription>
-                            </DialogDescription>
-                        </DialogHeader>
+        <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+                <DialogTitle>{globalTranslate("edit")}</DialogTitle>
+                <DialogDescription>
+                </DialogDescription>
+            </DialogHeader>
             <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
                 <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={original.userName} {...register("userName")}
+                <ValidatableInput readonly={false} defaultValue={original.userName} {...register("userName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.userName?.message}                                  fieldPropertyName={"userName"}/>
-<ValidatableInput readonly={false} defaultValue={original.chineseName} {...register("chineseName")}
+                                  errorMessage={errors.userName?.message} fieldPropertyName={"userName"}/>
+                <ValidatableInput readonly={false} defaultValue={original.chineseName} {...register("chineseName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
-<ValidatableInput readonly={false} defaultValue={original.birthday} {...register("birthday")}
+                                  errorMessage={errors.chineseName?.message} fieldPropertyName={"chineseName"}/>
+                <ValidatableDate {...register("birthday")} readonly={false} fieldPropertyName={"birthday"}
+                                 setValue={setValue}
+                                 pageTranslate={pageTranslate} defaultValue={original.birthday}/>
+                <ValidatableInput readonly={false} defaultValue={original.email} {...register("email")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.birthday?.message}                                  fieldPropertyName={"birthday"}/>
-<ValidatableInput readonly={false} defaultValue={original.email} {...register("email")}
+                                  errorMessage={errors.email?.message} fieldPropertyName={"email"}/>
+                <ValidatableInput readonly={false} defaultValue={original.mobile} {...register("mobile")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.email?.message}                                  fieldPropertyName={"email"}/>
-<ValidatableInput readonly={false} defaultValue={original.mobile} {...register("mobile")}
+                                  errorMessage={errors.mobile?.message} fieldPropertyName={"mobile"}/>
+                <ValidatableInput readonly={false} defaultValue={original.tel} {...register("tel")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.mobile?.message}                                  fieldPropertyName={"mobile"}/>
-<ValidatableInput readonly={false} defaultValue={original.tel} {...register("tel")}
+                                  errorMessage={errors.tel?.message} fieldPropertyName={"tel"}/>
+                <ValidatableInput readonly={false} defaultValue={original.idCard} {...register("idCard")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.tel?.message}                                  fieldPropertyName={"tel"}/>
-<ValidatableInput readonly={false} defaultValue={original.idCard} {...register("idCard")}
+                                  errorMessage={errors.idCard?.message} fieldPropertyName={"idCard"}/>
+                <ValidatableSelect
+                    dictionary={meta.result.data.dictionary["gender"]}
+                    pageTranslate={pageTranslate} defaultValue={original.gender}
+                    setValue={setValue}
+                    fieldPropertyName={"gender"}/>
+                <ValidatableInput readonly={false} defaultValue={original.age} {...register("age")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
-                                  errorMessage={errors.idCard?.message}                                  fieldPropertyName={"idCard"}/>
-<ValidatableSelect dictionary={meta.result.data.dictionary["gender"]} pageTranslate={pageTranslate} defaultValue={original.gender}setValue={setValue}
-fieldPropertyName={"gender"}/>
-<ValidatableInput readonly={false} defaultValue={original.age} {...register("age")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.age?.message}                                  fieldPropertyName={"age"}/>
+                                  errorMessage={errors.age?.message} fieldPropertyName={"age"}/>
+                <ValidatableSelect dictionary={meta.result.data.dictionary["projectId"]} pageTranslate={pageTranslate}
+                                   defaultValue={original.projectId} setValue={setValue}
+                                   fieldPropertyName={"projectId"}/>
             </div>
-           <DialogFooter>
-                                       <DialogClose asChild>
-                                           <Button variant="outline">{globalTranslate("cancel")}</Button>
-                                       </DialogClose>
-                                       <Button type="submit">{globalTranslate("save")}</Button>
-                        </DialogFooter>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="outline">{globalTranslate("cancel")}</Button>
+                </DialogClose>
+                <Button type="submit">{globalTranslate("save")}</Button>
+            </DialogFooter>
         </form>
     );
 };

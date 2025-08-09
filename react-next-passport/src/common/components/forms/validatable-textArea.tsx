@@ -15,7 +15,7 @@ export interface FormHookInputProps
     readonly?: boolean,
 }
 
-const ValidatableTextArea = React.forwardRef<HTMLTextAreaElement, FormHookInputProps>(
+const ValidatableTextarea = React.forwardRef<HTMLTextAreaElement, FormHookInputProps>(
     ({
          errorMessage,
          validateTranslate,
@@ -51,5 +51,5 @@ const ValidatableTextArea = React.forwardRef<HTMLTextAreaElement, FormHookInputP
         )
     }
 )
-ValidatableTextArea.displayName = "ValidatableTextArea"
-export {ValidatableTextArea}
+ValidatableTextarea.displayName = "ValidatableTextArea"
+export {ValidatableTextarea}

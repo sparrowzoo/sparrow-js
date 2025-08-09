@@ -7,9 +7,13 @@ export const PlainTextHeader = ({columnTitle}: ColumnOperationProps) => {
     return ({column, table}) => {
         const tableName = table?.options.meta?.tableName;
         const i18n = table?.options.meta.i18n;
-        const t = useTranslations(tableName);
-        const localTitle = i18n ? t(column.id) : columnTitle;
-        return (<strong>{localTitle}</strong>
+        if (i18n) {
+            const t = useTranslations(tableName);
+            if (t.has(column.id)) {
+                columnTitle = t(column.id);
+            }
+        }
+        return (<strong>{columnTitle}</strong>
         );
     }
 };

@@ -36,7 +36,7 @@ const ColumnFilter = () => {
                                     checked={column.getIsVisible()}
                                     onCheckedChange={(value) => column.toggleVisibility(!!value)}
                                 >
-                                    {i18n ? t(column.id) : column.id}
+                                    {i18n && t.has(column.id) ? t(column.id) : column.id}
                                 </DropdownMenuCheckboxItem>
                             );
                         })}

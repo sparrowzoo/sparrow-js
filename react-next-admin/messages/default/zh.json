@@ -160,6 +160,10 @@
       "MALE": "男",
       "FEMALE": "女",
       "all": "全部"
+    },
+    "source": {
+      "INNER": "工程内",
+      "SOURCE_CODE": "源代码"
     }
   }
 }
