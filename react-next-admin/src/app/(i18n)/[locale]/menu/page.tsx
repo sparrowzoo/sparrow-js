@@ -6,6 +6,7 @@ import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/menu/search";
 import Operation from "@/components/menu/operation";
 import EditPage from "@/components/menu/edit";
+import Result, {PagerResult} from "@/common/lib/protocol/Result";
 
 const data: Payment[] = [
     {
@@ -98,22 +99,30 @@ const data: Payment[] = [
 
     },
 ];
-
+const pageResult: PagerResult<Payment> = {
+    list: data,
+    recordTotal: data.length
+};
+const result = {
+    code: "0",
+    data: pageResult
+} as Result<PagerResult<Payment>>;
 export default function Page() {
-
-    const [dataState, setDataState] = useState(data);
+    const [dataState, setDataState] = useState(result);
     return (
         <div className="w-full">
-            <DataTable
+            <DataTable<Payment>
                 hiddenColumns={{status: false}}
                 SearchComponent={Search}
                 OperationComponent={Operation}
                 EditComponent={EditPage}
                 primary={"id"}
-                data={dataState}
+                result={dataState}
                 columns={columns}
+                defaultPager={{pageIndex: 0, pageSize: -1}}
                 setData={setDataState}
-            ></DataTable>
+                i18n={true} initHandler={() => {
+            }}></DataTable>
         </div>
     );
 }

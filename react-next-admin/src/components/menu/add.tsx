@@ -11,8 +11,10 @@ import {Input} from "@/components/ui/input";
 import MenuApi from "@/api/auto/menu";
 import toast from "react-hot-toast";
 import {useTranslations} from "next-intl";
+import {TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import {ProjectConfig} from "@/components/project-config/columns";
 
-export default function AddPage() {
+export default function Page({callbackHandler, table}: TableOperationProps<ProjectConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
 

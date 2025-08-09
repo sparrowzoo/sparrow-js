@@ -24,16 +24,26 @@ const ValidatableSelect = React.forwardRef<HTMLInputElement, FormHookSelectProps
          setValue,
          className,
      }, ref) => {
+
+        let defaultValueStr = defaultValue?.toString();
         if (!dictionary || dictionary.length == 0) {
             console.error("field is not found " + fieldPropertyName);
             return <></>
         }
-        const translator = useTranslations("KVS." + fieldPropertyName);
+
         let currentItem = Utils.getValue(dictionary, defaultValue);
         if (!currentItem) {
             currentItem = dictionary[0];
+            defaultValueStr = currentItem.key.toString();
         }
-        const displayText = translator ? translator(currentItem?.value, {defaultValue: currentItem.value}) : currentItem.value;
+        let displayText = currentItem.value;
+        const translator = useTranslations("KVS");
+        const i18n = translator.has(fieldPropertyName);
+        if (i18n) {
+            displayText = translator(fieldPropertyName + "." + currentItem.value);
+        }
+
+        setValue(fieldPropertyName, defaultValueStr);
 
         return (
 
@@ -43,7 +53,7 @@ const ValidatableSelect = React.forwardRef<HTMLInputElement, FormHookSelectProps
                 <div className={"flex-1"}>
 
 
-                    <Select defaultValue={defaultValue} onValueChange={(value) => {
+                    <Select defaultValue={defaultValueStr} onValueChange={(value) => {
                         setValue(fieldPropertyName, value);
                     }
                     }>
@@ -55,8 +65,12 @@ const ValidatableSelect = React.forwardRef<HTMLInputElement, FormHookSelectProps
                             <SelectGroup>
                                 {
                                     dictionary?.map((item) => {
+                                        let displayText = item.value;
+                                        if (i18n) {
+                                            displayText = translator(fieldPropertyName + "." + item.value);
+                                        }
                                         return <SelectItem key={item.key}
-                                                           value={item.key + ""}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
+                                                           value={item.key.toString()}>{displayText}</SelectItem>
                                     })
                                 }
                             </SelectGroup>

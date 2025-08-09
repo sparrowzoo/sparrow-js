@@ -11,15 +11,17 @@ const NormalCell = (field: string, width?: number, handler?: (value: any) => str
             value = handler(value);
         }
         const meta = table.options.meta as MyTableMeta<any>;
-        const dictionary = meta.result.data.dictionary[field];
-        if (dictionary) {
-            let currentItem = Utils.getValue(dictionary, value);
-            if (currentItem) {
-                const translator = useTranslations("KVS");
-                if (meta.i18n && translator.has(field)) {
-                    value = translator(field + "." + currentItem.value);
-                } else {
-                    value = currentItem.value;
+        if (meta.result.data.dictionary) {
+            const dictionary = meta.result.data.dictionary[field];
+            if (dictionary) {
+                let currentItem = Utils.getValue(dictionary, value);
+                if (currentItem) {
+                    const translator = useTranslations("KVS");
+                    if (meta.i18n && translator.has(field)) {
+                        value = translator(field + "." + currentItem.value);
+                    } else {
+                        value = currentItem.value;
+                    }
                 }
             }
         }

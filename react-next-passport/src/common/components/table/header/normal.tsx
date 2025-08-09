@@ -7,11 +7,16 @@ const NormalHeader = ({showFilter, showSort, columnTitle, column}: ColumnOperati
     return ({column, table}) => {
         const tableName = table?.options.meta?.tableName;
         const i18n = table?.options.meta.i18n;
-        const t = useTranslations(tableName);
-        const title = i18n ? t(column.id) : columnTitle;
+        if (i18n) {
+            const t = useTranslations(tableName);
+            if (t.has(column.id)) {
+                columnTitle = t(column.id)
+            }
+        }
 
         return (<>
-                <ColumnOperation column={column} columnTitle={title} showFilter={showFilter} showSort={showSort}/></>
+                <ColumnOperation column={column} columnTitle={columnTitle} showFilter={showFilter}
+                                 showSort={showSort}/></>
         );
     }
 };

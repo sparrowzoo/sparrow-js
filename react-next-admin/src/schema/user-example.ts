@@ -1,61 +1,86 @@
-
 import * as v from "valibot";
-function createSchema(translate:(key:string)=>string) {
+
+function createSchema(translate: (key: string) => string) {
     const InnerFormSchema = v.object({
         id:
-v.union([v.literal(""),v.pipe(
- v.string(),
-v.check((val) => {return /^\d+$/.test(val);},translate("id.check-message")),
-v.transform((input): number | string => {return parseInt(input,10);}))
-], (issue) => {        if (issue.issues) {
-            return issue.issues[issue.issues.length - 1].message;
-        }
-        return "";
-    })
-,userName:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("userName.empty-message")))
+            v.string()
+        , userName:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("userName.empty-message")))
 
-,chineseName:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("chineseName.empty-message")))
+        , chineseName:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("chineseName.empty-message")),
+                v.check((val) => {
+                    return /^[\u4e00-\u9fa5]+$/.test(val);
+                }, translate("chineseName.check-message")))
 
-,birthday:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("birthday.empty-message")))
+        , birthday:
+            v.string()
+        , email:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("email.empty-message")),
+                v.email(translate("email.email-message")))
 
-,email:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("email.empty-message")))
+        , mobile:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("mobile.empty-message")),
+                v.check((val) => {
+                    return /^1\d{10}$/.test(val);
+                }, translate("mobile.check-message")))
 
-,mobile:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("mobile.empty-message")))
+        , tel:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("tel.empty-message")),
+                v.check((val) => {
+                    return /^(\d{4}-|\d{3}-)?(\d{8}|\d{7})$/.test(val);
+                }, translate("tel.check-message")))
 
-,tel:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("tel.empty-message")))
+        , idCard:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("idCard.empty-message")),
+                v.check((val) => {
+                    return /^(\d{15}|\d{17}[\dXx])$/.test(val);
+                }, translate("idCard.check-message")))
 
-,idCard:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("idCard.empty-message")))
+        , gender:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("gender.empty-message")),
+                v.check((val) => {
+                    return /^\d+$/.test(val);
+                }, translate("gender.check-message")),
+                v.transform((input): number | string => {
+                    return parseInt(input, 10);
+                }))
 
-,gender:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("gender.empty-message")))
+        , age:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("age.empty-message")),
+                v.check((val) => {
+                    return /^\d+$/.test(val);
+                }, translate("age.check-message")),
+                v.transform((input): number | string => {
+                    return parseInt(input, 10);
+                }))
 
-,age:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("age.empty-message")))
+        , projectId:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("projectId.empty-message")),
+                v.check((val) => {
+                    return /^\d+$/.test(val);
+                }, translate("projectId.check-message")),
+                v.transform((input): number | string => {
+                    return parseInt(input, 10);
+                }))
 
 
     });
@@ -64,4 +89,5 @@ v.nonEmpty(translate("age.empty-message")))
     //type FormData = v.InferOutput<typeof FormSchema>;
     return FormSchema
 }
+
 export default createSchema;

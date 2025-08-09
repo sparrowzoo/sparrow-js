@@ -22,7 +22,7 @@ export default function Page() {
     const [dataState, setDataState] = useState<Result<PagerResult<TableConfig>> | undefined>();
     const searchParams = useSearchParams();
     const projectId = searchParams.get("projectId");
-    const pagination = {pageIndex: 0, pageSize: 2};
+    const pagination = {pageIndex: 0, pageSize: -1};
     if (projectId == null) {
         return <div>Project Not Found !</div>
     }

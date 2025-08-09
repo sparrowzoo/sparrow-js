@@ -8,9 +8,8 @@ import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
-import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
-import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
-import {ValidatableSelect} from "@/common/components/forms/validatable-select";
+import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
+import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
 import {CellContextProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
@@ -98,7 +97,7 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"i18n"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.description} {...register("description")}
+<ValidatableTextarea className={"w-80 h-60"} readonly={false} defaultValue={original.description} {...register("description")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
@@ -115,7 +114,7 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"architectures"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false} defaultValue={original.config} {...register("config")}
+<ValidatableTextarea className={"w-80 h-60"} readonly={false} defaultValue={original.config} {...register("config")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
