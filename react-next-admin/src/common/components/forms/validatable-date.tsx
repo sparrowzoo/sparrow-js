@@ -68,7 +68,7 @@ const ValidatableDate = React.forwardRef<HTMLInputElement, FormHookDateProps<Fie
                                 mode="single"
                                 selected={date}
                                 captionLayout="dropdown"
-                                onSelect={(date) => {
+                                onSelect={(date: Date) => {
                                     const formattedDate = dayjs(date).format(dateFormat);
                                     setDate(date)
                                     setOpen(false);
