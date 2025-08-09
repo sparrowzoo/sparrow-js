@@ -36,7 +36,7 @@ export default interface DataTableProps<
 
 export interface TableOperationProps<TData> {
     table: Table<TData>;
-    callbackHandler: () => void;
+    callbackHandler?: () => void;
 }
 
 export interface CellContextProps<TData> {
