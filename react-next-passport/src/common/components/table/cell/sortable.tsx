@@ -18,7 +18,7 @@ const SortableCell = (field: string) => {
         return <Input onBlur={() => {
             const originalData = TableUtils.getOriginalData(table);
             result.data.list = originalData.sort((a, b) => a.sort - b.sort);
-            setData(TableUtils.cloneResult(result).data);
+            setData(TableUtils.cloneResult(result));
         }
         } onChange={(e) => {
             row.original[field] = e.target.value;

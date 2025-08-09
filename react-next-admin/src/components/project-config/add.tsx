@@ -10,9 +10,8 @@ import ProjectConfigApi from "@/api/auto/project-config";
 import toast from "react-hot-toast";
 import * as v from "valibot";
 import {useTranslations} from "next-intl";
-import {ValidatableSelect} from "@/common/components/forms/validatable-select";
-import {ValidatableTextArea} from "@/common/components/forms/ValidatableTextArea";
-import {ValidatableInput} from "@/common/components/forms/ValidatableInput";
+import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
+import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {ProjectConfig} from "@/components/project-config/columns";
 
@@ -99,7 +98,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Proje
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"i18n"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false}  {...register("description")}
+<ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("description")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
@@ -116,7 +115,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Proje
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                                                     fieldPropertyName={"architectures"}/>
-<ValidatableTextArea className={"w-80 h-60"} readonly={false}  {...register("config")}
+<ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("config")}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}

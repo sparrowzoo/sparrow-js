@@ -6,7 +6,7 @@ import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import AddPage from "@/components/menu/add";
 import MenuApi from "@/api/auto/menu";
 import toast from "react-hot-toast";
-import {getSelectedIds} from "@/common/lib/table/TableUtils";
+import TableUtils from "@/common/lib/table/TableUtils";
 
 export default function Operation({table}: TableOperationProps<Payment>) {
     return (<div className="flex justify-between gap-4">
@@ -20,7 +20,7 @@ export default function Operation({table}: TableOperationProps<Payment>) {
             </Dialog>
             <Button onClick={() => {
                 const translate = () => "";
-                const selectedIds = getSelectedIds(table);
+                const selectedIds = TableUtils.getSelectedIds(table);
                 MenuApi.save(selectedIds, translate).then(
                     (res) => {
                         toast.success("操作成功！");

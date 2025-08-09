@@ -51,7 +51,7 @@ cell:CheckBoxCell,
 enableHiding: false
 },{
 accessorKey: "projectId",
-header: PlainTextHeader({columnTitle: "项目ID"} as ColumnOperationProps),
+header: PlainTextHeader({columnTitle: "项目"} as ColumnOperationProps),
 cell: NormalCell("projectId"),
 enableHiding: true
 },{

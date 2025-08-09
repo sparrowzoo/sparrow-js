@@ -31,7 +31,7 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
                     <Button onClick={() => setOpen(true)} variant="outline">{globalTranslate("add")}</Button>
                 </DialogTrigger>
                 <DialogContent className="w-[800px] sm:max-w-[625px]">
-                    <AddPage callbackHandler={callbackHandler}/>
+                    <AddPage table={table} callbackHandler={callbackHandler}/>
                 </DialogContent>
             </Dialog>
             <Button onClick={() => {

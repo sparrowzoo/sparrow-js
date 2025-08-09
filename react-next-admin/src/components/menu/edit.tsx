@@ -10,9 +10,9 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import MenuApi from "@/api/auto/menu";
 import toast from "react-hot-toast";
-import {RowEditProps} from "@/common/lib/table/DataTableProperty";
+import {CellContextProps} from "@/common/lib/table/DataTableProperty";
 
-export default function EditPage({id}: RowEditProps) {
+export default function EditPage({cellContext, callbackHandler}: CellContextProps<any>) {
     const translate = (key: string) => {
         return "zhangsan";
     }
@@ -21,7 +21,6 @@ export default function EditPage({id}: RowEditProps) {
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        alert(id);
         MenuApi.save(data, translate).then(
             (res) => {
                 toast.success("操作成功！");

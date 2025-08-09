@@ -10,8 +10,9 @@ export default function SearchSelect<T>({
                                             dictionary
                                         }: SearchInputProps<T>) {
     const className = "w-fit";
-    const translator = useTranslations("KVS." + propertyName);
-    const displayText = translator ? translator("all") : "all";
+    const translator = useTranslations("KVS");
+    const i18n = translator.has(propertyName);
+    const allText = i18n ? translator(propertyName + ".all") : "all";
     return (
         <Select onValueChange={(value) => {
             setSearchCondition((prevState) => {
@@ -28,13 +29,17 @@ export default function SearchSelect<T>({
             </SelectTrigger>
             <SelectContent>
                 <SelectGroup>
-                    <SelectItem key={-1}
-                                value={"-1"}>{displayText}</SelectItem>
+                    <SelectItem key={"-1"}
+                                value={"-1"}>{allText}</SelectItem>
                     {
 
                         dictionary?.map((item) => {
+                            let displayText = item.value;
+                            if (i18n) {
+                                displayText = translator(propertyName + "." + item.value);
+                            }
                             return <SelectItem key={item.key}
-                                               value={item.key as string}>{translator ? translator(item.value, {defaultValue: item.value}) : item.value}</SelectItem>
+                                               value={item.key as string}>{displayText}</SelectItem>
                         })
                     }
                 </SelectGroup>
