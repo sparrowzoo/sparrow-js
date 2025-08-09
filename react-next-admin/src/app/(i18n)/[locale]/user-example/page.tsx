@@ -14,8 +14,6 @@ import toast from "react-hot-toast";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
 
 
-
-
 export default function Page() {
     const errorTranslate = useTranslations("UserExample.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
@@ -23,23 +21,24 @@ export default function Page() {
     const pagination = {pageIndex: 0, pageSize: 10};
 
     const init = () => {
-                UserExampleApi.search({...pagination}, errorTranslate).then(
-                    (res) => {
-                        setDataState(res)
-                    }
-                ).catch(() => {
-                });
-            };
-            useEffect(() => {
-                init();
-            }, []);
+        UserExampleApi.search({...pagination}, errorTranslate).then(
+            (res) => {
+                setDataState(res)
+            }
+        ).catch(() => {
+        });
+    };
+    useEffect(() => {
+        init();
+    }, []);
 
 
-      const deleteHandler= (id: number) => {
-            UserExampleApi.delete(id, errorTranslate).then(()=>{
-                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
-            }).catch(()=>{});
-        }
+    const deleteHandler = (id: number) => {
+        UserExampleApi.delete(id, errorTranslate).then(() => {
+            toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
+        }).catch(() => {
+        });
+    }
 
     if (!dataState) {
         return <ThreeDotLoading/>
@@ -60,7 +59,7 @@ export default function Page() {
                 initHandler={init}
                 defaultPager={pagination}
 
-                defaultRowOperationComponents={[]}
+                RowOperationComponents={[]}
             ></DataTable>
         </div>
     );
