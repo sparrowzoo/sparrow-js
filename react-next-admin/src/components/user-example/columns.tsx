@@ -90,11 +90,6 @@ header: PlainTextHeader({columnTitle: "年龄"} as ColumnOperationProps),
 cell: NormalCell("age"),
 enableHiding: true
 },{
-accessorKey: "projectId",
-header: PlainTextHeader({columnTitle: "项目"} as ColumnOperationProps),
-cell: NormalCell("projectId"),
-enableHiding: true
-},{
 accessorKey: "createUserName",
 header: PlainTextHeader({columnTitle: "创建人"} as ColumnOperationProps),
 cell: NormalCell("createUserName"),

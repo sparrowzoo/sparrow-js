@@ -10,7 +10,6 @@ import UserExampleApi from "@/api/auto/user-example";
 import toast from "react-hot-toast";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {ValidatableSelect} from "@/common/components/forms/validatable-select";
-import {ValidatableDate} from "@/common/components/forms/validatable-date";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
 import {CellContextProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
@@ -86,9 +85,12 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
-<ValidatableDate readonly={false} fieldPropertyName={"birthday"}
-                                 setValue={setValue}
-                                 pageTranslate={pageTranslate} defaultValue={original.birthday}/>
+<ValidatableInput readonly={false} defaultValue={original.birthday} {...register("birthday")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.birthday?.message}                                  fieldPropertyName={"birthday"}/>
 <ValidatableInput readonly={false} defaultValue={original.email} {...register("email")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
@@ -121,8 +123,6 @@ fieldPropertyName={"gender"}/>
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.age?.message}                                  fieldPropertyName={"age"}/>
-<ValidatableSelect dictionary={meta.result.data.dictionary["projectId"]} pageTranslate={pageTranslate} defaultValue={original.projectId}setValue={setValue}
-fieldPropertyName={"projectId"}/>
             </div>
            <DialogFooter>
                                        <DialogClose asChild>
