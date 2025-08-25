@@ -12,7 +12,6 @@ import * as v from "valibot";
 import {useTranslations} from "next-intl";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {ValidatableSelect} from "@/common/components/forms/validatable-select";
-import {ValidatableDate} from "@/common/components/forms/validatable-date";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {UserExample} from "@/components/user-example/columns";
 
@@ -87,9 +86,12 @@ export default function Page({callbackHandler, table}: TableOperationProps<UserE
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
-<ValidatableDate readonly={false} fieldPropertyName={"birthday"}
-                                 setValue={setValue}
-                                 pageTranslate={pageTranslate} />
+<ValidatableInput readonly={false}  {...register("birthday")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  validateTranslate={validateTranslate}
+                                  errorMessage={errors.birthday?.message}                                  fieldPropertyName={"birthday"}/>
 <ValidatableInput readonly={false}  {...register("email")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
@@ -122,8 +124,6 @@ fieldPropertyName={"gender"}/>
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.age?.message}                                  fieldPropertyName={"age"}/>
-<ValidatableSelect dictionary={meta.result.data.dictionary["projectId"]} pageTranslate={pageTranslate} setValue={setValue}
-fieldPropertyName={"projectId"}/>
             </div>
              <DialogFooter>
                             <DialogClose asChild>
