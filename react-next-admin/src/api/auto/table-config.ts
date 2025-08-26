@@ -8,7 +8,7 @@ export default class TableConfigApi {
         translator: (key: string) => string
     ): Promise<any> {
         const body = JSON.stringify(query);
-        return Fetcher.post("/table/config/search.json", body, translator);
+        //return Fetcher.post("/table/config/search.json", body, translator);
     }
 
     public static  save(

@@ -3,16 +3,31 @@ import toast from "react-hot-toast";
 import CrosStorage from "@/common/lib/CrosStorage";
 import Result from "@/common/lib/protocol/Result";
 import {Translator} from "@/common/lib/TranslatorType";
-
 //https://nextjs.org/docs/app/getting-started/fetching-data
 // https://developer.mozilla.org/zh-CN/docs/Web/API/Window/fetch
+
+interface GetProps {
+    url: string,
+    translator: Translator,
+    crosStorage?: CrosStorage,
+    withCookie?: boolean,
+    redirectToLogin: () =>void
+}
+
+interface PostProps extends GetProps {
+    body: any
+}
+
 export default class Fetcher {
     static async get(
-        url: string,
-        translate: Translator = null,
-        crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
-        withCookie = false
+        {url, translator, crosStorage, withCookie, redirectToLogin}: GetProps
     ) {
+        if (!crosStorage) {
+            crosStorage = CrosStorage.getCrosStorage();
+        }
+        if (!withCookie) {
+            withCookie = false;
+        }
         if (url.indexOf("http") < 0) {
             url = API_BASIC_URL + url;
         }
@@ -34,7 +49,10 @@ export default class Fetcher {
             .then(async (response) => {
                 const result = (await response.json()) as Result;
                 if (result.code != "0") {
-                    toast.error(translate ? translate(result.key) : result.message);
+                    toast.error(translator ? translator(result.key) : result.message);
+                    if (result.key == "user_not_login") {
+                        redirectToLogin();
+                    }
                     return Promise.reject(result);
                 }
                 return result;
@@ -42,11 +60,7 @@ export default class Fetcher {
     }
 
     static async post(
-        url: string,
-        body: any,
-        translator: Translator = null,
-        crosStorage: CrosStorage | null = CrosStorage.getCrosStorage(),
-        withCookie = false
+        {url, translator, crosStorage, withCookie, redirectToLogin, body}: PostProps,
     ) {
         if (url.indexOf("http") < 0) {
             url = API_BASIC_URL + url;
@@ -73,10 +87,12 @@ export default class Fetcher {
                 const result = (await response.json()) as Result;
                 if (result.code != "0") {
                     toast.error(translator ? translator(result.key) : result.message);
+                    if (result.key == "user_not_login") {
+                        redirectToLogin();
+                    }
                     return Promise.reject(result);
-                } else {
-                    return result;
                 }
+                return result;
             });
     }
 }
