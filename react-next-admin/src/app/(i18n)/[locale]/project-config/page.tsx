@@ -15,15 +15,16 @@ import Result, {PagerResult} from "@/common/lib/protocol/Result";
 import TableConfigs from "@/components/project-config/operations/table-configs";
 import ClearScaffold from "@/components/project-config/operations/clear";
 import InitScaffold from "@/components/project-config/operations/init";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 
 export default function Page() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
-
+    const  Navigations=useNavigating();
     const [dataState, setDataState] = useState<Result<PagerResult<ProjectConfig>> | undefined>();
     const init = () => {
-        ProjectConfigApi.search({}, errorTranslate).then(
+        ProjectConfigApi.search({}, errorTranslate,Navigations.redirectToLogin).then(
             (res) => {
                 setDataState(res);
             }
