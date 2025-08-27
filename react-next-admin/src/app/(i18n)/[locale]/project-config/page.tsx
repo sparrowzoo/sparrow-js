@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -12,42 +13,45 @@ import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
 import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import useNavigating from "@/common/hook/NavigatingHook";
 import TableConfigs from "@/components/project-config/operations/table-configs";
 import ClearScaffold from "@/components/project-config/operations/clear";
 import InitScaffold from "@/components/project-config/operations/init";
-import useNavigating from "@/common/hook/NavigatingHook";
+
+
+
 
 
 export default function Page() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
-    const  Navigations=useNavigating();
     const [dataState, setDataState] = useState<Result<PagerResult<ProjectConfig>> | undefined>();
+    const pagination = {pageIndex: 0, pageSize: 10};
+    const  Navigations=useNavigating();
     const init = () => {
-        ProjectConfigApi.search({}, errorTranslate,Navigations.redirectToLogin).then(
-            (res) => {
-                setDataState(res);
-            }
-        ).catch(() => {
-        });
-    };
-    useEffect(() => {
-        init();
-    }, []);
+                ProjectConfigApi.search({...pagination}, errorTranslate,Navigations.redirectToLogin).then(
+                    (res) => {
+                        setDataState(res)
+                    }
+                ).catch(() => {
+                });
+            };
+            useEffect(() => {
+                init();
+            }, []);
 
 
-    const deleteHandler = (id: number) => {
-        ProjectConfigApi.delete(id, errorTranslate).then(() => {
-            toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
-        }).catch(() => {
-        });
-    }
+      const deleteHandler= (id: number) => {
+            ProjectConfigApi.delete(id, errorTranslate,Navigations.redirectToLogin).then(()=>{
+                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
+            }).catch(()=>{});
+        }
 
     if (!dataState) {
         return <ThreeDotLoading/>
     }
     return (
-        <div className="w-full p-2">
+        <div className="w-full">
             <DataTable<ProjectConfig>
                 SearchComponent={Search}
                 OperationComponent={Operation}

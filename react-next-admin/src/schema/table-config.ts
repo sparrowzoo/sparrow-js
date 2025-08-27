@@ -3,15 +3,7 @@ import * as v from "valibot";
 function createSchema(translate:(key:string)=>string) {
     const InnerFormSchema = v.object({
         id:
-v.union([v.literal(""),v.pipe(
- v.string(),
-v.check((val) => {return /^\d+$/.test(val);},translate("id.check-message")),
-v.transform((input): number | string => {return parseInt(input,10);}))
-], (issue) => {        if (issue.issues) {
-            return issue.issues[issue.issues.length - 1].message;
-        }
-        return "";
-    })
+v.string()
 ,projectId:
 v.pipe(
  v.string(),
@@ -40,7 +32,7 @@ v.pipe(
 v.nonEmpty(translate("description.empty-message")))
 
 ,locked:
-v.boolean()
+v.string()
 ,checkable:
 v.pipe(
  v.string(),
@@ -63,7 +55,7 @@ v.check((val) => {return /^\d+$/.test(val);},translate("columnFilter.check-messa
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,statusCommand:
-v.boolean()
+v.string()
 ,columnConfigs:
 v.string()
 ,source:
@@ -83,7 +75,7 @@ v.check((val) => {return /^\d+$/.test(val);},translate("pageSize.check-message")
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,onlyAccessSelf:
-v.boolean()
+v.string()
 
     });
     //扩展提示

@@ -111,17 +111,6 @@ export default function Page({callbackHandler, table}: TableOperationProps<Proje
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.modulePrefix?.message}                                  fieldPropertyName={"modulePrefix"}/>
-<ValidatableInput readonly={false}  {...register("architectures")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"architectures"}/>
-<ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("config")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"config"}/>
 <ValidatableInput readonly={false}  {...register("wrapWithParent")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
