@@ -13,7 +13,10 @@ import useNavigating from "@/common/hook/NavigatingHook";
 
 
 interface ProjectConfigQuery extends SimplePager{
-    status: number;
+    name: string;
+frontendName: string;
+chineseName: string;
+status: number;
 }
 
 export default function Search({table}: TableOperationProps<ProjectConfig>) {
@@ -23,7 +26,8 @@ export default function Search({table}: TableOperationProps<ProjectConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const setDataState = meta.setData;
     const [projectConfigQuery, setProjectConfigQuery] = useState<ProjectConfigQuery>({} as ProjectConfigQuery)
-    const Navigations = useNavigating();
+    const  Navigations=useNavigating();
+
     if (setDataState == null) {
         return <>setDataState is not defined</>
     }
@@ -46,7 +50,16 @@ export default function Search({table}: TableOperationProps<ProjectConfig>) {
 
 
     return (<div className="flex flex-row flex-wrap gap-4">
-            <SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setProjectConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
+            <SearchInput value={projectConfigQuery?.name||""} 
+propertyName={"name"} pageTranslate={pageTranslate} 
+setSearchCondition={setProjectConfigQuery}/>
+<SearchInput value={projectConfigQuery?.frontendName||""} 
+propertyName={"frontendName"} pageTranslate={pageTranslate} 
+setSearchCondition={setProjectConfigQuery}/>
+<SearchInput value={projectConfigQuery?.chineseName||""} 
+propertyName={"chineseName"} pageTranslate={pageTranslate} 
+setSearchCondition={setProjectConfigQuery}/>
+<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setProjectConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
             <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
         </div>
     );

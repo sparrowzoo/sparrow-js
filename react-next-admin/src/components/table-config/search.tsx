@@ -9,10 +9,13 @@ import {useTranslations} from "next-intl";
 import SearchInput from "@/common/components/forms/search-input";
 import SearchSelect from "@/common/components/forms/search-select";
 import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 
 interface TableConfigQuery extends SimplePager{
-    status: number;
+    tableName: string;
+className: string;
+status: number;
 }
 
 export default function Search({table}: TableOperationProps<TableConfig>) {
@@ -22,6 +25,7 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const setDataState = meta.setData;
     const [tableConfigQuery, setTableConfigQuery] = useState<TableConfigQuery>({} as TableConfigQuery)
+    const  Navigations=useNavigating();
 
     if (setDataState == null) {
         return <>setDataState is not defined</>
@@ -34,7 +38,7 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
             }
             tableConfigQuery.pageNo = page?.pageIndex;
             tableConfigQuery.pageSize = page?.pageSize;
-            TableConfigApi.search(tableConfigQuery, errorTranslate).then(
+            TableConfigApi.search(tableConfigQuery, errorTranslate,Navigations.redirectToLogin).then(
                 (res) => {
                     setDataState(res)
                 }
@@ -45,7 +49,13 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
 
 
     return (<div className="flex flex-row flex-wrap gap-4">
-            <SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
+            <SearchInput value={tableConfigQuery?.tableName||""} 
+propertyName={"tableName"} pageTranslate={pageTranslate} 
+setSearchCondition={setTableConfigQuery}/>
+<SearchInput value={tableConfigQuery?.className||""} 
+propertyName={"className"} pageTranslate={pageTranslate} 
+setSearchCondition={setTableConfigQuery}/>
+<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
             <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
         </div>
     );

@@ -10,6 +10,7 @@ import {useTranslations} from "next-intl";
 import CoderApi from "@/api/manual/coder";
 import KeyValue from "@/common/lib/protocol/KeyValue";
 import TableInit from "@/components/table-config/table-init";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 
 export default function Operation({table}: TableOperationProps<TableConfig>) {
@@ -23,6 +24,8 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
     const result = meta.result;
     const parent = meta.parent as KeyValue;
     const projectId = parent.key;
+    const  Navigations=useNavigating();
+
     const callbackHandler = () => {
         setOpen(false);
         initHandler();
@@ -43,7 +46,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                TableConfigApi.batchDelete(selectedIds, errorTranslate).then(
+                TableConfigApi.batchDelete(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
                     (res) => {
                         const datas = TableUtils.removeRowByPrimary(selectedIds, table);
                         result.data.list = datas;
@@ -60,7 +63,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                TableConfigApi.enable(selectedIds, errorTranslate).then(
+                TableConfigApi.enable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
                     (res) => {
                         const datas = TableUtils.batchEnable(selectedIds, table, "status");
                         result.data.list = datas;
@@ -77,7 +80,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                TableConfigApi.disable(selectedIds, errorTranslate).then(
+                TableConfigApi.disable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
                     (res) => {
                         const datas = TableUtils.batchDisable(selectedIds, table, "status");
                         result.data.list = datas;
@@ -97,7 +100,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                 }
                 const tableNames = TableUtils.getSelectedFields(table, "tableName");
 
-                CoderApi.generate(projectId, tableNames, errorTranslate).then(
+                CoderApi.generate(projectId, tableNames, errorTranslate,Navigations.redirectToLogin).then(
                     (res) => {
                         toast.success(globalTranslate("generate-code") + globalTranslate("operation-success"));
                     }
