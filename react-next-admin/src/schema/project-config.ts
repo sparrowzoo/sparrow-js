@@ -3,15 +3,7 @@ import * as v from "valibot";
 function createSchema(translate:(key:string)=>string) {
     const InnerFormSchema = v.object({
         id:
-v.union([v.literal(""),v.pipe(
- v.string(),
-v.check((val) => {return /^\d+$/.test(val);},translate("id.check-message")),
-v.transform((input): number | string => {return parseInt(input,10);}))
-], (issue) => {        if (issue.issues) {
-            return issue.issues[issue.issues.length - 1].message;
-        }
-        return "";
-    })
+v.string()
 ,name:
 v.pipe(
  v.string(),
@@ -28,7 +20,7 @@ v.pipe(
 v.nonEmpty(translate("chineseName.empty-message")))
 
 ,i18n:
-v.boolean()
+v.string()
 ,description:
 v.string()
 ,modulePrefix:
@@ -36,12 +28,8 @@ v.pipe(
  v.string(),
 v.nonEmpty(translate("modulePrefix.empty-message")))
 
-,architectures:
-v.string()
-,config:
-v.string()
 ,wrapWithParent:
-v.boolean()
+v.string()
 ,scaffold:
 v.string()
 

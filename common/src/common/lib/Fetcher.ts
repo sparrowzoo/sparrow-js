@@ -8,10 +8,10 @@ import {Translator} from "@/common/lib/TranslatorType";
 
 interface GetProps {
     url: string,
-    translator: Translator,
+    translator?: Translator,
     crosStorage?: CrosStorage,
     withCookie?: boolean,
-    redirectToLogin: () =>void
+    redirectToLogin?: () =>void
 }
 
 interface PostProps extends GetProps {
@@ -51,7 +51,9 @@ export default class Fetcher {
                 if (result.code != "0") {
                     toast.error(translator ? translator(result.key) : result.message);
                     if (result.key == "user_not_login") {
-                        redirectToLogin();
+                        if(redirectToLogin) {
+                            redirectToLogin();
+                        }
                     }
                     return Promise.reject(result);
                 }
@@ -88,7 +90,9 @@ export default class Fetcher {
                 if (result.code != "0") {
                     toast.error(translator ? translator(result.key) : result.message);
                     if (result.key == "user_not_login") {
-                        redirectToLogin();
+                        if(redirectToLogin) {
+                            redirectToLogin();
+                        }
                     }
                     return Promise.reject(result);
                 }
