@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -6,6 +7,7 @@ import {columns, TableConfig} from "@/components/table-config/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/table-config/search";
 import Operation from "@/components/table-config/operation";
+import EditPage from "@/components/table-config/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
@@ -14,6 +16,8 @@ import Result, {PagerResult} from "@/common/lib/protocol/Result";
 import {useSearchParams} from "next/navigation";
 import KeyValue from "@/common/lib/protocol/KeyValue";
 import TableEdit from "@/components/table-config/table-edit";
+import useNavigating from "@/common/hook/NavigatingHook";
+
 
 
 export default function Page() {
@@ -23,28 +27,29 @@ export default function Page() {
     const searchParams = useSearchParams();
     const projectId = searchParams.get("projectId");
     const pagination = {pageIndex: 0, pageSize: -1};
+    const  Navigations=useNavigating();
+
     if (projectId == null) {
         return <div>Project Not Found !</div>
     }
     const init = () => {
-        TableConfigApi.search({...pagination, projectId: projectId}, errorTranslate).then(
-            (res) => {
-                setDataState(res)
-            }
-        ).catch(() => {
-        });
-    };
-    useEffect(() => {
-        init();
-    }, []);
+                TableConfigApi.search({...pagination}, errorTranslate,Navigations.redirectToLogin).then(
+                    (res) => {
+                        setDataState(res)
+                    }
+                ).catch(() => {
+                });
+            };
+            useEffect(() => {
+                init();
+            }, []);
 
 
-    const deleteHandler = (id: number) => {
-        TableConfigApi.delete(id, errorTranslate).then(() => {
-            toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
-        }).catch(() => {
-        });
-    }
+      const deleteHandler= (id: number) => {
+            TableConfigApi.delete(id, errorTranslate,Navigations.redirectToLogin).then(()=>{
+                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
+            }).catch(()=>{});
+        }
 
     if (!dataState) {
         return <ThreeDotLoading/>

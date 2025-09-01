@@ -12,8 +12,7 @@ v.nonEmpty(translate("userName.empty-message")))
 ,chineseName:
 v.pipe(
  v.string(),
-v.nonEmpty(translate("chineseName.empty-message")),
-v.check((val) => {return /^[\u4e00-\u9fa5]+$/.test(val);},translate("chineseName.check-message")))
+v.nonEmpty(translate("chineseName.empty-message")))
 
 ,birthday:
 v.string()
@@ -49,19 +48,9 @@ v.check((val) => {return /^\d+$/.test(val);},translate("gender.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,age:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("age.empty-message")),
-v.check((val) => {return /^\d+$/.test(val);},translate("age.check-message")),
-v.transform((input): number | string => {return parseInt(input,10);}))
-
+v.string()
 ,projectId:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("projectId.empty-message")),
-v.check((val) => {return /^\d+$/.test(val);},translate("projectId.check-message")),
-v.transform((input): number | string => {return parseInt(input,10);}))
-
+v.string()
 
     });
     //扩展提示

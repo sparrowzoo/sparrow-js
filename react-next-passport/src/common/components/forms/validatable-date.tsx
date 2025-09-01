@@ -1,4 +1,5 @@
 import * as React from "react"
+import {useEffect} from "react"
 import {FieldValues} from "react-hook-form/dist/types/fields";
 import {Label} from "@/components/ui/label";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
@@ -37,7 +38,10 @@ const ValidatableDate = React.forwardRef<HTMLInputElement, FormHookDateProps<Fie
         } else {
             defaultValue = dayjs(defaultDate).format(dateFormat);
         }
-        setValue(fieldPropertyName, defaultValue);
+        //受控组件需要加此条件
+        useEffect(() => {
+            setValue(fieldPropertyName, defaultValue);
+        }, []);
 
         const [date, setDate] = React.useState<Date>(defaultDate);
         return (
@@ -64,7 +68,7 @@ const ValidatableDate = React.forwardRef<HTMLInputElement, FormHookDateProps<Fie
                                 mode="single"
                                 selected={date}
                                 captionLayout="dropdown"
-                                onSelect={(date) => {
+                                onSelect={(date: Date) => {
                                     const formattedDate = dayjs(date).format(dateFormat);
                                     setDate(date)
                                     setOpen(false);

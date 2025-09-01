@@ -14,6 +14,7 @@ import {ValidatableTextarea} from "@/common/components/forms/validatable-textare
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {TableConfig} from "@/components/table-config/columns";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
@@ -27,6 +28,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Table
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
     const meta = table.options.meta as MyTableMeta<TableConfig>;
+    const  Navigations=useNavigating();
 
 
 
@@ -34,7 +36,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Table
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        TableConfigApi.save(data, errorTranslate).then(
+        TableConfigApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
             (res) => {
                 callbackHandler();
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));

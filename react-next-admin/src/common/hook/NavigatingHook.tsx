@@ -25,7 +25,6 @@ export default function useNavigating() {
       }
       Navigations.redirectToIndex();
     }
-
     public static redirectToLogin(
       withRef: boolean = true,
       timeout: number = 2000

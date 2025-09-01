@@ -14,6 +14,7 @@ import {useTranslations} from "next-intl";
 import * as v from "valibot";
 import {CellContextProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {TableConfig} from "@/components/table-config/columns";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
@@ -26,6 +27,7 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
         type FormData = v.InferOutput<typeof FormSchema>;
         const original = cellContext.row.original;
          const meta = cellContext.table.options.meta as MyTableMeta<TableConfig>;
+    const  Navigations=useNavigating();
 
 
 
@@ -33,7 +35,7 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        TableConfigApi.save(data, errorTranslate).then(
+        TableConfigApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
             (res) => {
                 if(callbackHandler){callbackHandler();}
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));

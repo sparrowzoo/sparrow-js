@@ -14,6 +14,7 @@ import {ValidatableTextarea} from "@/common/components/forms/validatable-textare
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {ProjectConfig} from "@/components/project-config/columns";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
@@ -27,6 +28,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Proje
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
     const meta = table.options.meta as MyTableMeta<ProjectConfig>;
+    const  Navigations=useNavigating();
 
 
 
@@ -34,7 +36,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<Proje
         data: FormData,
         event: React.BaseSyntheticEvent | undefined
     ) => {
-        ProjectConfigApi.save(data, errorTranslate).then(
+        ProjectConfigApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
             (res) => {
                 callbackHandler();
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
@@ -109,17 +111,6 @@ export default function Page({callbackHandler, table}: TableOperationProps<Proje
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.modulePrefix?.message}                                  fieldPropertyName={"modulePrefix"}/>
-<ValidatableInput readonly={false}  {...register("architectures")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"architectures"}/>
-<ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("config")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"config"}/>
 <ValidatableInput readonly={false}  {...register("wrapWithParent")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
