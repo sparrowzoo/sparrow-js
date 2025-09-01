@@ -5,7 +5,6 @@ import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 export default function IndexPage() {
   useEffect(() => {
-    debugger;
     const locate = localStorage.getItem("locale");
     window.location.href = (locate || routing.defaultLocale) + "/dashboard";
   }, []);

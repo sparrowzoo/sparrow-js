@@ -53,8 +53,8 @@ export function DataTable<TData extends BasicData<TData>>({
     const [rowSelection, setRowSelection] = React.useState({});
 
     const [pagination, setPagination] = React.useState<PaginationState>({
-        pageIndex: defaultPager.pageIndex,
-        pageSize: defaultPager.pageSize,
+        pageIndex: defaultPager ? defaultPager.pageIndex : 0,
+        pageSize: defaultPager ? defaultPager.pageSize : 10,
     });
     const table = useReactTable({
         onStateChange(updater: Updater<TableState>): void {
