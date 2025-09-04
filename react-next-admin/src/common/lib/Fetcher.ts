@@ -67,6 +67,12 @@ export default class Fetcher {
         if (url.indexOf("http") < 0) {
             url = API_BASIC_URL + url;
         }
+        if (!withCookie) {
+            withCookie = false;
+        }
+        if (!crosStorage) {
+            crosStorage = CrosStorage.getCrosStorage();
+        }
         let token: string | null = null;
         if (crosStorage) {
             token = await crosStorage.getToken().then((token) => token);
