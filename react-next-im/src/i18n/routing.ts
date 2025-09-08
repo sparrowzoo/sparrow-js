@@ -1,5 +1,5 @@
 import {defineRouting} from "next-intl/routing";
-import {PASSPORT_ROOT} from "@/common/lib/Env";
+import {ADMIN_ROOT, PASSPORT_ROOT} from "@/common/lib/Env";
 
 export const routing = defineRouting({
     locales: ["en", "zh"],
@@ -30,5 +30,9 @@ export const routing = defineRouting({
         "/blog": "/blog",
         "/chat/friends/new-friend": "/chat/friends/new-friend",
         "/playground": "/playground",
+        "/coder": {
+            en: `${ADMIN_ROOT}/en/project-config`,
+            zh: `${ADMIN_ROOT}/zh/project-config`,
+        }
     },
 });
