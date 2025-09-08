@@ -1,11 +1,14 @@
 import {defineRouting} from "next-intl/routing";
-import {PASSPORT_ROOT} from "@/common/lib/Env";
+import {PASSPORT_ROOT, WWW_ROOT} from "@/common/lib/Env";
 
 export const routing = defineRouting({
     locales: ["en", "zh"],
     defaultLocale: "en",
     pathnames: {
-        "/": "/",
+        "/": {
+            en: `${WWW_ROOT}/en/hi`,
+            zh: `${WWW_ROOT}/zh/hi`,
+        },
         "/dashboard": "/dashboard",
         "/access-history": "/access-history",
         "/sign-in": {
@@ -21,5 +24,6 @@ export const routing = defineRouting({
             zh: `${PASSPORT_ROOT}/zh/avatar-editor`,
         },
         "/table-config": "/table-config",
+        "/project-config": "/project-config"
     },
 });

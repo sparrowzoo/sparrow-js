@@ -1,15 +1,14 @@
-export default interface Result<Data> {
+export default interface Result {
     code: string;
     message?: string;
-    data: Data;
+    data: any;
     key?: string;
     instruction?: string;
 }
 
 
-
-export interface PagerResult<T> {
+export interface PagerResult {
     recordTotal: number;
-    list: T[];
+    list: any[];
     dictionary: Map<String, Object>;
 }
