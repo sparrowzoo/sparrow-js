@@ -15,6 +15,7 @@ declare const messages: {
     "im": "IM",
     "client-server": "Client Server",
     "shop": "Shop",
+    "coder": "Coder",
     "playground": "Write Blog",
     "theme-toggle": "Toggle Theme",
     "light-mode": "Light Mode",
