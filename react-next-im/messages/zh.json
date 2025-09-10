@@ -35,6 +35,7 @@
     "my-friends": "我的好友",
     "my-groups": "我的群组",
     "Audit": {
+      "system_server_error": "系统错误，请稍后再试",
       "agree-success": "已同意 ",
       "reject-success": "已拒绝 ",
       "agree": "同意",
