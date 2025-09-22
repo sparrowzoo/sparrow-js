@@ -12,10 +12,10 @@ export default class ChatApi {
     static async getVisitorToken(): Promise<string> {
         let token;
         await Fetcher.get({
-            url: "/chat/v2/get-visitor-token.json",
+            url: "/get-visitor-token.json",
         }).then(
             async (response: Result) => {
-                token = response.data;
+                token = response.data.token;
             }
         );
         return token;
