@@ -36,7 +36,7 @@ export default async function RootLayout({children, params}: Props) {
     setRequestLocale(locale);
 
     return (
-        <html className="h-full" lang={locale}>
+        <html className="h-full" lang={locale} suppressHydrationWarning>
         <body
             className={
                 "mx-auto text-left justify-center align-middle content-center w-full "
