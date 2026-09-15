@@ -54,11 +54,11 @@ export default function UserProfile() {
       <DropdownMenuContent align="end">
         {/*<DropdownMenuLabel>My Account</DropdownMenuLabel>*/}
         {/*<DropdownMenuSeparator />*/}
-        <DraravataropdownMenuItem>
+        <DropdownMenuItem>
           <Link target={"_blank"} href={`/avatar-editor`}>
             {t("avatar-setting")}
           </Link>
-        </DraravataropdownMenuItem>
+        </DropdownMenuItem>
         {/*<DropdownMenuItem>Support</DropdownMenuItem>*/}
         <DropdownMenuSeparator />
         <DropdownMenuItem
