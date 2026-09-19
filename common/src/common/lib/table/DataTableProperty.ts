@@ -18,12 +18,12 @@ export default interface DataTableProps<
     TData extends BasicData<TData>
 > {
     columns: ColumnDef<TData, string>[];
-    result: Result<PagerResult<TData>>;
+    result: Result;
     primary?: string;
     tableName?: string;
     i18n: boolean;
     hiddenColumns?: VisibilityState | (() => VisibilityState);
-    setData: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
+    setData: React.Dispatch<React.SetStateAction<Result> | undefined>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
@@ -49,14 +49,14 @@ export interface MyTableMeta<TData> extends TableMeta<TData> {
     parent: {},
     tableName: string,
     i18n: boolean,
-    setData: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
+    setData: React.Dispatch<React.SetStateAction<Result> | undefined>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
     deleteHandler?: (id: IDENTITY) => void;
     initHandler: () => void;
     searchHandler: (pager: PaginationState | undefined) => void;
-    result: Result<PagerResult<TData>>;
+    result: Result;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
 }
 

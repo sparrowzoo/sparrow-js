@@ -5,7 +5,8 @@ import {Utils} from "@/common/lib/Utils";
 
 const NormalCell = (field: string, width?: number, handler?: (value: any) => string) => {
     const widthClass = width ? `w-${width}` : "w-fit";
-    return ({row, table}) => {
+    const Cell= ({row, table}) => {
+        const translator = useTranslations("KVS");
         let value = row.getValue(field);
         if (handler) {
             value = handler(value);
@@ -16,7 +17,6 @@ const NormalCell = (field: string, width?: number, handler?: (value: any) => str
             if (dictionary) {
                 let currentItem = Utils.getValue(dictionary, value);
                 if (currentItem) {
-                    const translator = useTranslations("KVS");
                     if (meta.i18n && translator.has(field)) {
                         value = translator(field + "." + currentItem.value);
                     } else {
@@ -31,5 +31,7 @@ const NormalCell = (field: string, width?: number, handler?: (value: any) => str
         }
         return <div className={widthClass}>{value}</div>
     }
+    Cell.displayName="NormalCell";
+    return Cell;
 }
 export default NormalCell;

@@ -15,6 +15,7 @@ export default function HtmlFragment(htmlFragmentProps: HtmlFragmentProps) {
       const root = createRoot(container);
       root.render(<DynamicComponent table={htmlFragmentProps} />);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return null; // 返回空值，避免自动生成默认 div
 }

@@ -6,7 +6,7 @@ import {useTranslations} from "next-intl";
 
 const SelectCell = (field: string, i18n?: boolean, readOnly: boolean = false) => {
     const className = "w-fit";
-    return ({row, cell}) => {
+    const Cell = ({row, cell}) => {
         const translator = useTranslations("KVS");
         const fieldValue = row.original[field] || "";
         const meta = cell.getContext().table.options.meta as MyTableMeta<any>;
@@ -57,5 +57,7 @@ const SelectCell = (field: string, i18n?: boolean, readOnly: boolean = false) =>
             </Select>
         )
     }
+    Cell.displayName = "SelectCell";
+    return Cell;
 }
 export default SelectCell;

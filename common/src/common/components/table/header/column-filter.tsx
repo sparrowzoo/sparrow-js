@@ -11,7 +11,7 @@ import {useTranslations} from "next-intl";
 
 
 const ColumnFilter = () => {
-    return ({table, column}) => {
+    const CF = ({table, column}) => {
         const tableName = table?.options.meta?.tableName;
         const i18n = table?.options.meta.i18n;
         const t = useTranslations(tableName);
@@ -28,7 +28,6 @@ const ColumnFilter = () => {
                         .getAllColumns()
                         .filter((column) => column.getCanHide())
                         .map((column) => {
-                            debugger;
                             return (
                                 <DropdownMenuCheckboxItem
                                     key={column.id}
@@ -44,6 +43,8 @@ const ColumnFilter = () => {
             </DropdownMenu>
         );
     }
+    CF.displayName = "ColumnFilter";
+    return CF;
 };
 export default ColumnFilter;
 

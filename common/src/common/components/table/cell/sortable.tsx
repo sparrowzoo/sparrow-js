@@ -6,7 +6,7 @@ import {MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import TableUtils from "@/common/lib/table/TableUtils";
 
 const SortableCell = (field: string) => {
-    return ({row, table}: CellContext<any, any>) => {
+    const Cell = ({row, table}: CellContext<any, any>) => {
         const meta = table.options.meta as MyTableMeta<any>;
         const result = meta.result;
         const setData = meta.setData;
@@ -30,5 +30,7 @@ const SortableCell = (field: string) => {
         }
         } className={"w-16"} min={0} max={99} type={"number"} value={value}/>
     }
+    Cell.displayName = "SortableCell";
+    return Cell;
 }
 export default SortableCell;

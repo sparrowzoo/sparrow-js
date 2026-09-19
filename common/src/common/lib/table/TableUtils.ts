@@ -33,10 +33,10 @@ class TableUtils {
         return originalData;
     }
 
-    static cloneResult = (result: Result<any>) => {
+    static cloneResult = (result: Result) => {
         return {
             ...result
-        } as Result<any>;
+        } as Result;
     }
 
     static removeRowByPrimary = (ids: IDENTITY[], table: Table<any>) => {
