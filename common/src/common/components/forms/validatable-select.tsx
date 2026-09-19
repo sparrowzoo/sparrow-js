@@ -25,6 +25,8 @@ const ValidatableSelect = React.forwardRef<HTMLInputElement, FormHookSelectProps
          className,
      }, ref) => {
 
+        const translator = useTranslations("KVS");
+
         let defaultValueStr = defaultValue?.toString();
         if (!dictionary || dictionary.length == 0) {
             console.error("field is not found " + fieldPropertyName);
@@ -37,7 +39,6 @@ const ValidatableSelect = React.forwardRef<HTMLInputElement, FormHookSelectProps
             defaultValueStr = currentItem.key.toString();
         }
         let displayText = currentItem.value;
-        const translator = useTranslations("KVS");
         const i18n = translator.has(fieldPropertyName);
         if (i18n) {
             displayText = translator(fieldPropertyName + "." + currentItem.value);

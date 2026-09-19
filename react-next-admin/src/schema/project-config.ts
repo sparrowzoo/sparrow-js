@@ -1,37 +1,35 @@
-
 import * as v from "valibot";
-function createSchema(translate:(key:string)=>string) {
+
+function createSchema(translate: (key: string) => string) {
     const InnerFormSchema = v.object({
         id:
-v.string()
-,name:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("name.empty-message")))
+            v.string()
+        , name:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("name.empty-message")))
 
-,frontendName:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("frontendName.empty-message")))
+        , frontendName:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("frontendName.empty-message")))
 
-,chineseName:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("chineseName.empty-message")))
+        , chineseName:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("chineseName.empty-message")))
 
-,i18n:
-v.string()
-,description:
-v.string()
-,modulePrefix:
-v.pipe(
- v.string(),
-v.nonEmpty(translate("modulePrefix.empty-message")))
+        , i18n:
+            v.boolean()
+        , description:
+            v.string()
+        , modulePrefix:
+            v.pipe(
+                v.string(),
+                v.nonEmpty(translate("modulePrefix.empty-message")))
 
-,wrapWithParent:
-v.string()
-,scaffold:
-v.string()
+        , wrapWithParent: v.boolean(),
+        scaffold:v.string()
 
     });
     //扩展提示
@@ -39,4 +37,5 @@ v.string()
     //type FormData = v.InferOutput<typeof FormSchema>;
     return FormSchema
 }
+
 export default createSchema;

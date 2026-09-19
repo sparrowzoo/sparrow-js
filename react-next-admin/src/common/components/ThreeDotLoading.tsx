@@ -1,10 +1,9 @@
-import { ThreeDots } from "react-loader-spinner";
 import { useEffect, useState } from "react";
 
 export default function ThreeDotLoading() {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    if (window) {
+    if (typeof window !== "undefined") {
       setLoading(false);
     }
   }, []);
@@ -13,15 +12,18 @@ export default function ThreeDotLoading() {
     return <></>;
   }
   return (
-    <ThreeDots
-      visible={true}
-      height="80"
-      width="80"
-      color="grey"
-      radius="9"
-      ariaLabel="three-dots-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-    />
+    <div
+      className="flex items-center justify-center gap-2 py-4"
+      role="status"
+      aria-label="loading"
+    >
+      {[0, 1, 2].map((i) => (
+        <span
+          key={i}
+          className="h-3 w-3 animate-bounce rounded-full bg-gray-400"
+          style={{ animationDelay: `${i * 0.15}s` }}
+        />
+      ))}
+    </div>
   );
 }

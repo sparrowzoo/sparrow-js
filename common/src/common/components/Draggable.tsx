@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import {
   DndContext,
-  DragStartEvent,
   MouseSensor,
   useDraggable,
   useSensor,
@@ -22,38 +21,29 @@ function DraggableContainer(draggableProps: DraggableContainerProps) {
     useDraggable({
       id: "box",
     });
-  const { position, children, asChild, ...props } = draggableProps;
-  let mergedStyles = {};
-  let localTransform: Transform | null;
-  if (!transform) {
-    //说明初始化或者拖拽结束
-    localTransform = {
-      x: position.left,
-      y: position.top,
-      scaleX: 1,
-      scaleY: 1,
-    };
-  } else {
-    //表示拖拽中....
-    //表示挪动了多少距离
-    //结合transform case 示例更好理解
-    localTransform = {
-      x: transform.x + position.left,
-      y: transform.y + position.top,
-      scaleX: 1,
-      scaleY: 1,
-    };
-  }
-  mergedStyles = {
-    transform: CSS.Transform.toString(localTransform),
-  };
+  const { position, children } = draggableProps;
+
+  const localTransform: Transform = transform
+    ? {
+        x: transform.x + position.left,
+        y: transform.y + position.top,
+        scaleX: 1,
+        scaleY: 1,
+      }
+    : {
+        x: position.left,
+        y: position.top,
+        scaleX: 1,
+        scaleY: 1,
+      };
 
   return (
     <AsChild
       asChild={true}
+      ref={setNodeRef}
       style={{
-        cursor: "grab",
-        ...mergedStyles,
+        cursor: isDragging ? "grabbing" : "grab",
+        transform: CSS.Transform.toString(localTransform),
       }}
       {...listeners}
       {...attributes}
@@ -83,18 +73,11 @@ export default function Draggable(draggableProps: DraggableProps) {
   return (
     <DndContext
       sensors={sensors}
-      onDragStart={(e: DragStartEvent) => {
-        console.log("dragging start " + JSON.stringify(position));
-      }}
       onDragEnd={(e) => {
-        setPosition((prev) => {
-          const left = prev?.left;
-          const top = prev?.top;
-          if (left && top) {
-            return { left: left + e.delta.x, top: top + e.delta.y };
-          }
-          return { left: e.delta.x, top: e.delta.y };
-        });
+        setPosition((prev) => ({
+          left: prev.left + e.delta.x,
+          top: prev.top + e.delta.y,
+        }));
       }}
     >
       <DraggableContainer asChild={draggableProps.asChild} position={position}>

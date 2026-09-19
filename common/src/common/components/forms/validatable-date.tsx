@@ -38,9 +38,10 @@ const ValidatableDate = React.forwardRef<HTMLInputElement, FormHookDateProps<Fie
         } else {
             defaultValue = dayjs(defaultDate).format(dateFormat);
         }
-        //受控组件需要加此条件
+        //受控组件需要加此条件：仅在挂载时初始化一次
         useEffect(() => {
             setValue(fieldPropertyName, defaultValue);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
         const [date, setDate] = React.useState<Date>(defaultDate);

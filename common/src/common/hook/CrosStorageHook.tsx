@@ -8,6 +8,7 @@ export default function useCrosStorage() {
     return () => {
       crosStorage?.destroy();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return crosStorage;
 }
