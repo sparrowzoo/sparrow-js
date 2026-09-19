@@ -37,6 +37,7 @@ export default function useReachBottom(
   // 滚动事件处理（带防抖）
   useEffect(() => {
     console.log("重新装裁 scroll", lastId);
+    const node = containerRef.current;
     const handleScroll = () => {
       if (!checkScrollBottom()) {
         return;
@@ -50,13 +51,13 @@ export default function useReachBottom(
         finishLoading(newLastId);
       });
     };
-    containerRef.current &&
-      containerRef.current.addEventListener("scroll", handleScroll);
+    node && node.addEventListener("scroll", handleScroll);
     return () => {
-      containerRef.current &&
-        containerRef.current.removeEventListener("scroll", handleScroll);
+      node && node.removeEventListener("scroll", handleScroll);
     };
-  }, [loading]); //每次请求都重新绑定参数，避免闭包缓存
+    // 每次请求都重新绑定参数，避免闭包缓存（避免闭包捕获旧的 lastId）
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
   return {
     loading,
     startLoading,

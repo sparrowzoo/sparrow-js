@@ -23,6 +23,7 @@ export default function HtmlFragment(props: Props) {
         </NextIntlClientProvider>
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return null; // 返回空值，避免自动生成默认 div
 }
