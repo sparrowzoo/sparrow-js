@@ -1,11 +1,10 @@
 import * as React from "react"
 
 import {cn} from "@/lib/utils"
-import {FieldValues} from "react-hook-form/dist/types/fields";
 import {Label} from "@/components/ui/label";
 import ErrorMessage from "@/common/components/i18n/ErrorMessage";
 
-export interface FormHookInputProps<TFieldValues extends FieldValues>
+export interface FormHookInputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     pageTranslate?: (key: string) => string,
     validateTranslate?: (key: string) => string,
@@ -15,10 +14,9 @@ export interface FormHookInputProps<TFieldValues extends FieldValues>
     readonly?: boolean,
 }
 
-const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps<FieldValues>>(
+const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps>(
     ({
          errorMessage,
-         validateTranslate,
          pageTranslate,
          fieldPropertyName,
          isSubmitted,

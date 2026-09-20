@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 interface HtmlFragmentProps {
-  DynamicComponent: React.ComponentType<any>;
+  DynamicComponent: React.ComponentType<Record<string, unknown>>;
   containerId: string;
 }
 

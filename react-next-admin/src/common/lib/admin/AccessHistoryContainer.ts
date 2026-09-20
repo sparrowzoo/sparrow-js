@@ -9,7 +9,7 @@ export default class AccessHistoryContainer {
     }
 
     public getAccessHistories(): AccessLog[] {
-        return this.ACCESS_HISTORY_MENU_ITEMS.sort(
+        return [...this.ACCESS_HISTORY_MENU_ITEMS].sort(
             (a, b) => b.accessTime - a.accessTime
         );
     }
@@ -30,9 +30,15 @@ export default class AccessHistoryContainer {
     }
 
     public delete(url: string): void {
-        const item = this.ACCESS_HISTORY_MENU_ITEMS.findIndex(
+        const index = this.ACCESS_HISTORY_MENU_ITEMS.findIndex(
             (item) => item.url === url
         );
-        this.ACCESS_HISTORY_MENU_ITEMS.splice(item, 1);
+        if (index !== -1) {
+            this.ACCESS_HISTORY_MENU_ITEMS.splice(index, 1);
+        }
+    }
+
+    public clear(): void {
+        this.ACCESS_HISTORY_MENU_ITEMS = [];
     }
 }

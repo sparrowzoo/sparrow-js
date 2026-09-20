@@ -18,7 +18,7 @@ import useNavigating from "@/common/hook/NavigatingHook";
 export default function UserProfile() {
   const { redirectToLogin } = useNavigating();
   const [loginUser, setLoginUser] = React.useState<LoginUser | null>(null);
-  let crosStorage = useCrosStorage();
+  const crosStorage = useCrosStorage();
   const t = useTranslations("Header");
 
   useEffect(() => {

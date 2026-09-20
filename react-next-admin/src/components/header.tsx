@@ -3,7 +3,6 @@ import {Search} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import React from "react";
 import UserProfile from "@/common/components/header/user-profile";
-import {useTranslations} from "next-intl";
 import LocaleSwitcher from "@/common/components/i18n/LocaleSwitcher";
 import {ModeToggle} from "@/common/components/header/mode-toggle";
 import AccessHistories from "@/common/components/access-histories";
@@ -12,7 +11,6 @@ type HeaderProps = {
     showProfile?: boolean;
 };
 export default function Header(headerProps: HeaderProps) {
-    const t = useTranslations("Header");
     return (
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
             <nav className="md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6 hidden md:w-full">

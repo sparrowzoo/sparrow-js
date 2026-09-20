@@ -1,11 +1,61 @@
 {
+  "GlobalForm": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "enable": "Enable",
+    "disable": "Disable",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "view": "View",
+    "more": "More",
+    "all": "All",
+    "none": "None",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading",
+    "error": "Error",
+    "operation-success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "next": "Next",
+    "previous": "Previous",
+    "back": "Back",
+    "no-record-checked": "Please select the record(s) to operate on!",
+    "table": "Project Table",
+    "clear-scaffold": "Clear Scaffold",
+    "init-scaffold": "Init Scaffold",
+    "generate-code": "Generate Code",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "first": "First",
+      "last": "Last",
+      "total": "Total {total}",
+      "page": "Page {page}",
+      "size": "{size} per page",
+      "next-page-not-found": "No next page",
+      "previous-page-not-found": "No previous page"
+    }
+  },
   "LocaleLayout": {
     "title": "sparrow admin",
     "description": "A React Admin Dashboard with Next.js"
   },
   "LocaleSwitcher": {
-    "label": "Change language to \uD83C\uDDFA\uD83C\uDDF8 English",
-    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unknown}}"
+    "label": "Change language to 🇺🇸 English",
+    "locale": "{locale, select, zh {🇨🇳 中文} en {🇺🇸 English} other {Unknown}}"
+  },
+  "ErrorMessage": {
+    "system_server_error": "System error, please try again later...",
+    "global_parameter_null": "Parameter cannot be null...",
+    "class_not_found": "Class not found..."
   },
   "Header": {
     "index": "Home",
@@ -24,5 +74,142 @@
     "sign-in": "Sign In",
     "sign-up": "Sign Up",
     "logout-success": "Logout success"
+  },
+  "AccessHistories": {
+    "label": "History",
+    "empty": "No history",
+    "remove": "Remove",
+    "clear-all": "Clear all"
+  },
+  "Home": {
+    "badge": "Admin Console",
+    "welcome": "Welcome back",
+    "subtitle": "A low-code admin scaffold to manage projects, menus, tables and users — generate CRUD code from your backend entities in one click.",
+    "quickAccess": "Quick Access",
+    "modules": {
+      "dashboard": {
+        "title": "Dashboard",
+        "description": "Resizable analytics workspace"
+      },
+      "menu": {
+        "title": "Menu",
+        "description": "Manage navigation menus"
+      },
+      "projectConfig": {
+        "title": "Project Config",
+        "description": "Configure your projects"
+      },
+      "tableConfig": {
+        "title": "Table Config",
+        "description": "Define data table columns"
+      },
+      "userExample": {
+        "title": "User Example",
+        "description": "Sample CRUD for users"
+      },
+      "accessHistory": {
+        "title": "Access History",
+        "description": "Recent navigation history"
+      }
+    }
+  },
+  "Sidebar": {
+    "brand": "Sparrow Admin",
+    "groups": {
+      "gettingStarted": "Getting Started",
+      "buildingYourApplication": "Building Your Application"
+    }
+  },
+  "KVS": {
+    "cellType": {
+      "CHECK_BOX": "Checkbox",
+      "NORMAL": "Normal",
+      "TREE": "Tree",
+      "OPERATION": "Operation",
+      "CURRENCY": "Currency",
+      "UNIX_TIMESTAMP": "Timestamp"
+    },
+    "columnType": {
+      "ACTION": "Action Menu",
+      "CHECK": "Checkbox",
+      "FILTER": "Filter",
+      "TREE": "Tree",
+      "NORMAL": "Normal"
+    },
+    "headerType": {
+      "CHECK_BOX": "Checkbox",
+      "COLUMN_FILTER": "Filter",
+      "NORMAL": "Normal",
+      "NORMAL_SORT": "Normal (sortable)",
+      "NORMAL_FILTER": "Normal (filterable)",
+      "NORMAL_SORT_FILTER": "Normal (filterable, sortable)",
+      "PLAIN_TEXT": "Action",
+      "EMPTY": "Empty"
+    },
+    "datasourceType": {
+      "NULL": "Text Input",
+      "DICTIONARY": "Dictionary",
+      "TABLE": "Table",
+      "ENUM": "Enum"
+    },
+    "controlType": {
+      "LABEL": "Label",
+      "LINK": "Link",
+      "INPUT_TEXT": "Text",
+      "INPUT_HIDDEN": "Hidden",
+      "INPUT_PASSWORD": "Password",
+      "TEXT_AREA": "Textarea",
+      "SELECT": "Select",
+      "RADIO_LIST": "Radio List",
+      "CHECK_BOX_LIST": "Checkbox List",
+      "CODE": "Code Editor",
+      "EDITOR": "Rich Text Editor",
+      "DATE": "Date",
+      "DATE_HHMMSS": "Time",
+      "CHECK_BOX": "Checkbox",
+      "RADIO": "Radio",
+      "FILE": "File Upload",
+      "ENABLE_DISABLE": "Enable/Disable",
+      "IMAGE": "Image"
+    },
+    "searchType": {
+      "EQUAL": "Equal",
+      "PREFIX_LIKE": "Prefix Match",
+      "SUFFIX_LIKE": "Suffix Match",
+      "LIKE": "Contains",
+      "DATE_RANGE": "Date Range",
+      "LESS": "Less Than",
+      "LESS_EQUAL": "Less Than or Equal",
+      "GREATER": "Greater Than",
+      "GREATER_EQUAL": "Greater Than or Equal",
+      "BETWEEN": "Between",
+      "NOT_EQUAL": "Not Equal"
+    },
+    "validateType": {
+      "string": "String",
+      "digital": "Number",
+      "email": "Email",
+      "mobile": "Mobile",
+      "tel": "Telephone",
+      "regex": "Regex",
+      "idCard": "ID Card",
+      "nullable": "None",
+      "chineseCharacters": "Chinese Characters"
+    },
+    "status": {
+      "ENABLE": "Enabled",
+      "DISABLE": "Disabled",
+      "all": "All"
+    },
+    "gender": {
+      "NULL": "Unknown",
+      "MALE": "Male",
+      "FEMALE": "Female",
+      "all": "All"
+    },
+    "source": {
+      "INNER": "Internal",
+      "SOURCE_CODE": "Source Code"
+    }
   }
 }

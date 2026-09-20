@@ -12,7 +12,7 @@ import dayjs from "dayjs";
  * HH:mm:ss time
  * @constructor
  */
-const UnixTimestampCell = (field: string, category: string = "timestamp") => {
+const UnixTimestampCell = (field: string) => {
     const  Cell= ({row}) => {
         const fieldValue = row.getValue(field);
         const formattedDate = dayjs(fieldValue).format('YYYY-MM-DD HH:mm:ss');

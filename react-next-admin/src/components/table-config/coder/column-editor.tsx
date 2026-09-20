@@ -17,7 +17,6 @@ import {useTranslations} from "next-intl";
 
 function SaveButton({table}: TableOperationProps<ColumnConfig>) {
     const meta = table.options.meta as MyTableMeta<ColumnConfig>
-    const setData = meta.setData;
     const parent = meta.parent as TableConfig;
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const globalTranslate = useTranslations("GlobalForm");
@@ -26,7 +25,7 @@ function SaveButton({table}: TableOperationProps<ColumnConfig>) {
             const originalData = TableUtils.getOriginalData(table);
             parent.columnConfigs = JSON.stringify(originalData);
             TableConfigApi.save(parent, errorTranslate).then(
-                (res) => {
+                () => {
                     toast.success(globalTranslate("save") + globalTranslate("operation-success"));
                 }
             ).catch(() => {

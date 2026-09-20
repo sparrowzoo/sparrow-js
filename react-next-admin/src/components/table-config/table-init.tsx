@@ -46,7 +46,7 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
                 <Button onClick={() => {
                     debugger;
                     CoderApi.initByLocal(parent.key, localFullClassName, errorTranslate)
-                        .then((result) => {
+                        .then(() => {
                             initHandler && initHandler();
                         }).catch(() => {
                     });
@@ -83,7 +83,7 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
                 </div>
                 <Button onClick={() => {
                     CoderApi.initByJpa(parent.key, jpaFullClassName, sourceCode, errorTranslate)
-                        .then((result) => {
+                        .then(() => {
                             initHandler && initHandler();
                         }).catch(() => {
                     });

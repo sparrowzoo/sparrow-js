@@ -1,4 +1,6 @@
 {
-  "status": "Status",
-  "actions": "Actions"
+  "Menu": {
+    "status": "Status",
+    "actions": "Actions"
+  }
 }

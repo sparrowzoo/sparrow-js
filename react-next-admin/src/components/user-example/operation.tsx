@@ -44,6 +44,7 @@ export default function Operation({table}: TableOperationProps<UserExample>) {
                                     return;
                 }
                 UserExampleApi.batchDelete(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                                             const datas= TableUtils.removeRowByPrimary(selectedIds,table);
                                             result.data.list=datas;
@@ -61,6 +62,7 @@ export default function Operation({table}: TableOperationProps<UserExample>) {
                                                 return;
                             }
                             UserExampleApi.enable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                 (res) => {
                                    const datas= TableUtils.batchEnable(selectedIds,table,"status");
                                    result.data.list=datas;
@@ -79,6 +81,7 @@ export default function Operation({table}: TableOperationProps<UserExample>) {
                                                             return;
                                         }
                                         UserExampleApi.disable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                             (res) => {
                                                  const datas= TableUtils.batchDisable(selectedIds,table,"status");
                                                  result.data.list=datas;

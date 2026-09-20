@@ -15,7 +15,7 @@ interface GetProps {
 }
 
 interface PostProps extends GetProps {
-    body: any
+    body: object | string
 }
 
 export default class Fetcher {
@@ -95,10 +95,9 @@ export default class Fetcher {
             .then(async (response) => {
                 const result = (await response.json()) as Result;
                 if (result.code != "0") {
-                    debugger;
                     const message: string = translator ? translator(result.key as string) : result.message as string;
                     toast.error(message);
-
+                    
                     if (result.key == "user_not_login") {
                         if (redirectToLogin) {
                             redirectToLogin();

@@ -2,12 +2,20 @@ import AccessHistoryContainer from "@/common/lib/admin/AccessHistoryContainer";
 
 export default class AdminBroker {
     public accessHistoryContainer: AccessHistoryContainer;
+    private listeners = new Set<() => void>();
 
     public constructor(accessHistoryContainer: AccessHistoryContainer) {
         this.accessHistoryContainer = accessHistoryContainer;
     }
 
-    public access(url: string, router: any) {
+    public subscribe(listener: () => void): () => void {
+        this.listeners.add(listener);
+        return () => {
+            this.listeners.delete(listener);
+        };
+    }
+
+    public access(url: string, router: { push: (url: string) => void }) {
         this.accessHistoryContainer.access(url);
         router.push(url);
         this.newMessageSignal();
@@ -18,6 +26,12 @@ export default class AdminBroker {
         this.newMessageSignal();
     }
 
+    public clearHistory() {
+        this.accessHistoryContainer.clear();
+        this.newMessageSignal();
+    }
+
     public newMessageSignal = () => {
+        this.listeners.forEach((listener) => listener());
     };
 }

@@ -3,7 +3,7 @@ import * as React from "react";
 import {ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import {useTranslations} from "next-intl";
 
-const NormalHeader = ({showFilter, showSort, columnTitle, column}: ColumnOperationProps) => {
+const NormalHeader = ({showFilter, showSort, columnTitle}: ColumnOperationProps) => {
     const NH = ({column, table}) => {
         const tableName = table?.options.meta?.tableName;
         const i18n = table?.options.meta.i18n;

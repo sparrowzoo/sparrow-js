@@ -1,7 +1,6 @@
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
-import React from "react";
 import crateScheme from "@/schema/table-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
@@ -27,10 +26,9 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
-        event: React.BaseSyntheticEvent | undefined
     ) => {
         TableConfigApi.save(data, errorTranslate).then(
-            (res) => {
+            () => {
                 toast.success(globalTranslate("save") + globalTranslate("operation-success"));
             }
         ).catch(() => {
@@ -40,11 +38,9 @@ export default function EditPage({cellContext}: CellContextProps<any>) {
     const {
         register,
         handleSubmit,
-        control,
         formState: {
             errors,
-            isSubmitted,
-            touchedFields
+            isSubmitted
         },
     } = useForm<FormData>({
         //相当于v.parse

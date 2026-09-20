@@ -18,11 +18,11 @@ const ChildComponent = ({
 
     return cloneElement(child, {
       ...props,
-      // @ts-ignore
+      // @ts-expect-error child.props is unknown
       ...child.props,
       ref,
       className: `${props.className || ""} ${
-        // @ts-ignore
+        // @ts-expect-error className on unknown child.props
         child.props.className || ""
       }`.trim(),
     });

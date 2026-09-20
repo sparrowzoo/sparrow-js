@@ -15,7 +15,7 @@ interface GetProps {
 }
 
 interface PostProps extends GetProps {
-    body: any
+    body: object | string
 }
 
 export default class Fetcher {

@@ -1,13 +1,13 @@
 // 触底检测函数
 import { useEffect, useRef, useState } from "react";
 
-export default function useReachBottom(
-  reachBottomHandler: (lastId: any) => Promise<any>,
-  initialLastId: any
+export default function useReachBottom<T>(
+  reachBottomHandler: (lastId: T) => Promise<T>,
+  initialLastId: T
 ) {
   const [loading, setLoading] = useState(false);
   const globalLoading = useRef(false);
-  const [lastId, setLastId] = useState<any>(initialLastId);
+  const [lastId, setLastId] = useState<T>(initialLastId);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const checkScrollBottom = () => {
@@ -25,7 +25,7 @@ export default function useReachBottom(
     setLoading(true);
   }
 
-  function finishLoading(newLastId: any) {
+  function finishLoading(newLastId: T) {
     setLoading(false);
     // 延迟1秒，防止短时间内多次触发reachBottomHandler
     setTimeout(() => {
@@ -47,13 +47,13 @@ export default function useReachBottom(
         return;
       }
       startLoading();
-      reachBottomHandler(lastId).then((newLastId: any) => {
+      reachBottomHandler(lastId).then((newLastId) => {
         finishLoading(newLastId);
       });
     };
-    node && node.addEventListener("scroll", handleScroll);
+    node?.addEventListener("scroll", handleScroll);
     return () => {
-      node && node.removeEventListener("scroll", handleScroll);
+      node?.removeEventListener("scroll", handleScroll);
     };
     // 每次请求都重新绑定参数，避免闭包缓存（避免闭包捕获旧的 lastId）
     // eslint-disable-next-line react-hooks/exhaustive-deps
