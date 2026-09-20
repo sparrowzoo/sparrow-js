@@ -51,7 +51,8 @@ export default function FileUploader({url, uploadCallback, uploadIcon, id, pathT
 
                 const result: Result = response.data;
                 if (result?.code !== "0") {
-                    toast.error(result?.message);
+                    const message = result?.message??"";
+                    toast.error(t("upload-failed", {message}));
                     return;
                 }
                 toast.success(t("upload-success"));

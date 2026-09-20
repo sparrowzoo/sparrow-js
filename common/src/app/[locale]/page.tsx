@@ -2,7 +2,7 @@ import {ModeToggle} from "@/common/components/header/mode-toggle";
 import {useTranslations} from "next-intl";
 import LocaleSwitcher from "@/common/components/i18n/LocaleSwitcher";
 import {Link} from "@/common/i18n/navigation";
-import {Anchor, ArrowRight, Bird, Blocks, CircleAlert, History, Languages, Loader2, Move, Settings, Sparkles, SunMoon, Table2, UploadCloud} from "lucide-react";
+import {Anchor, ArrowRight, Bird, Blocks, CircleAlert, History, Languages, Loader2, Move, Package, Settings, Sparkles, SunMoon, Table2, UploadCloud} from "lucide-react";
 
 const NEXT_INTL_GUIDE_URL = "/docs/next-intl/权威指南及使用说明.html";
 
@@ -126,6 +126,12 @@ export default function Home() {
                             className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
                             <Settings className="h-4 w-4"/>
                             {t("eslint-config-example")}
+                        </Link>
+                        <Link
+                            href="/i18n-static-export"
+                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
+                            <Package className="h-4 w-4"/>
+                            {t("i18n-static-export-example")}
                         </Link>
                     </div>
                 </section>

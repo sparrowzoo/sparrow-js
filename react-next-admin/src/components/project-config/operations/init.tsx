@@ -5,16 +5,18 @@ import {Button} from "@/components/ui/button";
 import {useTranslations} from "next-intl";
 import CoderApi from "@/api/manual/coder";
 import toast from "react-hot-toast";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 export default function InitScaffold({cellContext}: CellContextProps<ProjectConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+    const Navigations = useNavigating();
 
     const meta = cellContext.table.options.meta as MyTableMeta<ProjectConfig>;
     const primary = meta.primary;
     const row = cellContext.row.original;
     return <Button onClick={() => {
-        CoderApi.initScaffold(row[primary], errorTranslate).then(() => {
+        CoderApi.initScaffold(row[primary], errorTranslate, Navigations.redirectToLogin).then(() => {
                 toast.success(globalTranslate("init-scaffold") + globalTranslate("operation-success"));
             }
         ).catch(() => {

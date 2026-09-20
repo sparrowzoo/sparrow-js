@@ -6,6 +6,7 @@ import crateScheme from "@/schema/project-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import ProjectConfigApi from "@/api/auto/project-config";
+import {ProjectConfig} from "@/components/project-config/columns";
 import toast from "react-hot-toast";
 import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
@@ -16,7 +17,7 @@ import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
-export default function EditPage({cellContext,callbackHandler}: CellContextProps<any>) {
+export default function EditPage({cellContext,callbackHandler}: CellContextProps<ProjectConfig>) {
      const globalTranslate = useTranslations("GlobalForm");
         const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
         const pageTranslate = useTranslations("ProjectConfig")

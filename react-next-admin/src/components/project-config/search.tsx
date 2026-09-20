@@ -3,6 +3,7 @@ import * as React from "react";
 import {useState} from "react";
 import {ProjectConfig} from "@/components/project-config/columns";
 import {MyTableMeta,SimplePager, TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import {PagerResult} from "@/common/lib/protocol/Result";
 import {Button} from "@/components/ui/button";
 import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
@@ -59,7 +60,7 @@ setSearchCondition={setProjectConfigQuery}/>
 <SearchInput value={projectConfigQuery?.chineseName||""} 
 propertyName={"chineseName"} pageTranslate={pageTranslate} 
 setSearchCondition={setProjectConfigQuery}/>
-<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setProjectConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
+<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setProjectConfigQuery} dictionary={(meta.result.data as PagerResult<ProjectConfig>).dictionary['status']}/>
             <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
         </div>
     );

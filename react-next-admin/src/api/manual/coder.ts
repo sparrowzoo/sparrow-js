@@ -1,5 +1,6 @@
 import Fetcher from "@/common/lib/Fetcher";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
+import Result from "@/common/lib/protocol/Result";
 
 export default class CoderApi {
     public static initByLocal(
@@ -7,7 +8,7 @@ export default class CoderApi {
         fullClassName: string,
         translator: (key: string) => string,
         directToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const query = {
             projectId: projectId,
             fullClassName: fullClassName
@@ -28,7 +29,7 @@ export default class CoderApi {
         sourceCode: string,
         translator: (key: string) => string,
         directToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const query = {
             projectId: projectId,
             fullClassName: fullClassName,
@@ -46,10 +47,10 @@ export default class CoderApi {
 
     public static generate(
         projectId: IDENTITY,
-        tableNames: any[],
+        tableNames: unknown[],
         translator: (key: string) => string,
         directToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const query = {
             projectId: projectId,
             tableNames: tableNames
@@ -68,10 +69,10 @@ export default class CoderApi {
         projectId: IDENTITY,
         translator: (key: string) => string,
         directToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         return Fetcher.post({
             url: "/coder/init-scaffold.json",
-            body: projectId,
+            body: JSON.stringify(projectId),
             translator: translator,
             redirectToLogin:directToLogin
         });
@@ -82,10 +83,10 @@ export default class CoderApi {
         projectId: IDENTITY,
         translator: (key: string) => string,
         directToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         return Fetcher.post({
             url: "/coder/clear-scaffold.json",
-            body: projectId,
+            body: JSON.stringify(projectId),
             translator: translator,
             redirectToLogin:directToLogin
         });

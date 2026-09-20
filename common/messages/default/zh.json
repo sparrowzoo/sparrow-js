@@ -197,7 +197,8 @@
     "error-example": "错误信息示例",
     "draggable-example": "拖拽组件示例",
     "table-example": "表格组件示例",
-    "eslint-config-example": "编译配置差异说明"
+    "eslint-config-example": "编译配置差异说明",
+    "i18n-static-export-example": "静态导出与 middleware"
   },
   "FormsExample": {
     "back": "返回首页",
@@ -352,5 +353,10 @@
     "back": "返回首页",
     "title": "编译报错根因分析",
     "desc": "说明 react-next-admin 与 common 编译差异的根因：同一份源码，不同的 ESLint 配置。"
+  },
+  "I18nStaticExport": {
+    "back": "返回首页",
+    "title": "静态导出与 middleware",
+    "desc": "说明静态导出（output: 'export'）与 src/middleware.ts 的关系，以及静态模式下的替代方案。"
   }
 }

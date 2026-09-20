@@ -13,6 +13,7 @@ import {TableConfig} from "@/components/table-config/columns";
 import TableConfigApi from "@/api/auto/table-config";
 import toast from "react-hot-toast";
 import {useTranslations} from "next-intl";
+import useNavigating from "@/common/hook/NavigatingHook";
 
 
 function SaveButton({table}: TableOperationProps<ColumnConfig>) {
@@ -20,11 +21,12 @@ function SaveButton({table}: TableOperationProps<ColumnConfig>) {
     const parent = meta.parent as TableConfig;
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const globalTranslate = useTranslations("GlobalForm");
+    const Navigations = useNavigating();
 
     return (<div><Button onClick={() => {
             const originalData = TableUtils.getOriginalData(table);
             parent.columnConfigs = JSON.stringify(originalData);
-            TableConfigApi.save(parent, errorTranslate).then(
+            TableConfigApi.save(parent, errorTranslate, Navigations.redirectToLogin).then(
                 () => {
                     toast.success(globalTranslate("save") + globalTranslate("operation-success"));
                 }
@@ -37,7 +39,7 @@ function SaveButton({table}: TableOperationProps<ColumnConfig>) {
 
 export default function ColumnEditor({cellContext}: CellContextProps<TableConfig>) {
     const meta = cellContext.table.options.meta as MyTableMeta<ColumnConfig>;
-    const result = meta.result;
+    const result = meta.result as Result<PagerResult<ColumnConfig>>;
     const original = cellContext.row.original;
     let dataState = JSON.parse(original.columnConfigs) as ColumnConfig[];
     const filteringIds = ['check-box', 'actions', 'filter', 'createUserName', 'createUserId', 'modifiedUserId', 'modifiedUserName', 'gmtCreate', 'gmtModified', 'deleted', 'status'];

@@ -38,7 +38,7 @@ function InnerColumnOperation({showFilter, showSort, column}: ColumnOperationPro
                     {showSort && <DropdownMenuItem><Button
                         variant="ghost"
                         onClick={(e) => {
-                            column.toggleSorting(column.getIsSorted() === "asc");
+                            column?.toggleSorting(column?.getIsSorted() === "asc");
                             e.stopPropagation();
                         }}
                     >
@@ -52,7 +52,7 @@ function InnerColumnOperation({showFilter, showSort, column}: ColumnOperationPro
         return <Button
             variant="ghost"
             onClick={(e) => {
-                column.toggleSorting(column.getIsSorted() === "asc");
+                column?.toggleSorting(column?.getIsSorted() === "asc");
                 e.stopPropagation();
             }}
         >

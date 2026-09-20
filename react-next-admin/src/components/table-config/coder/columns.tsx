@@ -22,7 +22,7 @@ export interface ColumnConfig extends BasicData<ColumnConfig> {
     defaultValue: string;
     searchType: number;
     validateType: string;
-    validator: any;
+    validator: unknown;
     dataSourceType: number;
     dataSourceParams: string;
     columnType: number;
@@ -53,8 +53,8 @@ export const columns: ColumnDef<ColumnConfig>[] = [
     }, {
         accessorKey: "javaType",
         header: PlainTextHeader({columnTitle: "类型"} as ColumnOperationProps),
-        cell: NormalCell("javaType", undefined, (value: any) => {
-            return value.replace("java.lang.", "")
+        cell: NormalCell("javaType", undefined, (value: unknown) => {
+            return (value as string).replace("java.lang.", "")
         }),
         enableHiding: false
     }, {

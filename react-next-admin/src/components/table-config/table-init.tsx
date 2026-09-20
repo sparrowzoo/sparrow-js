@@ -9,6 +9,7 @@ import {Textarea} from "@/components/ui/textarea";
 import {Input} from "@/components/ui/input";
 import CoderApi from "@/api/manual/coder";
 import {useTranslations} from "next-intl";
+import useNavigating from "@/common/hook/NavigatingHook";
 import {DialogTitle} from "@/components/ui/dialog";
 
 export default function TableInit({table}: TableOperationProps<TableConfig>) {
@@ -19,6 +20,7 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
     const [jpaFullClassName, setJpaFullClassName] = useState("");
     const [sourceCode, setSourceCode] = useState("");
     const errorTranslate = useTranslations("ErrorMessage")
+    const Navigations = useNavigating();
     debugger;
     return <>
         <DialogTitle> 项目：{parent.value}
@@ -45,9 +47,9 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
                 </div>
                 <Button onClick={() => {
                     debugger;
-                    CoderApi.initByLocal(parent.key, localFullClassName, errorTranslate)
+                    CoderApi.initByLocal(parent.key, localFullClassName, errorTranslate, Navigations.redirectToLogin)
                         .then(() => {
-                            initHandler && initHandler();
+                            initHandler?.();
                         }).catch(() => {
                     });
                 }}>生成</Button>
@@ -82,9 +84,9 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
                     </div>
                 </div>
                 <Button onClick={() => {
-                    CoderApi.initByJpa(parent.key, jpaFullClassName, sourceCode, errorTranslate)
+                    CoderApi.initByJpa(parent.key, jpaFullClassName, sourceCode, errorTranslate, Navigations.redirectToLogin)
                         .then(() => {
-                            initHandler && initHandler();
+                            initHandler?.();
                         }).catch(() => {
                     });
                 }}>生成</Button>

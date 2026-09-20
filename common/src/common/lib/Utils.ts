@@ -27,7 +27,7 @@ export class Utils {
         return imageTypes.includes(extension as string);
     }
 
-    public static getValue(dictionary: KeyValue[] | undefined, key: string): KeyValue | undefined {
+    public static getValue(dictionary: KeyValue[] | undefined, key: string | undefined): KeyValue | undefined {
         if (!dictionary) {
             return undefined;
         }

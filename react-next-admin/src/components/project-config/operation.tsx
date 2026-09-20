@@ -2,6 +2,7 @@
 import * as React from "react";
 import {ProjectConfig} from "@/components/project-config/columns";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import Result, {PagerResult} from "@/common/lib/protocol/Result";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import AddPage from "@/components/project-config/add";
@@ -22,7 +23,7 @@ export default function Operation({table}: TableOperationProps<ProjectConfig>) {
 
     const initHandler=meta.initHandler;
     const setData=meta.setData;
-    const result=meta.result;
+    const result = meta.result as Result<PagerResult>;
 
     const callbackHandler = () => {
         setOpen(false);

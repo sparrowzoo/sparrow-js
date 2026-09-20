@@ -31,6 +31,6 @@ export const MODULES_BY_KEY: Record<string, MenuItem> = Object.fromEntries(
 );
 
 // url -> module key, used to resolve access-history titles via i18n
-export const MENU_URL_TO_KEY: Record<string, string> = Object.fromEntries(
-    modules.map((m) => [m.url, m.key])
+export const MENU_URL_TO_KEY: Map<string, string> = new Map(
+    modules.map((m) => [m.url, m.key] as [string, string])
 );

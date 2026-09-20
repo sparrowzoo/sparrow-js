@@ -43,7 +43,7 @@ const OperationCell = <TData,>({cellContext}: CellContextProps<TData>) => {
                 <DropdownMenuItem>
                     <Button onClick={(e) => {
                         e.stopPropagation();
-                        deleteHandler((original as unknown as Record<string, unknown>)[primary] as string | number);
+                        deleteHandler?.((original as unknown as Record<string, unknown>)[primary] as string | number);
                     }}>{globalTranslate("delete")}</Button>
                 </DropdownMenuItem>
                 {RowOperationComponents?.map((Item, index) => {
