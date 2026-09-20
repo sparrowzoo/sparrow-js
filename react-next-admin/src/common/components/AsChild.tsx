@@ -4,11 +4,13 @@ import React, { cloneElement } from "react";
 type ChildProps = {
   asChild?: boolean;
   children?: React.ReactNode;
+  ref?: React.Ref<HTMLElement>;
 } & React.ComponentPropsWithoutRef<"div">;
 
 const ChildComponent = ({
   asChild = false,
   children,
+  ref,
   ...props
 }: ChildProps) => {
   if (asChild) {
@@ -16,16 +18,21 @@ const ChildComponent = ({
 
     return cloneElement(child, {
       ...props,
-      // @ts-ignore
+      // @ts-expect-error child.props is unknown
       ...child.props,
+      ref,
       className: `${props.className || ""} ${
-        // @ts-ignore
+        // @ts-expect-error className on unknown child.props
         child.props.className || ""
       }`.trim(),
     });
   }
 
-  return <div {...props}>{children}</div>;
+  return (
+    <div ref={ref as React.Ref<HTMLDivElement>} {...props}>
+      {children}
+    </div>
+  );
 };
 
 export default ChildComponent;

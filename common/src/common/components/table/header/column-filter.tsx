@@ -11,7 +11,7 @@ import {useTranslations} from "next-intl";
 
 
 const ColumnFilter = () => {
-    const CF = ({table, column}) => {
+    const CF = ({table}) => {
         const tableName = table?.options.meta?.tableName;
         const i18n = table?.options.meta.i18n;
         const t = useTranslations(tableName);

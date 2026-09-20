@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import {AdminContext, AdminContextValue,} from "@/common/lib/admin/AdminContextProvider";
 import AdminBroker from "@/common/lib/admin/AdminBroker";
 import AccessHistoryContainer from "@/common/lib/admin/AccessHistoryContainer";
+import {MENU_URL_TO_KEY} from "@/common/lib/admin/navigation";
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/app-sidebar";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
@@ -20,11 +21,7 @@ export default function AdminRootLayout({
         useState<AdminContextValue>();
 
     useEffect(() => {
-        const menuMap = new Map<string, string>();
-        menuMap.set("/dashboard", "首页");
-        menuMap.set("/access-history", "访问历史");
-        menuMap.set("/menu", "菜单管理");
-        const accessHistoryContainer = new AccessHistoryContainer(menuMap);
+        const accessHistoryContainer = new AccessHistoryContainer(MENU_URL_TO_KEY);
         const adminBroker = new AdminBroker(accessHistoryContainer);
         const localContext = AdminContextValue.create(adminBroker);
         adminBroker.newMessageSignal = () => {

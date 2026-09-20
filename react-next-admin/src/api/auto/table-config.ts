@@ -1,13 +1,14 @@
 
 import Fetcher from "@/common/lib/Fetcher";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
+import Result from "@/common/lib/protocol/Result";
 
 export default class TableConfigApi {
     public static search(
-        query: any,
+        query: object,
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(query);
         return Fetcher.post({
             url: "/table/config/search.json",
@@ -18,10 +19,10 @@ export default class TableConfigApi {
     }
 
     public static  save(
-        params: any,
+        params: object,
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                     url: "/table/config/save.json",
@@ -35,7 +36,7 @@ export default class TableConfigApi {
         params: IDENTITY[],
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                             url: "/table/config/delete.json",
@@ -49,7 +50,7 @@ export default class TableConfigApi {
             id: IDENTITY,
             translator: (key: string) => string,
             redirectToLogin:()=>void
-        ): Promise<any> {
+        ): Promise<Result> {
             const body = JSON.stringify([id]);
             return Fetcher.post({
                                         url: "/table/config/delete.json",
@@ -64,7 +65,7 @@ export default class TableConfigApi {
         params: IDENTITY[],
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                                     url: "/table/config/disable.json",
@@ -78,7 +79,7 @@ export default class TableConfigApi {
         params: IDENTITY[],
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                                             url: "/table/config/enable.json",

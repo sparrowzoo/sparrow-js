@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import {useContext} from "react";
 import {
@@ -12,76 +14,55 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from "@/components/ui/sidebar";
-import {Link, useRouter} from "@/common/i18n/navigation";
+import {Link, usePathname, useRouter} from "@/common/i18n/navigation";
 import {AdminContext} from "@/common/lib/admin/AdminContextProvider";
-import {Package2} from "lucide-react";
-
-const data = {
-    navMain: [
-        {
-            title: "Getting Started",
-            url: "#",
-            items: [
-                {
-                    title: "Dashboard",
-                    url: "/dashboard",
-                },
-                {
-                    title: "About",
-                    url: "/access-history",
-                },
-            ],
-        },
-        {
-            title: "Building Your Application",
-            url: "#",
-            items: [
-                {
-                    title: "Menu",
-                    url: "/menu",
-                },
-                {
-                    title: "Projects",
-                    url: "/project-config",
-                    isActive: true,
-                },
-                {
-                    title: "Example",
-                    url: "/user-example",
-                }
-            ],
-        }
-    ],
-};
+import {MODULES_BY_KEY, navGroups} from "@/common/lib/admin/navigation";
+import {useTranslations} from "next-intl";
+import {Package2,} from "lucide-react";
 
 export function AppSidebar({...props}: React.ComponentProps<typeof Sidebar>) {
     const adminContext = useContext(AdminContext);
     const router = useRouter();
+    const pathname = usePathname();
+    const t = useTranslations("Sidebar");
+    const home = useTranslations("Home");
+
     return (
         <Sidebar {...props}>
-            <SidebarHeader className={"flex flex-row items-center justify-center"}>
-                <Package2 className="h-6 w-6"/><Link href="/">Index</Link>
+            <SidebarHeader className="flex flex-row items-center gap-2 px-4 py-3">
+                <Package2 className="h-6 w-6 text-primary"/>
+                <Link
+                    href="/"
+                    className="truncate font-semibold group-data-[collapsible=icon]:hidden"
+                >
+                    {t("brand")}
+                </Link>
             </SidebarHeader>
             <SidebarContent>
-                {/* We create a SidebarGroup for each parent. */}
-                {data.navMain.map((item) => (
-                    <SidebarGroup key={item.title}>
-                        <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
+                {navGroups.map((group) => (
+                    <SidebarGroup key={group.key}>
+                        <SidebarGroupLabel>{t(`groups.${group.key}`)}</SidebarGroupLabel>
                         <SidebarGroupContent>
                             <SidebarMenu>
-                                {item.items.map((item) => (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton
-                                            variant={"outline"}
-                                            onClick={() => {
-                                                adminContext.adminBroker.access(item.url, router);
-                                            }}
-                                            isActive={item.isActive}
-                                        >
-                                            {item.title}
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
+                                {group.items.map((key) => {
+                                    const item = MODULES_BY_KEY[key];
+                                    const Icon = item.icon;
+                                    const title = home(`modules.${key}.title`);
+                                    return (
+                                        <SidebarMenuItem key={key}>
+                                            <SidebarMenuButton
+                                                onClick={() =>
+                                                    adminContext.adminBroker.access(item.url, router)
+                                                }
+                                                isActive={pathname === item.url}
+                                                tooltip={title}
+                                            >
+                                                <Icon/>
+                                                <span>{title}</span>
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    );
+                                })}
                             </SidebarMenu>
                         </SidebarGroupContent>
                     </SidebarGroup>

@@ -75,6 +75,51 @@
     "sign-up": "注册",
     "logout-success": "您已退出登录!"
   },
+  "AccessHistories": {
+    "label": "访问历史",
+    "empty": "暂无记录",
+    "remove": "移除",
+    "clear-all": "清空全部"
+  },
+  "Home": {
+    "badge": "管理控制台",
+    "welcome": "欢迎回来",
+    "subtitle": "低代码后台脚手架，用于管理项目、菜单、表格与用户——一键从后端实体生成 CRUD 代码。",
+    "quickAccess": "快捷入口",
+    "modules": {
+      "dashboard": {
+        "title": "工作台",
+        "description": "可调尺寸的分析工作区"
+      },
+      "menu": {
+        "title": "菜单管理",
+        "description": "管理导航菜单"
+      },
+      "projectConfig": {
+        "title": "项目配置",
+        "description": "配置项目"
+      },
+      "tableConfig": {
+        "title": "表格配置",
+        "description": "定义数据表格列"
+      },
+      "userExample": {
+        "title": "用户示例",
+        "description": "用户 CRUD 示例"
+      },
+      "accessHistory": {
+        "title": "访问历史",
+        "description": "最近导航历史"
+      }
+    }
+  },
+  "Sidebar": {
+    "brand": "麻雀窝",
+    "groups": {
+      "gettingStarted": "快速开始",
+      "buildingYourApplication": "构建应用"
+    }
+  },
   "KVS": {
     "cellType": {
       "CHECK_BOX": "选择框",

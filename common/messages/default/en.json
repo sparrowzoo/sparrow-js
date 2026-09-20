@@ -99,7 +99,8 @@
     "loading-example": "Loading Components Example",
     "error-example": "Error Message Example",
     "draggable-example": "Draggable Example",
-    "table-example": "Table Components Example"
+    "table-example": "Table Components Example",
+    "eslint-config-example": "Build Config Differences"
   },
   "FormsExample": {
     "back": "Back to home",
@@ -262,5 +263,10 @@
     "sort": "Sort",
     "gmtCreate": "Created",
     "actions": "Actions"
+  },
+  "LinkConfig": {
+    "back": "Back to home",
+    "title": "Compile Error Root Cause",
+    "desc": "Explains why react-next-admin and common compile differently: same source, different ESLint config."
   }
 }

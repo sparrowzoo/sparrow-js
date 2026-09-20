@@ -2,7 +2,6 @@
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
-import React from "react";
 import crateScheme from "@/schema/user-example";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
@@ -34,10 +33,9 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
-        event: React.BaseSyntheticEvent | undefined
     ) => {
         UserExampleApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
-            (res) => {
+            () => {
                 if(callbackHandler){callbackHandler();}
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
@@ -47,13 +45,10 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
     const {
         register,
         handleSubmit,
-        control,
         setValue,
-        getValues,
         formState: {
             errors,
-            isSubmitted,
-            touchedFields
+            isSubmitted
         },
     } = useForm<FormData>({
         //相当于v.parse

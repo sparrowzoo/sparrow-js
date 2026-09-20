@@ -15,7 +15,7 @@ export default class AdminBroker {
         };
     }
 
-    public access(url: string, router: any) {
+    public access(url: string, router: { push: (url: string) => void }) {
         this.accessHistoryContainer.access(url);
         router.push(url);
         this.newMessageSignal();

@@ -1,5 +1,4 @@
 import {ColumnDef} from "@tanstack/react-table";
-import * as React from "react";
 import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import NormalCell from "@/common/components/table/cell/normal";
 import PlainTextHeader from "@/common/components/table/header/plain-text";

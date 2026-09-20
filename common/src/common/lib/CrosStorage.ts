@@ -102,7 +102,7 @@ export default class CrosStorage {
     storage: StorageType = StorageType.AUTOMATIC,
     generateVisitorToken: (() => Promise<string>) | null = null
   ) {
-    return new Promise<any>((resolve, reject) => {
+    return new Promise<string | null>((resolve) => {
       this.get(TOKEN_KEY, storage).then((token) => {
         if (token) {
           console.log(" token exist ", token);
@@ -250,7 +250,7 @@ export default class CrosStorage {
             req,
             this.iframeOrigin as string
           );
-        } catch (e) {
+        } catch {
           setTimeout(send, 1000);
         }
       };

@@ -196,7 +196,8 @@
     "loading-example": "Loading 组件示例",
     "error-example": "错误信息示例",
     "draggable-example": "拖拽组件示例",
-    "table-example": "表格组件示例"
+    "table-example": "表格组件示例",
+    "eslint-config-example": "编译配置差异说明"
   },
   "FormsExample": {
     "back": "返回首页",
@@ -346,5 +347,10 @@
     "sort": "排序",
     "gmtCreate": "创建时间",
     "actions": "操作"
+  },
+  "LinkConfig": {
+    "back": "返回首页",
+    "title": "编译报错根因分析",
+    "desc": "说明 react-next-admin 与 common 编译差异的根因：同一份源码，不同的 ESLint 配置。"
   }
 }

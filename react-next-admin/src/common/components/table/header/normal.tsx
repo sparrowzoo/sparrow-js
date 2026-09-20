@@ -3,15 +3,13 @@ import * as React from "react";
 import {ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import {useTranslations} from "next-intl";
 
-const NormalHeader = ({showFilter, showSort, columnTitle, column}: ColumnOperationProps) => {
-    return ({column, table}) => {
+const NormalHeader = ({showFilter, showSort, columnTitle}: ColumnOperationProps) => {
+    const NH = ({column, table}) => {
         const tableName = table?.options.meta?.tableName;
         const i18n = table?.options.meta.i18n;
-        if (i18n) {
-            const t = useTranslations(tableName);
-            if (t.has(column.id)) {
-                columnTitle = t(column.id)
-            }
+        const t = useTranslations(tableName);
+        if (i18n && t.has(column.id)) {
+            columnTitle = t(column.id)
         }
 
         return (<>
@@ -19,6 +17,8 @@ const NormalHeader = ({showFilter, showSort, columnTitle, column}: ColumnOperati
                                  showSort={showSort}/></>
         );
     }
+    NH.displayName = "NormalHeader";
+    return NH;
 };
 export default NormalHeader;
 

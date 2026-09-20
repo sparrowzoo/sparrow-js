@@ -25,7 +25,7 @@ import InitScaffold from "@/components/project-config/operations/init";
 export default function Page() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
-    const [dataState, setDataState] = useState<Result<PagerResult<ProjectConfig>> | undefined>();
+    const [dataState, setDataState] = useState<Result | undefined>();
     const pagination = {pageIndex: 0, pageSize: 10};
     const  Navigations=useNavigating();
     const init = () => {

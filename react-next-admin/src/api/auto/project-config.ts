@@ -1,13 +1,14 @@
 
 import Fetcher from "@/common/lib/Fetcher";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
+import Result from "@/common/lib/protocol/Result";
 
 export default class ProjectConfigApi {
     public static search(
-        query: any,
+        query: object,
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(query);
         return Fetcher.post({
             url: "/project/config/search.json",
@@ -18,10 +19,10 @@ export default class ProjectConfigApi {
     }
 
     public static  save(
-        params: any,
+        params: object,
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                     url: "/project/config/save.json",
@@ -35,7 +36,7 @@ export default class ProjectConfigApi {
         params: IDENTITY[],
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                             url: "/project/config/delete.json",
@@ -49,7 +50,7 @@ export default class ProjectConfigApi {
             id: IDENTITY,
             translator: (key: string) => string,
             redirectToLogin:()=>void
-        ): Promise<any> {
+        ): Promise<Result> {
             const body = JSON.stringify([id]);
             return Fetcher.post({
                                         url: "/project/config/delete.json",
@@ -64,7 +65,7 @@ export default class ProjectConfigApi {
         params: IDENTITY[],
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                                     url: "/project/config/disable.json",
@@ -78,7 +79,7 @@ export default class ProjectConfigApi {
         params: IDENTITY[],
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<any> {
+    ): Promise<Result> {
         const body = JSON.stringify(params);
         return Fetcher.post({
                                             url: "/project/config/enable.json",

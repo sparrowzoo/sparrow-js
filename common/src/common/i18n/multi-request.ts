@@ -1,6 +1,5 @@
 import {hasLocale} from "next-intl";
 import {getRequestConfig} from "next-intl/server";
-// @ts-ignore
 import {routing} from "@/i18n/routing";
 
 export default getRequestConfig(async ({requestLocale}) => {
@@ -9,7 +8,6 @@ export default getRequestConfig(async ({requestLocale}) => {
     const locale = hasLocale(routing.locales, requested)
         ? requested
         : routing.defaultLocale;
-    //@ts-ignore
     const i18nList = (await import(`../../../messages/list.json`)).default;
     console.log("i18n file list", i18nList);
     let messages = {};

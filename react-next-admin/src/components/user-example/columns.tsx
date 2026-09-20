@@ -1,13 +1,11 @@
 
 import {ColumnDef, filterFns} from "@tanstack/react-table";
-import * as React from "react";
 import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import CheckBoxCell from "@/common/components/table/cell/check-box";
 import NormalCell from "@/common/components/table/cell/normal";
 import CheckboxHeader from "@/common/components/table/header/check-box";
 import NormalHeader from "@/common/components/table/header/normal";
 import UnixTimestampCell from "@/common/components/table/cell/unix-timestamp";
-import OperationCell from "@/common/components/table/cell/operation";
 import ColumnFilter from "@/common/components/table/header/column-filter";
 import PlainTextHeader from "@/common/components/table/header/plain-text";
 

@@ -2,7 +2,6 @@
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
-import React from "react";
 import crateScheme from "@/schema/table-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
@@ -12,8 +11,7 @@ import {ValidatableTextarea} from "@/common/components/forms/validatable-textare
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
-import {CellContextProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
-import {TableConfig} from "@/components/table-config/columns";
+import {CellContextProps} from "@/common/lib/table/DataTableProperty";
 import useNavigating from "@/common/hook/NavigatingHook";
 
 
@@ -26,17 +24,15 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
         const FormSchema = crateScheme(validateTranslate);
         type FormData = v.InferOutput<typeof FormSchema>;
         const original = cellContext.row.original;
-         const meta = cellContext.table.options.meta as MyTableMeta<TableConfig>;
     const  Navigations=useNavigating();
 
 
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
-        event: React.BaseSyntheticEvent | undefined
     ) => {
         TableConfigApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
-            (res) => {
+            () => {
                 if(callbackHandler){callbackHandler();}
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
@@ -46,13 +42,9 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
     const {
         register,
         handleSubmit,
-        control,
-        setValue,
-        getValues,
         formState: {
             errors,
-            isSubmitted,
-            touchedFields
+            isSubmitted
         },
     } = useForm<FormData>({
         //相当于v.parse

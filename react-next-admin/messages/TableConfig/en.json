@@ -1,0 +1,77 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "description": "Description",
+  "pageSize": "Page Size",
+  "className": "Class Name",
+  "createUserName": "Created By",
+  "source": "Class Source",
+  "tableName": "Table Name",
+  "sourceCode": "Source Code",
+  "id": "ID",
+  "locked": "Locked",
+  "onlyAccessSelf": "Only Access Self",
+  "validate": {
+    "checkable": {
+      "check-message": "Please enter a valid number",
+      "empty-message": "Cannot be empty"
+    },
+    "description": {
+      "empty-message": "Cannot be empty"
+    },
+    "pageSize": {
+      "check-message": "Please enter a valid number",
+      "empty-message": "Cannot be empty"
+    },
+    "className": {
+      "empty-message": "Cannot be empty"
+    },
+    "source": {
+      "check-message": "Please enter a valid number",
+      "empty-message": "Cannot be empty"
+    },
+    "tableName": {
+      "empty-message": "Cannot be empty"
+    },
+    "statusCommand": {},
+    "sourceCode": {},
+    "columnFilter": {
+      "check-message": "Please enter a valid number",
+      "empty-message": "Cannot be empty"
+    },
+    "columnConfigs": {},
+    "rowMenu": {
+      "check-message": "Please enter a valid number",
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "locked": {},
+    "onlyAccessSelf": {},
+    "projectId": {
+      "check-message": "Please enter a valid number",
+      "empty-message": "Cannot be empty"
+    },
+    "primaryKey": {
+      "empty-message": "Cannot be empty"
+    }
+  },
+  "checkable": "Selectable",
+  "gmtCreate": "Created At",
+  "statusCommand": "Show Status Command",
+  "filter": "Filter Column",
+  "deleted": "Deleted",
+  "columnFilter": "Column Filter",
+  "modifiedUserId": "Updated By ID",
+  "columnConfigs": "Column Configs",
+  "rowMenu": "Row Menu",
+  "ErrorMessage": {
+    "system_server_error": "System error, please try again later...",
+    "global_parameter_null": "Parameter cannot be null...",
+    "user_not_login": "User not logged in..."
+  },
+  "projectId": "Project",
+  "actions": "Actions",
+  "primaryKey": "Primary Key",
+  "status": "Status"
+}

@@ -2,7 +2,6 @@
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
-import React from "react";
 import crateScheme from "@/schema/table-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
@@ -12,14 +11,14 @@ import * as v from "valibot";
 import {useTranslations} from "next-intl";
 import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
-import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {TableConfig} from "@/components/table-config/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
 
-export default function Page({callbackHandler, table}: TableOperationProps<TableConfig>) {
+export default function Page({callbackHandler}: TableOperationProps<TableConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const pageTranslate = useTranslations("TableConfig")
@@ -27,17 +26,15 @@ export default function Page({callbackHandler, table}: TableOperationProps<Table
 
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
-    const meta = table.options.meta as MyTableMeta<TableConfig>;
     const  Navigations=useNavigating();
 
 
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
-        event: React.BaseSyntheticEvent | undefined
     ) => {
         TableConfigApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
-            (res) => {
+            () => {
                 callbackHandler();
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
@@ -47,13 +44,9 @@ export default function Page({callbackHandler, table}: TableOperationProps<Table
     const {
         register,
         handleSubmit,
-        control,
-        setValue,
-        getValues,
         formState: {
             errors,
-            isSubmitted,
-            touchedFields
+            isSubmitted
         },
     } = useForm<FormData>({
         //相当于v.parse

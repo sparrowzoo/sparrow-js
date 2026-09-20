@@ -1,0 +1,46 @@
+{
+  "architectures": "Code Architecture",
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "frontendName": "Frontend Project Name",
+  "description": "Description",
+  "createUserName": "Created By",
+  "wrapWithParent": "Use Parent Module",
+  "gmtCreate": "Created At",
+  "i18n": "i18n",
+  "modulePrefix": "Module Prefix",
+  "filter": "Filter Column",
+  "deleted": "Deleted",
+  "modifiedUserId": "Updated By ID",
+  "scaffold": "Scaffold",
+  "name": "Project Name",
+  "chineseName": "Chinese Name",
+  "id": "ID",
+  "ErrorMessage": {
+    "system_server_error": "System error, please try again later...",
+    "global_parameter_null": "Parameter cannot be null..."
+  },
+  "config": "Scaffold Config",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "frontendName": {
+      "empty-message": "Cannot be empty"
+    },
+    "scaffold": {},
+    "name": {
+      "empty-message": "Cannot be empty"
+    },
+    "chineseName": {
+      "empty-message": "Cannot be empty"
+    },
+    "description": {},
+    "id": {},
+    "wrapWithParent": {},
+    "i18n": {},
+    "modulePrefix": {
+      "empty-message": "Cannot be empty"
+    }
+  }
+}

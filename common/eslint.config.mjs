@@ -6,13 +6,16 @@ const compat = new FlatCompat({
 })
 
 const eslintConfig = [
-    ...compat.config({
-        extends: ['next'],
+    ...compat.extends('next/core-web-vitals', 'next/typescript'),
+    {
+        ignores: ['.next/**', 'node_modules/**', 'next-env.d.ts', 'out/**', 'build/**'],
+    },
+    {
         rules: {
             'react/no-unescaped-entities': 'off',
             '@next/next/no-page-custom-font': 'off',
         },
-    }),
+    },
 ]
 
 export default eslintConfig

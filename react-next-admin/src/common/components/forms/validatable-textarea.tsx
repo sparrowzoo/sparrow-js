@@ -18,7 +18,6 @@ export interface FormHookInputProps
 const ValidatableTextarea = React.forwardRef<HTMLTextAreaElement, FormHookInputProps>(
     ({
          errorMessage,
-         validateTranslate,
          pageTranslate,
          fieldPropertyName,
          isSubmitted,

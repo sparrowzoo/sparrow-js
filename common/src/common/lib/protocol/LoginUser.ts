@@ -14,7 +14,7 @@ export default class LoginUser {
     public host: string;
     public days: number;
     public expireAt: number;
-    public extensions: Map<string, any>;
+    public extensions: Map<string, unknown>;
 
     public static logout(redirectToLogin: () => void, message) {
         CrosStorage.getCrosStorage()

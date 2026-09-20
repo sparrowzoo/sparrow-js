@@ -19,17 +19,11 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
     const [open, setOpen] = React.useState(false);
     const meta = table.options.meta as MyTableMeta<TableConfig>;
 
-    const initHandler = meta.initHandler;
     const setData = meta.setData;
     const result = meta.result;
     const parent = meta.parent as KeyValue;
     const projectId = parent.key;
     const  Navigations=useNavigating();
-
-    const callbackHandler = () => {
-        setOpen(false);
-        initHandler();
-    }
 
     return (<div className="flex justify-between gap-4">
             <Dialog onOpenChange={setOpen} open={open}>
@@ -47,6 +41,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     return;
                 }
                 TableConfigApi.batchDelete(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         const datas = TableUtils.removeRowByPrimary(selectedIds, table);
                         result.data.list = datas;
@@ -64,6 +59,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     return;
                 }
                 TableConfigApi.enable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         const datas = TableUtils.batchEnable(selectedIds, table, "status");
                         result.data.list = datas;
@@ -81,6 +77,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     return;
                 }
                 TableConfigApi.disable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         const datas = TableUtils.batchDisable(selectedIds, table, "status");
                         result.data.list = datas;
@@ -101,6 +98,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                 const tableNames = TableUtils.getSelectedFields(table, "tableName");
 
                 CoderApi.generate(projectId, tableNames, errorTranslate,Navigations.redirectToLogin).then(
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         toast.success(globalTranslate("generate-code") + globalTranslate("operation-success"));
                     }
