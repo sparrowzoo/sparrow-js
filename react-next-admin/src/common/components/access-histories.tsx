@@ -20,6 +20,7 @@ export default function AccessHistories({
     const {adminBroker} = useContext(AdminContext);
     const router = useRouter();
     const t = useTranslations("AccessHistories");
+    const home = useTranslations("Home");
 
     // 订阅 broker 的变更信号，增删/清空后自动刷新
     const [, forceRender] = useReducer((x: number) => x + 1, 0);
@@ -51,20 +52,22 @@ export default function AccessHistories({
                         {t("empty")}
                     </span>
                 ) : (
-                    accessHistories.map((history) => (
+                    accessHistories.map((history) => {
+                        const title = home(`modules.${history.title}.title`);
+                        return (
                         <div
                             key={history.url}
                             className="group flex shrink-0 items-center overflow-hidden rounded-full border border-border bg-background text-xs shadow-xs transition-colors hover:border-violet-500/40 hover:bg-accent"
                         >
                             <button
                                 type="button"
-                                title={history.title}
+                                title={title}
                                 onClick={() =>
                                     adminBroker.access(history.url, router)
                                 }
                                 className="max-w-[10rem] truncate px-3 py-1 font-medium text-foreground transition-colors hover:text-violet-600 dark:hover:text-violet-300"
                             >
-                                {history.title}
+                                {title}
                             </button>
 
                             <Tooltip>
@@ -89,7 +92,8 @@ export default function AccessHistories({
                                 <TooltipContent>{t("remove")}</TooltipContent>
                             </Tooltip>
                         </div>
-                    ))
+                        );
+                    })
                 )}
 
                 {accessHistories.length > 0 && (
