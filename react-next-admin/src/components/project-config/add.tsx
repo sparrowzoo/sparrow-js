@@ -35,7 +35,7 @@ export default function Page({callbackHandler}: TableOperationProps<ProjectConfi
     ) => {
         ProjectConfigApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
             () => {
-                callbackHandler();
+                callbackHandler?.();
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
         ).catch(()=>{});

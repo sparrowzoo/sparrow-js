@@ -70,7 +70,7 @@ class SparrowWebSocket {
                 this.handshakeFail(data);
                 return;
             }
-            toast.error(this.translate ? this.translate(data.key) : data.message);
+            toast.error(this.translate ? this.translate(data.key ?? "") : data.message ?? "");
             this.redirectLogin();
         });
     }

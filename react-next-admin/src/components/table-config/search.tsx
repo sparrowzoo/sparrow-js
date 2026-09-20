@@ -3,6 +3,7 @@ import * as React from "react";
 import {useState} from "react";
 import {TableConfig} from "@/components/table-config/columns";
 import {MyTableMeta,SimplePager, TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import {PagerResult} from "@/common/lib/protocol/Result";
 import {Button} from "@/components/ui/button";
 import TableConfigApi from "@/api/auto/table-config";
 import {useTranslations} from "next-intl";
@@ -55,7 +56,7 @@ setSearchCondition={setTableConfigQuery}/>
 <SearchInput value={tableConfigQuery?.className||""} 
 propertyName={"className"} pageTranslate={pageTranslate} 
 setSearchCondition={setTableConfigQuery}/>
-<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={meta.result.data.dictionary['status']}/>
+<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={(meta.result.data as PagerResult<TableConfig>).dictionary['status']}/>
             <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
         </div>
     );

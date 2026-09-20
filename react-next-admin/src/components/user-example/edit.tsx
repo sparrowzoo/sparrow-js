@@ -13,12 +13,13 @@ import {ValidatableDate} from "@/common/components/forms/validatable-date";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
 import {CellContextProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {PagerResult} from "@/common/lib/protocol/Result";
 import {UserExample} from "@/components/user-example/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
-export default function EditPage({cellContext,callbackHandler}: CellContextProps<any>) {
+export default function EditPage({cellContext,callbackHandler}: CellContextProps<UserExample>) {
      const globalTranslate = useTranslations("GlobalForm");
         const errorTranslate = useTranslations("UserExample.ErrorMessage")
         const pageTranslate = useTranslations("UserExample")
@@ -110,7 +111,7 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.idCard?.message}                                  fieldPropertyName={"idCard"}/>
-<ValidatableSelect dictionary={meta.result.data.dictionary["gender"]} pageTranslate={pageTranslate} defaultValue={original.gender}setValue={setValue}
+<ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["gender"]} pageTranslate={pageTranslate} defaultValue={original.gender?.toString()}setValue={setValue}
 fieldPropertyName={"gender"}/>
 <ValidatableInput readonly={false} defaultValue={original.age} {...register("age")}
                                   type={"text"}
@@ -118,7 +119,7 @@ fieldPropertyName={"gender"}/>
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.age?.message}                                  fieldPropertyName={"age"}/>
-<ValidatableSelect dictionary={meta.result.data.dictionary["projectId"]} pageTranslate={pageTranslate} defaultValue={original.projectId}setValue={setValue}
+<ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["projectId"]} pageTranslate={pageTranslate} defaultValue={original.projectId?.toString()}setValue={setValue}
 fieldPropertyName={"projectId"}/>
             </div>
            <DialogFooter>

@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {columns, UserExample} from "@/components/user-example/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/user-example/search";
@@ -11,30 +11,31 @@ import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import UserExampleApi from "@/api/auto/user-example";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
-import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import Result from "@/common/lib/protocol/Result";
 import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
 
 
+const pagination = {pageIndex: 0, pageSize: 10};
+
 export default function Page() {
     const errorTranslate = useTranslations("UserExample.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
-    const [dataState, setDataState] = useState<Result<PagerResult<UserExample>> | undefined>();
-    const pagination = {pageIndex: 0, pageSize: 10};
+    const [dataState, setDataState] = useState<Result | undefined>();
     const  Navigations=useNavigating();
-    const init = () => {
+    const init = useCallback(() => {
                 UserExampleApi.search({...pagination}, errorTranslate,Navigations.redirectToLogin).then(
                     (res) => {
                         setDataState(res)
                     }
                 ).catch(() => {
                 });
-            };
+            }, [errorTranslate, Navigations.redirectToLogin]);
             useEffect(() => {
                 init();
-            }, []);
+            }, [init]);
 
 
       const deleteHandler= (id: number) => {

@@ -1,10 +1,10 @@
 import {defineRouting} from "next-intl/routing";
-import {PASSPORT_ROOT} from "@/common/lib/Env";
+import {PASSPORT_ROOT, WWW_ROOT} from "@/common/lib/Env";
 
 export const routing = defineRouting({
     locales: ["en", "zh"],
     defaultLocale: "zh",
-    localePrefix: 'as-needed', // 关键配置
+    localePrefix: 'always', // 静态导出必须 always：as-needed 依赖 middleware 剥离默认语言前缀
     pathnames: {
         "/": "/",
         "/dashboard": "/dashboard",
@@ -22,6 +22,27 @@ export const routing = defineRouting({
             zh: `${PASSPORT_ROOT}/zh/avatar-editor`,
         },
         "/table-config": "/table-config",
-        "/project-config": "/project-config"
+        "/project-config": "/project-config",
+        "/blog": {
+            en: `${WWW_ROOT}/en/blog`,
+            zh: `${WWW_ROOT}/zh/blog`,
+        },
+        "/chat/friends": {
+            en: `${WWW_ROOT}/en/chat/friends`,
+            zh: `${WWW_ROOT}/zh/chat/friends`,
+        },
+        "/pop": {
+            en: `${WWW_ROOT}/en/pop`,
+            zh: `${WWW_ROOT}/zh/pop`,
+        },
+        "/shop": {
+            en: `${WWW_ROOT}/en/shop`,
+            zh: `${WWW_ROOT}/zh/shop`,
+        },
+        "/coder": "/project-config",
+        "/playground": {
+            en: `${WWW_ROOT}/en/playground`,
+            zh: `${WWW_ROOT}/zh/playground`,
+        }
     },
 });

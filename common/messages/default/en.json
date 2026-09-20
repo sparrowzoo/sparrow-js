@@ -100,7 +100,8 @@
     "error-example": "Error Message Example",
     "draggable-example": "Draggable Example",
     "table-example": "Table Components Example",
-    "eslint-config-example": "Build Config Differences"
+    "eslint-config-example": "Build Config Differences",
+    "i18n-static-export-example": "Static Export & Middleware"
   },
   "FormsExample": {
     "back": "Back to home",
@@ -268,5 +269,10 @@
     "back": "Back to home",
     "title": "Compile Error Root Cause",
     "desc": "Explains why react-next-admin and common compile differently: same source, different ESLint config."
+  },
+  "I18nStaticExport": {
+    "back": "Back to home",
+    "title": "Static Export & Middleware",
+    "desc": "Explains the relationship between static export (output: 'export') and src/middleware.ts, and the static replacements."
   }
 }

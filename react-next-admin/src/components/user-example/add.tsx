@@ -13,6 +13,7 @@ import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {ValidatableSelect} from "@/common/components/forms/validatable-select";
 import {ValidatableDate} from "@/common/components/forms/validatable-date";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {PagerResult} from "@/common/lib/protocol/Result";
 import {UserExample} from "@/components/user-example/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
 
@@ -37,7 +38,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<UserE
     ) => {
         UserExampleApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
             () => {
-                callbackHandler();
+                callbackHandler?.();
                 toast.success(globalTranslate("save")+globalTranslate("operation-success"));
             }
         ).catch(()=>{});
@@ -111,7 +112,7 @@ export default function Page({callbackHandler, table}: TableOperationProps<UserE
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.idCard?.message}                                  fieldPropertyName={"idCard"}/>
-<ValidatableSelect dictionary={meta.result.data.dictionary["gender"]} pageTranslate={pageTranslate} setValue={setValue}
+<ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["gender"]} pageTranslate={pageTranslate} setValue={setValue}
 fieldPropertyName={"gender"}/>
 <ValidatableInput readonly={false}  {...register("age")}
                                   type={"text"}
@@ -119,7 +120,7 @@ fieldPropertyName={"gender"}/>
                                   pageTranslate={pageTranslate}
                                   validateTranslate={validateTranslate}
                                   errorMessage={errors.age?.message}                                  fieldPropertyName={"age"}/>
-<ValidatableSelect dictionary={meta.result.data.dictionary["projectId"]} pageTranslate={pageTranslate} setValue={setValue}
+<ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["projectId"]} pageTranslate={pageTranslate} setValue={setValue}
 fieldPropertyName={"projectId"}/>
             </div>
              <DialogFooter>

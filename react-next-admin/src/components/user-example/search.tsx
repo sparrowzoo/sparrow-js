@@ -3,6 +3,7 @@ import * as React from "react";
 import {useState} from "react";
 import {UserExample} from "@/components/user-example/columns";
 import {MyTableMeta,SimplePager, TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import {PagerResult} from "@/common/lib/protocol/Result";
 import {Button} from "@/components/ui/button";
 import UserExampleApi from "@/api/auto/user-example";
 import {useTranslations} from "next-intl";
@@ -55,7 +56,7 @@ setSearchCondition={setUserExampleQuery}/>
 <SearchInput value={userExampleQuery?.chineseName||""} 
 propertyName={"chineseName"} pageTranslate={pageTranslate} 
 setSearchCondition={setUserExampleQuery}/>
-<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setUserExampleQuery} dictionary={meta.result.data.dictionary['status']}/>
+<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setUserExampleQuery} dictionary={(meta.result.data as PagerResult<UserExample>).dictionary['status']}/>
             <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
         </div>
     );

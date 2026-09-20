@@ -1,9 +1,9 @@
 import KeyValue from "@/common/lib/protocol/KeyValue";
 
-export default interface Result {
+export default interface Result<T = unknown> {
     code: string;
     message?: string;
-    data: unknown;
+    data: T;
     key?: string;
     instruction?: string;
 }

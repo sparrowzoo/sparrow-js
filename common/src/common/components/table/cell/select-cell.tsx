@@ -17,9 +17,9 @@ const SelectCell = (field: string, i18n?: boolean, readOnly: boolean = false) =>
         if (!currentItem) {
             if (dictionary.length == 0) {
                 console.error("field is not found " + field);
-            } else {
-                currentItem = dictionary[0];
+                return <></>;
             }
+            currentItem = dictionary[0];
         }
 
         let displayText = currentItem.value;

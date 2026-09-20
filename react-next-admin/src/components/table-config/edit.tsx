@@ -6,6 +6,7 @@ import crateScheme from "@/schema/table-config";
 import {Button} from "@/components/ui/button";
 import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
 import TableConfigApi from "@/api/auto/table-config";
+import {TableConfig} from "@/components/table-config/columns";
 import toast from "react-hot-toast";
 import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
@@ -16,7 +17,7 @@ import useNavigating from "@/common/hook/NavigatingHook";
 
 
 
-export default function EditPage({cellContext,callbackHandler}: CellContextProps<any>) {
+export default function EditPage({cellContext,callbackHandler}: CellContextProps<TableConfig>) {
      const globalTranslate = useTranslations("GlobalForm");
         const errorTranslate = useTranslations("TableConfig.ErrorMessage")
         const pageTranslate = useTranslations("TableConfig")

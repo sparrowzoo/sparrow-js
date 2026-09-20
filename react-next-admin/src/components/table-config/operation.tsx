@@ -1,6 +1,7 @@
 import * as React from "react";
 import {TableConfig} from "@/components/table-config/columns";
 import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProperty";
+import Result, {PagerResult} from "@/common/lib/protocol/Result";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import TableConfigApi from "@/api/auto/table-config";
@@ -20,7 +21,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
     const meta = table.options.meta as MyTableMeta<TableConfig>;
 
     const setData = meta.setData;
-    const result = meta.result;
+    const result = meta.result as Result<PagerResult>;
     const parent = meta.parent as KeyValue;
     const projectId = parent.key;
     const  Navigations=useNavigating();

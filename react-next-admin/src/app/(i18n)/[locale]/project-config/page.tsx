@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {columns, ProjectConfig} from "@/components/project-config/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/project-config/search";
@@ -12,7 +12,7 @@ import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import ProjectConfigApi from "@/api/auto/project-config";
 import {useTranslations} from "next-intl";
 import toast from "react-hot-toast";
-import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import Result from "@/common/lib/protocol/Result";
 import useNavigating from "@/common/hook/NavigatingHook";
 import TableConfigs from "@/components/project-config/operations/table-configs";
 import ClearScaffold from "@/components/project-config/operations/clear";
@@ -22,23 +22,24 @@ import InitScaffold from "@/components/project-config/operations/init";
 
 
 
+const pagination = {pageIndex: 0, pageSize: 10};
+
 export default function Page() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
     const [dataState, setDataState] = useState<Result | undefined>();
-    const pagination = {pageIndex: 0, pageSize: 10};
     const  Navigations=useNavigating();
-    const init = () => {
+    const init = useCallback(() => {
                 ProjectConfigApi.search({...pagination}, errorTranslate,Navigations.redirectToLogin).then(
                     (res) => {
                         setDataState(res)
                     }
                 ).catch(() => {
                 });
-            };
+            }, [errorTranslate, Navigations.redirectToLogin]);
             useEffect(() => {
                 init();
-            }, []);
+            }, [init]);
 
 
       const deleteHandler= (id: number) => {
