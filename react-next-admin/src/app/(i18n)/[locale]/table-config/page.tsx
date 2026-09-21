@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import {Suspense, useCallback, useEffect, useState} from "react";
+import {Suspense, useCallback, useEffect, useRef, useState} from "react";
 import {columns, TableConfig} from "@/components/table-config/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/table-config/search";
@@ -36,20 +36,21 @@ function TableConfigContent() {
     const searchParams = useSearchParams();
     const projectId = searchParams.get("projectId");
     const  Navigations=useNavigating();
+    const redirectToLoginRef = useRef(Navigations.redirectToLogin);
 
     const init = useCallback(() => {
-                TableConfigApi.search({...pagination}, errorTranslate,Navigations.redirectToLogin).then(
-                    (res) => {
-                        setDataState(res)
-                    }
-                ).catch(() => {
-                });
-            }, [errorTranslate, Navigations.redirectToLogin]);
-            useEffect(() => {
-                if (projectId != null) {
-                    init();
-                }
-            }, [projectId, init]);
+        TableConfigApi.search({...pagination}, errorTranslate, redirectToLoginRef.current).then(
+            (res) => {
+                setDataState(res)
+            }
+        ).catch(() => {
+        });
+    }, [errorTranslate]);
+    useEffect(() => {
+        if (projectId != null) {
+            init();
+        }
+    }, [projectId, init]);
 
     if (projectId == null) {
         return <div>Project Not Found !</div>

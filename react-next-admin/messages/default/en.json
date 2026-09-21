@@ -32,6 +32,7 @@
     "clear-scaffold": "Clear Scaffold",
     "init-scaffold": "Init Scaffold",
     "generate-code": "Generate Code",
+    "zip-download": "Compress & Download",
     "pagination": {
       "previous": "Previous",
       "next": "Next",

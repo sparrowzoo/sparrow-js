@@ -19,12 +19,12 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const [open, setOpen] = React.useState(false);
     const meta = table.options.meta as MyTableMeta<TableConfig>;
-
+    debugger
     const setData = meta.setData;
     const result = meta.result as Result<PagerResult>;
     const parent = meta.parent as KeyValue;
     const projectId = parent.key;
-    const  Navigations=useNavigating();
+    const Navigations = useNavigating();
 
     return (<div className="flex justify-between gap-4">
             <Dialog onOpenChange={setOpen} open={open}>
@@ -41,7 +41,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                TableConfigApi.batchDelete(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                TableConfigApi.batchDelete(selectedIds, errorTranslate, Navigations.redirectToLogin).then(
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         const datas = TableUtils.removeRowByPrimary(selectedIds, table);
@@ -59,7 +59,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                TableConfigApi.enable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                TableConfigApi.enable(selectedIds, errorTranslate, Navigations.redirectToLogin).then(
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         const datas = TableUtils.batchEnable(selectedIds, table, "status");
@@ -77,7 +77,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     toast(globalTranslate("no-record-checked"));
                     return;
                 }
-                TableConfigApi.disable(selectedIds, errorTranslate,Navigations.redirectToLogin).then(
+                TableConfigApi.disable(selectedIds, errorTranslate, Navigations.redirectToLogin).then(
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         const datas = TableUtils.batchDisable(selectedIds, table, "status");
@@ -98,13 +98,40 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                 }
                 const tableNames = TableUtils.getSelectedFields(table, "tableName");
 
-                CoderApi.generate(projectId, tableNames, errorTranslate,Navigations.redirectToLogin).then(
+                CoderApi.generate(projectId, tableNames, errorTranslate, Navigations.redirectToLogin).then(
                     // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     (res) => {
                         toast.success(globalTranslate("generate-code") + globalTranslate("operation-success"));
                     }
                 )
             }} variant="outline">{globalTranslate("generate-code")}</Button>
+
+            <Button onClick={() => {
+                const selectedIds = TableUtils.getSelectedIds(table);
+                if (selectedIds.length === 0) {
+                    toast(globalTranslate("no-record-checked"));
+                    return;
+                }
+                const tableNames = TableUtils.getSelectedFields(table, "tableName");
+
+                const toastId = toast.loading(globalTranslate("loading"));
+                CoderApi.zipDownload(projectId, tableNames, errorTranslate, Navigations.redirectToLogin).then(
+                    ({blob, filename}) => {
+                        toast.dismiss(toastId);
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement("a");
+                        a.href = url;
+                        a.download = filename;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        setTimeout(() => URL.revokeObjectURL(url), 0);
+                        toast.success(globalTranslate("zip-download") + globalTranslate("operation-success"));
+                    }
+                ).catch(() => {
+                    toast.dismiss(toastId);
+                });
+            }} variant="outline">{globalTranslate("zip-download")}</Button>
         </div>
     );
 }

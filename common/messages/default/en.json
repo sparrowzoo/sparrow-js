@@ -49,8 +49,8 @@
     "description": "A React Admin Dashboard with Next.js"
   },
   "LocaleSwitcher": {
-    "label": "Change language to \uD83C\uDDFA\uD83C\uDDF8 English",
-    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unknown}}"
+    "label": "Change language to 🇺🇸 English",
+    "locale": "{locale, select, zh {🇨🇳 中文} en {🇺🇸 English} other {Unknown}}"
   },
   "Header": {
     "index": "Home",
@@ -101,7 +101,8 @@
     "draggable-example": "Draggable Example",
     "table-example": "Table Components Example",
     "eslint-config-example": "Build Config Differences",
-    "i18n-static-export-example": "Static Export & Middleware"
+    "i18n-static-export-example": "Static Export & Middleware",
+    "zip-download-example": "ZIP Download Example"
   },
   "FormsExample": {
     "back": "Back to home",
@@ -274,5 +275,10 @@
     "back": "Back to home",
     "title": "Static Export & Middleware",
     "desc": "Explains the relationship between static export (output: 'export') and src/middleware.ts, and the static replacements."
+  },
+  "ZipDownloadExample": {
+    "back": "Back to home",
+    "title": "ZIP Download Pitfall Log",
+    "desc": "A summary of the backend zip-download pitfalls and fixes: file filtering, CORS response headers, non-ASCII filename encoding, and the Fetcher.download implementation."
   }
 }

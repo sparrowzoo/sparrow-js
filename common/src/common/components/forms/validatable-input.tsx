@@ -7,7 +7,6 @@ import ErrorMessage from "@/common/components/i18n/ErrorMessage";
 export interface FormHookInputProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     pageTranslate?: (key: string) => string,
-    validateTranslate?: (key: string) => string,
     fieldPropertyName: string,
     errorMessage?: string,
     isSubmitted?: boolean,
@@ -40,21 +39,21 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps>(
                 <Label
                     className={"justify-end w-[8rem]"}>{pageTranslate?.(fieldPropertyName) || fieldPropertyName}</Label>
                 <div className={"flex-1"}>
-                           <input
-                               onKeyDown={(e) => {
-                                   //阻止对话框自动关闭
-                                   e.stopPropagation();
-                               }
-                               }
-                               name={fieldPropertyName}
-                               type={type}
-                               className={cn(
-                                   defaultClazz,
-                                   className
-                               )}
-                               readOnly={type === "label" ? true : readonly}
-                               ref={ref}
-                               {...props}></input>
+                    <input
+                        onKeyDown={(e) => {
+                            //阻止对话框自动关闭
+                            e.stopPropagation();
+                        }
+                        }
+                        name={fieldPropertyName}
+                        type={type}
+                        className={cn(
+                            defaultClazz,
+                            className
+                        )}
+                        readOnly={type === "label" ? true : readonly}
+                        ref={ref}
+                        {...props}></input>
                 </div>
                 <div className={"w-[10rem]"}>
                     <ErrorMessage messageClass={"text-sm text-red-500"}

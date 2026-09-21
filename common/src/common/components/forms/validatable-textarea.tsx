@@ -7,7 +7,6 @@ import {Textarea} from "@/components/ui/textarea";
 export interface FormHookInputProps
     extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
     pageTranslate?: (key: string) => string,
-    validateTranslate?: (key: string) => string,
     fieldPropertyName: string,
     errorMessage?: string,
     isSubmitted?: boolean,

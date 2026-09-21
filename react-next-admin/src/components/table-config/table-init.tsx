@@ -5,8 +5,8 @@ import {TableConfig} from "@/components/table-config/columns";
 import {Label} from "@/components/ui/label";
 import KeyValue from "@/common/lib/protocol/KeyValue";
 import {Button} from "@/components/ui/button";
-import {Textarea} from "@/components/ui/textarea";
 import {Input} from "@/components/ui/input";
+import {Textarea} from "@/components/ui/textarea";
 import CoderApi from "@/api/manual/coder";
 import {useTranslations} from "next-intl";
 import useNavigating from "@/common/hook/NavigatingHook";
@@ -21,14 +21,13 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
     const [sourceCode, setSourceCode] = useState("");
     const errorTranslate = useTranslations("ErrorMessage")
     const Navigations = useNavigating();
-    debugger;
+
     return <>
-        <DialogTitle> 项目：{parent.value}
-        </DialogTitle>
-        <Tabs defaultValue="local" className="w-fit">
+        <DialogTitle>项目：{parent.value}</DialogTitle>
+        <Tabs defaultValue="class" className="w-fit">
             <TabsList>
                 <TabsTrigger value="class">本地类</TabsTrigger>
-                <TabsTrigger value="jpa">JPA类</TabsTrigger>
+                <TabsTrigger value="jpa">JPA 类</TabsTrigger>
             </TabsList>
             <TabsContent value="class">
                 <div className="flex flex-row justify-start items-center mb-4 gap-2">
@@ -46,7 +45,6 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
                     </div>
                 </div>
                 <Button onClick={() => {
-                    debugger;
                     CoderApi.initByLocal(parent.key, localFullClassName, errorTranslate, Navigations.redirectToLogin)
                         .then(() => {
                             initHandler?.();
@@ -56,8 +54,7 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
             </TabsContent>
             <TabsContent value="jpa">
                 <div className="flex flex-row justify-start items-center mb-4 gap-2">
-                    <Label
-                        className={"justify-end w-[8rem]"}>全限定类名</Label>
+                    <Label className={"justify-end w-[8rem]"}>全限定类名</Label>
                     <div className={"flex-1"}>
                         <Input value={jpaFullClassName} onChange={(e) => setJpaFullClassName(e.target.value)}
                                onKeyDown={(e) => {
@@ -69,17 +66,12 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
                         />
                     </div>
                 </div>
-
-                <div className="flex flex-row justify-start items-center mb-4 gap-2">
-                    <Label
-                        className={"justify-end w-[8rem]"}>源代码</Label>
+                <div className="flex flex-row justify-start items-start mb-4 gap-2">
+                    <Label className={"justify-end w-[8rem]"}>源代码</Label>
                     <div className={"flex-1"}>
                         <Textarea value={sourceCode} onChange={(e) => setSourceCode(e.target.value)}
-                                  onKeyDown={(e) => {
-                                      e.stopPropagation();
-                                  }
-                                  }
-                                  name={"fullClassName"}
+                                  name={"sourceCode"}
+                                  rows={8}
                         />
                     </div>
                 </div>

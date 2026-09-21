@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -12,12 +11,10 @@ import {useTranslations} from "next-intl";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {ValidatableSelect} from "@/common/components/forms/validatable-select";
 import {ValidatableDate} from "@/common/components/forms/validatable-date";
-import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {MyTableMeta, TableOperationProps} from "@/common/lib/table/DataTableProperty";
 import {PagerResult} from "@/common/lib/protocol/Result";
 import {UserExample} from "@/components/user-example/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
-
-
 
 
 export default function Page({callbackHandler, table}: TableOperationProps<UserExample>) {
@@ -29,19 +26,19 @@ export default function Page({callbackHandler, table}: TableOperationProps<UserE
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
     const meta = table.options.meta as MyTableMeta<UserExample>;
-    const  Navigations=useNavigating();
-
+    const Navigations = useNavigating();
 
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
     ) => {
-        UserExampleApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
+        UserExampleApi.save(data, errorTranslate, Navigations.redirectToLogin).then(
             () => {
                 callbackHandler?.();
-                toast.success(globalTranslate("save")+globalTranslate("operation-success"));
+                toast.success(globalTranslate("save") + globalTranslate("operation-success"));
             }
-        ).catch(()=>{});
+        ).catch(() => {
+        });
     };
 
     const {
@@ -63,72 +60,67 @@ export default function Page({callbackHandler, table}: TableOperationProps<UserE
 
 
     return (
-            <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
-                                   <DialogHeader>
-                                       <DialogTitle>{globalTranslate("add")}</DialogTitle>
-                                       <DialogDescription>
-                                       </DialogDescription>
-                                   </DialogHeader>
+        <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+                <DialogTitle>{globalTranslate("add")}</DialogTitle>
+                <DialogDescription>
+                </DialogDescription>
+            </DialogHeader>
             <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
                 <ValidatableInput  {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false}  {...register("userName")}
+                                   type={"hidden"}
+                                   fieldPropertyName={"id"}/>
+                <ValidatableInput readonly={false}  {...register("userName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.userName?.message}                                  fieldPropertyName={"userName"}/>
-<ValidatableInput readonly={false}  {...register("chineseName")}
+                                  errorMessage={errors.userName?.message} fieldPropertyName={"userName"}/>
+                <ValidatableInput readonly={false}  {...register("chineseName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
-<ValidatableDate readonly={false} fieldPropertyName={"birthday"}
+                                  errorMessage={errors.chineseName?.message} fieldPropertyName={"chineseName"}/>
+                <ValidatableDate readonly={false} fieldPropertyName={"birthday"}
                                  setValue={setValue}
-                                 pageTranslate={pageTranslate} />
-<ValidatableInput readonly={false}  {...register("email")}
+                                 pageTranslate={pageTranslate}/>
+                <ValidatableInput readonly={false}  {...register("email")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.email?.message}                                  fieldPropertyName={"email"}/>
-<ValidatableInput readonly={false}  {...register("mobile")}
+                                  errorMessage={errors.email?.message} fieldPropertyName={"email"}/>
+                <ValidatableInput readonly={false}  {...register("mobile")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.mobile?.message}                                  fieldPropertyName={"mobile"}/>
-<ValidatableInput readonly={false}  {...register("tel")}
+                                  errorMessage={errors.mobile?.message} fieldPropertyName={"mobile"}/>
+                <ValidatableInput readonly={false}  {...register("tel")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.tel?.message}                                  fieldPropertyName={"tel"}/>
-<ValidatableInput readonly={false}  {...register("idCard")}
+                                  errorMessage={errors.tel?.message} fieldPropertyName={"tel"}/>
+                <ValidatableInput readonly={false}  {...register("idCard")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.idCard?.message}                                  fieldPropertyName={"idCard"}/>
-<ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["gender"]} pageTranslate={pageTranslate} setValue={setValue}
-fieldPropertyName={"gender"}/>
-<ValidatableInput readonly={false}  {...register("age")}
+                                  errorMessage={errors.idCard?.message} fieldPropertyName={"idCard"}/>
+                <ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["gender"]}
+                                   pageTranslate={pageTranslate} setValue={setValue}
+                                   fieldPropertyName={"gender"}/>
+                <ValidatableInput readonly={false}  {...register("age")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.age?.message}                                  fieldPropertyName={"age"}/>
-<ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["projectId"]} pageTranslate={pageTranslate} setValue={setValue}
-fieldPropertyName={"projectId"}/>
+                                  errorMessage={errors.age?.message} fieldPropertyName={"age"}/>
+                <ValidatableSelect dictionary={(meta.result.data as PagerResult<UserExample>).dictionary["projectId"]}
+                                   pageTranslate={pageTranslate} setValue={setValue}
+                                   fieldPropertyName={"projectId"}/>
             </div>
-             <DialogFooter>
-                            <DialogClose asChild>
-                                <Button variant="outline">{globalTranslate("cancel")}</Button>
-                            </DialogClose>
-                            <Button type="submit">{globalTranslate("save")}</Button>
-             </DialogFooter>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="outline">{globalTranslate("cancel")}</Button>
+                </DialogClose>
+                <Button type="submit">{globalTranslate("save")}</Button>
+            </DialogFooter>
         </form>
     );
 };
