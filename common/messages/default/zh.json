@@ -50,7 +50,7 @@
   },
   "LocaleSwitcher": {
     "label": "切换至中文",
-    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unbekannt}}"
+    "locale": "{locale, select, zh {🇨🇳 中文} en {🇺🇸 English} other {Unbekannt}}"
   },
   "ErrorMessage": {
     "system_server_error": "系统错误，请稍侯再试...",
@@ -198,7 +198,8 @@
     "draggable-example": "拖拽组件示例",
     "table-example": "表格组件示例",
     "eslint-config-example": "编译配置差异说明",
-    "i18n-static-export-example": "静态导出与 middleware"
+    "i18n-static-export-example": "静态导出与 middleware",
+    "zip-download-example": "ZIP 下载示例"
   },
   "FormsExample": {
     "back": "返回首页",
@@ -358,5 +359,10 @@
     "back": "返回首页",
     "title": "静态导出与 middleware",
     "desc": "说明静态导出（output: 'export'）与 src/middleware.ts 的关系，以及静态模式下的替代方案。"
+  },
+  "ZipDownloadExample": {
+    "back": "返回首页",
+    "title": "ZIP 打包下载踩坑日志",
+    "desc": "总结后端文件压缩下载的踩坑与方案：文件过滤、跨域响应头、中文文件名编码，以及前端 Fetcher.download 的实现说明。"
   }
 }

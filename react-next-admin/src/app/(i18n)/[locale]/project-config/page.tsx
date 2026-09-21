@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import {columns, ProjectConfig} from "@/components/project-config/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/project-config/search";
@@ -29,17 +29,18 @@ export default function Page() {
     const globalTranslate = useTranslations("GlobalForm");
     const [dataState, setDataState] = useState<Result | undefined>();
     const  Navigations=useNavigating();
+    const redirectToLoginRef = useRef(Navigations.redirectToLogin);
     const init = useCallback(() => {
-                ProjectConfigApi.search({...pagination}, errorTranslate,Navigations.redirectToLogin).then(
-                    (res) => {
-                        setDataState(res)
-                    }
-                ).catch(() => {
-                });
-            }, [errorTranslate, Navigations.redirectToLogin]);
-            useEffect(() => {
-                init();
-            }, [init]);
+        ProjectConfigApi.search({...pagination}, errorTranslate, redirectToLoginRef.current).then(
+            (res) => {
+                setDataState(res)
+            }
+        ).catch(() => {
+        });
+    }, [errorTranslate]);
+    useEffect(() => {
+        init();
+    }, [init]);
 
 
       const deleteHandler= (id: number) => {

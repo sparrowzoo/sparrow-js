@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -16,8 +15,6 @@ import {ProjectConfig} from "@/components/project-config/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
 
 
-
-
 export default function Page({callbackHandler}: TableOperationProps<ProjectConfig>) {
     const globalTranslate = useTranslations("GlobalForm");
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
@@ -26,19 +23,19 @@ export default function Page({callbackHandler}: TableOperationProps<ProjectConfi
 
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
-    const  Navigations=useNavigating();
-
+    const Navigations = useNavigating();
 
 
     const onSubmit: SubmitHandler<FormData> = (
         data: FormData,
     ) => {
-        ProjectConfigApi.save(data, errorTranslate,Navigations.redirectToLogin).then(
+        ProjectConfigApi.save(data, errorTranslate, Navigations.redirectToLogin).then(
             () => {
                 callbackHandler?.();
-                toast.success(globalTranslate("save")+globalTranslate("operation-success"));
+                toast.success(globalTranslate("save") + globalTranslate("operation-success"));
             }
-        ).catch(()=>{});
+        ).catch(() => {
+        });
     };
 
     const {
@@ -59,70 +56,62 @@ export default function Page({callbackHandler}: TableOperationProps<ProjectConfi
 
 
     return (
-            <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
-                                   <DialogHeader>
-                                       <DialogTitle>{globalTranslate("add")}</DialogTitle>
-                                       <DialogDescription>
-                                       </DialogDescription>
-                                   </DialogHeader>
+        <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+                <DialogTitle>{globalTranslate("add")}</DialogTitle>
+                <DialogDescription>
+                </DialogDescription>
+            </DialogHeader>
             <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
                 <ValidatableInput  {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false}  {...register("name")}
+                                   type={"hidden"}
+                                   fieldPropertyName={"id"}/>
+                <ValidatableInput readonly={false}  {...register("name")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
-<ValidatableInput readonly={false}  {...register("frontendName")}
+                                  errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+                <ValidatableInput readonly={false}  {...register("frontendName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.frontendName?.message}                                  fieldPropertyName={"frontendName"}/>
-<ValidatableInput readonly={false}  {...register("chineseName")}
+                                  errorMessage={errors.frontendName?.message} fieldPropertyName={"frontendName"}/>
+                <ValidatableInput readonly={false}  {...register("chineseName")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.chineseName?.message}                                  fieldPropertyName={"chineseName"}/>
-<ValidatableInput readonly={false}  {...register("i18n")}
+                                  errorMessage={errors.chineseName?.message} fieldPropertyName={"chineseName"}/>
+                <ValidatableInput readonly={false}  {...register("i18n")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"i18n"}/>
-<ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("description")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"description"}/>
-<ValidatableInput readonly={false}  {...register("modulePrefix")}
+                                  fieldPropertyName={"i18n"}/>
+                <ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("description")}
+                                     isSubmitted={isSubmitted}
+                                     pageTranslate={pageTranslate}
+                                     fieldPropertyName={"description"}/>
+                <ValidatableInput readonly={false}  {...register("modulePrefix")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                  errorMessage={errors.modulePrefix?.message}                                  fieldPropertyName={"modulePrefix"}/>
-<ValidatableInput readonly={false}  {...register("wrapWithParent")}
+                                  errorMessage={errors.modulePrefix?.message} fieldPropertyName={"modulePrefix"}/>
+                <ValidatableInput readonly={false}  {...register("wrapWithParent")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"wrapWithParent"}/>
-<ValidatableInput readonly={false}  {...register("scaffold")}
+                                  fieldPropertyName={"wrapWithParent"}/>
+                <ValidatableInput readonly={false}  {...register("scaffold")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  validateTranslate={validateTranslate}
-                                                                    fieldPropertyName={"scaffold"}/>
+                                  fieldPropertyName={"scaffold"}/>
             </div>
-             <DialogFooter>
-                            <DialogClose asChild>
-                                <Button variant="outline">{globalTranslate("cancel")}</Button>
-                            </DialogClose>
-                            <Button type="submit">{globalTranslate("save")}</Button>
-             </DialogFooter>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="outline">{globalTranslate("cancel")}</Button>
+                </DialogClose>
+                <Button type="submit">{globalTranslate("save")}</Button>
+            </DialogFooter>
         </form>
     );
 };
