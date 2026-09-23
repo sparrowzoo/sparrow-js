@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {AdminContext, AdminContextValue,} from "@/common/lib/admin/AdminContextProvider";
 import AdminBroker from "@/common/lib/admin/AdminBroker";
 import AccessHistoryContainer from "@/common/lib/admin/AccessHistoryContainer";
-import {MENU_URL_TO_KEY} from "@/common/lib/admin/navigation";
+import {MENU_URL_TO_KEY} from "@/lib/navigation";
 import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/app-sidebar";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
@@ -43,12 +43,11 @@ export default function AdminRootLayout({
                 enableSystem
                 disableTransitionOnChange
             >
-                {" "}
-                <SidebarProvider>
+                <SidebarProvider style={{"--sidebar-width": "15rem"} as React.CSSProperties}>
                     <AppSidebar/>
-                    <SidebarInset>
+                    <SidebarInset className="min-w-0">
                         <Header showProfile={true}/>
-                        <div className={"w-full p-2"}>{children}</div>
+                        <div className="flex min-w-0 flex-1 flex-col">{children}</div>
                     </SidebarInset>
                 </SidebarProvider>
             </ThemeProvider>

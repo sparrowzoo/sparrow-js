@@ -16,6 +16,7 @@ import {useSearchParams} from "next/navigation";
 import KeyValue from "@/common/lib/protocol/KeyValue";
 import TableEdit from "@/components/table-config/table-edit";
 import useNavigating from "@/common/hook/NavigatingHook";
+import {FolderCog} from "lucide-react";
 
 
 
@@ -30,6 +31,7 @@ export default function Page() {
 }
 
 function TableConfigContent() {
+    const pageTranslate = useTranslations("TableConfig");
     const errorTranslate = useTranslations("TableConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
     const [dataState, setDataState] = useState<Result | undefined>();
@@ -53,7 +55,16 @@ function TableConfigContent() {
     }, [projectId, init]);
 
     if (projectId == null) {
-        return <div>Project Not Found !</div>
+        return (
+            <div className="admin-page admin-data-page space-y-3">
+                <div className="flex min-h-72 flex-col items-center justify-center gap-5 rounded-xl border border-dashed bg-card p-8 text-center">
+                    <div className="flex size-16 items-center justify-center rounded-2xl bg-muted text-muted-foreground">
+                        <FolderCog className="size-7" strokeWidth={1.5} aria-hidden="true"/>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Project Not Found !</p>
+                </div>
+            </div>
+        );
     }
 
 
@@ -64,15 +75,26 @@ function TableConfigContent() {
         }
 
     if (!dataState) {
-        return <ThreeDotLoading/>
+        return (
+            <div className="admin-page admin-data-page space-y-3">
+                <div className="flex min-h-72 items-center justify-center rounded-xl border bg-card">
+                    <ThreeDotLoading/>
+                </div>
+            </div>
+        );
     }
     const projectDictionaries = (dataState.data as PagerResult<TableConfig>).dictionary["projectId"] as KeyValue[];
     const parent = projectDictionaries.find((e) => {
         return e.key == projectId;
     })
-    return (<>
-            <h1 className="text-3xl font-bold mb-4">项目 - {parent?.value}</h1>
-            <div className="w-full">
+    return (
+        <div className="admin-page admin-data-page space-y-3">
+            <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 px-1 pb-1 pt-1">
+                <FolderCog className="size-[18px] shrink-0 text-primary" strokeWidth={1.7} aria-hidden="true"/>
+                <span className="text-sm text-muted-foreground">{pageTranslate("projectId")}</span>
+                <span className="break-all text-base font-semibold tracking-tight text-foreground">{parent?.value}</span>
+            </div>
+            <div className="admin-table-panel min-w-0">
                 <DataTable<TableConfig>
                     SearchComponent={Search}
                     OperationComponent={Operation}
@@ -90,6 +112,6 @@ function TableConfigContent() {
                     RowOperationComponents={[]}
                 ></DataTable>
             </div>
-        </>
+        </div>
     );
 }

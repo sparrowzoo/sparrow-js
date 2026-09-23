@@ -108,6 +108,10 @@
         "title": "User Example",
         "description": "Sample CRUD for users"
       },
+      "department": {
+        "title": "Department",
+        "description": "Manage departments"
+      },
       "accessHistory": {
         "title": "Access History",
         "description": "Recent navigation history"

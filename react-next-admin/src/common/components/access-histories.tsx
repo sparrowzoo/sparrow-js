@@ -20,6 +20,7 @@ export default function AccessHistories({
     const {adminBroker} = useContext(AdminContext);
     const router = useRouter();
     const t = useTranslations("AccessHistories");
+    const home = useTranslations("Home");
 
     // 订阅 broker 的变更信号，增删/清空后自动刷新
     const [, forceRender] = useReducer((x: number) => x + 1, 0);
@@ -51,45 +52,51 @@ export default function AccessHistories({
                         {t("empty")}
                     </span>
                 ) : (
-                    accessHistories.map((history) => (
-                        <div
-                            key={history.url}
-                            className="group flex shrink-0 items-center overflow-hidden rounded-full border border-border bg-background text-xs shadow-xs transition-colors hover:border-violet-500/40 hover:bg-accent"
-                        >
-                            <button
-                                type="button"
-                                title={history.title}
-                                onClick={() =>
-                                    adminBroker.access(history.url, router)
-                                }
-                                className="max-w-[10rem] truncate px-3 py-1 font-medium text-foreground transition-colors hover:text-violet-600 dark:hover:text-violet-300"
+                    accessHistories.map((history) => {
+                        const titleKey = `modules.${history.title}.title`;
+                        const title = home.has(titleKey)
+                            ? home(titleKey)
+                            : history.title;
+                        return (
+                            <div
+                                key={history.url}
+                                className="group flex shrink-0 items-center overflow-hidden rounded-full border border-border bg-background text-xs shadow-xs transition-colors hover:border-violet-500/40 hover:bg-accent"
                             >
-                                {history.title}
-                            </button>
+                                <button
+                                    type="button"
+                                    title={title}
+                                    onClick={() =>
+                                        adminBroker.access(history.url, router)
+                                    }
+                                    className="max-w-[10rem] truncate px-3 py-1 font-medium text-foreground transition-colors hover:text-violet-600 dark:hover:text-violet-300"
+                                >
+                                    {title}
+                                </button>
 
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <button
-                                        type="button"
-                                        aria-label={t("remove")}
-                                        onClick={() =>
-                                            adminBroker.deleteHistory(
-                                                history.url
-                                            )
-                                        }
-                                        className={cn(
-                                            "flex h-5 w-5 items-center justify-center rounded-full",
-                                            "text-muted-foreground/70 transition-colors",
-                                            "hover:bg-destructive/10 hover:text-destructive"
-                                        )}
-                                    >
-                                        <X className="h-3 w-3" />
-                                    </button>
-                                </TooltipTrigger>
-                                <TooltipContent>{t("remove")}</TooltipContent>
-                            </Tooltip>
-                        </div>
-                    ))
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <button
+                                            type="button"
+                                            aria-label={t("remove")}
+                                            onClick={() =>
+                                                adminBroker.deleteHistory(
+                                                    history.url
+                                                )
+                                            }
+                                            className={cn(
+                                                "flex h-5 w-5 items-center justify-center rounded-full",
+                                                "text-muted-foreground/70 transition-colors",
+                                                "hover:bg-destructive/10 hover:text-destructive"
+                                            )}
+                                        >
+                                            <X className="h-3 w-3" />
+                                        </button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>{t("remove")}</TooltipContent>
+                                </Tooltip>
+                            </div>
+                        );
+                    })
                 )}
 
                 {accessHistories.length > 0 && (

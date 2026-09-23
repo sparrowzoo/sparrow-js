@@ -107,11 +107,6 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
             }} variant="outline">{globalTranslate("generate-code")}</Button>
 
             <Button onClick={() => {
-                const selectedIds = TableUtils.getSelectedIds(table);
-                if (selectedIds.length === 0) {
-                    toast(globalTranslate("no-record-checked"));
-                    return;
-                }
                 const tableNames = TableUtils.getSelectedFields(table, "tableName");
 
                 const toastId = toast.loading(globalTranslate("loading"));

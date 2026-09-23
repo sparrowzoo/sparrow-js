@@ -108,6 +108,10 @@
         "title": "用户示例",
         "description": "用户 CRUD 示例"
       },
+      "department": {
+        "title": "部门",
+        "description": "部门管理"
+      },
       "accessHistory": {
         "title": "访问历史",
         "description": "最近导航历史"

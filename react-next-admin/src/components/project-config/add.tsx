@@ -56,13 +56,13 @@ export default function Page({callbackHandler}: TableOperationProps<ProjectConfi
 
 
     return (
-        <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+        <form className="admin-form" onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
                 <DialogTitle>{globalTranslate("add")}</DialogTitle>
                 <DialogDescription>
                 </DialogDescription>
             </DialogHeader>
-            <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
+            <div className="admin-form-fields">
                 <ValidatableInput  {...register("id")}
                                    type={"hidden"}
                                    fieldPropertyName={"id"}/>
@@ -86,7 +86,7 @@ export default function Page({callbackHandler}: TableOperationProps<ProjectConfi
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   fieldPropertyName={"i18n"}/>
-                <ValidatableTextarea className={"w-80 h-60"} readonly={false}  {...register("description")}
+                <ValidatableTextarea className="min-h-28 w-full" readonly={false}  {...register("description")}
                                      isSubmitted={isSubmitted}
                                      pageTranslate={pageTranslate}
                                      fieldPropertyName={"description"}/>

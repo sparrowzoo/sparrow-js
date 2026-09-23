@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -17,9 +16,7 @@ import useNavigating from "@/common/hook/NavigatingHook";
 import TableConfigs from "@/components/project-config/operations/table-configs";
 import ClearScaffold from "@/components/project-config/operations/clear";
 import InitScaffold from "@/components/project-config/operations/init";
-
-
-
+import DownloadScaffold from "@/components/project-config/operations/download";
 
 
 const pagination = {pageIndex: 0, pageSize: 10};
@@ -28,7 +25,7 @@ export default function Page() {
     const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
     const [dataState, setDataState] = useState<Result | undefined>();
-    const  Navigations=useNavigating();
+    const Navigations = useNavigating();
     const redirectToLoginRef = useRef(Navigations.redirectToLogin);
     const init = useCallback(() => {
         ProjectConfigApi.search({...pagination}, errorTranslate, redirectToLoginRef.current).then(
@@ -43,32 +40,41 @@ export default function Page() {
     }, [init]);
 
 
-      const deleteHandler= (id: number) => {
-            ProjectConfigApi.delete(id, errorTranslate,Navigations.redirectToLogin).then(()=>{
-                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
-            }).catch(()=>{});
-        }
+    const deleteHandler = (id: number) => {
+        ProjectConfigApi.delete(id, errorTranslate, Navigations.redirectToLogin).then(() => {
+            toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
+        }).catch(() => {
+        });
+    }
 
     if (!dataState) {
-        return <ThreeDotLoading/>
+        return (
+            <div className="admin-page admin-data-page space-y-3">
+                <div className="flex min-h-72 items-center justify-center rounded-xl border bg-card">
+                    <ThreeDotLoading/>
+                </div>
+            </div>
+        );
     }
     return (
-        <div className="w-full">
-            <DataTable<ProjectConfig>
-                SearchComponent={Search}
-                OperationComponent={Operation}
-                tableName={"ProjectConfig"}
-                primary={"id"}
-                i18n={true}
-                result={dataState}
-                columns={columns}
-                setData={setDataState}
-                EditComponent={EditPage}
-                deleteHandler={deleteHandler}
-                initHandler={init}
-                defaultPager={{pageIndex: 0, pageSize: -1}}
-                RowOperationComponents={[TableConfigs, ClearScaffold, InitScaffold]}
-            ></DataTable>
+        <div className="admin-page admin-data-page space-y-3">
+            <div className="admin-table-panel min-w-0">
+                <DataTable<ProjectConfig>
+                    SearchComponent={Search}
+                    OperationComponent={Operation}
+                    tableName={"ProjectConfig"}
+                    primary={"id"}
+                    i18n={true}
+                    result={dataState}
+                    columns={columns}
+                    setData={setDataState}
+                    EditComponent={EditPage}
+                    deleteHandler={deleteHandler}
+                    initHandler={init}
+                    defaultPager={{pageIndex: 0, pageSize: -1}}
+                    RowOperationComponents={[TableConfigs, ClearScaffold, InitScaffold, DownloadScaffold]}
+                ></DataTable>
+            </div>
         </div>
     );
 }

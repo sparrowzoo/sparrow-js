@@ -1,9 +1,5 @@
-import {
-    FolderCog,
-    Table2,
-    Users,
-} from "lucide-react";
 import type {LucideIcon} from "lucide-react";
+import {Building2, FolderCog, Table2, Users} from "lucide-react";
 
 export interface MenuItem {
     key: string;
@@ -15,6 +11,7 @@ export const modules: MenuItem[] = [
     {key: "projectConfig", url: "/project-config", icon: FolderCog},
     {key: "tableConfig", url: "/table-config", icon: Table2},
     {key: "userExample", url: "/user-example", icon: Users},
+    {key: "department", url: "/department", icon: Building2},
 ];
 
 export interface NavGroup {
@@ -23,7 +20,7 @@ export interface NavGroup {
 }
 
 export const navGroups: NavGroup[] = [
-    {key: "buildingYourApplication", items: ["projectConfig", "userExample"]},
+    {key: "buildingYourApplication", items: ["projectConfig", "userExample", "department"]},
 ];
 
 export const MODULES_BY_KEY: Record<string, MenuItem> = Object.fromEntries(
