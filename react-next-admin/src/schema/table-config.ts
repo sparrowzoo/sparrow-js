@@ -32,7 +32,7 @@ v.pipe(
 v.nonEmpty(translate("description.empty-message")))
 
 ,locked:
-v.string()
+v.boolean()
 ,checkable:
 v.pipe(
  v.string(),
@@ -55,7 +55,7 @@ v.check((val) => {return /^\d+$/.test(val);},translate("columnFilter.check-messa
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,statusCommand:
-v.string()
+v.boolean()
 ,columnConfigs:
 v.string()
 ,source:
@@ -75,7 +75,7 @@ v.check((val) => {return /^\d+$/.test(val);},translate("pageSize.check-message")
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,onlyAccessSelf:
-v.string()
+v.boolean()
 
     });
     //扩展提示

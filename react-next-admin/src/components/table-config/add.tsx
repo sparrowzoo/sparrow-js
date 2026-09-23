@@ -95,7 +95,7 @@ export default function Page({callbackHandler}: TableOperationProps<TableConfig>
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  fieldPropertyName={"locked"}/>
+                                  errorMessage={errors.locked?.message} fieldPropertyName={"locked"}/>
                 <ValidatableInput readonly={false}  {...register("checkable")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
@@ -115,7 +115,7 @@ export default function Page({callbackHandler}: TableOperationProps<TableConfig>
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  fieldPropertyName={"statusCommand"}/>
+                                  errorMessage={errors.statusCommand?.message} fieldPropertyName={"statusCommand"}/>
                 <ValidatableTextarea className="min-h-28 w-full" readonly={false}  {...register("columnConfigs")}
                                      isSubmitted={isSubmitted}
                                      pageTranslate={pageTranslate}
@@ -138,7 +138,7 @@ export default function Page({callbackHandler}: TableOperationProps<TableConfig>
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
-                                  fieldPropertyName={"onlyAccessSelf"}/>
+                                  errorMessage={errors.onlyAccessSelf?.message} fieldPropertyName={"onlyAccessSelf"}/>
             </div>
             <DialogFooter>
                 <DialogClose asChild>

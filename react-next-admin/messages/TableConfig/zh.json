@@ -56,15 +56,15 @@
       "empty-message": "不允许为空"
     }
   },
-  "checkable": "选择",
+  "checkable": "选择框序号",
   "gmtCreate": "创建时间",
   "statusCommand": "是否显示状态命令",
   "filter": "过滤列",
   "deleted": "是否删除",
-  "columnFilter": "列过滤器",
+  "columnFilter": "列过滤器序号",
   "modifiedUserId": "更新人ID",
   "columnConfigs": "列配置",
-  "rowMenu": "行菜单",
+  "rowMenu": "行菜单序号",
   "ErrorMessage": {
     "system_server_error": "系统错误，请稍侯再试...",
     "global_parameter_null": "参数不能为空...",
