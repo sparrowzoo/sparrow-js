@@ -11,6 +11,7 @@ import SearchInput from "@/common/components/forms/search-input";
 import SearchSelect from "@/common/components/forms/search-select";
 import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 import useNavigating from "@/common/hook/NavigatingHook";
+import {Search as SearchIcon} from "lucide-react";
 
 
 interface TableConfigQuery extends SimplePager{
@@ -49,15 +50,28 @@ export default function Search({table}: TableOperationProps<TableConfig>) {
     meta.searchHandler=searchHandler;
 
 
-    return (<div className="flex flex-row flex-wrap gap-4">
-            <SearchInput value={tableConfigQuery?.tableName||""} 
-propertyName={"tableName"} pageTranslate={pageTranslate} 
-setSearchCondition={setTableConfigQuery}/>
-<SearchInput value={tableConfigQuery?.className||""} 
-propertyName={"className"} pageTranslate={pageTranslate} 
-setSearchCondition={setTableConfigQuery}/>
-<SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={(meta.result.data as PagerResult<TableConfig>).dictionary['status']}/>
-            <Button onClick={() => searchHandler()} variant="ghost" className="ml-2">{globalTranslate('search')}</Button>
+    return (
+        <div className="admin-search-bar grid grid-cols-1 items-center gap-3 rounded-lg bg-muted/40 p-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_8rem_auto]">
+            <label className="min-w-0 [&_input]:max-w-none">
+                <span className="sr-only">{pageTranslate("tableName")}</span>
+                <SearchInput value={tableConfigQuery?.tableName||""}
+                             propertyName={"tableName"} pageTranslate={pageTranslate}
+                             setSearchCondition={setTableConfigQuery}/>
+            </label>
+            <label className="min-w-0 [&_input]:max-w-none">
+                <span className="sr-only">{pageTranslate("className")}</span>
+                <SearchInput value={tableConfigQuery?.className||""}
+                             propertyName={"className"} pageTranslate={pageTranslate}
+                             setSearchCondition={setTableConfigQuery}/>
+            </label>
+            <label className="min-w-0 [&_button]:w-full">
+                <span className="sr-only">{pageTranslate("status")}</span>
+                <SearchSelect propertyName={"status"} pageTranslate={pageTranslate} setSearchCondition={setTableConfigQuery} dictionary={(meta.result.data as PagerResult<TableConfig>).dictionary['status']}/>
+            </label>
+            <Button onClick={() => searchHandler()} className="gap-2 px-5">
+                <SearchIcon className="size-4" aria-hidden="true"/>
+                {globalTranslate('search')}
+            </Button>
         </div>
     );
 }

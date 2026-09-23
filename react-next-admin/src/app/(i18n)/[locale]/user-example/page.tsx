@@ -1,70 +1,20 @@
 "use client";
 
 import * as React from "react";
-import {useCallback, useEffect, useRef, useState} from "react";
-import {columns, UserExample} from "@/components/user-example/columns";
-import {DataTable} from "@/common/components/table/data-table";
-import Search from "@/components/user-example/search";
-import Operation from "@/components/user-example/operation";
-import EditPage from "@/components/user-example/edit";
-import ThreeDotLoading from "@/common/components/ThreeDotLoading";
-import UserExampleApi from "@/api/auto/user-example";
-import {useTranslations} from "next-intl";
-import toast from "react-hot-toast";
-import Result from "@/common/lib/protocol/Result";
-import useNavigating from "@/common/hook/NavigatingHook";
-
-
-
-
-
-const pagination = {pageIndex: 0, pageSize: 10};
+import {Users} from "lucide-react";
 
 export default function Page() {
-    const errorTranslate = useTranslations("UserExample.ErrorMessage");
-    const globalTranslate = useTranslations("GlobalForm");
-    const [dataState, setDataState] = useState<Result | undefined>();
-    const  Navigations=useNavigating();
-    const redirectToLoginRef = useRef(Navigations.redirectToLogin);
-    const init = useCallback(() => {
-        UserExampleApi.search({...pagination}, errorTranslate, redirectToLoginRef.current).then(
-            (res) => {
-                setDataState(res)
-            }
-        ).catch(() => {
-        });
-    }, [errorTranslate]);
-    useEffect(() => {
-        init();
-    }, [init]);
 
-
-      const deleteHandler= (id: number) => {
-            UserExampleApi.delete(id, errorTranslate,Navigations.redirectToLogin).then(()=>{
-                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
-            }).catch(()=>{});
-        }
-
-    if (!dataState) {
-        return <ThreeDotLoading/>
-    }
     return (
-        <div className="w-full">
-            <DataTable<UserExample>
-                SearchComponent={Search}
-                OperationComponent={Operation}
-                tableName={"UserExample"}
-                primary={"id"}
-                i18n={true}
-                result={dataState}
-                columns={columns}
-                setData={setDataState}
-                EditComponent={EditPage}
-                deleteHandler={deleteHandler}
-                initHandler={init}
-                defaultPager={pagination}
-                RowOperationComponents={[]}
-            ></DataTable>
+        <div className="admin-page">
+            <section className="flex min-h-52 items-center gap-5 rounded-2xl border border-border/70 bg-card p-6 sm:p-9">
+                <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary/8 text-primary">
+                    <Users className="size-6" strokeWidth={1.75} aria-hidden="true"/>
+                </div>
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">
+                    User 示例
+                </h1>
+            </section>
         </div>
     );
 }

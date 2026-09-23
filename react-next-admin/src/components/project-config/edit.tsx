@@ -58,13 +58,13 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
 
 
     return (
-        <form className={"h-[calc(100vh-80px)] flex flex-col"} onSubmit={handleSubmit(onSubmit)}>
+        <form className="admin-form" onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
                 <DialogTitle>{globalTranslate("edit")}</DialogTitle>
                 <DialogDescription>
                 </DialogDescription>
             </DialogHeader>
-            <div className="min-h-0 flex-1 flex-col overflow-y-scroll">
+            <div className="admin-form-fields">
                 <ValidatableInput defaultValue={original.id} {...register("id")}
                                   type={"hidden"}
                                   fieldPropertyName={"id"}/>
@@ -88,7 +88,7 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   fieldPropertyName={"i18n"}/>
-                <ValidatableTextarea className={"w-80 h-60"} readonly={false}
+                <ValidatableTextarea className="min-h-28 w-full" readonly={false}
                                      defaultValue={original.description} {...register("description")}
                                      isSubmitted={isSubmitted}
                                      pageTranslate={pageTranslate}

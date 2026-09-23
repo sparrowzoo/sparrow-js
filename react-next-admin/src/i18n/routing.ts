@@ -23,6 +23,7 @@ export const routing = defineRouting({
         },
         "/table-config": "/table-config",
         "/project-config": "/project-config",
+        "/department": "/department",
         "/blog": {
             en: `${WWW_ROOT}/en/blog`,
             zh: `${WWW_ROOT}/zh/blog`,

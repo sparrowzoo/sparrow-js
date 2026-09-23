@@ -57,7 +57,7 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
     } as Result<PagerResult<ColumnConfig>>;
     const [data, setData] = useState(columnResult);
     return (
-        <div className="h-[calc(100vh-80px)] w-[calc(100vw-80px)] overflow-auto">
+        <div className="min-w-0 w-full">
             <DataTable<ColumnConfig>
                 initHandler={() => {
                 }}

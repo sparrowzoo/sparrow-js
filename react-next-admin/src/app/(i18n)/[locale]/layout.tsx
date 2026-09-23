@@ -38,15 +38,23 @@ export default async function RootLayout({children, params}: Props) {
     setRequestLocale(locale);
 
     return (
-        <html className="h-full" lang={locale}>
+        <html className="h-full" lang={locale} suppressHydrationWarning>
         <body
             className={
-                "mx-auto text-left justify-center align-middle content-center w-full "
+                "min-h-svh w-full text-left antialiased"
             }
         >
         <NextIntlClientProvider>
             <AdminRootLayout>
-                <Toaster position="top-center" reverseOrder={true}/>
+                <Toaster position="top-center" reverseOrder={true} toastOptions={{
+                    style: {
+                        background: "var(--popover)",
+                        color: "var(--popover-foreground)",
+                        border: "1px solid var(--border)",
+                        borderRadius: "var(--radius)",
+                        boxShadow: "0 8px 30px rgb(0 0 0 / 12%)",
+                    },
+                }}/>
 
                 {children}</AdminRootLayout>
         </NextIntlClientProvider>
