@@ -7,7 +7,6 @@ import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle}
 import TableConfigApi from "@/api/auto/table-config";
 import {TableConfig} from "@/components/table-config/columns";
 import toast from "react-hot-toast";
-import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
@@ -102,7 +101,7 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
 
-                                  fieldPropertyName={"locked"}/>
+                                  errorMessage={errors.locked?.message} fieldPropertyName={"locked"}/>
                 <ValidatableInput readonly={false} defaultValue={original.checkable} {...register("checkable")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
@@ -127,25 +126,16 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
 
-                                  fieldPropertyName={"statusCommand"}/>
-                <ValidatableTextarea className="min-h-28 w-full" readonly={false}
-                                     defaultValue={original.columnConfigs} {...register("columnConfigs")}
-                                     isSubmitted={isSubmitted}
-                                     pageTranslate={pageTranslate}
-
-                                     fieldPropertyName={"columnConfigs"}/>
-                <ValidatableInput readonly={false} defaultValue={original.source} {...register("source")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-
-                                  errorMessage={errors.source?.message} fieldPropertyName={"source"}/>
-                <ValidatableTextarea className="min-h-28 w-full" readonly={false}
-                                     defaultValue={original.sourceCode} {...register("sourceCode")}
-                                     isSubmitted={isSubmitted}
-                                     pageTranslate={pageTranslate}
-
-                                     fieldPropertyName={"sourceCode"}/>
+                                  errorMessage={errors.statusCommand?.message} fieldPropertyName={"statusCommand"}/>
+                <ValidatableInput defaultValue={original.columnConfigs} {...register("columnConfigs")}
+                                  type={"hidden"}
+                                  fieldPropertyName={"columnConfigs"}/>
+                <ValidatableInput defaultValue={original.source} {...register("source")}
+                                  type={"hidden"}
+                                  fieldPropertyName={"source"}/>
+                <ValidatableInput defaultValue={original.sourceCode} {...register("sourceCode")}
+                                  type={"hidden"}
+                                  fieldPropertyName={"sourceCode"}/>
                 <ValidatableInput readonly={false} defaultValue={original.pageSize} {...register("pageSize")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}
@@ -158,7 +148,7 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
 
-                                  fieldPropertyName={"onlyAccessSelf"}/>
+                                  errorMessage={errors.onlyAccessSelf?.message} fieldPropertyName={"onlyAccessSelf"}/>
             </div>
             <DialogFooter>
                 <DialogClose asChild>

@@ -56,15 +56,15 @@
       "empty-message": "Cannot be empty"
     }
   },
-  "checkable": "Selectable",
+  "checkable": "Selection Order",
   "gmtCreate": "Created At",
   "statusCommand": "Show Status Command",
   "filter": "Filter Column",
   "deleted": "Deleted",
-  "columnFilter": "Column Filter",
+  "columnFilter": "Column Filter Order",
   "modifiedUserId": "Updated By ID",
   "columnConfigs": "Column Configs",
-  "rowMenu": "Row Menu",
+  "rowMenu": "Row Menu Order",
   "ErrorMessage": {
     "system_server_error": "System error, please try again later...",
     "global_parameter_null": "Parameter cannot be null...",
