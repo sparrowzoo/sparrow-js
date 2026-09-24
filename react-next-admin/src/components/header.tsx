@@ -1,7 +1,8 @@
 "use client";
-import {ChevronRight, House, Search} from "lucide-react";
+import {BookOpen, ChevronRight, House, Search} from "lucide-react";
 import {Input} from "@/components/ui/input";
 import React from "react";
+import Image from "next/image";
 import UserProfile from "@/common/components/header/user-profile";
 import LocaleSwitcher from "@/common/components/i18n/LocaleSwitcher";
 import {ModeToggle} from "@/common/components/header/mode-toggle";
@@ -9,12 +10,14 @@ import AccessHistories from "@/common/components/access-histories";
 import {SidebarTrigger} from "@/components/ui/sidebar";
 import {Link, usePathname} from "@/common/i18n/navigation";
 import {modules} from "@/lib/navigation";
-import {useTranslations} from "next-intl";
+import {useLocale, useTranslations} from "next-intl";
+import {WWW_ROOT} from "@/common/lib/Env";
 
 type HeaderProps = {
     showProfile?: boolean;
 };
 export default function Header(headerProps: HeaderProps) {
+    const locale = useLocale();
     const t = useTranslations("Header");
     const home = useTranslations("Home");
     const global = useTranslations("GlobalForm");
@@ -24,8 +27,13 @@ export default function Header(headerProps: HeaderProps) {
     const PageIcon = activeModule?.icon ?? House;
 
     return (
-        <header className="admin-header sticky top-0 z-30 border-b bg-card/95 backdrop-blur-md">
-            <div className="flex h-16 min-w-0 items-center gap-3 px-4 sm:px-6 lg:px-8">
+        <header className="admin-header sticky top-0 z-30">
+            <div className="flex h-18 min-w-0 items-center gap-3 px-4 sm:px-6 lg:px-8">
+                <a href={`${WWW_ROOT?.replace(/\/+$/, "")}/${locale}/`}
+                   aria-label={t("backHome")} title={t("backHome")}
+                   className="flex shrink-0 items-center rounded-md text-foreground transition-colors hover:text-primary focus-visible:outline-2 focus-visible:outline-ring">
+                    <Image src="/svg/brand/sparrow-logo.svg" width={32} height={32} unoptimized alt="" className="size-8" aria-hidden="true"/>
+                </a>
                 <SidebarTrigger className="size-9 shrink-0 text-muted-foreground"/>
                 <nav aria-label={home("badge")} className="hidden min-w-0 items-center gap-3 text-sm sm:flex">
                     {activeModule && <>
@@ -48,21 +56,26 @@ export default function Header(headerProps: HeaderProps) {
                                 type="search"
                                 aria-label={global("search")}
                                 placeholder={global("search") + "…"}
-                                className="h-9 border-transparent bg-muted/70 pl-9 shadow-none focus-visible:border-ring"
+                                className="h-9 rounded-xl border-0 bg-muted/70 pl-9 shadow-none focus-visible:ring-ring/30"
                             />
                         </div>
                     </form>
-                    <div className="admin-locale shrink-0"><LocaleSwitcher/></div>
-                    <div className="admin-theme shrink-0"><ModeToggle/></div>
-                    {headerProps.showProfile && <div className="admin-profile flex shrink-0 items-center border-l pl-2 text-sm sm:pl-3"><UserProfile/></div>}
+                    <LocaleSwitcher className="shrink-0 rounded-xl" selectClassName="h-[38px] rounded-xl px-2.5 text-xs"/>
+                    <ModeToggle className="size-[38px] shrink-0 rounded-xl"/>
+                    {headerProps.showProfile && <div className="admin-profile flex shrink-0 items-center text-sm"><UserProfile/></div>}
                 </div>
             </div>
-            <nav className="admin-history flex h-9 min-w-0 items-center gap-3 border-t border-border/60 px-4 sm:px-6 lg:px-8">
+            <nav className="admin-history flex h-9 min-w-0 items-center gap-3 border-b border-border/60 px-4 sm:px-6 lg:px-8">
                 <span aria-current="page" className="flex shrink-0 items-center gap-1.5 border-r pr-3 text-xs font-semibold sm:hidden">
                     <PageIcon className="size-3.5 text-primary" strokeWidth={1.7}/>
                     {pageTitle}
                 </span>
                 <AccessHistories showSidebarTrigger={false}/>
+                <a href={`${WWW_ROOT?.replace(/\/+$/, "")}/${locale}/study/`}
+                   className="flex shrink-0 items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-primary focus-visible:outline-2 focus-visible:outline-ring">
+                    <BookOpen className="size-3.5" strokeWidth={1.7} aria-hidden="true"/>
+                    {t("study")}
+                </a>
             </nav>
         </header>
     );

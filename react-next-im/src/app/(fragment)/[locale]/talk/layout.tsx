@@ -38,14 +38,19 @@ export default async function RootLayout({ children, params }: Props) {
   }
   // Enable static rendering
   setRequestLocale(locale);
-  const messages: Record<string, any> = await getMessages(locale as any);
+  const messages = await getMessages({locale});
 
   return (
+    <html lang={locale}>
+    <body>
+    <div id="content-container" />
     <HtmlFragment
       containerId={"content-container"}
       locale={locale}
       messages={messages}
       DynamicComponent={Talk}
     ></HtmlFragment>
+    </body>
+    </html>
   );
 }

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>OpenAPI 分组策略及相关使用说明</title>
+    <style>
+        :root {
+            --bg: #07070d;
+            --bg-soft: #0c0c16;
+            --panel: rgba(255, 255, 255, 0.04);
+            --panel-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --text: #f4f4f7;
+            --text-dim: #9a9ab0;
+            --text-faint: #64647c;
+            --accent-1: #6d5cff;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --ok: #34d399;
+            --warn: #fbbf24;
+            --danger: #f43f5e;
+            --radius: 16px;
+            --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+                "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; }
+
+        .ambient {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 12% -5%, rgba(109, 92, 255, 0.16), transparent 60%),
+                radial-gradient(950px 480px at 92% 0%, rgba(34, 211, 238, 0.11), transparent 55%),
+                radial-gradient(900px 650px at 50% 115%, rgba(168, 85, 247, 0.12), transparent 60%);
+        }
+        .grid-noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.4;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        .topnav {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 64px;
+            background: rgba(7, 7, 13, 0.72);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
+        }
+        .brand .logo {
+            width: 32px; height: 32px; border-radius: 10px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
+            font-size: 16px; color: #fff;
+        }
+        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13.5px; padding: 7px 15px; border-radius: 9px;
+            transition: color .2s, background .2s;
+        }
+        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
+        .nav-links a.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
+        }
+        .nav-links a.primary:hover { filter: brightness(1.12); }
+
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 96px 24px 64px; text-align: center;
+        }
+        .hero .tag {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-size: 12.5px; letter-spacing: 0.12em; color: var(--text-dim);
+            padding: 7px 18px; border-radius: 100px;
+            background: var(--panel); border: 1px solid var(--border);
+            margin-bottom: 26px;
+            animation: rise .8s var(--ease) both;
+        }
+        .hero .tag .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 0 12px rgba(109, 92, 255, 0.8);
+        }
+        .hero h1 {
+            font-size: clamp(30px, 5vw, 46px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.16; margin-bottom: 20px;
+            animation: rise .8s var(--ease) .06s both;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(120deg, #c4b5fd 0%, #7dd3fc 50%, #f0abfc 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .subtitle {
+            color: var(--text-dim); font-size: 16px; max-width: 640px;
+            margin: 0 auto;
+            animation: rise .8s var(--ease) .12s both;
+        }
+
+        .article { max-width: 900px; margin: 0 auto; padding: 8px 24px 100px; }
+
+        .toc {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 26px; margin-bottom: 40px;
+        }
+        .toc .toc-title { font-size: 12px; color: var(--text-faint); letter-spacing: 0.12em; margin-bottom: 12px; text-transform: uppercase; }
+        .toc ol { list-style: none; counter-reset: toc; }
+        .toc li { counter-increment: toc; margin: 6px 0; }
+        .toc a { color: var(--text-dim); text-decoration: none; font-size: 14px; transition: color .2s; }
+        .toc a:hover { color: #fff; }
+        .toc a::before {
+            content: counter(toc); color: var(--accent-2);
+            font-family: var(--mono); font-size: 12px; margin-right: 10px;
+        }
+
+        section { margin-bottom: 48px; }
+        h2 {
+            font-size: 22px; font-weight: 700; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+            letter-spacing: -0.01em;
+        }
+        h2 .no {
+            font-family: var(--mono); font-size: 13px; color: var(--accent-2);
+            background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.22);
+            padding: 2px 9px; border-radius: 8px; flex-shrink: 0;
+        }
+        h3 { font-size: 17px; font-weight: 600; margin: 26px 0 12px; color: var(--text); }
+        p { color: var(--text-dim); font-size: 14.5px; margin-bottom: 14px; }
+        p strong, li strong { color: var(--text); }
+        ul, ol { color: var(--text-dim); font-size: 14.5px; padding-left: 24px; margin-bottom: 14px; }
+        li { margin: 6px 0; }
+
+        .card, .callout {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin: 18px 0;
+        }
+        .callout {
+            border-left: 4px solid var(--accent-1);
+            color: var(--text-dim); font-size: 14px;
+        }
+        .callout.ok { border-left-color: var(--ok); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.danger { border-left-color: var(--danger); }
+        .callout.info { border-left-color: var(--accent-1); }
+        .callout .title, .callout .ct {
+            font-weight: 600; font-size: 14px; color: var(--text);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+        }
+        .callout.ok .title, .callout.ok .ct { color: var(--ok); }
+        .callout.warn .title, .callout.warn .ct { color: var(--warn); }
+        .callout.danger .title, .callout.danger .ct { color: var(--danger); }
+        .callout strong { color: var(--text); }
+        .callout .ct .ico { font-size: 14px; line-height: 1; }
+        .callout p { margin-bottom: 0; }
+
+        pre {
+            background: #0a0a13; border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px; overflow-x: auto;
+            margin: 14px 0; font-family: var(--mono); font-size: 12.8px;
+            line-height: 1.65; color: #d6d6e0;
+        }
+        code {
+            font-family: var(--mono); font-size: 0.9em;
+            background: rgba(175, 184, 193, 0.14); border-radius: 5px; padding: 1px 6px;
+            color: #c4b5fd;
+        }
+        pre code { background: none; padding: 0; color: inherit; }
+        .cmt { color: #6b6b85; }
+        .kw { color: #f0abfc; }
+        .str { color: #7dd3fc; }
+
+        table { border-collapse: collapse; width: 100%; margin: 14px 0 20px; font-size: 13.5px; }
+        th, td { border: 1px solid var(--border); padding: 9px 13px; text-align: left; vertical-align: top; color: var(--text-dim); }
+        th { background: var(--panel-strong); color: var(--text); font-weight: 600; }
+        td code { font-size: 12.5px; }
+
+        footer {
+            padding: 44px 24px 60px; text-align: center;
+            color: var(--text-faint); font-size: 12.5px;
+            border-top: 1px solid var(--border);
+        }
+        footer .sep { margin: 0 8px; opacity: .5; }
+        footer .f-brand {
+            font-weight: 700; color: var(--text); font-size: 15px;
+            margin-bottom: 10px; display: inline-flex; align-items: center; gap: 9px;
+        }
+        footer .f-brand .logo {
+            width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); font-size: 11px; color: #fff;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 760px) {
+            .hero { padding: 72px 20px 52px; }
+        }
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; }
+            .brand .zh { display: none; }
+            .nav-links a { padding: 7px 11px; font-size: 12.5px; }
+            .article { padding: 8px 20px 80px; }
+            h2 { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="grid-noise"></div>
+
+<nav class="topnav">
+    <a class="brand" href="/index.html">
+        <span class="logo">雀</span>
+        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="/index.html">首页</a>
+        <a href="/index.html#products">产品</a>
+        <a href="/docs/index.html">文档</a>
+        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="tag"><span class="dot"></span>SPARROW FILE · 接口文档</div>
+    <h1>OpenAPI <span class="gradient">分组策略</span>及相关使用说明</h1>
+    <p class="subtitle">
+        本文记录 Sparrow File 接入 springdoc-openapi 时遇到的两个问题、根因与最终方案，
+        并给出「多 starter 共存」场景下如何给接口文档分组的通用做法。
+    </p>
+</header>
+
+<main class="article">
+    <div class="toc">
+        <div class="toc-title">目录 CONTENTS</div>
+        <ol>
+            <li><a href="#s1">背景：什么是 OpenAPI / Swagger UI</a></li>
+            <li><a href="#s2">遇到的两个问题</a></li>
+            <li><a href="#s3">根因分析</a></li>
+            <li><a href="#s4">最终方案：分组策略</a></li>
+            <li><a href="#s5">完整案例（file + passport 两个 starter）</a></li>
+            <li><a href="#s6">使用说明：如何新增一个分组</a></li>
+            <li><a href="#s7">验证方法</a></li>
+            <li><a href="#s8">注意事项与踩坑清单</a></li>
+        </ol>
+    </div>
+
+    <section id="s1">
+        <h2><span class="no">01</span>背景：什么是 OpenAPI / Swagger UI</h2>
+        <p>
+            <strong>OpenAPI</strong> 是一套描述 REST 接口的标准规范（以前叫 Swagger）。一段 OpenAPI 文档
+            用 JSON/YAML 描述「有哪些接口、每个接口的路径、参数、返回值」。它本身只是一份<strong>数据</strong>，
+            不参与业务逻辑。
+        </p>
+        <p>
+            <strong>springdoc-openapi</strong> 是 Spring Boot 生态下最常用的 OpenAPI 实现：它会<strong>自动扫描</strong>
+            你的 <code>@RestController</code> / <code>@RequestMapping</code> 等注解，动态生成接口文档，并提供一个
+            <strong>Swagger UI</strong> 页面（浏览器里可视化查看、调试接口）。
+        </p>
+        <div class="card callout">
+            <div class="ct"><span class="ico">💡</span>一句话理解</div>
+            <p>springdoc 帮你把代码里的 Controller 自动变成网页版接口文档，Swagger UI 是看这个文档的界面。</p>
+        </div>
+        <p>本项目相关地址（以本地 9999 端口为例）：</p>
+        <table>
+            <tr><th>地址</th><th>作用</th></tr>
+            <tr><td><code>/swagger-ui/index.html</code></td><td>Swagger UI 可视化界面</td></tr>
+            <tr><td><code>/v3/api-docs</code></td><td>默认分组的 OpenAPI JSON</td></tr>
+            <tr><td><code>/v3/api-docs/{group}</code></td><td>某个分组的 OpenAPI JSON，如 <code>/v3/api-docs/file</code></td></tr>
+            <tr><td><code>/v3/api-docs/swagger-config</code></td><td>Swagger UI 下拉里有哪些分组</td></tr>
+        </table>
+    </section>
+
+    <section id="s2">
+        <h2><span class="no">02</span>遇到的两个问题</h2>
+
+        <h3>问题一：应用启动直接报错</h3>
+        <p>文件服务同时引入了两个 starter：<code>passport-starter</code>（认证）和 <code>file-starter</code>（文件）。
+        两个 starter 各自都想给 Swagger UI 提供接口文档。结果应用启动时抛出：</p>
+        <pre><code><span class="cmt">Parameter 0 of method openAPIBuilder in
+org.springdoc.core.configuration.SpringDocConfiguration
+required a single bean, but 2 were found:</span>
+    - passportOpenAPI: defined by method 'passportOpenAPI' in
+      class path resource [com/sparrow/passport/config/PassportAutoConfiguration.class]
+    - fileOpenAPI: defined by method 'fileOpenAPI' in
+      class path resource [com/sparrow/file/config/FileAutoConfiguration.class]</code></pre>
+        <p>翻译过来：springdoc 内部需要一个「全局 OpenAPI」对象，但发现了<strong>两个</strong>，不知道用哪个，于是启动失败。</p>
+
+        <h3>问题二：切换分组，接口却一模一样</h3>
+        <p>解决了启动报错后，Swagger UI 里出现了 <code>file</code> 和 <code>passport</code> 两个分组。
+        但切到 <code>passport</code> 分组时，看到的<strong>仍然是 file 的接口</strong>，接口没有变化。</p>
+    </section>
+
+    <section id="s3">
+        <h2><span class="no">03</span>根因分析</h2>
+
+        <h3>根因一：<code>@ConditionalOnMissingBean</code> 跨类失效</h3>
+        <p>两个 starter 的自动配置里都写了这样一段，试图「如果已经有 OpenAPI 我就不注册了」：</p>
+        <pre><code><span class="kw">@Bean</span>
+<span class="kw">@ConditionalOnMissingBean</span>(OpenAPI.class)
+<span class="kw">public</span> OpenAPI xxxOpenAPI(...) { ... }</code></pre>
+        <p>
+            <code>@ConditionalOnMissingBean</code> 的语义是「容器里还没有这个类型的 Bean 时才注册」。
+            但它在<strong>跨多个 <code>@Configuration</code> 类</strong>时存在时序问题：两个配置类在同一轮被解析，
+            互相都看不到对方已经注册，于是<strong>两个 OpenAPI Bean 都注册了</strong>，最终冲突。
+        </p>
+        <div class="card callout warn">
+            <div class="ct"><span class="ico">⚠️</span>关键结论</div>
+            <p>多个 starter 共存时，<strong>不要各自注册全局 OpenAPI Bean</strong>。全局的只能有一个，
+            谁注册都可能和别的 starter 撞车。</p>
+        </div>
+
+        <h3>根因二：springdoc 全局配置优先级高于分组配置</h3>
+        <p>当时在 <code>application.properties</code> 里写了全局配置：</p>
+        <pre><code>springdoc.packages-to-scan=com.sparrow.file
+springdoc.paths-to-match=/**</code></pre>
+        <p>而 springdoc 源码 <code>AbstractOpenApiResource</code> 里的逻辑是「<strong>全局优先</strong>，全局为空才回退用分组的」：</p>
+        <pre><code><span class="cmt">// springdoc 源码逻辑（简化）</span>
+List&lt;String&gt; packagesToScan = springDocConfigProperties.getPackagesToScan(); <span class="cmt">// 先取全局</span>
+<span class="kw">if</span> (packagesToScan.isEmpty()) {                                  <span class="cmt">// 只有全局为空</span>
+    packagesToScan = groupConfig.getPackagesToScan();              <span class="cmt">// 才用分组的</span>
+}</code></pre>
+        <p>
+            于是全局的 <code>com.sparrow.file</code> 覆盖了 passport 分组自己的 <code>com.sparrow.passport</code>，
+            导致 <strong>所有分组都扫了 file 的包</strong>——这就是「切到 passport 还是 file 接口」的原因。
+        </p>
+    </section>
+
+    <section id="s4">
+        <h2><span class="no">04</span>最终方案：分组策略</h2>
+        <p>核心思路只有两条：</p>
+        <ul>
+            <li><strong>不注册全局 OpenAPI Bean</strong>，改用 <code>GroupedOpenApi</code>（分组）+ <code>addOpenApiCustomizer</code> 给每个分组注入自己的标题/描述。</li>
+            <li><strong>不设全局 <code>springdoc.packages-to-scan</code> / <code>springdoc.paths-to-match</code></strong>，让每个分组用自己的 <code>packagesToScan</code> 扫描自己的包。</li>
+        </ul>
+        <div class="card callout ok">
+            <div class="ct"><span class="ico">✅</span>什么是「分组」</div>
+            <p>
+                你可以把 Swagger UI 右上角的<strong>下拉框</strong>理解成「分组」：每个分组对应一个
+                <code>GroupedOpenApi</code> Bean，各自扫描不同的包、显示不同的标题。这样 file 和 passport
+                就能在同一个 Swagger UI 里互不干扰地共存。
+            </p>
+        </div>
+    </section>
+
+    <section id="s5">
+        <h2><span class="no">05</span>完整案例（file + passport 两个 starter）</h2>
+        <p>下面以本项目实际代码为例，说明分组策略如何落地。</p>
+
+        <h3>5.1 配置属性类 <code>FileOpenApiProperties</code></h3>
+        <p>用独立的 <code>sparrow.file.openapi.*</code> 前缀，避免和 springdoc 官方、passport 的配置冲突：</p>
+        <pre><code><span class="kw">@ConfigurationProperties</span>(prefix = <span class="str">"sparrow.file.openapi"</span>)
+<span class="kw">public class</span> FileOpenApiProperties {
+    <span class="kw">private boolean</span> enabled = <span class="kw">true</span>;
+    <span class="kw">private</span> String title = <span class="str">"Sparrow File"</span>;
+    <span class="kw">private</span> String description = <span class="str">"Sparrow File"</span>;
+    <span class="kw">private</span> String version = <span class="str">"1.0"</span>;
+    <span class="kw">private</span> String group = <span class="str">"file"</span>;
+    <span class="kw">private</span> String packagesToScan = <span class="str">"com.sparrow.file"</span>;
+    <span class="cmt">// ... getter/setter、contact、license 略</span>
+}</code></pre>
+
+        <h3>5.2 自动配置 <code>FileAutoConfiguration</code>（关键）</h3>
+        <p>只注册「分组」，<strong>不注册全局 OpenAPI Bean</strong>，把标题等信息通过 customizer 挂到分组上：</p>
+        <pre><code><span class="kw">@Bean</span>
+<span class="kw">@ConditionalOnMissingBean</span>(name = <span class="str">"fileGroup"</span>)
+<span class="kw">@ConditionalOnProperty</span>(prefix = <span class="str">"sparrow.file.openapi"</span>, name = <span class="str">"enabled"</span>,
+        havingValue = <span class="str">"true"</span>, matchIfMissing = <span class="kw">true</span>)
+<span class="kw">public</span> GroupedOpenApi <span class="kw">fileGroup</span>(FileOpenApiProperties properties) {
+    <span class="kw">return</span> GroupedOpenApi.builder()
+            .group(properties.getGroup())                    <span class="cmt">// 分组名：file</span>
+            .packagesToScan(properties.getPackagesToScan())  <span class="cmt">// 扫描包：com.sparrow.file</span>
+            .addOpenApiCustomizer(openApi -&gt; openApi.info(buildInfo(properties)))  <span class="cmt">// 注入标题</span>
+            .build();
+}
+
+<span class="kw">private</span> Info <span class="kw">buildInfo</span>(FileOpenApiProperties properties) {
+    Info info = <span class="kw">new</span> Info()
+            .title(properties.getTitle())
+            .description(properties.getDescription())
+            .version(properties.getVersion());
+    <span class="cmt">// contact / license 可选，这里略</span>
+    <span class="kw">return</span> info;
+}</code></pre>
+        <p>passport starter 的 <code>PassportAutoConfiguration</code> 同理，分组名为 <code>passport</code>、扫描 <code>com.sparrow.passport</code>。</p>
+
+        <h3>5.3 配置文件 <code>application.properties</code></h3>
+        <p>只保留两个开关，<strong>不要</strong>写全局 packages-to-scan / paths-to-match：</p>
+        <pre><code><span class="cmt"># 正确写法：只开开关，其余交给分组自己配置</span>
+springdoc.api-docs.enabled=<span class="kw">true</span>
+springdoc.swagger-ui.enabled=<span class="kw">true</span>
+
+<span class="cmt"># 错误写法（会覆盖所有分组的扫描包，导致串包）：
+# springdoc.packages-to-scan=com.sparrow.file
+# springdoc.paths-to-match=/**</span></code></pre>
+    </section>
+
+    <section id="s6">
+        <h2><span class="no">06</span>使用说明：如何新增一个分组</h2>
+        <p>假设你新建了一个 <code>xxx-starter</code>，想让它也出现在 Swagger UI 下拉里，只需三步：</p>
+        <ol>
+            <li>写一个 <code>XxxOpenApiProperties</code>，用独立前缀（如 <code>sparrow.xxx.openapi</code>），定义 <code>title</code>、<code>group</code>、<code>packagesToScan</code>。</li>
+            <li>在自动配置类里注册一个 <code>GroupedOpenApi</code> Bean，用 <code>addOpenApiCustomizer</code> 注入 Info。</li>
+            <li>用 <code>@ConditionalOnMissingBean(name = "xxxGroup")</code> 防止覆盖宿主的同名分组，用 <code>@ConditionalOnProperty</code> 支持开关关闭。</li>
+        </ol>
+        <div class="card callout">
+            <div class="ct"><span class="ico">📌</span>命名约定</div>
+            <p>分组名（<code>group</code>）建议与 starter 名一致：<code>file</code>、<code>passport</code>、<code>xxx</code>。
+            访问该分组的 JSON 文档地址就是 <code>/v3/api-docs/{group}</code>。</p>
+        </div>
+    </section>
+
+    <section id="s7">
+        <h2><span class="no">07</span>验证方法</h2>
+        <p>重启应用后，依次验证：</p>
+        <pre><code><span class="cmt"># 1. 分组列表（应能看到 file、passport 两个 url）</span>
+curl http://localhost:9999/v3/api-docs/swagger-config
+
+<span class="cmt"># 2. file 分组（应只有 file 的接口：upload.json / base64-upload.json 等）</span>
+curl http://localhost:9999/v3/api-docs/file
+
+<span class="cmt"># 3. passport 分组（应只有 passport 的接口：登录 / 注册等）</span>
+curl http://localhost:9999/v3/api-docs/passport</code></pre>
+        <p>浏览器打开 <code>http://localhost:9999/swagger-ui/index.html</code>，右上角下拉切换分组，两个分组的标题和接口应该各自独立。</p>
+    </section>
+
+    <section id="s8">
+        <h2><span class="no">08</span>注意事项与踩坑清单</h2>
+        <table>
+            <tr><th>坑</th><th>现象</th><th>正确做法</th></tr>
+            <tr>
+                <td>多个 starter 各自注册全局 <code>OpenAPI</code> Bean</td>
+                <td>启动报错 <code>required a single bean, but 2 were found</code></td>
+                <td>只注册 <code>GroupedOpenApi</code>，用 <code>addOpenApiCustomizer</code> 注入标题</td>
+            </tr>
+            <tr>
+                <td>设了全局 <code>springdoc.packages-to-scan</code></td>
+                <td>所有分组都显示同一个包的接口</td>
+                <td>删除全局配置，让分组各自 <code>packagesToScan</code></td>
+            </tr>
+            <tr>
+                <td>跨配置类用 <code>@ConditionalOnMissingBean(类型)</code></td>
+                <td>条件失效，出现重复 Bean</td>
+                <td>分组用 <code>@ConditionalOnMissingBean(name = "...")</code>（按名字）更可靠</td>
+            </tr>
+            <tr>
+                <td>Swagger UI 显示 "No API definition provided."</td>
+                <td>spec 接口没返回合法 JSON（常见于被认证拦截或分组为空）</td>
+                <td>确认认证排除名单包含 <code>/v3/api-docs</code>、<code>/swagger-ui/**</code></td>
+            </tr>
+        </table>
+        <div class="card callout warn">
+            <div class="ct"><span class="ico">🔒</span>别忘了认证放行</div>
+            <p>
+                如果项目有登录拦截，记得把 <code>/v3/api-docs</code>、<code>/v3/api-docs/**</code>、
+                <code>/swagger-ui/**</code>、<code>/swagger-ui.html</code> 加到放行名单，否则 Swagger UI 会一直提示
+                "No API definition provided."（本项目已在 <code>sparrow.authc.exclude-patterns</code> 里放行）。
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="f-brand"><span class="logo">雀</span>麻雀窝 Sparrow Zoo</div>
+    <div>Sparrow File<span class="sep">·</span>OpenAPI 分组策略说明<span class="sep">·</span>Powered by Sparrow OS</div>
+</footer>
+</body>
+</html>

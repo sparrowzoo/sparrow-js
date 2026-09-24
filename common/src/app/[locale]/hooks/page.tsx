@@ -290,7 +290,7 @@ Navigate.redirectToLogin(true, 2000);     // redirect to login after 2s (optiona
 `;
 
 export default function HooksExamplePage() {
-    const t = useTranslations("HooksExample");
+    const t = useTranslations("example.HooksExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

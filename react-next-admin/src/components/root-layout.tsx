@@ -39,7 +39,7 @@ export default function AdminRootLayout({
         <AdminContext.Provider value={adminContextValue as AdminContextValue}>
             <ThemeProvider
                 attribute="class"
-                defaultTheme="dark"
+                defaultTheme="system"
                 enableSystem
                 disableTransitionOnChange
             >

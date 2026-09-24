@@ -7,15 +7,16 @@ import LoginUser from "@/common/lib/protocol/LoginUser";
 
 export default class CrosStorage {
     private iframe: HTMLIFrameElement;
-    private iframeOrigin: string | undefined = STORAGE_PROXY;
+    private iframeOrigin: string = "";
+    private pending = new Set<() => void>();
     private cros: boolean = false;
-    private loaded: boolean = false;
 
     private constructor() {
         if (typeof window === "undefined") {
             return;
         }
-        console.log("cros storage ");
+        if (!STORAGE_PROXY) throw new Error("NEXT_PUBLIC_STORAGE_PROXY is required");
+        this.iframeOrigin = new URL(STORAGE_PROXY).origin;
         this.cros = UrlUtils.isCros(window.location.href, STORAGE_PROXY as string);
         if (!this.cros) {
             return;
@@ -88,33 +89,20 @@ export default class CrosStorage {
     }
 
     destroy() {
-        if (this.cros && document.body.contains(this.iframe)) {
-            document.body.removeChild(this.iframe);
-        }
+        // The iframe is shared by all storage clients on this page.
+        for (const cancel of this.pending) cancel();
+        this.pending.clear();
     }
 
     public async getToken(
         storage: StorageType = StorageType.AUTOMATIC,
         generateVisitorToken: (() => Promise<string>) | null = null
     ) {
-        return new Promise<string | null>((resolve) => {
-            this.get(TOKEN_KEY, storage).then((token) => {
-                if (token) {
-                    console.log(" token exist ", token);
-                    return resolve(token);
-                }
-                if (!generateVisitorToken) {
-                    console.log("no token found");
-                    return resolve(null);
-                }
-                generateVisitorToken().then((visitorToken) => {
-                    this.setToken(visitorToken).then(() => {
-                        console.log("generate visitor token", visitorToken);
-                        resolve(visitorToken);
-                    });
-                });
-            });
-        });
+        const token = await this.get(TOKEN_KEY, storage);
+        if (token || !generateVisitorToken) return token;
+        const visitorToken = await generateVisitorToken();
+        await this.setToken(visitorToken);
+        return visitorToken;
     }
 
     public setToken(token: string, storage: StorageType = StorageType.AUTOMATIC) {
@@ -126,14 +114,12 @@ export default class CrosStorage {
     }
 
     //用户基本信息本地化
-    public async locateToken(token = null) {
+    public async locateToken(token: string | null = null) {
         if (token) {
             return LoginUser.localize(token);
         }
         //如果不是cros环境，则不进行本地化
-        if (!this.cros) {
-            return null;
-        }
+        // Same-origin Passport must also display the current user or visitor.
         //这里可能存在之前本地化的token
         // const locationUser = sessionStorage.getItem(USER_INFO_KEY);
         // if (locationUser) {
@@ -141,7 +127,6 @@ export default class CrosStorage {
         //   return LoginUser.parseLoginJSON(locationUser);
         // }
         return await this.getToken().then((token) => {
-            console.log("get cros token ", token);
             if (token) {
                 return LoginUser.localize(token);
             }
@@ -149,61 +134,25 @@ export default class CrosStorage {
         });
     }
 
-    private resetIframe() {
-        this.destroy();
-        this.initFrame();
-    }
-
     private initFrame() {
-        let iframe: HTMLIFrameElement | null = document.querySelector(
-            "#cros-storage-iframe"
-        );
-        if (iframe == null) {
-            console.log("create iframe and append to body " + STORAGE_PROXY);
+        let iframe = document.querySelector<HTMLIFrameElement>("#cros-storage-iframe");
+        if (!iframe) {
             iframe = document.createElement("iframe");
-            iframe.src = STORAGE_PROXY as string;
-            iframe.src = iframe.src + "?" + UrlUtils.getHrefWithoutQueryString();
+            iframe.src = `${STORAGE_PROXY}?${encodeURIComponent(window.location.origin)}`;
             iframe.style.display = "none";
             iframe.id = "cros-storage-iframe";
-
-            const handleMessage = (event: MessageEvent<StorageRequest>) => {
-                console.log("receive message from iframe", event.data);
-                if (
-                    !this.iframeOrigin ||
-                    this.iframeOrigin?.indexOf(event.origin) < 0
-                ) {
-                    return;
-                }
-                this.loaded = true;
-                iframe?.setAttribute("loaded", "true");
-                window.removeEventListener("message", handleMessage); // 清理监听
+            iframe.title = "Account storage";
+            const frame = iframe;
+            const handleMessage = (event: MessageEvent) => {
+                if (event.origin !== this.iframeOrigin || event.source !== frame.contentWindow ||
+                    event.data?.command !== CommandType.INIT) return;
+                frame.setAttribute("loaded", "true");
+                window.removeEventListener("message", handleMessage);
             };
             window.addEventListener("message", handleMessage);
-            try {
-                document.body.appendChild(iframe);
-            } catch (e) {
-                console.error("iframe load error", e);
-                console.error("load url is ", iframe.src)
-            }
-        } else {
-            //存在，并没有ready 所以写之后无法回调
-            const localIframe = iframe;
-            const timer = setInterval(() => {
-                if (localIframe.getAttribute("loaded") === "true") {
-                    clearInterval(timer);
-                    this.loaded = true;
-                }
-            }, 100);
+            document.body.appendChild(frame);
         }
         this.iframe = iframe;
-        // iframe.addEventListener("DOMContentLoaded", () => {
-        //   console.log("iframe DOMContentLoaded");
-        //   this.loaded = true;
-        // });
-        // iframe.addEventListener("load", () => {
-        //   console.log("iframe loaded");
-        //   this.loaded = true;
-        // });
     }
 
     private getStorageType(storageType: StorageType) {
@@ -214,53 +163,46 @@ export default class CrosStorage {
         return storageType;
     }
 
-    // 发送请求
+    // Match both origin and iframe window; bound every request to a timeout.
     private request(req: StorageRequest): Promise<string | null> {
         return new Promise((resolve, reject) => {
-            // 监听响应
-            const handleMessage = (event: MessageEvent<StorageResponse>) => {
-                if (
-                    !this.iframeOrigin ||
-                    this.iframeOrigin?.indexOf(event.origin) < 0 ||
-                    event.data.requestId !== req.requestId
-                )
-                    return;
-
-                window.removeEventListener("message", handleMessage); // 清理监听
-
-                if (event.data.error) {
-                    reject(new Error(event.data.error));
-                } else {
-                    resolve(event.data.value);
-                }
+            let poll: ReturnType<typeof setTimeout>;
+            const cleanup = () => {
+                clearTimeout(poll);
+                clearTimeout(timeout);
+                window.removeEventListener("message", handleMessage);
+                this.pending.delete(cancel);
             };
+            const cancel = () => {
+                cleanup();
+                reject(new Error("Storage client destroyed"));
+            };
+            const handleMessage = (event: MessageEvent<StorageResponse>) => {
+                if (event.origin !== this.iframeOrigin || event.source !== this.iframe.contentWindow ||
+                    !event.data || event.data.requestId !== req.requestId) return;
+                cleanup();
+                if (event.data.error) reject(new Error(event.data.error));
+                else resolve(event.data.value);
+            };
+            this.pending.add(cancel);
             window.addEventListener("message", handleMessage);
-
+            const timeout = setTimeout(() => {
+                cleanup();
+                reject(new Error("Account storage request timed out"));
+            }, 10000);
             const send = () => {
-                console.log("send request", this.loaded);
-                if (!this.loaded) {
-                    setTimeout(send, 1000);
+                if (this.iframe.getAttribute("loaded") !== "true") {
+                    poll = setTimeout(send, 100);
                     return;
                 }
                 try {
-                    if (!this.iframe.contentWindow) {
-                        this.resetIframe();
-                    }
-                    this.iframe.contentWindow?.postMessage(
-                        req,
-                        this.iframeOrigin as string
-                    );
-                } catch {
-                    setTimeout(send, 1000);
+                    this.iframe.contentWindow?.postMessage(req, this.iframeOrigin);
+                } catch (error) {
+                    cleanup();
+                    reject(error);
                 }
             };
             send();
-
-            // 超时处理
-            // setTimeout(() => {
-            //   window.removeEventListener("message", handleMessage);
-            //   reject(new Error("Request timeout"));
-            // }, 5000);
         });
     }
 }

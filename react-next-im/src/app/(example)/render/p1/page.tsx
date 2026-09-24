@@ -11,9 +11,9 @@ function P1() {
         <li>nodejs 环境下 layout 不渲染</li>
         <li>nginx 环境下 layout 重渲染</li>
       </ul>
-      <Link href="./p1?query=test1">TEST1</Link>
+      <Link href="/render/p1/?query=test1">TEST1</Link>
       <br />
-      <Link href="./p1?query=test2">TEST2</Link>
+      <Link href="/render/p1/?query=test2">TEST2</Link>
     </div>
   );
 }

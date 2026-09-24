@@ -80,7 +80,7 @@ export default function ChatLayout({
   const avatarUrl = format(AVATAR_URL, currentUser?.userId);
   const userHome = "/chat/friends/contact?friendId=" + currentUser?.userId;
   return (
-    <div className="flex flex-col h-[calc(100vh-80px)]">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="flex flex-row flex-1 min-h-0 h-full w-full">
         <div className=" w-[4rem] flex flex-col  gap-4 p-2">
           <IconMenu title={t("my")} url={userHome}>

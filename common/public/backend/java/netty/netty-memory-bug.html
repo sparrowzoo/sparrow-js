@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Netty 内存共享与释放机制</title>
+    <style>
+        :root {
+            --bg: #07070d;
+            --bg-soft: #0c0c16;
+            --panel: rgba(255, 255, 255, 0.04);
+            --panel-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --text: #f4f4f7;
+            --text-dim: #9a9ab0;
+            --text-faint: #64647c;
+            --accent-1: #6d5cff;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --ok: #34d399;
+            --warn: #fbbf24;
+            --danger: #f43f5e;
+            --radius: 16px;
+            --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+                "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; }
+
+        .ambient {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 12% -5%, rgba(109, 92, 255, 0.16), transparent 60%),
+                radial-gradient(950px 480px at 92% 0%, rgba(34, 211, 238, 0.11), transparent 55%),
+                radial-gradient(900px 650px at 50% 115%, rgba(168, 85, 247, 0.12), transparent 60%);
+        }
+        .grid-noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.4;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        .topnav {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 64px;
+            background: rgba(7, 7, 13, 0.72);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
+        }
+        .brand .logo {
+            width: 32px; height: 32px; border-radius: 10px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
+            font-size: 16px; color: #fff;
+        }
+        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13.5px; padding: 7px 15px; border-radius: 9px;
+            transition: color .2s, background .2s;
+        }
+        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
+        .nav-links a.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
+        }
+        .nav-links a.primary:hover { filter: brightness(1.12); }
+
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 96px 24px 64px; text-align: center;
+        }
+        .hero .tag {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-size: 12.5px; letter-spacing: 0.12em; color: var(--text-dim);
+            padding: 7px 18px; border-radius: 100px;
+            background: var(--panel); border: 1px solid var(--border);
+            margin-bottom: 26px;
+            animation: rise .8s var(--ease) both;
+        }
+        .hero .tag .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 0 12px rgba(109, 92, 255, 0.8);
+        }
+        .hero h1 {
+            font-size: clamp(30px, 5vw, 46px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.16; margin-bottom: 20px;
+            animation: rise .8s var(--ease) .06s both;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(120deg, #c4b5fd 0%, #7dd3fc 50%, #f0abfc 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .subtitle {
+            color: var(--text-dim); font-size: 16px; max-width: 680px;
+            margin: 0 auto;
+            animation: rise .8s var(--ease) .12s both;
+        }
+
+        .article { max-width: 900px; margin: 0 auto; padding: 8px 24px 100px; }
+
+        .toc {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 26px; margin-bottom: 40px;
+        }
+        .toc .toc-title { font-size: 12px; color: var(--text-faint); letter-spacing: 0.12em; margin-bottom: 12px; text-transform: uppercase; }
+        .toc ol { list-style: none; counter-reset: toc; }
+        .toc li { counter-increment: toc; margin: 6px 0; }
+        .toc a { color: var(--text-dim); text-decoration: none; font-size: 14px; transition: color .2s; }
+        .toc a:hover { color: #fff; }
+        .toc a::before {
+            content: counter(toc); color: var(--accent-2);
+            font-family: var(--mono); font-size: 12px; margin-right: 10px;
+        }
+
+        section { margin-bottom: 48px; }
+        h2 {
+            font-size: 22px; font-weight: 700; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+            letter-spacing: -0.01em;
+        }
+        h2 .no {
+            font-family: var(--mono); font-size: 13px; color: var(--accent-2);
+            background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.22);
+            padding: 2px 9px; border-radius: 8px; flex-shrink: 0;
+        }
+        h3 { font-size: 17px; font-weight: 600; margin: 26px 0 12px; color: var(--text); }
+        p { color: var(--text-dim); font-size: 14.5px; margin-bottom: 14px; }
+        p strong, li strong { color: var(--text); }
+        ul, ol { color: var(--text-dim); font-size: 14.5px; padding-left: 24px; margin-bottom: 14px; }
+        li { margin: 6px 0; }
+
+        .card, .callout {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin: 18px 0;
+        }
+        .callout {
+            border-left: 4px solid var(--accent-1);
+            color: var(--text-dim); font-size: 14px;
+        }
+        .callout.ok { border-left-color: var(--ok); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.danger { border-left-color: var(--danger); }
+        .callout.info { border-left-color: var(--accent-1); }
+        .callout .title, .callout .ct {
+            font-weight: 600; font-size: 14px; color: var(--text);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+        }
+        .callout.ok .title, .callout.ok .ct { color: var(--ok); }
+        .callout.warn .title, .callout.warn .ct { color: var(--warn); }
+        .callout.danger .title, .callout.danger .ct { color: var(--danger); }
+        .callout strong { color: var(--text); }
+        .callout .ct .ico { font-size: 14px; line-height: 1; }
+        .callout p { margin-bottom: 0; }
+
+        pre {
+            background: #0a0a13; border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px; overflow-x: auto;
+            margin: 14px 0; font-family: var(--mono); font-size: 12.8px;
+            line-height: 1.65; color: #d6d6e0;
+        }
+        code {
+            font-family: var(--mono); font-size: 0.9em;
+            background: rgba(175, 184, 193, 0.14); border-radius: 5px; padding: 1px 6px;
+            color: #c4b5fd;
+        }
+        pre code { background: none; padding: 0; color: inherit; }
+        .cmt { color: #6b6b85; }
+        .kw { color: #f0abfc; }
+        .str { color: #7dd3fc; }
+        .fn { color: #a5b4fc; }
+        .type { color: #34d399; }
+        .num { color: #fbbf24; }
+
+        table { border-collapse: collapse; width: 100%; margin: 14px 0 20px; font-size: 13.5px; }
+        th, td { border: 1px solid var(--border); padding: 9px 13px; text-align: left; vertical-align: top; color: var(--text-dim); }
+        th { background: var(--panel-strong); color: var(--text); font-weight: 600; }
+        td code { font-size: 12.5px; }
+
+        footer {
+            padding: 44px 24px 60px; text-align: center;
+            color: var(--text-faint); font-size: 12.5px;
+            border-top: 1px solid var(--border);
+        }
+        footer .sep { margin: 0 8px; opacity: .5; }
+        footer .f-brand {
+            font-weight: 700; color: var(--text); font-size: 15px;
+            margin-bottom: 10px; display: inline-flex; align-items: center; gap: 9px;
+        }
+        footer .f-brand .logo {
+            width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); font-size: 11px; color: #fff;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 760px) {
+            .hero { padding: 72px 20px 52px; }
+        }
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; }
+            .brand .zh { display: none; }
+            .nav-links a { padding: 7px 11px; font-size: 12.5px; }
+            .article { padding: 8px 20px 80px; }
+            h2 { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="grid-noise"></div>
+
+<nav class="topnav">
+    <a class="brand" href="/index.html">
+        <span class="logo">雀</span>
+        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="/index.html">首页</a>
+        <a href="/index.html#products">产品</a>
+        <a href="/docs/index.html">文档</a>
+        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="tag"><span class="dot"></span>SPARROW ZOO · Netty 内存</div>
+    <h1>Netty <span class="gradient">内存共享与释放</span>机制</h1>
+    <p class="subtitle">
+        结合 <code>WebSocketFrameHandler</code> 案例，梳理引用计数模型、框架的自动释放点、
+        <code>retainedDuplicate</code> 零拷贝共享与 <code>newFrame</code> 深拷贝的区别，以及一处
+        「分配后未写入也未释放」导致的直接内存泄漏。
+    </p>
+</header>
+
+<main class="article">
+    <div class="toc">
+        <div class="toc-title">目录 CONTENTS</div>
+        <ol>
+            <li><a href="#s1">结论先行：案例与核心结论</a></li>
+            <li><a href="#s2">问题背景：引用计数与内存共享</a></li>
+            <li><a href="#s3">释放机制：自动释放点与手动释放</a></li>
+            <li><a href="#s4">内存共享：零拷贝 vs 深拷贝</a></li>
+            <li><a href="#s5">案例逐行分析：泄漏点定位</a></li>
+            <li><a href="#s6">泄露监控：ResourceLeakDetector</a></li>
+            <li><a href="#s7">总结归纳</a></li>
+        </ol>
+    </div>
+
+    <section id="s1">
+        <h2><span class="no">01</span>结论先行：案例与核心结论</h2>
+        <p>
+            这个案例（<code>WebSocketFrameHandler</code>）完整展示了 Netty 的两大内存机制——<strong>内存共享（零拷贝）</strong>
+            与 <strong>释放机制（引用计数）</strong>，以及一个典型的<strong>释放 bug</strong>。
+        </p>
+        <p>
+            在向多个接收方转发一条消息时，代码先调用 <code>newFrame(msg)</code> <strong>深拷贝</strong>出一帧新消息
+            （分配了一块新的直接内存，<code>refCnt = 1</code>），紧接着却用 <code>retainedDuplicate(msg)</code>
+            把变量<strong>覆盖</strong>掉。于是那块刚分配的新 buffer <strong>既没写入、也没释放</strong>——每转发一条消息、
+            每个接收方就泄漏一块直接内存。
+        </p>
+        <div class="card callout danger">
+            <div class="ct"><span class="ico">⛔</span>一句话结论</div>
+            <p>
+                <strong>「谁创建、谁释放；谁最后使用、谁释放」</strong>。这里 <code>newFrame</code> 创建了 buffer
+                却没有把它写出去，也没有 <code>release</code>，等于创建后立刻丢弃 → 直接内存泄漏。
+                泄漏量 = 消息数 × 接收方数。
+            </p>
+        </div>
+        <p>顺带梳理出 Netty 完整的释放责任链，方便对照自查：</p>
+        <table>
+            <tr><th>释放点</th><th>触发时机</th><th>谁负责</th></tr>
+            <tr>
+                <td><code>SimpleChannelInboundHandler</code></td>
+                <td><code>channelRead0</code> 返回后</td>
+                <td>框架自动 <code>release</code> 入站消息</td>
+            </tr>
+            <tr>
+                <td><code>TailContext</code></td>
+                <td>入站消息走到 pipeline 尾部仍未被处理</td>
+                <td>框架自动 <code>release</code>（丢弃未处理消息）</td>
+            </tr>
+            <tr>
+                <td><code>HeadContext</code></td>
+                <td>写方向 <code>flush</code> 完成后</td>
+                <td>框架自动 <code>release</code> 出站 buffer</td>
+            </tr>
+            <tr>
+                <td>业务代码</td>
+                <td>手动调用</td>
+                <td><code>ReferenceCountUtil.release / safeRelease</code></td>
+            </tr>
+        </table>
+    </section>
+
+    <section id="s2">
+        <h2><span class="no">02</span>问题背景：引用计数与内存共享</h2>
+        <p>
+            Netty 高性能的两大支柱是<strong>零拷贝</strong>与<strong>池化内存</strong>，两者都建立在同一个机制上：
+            <strong>引用计数（Reference Counting）</strong>。
+        </p>
+        <p>
+            <code>ByteBuf</code> 以及包装它的 <code>ByteBufHolder</code>（如 <code>WebSocketFrame</code>）都实现了
+            <code>ReferenceCounted</code> 接口：<code>retain()</code> 让计数 +1，<code>release()</code> 让计数 -1，
+            计数<strong>归零</strong>时才触发真正的释放。
+        </p>
+        <p>
+            「内存共享」意味着多个使用者共享同一块底层内存（零拷贝，不复制），代价是<strong>每个使用者都必须负责一次
+            <code>release</code></strong>——这就是「谁最后使用谁释放」的由来。反之「深拷贝」（如 <code>newFrame</code>）
+            各自持有独立内存、互不干扰，但要额外分配和复制。
+        </p>
+        <div class="card callout info">
+            <div class="ct"><span class="ico">🧭</span>一句话理解</div>
+            <p>
+                <strong>共享 = 省内存但要管好计数；拷贝 = 多占内存但各管各的。</strong>
+                混用（既拷贝又共享，还不释放）就是本案例踩的坑。
+            </p>
+        </div>
+    </section>
+
+    <section id="s3">
+        <h2><span class="no">03</span>释放机制：自动释放点与手动释放</h2>
+
+        <h3>3.1 引用计数模型与释放流程</h3>
+        <p>一次 <code>release()</code> 把计数减到 0 后，底层内存的归宿取决于分配方式：</p>
+        <ul>
+            <li><strong>池化内存</strong>：归还到 <code>PoolThreadCache</code>（线程私有缓存，下次复用最快），再根据使用情况回收至 <code>Chunk</code>。</li>
+            <li><strong>huge 内存</strong>：直接彻底销毁。</li>
+        </ul>
+        <p>而 <code>Chunk</code> 本身也有生命周期：释放时根据使用率把 <code>Chunk</code> 移动到合适的 <code>PoolChunkList</code>，使用率低于阈值时销毁整个 <code>Chunk</code>，把内存还给操作系统。</p>
+
+        <h3>3.2 读方向：TailContext 兜底释放</h3>
+        <p>入站消息沿 <code>Head → Tail</code> 依次经过 <code>ChannelInboundHandler</code>。如果消息一直没人处理、走到 pipeline 尾部，<code>TailContext</code> 会兜底释放它：</p>
+        <pre><code><span class="kw">final class</span> <span class="type">TailContext</span> <span class="kw">extends</span> <span class="type">AbstractChannelHandlerContext</span> <span class="kw">implements</span> <span class="type">ChannelInboundHandler</span> {
+    <span class="kw">@Override</span>
+    <span class="kw">public void</span> <span class="fn">channelRead</span>(<span class="type">ChannelHandlerContext</span> ctx, <span class="type">Object</span> msg) <span class="kw">throws</span> <span class="type">Exception</span> {
+        <span class="fn">onUnhandledInboundMessage</span>(msg);
+    }
+}
+
+<span class="kw">protected void</span> <span class="fn">onUnhandledInboundMessage</span>(<span class="type">Object</span> msg) {
+    <span class="kw">try</span> {
+        logger.<span class="fn">debug</span>(<span class="str">"Discarded inbound message {} that reached at the tail of the pipeline."</span>, msg);
+    } <span class="kw">finally</span> {
+        <span class="type">ReferenceCountUtil</span>.<span class="fn">release</span>(msg);   <span class="cmt">// 未处理消息在此释放</span>
+    }
+}</code></pre>
+
+        <h3>3.3 写方向：HeadContext flush 后释放</h3>
+        <p>出站消息沿 <code>Tail → Head</code> 依次经过 <code>ChannelOutboundHandler</code>。写请求最终到达 <code>HeadContext</code>，真正把数据刷到 socket 后释放 buffer：</p>
+        <pre><code><span class="kw">private void</span> <span class="fn">invokeWriteAndFlush</span>(<span class="type">Object</span> msg, <span class="type">ChannelPromise</span> promise) {
+    <span class="kw">if</span> (<span class="fn">invokeHandler</span>()) {
+        <span class="fn">invokeWrite0</span>(msg, promise);
+        <span class="cmt">// invokeFlush0() 这里释放过程 refCnt → 0</span>
+        <span class="fn">invokeFlush0</span>();
+    }
+}
+
+<span class="kw">private void</span> <span class="fn">invokeFlush0</span>() {
+    ((<span class="type">ChannelOutboundHandler</span>) <span class="fn">handler</span>()).<span class="fn">flush</span>(<span class="kw">this</span>);
+}
+
+<span class="kw">@Override</span>
+<span class="kw">public void</span> <span class="fn">flush</span>(<span class="type">ChannelHandlerContext</span> ctx) <span class="kw">throws</span> <span class="type">Exception</span> {
+    unsafe.<span class="fn">flush</span>();   <span class="cmt">// unsafe flush 后被释放</span>
+}</code></pre>
+
+        <h3>3.4 SimpleChannelInboundHandler 自动释放</h3>
+        <p>
+            前面的文档已详述：继承 <code>SimpleChannelInboundHandler</code> 后，<code>channelRead0</code> 返回时框架会
+            在 <code>finally</code> 里自动 <code>release</code> 入站消息（<code>autoRelease = true</code>）。
+            本案例的 <code>WebSocketFrameHandler</code> 正是这么做的，所以<strong>入站帧本身不会泄漏</strong>——泄漏点在它内部手动创建的那块新 buffer。
+        </p>
+
+        <h3>3.5 手动释放：ReferenceCountUtil</h3>
+        <pre><code><span class="kw">public final class</span> <span class="type">ReferenceCountUtil</span> {
+    <span class="kw">public static boolean</span> <span class="fn">release</span>(<span class="type">Object</span> msg, <span class="kw">int</span> decrement) {
+        <span class="kw">if</span> (msg <span class="kw">instanceof</span> <span class="type">ReferenceCounted</span>) {
+            <span class="kw">return</span> ((<span class="type">ReferenceCounted</span>) msg).<span class="fn">release</span>(decrement);
+        }
+        <span class="kw">return</span> <span class="kw">false</span>;
+    }
+
+    <span class="kw">public static void</span> <span class="fn">safeRelease</span>(<span class="type">Object</span> msg) {
+        <span class="kw">try</span> {
+            <span class="fn">release</span>(msg);
+        } <span class="kw">catch</span> (<span class="type">Throwable</span> t) {
+            logger.<span class="fn">warn</span>(<span class="str">"Failed to release a message: {}"</span>, msg, t);
+        }
+    }
+}</code></pre>
+        <p>
+            <code>ReferenceCounted</code> 对象初始化时引用计数默认是 <code>1</code>——表示「当前持有者」占用一份引用，
+            用完必须 <code>release</code> 一次把这份引用还掉。
+        </p>
+    </section>
+
+    <section id="s4">
+        <h2><span class="no">04</span>内存共享：零拷贝 vs 深拷贝</h2>
+        <p>发送一份消息给多个接收方时，有两条路可选，取舍完全不同：</p>
+        <table>
+            <tr><th>方式</th><th>是否复制内存</th><th>引用计数变化</th><th>适用场景</th></tr>
+            <tr>
+                <td><code>retain()</code> / <code>retainedDuplicate()</code></td>
+                <td>否（共享同一底层内存，零拷贝）</td>
+                <td><code>refCnt + 1</code>，每个消费者用完各自 <code>release</code></td>
+                <td>多个消费者<strong>只读</strong>同一份数据</td>
+            </tr>
+            <tr>
+                <td><code>newFrame</code>（手动复制）</td>
+                <td>是（深拷贝，独立内存）</td>
+                <td>新 buffer <code>refCnt = 1</code>，各管各的</td>
+                <td>每个消费者需要<strong>各自修改</strong>内容（如追加时间戳）</td>
+            </tr>
+        </table>
+        <pre><code><span class="cmt">// 零拷贝共享：复制的是「视图」，不是内存</span>
+<span class="kw">private static</span> <span class="type">Object</span> <span class="fn">retainedDuplicate</span>(<span class="type">Object</span> message) {
+    <span class="kw">if</span> (message <span class="kw">instanceof</span> <span class="type">ByteBuf</span>) {
+        <span class="kw">return</span> ((<span class="type">ByteBuf</span>) message).<span class="fn">retainedDuplicate</span>();
+    } <span class="kw">else</span> {
+        <span class="kw">return</span> message <span class="kw">instanceof</span> <span class="type">ByteBufHolder</span>
+            ? ((<span class="type">ByteBufHolder</span>) message).<span class="fn">retainedDuplicate</span>()   <span class="cmt">// refCnt + 1</span>
+            : <span class="type">ReferenceCountUtil</span>.<span class="fn">retain</span>(message);
+    }
+}</code></pre>
+        <div class="card callout warn">
+            <div class="ct"><span class="ico">⚠️</span>共享的两面性</div>
+            <p>
+                共享省内存，但<strong>所有消费者看到的是同一份字节</strong>。本案例里 <code>newFrame</code> 原本要往消息尾部追加
+                <code>_时间戳</code>，改用 <code>retainedDuplicate</code> 后共享的是原始内容、<strong>时间戳就丢了</strong>——
+                除了泄漏，还顺带改变了业务语义。
+            </p>
+        </div>
+    </section>
+
+    <section id="s5">
+        <h2><span class="no">05</span>案例逐行分析：泄漏点定位</h2>
+        <p>关键代码（<code>channelRead0</code> 的二进制分支与 <code>writeAndFlush</code>）：</p>
+        <pre><code><span class="kw">private</span> <span class="type">BinaryWebSocketFrame</span> <span class="fn">newFrame</span>(<span class="type">BinaryWebSocketFrame</span> msg) {
+    <span class="type">ByteBuf</span> byteBuf = <span class="kw">null</span>;
+    <span class="kw">try</span> {
+        <span class="kw">byte</span>[] serviceTimeBytes = (<span class="str">"_"</span> + <span class="type">System</span>.<span class="fn">currentTimeMillis</span>()).<span class="fn">getBytes</span>();
+        <span class="kw">int</span> capacity = msg.<span class="fn">content</span>().<span class="fn">readableBytes</span>() + serviceTimeBytes.length;
+        byteBuf = <span class="type">ByteBufAllocator</span>.DEFAULT.<span class="fn">directBuffer</span>(capacity);   <span class="cmt">// 深拷贝：新分配直接内存</span>
+        byteBuf.<span class="fn">writeBytes</span>(msg.<span class="fn">content</span>());
+        byteBuf.<span class="fn">writeBytes</span>(serviceTimeBytes);
+        msg.<span class="fn">content</span>().<span class="fn">resetReaderIndex</span>();
+        <span class="kw">return new</span> <span class="type">BinaryWebSocketFrame</span>(byteBuf);                    <span class="cmt">// refCnt = 1</span>
+    } <span class="kw">catch</span> (<span class="type">Exception</span> e) {
+        <span class="kw">if</span> (byteBuf != <span class="kw">null</span>) <span class="type">ReferenceCountUtil</span>.<span class="fn">release</span>(byteBuf);       <span class="cmt">// 异常路径已修复</span>
+        <span class="kw">throw</span> e;
+    }
+}
+
+<span class="kw">private void</span> <span class="fn">writeAndFlush</span>(..., <span class="type">BinaryWebSocketFrame</span> msg, <span class="type">List</span>&lt;<span class="type">Channel</span>&gt; channels) {
+    <span class="kw">for</span> (<span class="type">Channel</span> channel : channels) {
+        ...
+        <span class="type">BinaryWebSocketFrame</span> webSocketFrame = <span class="kw">this</span>.<span class="fn">newFrame</span>(msg);   <span class="cmt">// 分配新 buffer，refCnt=1</span>
+        webSocketFrame = (<span class="type">BinaryWebSocketFrame</span>) <span class="fn">retainedDuplicate</span>(msg);   <span class="cmt">// 覆盖！新 buffer 被丢弃 → 泄漏</span>
+        channel.<span class="fn">writeAndFlush</span>(webSocketFrame, promise);                    <span class="cmt">// 共享帧写出，flush 后释放</span>
+    }
+}</code></pre>
+        <p>引用计数的完整流转如下：</p>
+        <pre><code>入站：WebSocketFrameHandler（SimpleChannelInboundHandler&lt;WebSocketFrame&gt;）
+  channelRead0 收到 BinaryWebSocketFrame msg，msg.refCnt = 1
+
+  循环每个接收方 channel（共 N 个）：
+    ├─ newFrame(msg)            → 新分配独立 direct buffer，refCnt=1  ← 被覆盖，永不释放 ✗
+    ├─ retainedDuplicate(msg)   → 共享 msg 底层内存，msg.refCnt + 1
+    └─ channel.writeAndFlush()  → flush 后 Netty 释放该共享帧，msg.refCnt - 1
+
+  channelRead0 返回 → SimpleChannelInboundHandler 自动 release(msg)，msg.refCnt - 1
+
+最终：
+  msg 的共享内存：1 + N - N - 1 = 0  ✓ 正确释放
+  newFrame 的独立内存：每个 channel 泄漏 1 块  ✗ 永不释放（泄漏量 = 消息数 × N）</code></pre>
+        <div class="card callout danger">
+            <div class="ct"><span class="ico">⛔</span>泄漏点</div>
+            <p>
+                <code>newFrame(msg)</code> 每次循环都<strong>分配一块新的直接内存</strong>，紧接着被
+                <code>retainedDuplicate(msg)</code> 覆盖，这块内存<strong>既没写入 channel、也没手动 release</strong>，
+                引用计数永远停在 1，直接内存只增不减。配合 <code>-Xmx200m</code>（直接内存上限默认也约 200m），很快 OOM。
+            </p>
+        </div>
+
+        <h3>正确写法</h3>
+        <p>要么用「拷贝」、要么用「共享」，二选一，别混用。这里因为要追加时间戳，用拷贝即可：</p>
+        <pre><code><span class="kw">for</span> (<span class="type">Channel</span> channel : channels) {
+    <span class="kw">if</span> (channel == <span class="kw">null</span> || !channel.<span class="fn">isOpen</span>() || !channel.<span class="fn">isActive</span>()) {
+        <span class="kw">if</span> (chatType == <span class="type">Chat</span>.CHAT_TYPE_1_2_1) {
+            ctx.<span class="fn">channel</span>().<span class="fn">writeAndFlush</span>(<span class="kw">new</span> <span class="type">TextWebSocketFrame</span>(<span class="type">Instruction</span>.OFFLINE));
+        }
+        <span class="kw">continue</span>;
+    }
+    <span class="cmt">// 每个接收方一份独立拷贝，写出去后所有权移交出站管线，flush 后由 HeadContext 释放</span>
+    <span class="type">BinaryWebSocketFrame</span> webSocketFrame = <span class="kw">this</span>.<span class="fn">newFrame</span>(msg);
+    channel.<span class="fn">writeAndFlush</span>(webSocketFrame, promise);
+}</code></pre>
+        <p>
+            这样 <code>newFrame</code> 返回的 <code>refCnt=1</code> 新帧被 <code>writeAndFlush</code> 写出去，
+            释放责任移交给出站管线（<code>HeadContext</code> flush 后释放），既不用手动 <code>release</code>，
+            也不需要 <code>retainedDuplicate</code>。
+        </p>
+    </section>
+
+    <section id="s6">
+        <h2><span class="no">06</span>泄露监控：ResourceLeakDetector</h2>
+        <p>Netty 用 <code>ResourceLeakDetector</code> 检测内存泄漏，但要注意它的定位：<strong>只告警、不释放</strong>。</p>
+        <ul>
+            <li>
+                <strong>跟踪机制</strong>：创建 <code>ByteBuf</code> 时，Netty 会把它包装成 <code>LeakAwareByteBuf</code>
+                （<code>SimpleLeakAwareByteBuf</code> / <code>AdvancedLeakAwareByteBuf</code>），并创建一个
+                <code>WeakReference</code> 指向原始 <code>ByteBuf</code>，注册到引用链中跟踪。
+            </li>
+            <li>
+                <strong>判定泄露</strong>：对象被 GC 回收时，若从未调用 <code>release()</code>（<code>refCnt</code> 未归零），
+                该弱引用会进入 <code>ReferenceQueue</code>，从而判定为泄漏。
+            </li>
+            <li>
+                <strong>只记录不释放</strong>：<code>clearRefQueue()</code> 轮询队列并调用 <code>ref.dispose()</code>，
+                这一步只是<strong>记录泄漏堆栈</strong>（就是我们看到的那份「Recent access records / Created at」报告），
+                <strong>并不会释放底层直接内存</strong>。
+            </li>
+        </ul>
+        <pre><code><span class="kw">private static final class</span> <span class="type">DefaultResourceLeak</span>&lt;<span class="type">T</span>&gt;
+        <span class="kw">extends</span> <span class="type">WeakReference</span>&lt;<span class="type">Object</span>&gt; <span class="kw">implements</span> <span class="type">ResourceLeakTracker</span>&lt;<span class="type">T</span>&gt;, <span class="type">ResourceLeak</span> {
+
+<span class="kw">private void</span> <span class="fn">clearRefQueue</span>() {
+    <span class="kw">for</span> (;;) {
+        <span class="type">DefaultResourceLeak</span> ref = (<span class="type">DefaultResourceLeak</span>) refQueue.<span class="fn">poll</span>();
+        <span class="kw">if</span> (ref == <span class="kw">null</span>) <span class="kw">break</span>;
+        ref.<span class="fn">dispose</span>();   <span class="cmt">// 仅记录泄漏堆栈，不释放底层内存</span>
+    }
+}</code></pre>
+        <div class="card callout info">
+            <div class="ct"><span class="ico">📌</span>一个小纠正</div>
+            <p>
+                源码里 <code>DefaultResourceLeak</code> 继承的是 <strong><code>WeakReference</code>（弱引用）</strong>，
+                并非「虚引用」（PhantomReference）。两者行为近似——对象一旦只被该引用指向、即将被 GC 回收，就会被放入
+                <code>ReferenceQueue</code> 供检测器发现，但弱引用是「GC 时即回收」，是 Netty 实际的实现选择。
+            </p>
+        </div>
+    </section>
+
+    <section id="s7">
+        <h2><span class="no">07</span>总结归纳</h2>
+        <table>
+            <tr><th>维度</th><th>要点</th></tr>
+            <tr>
+                <td>引用计数</td>
+                <td><code>retain()</code> +1、<code>release()</code> -1，归零才真正释放（归还 <code>PoolThreadCache</code> / <code>Chunk</code>，huge 销毁）</td>
+            </tr>
+            <tr>
+                <td>框架自动释放</td>
+                <td>入站：<code>SimpleChannelInboundHandler</code>（channelRead0 后）、<code>TailContext</code>（未处理兜底）；出站：<code>HeadContext</code>（flush 后）</td>
+            </tr>
+            <tr>
+                <td>手动释放</td>
+                <td><code>ReferenceCountUtil.release / safeRelease</code>，用于自己创建/占用的 buffer</td>
+            </tr>
+            <tr>
+                <td>共享 vs 拷贝</td>
+                <td><code>retainedDuplicate</code> 零拷贝共享（每个消费者各 release 一次）；<code>newFrame</code> 深拷贝（各管各的）</td>
+            </tr>
+            <tr>
+                <td>本案例 bug</td>
+                <td><code>newFrame</code> 分配的新 buffer 被 <code>retainedDuplicate</code> 覆盖，未写也未释放 → 每个接收方泄漏一块直接内存</td>
+            </tr>
+            <tr>
+                <td>泄露监控</td>
+                <td><code>ResourceLeakDetector</code> 基于弱引用跟踪，<strong>只告警不释放</strong></td>
+            </tr>
+        </table>
+        <div class="card callout ok">
+            <div class="ct"><span class="ico">✅</span>一句话记住</div>
+            <p>
+                <strong>谁创建谁释放、谁最后使用谁释放；共享要 retain、用完要 release。</strong>
+                拷贝和共享二选一，别「先拷贝、再改成共享」却忘了把拷贝的那块内存释放掉。
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="f-brand"><span class="logo">雀</span>麻雀窝 Sparrow Zoo</div>
+    <div>Sparrow Zoo<span class="sep">·</span>Netty 内存共享与释放机制<span class="sep">·</span>Powered by Sparrow OS</div>
+</footer>
+</body>
+</html>

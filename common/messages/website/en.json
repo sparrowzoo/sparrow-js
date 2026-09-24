@@ -1,0 +1,505 @@
+{
+  "metadata": {
+    "title": "Sparrow Zoo · An Integrated Development Ecosystem",
+    "description": "Explore Sparrow Zoo's engineering foundation, identity and file services, and development guides, connecting Java / Spring Boot with React / Next.js."
+  },
+  "brand": {
+    "name": "Sparrow Zoo",
+    "tagline": "麻雀窝"
+  },
+  "nav": {
+    "label": "Main navigation",
+    "products": "Products",
+    "docs": "Documentation",
+    "ecosystem": "Ecosystem",
+    "playground": "Playground",
+    "study": "Learning",
+    "language": "Change language",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "skip": "Skip to main content"
+  },
+  "hero": {
+    "eyebrow": "SPARROW ZOO · A CONNECTED ECOSYSTEM",
+    "title": "One ecosystem.",
+    "highlight": "From scaffolding to an AI agent platform.",
+    "description": "A shared engineering foundation for identity, files, access control, and real-time communication. Build on reusable capabilities and bring your next application to life.",
+    "primary": "Explore products",
+    "secondary": "Read the docs",
+    "note": "Java / Spring Boot · React / Next.js"
+  },
+  "stats": {
+    "products": "Ecosystem products",
+    "docs": "Development guides",
+    "stack": "Engineering foundation"
+  },
+  "products": {
+    "eyebrow": "PRODUCTS / THE BUILDING BLOCKS",
+    "title": "From foundations to application services",
+    "description": "Choose the capabilities your application needs. Explore available services and see what's in development.",
+    "guide": "Read the engineering guide",
+    "details": "Explore the product",
+    "planned": "In development",
+    "foundation": "Foundation",
+    "available": "Complete",
+    "scaffold": {
+      "title": "Project Scaffold",
+      "subtitle": "Sparrow Scaffold",
+      "description": "A clear approach to build standards: Parent for the baseline, BOM for component versions, and Starter for integration. Give component evolution and application adoption a shared direction.",
+      "tags": ["Java", "Spring Boot", "Parent / BOM", "Starter"]
+    },
+    "passport": {
+      "title": "Passport Identity",
+      "subtitle": "Unified Identity",
+      "description": "A shared entry point for sign-in, registration, and password recovery, with options for separate frontends and monolithic applications.",
+      "tags": ["Sign-in & registration", "Password recovery", "Shared identity"],
+      "page": {
+        "name": "Sparrow Passport",
+        "eyebrow": "UNIFIED IDENTITY",
+        "title": "One identity entry point.",
+        "highlight": "Connected applications.",
+        "description": "Bring sign-in, registration and password recovery into one identity service. Support separate frontends and monolithic applications with a reusable authentication foundation.",
+        "tags": ["Sign-in & registration", "Password recovery", "Shared login state"],
+        "primaryLabel": "Try Passport",
+        "secondaryLabel": "Explore both editions",
+        "flowLabel": "Integration flow",
+        "capabilitiesEyebrow": "CAPABILITIES",
+        "capabilitiesTitle": "Shared capabilities. Considered details.",
+        "capabilitiesLabel": "Product capabilities",
+        "integrationEyebrow": "START BUILDING",
+        "integrationLabel": "Integration and resources",
+        "features": [
+          {"title": "A complete account flow", "description": "Organize sign-in, registration and password recovery around a common identity service for your applications."},
+          {"title": "Fit your application architecture", "description": "Dedicated entry points support both separate frontend applications and traditional integrated applications."},
+          {"title": "Share login context", "description": "Use the shared frontend library to exchange tokens across application subdomains and return users to their original destination after sign-in."}
+        ],
+        "flow": [
+          {"label": "Integrate the identity service", "detail": "Add identity capabilities to a Spring Boot application through passport-starter."},
+          {"label": "Connect application entry points", "detail": "Configure service URLs, sign-in entry points and the cross-domain storage proxy."},
+          {"label": "Continue the user journey", "detail": "Send authenticated API requests and return users to the page they intended to visit."}
+        ],
+        "integrationTitle": "Identity that fits your application.",
+        "integrationDescription": "The backend Starter organizes authentication capabilities. Shared frontend request and storage modules connect login state while applications retain their own pages and business flows.",
+        "resources": [
+          {"title": "Passport source", "description": "Explore the authentication framework and passport-starter.", "href": "https://github.com/sparrowzoo/sparrow-passport-ddd", "external": true},
+          {"title": "Captcha Hook", "description": "Learn about image loading, refresh and session initialization. In Chinese.", "href": "/frontend/react/captcha.html"},
+          {"title": "OpenAPI grouping", "description": "Organize API groups when Passport and File coexist. In Chinese.", "href": "/backend/java/open-api/open-api-group.html"}
+        ],
+        "experience": {
+          "eyebrow": "TRY PASSPORT / LIVE DEMO",
+          "title": "Two ways to connect. Try them now.",
+          "description": "Choose your application architecture and open sign-in or registration. Demos open in a new tab.",
+          "recommended": "Recommended",
+          "tryLogin": "Try sign-in",
+          "register": "Register",
+          "separated": {
+            "title": "Separate frontend & backend",
+            "caption": "React / Next.js",
+            "description": "A dedicated React / Next.js interface connected to the identity service through APIs. Explore sign-in and registration in a modern frontend application."
+          },
+          "monolithic": {
+            "title": "Monolithic application",
+            "caption": "Spring Boot",
+            "description": "Pages and authentication are served by the same backend application. Explore sign-in and registration through server-rendered pages for an integrated project."
+          }
+        }
+      }
+    },
+    "file": {
+      "title": "File Service",
+      "subtitle": "File Storage",
+      "description": "Upload and store files through a shared interface, with drag and drop, progress tracking, previews, and storage paths for different use cases.",
+      "tags": ["Drag and drop", "Upload progress", "File previews"],
+      "page": {
+        "name": "Sparrow File",
+        "eyebrow": "FILE UPLOAD & STORAGE",
+        "title": "From choosing a file",
+        "highlight": "to putting it to work.",
+        "description": "Connect file selection, upload progress and previews through a shared upload and storage service. Organize resources by business purpose and reuse uploads across your application.",
+        "tags": ["Drag & drop", "Upload progress", "File previews"],
+        "primaryLabel": "Explore upload example",
+        "secondaryLabel": "Explore capabilities",
+        "flowLabel": "Integration flow",
+        "capabilitiesEyebrow": "CAPABILITIES",
+        "capabilitiesTitle": "Shared capabilities. Considered details.",
+        "capabilitiesLabel": "Product capabilities",
+        "integrationEyebrow": "START BUILDING",
+        "integrationLabel": "Integration and resources",
+        "features": [
+          {"title": "A natural upload experience", "description": "The upload example supports file selection, drag and drop, pasting, multiple files and image thumbnails."},
+          {"title": "Feedback at every step", "description": "Show upload progress and completion, surface errors, and copy or open the returned file URL."},
+          {"title": "Organize files by purpose", "description": "Use pathType to distinguish resources, CMS content, comments, posts, avatars and application files."}
+        ],
+        "flow": [
+          {"label": "Choose a storage purpose", "detail": "Set pathType to place the file in the appropriate business category."},
+          {"label": "Upload with progress", "detail": "Submit the file and receive progress updates, results and error feedback."},
+          {"label": "Use the returned URL", "detail": "Connect the file address to content, an avatar or a business form."}
+        ],
+        "integrationTitle": "One service. Multiple upload entry points.",
+        "integrationDescription": "Use file-starter on the backend and FileUploader in React. Configure the upload endpoint and result callback to reuse file selection, authentication and progress handling.",
+        "resources": [
+          {"title": "File upload component", "description": "Explore the React example, configuration and integration guide.", "href": "/upload"},
+          {"title": "File source", "description": "Explore the file service and file-starter.", "href": "https://github.com/sparrowzoo/sparrow-file", "external": true},
+          {"title": "OpenAPI integration", "description": "Connect API documentation to a Spring Boot application. In Chinese.", "href": "/backend/java/open-api/open-api.html"}
+        ]
+      }
+    },
+    "security": {
+      "title": "Security",
+      "subtitle": "Access Control",
+      "description": "Shared access control built around roles, permissions, and resources, with authentication and authorization capabilities in development.",
+      "tags": ["RBAC", "Authorization", "Resource isolation"]
+    },
+    "im": {
+      "title": "Instant Messaging",
+      "subtitle": "Sparrow IM",
+      "description": "A messaging service for direct chats, group conversations, and notifications, informed by connection and message handling practices.",
+      "tags": ["Direct & group chats", "Notifications", "WebSocket"],
+      "page": {
+        "name": "Sparrow IM",
+        "eyebrow": "INSTANT MESSAGING",
+        "title": "Every conversation.",
+        "highlight": "Keep it going.",
+        "description": "Bring direct and group conversations into your application. WebSocket connection management links contacts, sessions and message history to support real-time communication.",
+        "tags": ["Direct & group chat", "Text & images", "WebSocket"],
+        "primaryLabel": "Try IM",
+        "secondaryLabel": "View source",
+        "flowLabel": "Integration flow",
+        "capabilitiesEyebrow": "CAPABILITIES",
+        "capabilitiesTitle": "Shared capabilities. Considered details.",
+        "capabilitiesLabel": "Product capabilities",
+        "integrationEyebrow": "START BUILDING",
+        "integrationLabel": "Integration and resources",
+        "features": [
+          {"title": "Conversations built around sessions", "description": "Connect direct and group sessions, contacts and groups through a common protocol for text and image messages."},
+          {"title": "Manage the connection lifecycle", "description": "Use authenticated handshakes, heartbeats and reconnection logic, with window activity informing connection management."},
+          {"title": "Keep conversations discoverable", "description": "Query session lists and message history by conversation, content and time to connect live exchanges with past messages."}
+        ],
+        "flow": [
+          {"label": "Authenticate and connect", "detail": "Acquire an identity token and start an authenticated WebSocket handshake."},
+          {"label": "Open a conversation", "detail": "Choose a contact or group and load the session and its messages."},
+          {"label": "Exchange and retrieve messages", "detail": "Send and receive through the live connection and query history through the API."}
+        ],
+        "integrationTitle": "Explore the interface and the connection.",
+        "integrationDescription": "react-next-im provides a React / Next.js messaging interface and message handling, while the shared library manages WebSocket connections. Netty engineering notes explain message processing and memory management.",
+        "resources": [
+          {"title": "Frontend source", "description": "Explore messaging in the sparrow-js react-next-im project.", "href": "https://github.com/sparrowzoo/sparrow-js", "external": true},
+          {"title": "Netty inbound messages & OOM", "description": "Understand message release, heartbeats and leak diagnosis. In Chinese.", "href": "/backend/java/netty/netty-oom.html"},
+          {"title": "Netty memory sharing & release", "description": "Trace reference counts and ownership when forwarding messages. In Chinese.", "href": "/backend/java/netty/netty-memory-bug.html"}
+        ]
+      }
+    },
+    "coder": {
+      "title": "Code Generator",
+      "subtitle": "Sparrow Coder",
+      "description": "Turn entity models into CRUD code for Clean Architecture backends and React frontends, reducing repetitive implementation work.",
+      "tags": ["CRUD", "Clean Architecture", "React"],
+      "page": {
+        "meta": "Sparrow Coder · Clean Architecture Code Generator",
+        "eyebrow": "SPARROW CODER / ADMIN APPLICATION GENERATOR",
+        "title": "From a PO class",
+        "highlight": "to your application.",
+        "description": "Turn your PO classes into a Clean Architecture backend and frontend pages that follow your package conventions. Templates and metadata handle the repetitive work.",
+        "start": "Get started",
+        "experience": "Try Coder",
+        "source": "View source",
+        "tags": ["No AI required", "Separate frontend & backend", "Code you can extend"],
+        "input": "Define your model",
+        "engine": "Templates + metadata",
+        "output": "Generate both sides",
+        "backend": "Clean Architecture backend",
+        "frontend": "Admin lists & forms",
+        "diagramNote": "One model · Backend and frontend code",
+        "nav": ["Capabilities", "Architecture", "Workflow", "PO modeling", "Quick start"],
+        "navLabel": "Code generator page navigation",
+        "featuresTitle": "Templates handle repetition. You build the business.",
+        "featuresDescription": "Controllers, services, DAOs, mappers, lists and forms start from the same business model.",
+        "features": [
+          {"title": "Generate both sides together", "description": "Produce backend layers and React / Next.js admin pages from PO classes, reducing repetitive CRUD implementation."},
+          {"title": "Start with a clear architecture", "description": "Organize code by responsibility, package name and module prefix, using dependency inversion and leaving room for business logic."},
+          {"title": "Configure the interface", "description": "Use column_configs to customize visible columns, filters, row menus and status commands for your application."}
+        ],
+        "architectureTitle": "Clear layers. A complete starting point.",
+        "architectureDescription": "Use sparrow-example for the backend and react-next-admin inside sparrow-js for the frontend. Two independent applications, one business definition.",
+        "layers": ["API entry points & conversion", "Domain logic & business rules", "Infrastructure & implementations", "Persistence interfaces & access"],
+        "layerNote": "Separate responsibilities through interfaces and dependency inversion, keeping domain logic decoupled from storage implementations.",
+        "backendScaffold": "Backend scaffold",
+        "frontendScaffold": "Frontend scaffold",
+        "separate": "Build and run independently",
+        "workflowTitle": "Define, generate, and make it yours.",
+        "workflowDescription": "Download your project, write the PO classes, generate the code, then continue building in your own application.",
+        "modelTitle": "Define fields and relationships in the model.",
+        "modelDescription": "Use @Table and @Column for table and field metadata, and @ListDatasource for relationships. Templates turn those definitions into code and controls.",
+        "relation": "From departments to users",
+        "relationDescription": "Department is the parent table and UserExample is the child. Link departmentId to t_department to generate dropdowns or association controls.",
+        "cautionTitle": "Move examples into your own package",
+        "caution": "The official com.sparrow.coder.po.Department and UserExample classes are references only. Copy them to your own PO package and change the package name before generating business code. This snippet uses com.yourcompany.po.",
+        "snippet": "UserExample.java · Business PO example (imports omitted)",
+        "quickTitle": "Set up. Generate your first application.",
+        "quickDescription": "Install dependencies, configure services and start the generator in order. Expand each step to copy commands and adapt them to your environment.",
+        "requirementsNote": "Node.js is only needed for the frontend.",
+        "repos": "Repositories & scaffolds",
+        "modules": "Generator modules",
+        "faqTitle": "A few things to help you get started.",
+        "ctaTitle": "Let your next admin app start with a model.",
+        "ctaDescription": "Define your project and PO classes. Save your time for the logic that makes your business different.",
+        "allProducts": "Explore other products",
+        "guide": {
+          "repositories": [
+            {"role": "Core framework, including infra-bom, sparrow-bom and Sparrow modules."},
+            {"role": "Spring Boot integration for the Sparrow framework."},
+            {"role": "File services, including file-starter."},
+            {"role": "Authentication framework, including passport-starter."},
+            {"role": "Backend scaffold for generated business projects."},
+            {"role": "Frontend workspace containing the react-next-admin scaffold."},
+            {"role": "Project configuration, metadata parsing and template generation."}
+          ],
+          "setup": [
+            {"title": "Clone the projects and scaffolds", "description": "Place dependencies, the frontend workspace and the generator under ~/workspace/sparrow. Place the backend scaffold directly under ~/workspace.", "note": "sparrow-example and sparrow are sibling directories. react-next-admin lives inside sparrow-js. Node.js is only required to run the frontend."},
+            {"title": "Install dependencies in order", "description": "Install the core framework first, followed by the integration starter, file services and authentication framework. Build sparrow-coder last.", "note": "sparrow-shell provides infra-bom and sparrow-bom, so it must be installed first."},
+            {"title": "Initialize the database", "description": "Start MySQL, create the sparrow database and import the project configuration, table configuration and example table scripts.", "note": ""},
+            {"title": "Configure the workspace and services", "description": "Edit coder-main-spring-boot/src/main/resources/application.properties to set your workspace paths, database connection and Redis settings.", "note": "These paths use macOS conventions. Replace the username, database password and service addresses with your local values."},
+            {"title": "Configure frontend static resources", "description": "Edit coder-main-spring-boot/src/main/configs/dev.properties so the generator can load its frontend static resources.", "note": "Replace your_home_path with your actual home directory and ensure the path matches the location of sparrow-js."},
+            {"title": "Start the generator", "description": "The dev environment uses port 8888 by default. Open the home page and sign in to start configuring projects.", "note": "Home: http://localhost:8888; API docs: http://localhost:8888/doc.html; Druid monitor: http://localhost:8888/druid (default username and password: druid)."}
+          ],
+          "workflow": [
+            {"title": "Define a project and download its scaffold", "description": "In Project Configuration, set the project names, business package, frontend project name, module prefix, architecture and scaffold. Configure internationalization and a parent module if needed, then use zip-download to download your backend and frontend business project."},
+            {"title": "Build and run your business project", "description": "Run mvn clean package -Dmaven.test.skip=true for the backend, then start the module artifact with java -jar. In the generated frontend directory, run npm install and npm run dev. Build and start the two applications separately."},
+            {"title": "Write PO classes in your own package", "description": "In your generated business project, use com.sparrow.coder.po.Department (parent) and com.sparrow.coder.po.UserExample (child) as references. Copy them into your own PO package, such as com.yourcompany.po, and change the package declaration. Describe metadata with @Table and @Column; link the parent table with @ListDatasource(type = ListDatasourceType.TABLE, params = \"t_department\"). Do not generate business code directly from the official example classes."},
+            {"title": "Generate backend and frontend code", "description": "Return to sparrow-coder, select a table and click Generate Code (/coder/generate.json). PO metadata and templates produce the DAO, Domain, Adapter and Infrastructure layers, plus frontend lists and forms. No AI is involved."},
+            {"title": "Rebuild and run the generated code", "description": "Return to your business project, rebuild and restart the backend and frontend to activate the generated code. Continue implementing your business logic on top of the generated architecture."},
+            {"title": "Customize the interface with column configuration", "description": "Use column_configs in t_table_config to control visible columns, filters, row menus and status commands. Parent-child relationships can automatically produce dropdowns or association controls."}
+          ],
+          "faq": [
+            {"question": "The build cannot find infra-bom or sparrow-* dependencies?", "answer": "Confirm that all dependency repositories are cloned, then run mvn clean install in the order shown in the setup guide. Install sparrow-shell first because the other modules depend on its POMs."},
+            {"question": "The application cannot connect to the database?", "answer": "Check that MySQL is running, the sparrow database exists, and the connection URL, username and password in application.properties are correct."},
+            {"question": "Frontend static resources return 404?", "answer": "Check workspace and frontend_project_root in application.properties, as well as physical_resource in dev.properties. Each path must resolve to the correct local directory."},
+            {"question": "Can I generate business code directly from the official PO examples?", "answer": "No. Department and UserExample are references. Copy them into your business project's own PO package and update the package declaration before generation. The generator uses your PO metadata and does not require AI."}
+          ],
+          "modules": [
+            {"description": "Dependency versions; coder-bom inherits from infra-bom."},
+            {"description": "Protocol layer: Query, Param and enums."},
+            {"description": "Persistent objects and official PO examples."},
+            {"description": "DAO interface definitions."},
+            {"description": "DAO implementation with Sparrow ORM."},
+            {"description": "DAO implementation with MyBatis."},
+            {"description": "Domain logic and the code generation engine."},
+            {"description": "Infrastructure layer."},
+            {"description": "Adapter layer: Controller and Assemble."},
+            {"description": "Spring Boot integration starter."},
+            {"description": "Startup module and Application entry point."},
+            {"description": "Database schema scripts."}
+          ]
+        }
+      }
+    },
+    "ui": {
+      "title": "UI Components",
+      "subtitle": "UI Components",
+      "description": "React and Next.js component examples — forms, tables, uploads and drag-and-drop — ready to reuse in your projects.",
+      "tags": ["React", "Next.js", "Components"]
+    }
+  },
+  "docs": {
+    "eyebrow": "DOCUMENTATION / ENGINEERING NOTES",
+    "title": "Build on what we've learned",
+    "description": "Explore architecture decisions, integration guides, and debugging notes drawn from the project's engineering work.",
+    "languageNote": "Guide content is currently available in Chinese.",
+    "all": "All guides",
+    "backend": "Backend",
+    "frontend": "Frontend",
+    "search": "Search titles and topics…",
+    "empty": "No matching guides. Try another search term.",
+    "clear": "Clear search and filters",
+    "count": "{count} guides",
+    "read": "Read guide",
+    "items": {
+      "launchRunbook": {
+        "title": "Next.js 15 HTTP static deployment runbook",
+        "description": "Build and package all four sites, configure Nginx, switch releases atomically, verify live flows, and roll back."
+      },
+      "bom": {
+        "title": "Sparrow Parent and BOM",
+        "description": "Separate build baselines, component versions, and application adoption, with complete POM examples."
+      },
+      "maven": {
+        "title": "Maven sources and breakpoint debugging",
+        "description": "Trace misplaced breakpoints to source packages and bytecode line tables, from publishing to local debugging."
+      },
+      "openapi": {
+        "title": "Integrating springdoc-openapi",
+        "description": "Understand Servlet MVC and WebFlux stacks and select the matching API documentation dependency."
+      },
+      "groups": {
+        "title": "OpenAPI grouping strategies",
+        "description": "Resolve configuration conflicts across starters and create separate API groups for File and Passport."
+      },
+      "thymeleaf": {
+        "title": "Thymeleaf template paths",
+        "description": "Diagnose missing templates caused by double slashes when a prefix meets a view name."
+      },
+      "oom": {
+        "title": "Netty inbound messages and OOM",
+        "description": "Follow a handler case study to find unreleased references, memory leaks, and heartbeat failures."
+      },
+      "memory": {
+        "title": "Netty memory sharing and release",
+        "description": "Explore reference counting, zero-copy sharing, and deep copies to clarify memory ownership in message forwarding."
+      },
+      "captcha": {
+        "title": "The useCaptcha React Hook",
+        "description": "Walk through session setup, image loading, and refresh behavior, including cleanup and retry boundaries."
+      },
+      "intl": {
+        "title": "Internationalization with next-intl",
+        "description": "Connect locale routing, middleware, and message context, with guidance on grouped translations and troubleshooting."
+      },
+      "staticDeployment": {
+        "title": "Site domains and Nginx static deployment",
+        "description": "Review site domains and environment settings, Next.js static export, locale routing, and a phased deployment plan."
+      }
+    }
+  },
+  "ecosystem": {
+    "eyebrow": "WHY SPARROW / SHARED CAPABILITIES",
+    "title": "Common capabilities, growing together",
+    "description": "Turn recurring engineering problems into reusable foundations, from backend components to shared frontend libraries.",
+    "auth": {
+      "title": "Shared identity",
+      "description": "Connect application entry points through Passport authentication and shared sign-in state across domains."
+    },
+    "engineering": {
+      "title": "Engineering standards",
+      "description": "Give build standards, version management, and framework integration clear roles through Parent, BOM, and Starter."
+    },
+    "realtime": {
+      "title": "Real-time connections",
+      "description": "Build on practical work with WebSocket heartbeats, reconnection, and Netty message handling."
+    },
+    "modular": {
+      "title": "Compose as needed",
+      "description": "Combine shared protocols, independent components, and frontend capabilities with room to extend each application."
+    }
+  },
+  "cta": {
+    "eyebrow": "START BUILDING / YOUR NEXT STEP",
+    "title": "Start with the engineering foundation",
+    "description": "Understand the Sparrow approach and find the services and practices that fit your application.",
+    "primary": "Read the engineering guide",
+    "secondary": "Browse all guides"
+  },
+  "playground": {
+    "eyebrow": "PLAYGROUND / COMPONENT EXAMPLES",
+    "metadata": {
+      "title": "Component Playground · Sparrow Zoo",
+      "description": "Explore interactive examples and usage guides for Sparrow's shared frontend components, from forms and tables to uploads, feedback, and React / Next.js engineering practices."
+    },
+    "hero": {
+      "title": "From interaction",
+      "highlight": "to implementation",
+      "description": "Try the components, explore their behavior, and find the guidance to integrate them. Browse Sparrow's shared frontend library by the task at hand.",
+      "primary": "Explore examples",
+      "secondary": "Read the docs"
+    },
+    "overview": {
+      "label": "Component playground",
+      "count": "{count} examples and guides",
+      "description": "Find demos and implementation notes, from data entry to interaction feedback."
+    },
+    "features": {
+      "i18n": {
+        "title": "Two languages",
+        "description": "Explore examples and explanations in English or Chinese."
+      },
+      "theme": {
+        "title": "Light and dark",
+        "description": "Choose a light or dark theme, or follow your system preference."
+      },
+      "components": {
+        "title": "Shared components",
+        "description": "Connect interactive demos with guidance for using each component."
+      }
+    },
+    "catalog": {
+      "eyebrow": "EXPLORE / BY USE CASE",
+      "title": "Find the piece you need",
+      "description": "Start with a specific task across data, files, interactions, and engineering practices.",
+      "open": "View example and guide"
+    },
+    "groups": {
+      "data": {
+        "title": "Data and forms",
+        "description": "Input, validation, search, and data display."
+      },
+      "files": {
+        "title": "File handling",
+        "description": "From uploading files to downloading archives."
+      },
+      "interaction": {
+        "title": "Interaction and feedback",
+        "description": "Make actions responsive and states clear."
+      },
+      "engineering": {
+        "title": "Engineering practices",
+        "description": "Shared utilities, build configuration, and deployment."
+      }
+    },
+    "examples": {
+      "forms": {
+        "title": "Forms and validation",
+        "description": "Try validated inputs, selects, dates, and text areas alongside table search controls."
+      },
+      "table": {
+        "title": "Data tables",
+        "description": "Explore search, sorting, filtering, editable cells, pagination, and tree data."
+      },
+      "upload": {
+        "title": "File uploads",
+        "description": "Try FileUploader and learn how to configure the upload endpoint and result callback."
+      },
+      "zipDownload": {
+        "title": "ZIP downloads",
+        "description": "Read practical notes on file filtering, CORS headers, filenames, and frontend download handling."
+      },
+      "accessHistories": {
+        "title": "Access history",
+        "description": "Simulate recent visits, navigate history, remove individual entries, or clear the list."
+      },
+      "hooks": {
+        "title": "Custom Hooks",
+        "description": "Explore infinite scrolling, cross-origin storage, captchas, and redirects with locale routing."
+      },
+      "loading": {
+        "title": "Loading states",
+        "description": "Preview bouncing and pulsing dots, then simulate a request to see loading states in action."
+      },
+      "error": {
+        "title": "Error feedback",
+        "description": "Try form validation hints and an animated error page for different feedback scenarios."
+      },
+      "draggable": {
+        "title": "Drag and move",
+        "description": "Move cards and buttons to explore wrapping a single element with Draggable."
+      },
+      "eslintConfig": {
+        "title": "ESLint configuration",
+        "description": "Trace different build results from shared source code to ESLint presets and rules."
+      },
+      "i18nStaticExport": {
+        "title": "Locales and static export",
+        "description": "Explore locale routing, middleware limitations, and deployment settings for static export."
+      }
+    },
+    "guide": {
+      "eyebrow": "KEEP EXPLORING / THE NEXT STEP",
+      "title": "Connect the experience to the code",
+      "description": "Continue with the next-intl guide to understand locale routing, message configuration, and context in a multilingual application.",
+      "action": "Read the internationalization guide"
+    }
+  },
+  "footer": {
+    "description": "From engineering foundations to application services, building an ecosystem of reusable capabilities.",
+    "backToTop": "Back to top",
+    "credit": "Powered by Sparrow OS"
+  }
+}

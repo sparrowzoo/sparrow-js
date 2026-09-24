@@ -1,6 +1,5 @@
 import { hasLocale } from "next-intl";
 import { getRequestConfig } from "next-intl/server";
-// @ts-ignore
 import { routing } from "@/i18n/routing";
 
 export default getRequestConfig(async ({ requestLocale }) => {

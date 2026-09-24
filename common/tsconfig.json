@@ -31,11 +31,12 @@
     "strictNullChecks": false
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "dist/pc/types/**/*.ts"
+    "dist/pc/types/**/*.ts",
+    "next-env.d.ts",
+    ".next-dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -10,10 +10,10 @@
 
 | 类别 | 依赖 | 版本 | 说明 |
 |------|------|------|------|
-| 框架 | `next` | **15.3.2** | App Router，Turbopack dev |
+| 框架 | `next` | **15.5.26** | App Router，Turbopack dev |
 | 视图 | `react` / `react-dom` | **^19.0.0**（已装 19.3.0） | React 19 |
 | 类型 | `typescript` | **^5** | `strict: false`，`strictNullChecks: true` |
-| 国际化 | `next-intl` | **^4.1.0** | `[locale]` 路由段 + 静态渲染 |
+| 国际化 | `next-intl` | **4.14.6** | `[locale]` 路由段 + 静态渲染 |
 | 样式 | `tailwindcss` | **^4** | 经 `@tailwindcss/postcss`，无独立 config 文件 |
 | 组件库 | `shadcn` (CLI) | **^2.6.0** | style `new-york`，RSC 开启 |
 | UI 原语 | `@radix-ui/react-*` | 多组件 | checkbox/dialog/dropdown-menu/label/popover/select/separator/slider/slot/tabs/tooltip |
@@ -24,11 +24,11 @@
 | 图标 | `lucide-react` | **^0.511.0** | 配合 shadcn |
 | 主题 | `next-themes` | **^0.4.6** | 深浅色切换 |
 | 提示 | `react-hot-toast` | **^2.5.2** | 全局 toast |
-| 日期 | `react-day-picker` / `dayjs` / `date-fns` | **^9.9.0** / **^1.11.13** / **^4.1.0** | 日期组件与格式化 |
+| 日期 | `react-day-picker` / `dayjs` / `date-fns` | **^9.9.0** / **^1.11.13** / **4.14.6** | 日期组件与格式化 |
 | 布局 | `react-resizable-panels` | **^3.0.2** | 可调尺寸面板 |
 | 工具 | `clsx` / `tailwind-merge` / `class-variance-authority` | ^2.1.1 / ^3.3.0 / ^0.7.1 | 样式合并 |
 | 代码复制 | `cpy-cli` | **^5.0.0** | 从 `../common` 复制共享库 |
-| 规范 | `eslint` + `eslint-config-next` | **^9** / **15.3.2** | flat config（eslint.config.mjs） |
+| 规范 | `eslint` + `eslint-config-next` | **^9** / **15.5.26** | flat config（eslint.config.mjs） |
 
 > **Node.js**：Next.js 15 要求 **>= 18.18**，官方推荐 **20.x LTS**（`next` engines 为 `^18.18.0 || ^19.8.0 || >=20.0.0`）。**TypeScript**：>= 4.5（本项目 5.x）。
 
@@ -136,3 +136,11 @@ yarn copy     # cpy ./../common/src/common ./src/ --parents（同步共享库）
 ```
 
 > 端口约定：admin=3002、passport=3000、www=3001（见 `.env.development` 的 `NEXT_PUBLIC_*_ROOT`）。
+
+## 当前静态部署约定（优先于上文历史描述）
+
+- 使用 Next.js 15.5.26 / next-intl 4.14.6，`output: "export"` 和 `trailingSlash: true`，产物 `out/`。开发缓存 `.next-dev`，生产缓存 `.next`。
+- 默认语言 `zh`；显式 `/zh/`、`/en/`，已移除 `pathnames` 跨站重写。根 `(index)` 为静态语言偏好入口；外站链接显式使用配置的 origin 与 locale。
+- 开发端口：common 3000、passport 3001、admin 3002、IM 3003。生产管理站为 `http://admin.sparrowzoo.com`，`coder` 是 Nginx 兼容别名。
+- 使用 npm / package-lock.json 构建发布；`npm start` 只预览静态产物，线上不用 Next 服务。共享源修改后继续 `npm run copy`。
+- 上线操作以 `common/public/backend/nginx/next15-http-launch.html` 为准。

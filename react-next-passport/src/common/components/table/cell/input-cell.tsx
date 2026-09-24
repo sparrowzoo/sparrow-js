@@ -5,7 +5,7 @@ import {Checkbox} from "@/components/ui/checkbox";
 
 const InputCell = (field: string, type: string, width?: number) => {
     const className = width ? `w-${width}` : "w-fit";
-    return ({row}) => {
+    const Cell = ({row}) => {
         const fieldValue = row.getValue(field) || "";
         const [value, setValue] = useState(fieldValue);
         useEffect(() => {
@@ -30,5 +30,8 @@ const InputCell = (field: string, type: string, width?: number) => {
         }} className={className} type={type} value={value}/>
         </>);
     }
+    Cell.displayName = "InputCell";
+    return Cell;
 }
+
 export default InputCell;

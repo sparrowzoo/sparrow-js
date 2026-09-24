@@ -14,15 +14,13 @@ const ChildComponent = ({
   ...props
 }: ChildProps) => {
   if (asChild) {
-    const child = React.Children.only(children) as React.ReactElement;
+    const child = React.Children.only(children) as React.ReactElement<ChildProps>;
 
     return cloneElement(child, {
       ...props,
-      // @ts-expect-error child.props is unknown
       ...child.props,
       ref,
       className: `${props.className || ""} ${
-        // @ts-expect-error className on unknown child.props
         child.props.className || ""
       }`.trim(),
     });

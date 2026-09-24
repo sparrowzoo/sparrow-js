@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "title": "Learning Hub · Sparrow Zoo",
+    "description": "Learn with Zhige, from a first Java project and data structures to practical team development. Explore the learning path, syllabus, and community."
+  },
+  "hero": {
+    "eyebrow": "SPARROW ZOO · LEARN & BUILD",
+    "title": "Learn to code.",
+    "highlight": "Bring a project to life.",
+    "description": "Welcome to Zhige’s programming community. Start with a small project you can deploy, build your algorithm skills, and gain experience through real development workflows.",
+    "primary": "Explore the learning path",
+    "secondary": "Join the community"
+  },
+  "quickLinks": {
+    "label": "Learning resources",
+    "path": {
+      "title": "Find your starting point",
+      "description": "First projects, algorithms, and practical development"
+    },
+    "community": {
+      "title": "Learn with others",
+      "description": "Discuss your questions on IM and Knowledge Planet"
+    },
+    "outline": {
+      "title": "Browse the syllabus",
+      "description": "Explore the topics and set your own pace"
+    }
+  },
+  "path": {
+    "eyebrow": "LEARNING PATH",
+    "title": "Build your skills, one project at a time",
+    "description": "Start where your experience takes you. Move from implementation to deployment, then explore algorithms and collaborative development."
+  },
+  "courses": {
+    "audienceLabel": "Who it’s for",
+    "topicsLabel": "What you’ll explore",
+    "goalLabel": "Learning goal",
+    "stepsLabel": "Project workflow",
+    "lottery": {
+      "eyebrow": "STAGE 01 / FIRST PROJECT",
+      "title": "Java Lottery Project",
+      "description": "Build a complete lottery application while connecting Java fundamentals, frontend and backend implementation, and deployment.",
+      "audience": "Learners starting Java or looking to take their first project online.",
+      "topics": [
+        "Java environment setup and language fundamentals",
+        "Lottery probabilities, statistics, and random numbers",
+        "Frontend and backend implementation from scratch",
+        "Nginx, automatic startup, and single-server high availability",
+        "DNS, deployment, operations, and Alibaba Cloud DevOps",
+        "Course questions and practical discussion"
+      ],
+      "goal": "Complete a small project independently, from local development to a live deployment.",
+      "action": "Try the lottery project"
+    },
+    "algorithms": {
+      "eyebrow": "STAGE 02 / CORE SKILLS",
+      "title": "Data Structures & Algorithms",
+      "description": "Explore classic textbooks, JDK collection implementations, and common interview problems to understand how data structures work and how to reason about solutions.",
+      "audience": "Learners with Java basics who want a deeper understanding of collections and algorithms.",
+      "topics": [
+        "Core concepts drawn from classic textbooks",
+        "Data structures through JDK collection source code",
+        "Common problems informed by interview experience",
+        "Representative LeetCode problems and practice"
+      ],
+      "goal": "Understand common data structures and algorithms, and make informed choices when using Java collections.",
+      "action": "View the syllabus"
+    },
+    "project": {
+      "eyebrow": "STAGE 03 / ENGINEERING PRACTICE",
+      "title": "Practical Enterprise Development",
+      "description": "Work through a real development process, from requirements and design reviews to integration and deployment, with architect guidance and peer discussion.",
+      "audience": "Learners who can write basic application code and want to understand team development.",
+      "topics": [
+        "Enterprise workflows and requirements discussions",
+        "Architect guidance on design and implementation",
+        "Peer discussion, code reviews, and integration",
+        "Project deployment and launch"
+      ],
+      "goal": "Experience the full process from requirements to deployment, and understand how design, implementation, and collaboration connect.",
+      "action": "View the project syllabus",
+      "steps": [
+        "TRD analysis and requirements alignment · 3 sessions",
+        "API design and Swagger definitions · 2 sessions",
+        "Database design alignment · 5 sessions",
+        "Implementation · 10 sessions",
+        "Code review · 10 sessions",
+        "Code walkthroughs and alignment · 10 sessions",
+        "Integration testing · 5 sessions",
+        "Deployment · 2 sessions"
+      ]
+    }
+  },
+  "mentor": {
+    "eyebrow": "YOUR MENTOR",
+    "title": "Learn from hands-on experience",
+    "name": "Zhige",
+    "description": "A developer since 2008 who enjoys programming, sharing knowledge, and open source. Learn through engineering practice, technical discussions, and concrete problems.",
+    "experience": [
+      "Tongcheng Travel: international flights and billions of global fare records",
+      "Meicai: recommendation platform architecture",
+      "Missfresh: search and recommendation for a major traffic entry point",
+      "Missfresh: an algorithm platform supporting supply chain purchasing, sales, replenishment, and distribution",
+      "An education platform in China: technical director experience",
+      "A new retail company: intelligent supply chain replenishment"
+    ],
+    "contact": "Connect with Zhige",
+    "contactDescription": "Scan the WeChat code to discuss courses and learning questions."
+  },
+  "community": {
+    "eyebrow": "LEARN TOGETHER",
+    "title": "A path to follow. People to learn with.",
+    "description": "Bring your questions and keep building. Find the course resources and people to discuss your progress with.",
+    "chat": {
+      "title": "IM Learning Community",
+      "description": "Explore Sparrow IM and discuss programming and project development.",
+      "action": "Open IM"
+    },
+    "knowledge": {
+      "title": "Knowledge Planet",
+      "description": "Browse ongoing learning content and join technical discussions.",
+      "action": "Visit Knowledge Planet",
+      "qr": "View the community QR code"
+    },
+    "outline": {
+      "title": "Course Syllabus",
+      "description": "Explore the course topics and project activities to find your starting point.",
+      "action": "View the syllabus"
+    }
+  },
+  "upcoming": {
+    "title": "More areas to explore",
+    "description": "Future topics include e-commerce, supply chains, search and recommendation, source code, and middleware."
+  },
+  "images": {
+    "lottery": "Java lottery project preview",
+    "algorithms": "Data structures and algorithms course material",
+    "project": "Enterprise development project material",
+    "mentor": "Zhige",
+    "wechat": "WeChat contact QR code for Zhige",
+    "knowledge": "Knowledge Planet learning community"
+  },
+  "gallery": {
+    "expand": "Open full image",
+    "previous": "Previous image",
+    "next": "Next image",
+    "page": "{current} / {total}"
+  }
+}

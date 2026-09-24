@@ -1,5 +1,7 @@
 import {format} from "date-fns";
 import KeyValue from "@/common/lib/protocol/KeyValue";
+import {type ClassValue, clsx} from "clsx"
+import {twMerge} from "tailwind-merge"
 
 export class Utils {
     public static randomUUID() {
@@ -35,4 +37,8 @@ export class Utils {
             return e.key == key;
         })
     }
+}
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
 }

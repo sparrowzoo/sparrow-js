@@ -1,10 +1,19 @@
 {
+  "product": {
+    "passport": "Passport Identity",
+    "im": "Instant Messaging",
+    "coder": "Code Generator",
+    "file": "File Service",
+    "ui": "UI Components",
+    "security": "Security"
+  },
   "LocaleLayout": {
-    "title": "sparrow zoo"
+    "title": "Sparrow Passport · Your Sparrow Zoo identity",
+    "description": "Sign in, create an account or recover access to your Sparrow Zoo identity."
   },
   "LocaleSwitcher": {
-    "label": "Change language to \uD83C\uDDFA\uD83C\uDDF8 English",
-    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unknown}}"
+    "label": "Change language",
+    "locale": "{locale, select, zh {中文} en {English} other {Language}}"
   },
   "Header": {
     "index": "Home",
@@ -14,6 +23,7 @@
     "shop": "Shop",
     "coder": "Coder",
     "playground": "Write Blog",
+    "study": "Learning",
     "theme-toggle": "Toggle Theme",
     "light-mode": "Light Mode",
     "dark-mode": "Dark Mode",
@@ -21,31 +31,37 @@
     "avatar-setting": "Avatar Setting",
     "logout": "Logout",
     "sign-in": "Sign In",
-    "sign-up": "Sign Up"
+    "sign-up": "Sign Up",
+    "logout-success": "Signed out"
   },
   "Passport": {
     "sign-in": {
-      "sign-in": "Login",
-      "username": "Username/Email",
+      "sign-in": "Sign in",
+      "username": "Username or email",
       "user_password_error": "password error",
       "user_name_not_exist": "User name does not exist",
-      "sign-in-title": "Login",
-      "sign-in-title2": "please input your username and password",
-      "sign-in-success": "Login Success !",
-      "to-sign-up": "not register?",
-      "sign-up": "Sign Up",
+      "sign-in-title": "Sign in to your account",
+      "sign-in-title2": "Enter your username or email to continue.",
+      "sign-in-success": "Welcome back!",
+      "to-sign-up": "New to Sparrow Zoo?",
+      "sign-up": "Create an account",
       "sign-in-with-wechat": "Sign in with WeChat",
-      "remember-me": "Remember Me",
+      "remember-me": "Remember me",
       "password": "Password",
-      "captcha": "Captcha",
+      "captcha": "Verification code",
       "global_validate_code_error": "Captcha error, please try again input",
-      "system_server_error": "System error, please try again later"
+      "system_server_error": "System error, please try again later",
+      "username-placeholder": "Username or email address",
+      "password-placeholder": "Enter your password",
+      "captcha-placeholder": "Verification code",
+      "captcha-refresh": "Refresh verification code",
+      "submitting": "Signing in…"
     },
     "find-password": {
-      "forgot-password": "Forgot Password?",
-      "input-email-to-find-password": "Please input your email to find password",
-      "find-password": "Find Password",
-      "send-find-password-email": "Send Email",
+      "forgot-password": "Forgot password?",
+      "input-email-to-find-password": "Enter the email address you used to create your account.",
+      "find-password": "Reset your password",
+      "send-find-password-email": "Send reset link",
       "password-reset-email-sent": "Password reset email sent, please check your email",
       "close": "Close",
       "global_validate_code_error": "Captcha error, please try again input",
@@ -65,21 +81,75 @@
       "confirm": "Confirm"
     },
     "sign-up": {
-      "sign-up": "Sign Up",
-      "sign-up-success": "Register Success !",
-      "sign-up-title": "Register",
-      "email": "Email",
-      "username": "UserName",
-      "password-confirm": "Confirm Password",
+      "sign-up": "Create account",
+      "sign-up-success": "Your account is ready.",
+      "sign-up-title": "Create your account",
+      "email": "Email address",
+      "username": "Username",
+      "password-confirm": "Confirm password",
       "continue-with": "Or continue with",
-      "to-sign-in": "Registered? ",
-      "sign-in": "Sign in ",
+      "to-sign-in": "Already have an account?",
+      "sign-in": "Sign in",
       "user_email_exist": "Email already exists",
       "user_name_exist": "User Name already exists",
       "global_validate_code_error": "Captcha error, please try again input",
       "system_server_error": "System error, please try again later",
       "password": "Password",
-      "captcha": "Captcha"
+      "captcha": "Verification code",
+      "sign-up-description": "A few details to get started with Sparrow Zoo.",
+      "captcha-refresh": "Refresh verification code",
+      "submitting": "Creating account…",
+      "sign-up-error": "Registration failed. Please try again."
+    },
+    "navigation": {
+      "brand": "Sparrow Zoo",
+      "label": "Passport navigation",
+      "home": "Home",
+      "product": "About Passport",
+      "study": "Learning",
+      "signIn": "Sign in",
+      "signUp": "Create account",
+      "backHome": "Back to Sparrow Zoo",
+      "footer": "One identity. More to explore.",
+      "skip": "Skip to main content"
+    },
+    "shell": {
+      "sign-in": {
+        "title": "Welcome back.",
+        "highlight": "Make your next move.",
+        "description": "Sign in to Sparrow Zoo and pick up where you left off. Your conversations, ideas and tools await."
+      },
+      "sign-up": {
+        "title": "Start here.",
+        "highlight": "Discover what’s next.",
+        "description": "Create your Sparrow Zoo account and find a place for your conversations, collaboration and ideas."
+      },
+      "reset": {
+        "title": "A fresh password.",
+        "highlight": "A familiar workspace.",
+        "description": "Use the reset link from your email to update your password and return to your account."
+      },
+      "identity": {
+        "title": "One account, one identity",
+        "description": "Use your username or email to sign in."
+      },
+      "connected": {
+        "title": "Connect and explore",
+        "description": "Find your next tool in the Sparrow ecosystem."
+      },
+      "recovery": {
+        "title": "A way back to your account",
+        "description": "Recover access through your registered email."
+      },
+      "about": "Explore Sparrow Passport"
+    },
+    "ui": {
+      "backToSignIn": "Back to sign in",
+      "emailLabel": "Email address",
+      "sending": "Sending…",
+      "resetPending": "Updating password…",
+      "avatarTitle": "Make your account your own.",
+      "avatarDescription": "Choose an image, adjust the crop and preview, then save your new avatar."
     }
   },
   "AvatarUploader": {

@@ -24,7 +24,7 @@ export interface DownloadResult {
 }
 
 export default class Fetcher {
-    static async get(
+    static async get<T = unknown>(
         {url, translator, crosStorage, withCookie, redirectToLogin}: GetProps
     ) {
         if (!crosStorage) {
@@ -52,7 +52,7 @@ export default class Fetcher {
         }
         return fetch(url, options)
             .then(async (response) => {
-                const result = (await response.json()) as Result;
+                const result = (await response.json()) as Result<T>;
                 if (result.code != "0") {
                     const message: string = translator ? translator(result.key as string) : result.message as string;
                     toast.error(message);
@@ -67,7 +67,7 @@ export default class Fetcher {
             });
     }
 
-    static async post(
+    static async post<T = unknown>(
         {url, translator, crosStorage, withCookie, redirectToLogin, body}: PostProps,
     ) {
         if (url.indexOf("http") < 0) {
@@ -98,7 +98,7 @@ export default class Fetcher {
         }
         return fetch(url, options)
             .then(async (response) => {
-                const result = (await response.json()) as Result;
+                const result = (await response.json()) as Result<T>;
                 if (result.code != "0") {
                     const message: string = translator ? translator(result.key as string) : result.message as string;
                     toast.error(message);

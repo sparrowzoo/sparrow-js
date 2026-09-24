@@ -33,7 +33,11 @@ export default class UrlUtils {
     if (!queryString) {
       return null;
     }
-    return decodeURIComponent(queryString.substring(1));
+    try {
+      return decodeURIComponent(queryString.substring(1));
+    } catch {
+      return queryString.substring(1);
+    }
   }
 
   public static getHrefWithoutQueryString() {

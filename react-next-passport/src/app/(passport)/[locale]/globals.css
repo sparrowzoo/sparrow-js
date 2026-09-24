@@ -4,13 +4,30 @@
 
 @layer base {
     :root {
-        --background: 0 0% 100%;
-        --foreground: 20 14.3% 4.1%;
+        color-scheme: light;
+        --font-geist-sans: ui-sans-serif;
+        --passport-bg: #fafaff;
+        --passport-panel: #fff;
+        --passport-text: #262238;
+        --passport-muted: #655e79;
+        --passport-faint: #746c87;
+        --passport-border: rgba(50, 44, 89, .12);
+        --passport-input-border: #ddd9e9;
+        --passport-input: #fbfaff;
+        --passport-soft: #f5f2fc;
+        --passport-accent: #7452c6;
+        --passport-error: #b82e4b;
+        --passport-focus: rgba(116, 82, 198, .12);
+        --passport-glow: rgba(116, 82, 198, .055);
+        --passport-gradient: linear-gradient(105deg, #7b51cb, #416aaf 60%, #208d92);
+        --passport-shadow: 0 12px 48px rgba(73, 54, 117, .06);
+        --background: 240 100% 99%;
+        --foreground: 251 24% 18%;
         --card: 0 0% 100%;
         --card-foreground: 20 14.3% 4.1%;
         --popover: 0 0% 100%;
         --popover-foreground: 20 14.3% 4.1%;
-        --primary: 24 9.8% 10%;
+        --primary: 258 51% 55%;
         --primary-foreground: 60 9.1% 97.8%;
         --secondary: 60 4.8% 95.9%;
         --secondary-foreground: 24 9.8% 10%;
@@ -22,7 +39,7 @@
         --destructive-foreground: 60 9.1% 97.8%;
         --border: 20 5.9% 90%;
         --input: 20 5.9% 90%;
-        --ring: 20 14.3% 4.1%;
+        --ring: 258 51% 55%;
         --radius: 0.5rem;
         --chart-1: 12 76% 61%;
         --chart-2: 173 58% 39%;
@@ -32,25 +49,41 @@
     }
 
     .dark {
-        --background: 20 14.3% 4.1%;
-        --foreground: 60 9.1% 97.8%;
-        --card: 20 14.3% 4.1%;
+        color-scheme: dark;
+        --passport-bg: #080910;
+        --passport-panel: #10111c;
+        --passport-text: #f0f1f8;
+        --passport-muted: #a0a3bb;
+        --passport-faint: #858aa7;
+        --passport-border: rgba(178, 184, 222, .14);
+        --passport-input-border: #303246;
+        --passport-input: #0c0d17;
+        --passport-soft: #191729;
+        --passport-accent: #b8a8ff;
+        --passport-error: #f59baa;
+        --passport-focus: rgba(184, 168, 255, .12);
+        --passport-glow: rgba(111, 85, 179, .11);
+        --passport-gradient: linear-gradient(105deg, #c4b5fd, #95c8fa 60%, #80e3df);
+        --passport-shadow: 0 16px 52px rgba(0, 0, 0, .18);
+        --background: 233 33% 5%;
+        --foreground: 233 36% 96%;
+        --card: 235 27% 9%;
         --card-foreground: 60 9.1% 97.8%;
-        --popover: 20 14.3% 4.1%;
+        --popover: 235 27% 9%;
         --popover-foreground: 60 9.1% 97.8%;
-        --primary: 60 9.1% 97.8%;
-        --primary-foreground: 24 9.8% 10%;
-        --secondary: 12 6.5% 15.1%;
+        --primary: 251 100% 83%;
+        --primary-foreground: 235 27% 9%;
+        --secondary: 247 27% 13%;
         --secondary-foreground: 60 9.1% 97.8%;
-        --muted: 12 6.5% 15.1%;
-        --muted-foreground: 24 5.4% 63.9%;
-        --accent: 12 6.5% 15.1%;
+        --muted: 247 27% 13%;
+        --muted-foreground: 233 16% 68%;
+        --accent: 247 27% 13%;
         --accent-foreground: 60 9.1% 97.8%;
         --destructive: 0 62.8% 30.6%;
         --destructive-foreground: 60 9.1% 97.8%;
-        --border: 12 6.5% 15.1%;
-        --input: 12 6.5% 15.1%;
-        --ring: 24 5.7% 82.9%;
+        --border: 235 19% 23%;
+        --input: 235 19% 23%;
+        --ring: 251 100% 83%;
         --chart-1: 220 70% 50%;
         --chart-2: 160 60% 45%;
         --chart-3: 30 80% 55%;
@@ -66,6 +99,8 @@
 
     body {
         @apply bg-background text-foreground;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+        -webkit-font-smoothing: antialiased;
     }
 }
 

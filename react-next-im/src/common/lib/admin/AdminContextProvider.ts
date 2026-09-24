@@ -17,6 +17,6 @@ export class AdminContextValue {
     }
 }
 
-export const AdminContext: Context<AdminContextValue> = createContext(
-    null as any
+export const AdminContext: Context<AdminContextValue> = createContext<AdminContextValue>(
+    null as unknown as AdminContextValue
 );

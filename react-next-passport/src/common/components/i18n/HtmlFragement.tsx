@@ -5,8 +5,8 @@ import { createRoot } from "react-dom/client";
 
 type Props = {
   locale: string;
-  messages: Record<string, any>;
-  DynamicComponent: React.ComponentType<any>;
+  messages: React.ComponentProps<typeof NextIntlClientProvider>["messages"];
+  DynamicComponent: React.ComponentType<Record<string, unknown>>;
   containerId: string;
 };
 //https://next-intl.dev/docs/usage/configuration#server-client-components
@@ -23,6 +23,7 @@ export default function HtmlFragment(props: Props) {
         </NextIntlClientProvider>
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return null; // 返回空值，避免自动生成默认 div
 }

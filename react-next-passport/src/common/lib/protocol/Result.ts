@@ -1,14 +1,15 @@
-export default interface Result {
+import KeyValue from "@/common/lib/protocol/KeyValue";
+
+export default interface Result<T = unknown> {
     code: string;
     message?: string;
-    data: any;
+    data: T;
     key?: string;
     instruction?: string;
 }
 
-
-export interface PagerResult {
+export interface PagerResult<T = unknown> {
     recordTotal: number;
-    list: any[];
-    dictionary: Map<String, Object>;
+    list: T[];
+    dictionary: Record<string, KeyValue[]>;
 }

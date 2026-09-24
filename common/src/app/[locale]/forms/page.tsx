@@ -385,7 +385,7 @@ import SearchSelect from "@/common/components/forms/search-select";
 `;
 
 export default function FormsExamplePage() {
-    const t = useTranslations("FormsExample");
+    const t = useTranslations("example.FormsExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

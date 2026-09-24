@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Maven 依赖调试：找不到源代码导致断点行号错位</title>
+    <meta name="description" content="依赖 jar 时找不到源代码，class 文件与源文件代码行对不齐，导致 debug 断点误判的根因与解决方案。"/>
+    <style>
+        :root {
+            --bg: #07070d;
+            --bg-soft: #0c0c16;
+            --panel: rgba(255, 255, 255, 0.04);
+            --panel-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --text: #f4f4f7;
+            --text-dim: #9a9ab0;
+            --text-faint: #64647c;
+            --accent-1: #6d5cff;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --ok: #34d399;
+            --warn: #fbbf24;
+            --danger: #f43f5e;
+            --radius: 16px;
+            --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+                "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; }
+
+        .ambient {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 12% -5%, rgba(109, 92, 255, 0.16), transparent 60%),
+                radial-gradient(950px 480px at 92% 0%, rgba(34, 211, 238, 0.11), transparent 55%),
+                radial-gradient(900px 650px at 50% 115%, rgba(168, 85, 247, 0.12), transparent 60%);
+        }
+        .grid-noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.4;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        .topnav {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 64px;
+            background: rgba(7, 7, 13, 0.72);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
+        }
+        .brand .logo {
+            width: 32px; height: 32px; border-radius: 10px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
+            font-size: 16px; color: #fff;
+        }
+        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13.5px; padding: 7px 15px; border-radius: 9px;
+            transition: color .2s, background .2s;
+        }
+        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
+        .nav-links a.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
+        }
+        .nav-links a.primary:hover { filter: brightness(1.12); }
+
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 96px 24px 64px; text-align: center;
+        }
+        .hero .tag {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-size: 12.5px; letter-spacing: 0.12em; color: var(--text-dim);
+            padding: 7px 18px; border-radius: 100px;
+            background: var(--panel); border: 1px solid var(--border);
+            margin-bottom: 26px;
+            animation: rise .8s var(--ease) both;
+        }
+        .hero .tag .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 0 12px rgba(109, 92, 255, 0.8);
+        }
+        .hero h1 {
+            font-size: clamp(30px, 5vw, 46px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.16; margin-bottom: 20px;
+            animation: rise .8s var(--ease) .06s both;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(120deg, #c4b5fd 0%, #7dd3fc 50%, #f0abfc 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .subtitle {
+            color: var(--text-dim); font-size: 16px; max-width: 660px;
+            margin: 0 auto;
+            animation: rise .8s var(--ease) .12s both;
+        }
+
+        .article { max-width: 900px; margin: 0 auto; padding: 8px 24px 100px; }
+
+        .toc {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 26px; margin-bottom: 40px;
+        }
+        .toc .toc-title { font-size: 12px; color: var(--text-faint); letter-spacing: 0.12em; margin-bottom: 12px; text-transform: uppercase; }
+        .toc ol { list-style: none; counter-reset: toc; }
+        .toc li { counter-increment: toc; margin: 6px 0; }
+        .toc a { color: var(--text-dim); text-decoration: none; font-size: 14px; transition: color .2s; }
+        .toc a:hover { color: #fff; }
+        .toc a::before {
+            content: counter(toc); color: var(--accent-2);
+            font-family: var(--mono); font-size: 12px; margin-right: 10px;
+        }
+
+        section { margin-bottom: 48px; }
+        h2 {
+            font-size: 22px; font-weight: 700; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+            letter-spacing: -0.01em;
+        }
+        h2 .no {
+            font-family: var(--mono); font-size: 13px; color: var(--accent-2);
+            background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.22);
+            padding: 2px 9px; border-radius: 8px; flex-shrink: 0;
+        }
+        h3 { font-size: 17px; font-weight: 600; margin: 26px 0 12px; color: var(--text); }
+        p { color: var(--text-dim); font-size: 14.5px; margin-bottom: 14px; }
+        p strong, li strong { color: var(--text); }
+        ul, ol { color: var(--text-dim); font-size: 14.5px; padding-left: 24px; margin-bottom: 14px; }
+        li { margin: 6px 0; }
+
+        .card, .callout {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin: 18px 0;
+        }
+        .callout {
+            border-left: 4px solid var(--accent-1);
+            color: var(--text-dim); font-size: 14px;
+        }
+        .callout.ok { border-left-color: var(--ok); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.danger { border-left-color: var(--danger); }
+        .callout.info { border-left-color: var(--accent-1); }
+        .callout .title, .callout .ct {
+            font-weight: 600; font-size: 14px; color: var(--text);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+        }
+        .callout.ok .title, .callout.ok .ct { color: var(--ok); }
+        .callout.warn .title, .callout.warn .ct { color: var(--warn); }
+        .callout.danger .title, .callout.danger .ct { color: var(--danger); }
+        .callout strong { color: var(--text); }
+        .callout .ct .ico { font-size: 14px; line-height: 1; }
+        .callout p { margin-bottom: 0; }
+
+        pre {
+            background: #0a0a13; border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px; overflow-x: auto;
+            margin: 14px 0; font-family: var(--mono); font-size: 12.8px;
+            line-height: 1.65; color: #d6d6e0;
+        }
+        code {
+            font-family: var(--mono); font-size: 0.9em;
+            background: rgba(175, 184, 193, 0.14); border-radius: 5px; padding: 1px 6px;
+            color: #c4b5fd;
+        }
+        pre code { background: none; padding: 0; color: inherit; }
+        .cmt { color: #6b6b85; }
+        .kw { color: #f0abfc; }
+        .str { color: #7dd3fc; }
+
+        table { border-collapse: collapse; width: 100%; margin: 14px 0 20px; font-size: 13.5px; }
+        th, td { border: 1px solid var(--border); padding: 9px 13px; text-align: left; vertical-align: top; color: var(--text-dim); }
+        th { background: var(--panel-strong); color: var(--text); font-weight: 600; }
+        td code { font-size: 12.5px; }
+
+        footer {
+            padding: 44px 24px 60px; text-align: center;
+            color: var(--text-faint); font-size: 12.5px;
+            border-top: 1px solid var(--border);
+        }
+        footer .sep { margin: 0 8px; opacity: .5; }
+        footer .f-brand {
+            font-weight: 700; color: var(--text); font-size: 15px;
+            margin-bottom: 10px; display: inline-flex; align-items: center; gap: 9px;
+        }
+        footer .f-brand .logo {
+            width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); font-size: 11px; color: #fff;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 760px) {
+            .hero { padding: 72px 20px 52px; }
+        }
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; }
+            .brand .zh { display: none; }
+            .nav-links a { padding: 7px 11px; font-size: 12.5px; }
+            .article { padding: 8px 20px 80px; }
+            h2 { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="grid-noise"></div>
+
+<nav class="topnav">
+    <a class="brand" href="/index.html">
+        <span class="logo">雀</span>
+        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="/index.html">首页</a>
+        <a href="/index.html#products">产品</a>
+        <a href="/docs/index.html">文档</a>
+        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="tag"><span class="dot"></span>SPARROW ZOO · 调试踩坑</div>
+    <h1>依赖 jar 找不到源代码，<span class="gradient">断点为何错位</span></h1>
+    <p class="subtitle">
+        记录 Maven 依赖调试时「找不到源代码」导致 <code>class</code> 文件与源文件代码行对不齐、
+        进而引发 debug 断点误判的根因，以及一劳永逸的解决方案。
+    </p>
+</header>
+
+<main class="article">
+    <div class="toc">
+        <div class="toc-title">目录 CONTENTS</div>
+        <ol>
+            <li><a href="#s1">结论先行：源码与字节码行号不一致</a></li>
+            <li><a href="#s2">问题背景：依赖一个 jar 到底发生了什么</a></li>
+            <li><a href="#s3">class 文件里的调试信息</a></li>
+            <li><a href="#s4">断点如何映射回源码行</a></li>
+            <li><a href="#s5">两种「行号错位」场景</a></li>
+            <li><a href="#s6">解决方案</a></li>
+            <li><a href="#s7">总结归纳</a></li>
+        </ol>
+    </div>
+
+    <section id="s1">
+        <h2><span class="no">01</span>结论先行</h2>
+        <p>
+            调试时断点「落到错行」或「看起来没生效」，本质上是<strong>编译产物里的行号表
+            （LineNumberTable）与你眼前看到的源码不一致</strong>。
+        </p>
+        <p>
+            Maven 依赖默认只提供编译好的 <code>.class</code> 字节码，<strong>不带 <code>.java</code> 源码</strong>。
+            当 IDE 找不到配套的 <code>-sources.jar</code>（源码包）时，只能<strong>反编译</strong>字节码来充当源码，
+            反编译结果的代码行号与原始源码并不对应，于是断点落在「看着正确、实际不对」的行上。
+        </p>
+        <div class="card callout info">
+            <div class="ct"><span class="ico">📌</span>权威依据</div>
+            <p>
+                《The Java Virtual Machine Specification》第 4.7 章定义，class 文件可携带
+                <code>SourceFile</code>、<code>LineNumberTable</code>、<code>LocalVariableTable</code>
+                等调试属性；调试器正是靠 <code>LineNumberTable</code> 把「字节码偏移量」翻译回「源码行号」。
+                而 Maven 官方 <code>maven-source-plugin</code> 用于把源码打进 <code>-sources.jar</code>，
+                供 IDE 下载和联调，二者缺一不可。
+            </p>
+        </div>
+        <p>
+            一句话结论：<strong>要让断点精准，就必须保证「源码 = 编译这份字节码时的那份源码」，
+            且源码可被 IDE 找到。</strong>缺源码或源码与字节码不同步，都会造成行号错位。
+        </p>
+    </section>
+
+    <section id="s2">
+        <h2><span class="no">02</span>问题背景：依赖一个 jar 到底发生了什么</h2>
+        <p>先从一个小白的视角还原整个过程。当你在 <code>pom.xml</code> 里写下一段依赖：</p>
+        <pre><code><span class="kw">&lt;dependency&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>com.sparrow<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>sparrow-core<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>1.0.0<span class="kw">&lt;/version&gt;</span>
+<span class="kw">&lt;/dependency&gt;</span></code></pre>
+        <p>Maven 会去仓库把这个 <code>sparrow-core-1.0.0.jar</code> 拉下来。请注意，这个 jar 里装的是：</p>
+        <table>
+            <tr><th>内容</th><th>是什么</th><th>能否用于调试</th></tr>
+            <tr><td><code>*.class</code></td><td>编译后的字节码 + 元数据（含行号表）</td><td>能运行，但不能直接读</td></tr>
+            <tr><td><code>META-INF/</code></td><td>清单、资源、签名等</td><td>与调试无关</td></tr>
+            <tr><td><code>*.java</code></td><td>❌ 默认<strong>不包含</strong></td><td>——</td></tr>
+        </table>
+        <p>
+            也就是说，<strong>普通 jar 里没有 <code>.java</code> 源码</strong>。而调试器想要在断点处高亮出一行代码，
+            就必须拿到一份「源码」。这份源码从哪来？答案是一个额外的产物——<code>-sources.jar</code>。
+        </p>
+        <div class="card callout warn">
+            <div class="ct"><span class="ico">⚠️</span>关键认知</div>
+            <p>
+                Maven 中央仓库或公司私服上的库，通常会同时发布三个产物：
+                主 jar（字节码）、<code>-sources.jar</code>（源码）、<code>-javadoc.jar</code>（文档）。
+                若发布时<strong>漏掉了 <code>-sources.jar</code></strong>，下游使用者就「找不到源代码」。
+            </p>
+        </div>
+    </section>
+
+    <section id="s3">
+        <h2><span class="no">03</span>class 文件里的调试信息</h2>
+        <p>为什么反编译会导致行号错位？先要理解字节码里「行号」是怎么存的。</p>
+        <p>
+            用 <code>javac</code> 编译 Java 源码时，只要开启了调试信息（默认开启，Maven 的
+            <code>maven-compiler-plugin</code> 默认 <code>debug=true</code>），编译器就会往 class 文件里写入
+            几个属性，其中最关键的三个是：
+        </p>
+        <ul>
+            <li><strong><code>SourceFile</code></strong>：记录编译这份字节码的源文件名，如 <code>UserService.java</code>。</li>
+            <li><strong><code>LineNumberTable</code></strong>：记录「字节码指令偏移量 → 源码行号」的映射表。</li>
+            <li><strong><code>LocalVariableTable</code></strong>：记录局部变量名与槽位、作用域的映射（方便看变量名）。</li>
+        </ul>
+        <p>用 <code>javap</code> 反汇编一个 class，就能看到这张行号表：</p>
+        <pre><code>javap -c -l com.sparrow.service.UserService.class
+
+  <span class="kw">public</span> com.sparrow.service.UserService();
+    <span class="kw">Code</span>:
+       <span class="cmt">// 字节码偏移 0  行号 12</span>
+       0: aload_0
+       ...
+      <span class="cmt">// ... 中间省略 ...</span>
+      LineNumberTable:
+        line 12: 0
+        line 13: 4
+        line 14: 11</code></pre>
+        <p>
+            这张 <code>LineNumberTable</code> 就是调试器「对行号」的唯一依据。它把每个字节码位置对应到
+            <strong>编译当时</strong>的源码行号。
+        </p>
+        <div class="card callout ok">
+            <div class="ct"><span class="ico">✅</span>重要</div>
+            <p>
+                行号表是「编译时刻」的产物。如果编译之后源码又改了、却没有重新编译，
+                那么字节码里的行号表就会和最新源码<strong>脱节</strong>——这正是错位的温床。
+            </p>
+        </div>
+    </section>
+
+    <section id="s4">
+        <h2><span class="no">04</span>断点如何映射回源码行</h2>
+        <p>调试器（以 IDEA/Eclipse 为例）在断点命中时，会走这样一条链路：</p>
+        <table>
+            <tr><th>步骤</th><th>动作</th><th>依赖</th></tr>
+            <tr><td>①</td><td>JVM 通过 JPDA 上报「执行到某字节码偏移量」</td><td>class 字节码</td></tr>
+            <tr><td>②</td><td>调试器查 <code>LineNumberTable</code>，把偏移量换算成源码行号</td><td>class 里的行号表</td></tr>
+            <tr><td>③</td><td>调试器按 <code>SourceFile</code> + 行号，找到并打开源码文件</td><td><code>-sources.jar</code></td></tr>
+            <tr><td>④</td><td>在源码对应行高亮断点</td><td>源码与行号表一致</td></tr>
+        </table>
+        <p>
+            可以看到，第 ③ 步需要「真正的源码文件」，第 ④ 步需要「源码的行号与行号表一致」。
+            这两步任何一环出问题，断点就会「错位」或「飘」。
+        </p>
+    </section>
+
+    <section id="s5">
+        <h2><span class="no">05</span>两种「行号错位」场景</h2>
+
+        <h3>场景一：找不到源码 → 反编译兜底</h3>
+        <p>当依赖没有 <code>-sources.jar</code> 时，IDEA 会提示「Download Sources」；如果仓库里也没有，它就只能<strong>反编译</strong> <code>.class</code> 来给你看代码：</p>
+        <pre><code><span class="cmt">// IDEA 反编译后的代码（Fernflower）—— 只是近似还原，不是原始源码</span>
+<span class="kw">public</span> <span class="kw">class</span> UserService {
+    <span class="kw">public</span> User getUser(Long id) {
+        User user = userMapper.selectById(id);   <span class="cmt">// 反编译行号可能在此</span>
+        <span class="kw">if</span> (user == <span class="kw">null</span>) {
+            <span class="kw">throw new</span> RuntimeException(...);   <span class="cmt">// 但字节码行号表指向另一行</span>
+        }
+        <span class="kw">return</span> user;
+    }
+}</code></pre>
+        <div class="card callout danger">
+            <div class="ct"><span class="ico">⛔</span>现象</div>
+            <p>
+                断点打在反编译代码的某一行，但程序执行到该行时却<strong>不命中</strong>，或命中在
+                相邻的、看似无关的行上——因为反编译产物的行号与字节码 <code>LineNumberTable</code> 对不上。
+            </p>
+        </div>
+
+        <h3>场景二：sources.jar 过期 / 不同步</h3>
+        <p>
+            即使有 <code>-sources.jar</code>，如果它和主 jar <strong>不是同一次构建</strong>产出的（例如改了代码后只重新打包了主 jar、
+            忘了重新生成源码包），那么源码包里的行号是「旧版本」的，字节码里的行号表却是「新版本」的，
+            两者照样错位。
+        </p>
+        <table>
+            <tr><th>场景</th><th>字节码行号表</th><th>你看到的源码</th><th>结果</th></tr>
+            <tr><td>无 sources.jar</td><td>原始行号</td><td>反编译产物（行号漂移）</td><td>断点错位</td></tr>
+            <tr><td>sources.jar 过期</td><td>新版行号</td><td>旧版源码</td><td>断点错位</td></tr>
+            <tr><td>sources.jar 同步</td><td>一致</td><td>同一次构建源码</td><td>✅ 精准命中</td></tr>
+        </table>
+    </section>
+
+    <section id="s6">
+        <h2><span class="no">06</span>解决方案</h2>
+        <p>从「发布方」和「使用方」两侧同时下手，才能彻底解决。</p>
+
+        <h3>① 发布方：打包时带上 sources.jar</h3>
+        <p>在库的 <code>pom.xml</code> 里挂上 <code>maven-source-plugin</code>，绑定到 <code>package</code> 阶段，让每次构建都自动产出源码包：</p>
+        <pre><code><span class="kw">&lt;plugin&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>maven-source-plugin<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>3.3.0<span class="kw">&lt;/version&gt;</span>
+    <span class="kw">&lt;executions&gt;</span>
+        <span class="kw">&lt;execution&gt;</span>
+            <span class="kw">&lt;id&gt;</span>attach-sources<span class="kw">&lt;/id&gt;</span>
+            <span class="kw">&lt;phase&gt;</span>package<span class="kw">&lt;/phase&gt;</span>
+            <span class="kw">&lt;goals&gt;</span>
+                <span class="kw">&lt;goal&gt;</span>jar-no-fork<span class="kw">&lt;/goal&gt;</span>
+            <span class="kw">&lt;/goals&gt;</span>
+        <span class="kw">&lt;/execution&gt;</span>
+    <span class="kw">&lt;/executions&gt;</span>
+<span class="kw">&lt;/plugin&gt;</span></code></pre>
+        <p>这样 <code>mvn package</code> / <code>mvn install</code> / <code>mvn deploy</code> 都会在同一次构建里生成 <code>xxx-sources.jar</code>，保证源码与字节码同步。</p>
+
+        <h3>② 发布方：确认编译开启了调试信息</h3>
+        <p>没有行号表，一切都无从谈起。确保 <code>maven-compiler-plugin</code> 的 debug 没被关掉：</p>
+        <pre><code><span class="kw">&lt;plugin&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;configuration&gt;</span>
+        <span class="kw">&lt;debug&gt;</span>true<span class="kw">&lt;/debug&gt;</span>
+        <span class="kw">&lt;debuglevel&gt;</span>lines,vars,source<span class="kw">&lt;/debuglevel&gt;</span>
+    <span class="kw">&lt;/configuration&gt;</span>
+<span class="kw">&lt;/plugin&gt;</span></code></pre>
+
+        <h3>③ 关于 maven-gpg-plugin：它不背「行号」的锅</h3>
+        <p>本项目的发布配置里有这样一段签名插件：</p>
+        <pre><code><span class="kw">&lt;plugin&gt;</span>
+    <span class="kw">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="kw">&lt;/groupId&gt;</span>
+    <span class="kw">&lt;artifactId&gt;</span>maven-gpg-plugin<span class="kw">&lt;/artifactId&gt;</span>
+    <span class="kw">&lt;version&gt;</span>1.5<span class="kw">&lt;/version&gt;</span>
+    <span class="kw">&lt;executions&gt;</span>
+        <span class="kw">&lt;execution&gt;</span>
+            <span class="kw">&lt;id&gt;</span>sign-artifacts<span class="kw">&lt;/id&gt;</span>
+            <span class="kw">&lt;phase&gt;</span>verify<span class="kw">&lt;/phase&gt;</span>
+            <span class="kw">&lt;goals&gt;</span>
+                <span class="kw">&lt;goal&gt;</span>sign<span class="kw">&lt;/goal&gt;</span>
+            <span class="kw">&lt;/goals&gt;</span>
+        <span class="kw">&lt;/execution&gt;</span>
+    <span class="kw">&lt;/executions&gt;</span>
+<span class="kw">&lt;/plugin&gt;</span></code></pre>
+        <div class="card callout info">
+            <div class="ct"><span class="ico">💡</span>定位澄清</div>
+            <p>
+                <code>maven-gpg-plugin</code> 只负责给发布到中央仓库的产物做<strong> GPG 签名</strong>（完整性、防篡改），
+                它<strong>不参与源码生成、也不影响行号表</strong>。真正解决「找不到源码」的是前面的
+                <code>maven-source-plugin</code>。二者职责不同，别混淆。
+            </p>
+        </div>
+
+        <h3>④ 使用方：让 IDE 下载并启用源码</h3>
+        <ul>
+            <li>IDEA 里右键依赖 → <code>Download Sources</code>；或全局开启
+                <code>Settings → Build Tools → Maven → Importing → 勾选 Sources</code>，让 IDEA 自动下载源码。</li>
+            <li>确认没在看「反编译」代码：IDEA 编辑器标签/右上角会显示「Decompiled .class」字样，出现它说明在用反编译产物。</li>
+            <li>本地联调时，优先用 <code>mvn install</code> 而非直接引用 <code>target/classes</code>，确保 IDE 拿到的是带源码的安装产物。</li>
+        </ul>
+    </section>
+
+    <section id="s7">
+        <h2><span class="no">07</span>总结归纳</h2>
+        <table>
+            <tr><th>问题</th><th>根因</th><th>解决</th></tr>
+            <tr><td>依赖 jar 找不到源代码</td><td>发布时没带 <code>-sources.jar</code></td><td>发布方挂 <code>maven-source-plugin</code></td></tr>
+            <tr><td>断点落到错行 / 不命中</td><td>源码与字节码 <code>LineNumberTable</code> 不一致</td><td>保证源码与字节码同一次构建产出</td></tr>
+            <tr><td>IDE 展示的是反编译代码</td><td>仓库无源码包，IDE 反编译兜底</td><td>IDE 开启「Download Sources」</td></tr>
+            <tr><td>类完全没有行号表</td><td>编译时关闭了 debug 信息</td><td><code>maven-compiler-plugin</code> 保持 <code>debug=true</code></td></tr>
+        </table>
+        <div class="card callout ok">
+            <div class="ct"><span class="ico">✅</span>一句话记住</div>
+            <p>
+                断点精准 = 「<strong>带调试信息的字节码</strong>」+「<strong>与之同源的 sources.jar</strong>」。
+                发布方用 <code>maven-source-plugin</code> 补源码包，使用方在 IDE 里下载源码，行号自然对得上。
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="f-brand"><span class="logo">雀</span>麻雀窝 Sparrow Zoo</div>
+    <div>Sparrow Zoo<span class="sep">·</span>Maven 依赖调试踩坑记录<span class="sep">·</span>Powered by Sparrow OS</div>
+</footer>
+</body>
+</html>

@@ -1,12 +1,14 @@
-import React, {ReactNode} from "react";
+import React, {ReactNode, Suspense} from "react";
 import "./globals.css";
 import {ThemeProvider} from "@/components/theme-provider";
 import {Toaster} from "react-hot-toast";
 import {hasLocale, Locale, NextIntlClientProvider} from "next-intl";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getMessages, getTranslations, setRequestLocale} from "next-intl/server";
 import {routing} from "@/i18n/routing";
 import {notFound} from "next/navigation";
-import Header from "@/common/components/header/header";
+import PassportHeader from "@/components/passport/passport-header";
+import PassportFooter from "@/components/passport/passport-footer";
+import styles from "@/components/passport/passport.module.css";
 
 type Props = {
     children: ReactNode;
@@ -24,6 +26,7 @@ export async function generateMetadata(props: Omit<Props, "children">) {
 
     return {
         title: t("title"),
+        description: t("description"),
     };
 }
 
@@ -36,28 +39,28 @@ export default async function RootLayout({children, params}: Props) {
 
     // Enable static rendering
     setRequestLocale(locale);
+    const t = await getTranslations({locale, namespace: "Passport.navigation"});
+    const messages = await getMessages({locale});
     return (
-        <>
-            <html lang="en" suppressHydrationWarning>
-            {/*body 不能直接使用container class，需要在body下再包一层div*/}
-            {/*否则组件样式会飘移*/}
-            <body className={"width-full"}>
-            <div className={"container"}>
-                <Toaster position="top-center" reverseOrder={true}/>
+            <html lang={locale} suppressHydrationWarning>
+            <body>
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <NextIntlClientProvider>
-                        <Header/>
-                        {children}
+                    <NextIntlClientProvider locale={locale} messages={messages}>
+                        <div className={styles.site}>
+                            <a href="#main-content" className={styles.skipLink}>{t("skip")}</a>
+                            <Suspense fallback={<div className={styles.headerPlaceholder}/> }><PassportHeader/></Suspense>
+                            <main id="main-content" className={styles.main}>{children}</main>
+                            <PassportFooter/>
+                        </div>
+                        <Toaster position="top-center" reverseOrder={false} toastOptions={{className: styles.toast}}/>
                     </NextIntlClientProvider>
                 </ThemeProvider>
-            </div>
             </body>
             </html>
-        </>
     );
 }

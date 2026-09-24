@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Netty 消息处理器 OOM：入站消息未释放</title>
+    <style>
+        :root {
+            --bg: #07070d;
+            --bg-soft: #0c0c16;
+            --panel: rgba(255, 255, 255, 0.04);
+            --panel-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --text: #f4f4f7;
+            --text-dim: #9a9ab0;
+            --text-faint: #64647c;
+            --accent-1: #6d5cff;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --ok: #34d399;
+            --warn: #fbbf24;
+            --danger: #f43f5e;
+            --radius: 16px;
+            --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+                "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; }
+
+        .ambient {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 12% -5%, rgba(109, 92, 255, 0.16), transparent 60%),
+                radial-gradient(950px 480px at 92% 0%, rgba(34, 211, 238, 0.11), transparent 55%),
+                radial-gradient(900px 650px at 50% 115%, rgba(168, 85, 247, 0.12), transparent 60%);
+        }
+        .grid-noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.4;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        .topnav {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 64px;
+            background: rgba(7, 7, 13, 0.72);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
+        }
+        .brand .logo {
+            width: 32px; height: 32px; border-radius: 10px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
+            font-size: 16px; color: #fff;
+        }
+        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13.5px; padding: 7px 15px; border-radius: 9px;
+            transition: color .2s, background .2s;
+        }
+        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
+        .nav-links a.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
+        }
+        .nav-links a.primary:hover { filter: brightness(1.12); }
+
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 96px 24px 64px; text-align: center;
+        }
+        .hero .tag {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-size: 12.5px; letter-spacing: 0.12em; color: var(--text-dim);
+            padding: 7px 18px; border-radius: 100px;
+            background: var(--panel); border: 1px solid var(--border);
+            margin-bottom: 26px;
+            animation: rise .8s var(--ease) both;
+        }
+        .hero .tag .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 0 12px rgba(109, 92, 255, 0.8);
+        }
+        .hero h1 {
+            font-size: clamp(30px, 5vw, 46px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.16; margin-bottom: 20px;
+            animation: rise .8s var(--ease) .06s both;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(120deg, #c4b5fd 0%, #7dd3fc 50%, #f0abfc 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .subtitle {
+            color: var(--text-dim); font-size: 16px; max-width: 640px;
+            margin: 0 auto;
+            animation: rise .8s var(--ease) .12s both;
+        }
+
+        .article { max-width: 900px; margin: 0 auto; padding: 8px 24px 100px; }
+
+        .toc {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 26px; margin-bottom: 40px;
+        }
+        .toc .toc-title { font-size: 12px; color: var(--text-faint); letter-spacing: 0.12em; margin-bottom: 12px; text-transform: uppercase; }
+        .toc ol { list-style: none; counter-reset: toc; }
+        .toc li { counter-increment: toc; margin: 6px 0; }
+        .toc a { color: var(--text-dim); text-decoration: none; font-size: 14px; transition: color .2s; }
+        .toc a:hover { color: #fff; }
+        .toc a::before {
+            content: counter(toc); color: var(--accent-2);
+            font-family: var(--mono); font-size: 12px; margin-right: 10px;
+        }
+
+        section { margin-bottom: 48px; }
+        h2 {
+            font-size: 22px; font-weight: 700; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+            letter-spacing: -0.01em;
+        }
+        h2 .no {
+            font-family: var(--mono); font-size: 13px; color: var(--accent-2);
+            background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.22);
+            padding: 2px 9px; border-radius: 8px; flex-shrink: 0;
+        }
+        h3 { font-size: 17px; font-weight: 600; margin: 26px 0 12px; color: var(--text); }
+        p { color: var(--text-dim); font-size: 14.5px; margin-bottom: 14px; }
+        p strong, li strong { color: var(--text); }
+        ul, ol { color: var(--text-dim); font-size: 14.5px; padding-left: 24px; margin-bottom: 14px; }
+        li { margin: 6px 0; }
+
+        .card, .callout {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin: 18px 0;
+        }
+        .callout {
+            border-left: 4px solid var(--accent-1);
+            color: var(--text-dim); font-size: 14px;
+        }
+        .callout.ok { border-left-color: var(--ok); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.danger { border-left-color: var(--danger); }
+        .callout.info { border-left-color: var(--accent-1); }
+        .callout .title, .callout .ct {
+            font-weight: 600; font-size: 14px; color: var(--text);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+        }
+        .callout.ok .title, .callout.ok .ct { color: var(--ok); }
+        .callout.warn .title, .callout.warn .ct { color: var(--warn); }
+        .callout.danger .title, .callout.danger .ct { color: var(--danger); }
+        .callout strong { color: var(--text); }
+        .callout .ct .ico { font-size: 14px; line-height: 1; }
+        .callout p { margin-bottom: 0; }
+
+        pre {
+            background: #0a0a13; border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px; overflow-x: auto;
+            margin: 14px 0; font-family: var(--mono); font-size: 12.8px;
+            line-height: 1.65; color: #d6d6e0;
+        }
+        code {
+            font-family: var(--mono); font-size: 0.9em;
+            background: rgba(175, 184, 193, 0.14); border-radius: 5px; padding: 1px 6px;
+            color: #c4b5fd;
+        }
+        pre code { background: none; padding: 0; color: inherit; }
+        .cmt { color: #6b6b85; }
+        .kw { color: #f0abfc; }
+        .str { color: #7dd3fc; }
+        .fn { color: #a5b4fc; }
+        .type { color: #34d399; }
+        .num { color: #fbbf24; }
+
+        table { border-collapse: collapse; width: 100%; margin: 14px 0 20px; font-size: 13.5px; }
+        th, td { border: 1px solid var(--border); padding: 9px 13px; text-align: left; vertical-align: top; color: var(--text-dim); }
+        th { background: var(--panel-strong); color: var(--text); font-weight: 600; }
+        td code { font-size: 12.5px; }
+
+        footer {
+            padding: 44px 24px 60px; text-align: center;
+            color: var(--text-faint); font-size: 12.5px;
+            border-top: 1px solid var(--border);
+        }
+        footer .sep { margin: 0 8px; opacity: .5; }
+        footer .f-brand {
+            font-weight: 700; color: var(--text); font-size: 15px;
+            margin-bottom: 10px; display: inline-flex; align-items: center; gap: 9px;
+        }
+        footer .f-brand .logo {
+            width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); font-size: 11px; color: #fff;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 760px) {
+            .hero { padding: 72px 20px 52px; }
+        }
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; }
+            .brand .zh { display: none; }
+            .nav-links a { padding: 7px 11px; font-size: 12.5px; }
+            .article { padding: 8px 20px 80px; }
+            h2 { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="grid-noise"></div>
+
+<nav class="topnav">
+    <a class="brand" href="/index.html">
+        <span class="logo">雀</span>
+        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="/index.html">首页</a>
+        <a href="/index.html#products">产品</a>
+        <a href="/docs/index.html">文档</a>
+        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="tag"><span class="dot"></span>SPARROW ZOO · Netty 踩坑</div>
+    <h1>Netty <span class="gradient">入站消息未释放</span>导致 OOM</h1>
+    <p class="subtitle">
+        结合 <code>SimpleChannelInboundHandler</code> 的自动释放机制，定位自定义 handler
+        继承 <code>ChannelInboundHandlerAdapter</code> 却未 <code>release</code> 入站消息，
+        导致引用计数不归零、缓冲不断泄漏直至 OOM，并进一步拖垮客户端心跳、造成 IM 消息异常。
+    </p>
+</header>
+
+<main class="article">
+    <div class="toc">
+        <div class="toc-title">目录 CONTENTS</div>
+        <ol>
+            <li><a href="#s1">结论先行：OOM 的根因</a></li>
+            <li><a href="#s2">问题背景：Netty 的引用计数模型</a></li>
+            <li><a href="#s3">详细内容：两段代码对比</a></li>
+            <li><a href="#s4">OOM 是如何一步步形成的</a></li>
+            <li><a href="#s5">心跳为何也被拖垮：IM 消息异常</a></li>
+            <li><a href="#s6">泄漏检测报告解读</a></li>
+            <li><a href="#s7">修复方案</a></li>
+            <li><a href="#s8">总结归纳</a></li>
+        </ol>
+    </div>
+
+    <section id="s1">
+        <h2><span class="no">01</span>结论先行：OOM 的根因</h2>
+        <p>
+            <code>OutOfMemoryHandler</code> 继承的是 <code>ChannelInboundHandlerAdapter</code>（而非
+            <code>SimpleChannelInboundHandler</code>），它重写了 <code>channelRead</code>，处理完入站消息后
+            <strong>既没有调用 <code>ReferenceCountUtil.release(msg)</code> 释放引用，也没有
+            <code>ctx.fireChannelRead(msg)</code> 把消息传下去</strong>。
+        </p>
+        <p>
+            而 Netty 的 <code>ByteBuf</code> / <code>BinaryWebSocketFrame</code> 都是<strong>引用计数（Reference Counted）</strong>对象：
+            引用计数永远不归零，底层缓冲就永远不被回收。同时该处理器还用
+            <code>PooledByteBufAllocator(preferDirect = true)</code> 申请<strong>堆外直接内存</strong>，
+            泄漏的直接内存不受堆 GC 管理，最终触发 <code>OutOfMemoryError</code>。
+        </p>
+        <div class="card callout danger">
+            <div class="ct"><span class="ico">⛔</span>一句话结论</div>
+            <p>
+                <strong>入站消息只消费、不释放</strong>——Netty 的约定是「消息要么往下传，要么自己释放」，
+                这个 handler 两头都没做，导致每条 WebSocket 帧都泄漏一个 <code>ByteBuf</code>，累积到内存耗尽。
+            </p>
+        </div>
+        <div class="card callout warn">
+            <div class="ct"><span class="ico">💥</span>同样致命的副作用</div>
+            <p>
+                同一个 bug 还会<strong>吞掉心跳和 IM 消息</strong>：非 <code>BinaryWebSocketFrame</code> 的帧
+                （<code>Ping</code>/<code>Pong</code>/<code>Text</code> 等）因为少了 <code>else</code> 分支而不被
+                <code>fireChannelRead</code> 透传，客户端收不到心跳应答就会断线重连，消息丢、乱、重复。
+            </p>
+        </div>
+    </section>
+
+    <section id="s2">
+        <h2><span class="no">02</span>问题背景：Netty 的引用计数模型</h2>
+        <p>
+            Netty 高性能的关键之一是<strong>零拷贝 + 引用计数</strong>。它的缓冲区 <code>ByteBuf</code> 以及包装它的
+            <code>WebSocketFrame</code> 都实现了 <code>ReferenceCounted</code> 接口，遵循这样一套规则：
+        </p>
+        <ul>
+            <li><code>retain()</code>：引用计数 <code>refCnt + 1</code>，表示「多一个使用者」。</li>
+            <li><code>release()</code>：引用计数 <code>refCnt - 1</code>，表示「我用完了」。</li>
+            <li>当 <code>refCnt</code> 归零，底层内存才真正被回收——池化分配器下归还给内存池复用，非池化则 <code>free</code>。</li>
+        </ul>
+        <p>那么<strong>谁来负责 release</strong>？Netty 的通用约定是：</p>
+        <div class="card callout info">
+            <div class="ct"><span class="ico">📌</span>Netty 官方约定</div>
+            <p>
+                在 <code>channelRead</code> 里拿到的消息，要么调用 <code>ctx.fireChannelRead(msg)</code>
+                继续传给下一个 handler（由下游负责释放），要么在当前 handler 用完后就地 <code>release</code>。
+                如果<strong>既不往下传、也不释放</strong>，就是内存泄漏。
+            </p>
+        </div>
+        <p>还需要区分两类内存：</p>
+        <table>
+            <tr><th>类型</th><th>所在区域</th><th>由谁回收</th><th>耗尽表现</th></tr>
+            <tr>
+                <td>堆内存 <code>heapBuffer</code></td>
+                <td>JVM 堆内</td>
+                <td>堆 GC 回收</td>
+                <td><code>OutOfMemoryError: Java heap space</code></td>
+            </tr>
+            <tr>
+                <td>直接内存 <code>directBuffer</code></td>
+                <td>堆外（native）</td>
+                <td>GC 不直接管，受 <code>-XX:MaxDirectMemorySize</code> 限制</td>
+                <td><code>OutOfMemoryError: Direct buffer memory</code></td>
+            </tr>
+        </table>
+        <p>本案例里两种泄漏叠加：入站消息本身泄漏（从注释堆栈看是堆内解压缓冲），处理器自己又申请了直接内存、异常时同样泄漏。</p>
+    </section>
+
+    <section id="s3">
+        <h2><span class="no">03</span>详细内容：两段代码对比</h2>
+
+        <h3>3.1 第一段：SimpleChannelInboundHandler 的「正确姿势」</h3>
+        <p>这是 Netty 框架源码 <code>SimpleChannelInboundHandler.channelRead</code>，它是释放逻辑的标准范式：</p>
+        <pre><code><span class="kw">public void</span> <span class="fn">channelRead</span>(<span class="type">ChannelHandlerContext</span> ctx, <span class="type">Object</span> msg) <span class="kw">throws</span> <span class="type">Exception</span> {
+    <span class="kw">boolean</span> release = <span class="kw">true</span>;
+    <span class="kw">try</span> {
+        <span class="kw">if</span> (<span class="fn">acceptInboundMessage</span>(msg)) {
+            <span class="type">I</span> imsg = (<span class="type">I</span>) msg;
+            <span class="fn">channelRead0</span>(ctx, imsg);        <span class="cmt">// 业务逻辑</span>
+        } <span class="kw">else</span> {
+            release = <span class="kw">false</span>;                  <span class="cmt">// 不匹配 → 交给下游，下游负责释放</span>
+            ctx.<span class="fn">fireChannelRead</span>(msg);
+        }
+    } <span class="kw">finally</span> {
+        <span class="kw">if</span> (autoRelease &amp;&amp; release) {
+            <span class="type">ReferenceCountUtil</span>.<span class="fn">release</span>(msg);  <span class="cmt">// 关键：自动释放</span>
+        }
+    }
+}</code></pre>
+        <p>要点：</p>
+        <ul>
+            <li><code>acceptInboundMessage(msg)</code> 判断消息类型是否匹配泛型 <code>I</code>。</li>
+            <li>匹配 → 调 <code>channelRead0</code> 交给业务；不匹配 → <code>fireChannelRead</code> 下传，并把 <code>release</code> 置 <code>false</code>（因为下游接管了释放责任）。</li>
+            <li><code>finally</code> 里根据 <code>autoRelease &amp;&amp; release</code> 决定是否 <code>ReferenceCountUtil.release(msg)</code>。<code>autoRelease</code> 是该类的字段，默认 <code>true</code>。</li>
+        </ul>
+        <p>也就是说，<strong>只要你继承 <code>SimpleChannelInboundHandler</code>，用完消息后框架会自动帮你 release，无需手写。</strong></p>
+
+        <h3>3.2 第二段：OutOfMemoryHandler 的问题</h3>
+        <p>再看出问题的自定义 handler（关键部分）：</p>
+        <pre><code><span class="kw">public class</span> <span class="type">OutOfMemoryHandler</span> <span class="kw">extends</span> <span class="type">ChannelInboundHandlerAdapter</span> {
+    <span class="type">PooledByteBufAllocator</span> allocator = <span class="kw">new</span> <span class="type">PooledByteBufAllocator</span>(<span class="kw">true</span>);  <span class="cmt">// preferDirect = true</span>
+
+    <span class="kw">private</span> <span class="type">Object</span> <span class="fn">getBinaryWebSocketFrame</span>(<span class="type">BinaryWebSocketFrame</span> msg) {
+        <span class="type">ByteBuf</span> byteBuf = <span class="kw">null</span>;
+        <span class="kw">try</span> {
+            <span class="kw">byte</span>[] serviceTimeBytes = (<span class="str">"_"</span> + <span class="type">System</span>.<span class="fn">currentTimeMillis</span>()).<span class="fn">getBytes</span>();
+            <span class="kw">int</span> capacity = msg.<span class="fn">content</span>().<span class="fn">readableBytes</span>() + serviceTimeBytes.length;
+            byteBuf = allocator.<span class="fn">directBuffer</span>(capacity);     <span class="cmt">// 申请堆外直接内存</span>
+            byteBuf.<span class="fn">writeBytes</span>(msg.<span class="fn">content</span>());
+            byteBuf.<span class="fn">writeBytes</span>(serviceTimeBytes);
+            msg.<span class="fn">content</span>().<span class="fn">resetReaderIndex</span>();
+            <span class="kw">return new</span> <span class="type">BinaryWebSocketFrame</span>(byteBuf);
+        } <span class="kw">catch</span> (<span class="type">Exception</span> e) {
+            <span class="kw">return</span> <span class="kw">null</span>;                             <span class="cmt">// ← 异常时 byteBuf 没释放！</span>
+        }
+    }
+
+    <span class="kw">@Override</span>
+    <span class="kw">public void</span> <span class="fn">channelRead</span>(<span class="type">ChannelHandlerContext</span> ctx, <span class="type">Object</span> msg) <span class="kw">throws</span> <span class="type">Exception</span> {
+        <span class="kw">if</span> (msg <span class="kw">instanceof</span> <span class="type">BinaryWebSocketFrame</span>) {
+            <span class="type">BinaryWebSocketFrame</span> frame = (<span class="type">BinaryWebSocketFrame</span>) msg;
+            <span class="type">BinaryUtils</span>.<span class="fn">toString</span>(msg);
+            ctx.<span class="fn">channel</span>().<span class="fn">writeAndFlush</span>(<span class="kw">this</span>.<span class="fn">getBinaryWebSocketFrame</span>(frame));
+            <span class="cmt">// ← 既没有 ReferenceCountUtil.release(msg)，也没有 ctx.fireChannelRead(msg)</span>
+        }
+    }
+}</code></pre>
+        <p>对比第一段代码，能清楚地看到它缺了什么：</p>
+        <table>
+            <tr><th>维度</th><th>SimpleChannelInboundHandler</th><th>OutOfMemoryHandler</th></tr>
+            <tr>
+                <td>父类</td>
+                <td><code>SimpleChannelInboundHandler&lt;I&gt;</code></td>
+                <td><code>ChannelInboundHandlerAdapter</code></td>
+            </tr>
+            <tr>
+                <td>是否自动释放入站消息</td>
+                <td>是（<code>autoRelease=true</code>，<code>finally</code> 里 release）</td>
+                <td>否，需手动释放</td>
+            </tr>
+            <tr>
+                <td>处理完消息后</td>
+                <td>框架自动 <code>release</code></td>
+                <td>既不 <code>release</code>，也不 <code>fireChannelRead</code> → <strong>泄漏</strong></td>
+            </tr>
+        </table>
+        <p>
+            注意：<code>ChannelInboundHandlerAdapter.channelRead</code> 的默认实现是
+            <code>ctx.fireChannelRead(msg)</code>（把消息往下传）。一旦你<strong>重写</strong>了它又不主动下传，
+            就切断了消息往下游流动的路径，而它又不会自动释放——于是消息就「卡」在这个 handler 里，泄漏了。
+        </p>
+    </section>
+
+    <section id="s4">
+        <h2><span class="no">04</span>OOM 是如何一步步形成的</h2>
+        <p>把上面的问题串起来，泄漏链是这样的：</p>
+        <pre><code>每条入站 BinaryWebSocketFrame
+  └─ 到达 OutOfMemoryHandler.channelRead
+       ├─ 被处理（toString + 回显一个带时间戳的新帧）
+       ├─ 新帧 writeAndFlush 出去（出站方向 Netty 会在写完后释放，正常）
+       └─ 入站帧 msg：
+            ├─ 没有 release()  →  refCnt 始终 ≥ 1，永不归零
+            ├─ 没有 fireChannelRead()  →  下游也无法代为释放
+            └─ 底层 ByteBuf 永远回不到池 / 不被 free
+
+高频消息（例如 EmbeddedChannel 压测循环 writeInbound）
+  └─ 每个帧都泄漏一份缓冲 → 内存只增不减 → OOM</code></pre>
+        <p>具体有两个层面的后果：</p>
+        <ul>
+            <li>
+                <strong>入站帧泄漏</strong>：每条消息的 <code>ByteBuf</code> 引用计数不归零，对象无法被释放；
+                如果是直接内存，还不受堆 GC 管理，<code>MaxDirectMemorySize</code> 很快被耗尽。
+            </li>
+            <li>
+                <strong>异常路径二次泄漏</strong>：<code>getBinaryWebSocketFrame</code> 里
+                <code>allocator.directBuffer(capacity)</code> 申请的直接内存，一旦中间抛异常，<code>catch</code>
+                直接 <code>return null</code>，刚申请还没写入帧的 <code>byteBuf</code> 也没被释放。
+            </li>
+        </ul>
+        <div class="card callout warn">
+            <div class="ct"><span class="ico">⚠️</span>为什么直接内存特别危险</div>
+            <p>
+                直接内存分配在 JVM 堆外，<strong>堆 GC 并不直接回收它</strong>，其上限由
+                <code>-XX:MaxDirectMemorySize</code> 控制（默认约等于 <code>-Xmx</code>）。一旦泄漏，
+                会出现「堆内存还很充裕、进程却 OOM」的诡异现象，报错常是
+                <code>OutOfMemoryError: Direct buffer memory</code>。
+            </p>
+        </div>
+    </section>
+
+    <section id="s5">
+        <h2><span class="no">05</span>心跳为何也被拖垮：IM 消息异常</h2>
+        <p>
+            除了内存泄漏，这个 handler 还会<strong>直接影响客户端心跳，导致 IM 消息异常</strong>。
+            根子还是同一个：重写 <code>channelRead</code> 后，<strong>只处理了 <code>BinaryWebSocketFrame</code>，
+            却没有 <code>else</code> 分支把其他帧往下传</strong>。于是它成了 pipeline 里的一个「黑洞」：
+        </p>
+        <pre><code>PingWebSocketFrame / PongWebSocketFrame / TextWebSocketFrame / CloseWebSocketFrame
+  └─ 进入 OutOfMemoryHandler.channelRead
+       └─ 不是 BinaryWebSocketFrame → 什么都不做
+            ├─ 不 fireChannelRead → 下游（心跳/业务）永远收不到
+            └─ 不 release           → 这些帧同样泄漏，雪上加霜
+
+BinaryWebSocketFrame（真实业务消息 / 应用层心跳）
+  └─ 被截住 → 不回传给业务，而是回显一帧「原内容 + _时间戳」</code></pre>
+        <p>IM 系统里常见的两类心跳，都被这条代码破坏：</p>
+        <table>
+            <tr><th>心跳类型</th><th>报文形态</th><th>被破坏的机制</th><th>后果</th></tr>
+            <tr>
+                <td>WebSocket 协议层心跳</td>
+                <td><code>PingWebSocketFrame</code> / <code>PongWebSocketFrame</code></td>
+                <td>非 <code>BinaryWebSocketFrame</code>，被 handler 丢弃，服务端永远不回 <code>Pong</code></td>
+                <td>客户端收不到 pong → 判定连接断开 → 主动断开重连</td>
+            </tr>
+            <tr>
+                <td>应用层心跳（自定义消息）</td>
+                <td>二进制心跳消息（带 heartbeat 类型字段）</td>
+                <td>被 <code>BinaryWebSocketFrame</code> 分支截住，替换成「内容 + 时间戳」回显，心跳 ack 不发</td>
+                <td>客户端收不到心跳应答 → 判定离线 → 断开重连</td>
+            </tr>
+        </table>
+        <p>心跳一断，紧接着就是一串 IM 消息异常：</p>
+        <ul>
+            <li><strong>频繁断线重连</strong>：客户端因心跳超时反复断开、重连，连接状态抖动。</li>
+            <li><strong>消息丢失</strong>：真实 IM 二进制消息被截住、不回传业务层，服务端根本没处理。</li>
+            <li><strong>消息污染/异常</strong>：每条消息还被回显一帧「原内容 + <code>_时间戳</code>」，客户端可能解析失败、出现重复或乱序。</li>
+            <li><strong>雪上加霜</strong>：被丢弃的 ping/pong 等帧同样没释放，与 OOM 泄漏叠加，服务端 GC 停顿又进一步拖慢心跳处理。</li>
+        </ul>
+        <div class="card callout danger">
+            <div class="ct"><span class="ico">⛔</span>重点：别漏掉 else 分支</div>
+            <p>
+                这个 handler 除了「该释放不释放」，更致命的是<strong>「该下传不下传」</strong>。正确写法里，
+                不处理的消息必须 <code>ctx.fireChannelRead(msg)</code> 透传给下一个 handler（心跳处理器、业务分发器）。
+                少了这一步，心跳和普通消息会一起被吞掉，整条 IM 链路异常。
+            </p>
+        </div>
+    </section>
+
+    <section id="s6">
+        <h2><span class="no">06</span>泄漏检测报告解读</h2>
+        <p>
+            代码注释里贴的那段「<code>Recent access records:</code> / <code>Created at:</code>」堆栈，
+            正是 Netty <strong><code>ResourceLeakDetector</code>（资源泄漏检测器）</strong>的典型报告。它会在某个
+            <code>ByteBuf</code> 被 GC 回收、却从未 <code>release</code> 时，打印出这个缓冲的<strong>创建点</strong>，帮助定位泄漏来源。
+        </p>
+        <p>这段堆栈的关键几行：</p>
+        <pre><code><span class="type">PooledByteBufAllocator</span>.<span class="fn">newHeapBuffer</span>(...)            <span class="cmt">// 泄漏的缓冲是「堆内」池化缓冲</span>
+<span class="type">AbstractByteBufAllocator</span>.<span class="fn">heapBuffer</span>(...)
+<span class="type">ZlibDecoder</span>.<span class="fn">prepareDecompressBuffer</span>(...)       <span class="cmt">// 解压时申请的解压缓冲</span>
+<span class="type">JdkZlibDecoder</span>.<span class="fn">decode</span>(...)
+<span class="type">PerMessageDeflateDecoder</span>.<span class="fn">decode</span>(...)           <span class="cmt">// WebSocket PerMessageDeflate 扩展</span>
+<span class="type">MessageToMessageDecoder</span>.<span class="fn">channelRead</span>(...)
+...
+<span class="type">EmbeddedChannel</span>.<span class="fn">writeInbound</span>(...)              <span class="cmt">// 测试/压测里写入入站消息</span></code></pre>
+        <p>它说明了三件事：</p>
+        <ul>
+            <li>泄漏发生在 <strong>WebSocket <code>PerMessageDeflate</code>（消息压缩扩展）的解压路径</strong>上——压缩消息解压产生的缓冲没有被释放。</li>
+            <li>这个被泄漏的缓冲正是<strong>入站帧的内容</strong>，最终流入 <code>OutOfMemoryHandler</code> 后被「截住」不再释放。</li>
+            <li>堆栈末尾的 <code>EmbeddedChannel.writeInbound</code> 说明是在<strong>单元测试 / 压测</strong>场景里用 <code>EmbeddedChannel</code> 反复写入入站消息触发的——这也解释了为什么消息量大到足以 OOM。</li>
+        </ul>
+        <div class="card callout info">
+            <div class="ct"><span class="ico">🧭</span>为什么报的是堆内缓冲</div>
+            <p>
+                这份报告定位的是「入站帧内容」这个堆内解压缓冲；而 <code>getBinaryWebSocketFrame</code> 里的
+                <code>directBuffer</code> 属于另一处潜在泄漏。两处泄漏共同加速了内存耗尽——一个撑爆堆，一个撑爆直接内存。
+            </p>
+        </div>
+    </section>
+
+    <section id="s7">
+        <h2><span class="no">07</span>修复方案</h2>
+        <p>按「改动最小、最稳妥」排序，推荐下面三种，任选其一：</p>
+
+        <h3>方案一：改成继承 SimpleChannelInboundHandler（最推荐）</h3>
+        <pre><code><span class="kw">public class</span> <span class="type">OutOfMemoryHandler</span> <span class="kw">extends</span> <span class="type">SimpleChannelInboundHandler</span>&lt;<span class="type">BinaryWebSocketFrame</span>&gt; {
+    <span class="kw">@Override</span>
+    <span class="kw">protected void</span> <span class="fn">channelRead0</span>(<span class="type">ChannelHandlerContext</span> ctx, <span class="type">BinaryWebSocketFrame</span> msg) <span class="kw">throws</span> <span class="type">Exception</span> {
+        <span class="type">BinaryUtils</span>.<span class="fn">toString</span>(msg);
+        ctx.<span class="fn">channel</span>().<span class="fn">writeAndFlush</span>(<span class="kw">this</span>.<span class="fn">getBinaryWebSocketFrame</span>(msg));
+        <span class="cmt">// 框架会在 channelRead0 返回后自动 release(msg)，无需手写</span>
+    }
+}</code></pre>
+
+        <h3>方案二：手动 release（仍继承 Adapter）</h3>
+        <pre><code><span class="kw">@Override</span>
+<span class="kw">public void</span> <span class="fn">channelRead</span>(<span class="type">ChannelHandlerContext</span> ctx, <span class="type">Object</span> msg) <span class="kw">throws</span> <span class="type">Exception</span> {
+    <span class="kw">boolean</span> release = <span class="kw">true</span>;
+    <span class="kw">try</span> {
+        <span class="kw">if</span> (msg <span class="kw">instanceof</span> <span class="type">BinaryWebSocketFrame</span>) {
+            <span class="type">BinaryWebSocketFrame</span> frame = (<span class="type">BinaryWebSocketFrame</span>) msg;
+            <span class="type">BinaryUtils</span>.<span class="fn">toString</span>(msg);
+            ctx.<span class="fn">channel</span>().<span class="fn">writeAndFlush</span>(<span class="kw">this</span>.<span class="fn">getBinaryWebSocketFrame</span>(frame));
+        } <span class="kw">else</span> {
+            release = <span class="kw">false</span>;
+            ctx.<span class="fn">fireChannelRead</span>(msg);
+        }
+    } <span class="kw">finally</span> {
+        <span class="kw">if</span> (release) {
+            <span class="type">ReferenceCountUtil</span>.<span class="fn">release</span>(msg);
+        }
+    }
+}</code></pre>
+
+        <h3>方案三：修复 getBinaryWebSocketFrame 的异常泄漏</h3>
+        <pre><code><span class="kw">private</span> <span class="type">Object</span> <span class="fn">getBinaryWebSocketFrame</span>(<span class="type">BinaryWebSocketFrame</span> msg) {
+    <span class="type">ByteBuf</span> byteBuf = <span class="kw">null</span>;
+    <span class="kw">try</span> {
+        <span class="kw">byte</span>[] serviceTimeBytes = (<span class="str">"_"</span> + <span class="type">System</span>.<span class="fn">currentTimeMillis</span>()).<span class="fn">getBytes</span>();
+        <span class="kw">int</span> capacity = msg.<span class="fn">content</span>().<span class="fn">readableBytes</span>() + serviceTimeBytes.length;
+        byteBuf = allocator.<span class="fn">directBuffer</span>(capacity);
+        byteBuf.<span class="fn">writeBytes</span>(msg.<span class="fn">content</span>());
+        byteBuf.<span class="fn">writeBytes</span>(serviceTimeBytes);
+        msg.<span class="fn">content</span>().<span class="fn">resetReaderIndex</span>();
+        <span class="kw">return new</span> <span class="type">BinaryWebSocketFrame</span>(byteBuf);
+    } <span class="kw">catch</span> (<span class="type">Exception</span> e) {
+        <span class="type">ReferenceCountUtil</span>.<span class="fn">release</span>(byteBuf);   <span class="cmt">// 异常时也要释放已申请的直接内存</span>
+        <span class="kw">return</span> <span class="kw">null</span>;
+    }
+}</code></pre>
+        <div class="card callout ok">
+            <div class="ct"><span class="ico">✅</span>最省事的做法</div>
+            <p>
+                直接采用<strong>方案一</strong>：继承 <code>SimpleChannelInboundHandler&lt;BinaryWebSocketFrame&gt;</code>，
+                把逻辑写进 <code>channelRead0</code>，自动释放交给框架，从根上杜绝「忘了 release」。
+                更重要的是，<code>SimpleChannelInboundHandler</code> 对不匹配的消息会自动 <code>fireChannelRead</code> 透传，
+                <strong>心跳和业务消息不会再被吞掉</strong>——一处改动同时解决 OOM 与 IM 消息异常。
+            </p>
+        </div>
+    </section>
+
+    <section id="s8">
+        <h2><span class="no">08</span>总结归纳</h2>
+        <table>
+            <tr><th>问题</th><th>根因</th><th>修复</th></tr>
+            <tr>
+                <td>入站消息泄漏（主因）</td>
+                <td>继承 <code>ChannelInboundHandlerAdapter</code>，重写 <code>channelRead</code> 后既不 <code>release</code> 也不 <code>fireChannelRead</code></td>
+                <td>改用 <code>SimpleChannelInboundHandler</code>，或手动 <code>ReferenceCountUtil.release</code></td>
+            </tr>
+            <tr>
+                <td>直接内存泄漏（次因）</td>
+                <td><code>directBuffer</code> 申请后，异常路径 <code>catch</code> 返回 <code>null</code> 前未释放</td>
+                <td><code>catch</code> 里 <code>ReferenceCountUtil.release(byteBuf)</code></td>
+            </tr>
+            <tr>
+                <td>心跳/消息被吞（连带）</td>
+                <td>重写 <code>channelRead</code> 只处理 <code>BinaryWebSocketFrame</code>，无 <code>else</code> 分支 <code>fireChannelRead</code>，ping/pong 与业务消息被丢弃</td>
+                <td>非目标类型消息统一 <code>ctx.fireChannelRead(msg)</code> 透传</td>
+            </tr>
+        </table>
+        <div class="card callout ok">
+            <div class="ct"><span class="ico">✅</span>一句话记住</div>
+            <p>
+                <strong>Netty 的消息要么往下传、要么自己释放，两头都占就是泄漏。</strong>
+                不释放会 OOM，不往下传还会吞掉心跳、拖垮 IM 消息链路。需要「处理完自动释放」的场景，
+                优先继承 <code>SimpleChannelInboundHandler</code>，别手写 <code>ChannelInboundHandlerAdapter.channelRead</code>
+                还忘了 <code>release</code> 和 <code>fireChannelRead</code>。
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="f-brand"><span class="logo">雀</span>麻雀窝 Sparrow Zoo</div>
+    <div>Sparrow Zoo<span class="sep">·</span>Netty 入站消息未释放导致 OOM<span class="sep">·</span>Powered by Sparrow OS</div>
+</footer>
+</body>
+</html>

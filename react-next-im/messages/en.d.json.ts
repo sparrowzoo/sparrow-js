@@ -6,8 +6,15 @@ declare const messages: {
     "title": "sparrow zoo"
   },
   "LocaleSwitcher": {
-    "label": "Change language to \uD83C\uDDFA\uD83C\uDDF8 English",
-    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unknown}}"
+    "label": "Change language",
+    "locale": "{locale, select, zh {中文} en {English} other {Other}}"
+  },
+  "IMHeader": {
+    "brand": "Sparrow Zoo",
+    "label": "IM navigation",
+    "home": "Website",
+    "study": "Learning",
+    "support": "Support"
   },
   "Header": {
     "index": "Home",
@@ -17,6 +24,7 @@ declare const messages: {
     "shop": "Shop",
     "coder": "Coder",
     "playground": "Write Blog",
+    "study": "Learning",
     "theme-toggle": "Toggle Theme",
     "light-mode": "Light Mode",
     "dark-mode": "Dark Mode",
@@ -78,6 +86,14 @@ declare const messages: {
     "in-group": " In group ",
     "say": " Said ",
     "only-see": " Click here to see only "
+  },
+  "product": {
+    "passport": "Passport Identity",
+    "im": "Instant Messaging",
+    "coder": "Code Generator",
+    "file": "File Service",
+    "ui": "UI Components",
+    "security": "Security"
   },
   "ClientServer": {
     "title": "Server",

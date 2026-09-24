@@ -5,31 +5,32 @@ import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import Contact from "@/lib/protocol/contact/Contact";
 import {format} from "util";
 import {AVATAR_URL} from "@/common/lib/Env";
-import Result from "@/common/lib/protocol/Result";
 import {Translator} from "@/common/lib/TranslatorType";
+import Group from "@/lib/protocol/contact/Group";
+
+interface RemoteContactGroup {
+    userMap: Record<string, Contact>;
+    contactIds: Array<string | number>;
+    quns: Group[];
+}
 
 export default class ChatApi {
     static async getVisitorToken(): Promise<string> {
-        let token;
-        await Fetcher.get({
+        const response = await Fetcher.get<{token: string}>({
             url: "/get-visitor-token.json",
-        }).then(
-            async (response: Result) => {
-                token = response.data.token;
-            }
-        );
-        return token;
+        });
+        return response.data.token;
     }
 
     static async getMessages(sessionKey: string, translator: Translator) {
         let messages: Message[] = [];
         console.log("sessionKey getMessages", sessionKey);
-        await Fetcher.post({
+        await Fetcher.post<Message[]>({
             url: "/chat/v2/messages.json",
             body: sessionKey,
             translator: translator
         }).then(
-            async (response: Result) => {
+            async (response) => {
                 let messageList: Message[] = response.data;
                 if (messageList == null) {
                     messageList = [];
@@ -44,8 +45,8 @@ export default class ChatApi {
 
     static async getSessions(translator: Translator) {
         let sessions: ChatSession[] = [];
-        await Fetcher.get({url: "/chat/v2/sessions.json", translator: translator}).then(
-            (response: Result) => {
+        await Fetcher.get<ChatSession[]>({url: "/chat/v2/sessions.json", translator: translator}).then(
+            (response) => {
                 const chatSessions: ChatSession[] = response.data;
                 for (let session of chatSessions) {
                     const localSession = ChatSession.newLocalSession(session);
@@ -60,8 +61,8 @@ export default class ChatApi {
         translator: null | ((key: string) => string) = null
     ) {
         let localContactGroup: ContactGroup = new ContactGroup();
-        await Fetcher.get({url: "/contact/contacts.json", translator: translator}).then(
-            async (response: Result) => {
+        await Fetcher.get<RemoteContactGroup>({url: "/contact/contacts.json", translator: translator}).then(
+            async (response) => {
                 if (response.data) {
                     const remoteContactGroup = response.data;
                     const userMap = remoteContactGroup.userMap;
@@ -102,12 +103,12 @@ export default class ChatApi {
         translator: null | ((key: string) => string) = null
     ): Promise<Contact[] | null> {
         let users: Contact[] | null = null;
-        await Fetcher.post({
+        await Fetcher.post<Contact[]>({
                 url: "/contact/get-users-by-ids.json",
                 body: userIds,
                 translator: translator
             }
-        ).then(async (response: Result) => {
+        ).then(async (response) => {
             if (!response.data) {
                 users = [];
                 return;

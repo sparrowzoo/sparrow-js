@@ -15,11 +15,11 @@ import {CellContextProps, MyTableMeta} from "@/common/lib/table/DataTablePropert
 import PopItem from "@/common/components/table/cell/pop-operation-item";
 
 
-const OperationCell = ({cellContext}: CellContextProps<any>) => {
+const OperationCell = <TData,>({cellContext}: CellContextProps<TData>) => {
     const globalTranslate = useTranslations("GlobalForm");
     const table = cellContext?.table;
     const original = cellContext.row.original;
-    const meta = table?.options?.meta as MyTableMeta<any>;
+    const meta = table?.options?.meta as MyTableMeta<TData>;
     const primary = meta.primary;
     const EditComponent = meta.EditComponent;
     const RowOperationComponents = meta.RowOperationComponents;
@@ -43,7 +43,7 @@ const OperationCell = ({cellContext}: CellContextProps<any>) => {
                 <DropdownMenuItem>
                     <Button onClick={(e) => {
                         e.stopPropagation();
-                        deleteHandler(original[primary]);
+                        deleteHandler?.((original as unknown as Record<string, unknown>)[primary] as string | number);
                     }}>{globalTranslate("delete")}</Button>
                 </DropdownMenuItem>
                 {RowOperationComponents?.map((Item, index) => {

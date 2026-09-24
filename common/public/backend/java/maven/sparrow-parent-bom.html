@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="Sparrow 平台的 Maven 架构设计：以 sparrow-parent 统一稳定构建基线，以 sparrow-bom 交付组件版本组合，说明 parent、import 与多模块业务项目的最佳实践。">
+  <title>Sparrow Parent 与 BOM：从内部构建到业务接入</title>
+  <style>
+    :root{--bg:#07070d;--panel:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#f4f4f7;--secondary:#9a9ab0;--tertiary:#64647c;--purple:#6d5cff;--cyan:#22d3ee;--pink:#a855f7;--code:#0c0c16;--radius:18px;--gradient:linear-gradient(110deg,#6d5cff 0%,#22d3ee 53%,#a855f7 100%);--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:105px}body{margin:0;color:var(--text);background:var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.85;letter-spacing:.01em}body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 7% 1%,#6d5cff23,transparent 42%),radial-gradient(ellipse at 88% 15%,#22d3ee0d,transparent 37%),radial-gradient(ellipse at 84% 85%,#a855f710,transparent 42%)}body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px),url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' opacity='.07' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");background-size:64px 64px,64px 64px,180px 180px}
+    a{color:#88dce8;text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:4px}button,select{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}::selection{background:#6d5cff60;color:white}h1,h2,h3,h4,p{margin:0}h1,h2,h3{line-height:1.3;letter-spacing:-.035em}h1{font-size:clamp(34px,4.1vw,59px);font-weight:750}h2{font-size:30px}h3{font-size:22px}h4{font-size:16px;font-weight:600}p+p{margin-top:13px}strong{color:var(--text);font-weight:650}code{font-family:var(--mono);font-size:.88em;color:#c9c5ff;overflow-wrap:anywhere}p code,li code,td code{padding:2px 5px;border-radius:5px;background:#ffffff05}small{font-size:12px}ul,ol{padding-left:23px;margin:14px 0}li+li{margin-top:8px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:16px 19px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}th{background:#ffffff03;color:var(--text);font-weight:550}td{color:var(--secondary)}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#ffffff02}td:first-child{color:var(--text)}.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);margin:22px 0}.table-wrap table{min-width:590px}.table-wrap.wide table{min-width:740px}
+    .wrap{max-width:1232px;padding:0 40px;margin:auto}.gradient-text{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}.eyebrow{font-size:11px;font-weight:650;letter-spacing:.17em;text-transform:uppercase;color:var(--secondary)}.muted{color:var(--secondary)}.fine{color:var(--secondary);font-size:13px;line-height:1.75}.decorative{color:var(--tertiary)}.panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel)}.lift{transition:transform .22s,border-color .22s,background .22s}.lift:hover{transform:translateY(-4px);border-color:#ffffff19;background:#ffffff06}.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--secondary);line-height:1.6}.dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;display:inline-block;box-shadow:0 0 12px #22d3ee50}.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:10px 20px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:13px;background:#ffffff04;line-height:1.6;text-decoration:none;transition:transform .2s,filter .2s}.button:hover{transform:translateY(-2px);text-decoration:none;filter:brightness(1.14)}.button.primary{border:0;background:var(--gradient);color:#080c18;font-weight:750}.button .arrow{font-size:17px;line-height:1}.source{font-size:12px;color:#91c6d3;margin-top:14px;display:block}.source a{color:inherit;text-decoration:underline;text-decoration-color:#91c6d340;text-underline-offset:3px}.skip{position:absolute;left:12px;top:-80px;z-index:99;background:var(--bg);padding:12px}.skip:focus{top:12px}
+    .topbar{position:sticky;top:0;z-index:50;background:#07070ddb;backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:30px}.brand{display:flex;align-items:center;gap:12px;color:var(--text);font-size:17px;letter-spacing:-.025em;font-weight:650;white-space:nowrap}.brand:hover{text-decoration:none}.brand-mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid #a39bff40;background:linear-gradient(145deg,#6d5cff26,#22d3ee0c);border-radius:10px;font-family:var(--mono);font-size:19px;color:#c5c0ff}.brand-sub{color:var(--tertiary);font-size:12px;font-weight:400;margin-left:4px;letter-spacing:.06em}.topnav{display:flex;align-items:center;gap:26px}.topnav>a:not(.button){color:var(--secondary);font-size:13px}.reading-progress{position:absolute;bottom:-1px;left:0;height:2px;width:0;background:var(--gradient);transition:width .1s linear}
+    .hero{padding:58px 0 58px;border-bottom:1px solid var(--border)}.crumb{display:flex;align-items:center;gap:12px;margin-bottom:35px;color:var(--secondary);font-size:12px}.crumb span[aria-hidden]{color:var(--tertiary)}.hero-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:60px;align-items:center}.hero h1 span{display:block}.hero h1 .subline{margin-top:10px;font-size:.64em;letter-spacing:-.015em}.hero-desc{font-size:16px;line-height:1.95;color:var(--secondary);max-width:600px;margin-top:23px}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}.meta{display:flex;align-items:center;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--secondary);font-size:11px}.meta i{height:3px;width:3px;background:var(--tertiary);border-radius:50%}.hero-map{padding:26px;position:relative;box-shadow:0 18px 100px #6d5cff0a}.hero-map .map-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.map-node{border:1px solid var(--border);border-radius:12px;padding:15px 16px;background:#0c0c16aa}.map-node b{font-family:var(--mono);font-size:15px;font-weight:500;display:block}.map-node span{color:var(--secondary);font-size:12px;display:block;margin-top:4px}.map-node.primary-node{background:linear-gradient(115deg,#6d5cff14,#22d3ee09);border-color:#8c7fff25}.map-line{display:flex;justify-content:center;align-items:center;gap:12px;color:var(--secondary);font-size:11px;height:37px}.map-line:before,.map-line:after{content:"";height:1px;width:26px;background:#ffffff1a}.map-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.map-two .map-node{padding:13px}.map-two b{font-size:12px}.hero-map .fine{border-top:1px solid var(--border);margin-top:19px;padding-top:14px;font-size:11px}
+    .main-grid{display:grid;grid-template-columns:minmax(0,1fr) 195px;gap:64px;padding-top:48px;padding-bottom:70px}.article{min-width:0}.toc{position:sticky;top:106px;align-self:start;border-left:1px solid var(--border);padding-left:21px}.toc .eyebrow{margin-bottom:17px;color:var(--tertiary)}.toc a{display:block;font-size:12px;color:var(--secondary);padding:7px 0;line-height:1.65;transition:color .2s}.toc a.active{color:var(--cyan)}.toc .sub{padding-left:10px;font-size:11px}.toc .toc-bottom{margin-top:23px;padding-top:17px;border-top:1px solid var(--border)}.toc .toc-bottom p{font-size:11px;color:var(--secondary);line-height:1.7}.section{margin-bottom:58px;scroll-margin-top:100px}.section-heading{display:flex;align-items:baseline;gap:15px;margin-bottom:22px}.section-number{font:12px var(--mono);color:var(--tertiary);letter-spacing:.06em}.section>p,.subsection>p{color:var(--secondary)}.subsection{margin-top:36px;scroll-margin-top:106px}.subsection h3{margin-bottom:16px}.subsection h3 .step{color:var(--cyan);font:12px var(--mono);margin-right:9px;vertical-align:middle}.section-intro{font-size:17px;line-height:1.9}.conclusion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:24px 0}.conclusion-card{padding:20px 18px}.conclusion-card .tag{font:10px var(--mono);letter-spacing:.09em;color:var(--secondary);margin-bottom:13px}.conclusion-card h3{font-size:16px;letter-spacing:0;margin-bottom:9px}.conclusion-card p{font-size:13px;color:var(--secondary);line-height:1.8}.note{padding:19px 22px;border:1px solid var(--border);border-left:2px solid var(--purple);border-radius:0 14px 14px 0;background:linear-gradient(100deg,#6d5cff0b,#ffffff02);margin:23px 0;color:var(--secondary);font-size:14px}.note.cyan{border-left-color:var(--cyan);background:linear-gradient(100deg,#22d3ee09,#ffffff02)}.note strong{display:block;font-size:14px;margin-bottom:5px}.note p{margin-top:0}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.glossary>div{padding:17px 19px}.glossary dt{font:13px var(--mono);color:var(--text);margin-bottom:6px}.glossary dd{margin:0;font-size:13px;color:var(--secondary)}
+    .architecture{padding:24px;margin:24px 0}.architecture-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:20px}.architecture-head h4{font-size:14px}.architecture-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.arch-column{border:1px solid var(--border);border-radius:13px;padding:18px;background:#07070d55}.arch-column>p:first-child{font-size:11px;letter-spacing:.08em;color:var(--secondary);margin-bottom:13px}.arch-row{background:#ffffff03;border:1px solid var(--border);border-radius:10px;padding:12px 13px;line-height:1.6}.arch-row+.arch-row{margin-top:10px}.arch-row b{font:12px var(--mono)}.arch-row span{display:block;font-size:11px;color:var(--secondary);margin-top:5px}.arch-arrow{text-align:center;color:#aca4ed;font-size:11px;line-height:1.8;padding:9px 0}.arch-column .fine{font-size:12px;margin-top:13px}.architecture-foot{padding-top:18px;margin-top:18px;border-top:1px solid var(--border);font-size:12px;color:var(--secondary)}.rule-list{list-style:none;padding:0;counter-reset:rule}.rule-list li{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border);color:var(--secondary);font-size:14px}.rule-list li:before{counter-increment:rule;content:counter(rule,decimal-leading-zero);font:11px var(--mono);color:var(--tertiary);padding-top:6px}.rule-list li:last-child{border-bottom:0}
+    .switcher{display:flex;gap:5px;padding:5px;background:#ffffff03;border:1px solid var(--border);border-radius:999px;width:fit-content;margin:21px 0;max-width:100%;flex-wrap:wrap}.switcher button{padding:9px 17px;border-radius:999px;border:0;color:var(--secondary);font-size:12px;background:transparent;line-height:1.6}.switcher button[aria-selected=true],.switcher button[aria-pressed=true]{color:var(--text);background:linear-gradient(115deg,#6d5cff42,#22d3ee18,#a855f72b);box-shadow:inset 0 0 0 1px #ffffff12}.route-panel{padding:23px}.route-panel h4{margin-bottom:11px}.route-panel p,.route-panel li{font-size:14px;color:var(--secondary)}.route-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.route-tags .pill{font-size:11px;color:#b7c8dc}.tradeoff{font-size:13px;color:var(--secondary);padding-top:16px;margin-top:17px;border-top:1px solid var(--border)}[hidden]{display:none!important}.codebox{margin-top:16px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--code)}.code-header{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:45px;padding:9px 16px;border-bottom:1px solid var(--border);background:#ffffff015}.code-header span{font:11px var(--mono);color:var(--secondary);overflow-wrap:anywhere}.copy{font-size:11px;white-space:nowrap;padding:4px 11px;border:1px solid var(--border);border-radius:999px;background:#ffffff04;color:var(--secondary)}.copy:hover{color:var(--text);border-color:#ffffff25}pre{margin:0;padding:20px 21px;overflow:auto;tab-size:2;line-height:1.8;font-size:12px}pre code{font-size:inherit;color:#c7c8de;white-space:pre;overflow-wrap:normal}.xml-tag{color:#adabff}.xml-attr{color:#83d3df}.xml-comment{color:#73758c}.example-notes{font-size:12px;color:var(--secondary);margin-top:12px}.example-group{margin-top:16px}.example-group summary{cursor:pointer;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:14px;list-style:none}.example-group summary::-webkit-details-marker{display:none}.example-group summary:after{content:"+";font:18px var(--mono);color:var(--secondary)}.example-group[open] summary:after{content:"−"}.example-content{padding:0 18px 19px}.example-content .codebox{margin-top:0}.example-group summary span{color:var(--secondary);font:10px var(--mono);margin-left:auto}.diagram-code{padding:20px;font:12px/1.95 var(--mono);white-space:pre;overflow:auto;color:#bcc0d7}.benefits{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:22px}.benefit{padding:22px}.benefit .number{font:11px var(--mono);color:var(--tertiary);margin-bottom:13px}.benefit h4{margin-bottom:8px;font-size:15px}.benefit p{font-size:13px;color:var(--secondary)}.version-lab{padding:23px;margin-top:22px}.version-lab h4{font-size:15px}.version-lab .switcher{margin:16px 0}.version-lab table{font-size:12px;min-width:460px}.version-lab th,.version-lab td{padding:12px 15px}.version-lab .table-wrap{margin-bottom:16px}.changed{color:var(--cyan);font-weight:650}.version-result{font-size:13px;color:var(--secondary);min-height:64px;padding:14px 17px;border-radius:10px;background:#ffffff03}.version-result strong{font-size:13px}.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:23px 0}.timeline>div{padding:15px 12px;border:1px solid var(--border);border-radius:12px;position:relative;background:#ffffff02}.timeline b{font:11px var(--mono);color:#9d91ee;display:block;margin-bottom:7px}.timeline span{font-size:12px}.sources{margin:24px 0 0;padding:0;list-style:none}.sources li{display:grid;grid-template-columns:29px 1fr;gap:11px;padding:14px 0;border-bottom:1px solid var(--border)}.sources .ref-number{font:11px var(--mono);color:var(--tertiary);padding-top:5px}.sources a{font-size:13px}.sources p{font-size:12px;color:var(--secondary);margin-top:3px}.closing{padding:29px;margin-top:32px;background:linear-gradient(115deg,#6d5cff13,#22d3ee07,#a855f70c);border:1px solid #ffffff10;border-radius:var(--radius)}.closing h3{font-size:22px;margin-bottom:15px}.closing p{color:var(--secondary);font-size:14px}.footer{border-top:1px solid var(--border);padding:26px 0 36px}.footer-inner{display:flex;justify-content:space-between;gap:20px;color:var(--secondary);font-size:11px}.footer a{color:var(--secondary)}.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#171724;border:1px solid #ffffff16;padding:10px 20px;border-radius:999px;color:var(--text);font-size:12px;z-index:80;box-shadow:0 8px 35px #0006}
+    .repo-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:23px 0}.repo-card{padding:23px;display:flex;flex-direction:column;min-width:0}.repo-card .repo-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}.repo-card h4{font:15px/1.5 var(--mono);overflow-wrap:anywhere;margin-bottom:12px}.repo-card h4 a{color:var(--text)}.repo-card p{color:var(--secondary);font-size:13px;line-height:1.9}.repo-card .repo-role{font-size:12px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}.repo-card .repo-links{display:flex;gap:18px;margin-top:auto;padding-top:18px;font-size:12px}.toc{max-height:calc(100vh - 132px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#ffffff18 transparent}
+    @media(min-width:1500px){.wrap{max-width:1320px}.hero-grid{gap:85px}.main-grid{gap:75px}}
+    @media(max-width:1050px){.wrap{padding:0 28px}.hero-grid{gap:30px;grid-template-columns:1.35fr 1fr}.hero-map{padding:20px}.main-grid{grid-template-columns:minmax(0,1fr) 160px;gap:30px}.topnav{gap:18px}.brand-sub{display:none}.conclusion-grid{grid-template-columns:1fr}.conclusion-card{display:grid;grid-template-columns:125px 1fr;column-gap:15px;padding:17px 20px}.conclusion-card .tag{grid-column:1;margin:0 0 5px}.conclusion-card h3{grid-column:1;margin:0}.conclusion-card p{grid-column:2;grid-row:1/3}.map-two{grid-template-columns:1fr}.map-two .map-node:last-child{display:none}}
+    @media(max-width:760px){html{scroll-padding-top:89px}.wrap{padding:0 21px}.nav-inner{height:63px;gap:15px}.topnav{gap:15px}.topnav>a:not(.button){display:none}.topnav .button{font-size:11px;padding:8px 14px}.hero{padding:30px 0 35px}.crumb{margin-bottom:25px;font-size:10px;gap:9px}.hero-grid{grid-template-columns:1fr;gap:28px}.hero-desc{font-size:14px}.hero-map{padding:20px}.map-two{grid-template-columns:1fr 1fr}.map-two .map-node:last-child{display:block}.hero-map .map-label{margin-bottom:15px}.meta{gap:11px;font-size:10px;margin-top:20px}.main-grid{display:block;padding-top:32px}.toc{display:none}.section{margin-bottom:43px}.section-heading{gap:12px;margin-bottom:19px}h2{font-size:26px}h3{font-size:20px}.section-intro{font-size:16px}.architecture{padding:17px}.architecture-grid{grid-template-columns:1fr}.architecture-head{align-items:flex-start}.architecture-head .pill{font-size:9px;padding:4px 9px}.conclusion-card{display:block;padding:19px}.conclusion-card .tag{margin-bottom:8px}.conclusion-card h3{margin-bottom:8px}.glossary{gap:10px}.glossary>div{padding:14px}.glossary dt{font-size:11px}.glossary dd{font-size:12px}.route-panel{padding:18px}.switcher button{font-size:11px;padding:8px 12px}.switcher{border-radius:18px}.benefits{grid-template-columns:1fr}.benefit{padding:20px}.timeline{grid-template-columns:1fr 1fr}.version-lab{padding:17px}.version-result{min-height:0}.footer-inner{display:block}.footer-inner>div+div{margin-top:10px}.example-group summary{padding:15px}.example-group summary span{display:none}.example-content{padding:0 12px 14px}pre{padding:17px;font-size:11px}.code-header{padding:9px 12px}.closing{padding:23px}.note{padding:17px 18px}.section-number{font-size:11px}}
+    @media(max-width:760px){.repo-grid{grid-template-columns:1fr}.repo-card{padding:20px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.lift:hover,.button:hover{transform:none}}
+    @media print{body{background:white;color:#111;font-size:11pt}body::before,body::after,.topbar,.toc,.hero-map,.hero-actions,.switcher,.copy,.reading-progress,.toast{display:none!important}.wrap{max-width:none;padding:0}.main-grid{display:block;padding:20px 0}.hero{padding:15px 0}.hero-grid{display:block}h1{font-size:28pt}.gradient-text{background:none;color:#111}.muted,.fine,p,td,li,.hero-desc,.conclusion-card p,.benefit p,.closing p{color:#444!important}.panel,.note,.codebox,.closing{background:white;border-color:#ddd}.table-wrap{overflow:visible}.table-wrap table{min-width:0}.codebox pre{white-space:pre-wrap}pre code{white-space:pre-wrap;color:#222}.xml-tag,.xml-attr,.xml-comment{color:#444}.footer{margin-top:25px}.article section{break-inside:auto}.panel{break-inside:avoid}a{color:#333}.pill{color:#444;border-color:#ddd}}
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#conclusion">跳到文章正文</a>
+  <header class="topbar">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Sparrow 文章顶部"><span class="brand-mark" aria-hidden="true">s</span>sparrow<span class="brand-sub"> / ENGINEERING</span></a>
+      <nav class="topnav" aria-label="文章导航"><a href="#conclusion">结论先行</a><a href="#background">问题背景</a><a href="#details">详细内容</a><a class="button primary" href="#examples">查看 POM 示例 <span class="arrow" aria-hidden="true">↗</span></a></nav>
+    </div>
+    <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+  </header>
+
+  <div class="wrap">
+    <header class="hero" aria-label="文章 Banner">
+      <div class="crumb"><span>平台工程手记</span><span aria-hidden="true">/</span><span>Maven 架构设计</span><span aria-hidden="true">/</span><span class="pill"><span class="dot" aria-hidden="true"></span>推荐方案</span></div>
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow" style="margin-bottom:17px">BUILD ONCE. EVOLVE INDEPENDENTLY.</p>
+          <h1><span class="gradient-text">Sparrow Parent 与 BOM</span><span class="subline">按组织边界，划分构建与交付</span></h1>
+          <p class="hero-desc">上游提供构建基线，平台产出组件组合，<br>下游业务统一接入。<br>组织内部不把自己产出的 BOM 作为构建前提。</p>
+          <div class="hero-actions"><a class="button primary" href="#architecture">看清整体架构 <span aria-hidden="true">↓</span></a><a class="button" href="#projects">了解关联开源项目 <span aria-hidden="true">↗</span></a></div>
+          <div class="meta"><span>SPARROW 平台架构</span><i aria-hidden="true"></i><span>2026.09.22</span><i aria-hidden="true"></i><span>含官方依据与完整 POM 示例</span></div>
+        </div>
+        <div class="panel hero-map" aria-label="架构概要：稳定 Parent 为内部组件和对外 BOM 提供基线，业务使用 BOM">
+          <div class="map-label"><span class="eyebrow">ONE BASELINE · TWO AUDIENCES</span><span class="dot" aria-hidden="true"></span></div>
+          <div class="map-node primary-node"><b>sparrow-parent</b><span>Spring 生态 · JDK · 构建规范</span></div>
+          <div class="map-line">向下提供继承配置</div>
+          <div class="map-two"><div class="map-node"><b>protocol / core / auth</b><span>内部组件 · 独立发布</span></div><div class="map-node"><b>sparrow-bom</b><span>对外版本组合 · 业务入口</span></div></div>
+          <p class="fine">平台组件继承 Parent；业务项目继承或导入 BOM。<br>组件版本与构建基线分别演进。</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <main class="article" id="article">
+        <section id="conclusion" class="section">
+          <div class="section-heading"><span class="section-number">01 /</span><h2>结论先行</h2></div>
+          <p class="section-intro"><strong>按组织的生产与交付边界划分 POM：</strong>内部组件依赖上游基线，组织产出的 BOM 提供给下游。对 Sparrow 而言，在 <code>sparrow-shell</code> 下设置 <code>sparrow-parent</code> 与 <code>sparrow-bom</code> 两个 POM 子模块；<strong>sparrow-bom 的 parent 也是 sparrow-parent。</strong></p>
+          <div class="conclusion-grid">
+            <div class="panel conclusion-card lift"><div class="tag">01 · STABLE FOUNDATION</div><h3>内部继承 Parent</h3><p>协议、核心、认证组件采用稳定的构建与第三方版本基线，分别声明自己的发布版本。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">02 · PLATFORM DELIVERY</div><h3>对外交付 BOM</h3><p>BOM 继承 Parent、管理公司组件版本；业务可以获得整套规范，也可以仅导入版本管理。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">03 · SIMPLE ADOPTION</div><h3>业务无需重复建设</h3><p>即使采用多模块，也无需额外维护一套部门级 Parent/BOM；保留工程聚合根即可。</p></div>
+          </div>
+          <div class="note cyan"><strong>先明确：Maven 的能力，与公司的架构约定</strong><p>Maven 支持 POM 继承，也支持通过 <code>dependencyManagement</code> 导入 BOM。本方案进一步规定：<strong>平台内部组件不继承或导入对外的 sparrow-bom；业务项目可以将它作为 parent。</strong>这是为了隔离构建与发布节奏，不是 Maven 对 BOM 的语法限制。</p><span class="source">依据：<a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-management" target="_blank" rel="noopener noreferrer">Maven · Dependency Management</a> / <a href="https://maven.apache.org/pom.html#Inheritance" target="_blank" rel="noopener noreferrer">Maven · POM Inheritance</a></span></div>
+        </section>
+
+        <section id="background" class="section">
+          <div class="section-heading"><span class="section-number">02 /</span><h2>问题背景</h2></div>
+          <p><code>sparrow-shell</code> 聚合 Sparrow 自身的功能模块，其中协议层定义公共契约，核心层提供通用能力，认证模块提供登录、令牌与会话等功能。平台组维护这些组件，公司内部的业务平台按需使用；业务项目本身也可能由多个 Maven 模块组成。</p>
+          <p>讨论的起点是：一个 POM 同时承载 Spring 等开源生态版本、构建插件和 Sparrow 自有组件版本；内部组件又把这个 POM 作为 parent。再配合统一的 <code>sparrow_version</code>，一个组件改版本，就容易牵动整套清单和多个组件的发布版本。</p>
+          <p><strong>真正需要分开的，是三种变化：</strong>构建基线的变化、组件功能的变化，以及对外推荐版本组合的变化。它们不必拥有相同版本号，也不必在同一天发布。</p>
+          <dl class="glossary">
+            <div class="panel"><dt>Parent POM · 父配置</dt><dd>给子项目继承的工程规范，例如 JDK、编码、插件和公共依赖管理。</dd></div>
+            <div class="panel"><dt>BOM · 版本清单</dt><dd>Bill of Materials，集中列出兼容的组件版本；不自动把所有组件加入项目。</dd></div>
+            <div class="panel"><dt>Aggregator · 聚合根</dt><dd>通过 <code>modules</code> 组织一起构建的模块。被聚合不等于继承其配置。</dd></div>
+            <div class="panel"><dt>Dependency · 实际依赖</dt><dd>在 <code>dependencies</code> 中声明项目确实使用的库；版本可由父 POM 或 BOM 提供。</dd></div>
+          </dl>
+          <span class="source">聚合与继承是两种关系：<a href="https://maven.apache.org/pom.html#Aggregation" target="_blank" rel="noopener noreferrer">Maven · Aggregation</a>。</span>
+          <section id="projects" class="subsection">
+            <h3>关联开源项目：让分层有具体落点</h3>
+            <p>下面四个项目把讨论连接到实际代码。简介依据仓库 README；涉及目录或本文建议的地方单独标识。<strong>两个 POM 子模块的拆分是本文推荐方案，不表示这些仓库已经完成迁移。</strong></p>
+            <div class="repo-grid">
+              <article class="panel repo-card lift"><div class="repo-top"><span class="eyebrow">01 / FOUNDATION</span><span class="pill">README 说明</span></div><h4><a href="https://github.com/sparrowzoo/sparrow-shell" target="_blank" rel="noopener noreferrer">sparrowzoo/sparrow-shell</a></h4><p>Java 基础框架的功能模块集合。README 强调从 JDK 基础能力出发，以公共 API 与可替换实现降低耦合，让业务按需选择实现，并保留扩展点。</p><p>少依赖、低耦合是其设计方向；“减少依赖”的目标不能理解为当前全部模块都没有第三方依赖。</p><p class="repo-role"><strong>本文中的位置：</strong>平台组件生产侧。重点围绕 protocol、sparrow 核心及认证组件，推荐继承稳定的 <code>sparrow-parent</code>。</p><div class="repo-links"><a href="https://github.com/sparrowzoo/sparrow-shell" target="_blank" rel="noopener noreferrer">项目仓库 ↗</a><a href="https://github.com/sparrowzoo/sparrow-shell/blob/master/README.md" target="_blank" rel="noopener noreferrer">阅读 README ↗</a></div></article>
+              <article class="panel repo-card lift"><div class="repo-top"><span class="eyebrow">02 / VERSION CATALOG</span><span class="pill">README 说明</span></div><h4><a href="https://github.com/sparrowzoo/sparrow-bom" target="_blank" rel="noopener noreferrer">sparrowzoo/sparrow-bom</a></h4><p>README 将其定位为 Sparrow 项目集的 BOM 父项目。当前简介较短，主要确认它承担项目集的公共 POM 角色，没有展开完整的发布治理规则。</p><p class="repo-role"><strong>本文建议的演进：</strong>分离稳定的构建与开源生态基线，由 <code>sparrow-parent</code> 承担；<code>sparrow-bom</code> 继承它，并集中交付面向下游的公司组件组合。</p><div class="repo-links"><a href="https://github.com/sparrowzoo/sparrow-bom" target="_blank" rel="noopener noreferrer">项目仓库 ↗</a><a href="https://github.com/sparrowzoo/sparrow-bom/blob/master/README.md" target="_blank" rel="noopener noreferrer">阅读 README ↗</a></div></article>
+              <article class="panel repo-card lift"><div class="repo-top"><span class="eyebrow">03 / SPRING INTEGRATION</span><span class="pill">README 说明</span></div><h4><a href="https://github.com/sparrow-os/sparrow-starter" target="_blank" rel="noopener noreferrer">sparrow-os/sparrow-starter</a></h4><p>Sparrow 与 Spring 的集成入口。README 介绍了容器桥接、Controller 结果处理、客户端信息与跨域等 Web 支持，以及 Redis 限流、验证码和 MyBatis 等配套适配。</p><p>README 也给出 DDD / 整洁架构的接入思路：领域核心保持框架独立，在应用启动层引入 starter 完成集成。</p><p class="repo-role"><strong>本文中的位置：</strong>平台向业务提供的集成组件。作为这条产品线的生产者，建议继承上游基线，再纳入对外 BOM；此处不宣称仓库已采用新 POM 结构。</p><div class="repo-links"><a href="https://github.com/sparrow-os/sparrow-starter" target="_blank" rel="noopener noreferrer">项目仓库 ↗</a><a href="https://github.com/sparrow-os/sparrow-starter/blob/main/README.md" target="_blank" rel="noopener noreferrer">阅读 README ↗</a></div></article>
+              <article class="panel repo-card lift"><div class="repo-top"><span class="eyebrow">04 / BUSINESS MODULES</span><span class="pill">README + 目录观察</span></div><h4><a href="https://github.com/sparrow-os/sparrow-passport-ddd" target="_blank" rel="noopener noreferrer">sparrow-os/sparrow-passport-ddd</a></h4><p>当前 README 尚未展开项目职责与使用方式。仓库目录可见 <code>passport-domain</code>、<code>passport-application</code>、<code>passport-adapter</code> 等分层，以及 Sparrow、Spring Boot 等运行入口。</p><p class="repo-role"><strong>本文中的应用场景：</strong>用这类业务多模块结构讨论公司 BOM 的接入。仓库当前还存在 <code>bom</code> 目录；“无需额外的业务 BOM”是推荐方向，不是已完成的现状。</p><div class="repo-links"><a href="https://github.com/sparrow-os/sparrow-passport-ddd" target="_blank" rel="noopener noreferrer">查看仓库结构 ↗</a><a href="https://github.com/sparrow-os/sparrow-passport-ddd/blob/main/README.md" target="_blank" rel="noopener noreferrer">阅读 README ↗</a></div></article>
+            </div>
+            <div class="note cyan"><strong>功能代码、版本治理、框架接入与业务组织，是不同维度</strong><p><code>sparrow-shell</code> 提供基础能力，<code>sparrow-starter</code> 解决 Spring 接入，BOM 负责统一版本组合，多模块业务通过这些能力构建应用。这是本文对项目角色的架构归纳，并不表示四个仓库之间只有一条简单的 Maven 依赖链。</p></div>
+          </section>
+        </section>
+
+        <section id="details" class="section">
+          <div class="section-heading"><span class="section-number">03 /</span><h2>详细内容</h2></div>
+
+          <section id="architecture" class="subsection">
+            <h3><span class="step">STEP 01</span>先把生产者与使用方分开</h3>
+            <p>平台组是组件的生产者，业务部门是组件的使用方。<code>sparrow-parent</code> 为生产者提供稳定基线；<code>sparrow-bom</code> 继承这套基线，再补上公司组件清单，成为业务的统一入口。</p>
+            <figure class="panel architecture" style="margin-left:0;margin-right:0">
+              <div class="architecture-head"><h4>建议的 POM 关系</h4><span class="pill">结构建议 · 尚未修改现有工程</span></div>
+              <div class="architecture-grid">
+                <div class="arch-column"><p>平台组 / 组件生产者</p><div class="arch-row"><b>sparrow-shell</b><span>聚合 parent、bom 与功能模块；不决定继承关系</span></div><div class="arch-arrow">以下模块由 shell 聚合</div><div class="arch-row"><b>sparrow-parent</b><span>开源生态版本 + 构建基线</span></div><div class="arch-arrow">↑ parent 继承</div><div class="arch-row"><b>protocol · sparrow · authenticator</b><span>内部功能组件，各自拥有发布版本</span></div><p class="fine">内部依赖仍需明确声明；构建与验证不依赖对外的组件版本清单。</p></div>
+                <div class="arch-column"><p>平台交付 / 业务使用方</p><div class="arch-row"><b>sparrow-bom</b><span>parent = sparrow-parent<br>dependencyManagement = 公司组件版本清单</span></div><div class="arch-arrow">↑ 业务选择 parent 或 import 接入</div><div class="arch-row"><b>passport-sparrow</b><span>单模块或多模块业务应用</span></div><div class="arch-arrow">仅加入实际使用的 dependencies</div><div class="arch-row"><b>protocol / core / auth starters</b><span>版本由 BOM 统一选择</span></div><p class="fine">BOM 在本方案兼任“对外版本清单”和“可供业务继承的父 POM”。</p></div>
+              </div>
+              <figcaption class="architecture-foot"><strong>三条线分别管理：</strong>modules 决定聚合范围，parent 决定配置继承，dependencies 决定实际依赖。BOM 中的版本管理条目不是一条实际 JAR 依赖边。</figcaption>
+            </figure>
+            <div class="table-wrap"><table><thead><tr><th>工件</th><th>放什么</th><th>何时更新</th></tr></thead><tbody>
+              <tr><td><code>sparrow-parent</code></td><td>经验证的 Spring 生态版本、JDK、编码、编译和测试插件规范</td><td>开源基线、构建规则或必要修复变化时</td></tr>
+              <tr><td>内部功能组件</td><td>自身实现、公开契约、实际使用的上游依赖</td><td>功能、接口或依赖要求发生变化时</td></tr>
+              <tr><td><code>sparrow-bom</code></td><td>各组件或组件组的版本、适合业务采用的兼容组合</td><td>需要向业务交付新的版本组合时</td></tr>
+              <tr><td>业务工程根 POM</td><td>业务坐标、模块列表及本工程必要的装配信息</td><td>业务工程结构或业务版本变化时</td></tr>
+            </tbody></table></div>
+            <p class="fine">Parent 相对稳定，并不意味着永久冻结。平台组仍需验证开源生态的兼容关系并维护基线；新的 parent 发布后，旧组件不会自动改变自己的构建历史。</p>
+          </section>
+
+          <section id="org-boundary" class="subsection">
+            <h3><span class="step">STEP 02</span>按组织分层：自产 BOM 交付给下游</h3>
+            <p>这里的“上游”和“下游”是协作关系。社区提供开源生态的基础 parent 或依赖 BOM；公司平台组将经过验证的生态版本和构建要求沉淀到 <code>sparrow-parent</code>，生产自己的功能组件，再通过 <code>sparrow-bom</code> 向业务交付。</p>
+            <div class="panel diagram-code" role="img" aria-label="社区提供上游基线，sparrow-parent 由内部 A B C 与 sparrow-bom 共同继承，下游业务再继承或导入 sparrow-bom">社区开源生态：基础 parent / Spring 依赖 BOM
+                         │ 选型、验证、整合
+                         ▼
+                  sparrow-parent
+                 稳定的公司构建基线
+                    ▲           ▲
+             parent │           │ parent
+                    │           │
+         内部组件 A / B / C   sparrow-bom
+         自身版本独立发布     记录 A/B/C 的兼容版本
+                                  ▲
+                    下游选择 parent 或 import
+                                  │
+                       业务项目 passport-sparrow</div>
+            <p><strong>同一组织的组件生产者不继承或导入自己产出的对外 BOM。</strong>它们与 BOM 共同继承 <code>sparrow-parent</code>。因此，BOM 可以是下游业务的父 POM，却不是本组织内部 A/B/C 的父 POM。这里的“组织”按组件产品线的生产侧与消费侧划分：同一公司内的业务团队也可以是平台的下游。规则不只由仓库名、目录位置或行政归属决定。</p>
+            <div class="note cyan"><strong>一个组织的交付结果，可以成为下一个组织的输入</strong><p>公司平台组的 <code>sparrow-bom</code> 对本组织是产物，对业务部门是上游基线。业务部门直接使用它即可；只有业务部门本身也要向新的下游交付一组可复用组件时，才需要考虑自己的版本清单。</p></div>
+            <h4 style="margin-top:23px">以 C → B → A 为例：依赖升级与父配置升级分开</h4>
+            <p class="muted" style="margin-top:10px">箭头表示“使用”：C 使用 B，B 使用 A。若三者都继承同一个对外 BOM，A 发版后更新 BOM，团队再要求所有组件切换到这个新父版本，就会把 B、C 带入新一轮 POM 更新和发布。即使它们的功能没有变化，也可能被统一版本策略牵动。</p>
+            <div class="table-wrap"><table><thead><tr><th>变化</th><th>A/B/C 共同继承自产 BOM</th><th>A/B/C 继承稳定 parent</th></tr></thead><tbody>
+              <tr><td>A 发布兼容修复</td><td>一旦同步新的 BOM 父版本，B/C 的 POM 也会变化；统一项目版本会进一步放大发布范围</td><td>A 可以独立发布；B/C 是否采用新 A，按实际需求与兼容性决定</td></tr>
+              <tr><td>B 开始调用 A 的新接口</td><td>B 的真实依赖变化与 BOM 父版本变化混在一起</td><td>B 明确更新 A 的依赖版本并发布；C 是否需要修改取决于 B 的兼容性</td></tr>
+              <tr><td>对外推荐新的 A/B/C 组合</td><td>产品清单同时成为内部父配置，容易产生“改清单 → 改组件 → 再改清单”的往返</td><td>BOM 汇总已验证版本；稳定 parent 和无变化组件不必跟发</td></tr>
+            </tbody></table></div>
+            <p class="fine">这种“循环更新”是发布流程耦合，不意味着 Maven 每次都会强制所有模块升级。对于破坏性 API 变化，必要的 B/C 适配仍然要做；架构分层消除的是额外的版本联动，而非真实依赖关系。</p>
+          </section>
+
+          <section id="cycles" class="subsection">
+            <h3><span class="step">STEP 03</span>把“循环”说准确</h3>
+            <p>BOM 在 <code>dependencyManagement</code> 中管理 protocol，而 protocol 将该 BOM 作为 parent，<strong>这两项配置本身不构成 Maven 循环依赖</strong>。普通的版本管理条目不会要求 Maven 为构建 BOM 而先解析或构建 protocol。</p>
+            <div class="table-wrap"><table><thead><tr><th>情况</th><th>判断</th></tr></thead><tbody>
+              <tr><td>BOM 管理 protocol 版本，protocol 继承 BOM</td><td>语法合法；在当前组织中容易产生版本与发布职责耦合</td></tr>
+              <tr><td>A 的 parent 是 B，B 的 parent 又是 A</td><td>真正的父模型循环</td></tr>
+              <tr><td>两个 BOM 相互 import，或父 POM P 导入 BOM B，而 B 又以 P 为 parent</td><td>可能形成模型解析循环，应避免</td></tr>
+              <tr><td>父 POM 在普通 dependencies 中依赖自己的子组件</td><td>子组件继承后可能形成自依赖或构建依赖环</td></tr>
+            </tbody></table></div>
+            <p>本方案禁止内部组件继承或导入对外 BOM，是为了<strong>切断“构建组件要先更新对外清单”的治理耦合</strong>。同时规定 <code>sparrow-parent</code> 不反向导入 <code>sparrow-bom</code>，保持模型关系单向。</p>
+            <span class="source">官方说明：仅写在 <code>dependencyManagement</code> / <code>pluginManagement</code> 中的条目不改变 Reactor 构建排序。<a href="https://maven.apache.org/guides/mini/guide-multiple-modules.html#reactor-sorting" target="_blank" rel="noopener noreferrer">Maven · Reactor Sorting</a></span>
+          </section>
+
+          <section id="comparison" class="subsection">
+            <h3><span class="step">STEP 04</span>Parent 与 import，到底带来了什么？</h3>
+            <p>选择 <code>parent</code>，表示接受一套可继承的工程配置；选择 <code>import</code>，表示只接入依赖版本管理。业务已有自己的父 POM 时，后者尤其有用。</p>
+            <div class="table-wrap wide"><table><thead><tr><th>比较项</th><th>BOM 作为 parent</th><th>BOM 通过 import 引入</th></tr></thead><tbody>
+              <tr><td>声明位置</td><td><code>&lt;parent&gt;</code></td><td><code>dependencyManagement</code>，<code>type=pom</code> + <code>scope=import</code></td></tr>
+              <tr><td>数量</td><td>一个直接 parent</td><td>可导入多个 BOM，需要明确冲突优先级</td></tr>
+              <tr><td>依赖版本管理</td><td>继承</td><td>导入有效的管理清单，包含 BOM 继承所得的管理条目</td></tr>
+              <tr><td>普通 properties</td><td>继承，可供子项目使用</td><td>不会成为使用方自己的属性</td></tr>
+              <tr><td>构建插件与 pluginManagement</td><td>按 Maven 继承规则获得</td><td>不导入</td></tr>
+              <tr><td>普通 dependencies</td><td>会继承，可能增加实际依赖</td><td>不导入</td></tr>
+              <tr><td>业务 groupId / version</td><td>未声明时可能继承，业务应明确填写自己的坐标</td><td>不受 BOM 影响</td></tr>
+              <tr><td>是否自动引入全部组件</td><td>dependencyManagement 不会自动添加依赖</td><td>同样不会，仍需按需声明 dependencies</td></tr>
+              <tr><td>典型使用方</td><td>接受公司完整构建规范的新业务项目</td><td>已有父 POM、只需公司组件版本组合的业务项目</td></tr>
+            </tbody></table></div>
+            <span class="source">依据：<a href="https://maven.apache.org/pom.html#Inheritance" target="_blank" rel="noopener noreferrer">Maven POM 继承</a>、<a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#importing-dependencies" target="_blank" rel="noopener noreferrer">Importing Dependencies</a>。Spring Boot 官方也明确：<a href="https://docs.spring.io/spring-boot/maven-plugin/using.html#using.without-a-parent" target="_blank" rel="noopener noreferrer">导入依赖 BOM 不会带入插件管理</a>。</span>
+            <div class="note"><strong>属性覆盖，不要混为一谈</strong><p>继承链上以属性管理的版本，可由子项目按规则覆盖。纯 import 不会导入 BOM 的属性，不能假定在业务 POM 写同名属性就能覆盖导入结果；需要覆盖时，显式声明本项目的 <code>dependencyManagement</code> 条目，并检查有效 POM。父层再 import 的第三方 BOM 也有这个边界。</p></div>
+            <div class="note cyan"><strong>配置了插件版本，不等于执行了插件</strong><p><code>pluginManagement</code> 提供插件版本与默认配置。Compiler、Surefire 等默认生命周期插件会采用相应管理配置；Enforcer 等额外检查，还需要声明插件并绑定执行。导入 Spring 依赖 BOM 后，应由 <code>sparrow-parent</code> 另行管理构建插件。</p></div>
+          </section>
+
+          <section id="adoption" class="subsection">
+            <h3><span class="step">STEP 05</span>业务项目选择接入方式</h3>
+            <p>对 <code>passport-sparrow</code> 这样的业务项目，平台提供一个入口、两种接法。切换下面的选项，查看各自保留的控制权。</p>
+            <div class="switcher" role="tablist" aria-label="业务接入方式"><button type="button" role="tab" id="route-parent-tab" aria-controls="route-parent" aria-selected="true" data-tab-group="route" data-target="route-parent">作为 parent · 推荐新业务</button><button type="button" role="tab" id="route-import-tab" aria-controls="route-import" aria-selected="false" tabindex="-1" data-tab-group="route" data-target="route-import">通过 import · 保留现有规范</button></div>
+            <div id="route-parent" role="tabpanel" aria-labelledby="route-parent-tab" class="panel route-panel">
+              <h4>继承公司 BOM，一次接入版本与规范</h4><p>业务 POM 的 parent 指向 <code>sparrow-bom</code>。由于 BOM 继承 <code>sparrow-parent</code>，业务沿继承链获得公共构建配置和版本管理。业务只需声明自身坐标与实际使用的依赖。</p><div class="route-tags"><span class="pill">获得组件版本</span><span class="pill">获得构建规范</span><span class="pill">无需部门级父 POM</span></div><div class="codebox"><div class="code-header"><span>业务接入 · parent 关键片段</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml">&lt;parent&gt;
+  &lt;groupId&gt;com.sparrowzoo&lt;/groupId&gt;
+  &lt;artifactId&gt;sparrow-bom&lt;/artifactId&gt;
+  &lt;version&gt;1.2.0&lt;/version&gt;
+  &lt;relativePath/&gt;
+&lt;/parent&gt;
+&lt;groupId&gt;com.example.passport&lt;/groupId&gt;
+&lt;artifactId&gt;passport-sparrow&lt;/artifactId&gt;
+&lt;version&gt;1.0.0&lt;/version&gt;</code></pre></div><p class="tradeoff">适合接受公司统一工程规范的业务。BOM 升级可能同时更新组件组合，以及它选择的 parent 基线，平台应说明这两类变化。</p>
+            </div>
+            <div id="route-import" role="tabpanel" aria-labelledby="route-import-tab" class="panel route-panel" hidden>
+              <h4>保留已有 parent，只接入依赖管理</h4><p>业务继续使用现有父 POM，在 <code>dependencyManagement</code> 中导入 <code>sparrow-bom</code>。BOM 不会替换业务的编译、测试或打包插件配置。</p><div class="route-tags"><span class="pill">获得组件版本</span><span class="pill">保留原有 parent</span><span class="pill">构建插件自行管理</span></div><div class="codebox"><div class="code-header"><span>业务接入 · import 关键片段</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml">&lt;dependencyManagement&gt;
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;com.sparrowzoo&lt;/groupId&gt;
+      &lt;artifactId&gt;sparrow-bom&lt;/artifactId&gt;
+      &lt;version&gt;1.2.0&lt;/version&gt;
+      &lt;type&gt;pom&lt;/type&gt;
+      &lt;scope&gt;import&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;</code></pre></div><p class="tradeoff">导入的是 BOM 的有效依赖管理，可能也包含其继承的 Spring 生态条目。与现有 parent / 其他 BOM 重叠时，应核对最终版本组合，而不是假定它只影响 Sparrow 坐标。</p>
+            </div>
+          </section>
+
+          <section id="multimodule" class="subsection">
+            <h3><span class="step">STEP 06</span>多模块业务，不必再造一层部门标准</h3>
+            <p><strong>多模块是代码组织方式，不意味着业务部门需要另行建设、发布和维护一套公共 parent 或 BOM。</strong>最直接的做法是：工程根 POM 只声明模块列表，每个业务子模块直接继承公司 <code>sparrow-bom</code>。</p>
+            <div class="panel diagram-code" role="img" aria-label="passport-sparrow 根只聚合，passport-api、passport-service、passport-web 分别直接继承公司 sparrow-bom">passport-sparrow / pom.xml     packaging = pom · 只聚合
+├── passport-api / pom.xml      parent = sparrow-bom
+├── passport-service / pom.xml  parent = sparrow-bom
+└── passport-web / pom.xml      parent = sparrow-bom
+
+共同使用公司版本基线，无需发布部门级 parent / bom。</div>
+            <div class="table-wrap"><table><thead><tr><th>组织方式</th><th>适合的需求</th><th>需要理解的边界</th></tr></thead><tbody>
+              <tr><td><strong>根只聚合，子模块直接继承公司 BOM</strong></td><td>尽量少一层继承；所有模块直接采用公司规范</td><td>根 POM 的 properties / dependencyManagement 不会自动传给子模块；BOM 版本、业务版本和兄弟模块版本需协调</td></tr>
+              <tr><td>根继承公司 BOM，子模块继承工程根</td><td>希望本工程只写一次 BOM 版本，并共享业务级配置</td><td>这个根 POM 技术上是 parent，但不是额外建设一套部门级公共 Parent/BOM</td></tr>
+            </tbody></table></div>
+            <p class="fine">两种方式都合法。若子模块以业务根作为 parent，并把子 JAR 发布给其他工程使用，该根 POM 也必须能从仓库解析。不能把“无需独立的部门级父配置产品”理解成“任何业务父 POM 都无需发布”。</p>
+          </section>
+
+          <section id="releases" class="subsection">
+            <h3><span class="step">STEP 07</span>让三种版本按各自节奏演进</h3>
+            <p>各组件拥有自己的版本；BOM 使用专门的组件版本属性来记录组合。不要把所有组件都绑定到一个 <code>sparrow_version</code>，也不要用 <code>${project.version}</code> 表达 BOM 中全部组件的版本。</p>
+            <div class="panel version-lab">
+              <h4>版本组合演示 <span class="pill" style="margin-left:8px">示意版本 · 非已发布清单</span></h4>
+              <div class="switcher" aria-label="选择发布场景"><button type="button" aria-pressed="true" data-release="component">仅发布新协议</button><button type="button" aria-pressed="false" data-release="bom">交付新版本组合</button><button type="button" aria-pressed="false" data-release="baseline">更新构建基线</button></div>
+              <div class="table-wrap"><table><thead><tr><th>工件</th><th>原版本</th><th>本次发布后</th><th>业务采用情况</th></tr></thead><tbody id="version-rows"><tr><td><code>sparrow-parent</code></td><td>1.0.0</td><td>1.0.0</td><td>保持原基线</td></tr><tr><td><code>sparrow-protocol</code></td><td>1.0.5</td><td class="changed">1.0.6</td><td>BOM 仍选 1.0.5</td></tr><tr><td><code>sparrow</code></td><td>1.0.7</td><td>1.0.7</td><td>无需跟发</td></tr><tr><td>认证组件组</td><td>1.1.2</td><td>1.1.2</td><td>无需跟发</td></tr><tr><td><code>sparrow-bom</code></td><td>1.2.0</td><td>1.2.0</td><td>业务保持原组合</td></tr></tbody></table></div>
+              <div id="version-result" class="version-result" aria-live="polite"><strong>组件可以先发布，BOM 不必立即跟发。</strong> 新 protocol 继续继承原 parent。需要向业务推荐这次变化时，再验证兼容性并更新 BOM。</div>
+            </div>
+            <div class="timeline" aria-label="版本交付流程"><div><b>01 / BUILD</b><span>构建、验证变化组件</span></div><div><b>02 / RELEASE</b><span>发布组件独立版本</span></div><div><b>03 / VERIFY</b><span>验证跨组件兼容组合</span></div><div><b>04 / DELIVER</b><span>发布 BOM，业务按需采用</span></div></div>
+            <div class="note"><strong>BOM 更新仍然有成本，但不再要求全套组件陪跑</strong><p>要让业务通过统一入口选到新 protocol，版本清单仍需更新。收益是稳定 parent 和无变化的组件不必重发。若协议发生不兼容变更，相关实现与调用方仍需协同升级；独立版本不能消除真实的接口耦合。</p></div>
+          </section>
+
+          <section id="examples" class="subsection">
+            <h3><span class="step">STEP 08</span>POM 示例：从平台到业务</h3>
+            <p>下面的完整 POM 用于说明职责和继承关系。<strong>公司组件版本均为示意，不代表已发布工件</strong>；Spring Boot 3.5.0、Java 18 沿用当前讨论基线，不构成版本升级建议。示例尚未替换工程中的任何 POM。</p>
+            <div id="pom-examples"><details class="panel example-group" id="example-aggregator"><summary>01 · 平台聚合根：只组织构建<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>sparrow-shell/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-shell<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;packaging&gt;</span>pom<span class="xml-tag">&lt;/packaging&gt;</span>
+  <span class="xml-tag">&lt;modules&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>sparrow-parent<span class="xml-tag">&lt;/module&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>sparrow-bom<span class="xml-tag">&lt;/module&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>sparrow-protocol<span class="xml-tag">&lt;/module&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>sparrow<span class="xml-tag">&lt;/module&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>sparrow-authenticator/authenticator-core<span class="xml-tag">&lt;/module&gt;</span>
+  <span class="xml-tag">&lt;/modules&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>示例只列讨论中的关键模块；实际迁移应保留所有需要聚合构建的现有模块。</li><li>聚合根不承担公共继承职责，内部组件明确继承 sparrow-parent；聚合根自身版本不会决定被聚合组件的版本。</li></ul></div></details>
+<details class="panel example-group" id="example-internalparent"><summary>02 · 稳定 Parent：开源生态与构建基线<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>sparrow-shell/sparrow-parent/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-parent<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;packaging&gt;</span>pom<span class="xml-tag">&lt;/packaging&gt;</span>
+  <span class="xml-tag">&lt;properties&gt;</span>
+    <span class="xml-tag">&lt;java.version&gt;</span>18<span class="xml-tag">&lt;/java.version&gt;</span>
+    <span class="xml-tag">&lt;maven.compiler.release&gt;</span>${java.version}<span class="xml-tag">&lt;/maven.compiler.release&gt;</span>
+    <span class="xml-tag">&lt;project.build.sourceEncoding&gt;</span>UTF-8<span class="xml-tag">&lt;/project.build.sourceEncoding&gt;</span>
+    <span class="xml-tag">&lt;spring-boot.version&gt;</span>3.5.0<span class="xml-tag">&lt;/spring-boot.version&gt;</span>
+  <span class="xml-tag">&lt;/properties&gt;</span>
+  <span class="xml-tag">&lt;dependencyManagement&gt;</span>
+    <span class="xml-tag">&lt;dependencies&gt;</span>
+      <span class="xml-tag">&lt;dependency&gt;</span>
+        <span class="xml-tag">&lt;groupId&gt;</span>org.springframework.boot<span class="xml-tag">&lt;/groupId&gt;</span>
+        <span class="xml-tag">&lt;artifactId&gt;</span>spring-boot-dependencies<span class="xml-tag">&lt;/artifactId&gt;</span>
+        <span class="xml-tag">&lt;version&gt;</span>${spring-boot.version}<span class="xml-tag">&lt;/version&gt;</span>
+        <span class="xml-tag">&lt;type&gt;</span>pom<span class="xml-tag">&lt;/type&gt;</span>
+        <span class="xml-tag">&lt;scope&gt;</span>import<span class="xml-tag">&lt;/scope&gt;</span>
+      <span class="xml-tag">&lt;/dependency&gt;</span>
+    <span class="xml-tag">&lt;/dependencies&gt;</span>
+  <span class="xml-tag">&lt;/dependencyManagement&gt;</span>
+  <span class="xml-tag">&lt;build&gt;</span>
+    <span class="xml-tag">&lt;pluginManagement&gt;</span>
+      <span class="xml-tag">&lt;plugins&gt;</span>
+        <span class="xml-tag">&lt;plugin&gt;</span>
+          <span class="xml-tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="xml-tag">&lt;/groupId&gt;</span>
+          <span class="xml-tag">&lt;artifactId&gt;</span>maven-compiler-plugin<span class="xml-tag">&lt;/artifactId&gt;</span>
+          <span class="xml-tag">&lt;version&gt;</span>3.13.0<span class="xml-tag">&lt;/version&gt;</span>
+        <span class="xml-tag">&lt;/plugin&gt;</span>
+        <span class="xml-tag">&lt;plugin&gt;</span>
+          <span class="xml-tag">&lt;groupId&gt;</span>org.apache.maven.plugins<span class="xml-tag">&lt;/groupId&gt;</span>
+          <span class="xml-tag">&lt;artifactId&gt;</span>maven-surefire-plugin<span class="xml-tag">&lt;/artifactId&gt;</span>
+          <span class="xml-tag">&lt;version&gt;</span>3.5.2<span class="xml-tag">&lt;/version&gt;</span>
+        <span class="xml-tag">&lt;/plugin&gt;</span>
+      <span class="xml-tag">&lt;/plugins&gt;</span>
+    <span class="xml-tag">&lt;/pluginManagement&gt;</span>
+  <span class="xml-tag">&lt;/build&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>架构示例，版本号不是版本升级或兼容性背书；JDK 18 沿用讨论中的现有基线，实际按平台验证结果选择。</li><li>导入 spring-boot-dependencies 只获得依赖版本管理，不等于继承 spring-boot-starter-parent，也不带入它的构建插件配置。</li><li>pluginManagement 提供插件版本与默认配置；默认生命周期已绑定的 compiler/surefire 会采用这些配置，其他未绑定插件需要显式声明或 execution。</li><li>未加入仓库私有发布、签名、固定相对路径规则，避免这些平台生产侧配置被业务直接继承。</li><li>不管理 Sparrow 自产组件的发布版本，也不导入 sparrow-bom。</li></ul></div></details>
+<details class="panel example-group" id="example-protocolproducer"><summary>03 · 协议组件：声明自身版本<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>sparrow-shell/sparrow-protocol/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-parent<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath&gt;</span>../sparrow-parent/pom.xml<span class="xml-tag">&lt;/relativePath&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-protocol<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.0.5<span class="xml-tag">&lt;/version&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>组件独立声明发布版本，父版本 1.0.0 保持稳定。</li><li>完整的最小 POM，用于说明版本边界；实际迁移须保留模块现有且必要的依赖、插件。</li></ul></div></details>
+<details class="panel example-group" id="example-coreproducer"><summary>04 · 核心组件：明确内部依赖版本<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>sparrow-shell/sparrow/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-parent<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath&gt;</span>../sparrow-parent/pom.xml<span class="xml-tag">&lt;/relativePath&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>sparrow<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.0.7<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;dependencies&gt;</span>
+    <span class="xml-tag">&lt;dependency&gt;</span>
+      <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+      <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-protocol<span class="xml-tag">&lt;/artifactId&gt;</span>
+      <span class="xml-tag">&lt;version&gt;</span>1.0.5<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;/dependency&gt;</span>
+  <span class="xml-tag">&lt;/dependencies&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>平台生产者显式声明实际使用的内部依赖版本；不反向导入对外发行清单 sparrow-bom。</li><li>这不是现有 sparrow 模块全部依赖的替换清单。</li></ul></div></details>
+<details class="panel example-group" id="example-authproducer"><summary>05 · 认证组件：独立于协议与核心发版<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>sparrow-shell/sparrow-authenticator/authenticator-core/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-parent<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath&gt;</span>../../sparrow-parent/pom.xml<span class="xml-tag">&lt;/relativePath&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>authenticator-core<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.1.2<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;dependencies&gt;</span>
+    <span class="xml-tag">&lt;dependency&gt;</span>
+      <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+      <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-protocol<span class="xml-tag">&lt;/artifactId&gt;</span>
+      <span class="xml-tag">&lt;version&gt;</span>1.0.5<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;/dependency&gt;</span>
+    <span class="xml-tag">&lt;dependency&gt;</span>
+      <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+      <span class="xml-tag">&lt;artifactId&gt;</span>sparrow<span class="xml-tag">&lt;/artifactId&gt;</span>
+      <span class="xml-tag">&lt;version&gt;</span>1.0.7<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;/dependency&gt;</span>
+  <span class="xml-tag">&lt;/dependencies&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>认证组件可按发布组统一使用 1.1.2，且独立于 core 与 protocol。</li><li>只展示组件关系，实际认证第三方依赖和运行时装配必须保留。</li></ul></div></details>
+<details class="panel example-group" id="example-consumerbom" open><summary>06 · 对外 BOM：parent 明确指向 sparrow-parent<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>sparrow-shell/sparrow-bom/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-parent<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath&gt;</span>../sparrow-parent/pom.xml<span class="xml-tag">&lt;/relativePath&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-bom<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.2.0<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;packaging&gt;</span>pom<span class="xml-tag">&lt;/packaging&gt;</span>
+  <span class="xml-tag">&lt;properties&gt;</span>
+    <span class="xml-tag">&lt;sparrow.protocol.version&gt;</span>1.0.5<span class="xml-tag">&lt;/sparrow.protocol.version&gt;</span>
+    <span class="xml-tag">&lt;sparrow.core.version&gt;</span>1.0.7<span class="xml-tag">&lt;/sparrow.core.version&gt;</span>
+    <span class="xml-tag">&lt;sparrow.authenticator.version&gt;</span>1.1.2<span class="xml-tag">&lt;/sparrow.authenticator.version&gt;</span>
+  <span class="xml-tag">&lt;/properties&gt;</span>
+  <span class="xml-tag">&lt;dependencyManagement&gt;</span>
+    <span class="xml-tag">&lt;dependencies&gt;</span>
+      <span class="xml-tag">&lt;dependency&gt;</span>
+        <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+        <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-protocol<span class="xml-tag">&lt;/artifactId&gt;</span>
+        <span class="xml-tag">&lt;version&gt;</span>${sparrow.protocol.version}<span class="xml-tag">&lt;/version&gt;</span>
+      <span class="xml-tag">&lt;/dependency&gt;</span>
+      <span class="xml-tag">&lt;dependency&gt;</span>
+        <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+        <span class="xml-tag">&lt;artifactId&gt;</span>sparrow<span class="xml-tag">&lt;/artifactId&gt;</span>
+        <span class="xml-tag">&lt;version&gt;</span>${sparrow.core.version}<span class="xml-tag">&lt;/version&gt;</span>
+      <span class="xml-tag">&lt;/dependency&gt;</span>
+      <span class="xml-tag">&lt;dependency&gt;</span>
+        <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+        <span class="xml-tag">&lt;artifactId&gt;</span>authenticator-core<span class="xml-tag">&lt;/artifactId&gt;</span>
+        <span class="xml-tag">&lt;version&gt;</span>${sparrow.authenticator.version}<span class="xml-tag">&lt;/version&gt;</span>
+      <span class="xml-tag">&lt;/dependency&gt;</span>
+      <span class="xml-tag">&lt;dependency&gt;</span>
+        <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+        <span class="xml-tag">&lt;artifactId&gt;</span>authenticator-monolithic-starter<span class="xml-tag">&lt;/artifactId&gt;</span>
+        <span class="xml-tag">&lt;version&gt;</span>${sparrow.authenticator.version}<span class="xml-tag">&lt;/version&gt;</span>
+      <span class="xml-tag">&lt;/dependency&gt;</span>
+    <span class="xml-tag">&lt;/dependencies&gt;</span>
+  <span class="xml-tag">&lt;/dependencyManagement&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>这是有意采用的双用途 POM：业务 parent 入口，同时支持标准 BOM import；它继承稳定的 sparrow-parent。</li><li>作为 parent 时可沿父链继承公共构建配置；作为 import 时只取得有效 dependencyManagement，包含父链继承得到的第三方依赖版本管理。</li><li>dependencyManagement 是版本规则，不会自动引入这些 JAR，也不要求这些 JAR 在发布该 POM 之前存在。</li><li>需要验证组件之间的兼容性后再发布这个组合；示例中的不同版本号只说明可独立版本化。</li><li>普通 dependencies 保持为空，避免所有业务消费者被强制引入整套框架。</li></ul></div></details>
+<details class="panel example-group" id="example-businessroot"><summary>07 · 业务根：采用公司基线并聚合模块<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>passport-sparrow/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-bom<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.2.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath/&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;groupId&gt;</span>com.example.passport<span class="xml-tag">&lt;/groupId&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>passport-sparrow<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;packaging&gt;</span>pom<span class="xml-tag">&lt;/packaging&gt;</span>
+  <span class="xml-tag">&lt;modules&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>passport-api<span class="xml-tag">&lt;/module&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>passport-service<span class="xml-tag">&lt;/module&gt;</span>
+    <span class="xml-tag">&lt;module&gt;</span>passport-web<span class="xml-tag">&lt;/module&gt;</span>
+  <span class="xml-tag">&lt;/modules&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>relativePath 为空明确通过仓库解析公司级父 POM。</li><li>业务显式声明自己的 groupId/version，防止继承平台坐标或把业务版本绑定到 BOM 版本。</li><li>多模块只要求根 POM 聚合 modules，不要求部门额外维护和发布一套通用 parent 或 BOM。</li><li>子模块是否继承根 POM由项目决定；仅列入 modules 并不会自动继承根 POM。</li><li>以下 direct-bom 与 localroot 示例是单个子模块的替代写法，可按一致的项目规范选择。</li></ul></div></details>
+<details class="panel example-group" id="example-businesschild-direct-bom"><summary>08 · 业务子模块：直接继承公司 BOM<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>passport-sparrow/passport-api/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-bom<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.2.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath/&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;groupId&gt;</span>com.example.passport<span class="xml-tag">&lt;/groupId&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>passport-api<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;dependencies&gt;</span>
+    <span class="xml-tag">&lt;dependency&gt;</span>
+      <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+      <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-protocol<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;/dependency&gt;</span>
+  <span class="xml-tag">&lt;/dependencies&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>各子模块直接继承公司 BOM，根 POM 仅负责聚合也是合法结构。</li><li>每个子模块都要显式声明业务 groupId/version，也需分别维护父 BOM 版本。</li><li>如果 passport-web 依赖 passport-api，这种结构仍须明确该业务内部依赖的版本；聚合本身不提供版本管理。</li></ul></div></details>
+<details class="panel example-group" id="example-businesschild-localroot"><summary>09 · 可选写法：子模块继承本工程根 POM<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>passport-sparrow/passport-api/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>com.example.passport<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>passport-sparrow<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath&gt;</span>../pom.xml<span class="xml-tag">&lt;/relativePath&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>passport-api<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;dependencies&gt;</span>
+    <span class="xml-tag">&lt;dependency&gt;</span>
+      <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+      <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-protocol<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;/dependency&gt;</span>
+  <span class="xml-tag">&lt;/dependencies&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>可选常见写法：业务根 POM 同时聚合并作为本项目子模块的父 POM；由根集中选择公司 BOM 版本。</li><li>这是项目已有根 POM 的用途，不是要求业务部门再建一个通用 parent 产品或 BOM 产品。</li><li>子模块继承的是根 POM 的业务版本 1.0.0，不是公司 BOM 的 1.2.0。</li></ul></div></details>
+<details class="panel example-group" id="example-business-import"><summary>10 · 已有 parent：通过 import 接入<span>POM / XML</span></summary><div class="example-content"><div class="codebox"><div class="code-header"><span>passport-sparrow-import/pom.xml</span><button type="button" class="copy">复制</button></div><pre><code class="language-xml"><span class="xml-tag">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="xml-tag">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span>
+  <span class="xml-tag">&lt;modelVersion&gt;</span>4.0.0<span class="xml-tag">&lt;/modelVersion&gt;</span>
+  <span class="xml-tag">&lt;parent&gt;</span>
+    <span class="xml-tag">&lt;groupId&gt;</span>org.springframework.boot<span class="xml-tag">&lt;/groupId&gt;</span>
+    <span class="xml-tag">&lt;artifactId&gt;</span>spring-boot-starter-parent<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;version&gt;</span>3.5.0<span class="xml-tag">&lt;/version&gt;</span>
+    <span class="xml-tag">&lt;relativePath/&gt;</span>
+  <span class="xml-tag">&lt;/parent&gt;</span>
+  <span class="xml-tag">&lt;groupId&gt;</span>com.example.passport<span class="xml-tag">&lt;/groupId&gt;</span>
+  <span class="xml-tag">&lt;artifactId&gt;</span>passport-sparrow<span class="xml-tag">&lt;/artifactId&gt;</span>
+  <span class="xml-tag">&lt;version&gt;</span>1.0.0<span class="xml-tag">&lt;/version&gt;</span>
+  <span class="xml-tag">&lt;properties&gt;</span>
+    <span class="xml-tag">&lt;java.version&gt;</span>18<span class="xml-tag">&lt;/java.version&gt;</span>
+  <span class="xml-tag">&lt;/properties&gt;</span>
+  <span class="xml-tag">&lt;dependencyManagement&gt;</span>
+    <span class="xml-tag">&lt;dependencies&gt;</span>
+      <span class="xml-tag">&lt;dependency&gt;</span>
+        <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+        <span class="xml-tag">&lt;artifactId&gt;</span>sparrow-bom<span class="xml-tag">&lt;/artifactId&gt;</span>
+        <span class="xml-tag">&lt;version&gt;</span>1.2.0<span class="xml-tag">&lt;/version&gt;</span>
+        <span class="xml-tag">&lt;type&gt;</span>pom<span class="xml-tag">&lt;/type&gt;</span>
+        <span class="xml-tag">&lt;scope&gt;</span>import<span class="xml-tag">&lt;/scope&gt;</span>
+      <span class="xml-tag">&lt;/dependency&gt;</span>
+    <span class="xml-tag">&lt;/dependencies&gt;</span>
+  <span class="xml-tag">&lt;/dependencyManagement&gt;</span>
+  <span class="xml-tag">&lt;dependencies&gt;</span>
+    <span class="xml-tag">&lt;dependency&gt;</span>
+      <span class="xml-tag">&lt;groupId&gt;</span>com.sparrowzoo<span class="xml-tag">&lt;/groupId&gt;</span>
+      <span class="xml-tag">&lt;artifactId&gt;</span>authenticator-monolithic-starter<span class="xml-tag">&lt;/artifactId&gt;</span>
+    <span class="xml-tag">&lt;/dependency&gt;</span>
+  <span class="xml-tag">&lt;/dependencies&gt;</span>
+<span class="xml-tag">&lt;/project&gt;</span></code></pre></div><ul class="example-notes"><li>已有必须保留的父 POM 时，用 import 获取平台组件版本；一个项目只能有一个直接 parent。</li><li>这里 java.version 是业务自己声明的属性，不是从 sparrow-bom import 过来的。</li><li>此例的构建约定来自 Spring Boot parent；sparrow-parent 的插件配置和普通属性不会通过 BOM import 导入。</li><li>父 POM 或其他 BOM 与 Sparrow 管理相同坐标时应检查 effective-pom 与 dependency:tree；示例刻意让 Boot 版本一致，不能据此断言不同版本可兼容。</li></ul></div></details></div>
+            <div class="note cyan"><strong>生产构建还应明确启用哪些检查</strong><p>把测试、依赖收敛等质量检查真正绑定到生命周期；不要默认跳过测试。内部库只生成普通 JAR，Spring Boot 的 <code>repackage</code> 由业务可执行模块按需启用。签名、仓库部署等平台发布动作宜放入显式发布配置，避免业务继承后被意外执行。</p></div>
+          </section>
+
+          <section id="benefits" class="subsection">
+            <h3><span class="step">STEP 09</span>这套分工带来的收益</h3>
+            <div class="benefits">
+              <div class="panel benefit lift"><div class="number">01 / RELEASE</div><h4>发布范围与变化范围一致</h4><p>协议、核心、认证按实际变化发布，BOM 独立交付组合，减少无变化工件的重复发版。</p></div>
+              <div class="panel benefit lift"><div class="number">02 / OWNERSHIP</div><h4>平台与业务各自承担清晰职责</h4><p>平台组验证基线和组件兼容性，业务部门选定组合并实现业务，不必重复维护公共版本标准。</p></div>
+              <div class="panel benefit lift"><div class="number">03 / ADOPTION</div><h4>统一接入，也保留迁移空间</h4><p>新业务继承公司 BOM；已有工程可以先 import 接入，保留现有父配置和构建流程。</p></div>
+              <div class="panel benefit lift"><div class="number">04 / TRACEABILITY</div><h4>组合可追溯，升级可验证</h4><p>固定的组件坐标让每次组合变化可比较。业务可以明确选择旧 BOM 或新 BOM，并验证自己的兼容性。</p></div>
+            </div>
+            <ul class="rule-list"><li><span><strong>稳定基线：</strong>parent 管第三方生态和构建规范，不反向导入自家的业务 BOM。</span></li><li><span><strong>版本独立：</strong>组件声明自身版本；BOM 通过专用属性管理组件或组件组，不绑定业务自身版本。</span></li><li><span><strong>按需依赖：</strong>普通 dependencies 只声明真正使用的库，避免公共父 POM 强制引入一整套业务组件。</span></li><li><span><strong>先看最终结果：</strong>升级或覆盖版本后，检查 <code>mvn help:effective-pom</code> 与 <code>mvn dependency:tree</code>，再运行相应测试。</span></li></ul>
+          </section>
+
+          <section id="summary" class="subsection">
+            <div class="closing"><p class="eyebrow" style="margin-bottom:13px">DESIGN DECISION</p><h3 class="gradient-text">内部面向基线，产物交付下游。</h3><p><strong>sparrow-bom 与内部 A/B/C 共同继承 sparrow-parent；下游业务再继承或导入 sparrow-bom。</strong>同一个组织不把自己的对外组件清单作为组件生产的父配置，减少“改清单、改组件、再改清单”的更新联动。</p><p>多模块工程只需要合适的聚合与继承组织，不需要因此再建立一套部门级 Parent/BOM。版本组合仍要维护，兼容性仍要验证；通过明确职责，让每次变化只触及真正需要变化的部分。</p></div>
+          </section>
+        </section>
+
+        <section id="sources" class="section" style="margin-bottom:0">
+          <div class="section-heading"><span class="section-number">04 /</span><h2>官方依据与阅读</h2></div>
+          <p class="fine">下列文档支持 Maven 机制的说明；“平台生产者继承 parent、业务使用公司 BOM”的分工，是结合本项目背景给出的架构建议。文档核对日期：2026-09-22。</p>
+          <ol class="sources">
+            <li><span class="ref-number">[01]</span><div><a href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html" target="_blank" rel="noopener noreferrer">Maven · Introduction to the Dependency Mechanism ↗</a><p>dependencyManagement、import、BOM，以及管理依赖和实际引入依赖的区别。</p></div></li>
+            <li><span class="ref-number">[02]</span><div><a href="https://maven.apache.org/pom.html" target="_blank" rel="noopener noreferrer">Maven · POM Reference ↗</a><p>父 POM 继承、聚合、项目坐标、插件配置与 pluginManagement。</p></div></li>
+            <li><span class="ref-number">[03]</span><div><a href="https://maven.apache.org/guides/mini/guide-multiple-modules.html" target="_blank" rel="noopener noreferrer">Maven · Guide to Working with Multiple Modules ↗</a><p>Reactor 与多模块构建排序；版本管理声明不等于实际构建依赖。</p></div></li>
+            <li><span class="ref-number">[04]</span><div><a href="https://docs.spring.io/spring-boot/maven-plugin/using.html" target="_blank" rel="noopener noreferrer">Spring Boot · Using the Maven Plugin ↗</a><p>继承 parent 与导入 dependencies BOM 的差异，以及版本覆盖的边界。</p></div></li>
+            <li><span class="ref-number">[05]</span><div><a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html" target="_blank" rel="noopener noreferrer">Maven · Introduction to the Build Lifecycle ↗</a><p>packaging 与生命周期的默认插件目标绑定。</p></div></li>
+          </ol>
+        </section>
+      </main>
+      <aside class="toc" aria-label="文章目录"><p class="eyebrow">ON THIS PAGE</p><a href="#conclusion" class="active">01　结论先行</a><a href="#background">02　问题背景</a><a class="sub" href="#projects">四个关联开源项目</a><a href="#details">03　详细内容</a><a class="sub" href="#architecture">职责与整体架构</a><a class="sub" href="#org-boundary">组织边界与 C → B → A</a><a class="sub" href="#cycles">循环与发布耦合</a><a class="sub" href="#comparison">Parent / Import 对比</a><a class="sub" href="#adoption">业务接入方式</a><a class="sub" href="#multimodule">多模块项目组织</a><a class="sub" href="#releases">独立发布与版本组合</a><a class="sub" href="#examples">完整 POM 示例</a><a class="sub" href="#benefits">收益与最佳实践</a><a class="sub" href="#summary">归纳与结论</a><a href="#sources">04　官方依据</a><div class="toc-bottom"><p>面向平台组与业务开发者<br>基于 Sparrow 架构讨论整理</p><a href="#top" style="margin-top:9px">返回顶部 ↑</a></div></aside>
+    </div>
+  </div>
+  <footer class="footer"><div class="wrap footer-inner"><div><strong>sparrow</strong> / 平台工程手记 · Maven 架构设计</div><div>稳定构建，独立演进。　<a href="#top">返回文章顶部 ↑</a></div></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script>
+    (() => {
+      const toast = document.getElementById('toast'); let toastTimer;
+      function announce(message) { clearTimeout(toastTimer); toast.textContent = message; toast.hidden = false; toastTimer = setTimeout(() => { toast.hidden = true; }, 2100); }
+      document.querySelectorAll('.copy').forEach(button => button.addEventListener('click', async () => {
+        const content = button.closest('.codebox').querySelector('code').textContent;
+        try {
+          if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(content);
+          else { const input = document.createElement('textarea'); input.value = content; input.style.position = 'fixed'; input.style.opacity = '0'; document.body.appendChild(input); input.select(); const ok = document.execCommand('copy'); input.remove(); if (!ok) throw new Error('Copy unavailable'); }
+          button.textContent = '已复制'; announce('代码已复制'); setTimeout(() => { button.textContent = '复制'; }, 1800);
+        } catch { announce('请选中代码后复制'); }
+      }));
+      document.querySelectorAll('[data-tab-group]').forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll('[data-tab-group="' + button.dataset.tabGroup + '"]').forEach(tab => { const active = tab === button; tab.setAttribute('aria-selected', String(active)); tab.tabIndex = active ? 0 : -1; document.getElementById(tab.dataset.target).hidden = !active; });
+        });
+        button.addEventListener('keydown', event => {
+          if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
+          event.preventDefault(); const tabs = [...document.querySelectorAll('[data-tab-group="' + button.dataset.tabGroup + '"]')]; let index = tabs.indexOf(button);
+          if (event.key === 'Home') index = 0; else if (event.key === 'End') index = tabs.length - 1; else index = (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+          tabs[index].click(); tabs[index].focus();
+        });
+      });
+      const releaseScenarios = {
+        component: { rows: [['sparrow-parent','1.0.0','1.0.0','保持原基线'],['sparrow-protocol','1.0.5','1.0.6','BOM 仍选 1.0.5'],['sparrow','1.0.7','1.0.7','无需跟发'],['认证组件组','1.1.2','1.1.2','无需跟发'],['sparrow-bom','1.2.0','1.2.0','业务保持原组合']], title: '组件可以先发布，BOM 不必立即跟发。', text: '新 protocol 继续继承原 parent。需要向业务推荐这次变化时，再验证兼容性并更新 BOM。' },
+        bom: { rows: [['sparrow-parent','1.0.0','1.0.0','保持原基线'],['sparrow-protocol','1.0.5','1.0.6','选入新 BOM，已验证兼容'],['sparrow','1.0.7','1.0.7','复用已有工件'],['认证组件组','1.1.2','1.1.2','复用已有工件'],['sparrow-bom','1.2.0','1.2.1','业务可选择采用新组合']], title: '更新版本清单，不等于重发所有组件。', text: '示例假定 protocol 变更保持兼容，且已完成组合验证。BOM 1.2.1 只更新协议版本，其他组件沿用现有工件。' },
+        baseline: { rows: [['sparrow-parent','1.0.0','1.1.0','发布新基线，已有产物不变'],['sparrow-protocol','1.0.5','1.0.5','仍引用旧 parent'],['sparrow','1.0.7','1.0.7','按计划验证、迁移'],['认证组件组','1.1.2','1.1.2','按计划验证、迁移'],['sparrow-bom','1.2.0','1.2.0','仍继承旧 parent']], title: '新 parent 不会改写已经发布的组件。', text: '此处只发布构建基线。组件或业务 BOM 若要采用新 parent，需要修改各自 POM 并发布新版本；迁移可以分批进行。' }
+      };
+      document.querySelectorAll('[data-release]').forEach(button => button.addEventListener('click', () => {
+        document.querySelectorAll('[data-release]').forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        const scenario = releaseScenarios[button.dataset.release]; const tbody = document.getElementById('version-rows'); tbody.replaceChildren();
+        scenario.rows.forEach(row => { const tr = document.createElement('tr'); row.forEach((value,index) => { const td = document.createElement('td'); td.textContent = value; if (index === 2 && row[1] !== row[2]) td.className = 'changed'; tr.appendChild(td); }); tbody.appendChild(tr); });
+        const result = document.getElementById('version-result'); result.replaceChildren(); const title = document.createElement('strong'); title.textContent = scenario.title; result.append(title, ' ' + scenario.text);
+      }));
+      const progress = document.getElementById('reading-progress'); const tocLinks = [...document.querySelectorAll('.toc>a')]; const sections = tocLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean); let scheduled = false;
+      function onScroll() { if (scheduled) return; scheduled = true; requestAnimationFrame(() => { const maximum = document.documentElement.scrollHeight - window.innerHeight; progress.style.width = (maximum > 0 ? Math.min(100, Math.max(0, window.scrollY / maximum * 100)) : 0) + '%'; let current = sections[0]; sections.forEach(section => { if (section.getBoundingClientRect().top <= 145) current = section; }); tocLinks.forEach(link => { const active = link.getAttribute('href') === '#' + current.id; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current','location'); else link.removeAttribute('aria-current'); }); scheduled = false; }); }
+      window.addEventListener('scroll', onScroll, {passive:true}); window.addEventListener('resize', onScroll); document.querySelectorAll('details').forEach(detail => detail.addEventListener('toggle',onScroll)); onScroll();
+    })();
+  </script>
+</body>
+</html>

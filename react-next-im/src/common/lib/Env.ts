@@ -6,7 +6,7 @@ const TOKEN_STORAGE = process.env.NEXT_PUBLIC_TOKEN_STORAGE;
 
 const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY as string;
 
-const NEXT_ASSET_PREFIX = process.env.NEXT_PUBLIC_ASSET_PREFIX;
+const NEXT_ASSET_PREFIX = process.env.NEXT_PUBLIC_ASSET_PREFIX || "";
 const STORAGE_PROXY = process.env.NEXT_PUBLIC_STORAGE_PROXY;
 const CAPTCHA_URL = process.env.NEXT_PUBLIC_CAPTCHA_URL;
 
@@ -20,6 +20,9 @@ const VISITOR_AVATAR_URL = process.env.NEXT_PUBLIC_VISITOR_AVATAR_URL;
 const WWW_ROOT = process.env.NEXT_PUBLIC_WWW_ROOT;
 const PASSPORT_ROOT = process.env.NEXT_PUBLIC_PASSPORT_ROOT;
 const ADMIN_ROOT = process.env.NEXT_PUBLIC_ADMIN_ROOT;
+const IM_ROOT = process.env.NEXT_PUBLIC_IM_ROOT;
+const CODER_ROOT = ADMIN_ROOT;
+
 
 const SESSION_CATEGORY_GROUP = process.env.NEXT_PUBLIC_SESSION_CATEGORY_GROUP
     ? JSON.parse(process.env.NEXT_PUBLIC_SESSION_CATEGORY_GROUP)
@@ -30,12 +33,12 @@ const SESSION_CATEGORY_NAME_MAPPING = process.env
     ? JSON.parse(process.env.NEXT_PUBLIC_SESSION_CATEGORY_NAME_MAPPING as string)
     : "";
 
-function allowOrigin(origin: string) {
+export function allowOrigin(origin: string) {
     const NEXT_PUBLIC_ALLOW_ORIGINS = process.env.NEXT_PUBLIC_ALLOW_ORIGINS;
     if (NEXT_PUBLIC_ALLOW_ORIGINS) {
-        return NEXT_PUBLIC_ALLOW_ORIGINS.split(",").includes(origin);
+        return NEXT_PUBLIC_ALLOW_ORIGINS.split(",").map((value) => value.trim()).includes(origin);
     }
-    return true;
+    return false;
 }
 
 const WEBSOCKET = process.env.NEXT_PUBLIC_WEBSOCKET;
@@ -44,7 +47,8 @@ export {
     WWW_ROOT,
     PASSPORT_ROOT,
     ADMIN_ROOT,
-    allowOrigin,
+    IM_ROOT,
+    CODER_ROOT,
     STORAGE_PROXY,
     API_BASIC_URL,
     TOKEN_KEY,

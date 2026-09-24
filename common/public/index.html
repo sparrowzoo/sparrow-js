@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>开发文档中心 · 麻雀窝 Sparrow Zoo</title>
+    <meta name="description" content="麻雀窝 Sparrow Zoo 开发文档索引：springdoc-openapi 集成、OpenAPI 分组策略、Thymeleaf 配置踩坑、Maven 依赖调试断点错位、Sparrow Parent 与 BOM 架构设计"/>
+    <style>
+        :root {
+            --bg: #07070d;
+            --bg-soft: #0c0c16;
+            --panel: rgba(255, 255, 255, 0.04);
+            --panel-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --text: #f4f4f7;
+            --text-dim: #9a9ab0;
+            --text-faint: #64647c;
+            --accent-1: #6d5cff;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --danger: #f43f5e;
+            --ok: #34d399;
+            --warn: #fbbf24;
+            --radius: 16px;
+            --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .ambient {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 12% -5%, rgba(109, 92, 255, 0.16), transparent 60%),
+                radial-gradient(950px 480px at 92% 0%, rgba(34, 211, 238, 0.11), transparent 55%),
+                radial-gradient(900px 650px at 50% 115%, rgba(168, 85, 247, 0.12), transparent 60%);
+        }
+
+        .grid-noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.35;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        /* ---------- 顶部导航 ---------- */
+        .topnav {
+            position: sticky; top: 0; z-index: 10;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 62px;
+            background: rgba(7, 7, 13, 0.72);
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
+        }
+        .brand .logo {
+            width: 30px; height: 30px; border-radius: 9px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
+            font-size: 15px; color: #fff;
+        }
+        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13.5px; padding: 7px 14px; border-radius: 9px;
+            transition: color .2s, background .2s;
+        }
+        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
+        .nav-links a.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
+        }
+        .nav-links a.primary:hover { filter: brightness(1.1); }
+
+        /* ---------- Banner ---------- */
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 96px 24px 72px; text-align: center;
+        }
+        .hero .tag {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 12.5px; letter-spacing: 0.1em; color: var(--text-dim);
+            padding: 7px 18px; border-radius: 100px;
+            background: var(--panel); border: 1px solid var(--border);
+            margin-bottom: 28px;
+        }
+        .hero .tag .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 0 12px rgba(109, 92, 255, 0.8);
+        }
+        .hero h1 {
+            font-size: clamp(34px, 6vw, 58px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.14; margin-bottom: 22px;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(120deg, #c4b5fd 0%, #7dd3fc 50%, #f0abfc 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .subtitle {
+            color: var(--text-dim); font-size: 16px; max-width: 620px;
+            margin: 0 auto 36px;
+        }
+        .hero .stats {
+            display: flex; justify-content: center; gap: 42px; flex-wrap: wrap;
+        }
+        .hero .stat { text-align: center; }
+        .hero .stat .num {
+            font-family: var(--mono); font-size: 26px; font-weight: 700;
+            background: linear-gradient(120deg, #c4b5fd, #7dd3fc);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .stat .lbl { font-size: 12px; color: var(--text-faint); letter-spacing: 0.06em; margin-top: 2px; }
+
+        /* ---------- 文档卡片 ---------- */
+        .docs {
+            max-width: 1080px; margin: 0 auto; padding: 8px 24px 100px;
+        }
+        .section-head { margin-bottom: 28px; }
+        .section-head h2 {
+            font-size: 20px; font-weight: 700; display: flex; align-items: center; gap: 10px;
+        }
+        .section-head h2::before {
+            content: ""; width: 4px; height: 20px; border-radius: 2px;
+            background: linear-gradient(180deg, var(--accent-1), var(--accent-2));
+        }
+        .section-head p { color: var(--text-faint); font-size: 13.5px; margin-top: 6px; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+
+        .card {
+            position: relative; display: flex; flex-direction: column;
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 28px 26px 24px;
+            text-decoration: none; color: inherit;
+            transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+            overflow: hidden;
+        }
+        .card::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+            opacity: 0; transition: opacity .22s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: var(--border-strong);
+            box-shadow: 0 18px 46px rgba(0, 0, 0, 0.45);
+        }
+        .card:hover::before { opacity: 1; }
+
+        .card .top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
+        .card .no {
+            font-family: var(--mono); font-size: 12px; color: var(--accent-2);
+            background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.22);
+            padding: 3px 10px; border-radius: 8px;
+        }
+        .card .cat {
+            font-size: 11px; letter-spacing: 0.05em; color: var(--text-dim);
+            background: var(--panel-strong); border: 1px solid var(--border);
+            padding: 3px 11px; border-radius: 100px;
+        }
+        .card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; line-height: 1.35; }
+        .card p.desc { color: var(--text-dim); font-size: 14px; flex: 1; }
+        .card .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+        .card .tags span {
+            font-size: 11.5px; color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+            padding: 2px 9px; border-radius: 6px;
+        }
+        .card .go {
+            display: inline-flex; align-items: center; gap: 6px;
+            margin-top: 20px; font-size: 13.5px; font-weight: 600; color: #fff;
+        }
+        .card .go .arr { transition: transform .2s ease; color: var(--accent-2); }
+        .card:hover .go .arr { transform: translateX(4px); }
+
+        footer {
+            text-align: center; padding: 40px 24px 56px; color: var(--text-faint); font-size: 12.5px;
+            border-top: 1px solid var(--border);
+        }
+        footer .sep { margin: 0 8px; opacity: .5; }
+
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; }
+            .brand .zh { display: none; }
+            .hero { padding: 64px 20px 56px; }
+            .hero .stats { gap: 26px; }
+            .docs { padding: 8px 20px 80px; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="grid-noise"></div>
+
+<nav class="topnav">
+    <a class="brand" href="/index.html">
+        <span class="logo">雀</span>
+        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="/index.html">首页</a>
+        <a href="#docs">文档</a>
+        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="tag"><span class="dot"></span>SPARROW ZOO · 开发文档中心</div>
+    <h1>麻雀窝 <span class="gradient">开发文档</span></h1>
+    <p class="subtitle">
+        汇集 Sparrow Zoo 项目在接入 springdoc-openapi、接口文档分组、
+        Thymeleaf 模板引擎、Maven 依赖调试，以及 Parent/BOM 架构设计过程中沉淀的技术说明与踩坑记录。
+    </p>
+    <div class="stats">
+        <div class="stat"><div class="num">08</div><div class="lbl">文档篇目</div></div>
+        <div class="stat"><div class="num">06</div><div class="lbl">技术主题</div></div>
+        <div class="stat"><div class="num">2026</div><div class="lbl">持续更新</div></div>
+    </div>
+</header>
+
+<main class="docs" id="docs">
+    <div class="section-head">
+        <h2>文档索引</h2>
+        <p>点击卡片进入对应说明文档，返回请使用顶部导航。</p>
+    </div>
+
+    <div class="grid">
+        <a class="card" href="open-api.html">
+            <div class="top">
+                <span class="no">01</span>
+                <span class="cat">接口文档</span>
+            </div>
+            <h3>springdoc-openapi 集成说明</h3>
+            <p class="desc">
+                辨析 <code>webmvc-ui</code> 与 <code>webflux-ui</code> 的本质区别，
+                从阻塞 Servlet 与非阻塞 Netty 两种并发模型出发，给出本项目正确的依赖与配置方案。
+            </p>
+            <div class="tags">
+                <span>springdoc</span><span>webmvc vs webflux</span><span>配置指引</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+
+        <a class="card" href="open-api-group.html">
+            <div class="top">
+                <span class="no">02</span>
+                <span class="cat">接口文档</span>
+            </div>
+            <h3>OpenAPI 分组策略说明</h3>
+            <p class="desc">
+                记录多 starter 共存场景下 Swagger UI 接口文档的冲突根因与分组方案，
+                覆盖「如何新增一个分组」的通用做法与踩坑清单。
+            </p>
+            <div class="tags">
+                <span>GroupedOpenApi</span><span>多 starter 共存</span><span>分组隔离</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+
+        <a class="card" href="thymeleaf.html">
+            <div class="top">
+                <span class="no">03</span>
+                <span class="cat">配置踩坑</span>
+            </div>
+            <h3>Thymeleaf prefix 尾斜杠踩坑</h3>
+            <p class="desc">
+                视图解析「找不到资源」报错的根因：<code>spring.thymeleaf.prefix</code>
+                带尾斜杠与视图名前导斜杠叠加出双斜杠路径，附正确配置与检查清单。
+            </p>
+            <div class="tags">
+                <span>Thymeleaf</span><span>模板引擎</span><span>路径解析</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+
+        <a class="card" href="maven-source-debug.html">
+            <div class="top">
+                <span class="no">04</span>
+                <span class="cat">调试踩坑</span>
+            </div>
+            <h3>Maven 依赖调试：断点行号错位</h3>
+            <p class="desc">
+                依赖 jar 找不到源代码，<code>class</code> 文件与源文件代码行对不齐导致
+                debug 断点误判的根因，附 <code>maven-source-plugin</code> 与调试信息配置方案。
+            </p>
+            <div class="tags">
+                <span>Maven</span><span>sources.jar</span><span>LineNumberTable</span><span>断点调试</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+
+        <a class="card" href="captcha.html">
+            <div class="top">
+                <span class="no">05</span>
+                <span class="cat">前端组件</span>
+            </div>
+            <h3>useCaptcha 验证码 Hook 源码解析</h3>
+            <p class="desc">
+                拆解验证码自定义 Hook 的「两阶段加载」设计：先以 <code>session=true</code> 预热会话、
+                再设置 <code>img.src</code> 加载图片，附事件监听累积、无限轮询等隐患清单。
+            </p>
+            <div class="tags">
+                <span>React Hook</span><span>验证码</span><span>两阶段加载</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+
+        <a class="card" href="netty-oom.html">
+            <div class="top">
+                <span class="no">06</span>
+                <span class="cat">Netty 踩坑</span>
+            </div>
+            <h3>Netty 入站消息未释放导致 OOM</h3>
+            <p class="desc">
+                自定义 handler 继承 <code>ChannelInboundHandlerAdapter</code> 却未 <code>release</code> 入站消息，
+                引用计数不归零、直接内存泄漏直至 OOM，并拖垮客户端心跳、造成 IM 消息异常，附修复方案。
+            </p>
+            <div class="tags">
+                <span>Netty</span><span>引用计数</span><span>内存泄漏</span><span>心跳</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+
+        <a class="card" href="netty-memory-bug.html">
+            <div class="top">
+                <span class="no">07</span>
+                <span class="cat">Netty 内存</span>
+            </div>
+            <h3>Netty 内存共享与释放机制</h3>
+            <p class="desc">
+                结合 <code>WebSocketFrameHandler</code> 案例，梳理引用计数、自动释放点、<code>retainedDuplicate</code>
+                零拷贝共享与 <code>newFrame</code> 深拷贝的区别，定位「分配后未写也未释放」的直接内存泄漏。
+            </p>
+            <div class="tags">
+                <span>Netty</span><span>引用计数</span><span>零拷贝</span><span>ResourceLeakDetector</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+
+        <a class="card" href="architecture/sparrow-parent-bom.html">
+            <div class="top">
+                <span class="no">08</span>
+                <span class="cat">架构设计</span>
+            </div>
+            <h3>Sparrow Parent 与 BOM：从内部构建到业务接入</h3>
+            <p class="desc">
+                以 <code>sparrow-parent</code> 统一构建基线、<code>sparrow-bom</code> 交付组件版本组合，
+                梳理内部组件独立发布、业务通过 <code>parent</code> 继承或 <code>import</code> 导入 BOM 的方案，附多模块 POM 示例。
+            </p>
+            <div class="tags">
+                <span>Maven 架构</span><span>Parent 与 BOM</span><span>多模块接入</span>
+            </div>
+            <span class="go">阅读文档 <span class="arr">→</span></span>
+        </a>
+    </div>
+</main>
+
+<footer>
+    麻雀窝 Sparrow Zoo<span class="sep">·</span>开发文档中心<span class="sep">·</span>Powered by Sparrow OS
+</footer>
+</body>
+</html>

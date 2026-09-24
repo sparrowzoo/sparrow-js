@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Thymeleaf 配置踩坑：prefix 不能带尾斜杠</title>
+    <style>
+        :root {
+            --bg: #07070d;
+            --bg-soft: #0c0c16;
+            --panel: rgba(255, 255, 255, 0.04);
+            --panel-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --text: #f4f4f7;
+            --text-dim: #9a9ab0;
+            --text-faint: #64647c;
+            --accent-1: #6d5cff;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --ok: #34d399;
+            --warn: #fbbf24;
+            --danger: #f43f5e;
+            --radius: 16px;
+            --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+                "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        a { color: inherit; }
+
+        .ambient {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 12% -5%, rgba(109, 92, 255, 0.16), transparent 60%),
+                radial-gradient(950px 480px at 92% 0%, rgba(34, 211, 238, 0.11), transparent 55%),
+                radial-gradient(900px 650px at 50% 115%, rgba(168, 85, 247, 0.12), transparent 60%);
+        }
+        .grid-noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.4;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        .topnav {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 64px;
+            background: rgba(7, 7, 13, 0.72);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
+        }
+        .brand .logo {
+            width: 32px; height: 32px; border-radius: 10px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
+            font-size: 16px; color: #fff;
+        }
+        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13.5px; padding: 7px 15px; border-radius: 9px;
+            transition: color .2s, background .2s;
+        }
+        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
+        .nav-links a.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
+        }
+        .nav-links a.primary:hover { filter: brightness(1.12); }
+
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 96px 24px 64px; text-align: center;
+        }
+        .hero .tag {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-size: 12.5px; letter-spacing: 0.12em; color: var(--text-dim);
+            padding: 7px 18px; border-radius: 100px;
+            background: var(--panel); border: 1px solid var(--border);
+            margin-bottom: 26px;
+            animation: rise .8s var(--ease) both;
+        }
+        .hero .tag .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 0 12px rgba(109, 92, 255, 0.8);
+        }
+        .hero h1 {
+            font-size: clamp(30px, 5vw, 46px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.16; margin-bottom: 20px;
+            animation: rise .8s var(--ease) .06s both;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(120deg, #c4b5fd 0%, #7dd3fc 50%, #f0abfc 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .subtitle {
+            color: var(--text-dim); font-size: 16px; max-width: 640px;
+            margin: 0 auto;
+            animation: rise .8s var(--ease) .12s both;
+        }
+
+        .article { max-width: 900px; margin: 0 auto; padding: 8px 24px 100px; }
+
+        .toc {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 22px 26px; margin-bottom: 40px;
+        }
+        .toc .toc-title { font-size: 12px; color: var(--text-faint); letter-spacing: 0.12em; margin-bottom: 12px; text-transform: uppercase; }
+        .toc ol { list-style: none; counter-reset: toc; }
+        .toc li { counter-increment: toc; margin: 6px 0; }
+        .toc a { color: var(--text-dim); text-decoration: none; font-size: 14px; transition: color .2s; }
+        .toc a:hover { color: #fff; }
+        .toc a::before {
+            content: counter(toc); color: var(--accent-2);
+            font-family: var(--mono); font-size: 12px; margin-right: 10px;
+        }
+
+        section { margin-bottom: 48px; }
+        h2 {
+            font-size: 22px; font-weight: 700; margin-bottom: 16px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; gap: 10px;
+            letter-spacing: -0.01em;
+        }
+        h2 .no {
+            font-family: var(--mono); font-size: 13px; color: var(--accent-2);
+            background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.22);
+            padding: 2px 9px; border-radius: 8px; flex-shrink: 0;
+        }
+        h3 { font-size: 17px; font-weight: 600; margin: 26px 0 12px; color: var(--text); }
+        p { color: var(--text-dim); font-size: 14.5px; margin-bottom: 14px; }
+        p strong, li strong { color: var(--text); }
+        ul, ol { color: var(--text-dim); font-size: 14.5px; padding-left: 24px; margin-bottom: 14px; }
+        li { margin: 6px 0; }
+
+        .card, .callout {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 18px 22px;
+            margin: 18px 0;
+        }
+        .callout {
+            border-left: 4px solid var(--accent-1);
+            color: var(--text-dim); font-size: 14px;
+        }
+        .callout.ok { border-left-color: var(--ok); }
+        .callout.warn { border-left-color: var(--warn); }
+        .callout.danger { border-left-color: var(--danger); }
+        .callout.info { border-left-color: var(--accent-1); }
+        .callout .title, .callout .ct {
+            font-weight: 600; font-size: 14px; color: var(--text);
+            display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+        }
+        .callout.ok .title, .callout.ok .ct { color: var(--ok); }
+        .callout.warn .title, .callout.warn .ct { color: var(--warn); }
+        .callout.danger .title, .callout.danger .ct { color: var(--danger); }
+        .callout strong { color: var(--text); }
+        .callout .ct .ico { font-size: 14px; line-height: 1; }
+        .callout p { margin-bottom: 0; }
+
+        pre {
+            background: #0a0a13; border: 1px solid var(--border);
+            border-radius: 12px; padding: 16px 18px; overflow-x: auto;
+            margin: 14px 0; font-family: var(--mono); font-size: 12.8px;
+            line-height: 1.65; color: #d6d6e0;
+        }
+        code {
+            font-family: var(--mono); font-size: 0.9em;
+            background: rgba(175, 184, 193, 0.14); border-radius: 5px; padding: 1px 6px;
+            color: #c4b5fd;
+        }
+        pre code { background: none; padding: 0; color: inherit; }
+        .cmt { color: #6b6b85; }
+        .kw { color: #f0abfc; }
+        .str { color: #7dd3fc; }
+
+        table { border-collapse: collapse; width: 100%; margin: 14px 0 20px; font-size: 13.5px; }
+        th, td { border: 1px solid var(--border); padding: 9px 13px; text-align: left; vertical-align: top; color: var(--text-dim); }
+        th { background: var(--panel-strong); color: var(--text); font-weight: 600; }
+        td code { font-size: 12.5px; }
+
+        footer {
+            padding: 44px 24px 60px; text-align: center;
+            color: var(--text-faint); font-size: 12.5px;
+            border-top: 1px solid var(--border);
+        }
+        footer .sep { margin: 0 8px; opacity: .5; }
+        footer .f-brand {
+            font-weight: 700; color: var(--text); font-size: 15px;
+            margin-bottom: 10px; display: inline-flex; align-items: center; gap: 9px;
+        }
+        footer .f-brand .logo {
+            width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); font-size: 11px; color: #fff;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 760px) {
+            .hero { padding: 72px 20px 52px; }
+        }
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; }
+            .brand .zh { display: none; }
+            .nav-links a { padding: 7px 11px; font-size: 12.5px; }
+            .article { padding: 8px 20px 80px; }
+            h2 { font-size: 19px; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="grid-noise"></div>
+
+<nav class="topnav">
+    <a class="brand" href="/index.html">
+        <span class="logo">雀</span>
+        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="/index.html">首页</a>
+        <a href="/index.html#products">产品</a>
+        <a href="/docs/index.html">文档</a>
+        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="tag"><span class="dot"></span>SPARROW FILE · 配置踩坑</div>
+    <h1>Thymeleaf <span class="gradient">prefix 尾斜杠</span>踩坑记录</h1>
+    <p class="subtitle">
+        记录视图解析时「找不到资源」报错的根因：<code>spring.thymeleaf.prefix</code>
+        一旦带上尾斜杠，就会和 Controller 返回的前导斜杠视图名拼出双斜杠路径。
+    </p>
+</header>
+
+<main class="article">
+    <div class="toc">
+        <div class="toc-title">目录 CONTENTS</div>
+        <ol>
+            <li><a href="#s1">背景：Thymeleaf 如何定位模板</a></li>
+            <li><a href="#s2">问题：找不到资源</a></li>
+            <li><a href="#s3">根因：双斜杠路径</a></li>
+            <li><a href="#s4">正确配置</a></li>
+            <li><a href="#s5">注意事项与踩坑清单</a></li>
+        </ol>
+    </div>
+
+    <section id="s1">
+        <h2><span class="no">01</span>背景：Thymeleaf 如何定位模板</h2>
+        <p>
+            <strong>Thymeleaf</strong> 是 Spring Boot 生态里常用的服务端模板引擎。Controller 返回一个
+            <code>ModelAndView</code>（视图名）后，Thymeleaf 的视图解析器会按下面这条规则拼出模板的
+            实际路径，再去 <code>classpath</code> 下找文件：
+        </p>
+        <pre><code>实际模板路径 = prefix + 视图名 + suffix</code></pre>
+        <p>本项目在 <code>application.properties</code> 里配置了 prefix 和 suffix：</p>
+        <pre><code>spring.thymeleaf.cache=<span class="kw">false</span>
+spring.thymeleaf.favicon.enabled=<span class="kw">false</span>
+spring.thymeleaf.prefix=classpath:templates
+spring.thymeleaf.suffix=.html</code></pre>
+        <p>同时，Controller 返回的视图名<strong>自带前导斜杠</strong>：</p>
+        <pre><code><span class="kw">@RestController</span>
+<span class="kw">public class</span> Controller {
+    <span class="kw">@RequestMapping</span>(<span class="str">"upload"</span>)
+    <span class="kw">public</span> ModelAndView <span class="kw">upload</span>() {
+        <span class="kw">return new</span> ModelAndView(<span class="str">"/upload"</span>);          <span class="cmt">// 注意前导斜杠</span>
+    }
+
+    <span class="kw">@RequestMapping</span>(<span class="str">"spring-upload"</span>)
+    <span class="kw">public</span> ModelAndView <span class="kw">springUpload</span>() {
+        <span class="kw">return new</span> ModelAndView(<span class="str">"/spring-upload"</span>);
+    }
+}</code></pre>
+        <p>模板文件位于 <code>src/main/resources/templates/</code> 下：<code>upload.html</code> 和 <code>spring-upload.html</code>。</p>
+    </section>
+
+    <section id="s2">
+        <h2><span class="no">02</span>问题：找不到资源</h2>
+        <p>如果把 prefix 写成带尾斜杠的形式：</p>
+        <pre><code><span class="cmt"># 错误写法：末尾多了一个 /</span>
+spring.thymeleaf.prefix=classpath:templates/</code></pre>
+        <p>访问 <code>/upload</code> 或 <code>/spring-upload</code> 时，会直接报错，提示<strong>找不到模板资源</strong>。</p>
+        <div class="card callout danger">
+            <div class="ct"><span class="ico">⛔</span>现象</div>
+            <p>视图解析失败，日志/响应里出现类似「resource not found」「找不到资源」的错误，模板明明就躺在 <code>templates</code> 目录下却加载不出来。</p>
+        </div>
+    </section>
+
+    <section id="s3">
+        <h2><span class="no">03</span>根因：双斜杠路径</h2>
+        <p>回到那条拼接规则 <code>prefix + 视图名 + suffix</code>，关键在于<strong>视图名本身带了前导斜杠</strong>。于是两种写法拼出来的结果完全不同：</p>
+        <pre><code><span class="cmt"># 正确：prefix 无尾斜杠，靠视图名的前导 / 补全分隔</span>
+classpath:templates + /upload + .html = classpath:templates/upload.html   <span class="str">✓ 命中模板</span>
+
+<span class="cmt"># 错误：prefix 有尾斜杠，和视图名的前导 / 叠加成双斜杠</span>
+classpath:templates/ + /upload + .html = classpath:templates//upload.html  <span class="str">✗ 路径不存在</span></code></pre>
+        <p>
+            <code>classpath:templates//upload.html</code> 里出现了<strong>两个连续斜杠</strong>，
+            classpath 资源定位时按这个「不存在的路径」去找文件，自然找不到，于是报「找不到资源」。
+        </p>
+        <div class="card callout warn">
+            <div class="ct"><span class="ico">⚠️</span>关键结论</div>
+            <p>本项目视图名<strong>统一带前导斜杠</strong>（<code>/upload</code>、<code>/spring-upload</code>），
+            因此 <code>spring.thymeleaf.prefix</code> 永远不能加尾斜杠。二者只需一处提供分隔斜杠。</p>
+        </div>
+    </section>
+
+    <section id="s4">
+        <h2><span class="no">04</span>正确配置</h2>
+        <pre><code>spring.thymeleaf.cache=<span class="kw">false</span>
+spring.thymeleaf.favicon.enabled=<span class="kw">false</span>
+spring.thymeleaf.prefix=classpath:templates
+spring.thymeleaf.suffix=.html</code></pre>
+        <table>
+            <tr><th>项</th><th>值</th><th>说明</th></tr>
+            <tr><td><code>prefix</code></td><td><code>classpath:templates</code></td><td>无尾斜杠，配合视图名前导斜杠使用</td></tr>
+            <tr><td><code>suffix</code></td><td><code>.html</code></td><td>模板文件扩展名</td></tr>
+        </table>
+        <p>正确的解析示例：</p>
+        <table>
+            <tr><th>视图名</th><th>拼出的路径</th><th>对应文件</th></tr>
+            <tr><td><code>/upload</code></td><td><code>classpath:templates/upload.html</code></td><td><code>templates/upload.html</code></td></tr>
+            <tr><td><code>/spring-upload</code></td><td><code>classpath:templates/spring-upload.html</code></td><td><code>templates/spring-upload.html</code></td></tr>
+        </table>
+    </section>
+
+    <section id="s5">
+        <h2><span class="no">05</span>注意事项与踩坑清单</h2>
+        <table>
+            <tr><th>坑</th><th>现象</th><th>正确做法</th></tr>
+            <tr>
+                <td>prefix 带尾斜杠 <code>classpath:templates/</code></td>
+                <td>拼出 <code>classpath:templates//xxx.html</code>，报「找不到资源」</td>
+                <td>prefix 去掉尾斜杠，写成 <code>classpath:templates</code></td>
+            </tr>
+            <tr>
+                <td>视图名与 prefix 同时带斜杠</td>
+                <td>同上，双斜杠路径</td>
+                <td>约定「视图名带前导 / + prefix 无尾 /」，只需一处补全分隔</td>
+            </tr>
+            <tr>
+                <td>视图名漏写前导斜杠</td>
+                <td>拼出 <code>classpath:templatesupload.html</code>，同样找不到</td>
+                <td>保持视图名带前导斜杠（<code>/upload</code>）</td>
+            </tr>
+        </table>
+        <div class="card callout ok">
+            <div class="ct"><span class="ico">✅</span>一句话记住</div>
+            <p>视图名带前导 <code>/</code>，prefix 就不带尾 <code>/</code>；反过来 prefix 带尾 <code>/</code>，视图名就别带前导 <code>/</code>。本项目的约定是前者。</p>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="f-brand"><span class="logo">雀</span>麻雀窝 Sparrow Zoo</div>
+    <div>Sparrow File<span class="sep">·</span>Thymeleaf 配置踩坑记录<span class="sep">·</span>Powered by Sparrow OS</div>
+</footer>
+</body>
+</html>

@@ -15,8 +15,8 @@ export interface ImageProps {
 
 export default function InnerImage(props: ImageProps) {
   let imageSrc = `${props.src}`;
-  if (!imageSrc.startsWith("http://")) {
-    imageSrc = `${NEXT_ASSET_PREFIX}/${imageSrc}`;
+  if (!/^(?:https?:|data:|blob:|\/\/)/i.test(imageSrc)) {
+    imageSrc = `${(NEXT_ASSET_PREFIX ?? "").replace(/\/$/, "")}/${imageSrc.replace(/^\//, "")}`;
   }
   const imageLoader = ({ src, width, quality }) => {
     return `${src}?w=${width}&q=${quality || 75}`;

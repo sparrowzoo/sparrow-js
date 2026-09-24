@@ -1,10 +1,15 @@
 import Fetcher from "@/common/lib/Fetcher";
-import Result from "@/common/lib/protocol/Result";
 import Message from "@/lib/protocol/Message";
 import HistoryMessageWrap from "@/lib/protocol/HistoryMessageWrap";
 import Contact from "@/lib/protocol/contact/Contact";
 import SessionMeta from "@/lib/protocol/session/SessionMeta";
 import Group from "@/lib/protocol/contact/Group";
+
+interface RemoteHistoryMessageWrap {
+    historyMessages: Message[];
+    qunMaps: Record<string, Group>;
+    userMaps: Record<string, Contact>;
+}
 
 export default class MessageApi {
     public static async querySessions(
@@ -13,7 +18,7 @@ export default class MessageApi {
         userNickName: string,
         translator: (key: string) => string
     ): Promise<SessionMeta[]> {
-        return await Fetcher.post(
+        return await Fetcher.post<SessionMeta[]>(
             {
                 url: "/chat/v2/session-list.json",
                 body: {
@@ -23,7 +28,7 @@ export default class MessageApi {
                 },
                 translator: translator
             }
-        ).then((res: Result) => {
+        ).then((res) => {
             return res?.data;
         });
     }
@@ -36,7 +41,7 @@ export default class MessageApi {
         lastMessageId: number,
         translator: (key: string) => string
     ): Promise<HistoryMessageWrap> {
-        return await Fetcher.post({
+        return await Fetcher.post<RemoteHistoryMessageWrap>({
                 url: "/chat/v2/query-history-messages.json",
                 body:
                     {
@@ -48,7 +53,7 @@ export default class MessageApi {
                     },
                 translator: translator
             }
-        ).then((response: Result) => {
+        ).then((response) => {
             let messageWrap = response.data;
             const localMessageWrap = new HistoryMessageWrap();
             let messages: Message[] = [];

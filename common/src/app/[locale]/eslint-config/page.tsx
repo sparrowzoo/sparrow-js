@@ -111,7 +111,7 @@ Both errors are **ESLint rule errors, not TypeScript (tsc) type errors**.
 `;
 
 export default function LinkConfigPage() {
-    const t = useTranslations("LinkConfig");
+    const t = useTranslations("example.LinkConfig");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

@@ -1,0 +1,121 @@
+.site { display: flex; flex-direction: column; min-height: 100dvh; background: var(--passport-bg); color: var(--passport-text); font-size: 14px; line-height: 1.7; }
+.main { display: flex; flex: 1; flex-direction: column; justify-content: center; background: radial-gradient(ellipse 50% 65% at 14% 35%, var(--passport-glow), transparent 85%); }
+.site a { text-decoration: none; }
+.site :is(a, button):focus-visible { outline: 2px solid var(--passport-accent); outline-offset: 4px; }
+.skipLink { position: fixed; top: 12px; left: 16px; z-index: 60; padding: 10px 18px; border-radius: 8px; background: var(--passport-panel); color: var(--passport-text); transform: translateY(-150%); }
+.skipLink:focus { transform: translateY(0); }
+.headerPlaceholder { min-height: 78px; border-bottom: 1px solid var(--passport-border); }
+.authLayout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 480px); align-items: center; gap: 100px; width: 100%; max-width: 1168px; margin: 0 auto; padding: 64px 32px; }
+.story { max-width: 470px; padding: 12px 0; }
+.eyebrow { display: flex; align-items: center; gap: 9px; color: var(--passport-accent); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; font-weight: 500; letter-spacing: .15em; }
+.eyebrow > span { width: 5px; height: 5px; border-radius: 50%; background: var(--passport-accent); }
+.storyTitle { margin-top: 28px; font-size: clamp(31px, 3vw, 43px); font-weight: 600; letter-spacing: -.045em; line-height: 1.4; text-wrap: balance; }
+.storyTitle > span { background: var(--passport-gradient); color: transparent; background-clip: text; -webkit-background-clip: text; }
+.storyDescription { max-width: 385px; margin-top: 22px; color: var(--passport-muted); font-size: 14px; line-height: 1.95; text-wrap: pretty; }
+.benefits { display: flex; flex-direction: column; gap: 21px; margin-top: 40px; padding: 0; list-style: none; }
+.benefits > li { display: flex; align-items: center; gap: 16px; }
+.benefitIcon { display: grid; place-items: center; flex-shrink: 0; width: 40px; height: 40px; border: 1px solid var(--passport-border); border-radius: 10px; background: var(--passport-soft); color: var(--passport-accent); }
+.benefits h2 { font-size: 13px; font-weight: 550; }
+.benefits p { margin-top: 3px; color: var(--passport-faint); font-size: 11px; }
+.storyLink { display: inline-flex; align-items: center; gap: 8px; margin-top: 35px; color: var(--passport-muted); font-size: 12px; }
+.storyLink:hover { color: var(--passport-accent); }
+.authCard { min-width: 0; padding: 34px 38px; border: 1px solid var(--passport-border); border-radius: 16px; background: var(--passport-panel); box-shadow: var(--passport-shadow); }
+.cardTop { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--passport-faint); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .14em; }
+.cardMark { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--passport-border); border-radius: 10px; color: var(--passport-accent); background: var(--passport-soft); }
+.formHeading { margin: 25px 0 27px; }
+.formHeading h1 { color: var(--passport-text); font-size: 28px; font-weight: 600; letter-spacing: -.035em; line-height: 1.4; }
+.formHeading p { margin-top: 8px; color: var(--passport-muted); font-size: 12px; line-height: 1.8; }
+.form { display: flex; flex-direction: column; gap: 19px; }
+.field { display: flex; min-width: 0; flex-direction: column; gap: 8px; }
+.label, .field > label, .labelRow > label { color: var(--passport-text); font-size: 12px; font-weight: 500; line-height: 1.5; }
+.labelRow { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.input { width: 100%; height: 44px; min-width: 0; padding: 10px 13px; border: 1px solid var(--passport-input-border); border-radius: 7px; background: var(--passport-input); color: var(--passport-text); font-size: 13px; box-shadow: none; outline: none; transition: border-color .2s, box-shadow .2s; }
+.input::placeholder { color: var(--passport-faint); opacity: .8; }
+.input:hover { border-color: var(--passport-muted); }
+.input:focus-visible { outline: none; border-color: var(--passport-accent); box-shadow: 0 0 0 3px var(--passport-focus); --tw-ring-shadow: 0 0 #0000; --tw-ring-offset-shadow: 0 0 #0000; }
+.input[aria-invalid="true"] { border-color: var(--passport-error); }
+.fieldError { color: var(--passport-error); font-size: 11px; line-height: 1.8; overflow-wrap: anywhere; }
+.formHint { color: var(--passport-faint); font-size: 11px; line-height: 1.8; }
+.captchaRow { display: grid; grid-template-columns: minmax(0, 1fr) 112px; align-items: center; gap: 10px; }
+.captchaButton { position: relative; display: flex; align-items: center; justify-content: center; width: 112px; height: 44px; overflow: hidden; padding: 0; border: 1px solid var(--passport-input-border); border-radius: 7px; background: var(--passport-input); cursor: pointer; }
+.captchaImage { display: block; width: 112px; height: 44px; border: 1px solid var(--passport-input-border); border-radius: 7px; background: var(--passport-input); color: var(--passport-faint); font-size: 11px; object-fit: contain; cursor: pointer; }
+.captchaButton > .captchaImage { border: 0; border-radius: 0; pointer-events: none; }
+.captchaButton[data-loaded="false"] > .captchaImage { opacity: 0; }
+.captchaPlaceholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 4px 6px; color: var(--passport-faint); font-size: 10px; line-height: 1.35; pointer-events: none; }
+.captchaPlaceholder svg { flex-shrink: 0; }
+.rememberRow { display: flex; align-items: center; gap: 9px; color: var(--passport-muted); font-size: 12px; }
+.rememberRow button { width: 16px; height: 16px; border-color: var(--passport-input-border); border-radius: 4px; }
+.rememberRow button[data-state="checked"] { border-color: var(--passport-accent); background: var(--passport-accent); color: var(--passport-panel); }
+.primaryButton { display: inline-flex; justify-content: center; align-items: center; gap: 9px; width: 100%; min-height: 44px; padding: 11px 18px; border: 1px solid #8c77df; border-radius: 7px; background: linear-gradient(120deg, #7960db, #6758d1); color: #fff; font-size: 13px; font-weight: 550; box-shadow: 0 4px 18px rgba(106, 83, 207, .13); cursor: pointer; transition: background .2s, box-shadow .2s; }
+.primaryButton:hover { background: #7960db; box-shadow: 0 4px 20px rgba(106, 83, 207, .23); }
+.primaryButton:disabled { opacity: .6; cursor: wait; }
+.secondaryButton { display: inline-flex; justify-content: center; align-items: center; min-height: 42px; padding: 10px 18px; border: 1px solid var(--passport-border); border-radius: 7px; background: var(--passport-soft); color: var(--passport-muted); font-size: 12px; }
+.secondaryButton:hover { background: var(--passport-input); color: var(--passport-text); }
+.formSwitch { display: flex; justify-content: center; flex-wrap: wrap; gap: 7px; margin-top: 27px; padding-top: 23px; border-top: 1px solid var(--passport-border); color: var(--passport-muted); font-size: 12px; }
+.formSwitch a { display: inline-flex; align-items: center; gap: 7px; color: var(--passport-accent); font-weight: 500; }
+.formSwitch a:hover { text-decoration: underline; text-underline-offset: 4px; }
+.forgotButton { padding: 0; border: 0; background: none; color: var(--passport-accent); font-size: 11px; cursor: pointer; }
+.forgotButton:hover { text-decoration: underline; text-underline-offset: 4px; }
+.dialog { width: calc(100% - 32px); max-width: 420px; padding: 28px; border: 1px solid var(--passport-border); border-radius: 14px; background: var(--passport-panel); color: var(--passport-text); box-shadow: var(--passport-shadow); }
+.dialogTitle { font-size: 21px; font-weight: 600; letter-spacing: -.03em; }
+.dialogDescription { margin-top: 9px; color: var(--passport-muted); font-size: 12px; line-height: 1.9; }
+.dialogActions { display: flex; gap: 10px; margin-top: 5px; }
+.dialogActions > .primaryButton { flex: 1; }
+.dialogActions > .secondaryButton { flex-shrink: 0; }
+.dialog :is(button, a):focus-visible { outline: 2px solid var(--passport-accent); outline-offset: 3px; }
+.footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; width: calc(100% - 64px); max-width: 1104px; margin: 0 auto; padding: 22px 0 25px; border-top: 1px solid var(--passport-border); color: var(--passport-faint); font-size: 10px; }
+.footer p > span { margin-left: 7px; }
+.footer a { display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; }
+.footer a:hover { color: var(--passport-accent); }
+.toast { border: 1px solid var(--passport-border) !important; border-radius: 10px !important; background: var(--passport-panel) !important; color: var(--passport-text) !important; font-size: 13px !important; }
+.accountPage { width: 100%; max-width: 1000px; margin: 0 auto; padding: 48px 32px 64px; }
+.accountHeading { margin-bottom: 30px; }
+.accountHeading h1 { margin-top: 15px; color: var(--passport-text); font-size: 30px; font-weight: 600; letter-spacing: -.035em; }
+.accountHeading > p:last-child { margin-top: 10px; color: var(--passport-muted); font-size: 13px; }
+.avatarPanel { padding: 28px; border: 1px solid var(--passport-border); border-radius: 14px; background: var(--passport-panel); }
+.avatarPanel > div > div:first-child { flex-wrap: wrap; gap: 24px; margin-bottom: 25px; overflow-x: auto; }
+.avatarPanel :global(.preview) { overflow: auto; max-width: 100%; }
+.avatarPanel :global(.preview) canvas { max-width: none; }
+
+@media (max-width: 1100px) {
+    .authLayout { gap: 64px; padding-top: 50px; padding-bottom: 50px; }
+    .authCard { padding: 30px; }
+    .headerPlaceholder { min-height: 68px; }
+}
+@media (max-width: 860px) {
+    .authLayout { grid-template-columns: minmax(0, 1fr) minmax(0, 410px); gap: 36px; padding: 42px 24px; }
+    .storyTitle { font-size: 31px; }
+    .storyDescription { font-size: 12px; }
+    .benefits { gap: 20px; margin-top: 30px; }
+    .benefits p { font-size: 10px; }
+    .authCard { padding: 28px; }
+}
+@media (max-width: 700px) {
+    .authLayout { grid-template-columns: minmax(0, 1fr); gap: 27px; max-width: 520px; padding: 32px 20px 42px; }
+    .story { max-width: none; padding: 0; }
+    .storyTitle { margin-top: 14px; font-size: 29px; line-height: 1.3; }
+    .storyTitle br { display: none; }
+    .storyTitle span { display: block; }
+    .storyDescription { max-width: 410px; margin-top: 13px; font-size: 12px; }
+    .benefits, .storyLink { display: none; }
+    .authCard { padding: 27px; border-radius: 12px; }
+    .formHeading { margin: 20px 0 23px; }
+    .formHeading h1 { font-size: 25px; }
+    .form { gap: 18px; }
+    .input { font-size: 16px; }
+    .footer { width: calc(100% - 40px); max-width: 480px; padding: 20px 0; font-size: 9px; }
+    .footer p > span { display: block; margin: 3px 0 0; }
+    .accountPage { padding: 32px 20px 42px; }
+    .accountHeading h1 { font-size: 26px; }
+    .avatarPanel { padding: 18px; }
+}
+@media (max-width: 360px) {
+    .authLayout { padding-right: 16px; padding-left: 16px; }
+    .authCard { padding: 22px 20px; }
+    .storyTitle { font-size: 27px; }
+    .captchaRow { grid-template-columns: minmax(0, 1fr) 100px; }
+    .captchaImage, .captchaButton { width: 100px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .site *, .dialog * { transition: none !important; }
+}

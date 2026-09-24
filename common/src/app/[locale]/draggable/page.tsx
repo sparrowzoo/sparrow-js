@@ -76,7 +76,7 @@ import Draggable from "@/common/components/Draggable";
 `;
 
 export default function DraggableExamplePage() {
-    const t = useTranslations("DraggableExample");
+    const t = useTranslations("example.DraggableExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

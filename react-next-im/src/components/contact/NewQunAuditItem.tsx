@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import MyAvatar from "@/components/MyAvatar";
-import Link from "next/link";
+import {Link} from "@/common/i18n/navigation";
 import * as React from "react";
 import { SidebarMenuItem } from "@/components/ui/sidebar";
 import { AuditStatus } from "@/lib/protocol/audit/AuditStatus";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import AuditStatusProps from "@/lib/protocol/audit/AuditStatusProps";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Contact from "@/lib/protocol/contact/Contact";
-import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { AVATAR_URL } from "@/common/lib/Env";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
 import Group from "@/lib/protocol/contact/Group";
 import AuditApi from "@/api/AuditApi";
@@ -72,7 +72,7 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
     return <div>{audit.auditId} not found user</div>;
   }
 
-  const userHomeLink = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${applyUser.userId}`;
+  const userHomeLink = `/chat/friends/contact/?friendId=${encodeURIComponent(applyUser.userId)}`;
   const userName = applyUser.nickName || applyUser.userName;
   const avatar =
     applyUser.avatar || format(`${AVATAR_URL}`, `${applyUser.userId}`);
