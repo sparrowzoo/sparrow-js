@@ -1,0 +1,505 @@
+{
+  "metadata": {
+    "title": "麻雀窝 Sparrow Zoo · 一体化开发生态",
+    "description": "探索麻雀窝 Sparrow Zoo 的工程脚手架、统一认证、文件服务与开发文档，从 Java / Spring Boot 到 React / Next.js，连接工程实践与业务开发。"
+  },
+  "brand": {
+    "name": "麻雀窝",
+    "tagline": "Sparrow Zoo"
+  },
+  "nav": {
+    "label": "主导航",
+    "products": "产品",
+    "docs": "开发文档",
+    "ecosystem": "生态能力",
+    "playground": "组件示例",
+    "study": "学员入口",
+    "language": "切换语言",
+    "openMenu": "打开导航菜单",
+    "closeMenu": "关闭导航菜单",
+    "skip": "跳到主要内容"
+  },
+  "hero": {
+    "eyebrow": "SPARROW ZOO · 一体化开发生态",
+    "title": "一个生态，",
+    "highlight": "从脚手架到智能体平台",
+    "description": "以统一工程规范为起点，连接认证、文件、权限与实时通讯。沉淀可复用的通用能力，让每一次业务开发都有基础可循。",
+    "primary": "探索产品",
+    "secondary": "阅读开发文档",
+    "note": "Java / Spring Boot · React / Next.js"
+  },
+  "stats": {
+    "products": "生态产品",
+    "docs": "开发文档",
+    "stack": "技术底座"
+  },
+  "products": {
+    "eyebrow": "PRODUCTS / 产品目录",
+    "title": "从工程基础，到业务能力",
+    "description": "围绕同一套工程思路，按需接入各项能力。现有服务与建设方向，在这里一目了然。",
+    "guide": "阅读工程指南",
+    "details": "查看产品介绍",
+    "planned": "建设中",
+    "foundation": "工程基石",
+    "available": "已完成",
+    "scaffold": {
+      "title": "项目脚手架",
+      "subtitle": "Sparrow Scaffold",
+      "description": "统一工程规范，梳理 Parent 构建基线、BOM 版本组合与 Starter 集成，让组件演进和业务接入有据可循。",
+      "tags": ["Java", "Spring Boot", "Parent / BOM", "Starter"]
+    },
+    "passport": {
+      "title": "Passport 认证服务",
+      "subtitle": "Unified Identity",
+      "description": "集中提供登录、注册与找回密码入口，支持前后端分离和单体应用的身份认证场景。",
+      "tags": ["登录注册", "找回密码", "统一身份"],
+      "page": {
+        "name": "Sparrow Passport",
+        "eyebrow": "UNIFIED IDENTITY / 统一身份认证",
+        "title": "一个身份入口，",
+        "highlight": "连接你的业务应用。",
+        "description": "集中提供登录、注册与找回密码能力。支持前后端分离与单体应用，让身份认证成为可以复用的业务基础。",
+        "tags": ["登录注册", "找回密码", "跨域登录态"],
+        "primaryLabel": "立即体验",
+        "secondaryLabel": "两种体验入口",
+        "flowLabel": "接入流程",
+        "capabilitiesEyebrow": "CAPABILITIES / 产品能力",
+        "capabilitiesTitle": "通用能力，专注每一个细节。",
+        "capabilitiesLabel": "产品能力",
+        "integrationEyebrow": "START BUILDING / 接入与实践",
+        "integrationLabel": "集成与资源",
+        "features": [
+          {"title": "完整的账户入口", "description": "围绕登录、注册与找回密码组织认证流程，让用户从同一套身份服务进入业务。"},
+          {"title": "适配不同应用架构", "description": "前后端分离应用与传统一体式应用均有对应入口，按项目的交付方式选择接入。"},
+          {"title": "共享登录上下文", "description": "结合前端公共库的跨域存储能力，在不同子域应用间共享 token，并处理登录后的回跳。"}
+        ],
+        "flow": [
+          {"label": "接入认证服务", "detail": "通过 passport-starter 将身份能力接入 Spring Boot 工程。"},
+          {"label": "连接应用入口", "detail": "配置认证地址、登录入口与跨域存储代理，串联前端应用。"},
+          {"label": "回到业务流程", "detail": "完成登录后携带身份信息请求接口，返回用户原本访问的页面。"}
+        ],
+        "integrationTitle": "身份能力，融入现有工程。",
+        "integrationDescription": "后端通过 Starter 组织认证能力，前端通过公共请求与跨域存储模块衔接登录态。应用可以沿用自己的页面与业务流程。",
+        "resources": [
+          {"title": "Passport 源码", "description": "查看认证框架与 passport-starter。", "href": "https://github.com/sparrowzoo/sparrow-passport-ddd", "external": true},
+          {"title": "验证码 Hook", "description": "了解验证码加载、刷新与会话初始化。", "href": "/frontend/react/captcha.html"},
+          {"title": "OpenAPI 分组实践", "description": "查看 Passport 与 File 共存时的接口分组。", "href": "/backend/java/open-api/open-api-group.html"}
+        ],
+        "experience": {
+          "eyebrow": "TRY PASSPORT / LIVE DEMO",
+          "title": "两种接入方式，现在就体验。",
+          "description": "选择适合你的应用架构，直接打开登录或注册页面。体验入口将在新窗口打开。",
+          "recommended": "推荐",
+          "tryLogin": "登录体验",
+          "register": "注册账号",
+          "separated": {
+            "title": "前后端分离入口",
+            "caption": "React / Next.js",
+            "description": "独立的 React / Next.js 认证界面，通过接口连接后端身份服务。体验现代前端应用的登录与注册流程。"
+          },
+          "monolithic": {
+            "title": "单体应用入口",
+            "caption": "Spring Boot",
+            "description": "页面与认证服务由同一个后端应用提供，适合传统一体式项目。直接体验服务端页面的登录与注册流程。"
+          }
+        }
+      }
+    },
+    "file": {
+      "title": "File 文件服务",
+      "subtitle": "File Storage",
+      "description": "统一文件上传与存储入口，支持拖拽上传、进度展示和预览，并按业务选择存储路径。",
+      "tags": ["拖拽上传", "上传进度", "文件预览"],
+      "page": {
+        "name": "Sparrow File",
+        "eyebrow": "FILE SERVICE / 文件上传与存储",
+        "title": "从选择文件，",
+        "highlight": "到连接每一个业务场景。",
+        "description": "统一文件上传与存储入口，将文件选择、上传进度与结果预览串成清晰的体验。用业务路径组织资源，让上传能力随处可用。",
+        "tags": ["拖拽上传", "上传进度", "文件预览"],
+        "primaryLabel": "查看上传示例",
+        "secondaryLabel": "了解产品能力",
+        "flowLabel": "接入流程",
+        "capabilitiesEyebrow": "CAPABILITIES / 产品能力",
+        "capabilitiesTitle": "通用能力，专注每一个细节。",
+        "capabilitiesLabel": "产品能力",
+        "integrationEyebrow": "START BUILDING / 接入与实践",
+        "integrationLabel": "集成与资源",
+        "features": [
+          {"title": "自然的上传体验", "description": "上传示例支持点击选择、拖拽与粘贴文件，支持一次选择多个文件，并展示图片缩略预览。"},
+          {"title": "每一步都有反馈", "description": "实时显示上传进度与完成状态，返回文件地址后可复制或打开，失败时展示对应提示。"},
+          {"title": "按业务组织文件", "description": "通过 pathType 区分资源、CMS、评论、帖子、头像与应用等存储路径，适配不同业务场景。"}
+        ],
+        "flow": [
+          {"label": "选择业务路径", "detail": "根据文件用途指定 pathType，将资源归入对应场景。"},
+          {"label": "上传并查看进度", "detail": "提交文件，接收上传进度、成功结果与错误提示。"},
+          {"label": "使用文件地址", "detail": "将返回的 URL 用于内容展示、头像或业务表单。"}
+        ],
+        "integrationTitle": "一套服务，多个上传入口。",
+        "integrationDescription": "后端提供 file-starter，React 端提供 FileUploader 组件。通过上传地址与结果回调接入业务，复用文件选择、身份凭证与进度处理。",
+        "resources": [
+          {"title": "文件上传组件", "description": "查看 React 示例、配置与接入说明。", "href": "/upload"},
+          {"title": "File 源码", "description": "查看文件服务与 file-starter。", "href": "https://github.com/sparrowzoo/sparrow-file", "external": true},
+          {"title": "OpenAPI 集成说明", "description": "了解 Spring Boot 接口文档的集成方式。", "href": "/backend/java/open-api/open-api.html"}
+        ]
+      }
+    },
+    "security": {
+      "title": "Security 权限系统",
+      "subtitle": "Access Control",
+      "description": "围绕角色、权限与资源组织访问控制，为业务服务规划统一的鉴权与授权能力。",
+      "tags": ["RBAC", "鉴权授权", "资源隔离"]
+    },
+    "im": {
+      "title": "IM 即时通讯",
+      "subtitle": "Instant Messaging",
+      "description": "面向单聊、群聊与消息推送的实时通讯服务，持续沉淀连接管理与消息处理的工程实践。",
+      "tags": ["单聊群聊", "消息推送", "WebSocket"],
+      "page": {
+        "name": "Sparrow IM",
+        "eyebrow": "INSTANT MESSAGING / 即时通讯",
+        "title": "让每一次对话，",
+        "highlight": "保持连接。",
+        "description": "面向单聊与群聊的即时通讯能力。以 WebSocket 连接管理为基础，串联联系人、会话与消息记录，让实时交流融入业务。",
+        "tags": ["单聊群聊", "文本与图片", "WebSocket"],
+        "primaryLabel": "立即体验",
+        "secondaryLabel": "查看源码",
+        "flowLabel": "接入流程",
+        "capabilitiesEyebrow": "CAPABILITIES / 产品能力",
+        "capabilitiesTitle": "通用能力，专注每一个细节。",
+        "capabilitiesLabel": "产品能力",
+        "integrationEyebrow": "START BUILDING / 接入与实践",
+        "integrationLabel": "集成与资源",
+        "features": [
+          {"title": "围绕会话组织沟通", "description": "提供单聊与群聊会话、联系人及群组入口，在同一套消息协议下处理文本与图片消息。"},
+          {"title": "管理连接的生命周期", "description": "通过鉴权握手、心跳检测与断线重连维护 WebSocket 连接，并结合窗口活动状态管理连接。"},
+          {"title": "让消息可以回溯", "description": "提供会话列表与历史消息查询，可按会话、内容和时间检索消息，连接实时交流与历史记录。"}
+        ],
+        "flow": [
+          {"label": "建立身份与连接", "detail": "取得身份凭证后发起 WebSocket 鉴权握手。"},
+          {"label": "进入联系人与会话", "detail": "选择联系人或群组，加载会话与消息记录。"},
+          {"label": "收发与查询消息", "detail": "通过实时连接交换消息，并通过接口查询历史。"}
+        ],
+        "integrationTitle": "从界面到连接，都有工程参考。",
+        "integrationDescription": "react-next-im 提供 React / Next.js 通讯界面与消息处理实现，公共库沉淀 WebSocket 连接能力。结合 Netty 实践文档，理解消息处理与内存管理的细节。",
+        "resources": [
+          {"title": "前端工程源码", "description": "在 sparrow-js 的 react-next-im 中查看通讯实现。", "href": "https://github.com/sparrowzoo/sparrow-js", "external": true},
+          {"title": "Netty 入站消息与 OOM", "description": "理解消息释放、心跳与内存泄漏排查。", "href": "/backend/java/netty/netty-oom.html"},
+          {"title": "Netty 内存共享与释放", "description": "梳理消息转发中的引用计数与释放责任。", "href": "/backend/java/netty/netty-memory-bug.html"}
+        ]
+      }
+    },
+    "coder": {
+      "title": "代码生成器",
+      "subtitle": "Code Generator",
+      "description": "以实体模型为起点，生成整洁架构后端与 React 前端的 CRUD 代码，减少重复编写。",
+      "tags": ["CRUD", "整洁架构", "React"],
+      "page": {
+        "meta": "Sparrow Coder · 整洁架构代码生成器",
+        "eyebrow": "SPARROW CODER / 后台管理系统代码生成器",
+        "title": "从一个 PO 类，",
+        "highlight": "到一套业务工程。",
+        "description": "基于整洁架构，将你定义的 PO 类转化为符合企业包规范的后端代码与前端页面。纯模板与元数据驱动，让重复开发止于模型。",
+        "start": "快速开始",
+        "experience": "立即体验",
+        "source": "查看源码",
+        "tags": ["无需 AI 参与", "前后端分离", "代码可继续开发"],
+        "input": "定义业务模型",
+        "engine": "模板 + 元数据",
+        "output": "生成两端代码",
+        "backend": "整洁架构后端",
+        "frontend": "后台列表与表单",
+        "diagramNote": "定义一次模型 · 输出前后端代码",
+        "nav": ["核心能力", "工程架构", "使用流程", "PO 建模", "快速开始"],
+        "navLabel": "代码生成器页内导航",
+        "featuresTitle": "重复的交给模板，业务的留给你。",
+        "featuresDescription": "Controller、Service、DAO、Mapper、列表与表单，都从同一份业务模型出发。",
+        "features": [
+          {"title": "一次生成，覆盖两端", "description": "以 PO 类为输入，同时生成后端分层代码和 React / Next.js 管理页面，减少结构相似的 CRUD 编写。"},
+          {"title": "架构与规范，开箱即有", "description": "沿用整洁架构的职责划分与依赖倒置，按项目包名和模块前缀组织代码，保留业务扩展空间。"},
+          {"title": "界面随配置而变", "description": "通过 column_configs 调整列展示、过滤、行菜单与状态命令，让生成的后台贴合实际业务。"}
+        ],
+        "architectureTitle": "清晰的分层，完整的起点。",
+        "architectureDescription": "后端以 sparrow-example 为脚手架，前端以 sparrow-js 内的 react-next-admin 为脚手架。两个独立工程，遵循同一套业务定义。",
+        "layers": ["接口入口与对象转换", "领域逻辑与业务规则", "基础设施与接口实现", "持久化接口与数据访问"],
+        "layerNote": "按职责分层，以接口和依赖倒置组织协作，让领域逻辑与具体存储实现保持解耦。",
+        "backendScaffold": "后端脚手架",
+        "frontendScaffold": "前端脚手架",
+        "separate": "独立编译 · 分别启动",
+        "workflowTitle": "从定义项目，到运行你的业务。",
+        "workflowDescription": "先下载属于自己的工程，再编写 PO、生成代码，最后回到工程中继续开发。",
+        "modelTitle": "关系与字段，直接写进模型。",
+        "modelDescription": "通过 @Table、@Column 描述表与字段，通过 @ListDatasource 描述关联关系。模板读取这些元数据，生成对应代码与控件。",
+        "relation": "从部门到用户",
+        "relationDescription": "Department 是父表，UserExample 是子表。departmentId 关联 t_department，自动生成下拉选择或关联控件。",
+        "cautionTitle": "示例要放进你自己的业务包",
+        "caution": "官方 com.sparrow.coder.po.Department 与 UserExample 仅作参考，不能直接用于生成业务代码。请复制到自己的 PO 包，并将包名改为业务包名；本页示例已使用 com.yourcompany.po。",
+        "snippet": "UserExample.java · 业务 PO 示例（省略 imports）",
+        "quickTitle": "准备好环境，开始第一次生成。",
+        "quickDescription": "按顺序完成依赖安装、配置与启动。展开每一步查看命令，代码可直接复制并按本地环境调整。",
+        "requirementsNote": "Node.js 仅用于运行前端项目。",
+        "repos": "依赖仓库与脚手架",
+        "modules": "生成器模块结构",
+        "faqTitle": "接入时，你可能想知道。",
+        "ctaTitle": "让下一套后台，从模型开始。",
+        "ctaDescription": "定义你的项目和 PO 类，把时间留给真正不同的业务逻辑。",
+        "allProducts": "探索其他产品",
+        "guide": {
+          "repositories": [
+            {"role": "基础框架：infra-bom、sparrow-bom 与 Sparrow 核心模块。"},
+            {"role": "Spring Boot 与 Sparrow 框架的整合 Starter。"},
+            {"role": "文件服务，提供 file-starter。"},
+            {"role": "认证框架，提供 passport-starter。"},
+            {"role": "后端脚手架，作为生成业务工程的起点。"},
+            {"role": "前端工程，内含 react-next-admin 前端脚手架。"},
+            {"role": "代码生成器：项目配置、元数据解析与模板生成。"}
+          ],
+          "setup": [
+            {"title": "克隆工程与脚手架", "description": "将依赖、前端工程和生成器放在 ~/workspace/sparrow 下，后端脚手架放在工作区根目录。", "note": "sparrow-example 与 sparrow 目录平级；react-next-admin 位于 sparrow-js 内。Node.js 仅在运行前端时需要。"},
+            {"title": "按顺序安装依赖", "description": "先安装基础框架，再安装 Starter、文件服务与认证框架，最后编译 sparrow-coder。", "note": "sparrow-shell 提供 infra-bom 和 sparrow-bom，必须最先安装。"},
+            {"title": "初始化数据库", "description": "启动 MySQL，创建 sparrow 数据库，并导入项目配置、表配置与示例表脚本。", "note": ""},
+            {"title": "配置工作区与服务", "description": "编辑 coder-main-spring-boot/src/main/resources/application.properties，设置本地路径、数据库与 Redis。", "note": "这里使用 macOS 路径示例；请将用户名、数据库密码和服务地址替换为自己的配置。"},
+            {"title": "配置前端静态资源", "description": "编辑 coder-main-spring-boot/src/main/configs/dev.properties，让生成器可以读取前端静态资源。", "note": "将 your_home_path 替换为实际用户目录，并确认路径与本地 sparrow-js 所在位置一致。"},
+            {"title": "启动生成器", "description": "dev 环境默认监听 8888 端口，启动后进入首页并登录，即可开始配置项目。", "note": "首页：http://localhost:8888；接口文档：http://localhost:8888/doc.html；Druid 监控：http://localhost:8888/druid（默认账号与密码均为 druid）。"}
+          ],
+          "workflow": [
+            {"title": "定义项目，下载脚手架", "description": "在「项目配置」中设置项目名称、中文名称、业务包名、前端项目名称、模块前缀、代码架构与脚手架，并按需开启国际化和父 module。通过 zip-download 下载自己的前后端业务工程。"},
+            {"title": "编译并启动业务工程", "description": "后端执行 mvn clean package -Dmaven.test.skip=true，再通过 java -jar 启动对应模块产物。前端进入生成的前端目录，执行 npm install 和 npm run dev。两端独立编译、分别启动。"},
+            {"title": "在自己的业务包中编写 PO", "description": "在刚生成的业务工程中，参考父表 com.sparrow.coder.po.Department 与子表 com.sparrow.coder.po.UserExample。将示例复制到自己的 PO 包并修改包名，如 com.yourcompany.po。用 @Table、@Column 描述元数据，用 @ListDatasource(type = ListDatasourceType.TABLE, params = \"t_department\") 关联父表；不要直接使用官方示例类生成业务代码。"},
+            {"title": "一键生成两端代码", "description": "回到 sparrow-coder，选择表并点击「生成代码」（/coder/generate.json）。根据 PO 元数据与模板，生成 DAO、Domain、Adapter、Infrastructure 各层代码，以及前端列表和表单页面，全程无需 AI。"},
+            {"title": "重新编译，运行生成结果", "description": "回到业务工程，重新编译并启动后端与前端，让新增代码生效。在生成的架构基础上继续实现自己的业务逻辑。"},
+            {"title": "通过列配置调整界面", "description": "在 t_table_config 的 column_configs 中配置列展示、过滤、行菜单与状态命令，按业务需要调整后台管理界面。父子表关系可自动生成下拉或关联控件。"}
+          ],
+          "faq": [
+            {"question": "编译时找不到 infra-bom 或 sparrow-* 依赖？", "answer": "先确认依赖仓库已克隆，再按快速开始中的顺序执行 mvn clean install。sparrow-shell 必须最先安装，其余模块依赖它提供的 POM。"},
+            {"question": "启动时无法连接数据库？", "answer": "确认 MySQL 已启动、sparrow 数据库已创建，并检查 application.properties 中的连接地址、用户名和密码。"},
+            {"question": "前端静态资源返回 404？", "answer": "检查 application.properties 中的 workspace、frontend_project_root，以及 dev.properties 中的 physical_resource，确保它们指向真实存在的本地目录。"},
+            {"question": "可以直接用官方示例 PO 生成业务代码吗？", "answer": "不可以。Department 和 UserExample 仅作参考，请复制到业务工程自己的 PO 包中并修改包名后再生成。生成器以你的 PO 元数据为输入，生成过程无需 AI。"}
+          ],
+          "modules": [
+            {"description": "依赖版本管理；coder-bom 的 parent 为 infra-bom。"},
+            {"description": "协议层：Query、Param 与枚举。"},
+            {"description": "持久化对象与官方示例 PO。"},
+            {"description": "DAO 接口定义。"},
+            {"description": "Sparrow ORM 的 DAO 实现。"},
+            {"description": "MyBatis 的 DAO 实现。"},
+            {"description": "领域业务逻辑与代码生成核心。"},
+            {"description": "基础设施层。"},
+            {"description": "适配层：Controller 与 Assemble。"},
+            {"description": "Spring Boot 整合 Starter。"},
+            {"description": "启动模块与 Application 入口。"},
+            {"description": "数据库建表脚本。"}
+          ]
+        }
+      }
+    },
+    "ui": {
+      "title": "UI 组件库",
+      "subtitle": "UI Components",
+      "description": "基于 React 与 Next.js 的组件示例与交互演示，覆盖表单、表格、上传、拖拽等常见场景，可直接复用。",
+      "tags": ["React", "Next.js", "组件示例"]
+    }
+  },
+  "docs": {
+    "eyebrow": "DOCUMENTATION / 开发文档",
+    "title": "让实践，成为下一次的起点",
+    "description": "从工程架构、接口集成到问题排查，查阅项目中的实现说明与实践记录。",
+    "languageNote": "文档正文目前以中文提供。",
+    "all": "全部文档",
+    "backend": "后端工程",
+    "frontend": "前端开发",
+    "search": "搜索文档标题、主题…",
+    "empty": "没有找到匹配的文档，试试其他关键词。",
+    "clear": "清除搜索与筛选",
+    "count": "{count} 篇文档",
+    "read": "阅读文档",
+    "items": {
+      "launchRunbook": {
+        "title": "Next.js 15 · HTTP 静态上线操作手册",
+        "description": "按步骤完成四站构建打包、Nginx 配置、原子发布、真实业务验收与回滚。"
+      },
+      "bom": {
+        "title": "Sparrow Parent 与 BOM",
+        "description": "按生产与交付边界划分构建基线、组件版本和业务接入，附完整 POM 示例。"
+      },
+      "maven": {
+        "title": "Maven 依赖源码与断点调试",
+        "description": "理解源码包、字节码行号表与断点错位，梳理发布和联调中的处理方法。"
+      },
+      "openapi": {
+        "title": "springdoc-openapi 集成说明",
+        "description": "区分 Servlet MVC 与 WebFlux 技术栈，选择匹配的接口文档依赖。"
+      },
+      "groups": {
+        "title": "OpenAPI 分组策略",
+        "description": "处理多 Starter 共存时的配置冲突，为 File 与 Passport 设置独立接口分组。"
+      },
+      "thymeleaf": {
+        "title": "Thymeleaf 模板路径配置",
+        "description": "结合视图名前导斜杠，排查 prefix 拼接双斜杠导致的模板资源错误。"
+      },
+      "oom": {
+        "title": "Netty 入站消息与 OOM",
+        "description": "通过消息处理器案例，定位未释放引用造成的内存泄漏与心跳异常。"
+      },
+      "memory": {
+        "title": "Netty 内存共享与释放",
+        "description": "梳理引用计数、零拷贝和深拷贝，明确消息转发中的内存释放责任。"
+      },
+      "captcha": {
+        "title": "useCaptcha 验证码 Hook",
+        "description": "拆解会话初始化、图片加载与点击刷新，以及监听清理和重试边界。"
+      },
+      "intl": {
+        "title": "next-intl 国际化指南",
+        "description": "串联语言路由、中间件与消息上下文，理解多文件翻译配置和常见问题。"
+      },
+      "staticDeployment": {
+        "title": "站点域名与 Nginx 静态部署方案",
+        "description": "盘点各站域名与环境配置，评估 Next.js 静态导出、国际化路由及分阶段上线方案。"
+      }
+    }
+  },
+  "ecosystem": {
+    "eyebrow": "WHY SPARROW / 生态能力",
+    "title": "通用能力，一起生长",
+    "description": "从后端组件到前端公共库，把重复遇到的问题沉淀为可复用的工程基础。",
+    "auth": {
+      "title": "统一身份",
+      "description": "围绕 Passport 认证与跨域登录态共享，连接不同应用的身份入口。"
+    },
+    "engineering": {
+      "title": "工程规范",
+      "description": "用 Parent、BOM 与 Starter 的清晰分工，组织构建规范、版本管理与框架集成。"
+    },
+    "realtime": {
+      "title": "实时连接",
+      "description": "围绕 WebSocket 心跳、重连与 Netty 消息处理，积累实时通讯实践。"
+    },
+    "modular": {
+      "title": "按需组合",
+      "description": "通过公共协议、独立组件与共享前端能力，为不同业务保留组合和扩展空间。"
+    }
+  },
+  "cta": {
+    "eyebrow": "START BUILDING / 开始构建",
+    "title": "下一步，从理解工程开始",
+    "description": "了解 Sparrow 的构建思路，找到适合当前业务的服务与实践。",
+    "primary": "阅读工程指南",
+    "secondary": "浏览全部文档"
+  },
+  "playground": {
+    "eyebrow": "PLAYGROUND / 组件示例",
+    "metadata": {
+      "title": "组件示例 · 麻雀窝 Sparrow Zoo",
+      "description": "浏览 Sparrow 共享前端组件的交互示例与使用说明，涵盖表单、表格、文件上传、状态反馈及 React / Next.js 工程实践。"
+    },
+    "hero": {
+      "title": "从组件体验，",
+      "highlight": "到工程实践",
+      "description": "在真实交互中了解组件，在使用说明中找到接入方法。按场景探索 Sparrow 共享前端库，让通用能力融入你的应用。",
+      "primary": "浏览组件示例",
+      "secondary": "阅读开发文档"
+    },
+    "overview": {
+      "label": "组件示例",
+      "count": "{count} 个示例与指南",
+      "description": "从数据录入到交互反馈，集中查阅演示与实现说明。"
+    },
+    "features": {
+      "i18n": {
+        "title": "中英文浏览",
+        "description": "切换语言，使用熟悉的表达探索组件与说明。"
+      },
+      "theme": {
+        "title": "明暗主题",
+        "description": "支持浅色、深色与跟随系统的浏览体验。"
+      },
+      "components": {
+        "title": "共享组件",
+        "description": "结合交互演示与用法说明，了解组件如何接入。"
+      }
+    },
+    "catalog": {
+      "eyebrow": "EXPLORE / 按场景探索",
+      "title": "找到当前需要的那一块",
+      "description": "按数据、文件、交互与工程实践分类，从一个具体场景开始。",
+      "open": "查看示例与说明"
+    },
+    "groups": {
+      "data": {
+        "title": "数据与表单",
+        "description": "录入、校验、搜索与列表展示。"
+      },
+      "files": {
+        "title": "文件处理",
+        "description": "从上传体验到打包下载实践。"
+      },
+      "interaction": {
+        "title": "交互与反馈",
+        "description": "让操作有回应，让状态更清晰。"
+      },
+      "engineering": {
+        "title": "工程实践",
+        "description": "理解公共能力、构建配置与部署。"
+      }
+    },
+    "examples": {
+      "forms": {
+        "title": "表单与校验",
+        "description": "体验输入、选择、日期与多行文本校验，以及表格搜索条件组件。"
+      },
+      "table": {
+        "title": "数据表格",
+        "description": "探索搜索、排序、筛选、可编辑单元格、分页与树形数据展示。"
+      },
+      "upload": {
+        "title": "文件上传",
+        "description": "体验 FileUploader 上传组件，查阅上传地址配置与结果回调说明。"
+      },
+      "zipDownload": {
+        "title": "ZIP 打包下载",
+        "description": "查阅文件过滤、跨域响应头、中文文件名与前端下载处理的实践记录。"
+      },
+      "accessHistories": {
+        "title": "访问历史",
+        "description": "模拟最近访问记录，体验历史导航、单条移除与一键清空。"
+      },
+      "hooks": {
+        "title": "自定义 Hooks",
+        "description": "了解触底加载、跨域存储、验证码与语言路由重定向的用法。"
+      },
+      "loading": {
+        "title": "加载状态",
+        "description": "预览三点弹跳与脉冲动画，通过模拟请求体验加载状态切换。"
+      },
+      "error": {
+        "title": "错误提示",
+        "description": "体验表单校验提示与错误页动画，了解不同场景下的反馈方式。"
+      },
+      "draggable": {
+        "title": "自由拖拽",
+        "description": "拖动卡片与按钮，了解 Draggable 包裹单个元素的使用方式。"
+      },
+      "eslintConfig": {
+        "title": "ESLint 配置",
+        "description": "从同一份源码的构建差异出发，梳理 ESLint 预设与规则的影响。"
+      },
+      "i18nStaticExport": {
+        "title": "国际化与静态导出",
+        "description": "梳理静态导出时的语言路由、中间件限制与部署配置。"
+      }
+    },
+    "guide": {
+      "eyebrow": "KEEP EXPLORING / 继续探索",
+      "title": "把体验，连接到实现",
+      "description": "从 next-intl 指南继续，理解语言路由、消息配置与上下文，让多语言能力融入应用。",
+      "action": "阅读国际化指南"
+    }
+  },
+  "footer": {
+    "description": "从工程基础到业务服务，一起构建可复用的开发生态。",
+    "backToTop": "返回顶部",
+    "credit": "Powered by Sparrow OS"
+  }
+}

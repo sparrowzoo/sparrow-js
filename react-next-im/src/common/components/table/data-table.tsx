@@ -10,21 +10,16 @@ import {
     getFilteredRowModel,
     getSortedRowModel,
     SortingState,
-    TableState,
-    Updater,
     useReactTable,
     VisibilityState,
 } from "@tanstack/react-table";
 import {Table, TableBody, TableHead, TableHeader, TableRow,} from "@/components/ui/table";
 import DataTableProps, {BasicData, MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {PagerResult} from "@/common/lib/protocol/Result";
 import {EmptyRow} from "@/common/components/table/empty-row";
 import CellRenderer from "@/common/components/table/cell-render";
 import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 import Pager from "@/common/components/table/pager";
-
-function PaginationNext(props: { onClick: () => void, href: string }) {
-    return null;
-}
 
 export function DataTable<TData extends BasicData<TData>>({
                                                               columns,
@@ -57,10 +52,10 @@ export function DataTable<TData extends BasicData<TData>>({
         pageSize: defaultPager ? defaultPager.pageSize : 10,
     });
     const table = useReactTable({
-        onStateChange(updater: Updater<TableState>): void {
+        onStateChange(): void {
         },
         renderFallbackValue: undefined,
-        data: result.data.list,
+        data: (result.data as PagerResult<TData>).list,
         enableSubRowSelection: true,
         getSubRows: (row) => row.subRows || [],
         columns,
@@ -68,7 +63,7 @@ export function DataTable<TData extends BasicData<TData>>({
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         manualPagination: true,
-        rowCount: result.data.recordTotal,
+        rowCount: (result.data as PagerResult<TData>).recordTotal,
         onPaginationChange: setPagination,
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),

@@ -2,14 +2,13 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    assetPrefix: process.env.NEXT_ASSET_PREFIX,
     images: {
-        domains: ['http://img.sparrowzoo.net'],
         unoptimized: true
     },
-    // 编译文件的输出目录
-    distDir: "dist",
+    // Each application exports its own HTML and /_next assets to out/.
+    distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
     output: "export",
+    trailingSlash: true,
     webpack: (config, options) => {
         //https://webpack.docschina.org/loaders/html-loader/
         config.module.rules.push(

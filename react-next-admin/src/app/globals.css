@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "../common/styles/site-theme.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -46,31 +47,31 @@
 :root {
   color-scheme: light;
   --radius: 0.75rem;
-  --background: oklch(0.973 0.004 210);
-  --foreground: oklch(0.27 0.025 230);
-  --card: oklch(1 0 0);
+  --background: var(--sparrow-bg);
+  --foreground: var(--sparrow-text);
+  --card: var(--sparrow-panel);
   --card-foreground: var(--foreground);
-  --popover: oklch(1 0 0);
+  --popover: var(--sparrow-panel);
   --popover-foreground: var(--foreground);
-  --primary: oklch(0.47 0.085 185);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.951 0.006 210);
-  --secondary-foreground: oklch(0.35 0.025 230);
-  --muted: oklch(0.957 0.006 210);
-  --muted-foreground: oklch(0.51 0.022 230);
-  --accent: oklch(0.943 0.022 185);
-  --accent-foreground: oklch(0.36 0.065 185);
+  --primary: var(--sparrow-violet);
+  --primary-foreground: #fff;
+  --secondary: color-mix(in srgb, var(--sparrow-violet) 7%, var(--card));
+  --secondary-foreground: var(--sparrow-soft-text);
+  --muted: color-mix(in srgb, var(--sparrow-violet) 5%, var(--card));
+  --muted-foreground: var(--sparrow-muted);
+  --accent: color-mix(in srgb, var(--sparrow-violet) 10%, var(--card));
+  --accent-foreground: var(--sparrow-violet);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.914 0.009 210);
-  --input: oklch(0.879 0.012 210);
-  --ring: oklch(0.56 0.09 185);
+  --border: var(--sparrow-border);
+  --input: var(--sparrow-border-strong);
+  --ring: var(--sparrow-violet);
   --form-error: #9b514b;
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.992 0.002 210);
+  --chart-1: var(--sparrow-violet);
+  --chart-2: var(--sparrow-cyan);
+  --chart-3: var(--sparrow-pink);
+  --chart-4: var(--sparrow-green);
+  --chart-5: var(--sparrow-amber);
+  --sidebar: var(--sparrow-panel);
   --sidebar-foreground: var(--foreground);
   --sidebar-primary: var(--primary);
   --sidebar-primary-foreground: var(--primary-foreground);
@@ -82,38 +83,9 @@
 
 .dark {
   color-scheme: dark;
-  --background: oklch(0.177 0.012 230);
-  --foreground: oklch(0.932 0.007 210);
-  --card: oklch(0.218 0.014 230);
-  --card-foreground: var(--foreground);
-  --popover: oklch(0.245 0.014 230);
-  --popover-foreground: var(--foreground);
-  --primary: oklch(0.77 0.115 180);
-  --primary-foreground: oklch(0.2 0.035 185);
-  --secondary: oklch(0.271 0.016 230);
-  --secondary-foreground: var(--foreground);
-  --muted: oklch(0.255 0.013 230);
-  --muted-foreground: oklch(0.695 0.02 220);
-  --accent: oklch(0.29 0.036 190);
-  --accent-foreground: oklch(0.82 0.09 180);
+  --primary-foreground: #221b38;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.33 0.018 230);
-  --input: oklch(0.385 0.023 230);
-  --ring: oklch(0.7 0.1 180);
   --form-error: #dfa49f;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.202 0.013 230);
-  --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: var(--accent);
-  --sidebar-accent-foreground: var(--accent-foreground);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--ring);
 }
 
 @layer base {
@@ -145,52 +117,66 @@
   padding: 1rem clamp(0.75rem, 2vw, 1.5rem);
 }
 
-/* Keep shared components unchanged; their admin presentation lives here. */
-.admin-locale label {
-  display: inline-flex;
-  height: 2.25rem;
-  align-items: center;
-  color: var(--muted-foreground);
+/* App surfaces use the same palette as the public website. */
+.admin-welcome {
+  background: radial-gradient(ellipse at 90% 0, rgb(var(--sparrow-cyan-rgb) / 8%), transparent 55%),
+    radial-gradient(ellipse at 12% 0, rgb(var(--sparrow-violet-rgb) / 10%), transparent 65%),
+    var(--sparrow-product-bg);
 }
-.admin-locale select {
-  display: block;
-  height: 2.25rem;
-  width: 7rem;
-  max-width: 100%;
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  padding: 0 1.75rem 0 0.625rem;
-  line-height: normal;
-  font-size: 0.8125rem;
-  cursor: pointer;
+.admin-welcome::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background-image: linear-gradient(var(--sparrow-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--sparrow-grid) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to right, transparent, #000);
 }
-.admin-locale select:hover {
-  background: var(--muted);
-  color: var(--foreground);
-}
-.admin-locale select:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: 2px;
-}
-.admin-locale option {
-  background: var(--popover);
-  color: var(--popover-foreground);
-}
-.admin-locale label > span {
-  top: 50%;
-  transform: translateY(-50%);
-}
-.admin-theme button {
+.admin-welcome > * {
   position: relative;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-color: transparent;
+}
+.admin-welcome h1 {
+  width: fit-content;
+  background: var(--sparrow-title-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+.admin-module-card {
+  background: var(--sparrow-product-bg);
+  transition: transform 220ms ease, box-shadow 220ms ease, background-color 220ms ease;
+}
+.admin-module-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sparrow-card-shadow);
+}
+.admin-brand-mark {
+  background: var(--sparrow-brand-gradient);
+}
+.admin-header {
+  background: color-mix(in srgb, var(--background) 94%, transparent);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.admin-primary-button {
+  background: var(--sparrow-button-gradient);
+  color: var(--sparrow-button-foreground);
+  box-shadow: 0 3px 12px rgb(var(--sparrow-violet-rgb) / 10%);
+}
+.admin-primary-button:hover {
+  background: var(--sparrow-button-hover);
+}
+.admin-profile > button {
+  width: 2.375rem;
+  height: 2.375rem;
+  border: 0;
   background: transparent;
   color: var(--muted-foreground);
   box-shadow: none;
 }
-.admin-theme button:hover {
-  background: var(--muted);
+.admin-profile > button:hover {
+  background: var(--accent);
   color: var(--foreground);
 }
 .admin-profile a {
@@ -209,10 +195,10 @@
 
 .admin-table-panel {
   min-width: 0;
-  border: 1px solid var(--border);
+  border: 0;
   border-radius: var(--radius-xl);
   background: var(--card);
-  box-shadow: 0 2px 8px rgb(0 0 0 / 2%);
+  box-shadow: 0 8px 28px rgb(var(--sparrow-violet-rgb) / 3%);
 }
 .admin-table-panel > .w-full > .h-fit {
   margin: 0;
@@ -473,17 +459,15 @@
   .admin-form-fields > div > div:nth-child(3):has(> svg) {
     grid-row: 2;
   }
-  .admin-locale select {
-    max-width: 6.25rem;
-    padding-left: 0.25rem;
-    font-size: 0.75rem;
-  }
   .admin-table-panel > .w-full > .h-fit {
     padding: 1rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .admin-module-card:hover {
+    transform: none;
+  }
   .admin-page *,
   .admin-header *,
   [data-slot="sidebar"] * {

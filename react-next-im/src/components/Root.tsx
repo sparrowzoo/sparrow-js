@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Toaster} from "react-hot-toast";
 import {ThemeProvider} from "@/common/components/header/theme-provider";
-import Header from "@/common/components/header/header";
+import ImHeader from "@/components/im-header";
 
 export default async function Root({
                                        children,
@@ -18,8 +18,10 @@ export default async function Root({
                 enableSystem
                 disableTransitionOnChange
             >
-                <Header showProfile={true}/>
-                {children}
+                <div className="flex h-dvh flex-col">
+                    <ImHeader/>
+                    <div className="min-h-0 flex-1 overflow-auto">{children}</div>
+                </div>
             </ThemeProvider>
         </>
     );

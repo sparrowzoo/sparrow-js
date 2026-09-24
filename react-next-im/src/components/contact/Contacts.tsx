@@ -3,7 +3,7 @@ import ContactItem from "@/components/contact/ContactItem";
 import * as React from "react";
 import Contact from "@/lib/protocol/contact/Contact";
 import { SidebarMenu } from "@/components/ui/sidebar";
-import Link from "next/link";
+import {Link} from "@/common/i18n/navigation";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 
 interface ContactsProps {

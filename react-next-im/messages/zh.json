@@ -3,8 +3,15 @@
     "title": "麻雀窝"
   },
   "LocaleSwitcher": {
-    "label": "切换至中文",
-    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unbekannt}}"
+    "label": "切换语言",
+    "locale": "{locale, select, zh {中文} en {English} other {其他}}"
+  },
+  "IMHeader": {
+    "brand": "麻雀窝",
+    "label": "IM 主导航",
+    "home": "官网",
+    "study": "学员入口",
+    "support": "客服"
   },
   "Header": {
     "index": "首页",
@@ -14,6 +21,7 @@
     "shop": "商城",
     "coder": "代码生成器",
     "playground": "写文章",
+    "study": "学员入口",
     "theme-toggle": "切换皮肤",
     "light-mode": "亮色",
     "dark-mode": "暗黑",
@@ -76,6 +84,14 @@
     "in-group": " 在群里 ",
     "say": " 说 ",
     "only-see": " 点击这里只看 "
+  },
+  "product": {
+    "passport": "Passport 认证服务",
+    "im": "IM 即时通讯",
+    "coder": "代码生成器",
+    "file": "File 文件服务",
+    "ui": "UI 组件库",
+    "security": "Security 权限系统"
   },
   "ClientServer": {
     "title": "客服",

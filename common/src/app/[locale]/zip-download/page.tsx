@@ -4,6 +4,7 @@ import {useLocale, useTranslations} from "next-intl";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {Link} from "@/common/i18n/navigation";
+import {ADMIN_ROOT} from "@/common/lib/Env";
 import {ArrowLeft} from "lucide-react";
 
 const docZh = `# ZIP 打包下载踩坑日志
@@ -18,7 +19,7 @@ const docZh = `# ZIP 打包下载踩坑日志
 
 踩坑集中在四类问题：**文件过滤**、**跨域响应头**、**中文文件名**、**前端 Blob 保存**。
 
-示例请参考 react-next-admin：http://localhost:3002/zh/table-config/?projectId=28
+示例请参考 react-next-admin：${ADMIN_ROOT}/zh/table-config/?projectId=28
 
 ## 一、文件过滤：防止打包过大导致异常
 
@@ -159,7 +160,7 @@ Frontend button → \`CoderApi.zipDownload()\` → \`Fetcher.download()\` → \`
 
 Four problem areas: **file filtering**, **CORS response headers**, **non-ASCII filenames**, **frontend Blob saving**.
 
-Live example in react-next-admin: http://localhost:3002/zh/table-config/?projectId=28
+Live example in react-next-admin: ${ADMIN_ROOT}/en/table-config/?projectId=28
 
 ## 1. File filtering: avoid huge archives
 
@@ -285,7 +286,7 @@ setTimeout(() => URL.revokeObjectURL(url), 0);
 `;
 
 export default function ZipDownloadExamplePage() {
-    const t = useTranslations("ZipDownloadExample");
+    const t = useTranslations("example.ZipDownloadExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

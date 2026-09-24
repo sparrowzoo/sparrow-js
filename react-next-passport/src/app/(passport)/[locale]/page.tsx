@@ -1,11 +1,5 @@
-"use client";
-import { useEffect } from "react";
-import useNavigating from "@/common/hook/NavigatingHook";
+import SignInPage from "./sign-in/page";
 
-export default function Page() {
-  const Navigations = useNavigating();
-  useEffect(() => {
-    Navigations.redirectToIndex();
-  }, []);
-  return <></>;
+export default function PassportPage() {
+    return <SignInPage/>;
 }

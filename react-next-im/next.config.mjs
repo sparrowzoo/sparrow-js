@@ -2,27 +2,14 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
-    // async redirects() {
-    //     return [
-    //         {
-    //             source: '/',
-    //             destination: '/chat/friends/contact',
-    //             permanent: true,
-    //         }
-    //     ]
-    // },
-    assetPrefix: process.env.NEXT_PUBLIC_ASSET_PREFIX,
     images: {
-        domains: ["http://img.sparrowzoo.net", "http://photo.16pic.com"],
         unoptimized: true  // 图片不压缩
     },
     reactStrictMode: false,
-    // 编译文件的输出目录
-    distDir: "dist/pc",
+    distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
+    // Each site publishes its own out/ directory and same-origin framework assets.
     output: "export",
-    generateBuildId: async () => {
-        return "sparrow";
-    },
+    trailingSlash: true,
     webpack: (config, options) => {
         config.module.rules.push(
             {
@@ -51,5 +38,3 @@ const withNextIntl = createNextIntlPlugin({
 });
 export default withNextIntl(nextConfig);
 // export default nextConfig;
-
-

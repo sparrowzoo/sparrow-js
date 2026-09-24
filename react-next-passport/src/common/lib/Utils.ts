@@ -1,5 +1,7 @@
 import {format} from "date-fns";
 import KeyValue from "@/common/lib/protocol/KeyValue";
+import {type ClassValue, clsx} from "clsx"
+import {twMerge} from "tailwind-merge"
 
 export class Utils {
     public static randomUUID() {
@@ -27,7 +29,7 @@ export class Utils {
         return imageTypes.includes(extension as string);
     }
 
-    public static getValue(dictionary: KeyValue[] | undefined, key: string): KeyValue | undefined {
+    public static getValue(dictionary: KeyValue[] | undefined, key: string | undefined): KeyValue | undefined {
         if (!dictionary) {
             return undefined;
         }
@@ -35,4 +37,8 @@ export class Utils {
             return e.key == key;
         })
     }
+}
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs))
 }

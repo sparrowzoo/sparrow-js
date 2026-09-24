@@ -1,18 +1,22 @@
-# common — 前端公共库 / 共享组件
+# common — sparrowzoo 官方站点前端（含下游共享基础库与 UI）
 
 ## 项目概述
 
-本目录是 Sparrow 前端各子项目（react-next-admin / react-next-im / react-next-passport / react-webpack 等）共享的**底层公共库**。它不是一个独立运行的业务应用，而是一组被各子项目通过 `cpy` 复制进 `src/common` 后复用的能力，涵盖：数据请求、跨域登录态共享、WebSocket 长连接、后台管理状态、通用表格系统、表单/文件/国际化/头部等 React 组件，以及自定义 hooks。
+本目录是 **sparrowzoo 的官方站点前端**，同时承载 Sparrow 生态各子项目（react-next-admin / react-next-im / react-next-passport / react-webpack 等）共享的**基础库与 UI 组件**。
 
-> **本仓库不直接对外提供服务**，自身也保留一个最小的 Next.js App Router 骨架（`src/app/[locale]` + shadcn/ui 原语组件）用于本地开发调试。真正的消费方是各子项目。
+`src` 目录中**除 `app` 之外全部是下游共享代码**（相当于本平台的基础库 + UI），会通过 `cpy` 复制进各子项目复用，涵盖：数据请求、跨域登录态共享、WebSocket 长连接、后台管理状态、通用表格系统、表单/文件/国际化/头部等 React 组件，以及自定义 hooks。
+
+- `src/app/` — 本站（sparrowzoo 官方站点）自身的业务页面，**不属于共享代码**
+- `src/common/` — 共享库本体，被 `cpy` 复制进各子项目的 `src/common`（见下）
+- `src/components/` `src/hooks/` `src/lib/` `src/i18n/` — shadcn/ui 原语、工具与国际化脚手架，作为 `@/` 导入目标（各子项目自行生成等价副本）
 
 ## 跨项目复制机制（cpy）
 
-子项目（以 react-next-admin 为例）通过 `npm run copy`（`cpy ./../common/src/common ./src/ --parents`）把 `../common/src/common` 整目录复制进自身的 `src/common`。
+子项目（以 react-next-admin 为例）通过 `npm run copy`（`cpy ./../common/src/common ./src/ --parents`）把 `../common/src/common` 整目录复制进自身的 `src/common`。`copy` 脚本定义在**各子项目**的 `package.json` 中，方向是「从 common 拉取 → 覆盖子项目自身」。
 
 由此产生两条**关键约定**：
 
-1. **修改必须回源**：共享代码的权威源码在 `common/src/common`，子项目里的 `src/common` 只是副本，禁止直接改动，否则下次 copy 会被覆盖。
+1. **修改必须回源，然后 copy**：共享代码的权威源码在 `common/src/common`，子项目里的 `src/common` 只是副本，禁止直接改动（否则下次 copy 会被覆盖）。**下游项目若要修改任何共享内容，一定要回到本目录（common）修改，改完后到子项目执行 `npm run copy` 同步。**
 2. **对外部宿主项目的依赖倒置**：common 代码里大量 `@/` 导入指向的是**宿主项目**的路径，这些文件在 common 仓库里可能不存在或只是占位，复制进子项目后才真正解析。常见的有：
    - `@/i18n/routing` — next-intl 路由定义（`locales` / `pathnames`），由宿主项目提供
    - `@/components/ui/*` — shadcn/ui 原语组件（button/table/select/input/dialog/dropdown-menu/sidebar 等）
@@ -23,10 +27,10 @@
 
 | 类别 | 依赖 | 版本 | 说明 |
 |------|------|------|------|
-| 框架 | `next` | **15.3.2** | App Router，Turbopack dev |
-| 视图 | `react` / `react-dom` | **^18.3.1** | 显式锁定 React 18 |
+| 框架 | `next` | **15.5.26** | App Router，Turbopack dev |
+| 视图 | `react` / `react-dom` | **^19.0.0** | React 19 |
 | 类型 | `typescript` | **^5** | `strict: false`（见 tsconfig） |
-| 国际化 | `next-intl` | **^4.1.0** | `[locale]` 路由段 |
+| 国际化 | `next-intl` | **4.14.6** | 显式 `[locale]` 路由段、静态导出 |
 | 样式 | `tailwindcss` | **^4** | 经 `@tailwindcss/postcss`，无独立 config 文件 |
 | 组件库 | `shadcn` (CLI) | **^2.6.0** | style `new-york`，baseColor `stone`，RSC 开启 |
 | UI 原语 | `@radix-ui/react-*` | 多组件 | checkbox/dialog/dropdown-menu/label/popover/select/separator/slot/tooltip |
@@ -141,3 +145,10 @@ common/
 - **环境变量**：新增环境变量一律在 `Env.ts` 集中声明导出，不要在业务代码直接读 `process.env`。
 - **客户端组件**：涉及 `window` / `localStorage` / `document` 的模块（`CrosStorage`、`LoginUser` 等）需以 `"use client"` 或运行时判空保护，避免 SSR 报错。
 - **tsconfig**：`strict` / `strictNullChecks` 均为 `false`，类型约束较宽松，允许 `any`。
+
+## 静态部署约定
+
+- 四站 Next.js 统一 `15.5.26`，生产使用 `output: "export"`、`trailingSlash: true`，产物统一 `out/`；开发缓存 `.next-dev`，生产缓存 `.next`。
+- 生产阶段暂用 HTTP / WS，管理站规范域名为 `admin.sparrowzoo.com`，`coder` 仅为兼容别名。业务路由显式 `/zh/`、`/en/`，不依赖 middleware。
+- 发布使用 npm 与 `package-lock.json`；根目录 `deploy/build-static.mjs` 完成安装、复制、构建和产物验证。`npm start` 仅预览静态产物，线上 Nginx 直接读文件。
+- 操作手册：`common/public/backend/nginx/next15-http-launch.html`；可部署配置：`deploy/nginx/`。

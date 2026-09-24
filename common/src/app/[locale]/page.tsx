@@ -1,171 +1,154 @@
-import {ModeToggle} from "@/common/components/header/mode-toggle";
-import {useTranslations} from "next-intl";
-import LocaleSwitcher from "@/common/components/i18n/LocaleSwitcher";
+import {localeAlternates} from "@/lib/site-metadata";
+import type {Metadata} from "next";
+import {getTranslations, setRequestLocale} from "next-intl/server";
+import {ArrowDown, ArrowRight, ArrowUpRight, Blocks, BookOpen, Boxes, Braces, Check, Code2, FileUp, Layers3, LockKeyhole, MessageCircle, Radio, ShieldCheck} from "lucide-react";
 import {Link} from "@/common/i18n/navigation";
-import {Anchor, ArrowRight, Bird, Blocks, CircleAlert, Download, History, Languages, Loader2, Move, Package, Settings, Sparkles, SunMoon, Table2, UploadCloud} from "lucide-react";
+import DocumentDirectory from "./_components/document-directory";
+import SiteHeader from "./_components/site-header";
+import SiteFooter from "./_components/site-footer";
+import {documents, productIds} from "./_components/site-content";
+import styles from "./home.module.css";
 
-const NEXT_INTL_GUIDE_URL = "/docs/next-intl/权威指南及使用说明.html";
+type PageProps = {params: Promise<{locale: string}>};
 
-export default function Home() {
-    const t = useTranslations("Home");
+export async function generateMetadata({params}: PageProps): Promise<Metadata> {
+    const {locale} = await params;
+    const t = await getTranslations({locale, namespace: "website.metadata"});
+    return {
+    alternates: localeAlternates(locale, ""),
+        title: t("title"),
+        description: t("description"),
+        openGraph: {title: t("title"), description: t("description"), siteName: "Sparrow Zoo", type: "website"},
+    };
+}
 
-    const features = [
-        {icon: Languages, title: t("features.i18n.title"), desc: t("features.i18n.desc")},
-        {icon: SunMoon, title: t("features.theme.title"), desc: t("features.theme.desc")},
-        {icon: Blocks, title: t("features.components.title"), desc: t("features.components.desc")},
-    ];
+const products = [
+    {id: "passport", icon: ShieldCheck, href: "/products/passport", color: "violet"},
+    {id: "file", icon: FileUp, href: "/products/file", color: "cyan"},
+    {id: "security", icon: LockKeyhole, href: null, color: "violet"},
+    {id: "im", icon: MessageCircle, href: "/products/im", color: "cyan"},
+    {id: "coder", icon: Code2, href: "/products/coder", color: "pink"},
+    {id: "ui", icon: Blocks, href: "/ui", color: "cyan"},
+] as const;
+
+const capabilities = [
+    {id: "auth", icon: ShieldCheck},
+    {id: "engineering", icon: Layers3},
+    {id: "realtime", icon: Radio},
+    {id: "modular", icon: Boxes},
+] as const;
+
+export default async function Home({params}: PageProps) {
+    const {locale} = await params;
+    setRequestLocale(locale);
+    const t = await getTranslations("website");
 
     return (
-        <div className="relative min-h-screen overflow-hidden bg-background text-foreground">
-            {/* 背景柔光 */}
-            <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-                <div className="absolute -top-40 left-1/2 h-[480px] w-[720px] -translate-x-1/2 rounded-full bg-gradient-to-r from-violet-500/20 via-cyan-400/20 to-fuchsia-500/20 blur-[120px] dark:from-violet-600/25 dark:via-cyan-400/20 dark:to-fuchsia-600/25"/>
-                <div className="absolute bottom-0 left-1/4 h-[320px] w-[420px] rounded-full bg-cyan-400/10 blur-[100px] dark:bg-cyan-500/15"/>
-            </div>
-
-            {/* 顶部导航 */}
-            <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
-                <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-                    <div className="flex items-center gap-2">
-                        <span
-                            className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-violet-500 to-cyan-400 text-white">
-                            <Bird className="h-4 w-4"/>
-                        </span>
-                        <span className="text-lg font-semibold tracking-tight">{t("title")}</span>
+        <div className={styles.site} id="top">
+            <a href="#main-content" className={styles.skipLink}>{t("nav.skip")}</a>
+            <SiteHeader/>
+            <main id="main-content">
+                <section className={styles.hero} aria-labelledby="hero-heading">
+                    <div className={styles.heroGrid} aria-hidden="true"/>
+                    <div className={styles.heroContent}>
+                        <div className={styles.eyebrowPill}><span/>{t("hero.eyebrow")}</div>
+                        <h1 id="hero-heading">{t("hero.title")}<br/><span>{t("hero.highlight")}</span></h1>
+                        <p className={styles.heroDescription}>{t("hero.description")}</p>
+                        <div className={styles.heroActions}>
+                            <a href="#products" className={styles.primaryButton}>{t("hero.primary")}<ArrowRight size={17} aria-hidden="true"/></a>
+                            <a href="#docs" className={styles.secondaryButton}><BookOpen size={17} aria-hidden="true"/>{t("hero.secondary")}</a>
+                        </div>
+                        <p className={styles.heroNote}><span/>{t("hero.note")}</p>
                     </div>
-                    <div className="flex items-center gap-2">
-                        <LocaleSwitcher/>
-                        <ModeToggle/>
-                    </div>
-                </div>
-            </header>
-
-            {/* Hero */}
-            <main className="mx-auto max-w-6xl px-6">
-                <section className="flex flex-col items-center pb-16 pt-24 text-center sm:pt-32">
-                    <span
-                        className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-1.5 text-sm text-muted-foreground backdrop-blur">
-                        <Sparkles className="h-3.5 w-3.5 text-violet-500"/>
-                        {t("badge")}
-                    </span>
-
-                    <h1 className="mt-8 max-w-3xl text-5xl font-bold tracking-tight sm:text-7xl">
-                        <span className="bg-gradient-to-r from-violet-500 via-cyan-400 to-fuchsia-500 bg-clip-text text-transparent">
-                            {t("title")}
-                        </span>
-                        <br/>
-                        <span>{t("subtitle")}</span>
-                    </h1>
-
-                    <p className="mt-6 max-w-2xl text-lg text-muted-foreground">
-                        {t("description")}
-                    </p>
-
-                    <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-                        <a
-                            href="#"
-                            className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 px-6 py-3 text-sm font-medium text-white shadow-lg shadow-violet-500/25 transition-transform hover:-translate-y-0.5">
-                            {t("cta-primary")}
-                            <ArrowRight className="h-4 w-4"/>
-                        </a>
-                        <a
-                            href={NEXT_INTL_GUIDE_URL}
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            {t("cta-secondary")}
-                        </a>
-                        <Link
-                            href="/upload"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <UploadCloud className="h-4 w-4"/>
-                            {t("upload-example")}
-                        </Link>
-                        <Link
-                            href="/zip-download"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Download className="h-4 w-4"/>
-                            {t("zip-download-example")}
-                        </Link>
-                        <Link
-                            href="/forms"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Blocks className="h-4 w-4"/>
-                            {t("forms-example")}
-                        </Link>
-                        <Link
-                            href="/access-histories"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <History className="h-4 w-4"/>
-                            {t("access-histories-example")}
-                        </Link>
-                        <Link
-                            href="/hooks"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Anchor className="h-4 w-4"/>
-                            {t("hooks-example")}
-                        </Link>
-                        <Link
-                            href="/loading"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Loader2 className="h-4 w-4"/>
-                            {t("loading-example")}
-                        </Link>
-                        <Link
-                            href="/error"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <CircleAlert className="h-4 w-4"/>
-                            {t("error-example")}
-                        </Link>
-                        <Link
-                            href="/draggable"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Move className="h-4 w-4"/>
-                            {t("draggable-example")}
-                        </Link>
-                        <Link
-                            href="/table"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Table2 className="h-4 w-4"/>
-                            {t("table-example")}
-                        </Link>
-                        <Link
-                            href="/eslint-config"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Settings className="h-4 w-4"/>
-                            {t("eslint-config-example")}
-                        </Link>
-                        <Link
-                            href="/i18n-static-export"
-                            className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-6 py-3 text-sm font-medium backdrop-blur transition-colors hover:bg-card">
-                            <Package className="h-4 w-4"/>
-                            {t("i18n-static-export-example")}
-                        </Link>
+                    <div className={styles.stats}>
+                        <div><strong>{String(productIds.length).padStart(2, "0")}<span> / </span></strong><span>{t("stats.products")}</span></div>
+                        <div><strong>{String(documents.length).padStart(2, "0")}<span> / </span></strong><span>{t("stats.docs")}</span></div>
+                        <div><strong className={styles.stackStat}>Spring Boot <span>+</span> React</strong><span>{t("stats.stack")}</span></div>
                     </div>
                 </section>
 
-                {/* 特性卡片 */}
-                <section className="grid gap-6 pb-24 sm:grid-cols-3">
-                    {features.map((f) => {
-                        const Icon = f.icon;
-                        return (
-                            <div
-                                key={f.title}
-                                className="group rounded-2xl border border-border bg-card p-6 transition-all hover:-translate-y-1 hover:border-violet-500/40 hover:shadow-xl hover:shadow-violet-500/10">
-                                <span
-                                    className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/15 to-cyan-400/15 text-violet-500 dark:text-cyan-300">
-                                    <Icon className="h-5 w-5"/>
-                                </span>
-                                <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
-                                <p className="mt-2 text-sm text-muted-foreground">{f.desc}</p>
+                <section id="products" className={styles.section} aria-labelledby="products-heading">
+                    <div className={styles.sectionHead}>
+                        <div><p className={styles.eyebrow}>{t("products.eyebrow")}</p><h2 id="products-heading">{t("products.title")}</h2></div>
+                        <p className={styles.sectionDescription}>{t("products.description")}</p>
+                    </div>
+                    <div className={styles.productGrid}>
+                        <a href="/backend/java/maven/sparrow-parent-bom.html" className={`${styles.productCard} ${styles.foundation}`}>
+                            <div className={styles.foundationContent}>
+                                <div className={styles.productTop}><span className={styles.productIcon}><Layers3 size={25} aria-hidden="true"/></span><span className={styles.foundationBadge}>{t("products.foundation")}</span></div>
+                                <p className={styles.productSubtitle}>{t("products.scaffold.subtitle")}</p>
+                                <h3>{t("products.scaffold.title")}</h3>
+                                <p className={styles.productDescription}>{t("products.scaffold.description")}</p>
+                                <div className={styles.tags}>{(t.raw("products.scaffold.tags") as string[]).map((tag) => <span key={tag}>{tag}</span>)}</div>
+                                <span className={styles.foundationLink}>{t("products.guide")}<ArrowUpRight size={17} aria-hidden="true"/></span>
                             </div>
-                        );
-                    })}
+                            <div className={styles.foundationDiagram} aria-hidden="true">
+                                <div className={styles.diagramHeader}><span/><span/><span/><code>sparrow / foundation</code></div>
+                                <div className={styles.diagramBody}>
+                                    <div><Layers3 size={17}/><code>sparrow-parent</code><span>01</span></div>
+                                    <ArrowDown size={17} className={styles.diagramArrow}/>
+                                    <div><Boxes size={17}/><code>sparrow-bom</code><span>02</span></div>
+                                    <ArrowDown size={17} className={styles.diagramArrow}/>
+                                    <div className={styles.diagramApplication}><Braces size={17}/><code>your-application</code><Check size={16}/></div>
+                                </div>
+                                <div className={styles.diagramFooter}><span/>Java · Spring Boot · Maven</div>
+                            </div>
+                        </a>
+                        {products.map((product, index) => {
+                            const Icon = product.icon;
+                            const content = <>
+                                <div className={styles.productTop}>
+                                    <span className={styles.productIcon} data-color={product.color}><Icon size={24} aria-hidden="true"/></span>
+                                    <span className={product.href ? styles.availableBadge : styles.plannedBadge}><span/>{t(product.href ? "products.available" : "products.planned")}</span>
+                                </div>
+                                <p className={styles.productSubtitle}>{t(`products.${product.id}.subtitle`)}</p>
+                                <h3>{t(`products.${product.id}.title`)}</h3>
+                                <p className={styles.productDescription}>{t(`products.${product.id}.description`)}</p>
+                                <div className={styles.tags}>{(t.raw(`products.${product.id}.tags`) as string[]).map((tag) => <span key={tag}>{tag}</span>)}</div>
+                                <div className={styles.productFooter}><span className={styles.productNumber}>{String(index + 2).padStart(2, "0")}</span><span>{t(product.href ? "products.details" : "products.planned")}{product.href && <ArrowUpRight size={17} aria-hidden="true"/>}</span></div>
+                            </>;
+                            return product.href ? (
+                                <Link key={product.id} href={product.href} className={`${styles.productCard} ${index < 2 ? styles.availableCard : styles.compactCard}`}>{content}</Link>
+                            ) : (
+                                <article key={product.id} className={`${styles.productCard} ${styles.compactCard}`}>{content}</article>
+                            );
+                        })}
+                    </div>
+                </section>
+
+                <section id="docs" className={`${styles.section} ${styles.docsSection}`} aria-labelledby="docs-heading">
+                    <div className={styles.sectionHead}>
+                        <div><p className={styles.eyebrow}>{t("docs.eyebrow")}</p><h2 id="docs-heading">{t("docs.title")}</h2></div>
+                        <p className={styles.sectionDescription}>{t("docs.description")}</p>
+                    </div>
+                    <DocumentDirectory/>
+                </section>
+
+                <section id="ecosystem" className={styles.section} aria-labelledby="ecosystem-heading">
+                    <div className={styles.sectionHead}>
+                        <div><p className={styles.eyebrow}>{t("ecosystem.eyebrow")}</p><h2 id="ecosystem-heading">{t("ecosystem.title")}</h2></div>
+                        <p className={styles.sectionDescription}>{t("ecosystem.description")}</p>
+                    </div>
+                    <div className={styles.capabilities}>
+                        {capabilities.map(({id, icon: Icon}) => <div key={id} className={styles.capability}>
+                            <Icon size={23} aria-hidden="true"/>
+                            <h3>{t(`ecosystem.${id}.title`)}</h3>
+                            <p>{t(`ecosystem.${id}.description`)}</p>
+                        </div>)}
+                    </div>
+                </section>
+
+                <section className={`${styles.section} ${styles.ctaSection}`} aria-labelledby="cta-heading">
+                    <div className={styles.cta}>
+                        <div><p className={styles.eyebrow}>{t("cta.eyebrow")}</p><h2 id="cta-heading">{t("cta.title")}</h2><p className={styles.ctaDescription}>{t("cta.description")}</p></div>
+                        <div className={styles.ctaActions}>
+                            <a href="/backend/java/maven/sparrow-parent-bom.html" className={styles.primaryButton}>{t("cta.primary")}<ArrowRight size={16} aria-hidden="true"/></a>
+                            <a href="#docs" className={styles.textButton}>{t("cta.secondary")}<ArrowUpRight size={16} aria-hidden="true"/></a>
+                        </div>
+                    </div>
                 </section>
             </main>
-
-            {/* 底部 */}
-            <footer className="border-t border-border/60 py-8 text-center text-sm text-muted-foreground">
-                {t("footer")} · {new Date().getFullYear()}
-            </footer>
+            <SiteFooter/>
         </div>
     );
 }

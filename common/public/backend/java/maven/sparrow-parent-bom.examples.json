@@ -1,0 +1,105 @@
+[
+  {
+    "name": "aggregator",
+    "filepath": "sparrow-shell/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\">\n  <modelVersion>4.0.0</modelVersion>\n  <groupId>com.sparrowzoo</groupId>\n  <artifactId>sparrow-shell</artifactId>\n  <version>1.0.0</version>\n  <packaging>pom</packaging>\n  <modules>\n    <module>sparrow-parent</module>\n    <module>sparrow-bom</module>\n    <module>sparrow-protocol</module>\n    <module>sparrow</module>\n    <module>sparrow-authenticator/authenticator-core</module>\n  </modules>\n</project>",
+    "notes": [
+      "示例只列讨论中的关键模块；实际迁移应保留所有需要聚合构建的现有模块。",
+      "聚合根不承担公共继承职责，内部组件明确继承 sparrow-parent；聚合根自身版本不会决定被聚合组件的版本。"
+    ]
+  },
+  {
+    "name": "internalparent",
+    "filepath": "sparrow-shell/sparrow-parent/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <groupId>com.sparrowzoo</groupId>\n  <artifactId>sparrow-parent</artifactId>\n  <version>1.0.0</version>\n  <packaging>pom</packaging>\n  <properties>\n    <java.version>18</java.version>\n    <maven.compiler.release>${java.version}</maven.compiler.release>\n    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>\n    <spring-boot.version>3.5.0</spring-boot.version>\n  </properties>\n  <dependencyManagement>\n    <dependencies>\n      <dependency>\n        <groupId>org.springframework.boot</groupId>\n        <artifactId>spring-boot-dependencies</artifactId>\n        <version>${spring-boot.version}</version>\n        <type>pom</type>\n        <scope>import</scope>\n      </dependency>\n    </dependencies>\n  </dependencyManagement>\n  <build>\n    <pluginManagement>\n      <plugins>\n        <plugin>\n          <groupId>org.apache.maven.plugins</groupId>\n          <artifactId>maven-compiler-plugin</artifactId>\n          <version>3.13.0</version>\n        </plugin>\n        <plugin>\n          <groupId>org.apache.maven.plugins</groupId>\n          <artifactId>maven-surefire-plugin</artifactId>\n          <version>3.5.2</version>\n        </plugin>\n      </plugins>\n    </pluginManagement>\n  </build>\n</project>\n",
+    "notes": [
+      "架构示例，版本号不是版本升级或兼容性背书；JDK 18 沿用讨论中的现有基线，实际按平台验证结果选择。",
+      "导入 spring-boot-dependencies 只获得依赖版本管理，不等于继承 spring-boot-starter-parent，也不带入它的构建插件配置。",
+      "pluginManagement 提供插件版本与默认配置；默认生命周期已绑定的 compiler/surefire 会采用这些配置，其他未绑定插件需要显式声明或 execution。",
+      "未加入仓库私有发布、签名、固定相对路径规则，避免这些平台生产侧配置被业务直接继承。",
+      "不管理 Sparrow 自产组件的发布版本，也不导入 sparrow-bom。"
+    ]
+  },
+  {
+    "name": "protocolproducer",
+    "filepath": "sparrow-shell/sparrow-protocol/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>com.sparrowzoo</groupId>\n    <artifactId>sparrow-parent</artifactId>\n    <version>1.0.0</version>\n    <relativePath>../sparrow-parent/pom.xml</relativePath>\n  </parent>\n  <artifactId>sparrow-protocol</artifactId>\n  <version>1.0.5</version>\n</project>\n",
+    "notes": [
+      "组件独立声明发布版本，父版本 1.0.0 保持稳定。",
+      "完整的最小 POM，用于说明版本边界；实际迁移须保留模块现有且必要的依赖、插件。"
+    ]
+  },
+  {
+    "name": "coreproducer",
+    "filepath": "sparrow-shell/sparrow/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>com.sparrowzoo</groupId>\n    <artifactId>sparrow-parent</artifactId>\n    <version>1.0.0</version>\n    <relativePath>../sparrow-parent/pom.xml</relativePath>\n  </parent>\n  <artifactId>sparrow</artifactId>\n  <version>1.0.7</version>\n  <dependencies>\n    <dependency>\n      <groupId>com.sparrowzoo</groupId>\n      <artifactId>sparrow-protocol</artifactId>\n      <version>1.0.5</version>\n    </dependency>\n  </dependencies>\n</project>\n",
+    "notes": [
+      "平台生产者显式声明实际使用的内部依赖版本；不反向导入对外发行清单 sparrow-bom。",
+      "这不是现有 sparrow 模块全部依赖的替换清单。"
+    ]
+  },
+  {
+    "name": "authproducer",
+    "filepath": "sparrow-shell/sparrow-authenticator/authenticator-core/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>com.sparrowzoo</groupId>\n    <artifactId>sparrow-parent</artifactId>\n    <version>1.0.0</version>\n    <relativePath>../../sparrow-parent/pom.xml</relativePath>\n  </parent>\n  <artifactId>authenticator-core</artifactId>\n  <version>1.1.2</version>\n  <dependencies>\n    <dependency>\n      <groupId>com.sparrowzoo</groupId>\n      <artifactId>sparrow-protocol</artifactId>\n      <version>1.0.5</version>\n    </dependency>\n    <dependency>\n      <groupId>com.sparrowzoo</groupId>\n      <artifactId>sparrow</artifactId>\n      <version>1.0.7</version>\n    </dependency>\n  </dependencies>\n</project>\n",
+    "notes": [
+      "认证组件可按发布组统一使用 1.1.2，且独立于 core 与 protocol。",
+      "只展示组件关系，实际认证第三方依赖和运行时装配必须保留。"
+    ]
+  },
+  {
+    "name": "consumerbom",
+    "filepath": "sparrow-shell/sparrow-bom/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>com.sparrowzoo</groupId>\n    <artifactId>sparrow-parent</artifactId>\n    <version>1.0.0</version>\n    <relativePath>../sparrow-parent/pom.xml</relativePath>\n  </parent>\n  <artifactId>sparrow-bom</artifactId>\n  <version>1.2.0</version>\n  <packaging>pom</packaging>\n  <properties>\n    <sparrow.protocol.version>1.0.5</sparrow.protocol.version>\n    <sparrow.core.version>1.0.7</sparrow.core.version>\n    <sparrow.authenticator.version>1.1.2</sparrow.authenticator.version>\n  </properties>\n  <dependencyManagement>\n    <dependencies>\n      <dependency>\n        <groupId>com.sparrowzoo</groupId>\n        <artifactId>sparrow-protocol</artifactId>\n        <version>${sparrow.protocol.version}</version>\n      </dependency>\n      <dependency>\n        <groupId>com.sparrowzoo</groupId>\n        <artifactId>sparrow</artifactId>\n        <version>${sparrow.core.version}</version>\n      </dependency>\n      <dependency>\n        <groupId>com.sparrowzoo</groupId>\n        <artifactId>authenticator-core</artifactId>\n        <version>${sparrow.authenticator.version}</version>\n      </dependency>\n      <dependency>\n        <groupId>com.sparrowzoo</groupId>\n        <artifactId>authenticator-monolithic-starter</artifactId>\n        <version>${sparrow.authenticator.version}</version>\n      </dependency>\n    </dependencies>\n  </dependencyManagement>\n</project>\n",
+    "notes": [
+      "这是有意采用的双用途 POM：业务 parent 入口，同时支持标准 BOM import；它继承稳定的 sparrow-parent。",
+      "作为 parent 时可沿父链继承公共构建配置；作为 import 时只取得有效 dependencyManagement，包含父链继承得到的第三方依赖版本管理。",
+      "dependencyManagement 是版本规则，不会自动引入这些 JAR，也不要求这些 JAR 在发布该 POM 之前存在。",
+      "需要验证组件之间的兼容性后再发布这个组合；示例中的不同版本号只说明可独立版本化。",
+      "普通 dependencies 保持为空，避免所有业务消费者被强制引入整套框架。"
+    ]
+  },
+  {
+    "name": "businessroot",
+    "filepath": "passport-sparrow/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>com.sparrowzoo</groupId>\n    <artifactId>sparrow-bom</artifactId>\n    <version>1.2.0</version>\n    <relativePath/>\n  </parent>\n  <groupId>com.example.passport</groupId>\n  <artifactId>passport-sparrow</artifactId>\n  <version>1.0.0</version>\n  <packaging>pom</packaging>\n  <modules>\n    <module>passport-api</module>\n    <module>passport-service</module>\n    <module>passport-web</module>\n  </modules>\n</project>\n",
+    "notes": [
+      "relativePath 为空明确通过仓库解析公司级父 POM。",
+      "业务显式声明自己的 groupId/version，防止继承平台坐标或把业务版本绑定到 BOM 版本。",
+      "多模块只要求根 POM 聚合 modules，不要求部门额外维护和发布一套通用 parent 或 BOM。",
+      "子模块是否继承根 POM由项目决定；仅列入 modules 并不会自动继承根 POM。",
+      "以下 direct-bom 与 localroot 示例是单个子模块的替代写法，可按一致的项目规范选择。"
+    ]
+  },
+  {
+    "name": "businesschild-direct-bom",
+    "filepath": "passport-sparrow/passport-api/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>com.sparrowzoo</groupId>\n    <artifactId>sparrow-bom</artifactId>\n    <version>1.2.0</version>\n    <relativePath/>\n  </parent>\n  <groupId>com.example.passport</groupId>\n  <artifactId>passport-api</artifactId>\n  <version>1.0.0</version>\n  <dependencies>\n    <dependency>\n      <groupId>com.sparrowzoo</groupId>\n      <artifactId>sparrow-protocol</artifactId>\n    </dependency>\n  </dependencies>\n</project>\n",
+    "notes": [
+      "各子模块直接继承公司 BOM，根 POM 仅负责聚合也是合法结构。",
+      "每个子模块都要显式声明业务 groupId/version，也需分别维护父 BOM 版本。",
+      "如果 passport-web 依赖 passport-api，这种结构仍须明确该业务内部依赖的版本；聚合本身不提供版本管理。"
+    ]
+  },
+  {
+    "name": "businesschild-localroot",
+    "filepath": "passport-sparrow/passport-api/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>com.example.passport</groupId>\n    <artifactId>passport-sparrow</artifactId>\n    <version>1.0.0</version>\n    <relativePath>../pom.xml</relativePath>\n  </parent>\n  <artifactId>passport-api</artifactId>\n  <dependencies>\n    <dependency>\n      <groupId>com.sparrowzoo</groupId>\n      <artifactId>sparrow-protocol</artifactId>\n    </dependency>\n  </dependencies>\n</project>\n",
+    "notes": [
+      "可选常见写法：业务根 POM 同时聚合并作为本项目子模块的父 POM；由根集中选择公司 BOM 版本。",
+      "这是项目已有根 POM 的用途，不是要求业务部门再建一个通用 parent 产品或 BOM 产品。",
+      "子模块继承的是根 POM 的业务版本 1.0.0，不是公司 BOM 的 1.2.0。"
+    ]
+  },
+  {
+    "name": "business-import",
+    "filepath": "passport-sparrow-import/pom.xml",
+    "xml": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd\">\n  <modelVersion>4.0.0</modelVersion>\n  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>3.5.0</version>\n    <relativePath/>\n  </parent>\n  <groupId>com.example.passport</groupId>\n  <artifactId>passport-sparrow</artifactId>\n  <version>1.0.0</version>\n  <properties>\n    <java.version>18</java.version>\n  </properties>\n  <dependencyManagement>\n    <dependencies>\n      <dependency>\n        <groupId>com.sparrowzoo</groupId>\n        <artifactId>sparrow-bom</artifactId>\n        <version>1.2.0</version>\n        <type>pom</type>\n        <scope>import</scope>\n      </dependency>\n    </dependencies>\n  </dependencyManagement>\n  <dependencies>\n    <dependency>\n      <groupId>com.sparrowzoo</groupId>\n      <artifactId>authenticator-monolithic-starter</artifactId>\n    </dependency>\n  </dependencies>\n</project>\n",
+    "notes": [
+      "已有必须保留的父 POM 时，用 import 获取平台组件版本；一个项目只能有一个直接 parent。",
+      "这里 java.version 是业务自己声明的属性，不是从 sparrow-bom import 过来的。",
+      "此例的构建约定来自 Spring Boot parent；sparrow-parent 的插件配置和普通属性不会通过 BOM import 导入。",
+      "父 POM 或其他 BOM 与 Sparrow 管理相同坐标时应检查 effective-pom 与 dependency:tree；示例刻意让 Boot 版本一致，不能据此断言不同版本可兼容。"
+    ]
+  }
+]

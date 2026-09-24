@@ -125,6 +125,7 @@ const MenuBar = ({ editor }) => {
 
 export default function Editor() {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       StarterKit,
       TextAlign.configure({

@@ -38,7 +38,7 @@ import {UPLOAD_URL} from "@/common/lib/Env";
 
 | 环境 | 配置值 |
 |------|--------|
-| development | http://localhost:8888/upload.json |
+| development | \`http://localhost:8888/upload.json\` |
 | production | http://api.sparrowzoo.com/upload.json |
 
 > 前缀 \`NEXT_PUBLIC_\` 必须保留，Next.js 只会把带该前缀的变量内联到客户端。
@@ -112,7 +112,7 @@ The upload URL is configured via **NEXT_PUBLIC_UPLOAD_URL**, read from \`Env.ts\
 
 | Environment | Value |
 |-------------|-------|
-| development | http://localhost:8888/upload.json |
+| development | \`http://localhost:8888/upload.json\` |
 | production | http://api.sparrowzoo.com/upload.json |
 
 > The \`NEXT_PUBLIC_\` prefix is required; Next.js only inlines prefixed vars to the client.
@@ -158,7 +158,7 @@ interface Result {
 `;
 
 export default function UploadExamplePage() {
-    const t = useTranslations("UploadExample");
+    const t = useTranslations("example.UploadExample");
     const locale = useLocale();
     const [result, setResult] = useState<{url: string; fileName: string} | null>(null);
     const doc = locale === "zh" ? docZh : docEn;

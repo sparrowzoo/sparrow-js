@@ -21,6 +21,9 @@ function ContactDetail() {
   const webSocketContextValue = useContext(WebSocketContext);
 
   const friendId = searchParams?.get("friendId");
+  if (!friendId) {
+    return null;
+  }
 
   const currentUser = ChatUser.getCurrentUser();
   let friend = new ChatUser(friendId as string, UserCategory.REGISTER);
@@ -37,9 +40,6 @@ function ContactDetail() {
     currentUser as ChatUser,
     friend
   );
-  if (!friendId) {
-    return <h1></h1>;
-  }
 
   return (
     <div className={"flex flex-col p-4 shadow-md"}>

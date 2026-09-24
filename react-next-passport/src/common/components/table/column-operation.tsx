@@ -13,7 +13,7 @@ import * as React from "react";
 import {ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 
 
-function InnerColumnOperation({showFilter, showSort, columnTitle, column}: ColumnOperationProps) {
+function InnerColumnOperation({showFilter, showSort, column}: ColumnOperationProps) {
     if (showFilter) {
         return (
             <DropdownMenu>
@@ -38,7 +38,7 @@ function InnerColumnOperation({showFilter, showSort, columnTitle, column}: Colum
                     {showSort && <DropdownMenuItem><Button
                         variant="ghost"
                         onClick={(e) => {
-                            column.toggleSorting(column.getIsSorted() === "asc");
+                            column?.toggleSorting(column?.getIsSorted() === "asc");
                             e.stopPropagation();
                         }}
                     >
@@ -52,7 +52,7 @@ function InnerColumnOperation({showFilter, showSort, columnTitle, column}: Colum
         return <Button
             variant="ghost"
             onClick={(e) => {
-                column.toggleSorting(column.getIsSorted() === "asc");
+                column?.toggleSorting(column?.getIsSorted() === "asc");
                 e.stopPropagation();
             }}
         >

@@ -129,7 +129,7 @@ import LoadingSpinner from "@/common/components/LoadingSpinner";
 `;
 
 export default function LoadingExamplePage() {
-    const t = useTranslations("LoadingExample");
+    const t = useTranslations("example.LoadingExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

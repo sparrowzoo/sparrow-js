@@ -18,45 +18,63 @@ const UPLOAD_URL = process.env.NEXT_PUBLIC_UPLOAD_URL;
 const VISITOR_AVATAR_URL = process.env.NEXT_PUBLIC_VISITOR_AVATAR_URL;
 
 const WWW_ROOT = process.env.NEXT_PUBLIC_WWW_ROOT;
-
 const PASSPORT_ROOT = process.env.NEXT_PUBLIC_PASSPORT_ROOT;
+const ADMIN_ROOT = process.env.NEXT_PUBLIC_ADMIN_ROOT;
+const IM_ROOT = process.env.NEXT_PUBLIC_IM_ROOT;
+const CODER_ROOT = process.env.NEXT_PUBLIC_CODER_ROOT || ADMIN_ROOT;
+
+export type ProductUrl = `http://${string}` | `https://${string}`;
+
+/** Product entry points are shared across hosts; only IM requires a locale path. */
+function getProductUrls(locale: string) {
+    const language = locale.startsWith("zh") ? "zh" : "en";
+    return {
+        im: `${IM_ROOT?.replace(/\/+$/, "")}/${language}/hi` as ProductUrl,
+        coder: CODER_ROOT as ProductUrl,
+        passport: PASSPORT_ROOT as ProductUrl,
+    };
+}
 
 const SESSION_CATEGORY_GROUP = process.env.NEXT_PUBLIC_SESSION_CATEGORY_GROUP
-  ? JSON.parse(process.env.NEXT_PUBLIC_SESSION_CATEGORY_GROUP)
-  : "";
+    ? JSON.parse(process.env.NEXT_PUBLIC_SESSION_CATEGORY_GROUP)
+    : "";
 
 const SESSION_CATEGORY_NAME_MAPPING = process.env
-  .NEXT_PUBLIC_SESSION_CATEGORY_NAME_MAPPING
-  ? JSON.parse(process.env.NEXT_PUBLIC_SESSION_CATEGORY_NAME_MAPPING as string)
-  : "";
+    .NEXT_PUBLIC_SESSION_CATEGORY_NAME_MAPPING
+    ? JSON.parse(process.env.NEXT_PUBLIC_SESSION_CATEGORY_NAME_MAPPING as string)
+    : "";
 
 function allowOrigin(origin: string) {
-  const NEXT_PUBLIC_ALLOW_ORIGINS = process.env.NEXT_PUBLIC_ALLOW_ORIGINS;
-  if (NEXT_PUBLIC_ALLOW_ORIGINS) {
-    return NEXT_PUBLIC_ALLOW_ORIGINS.split(",").includes(origin);
-  }
-  return true;
+    const NEXT_PUBLIC_ALLOW_ORIGINS = process.env.NEXT_PUBLIC_ALLOW_ORIGINS;
+    if (NEXT_PUBLIC_ALLOW_ORIGINS) {
+        return NEXT_PUBLIC_ALLOW_ORIGINS.split(",").includes(origin);
+    }
+    return true;
 }
 
 const WEBSOCKET = process.env.NEXT_PUBLIC_WEBSOCKET;
 export {
-  NODE_ENV,
-  WWW_ROOT,
-  PASSPORT_ROOT,
-  allowOrigin,
-  STORAGE_PROXY,
-  API_BASIC_URL,
-  TOKEN_KEY,
-  TOKEN_STORAGE,
-  USER_INFO_KEY,
-  NEXT_ASSET_PREFIX,
-  WEBSOCKET,
-  SESSION_CATEGORY_GROUP,
-  SESSION_CATEGORY_NAME_MAPPING,
-  CAPTCHA_URL,
-  LOGIN_URL,
-  AVATAR_URL,
-  GROUP_AVATAR_URL,
-  UPLOAD_URL,
-  VISITOR_AVATAR_URL,
+    NODE_ENV,
+    WWW_ROOT,
+    PASSPORT_ROOT,
+    ADMIN_ROOT,
+    IM_ROOT,
+    CODER_ROOT,
+    getProductUrls,
+    allowOrigin,
+    STORAGE_PROXY,
+    API_BASIC_URL,
+    TOKEN_KEY,
+    TOKEN_STORAGE,
+    USER_INFO_KEY,
+    NEXT_ASSET_PREFIX,
+    WEBSOCKET,
+    SESSION_CATEGORY_GROUP,
+    SESSION_CATEGORY_NAME_MAPPING,
+    CAPTCHA_URL,
+    LOGIN_URL,
+    AVATAR_URL,
+    GROUP_AVATAR_URL,
+    UPLOAD_URL,
+    VISITOR_AVATAR_URL,
 };

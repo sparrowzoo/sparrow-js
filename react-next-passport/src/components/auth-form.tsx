@@ -11,19 +11,21 @@ import { FormData, OuterSchema } from "@/schema/sign-up";
 import { valibotResolver } from "@hookform/resolvers/valibot";
 import { ErrorMessage } from "@hookform/error-message";
 import signUp from "@/api/signup";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import useCaptcha from "@/common/hook/CaptchaHook";
-import Result from "@/common/lib/protocol/Result";
-import { Link } from "@/common/i18n/navigation";
-import { useTranslations } from "next-intl";
-import useNavigating from "@/common/hook/NavigatingHook";
+import { useLocale, useTranslations } from "next-intl";
+import useAuthSuffix from "@/components/passport/use-auth-suffix";
+import CaptchaImage from "@/components/passport/captcha-image";
+import styles from "@/components/passport/passport.module.css";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
+type UserAuthFormProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function AuthForm({ className, ...props }: UserAuthFormProps) {
   const t = useTranslations("Passport.sign-up");
-  const { redirectToLogin } = useNavigating();
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const locale = useLocale();
+  const authSuffix = useAuthSuffix();
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [submitError, setSubmitError] = React.useState("");
   const captchaRef = useCaptcha();
   const {
     register,
@@ -31,163 +33,203 @@ export function AuthForm({ className, ...props }: UserAuthFormProps) {
     formState: { errors },
   } = useForm<FormData>({
     mode: "onChange",
-    //相当于v.parse
-    resolver: valibotResolver(
-      OuterSchema,
-      //https://valibot.dev/guides/parse-data/
-      { abortEarly: false }
-    ), // Useful to check TypeScript regressions
+    resolver: valibotResolver(OuterSchema, { abortEarly: false }),
   });
-  const onSubmit: SubmitHandler<FormData> = (
-    data: FormData,
-    event: React.BaseSyntheticEvent | undefined
-  ) => {
+
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
     setIsLoading(true);
-    signUp(data, t)
-      .then((result: Result) => {
-        setIsLoading(false);
-        toast.success(t("sign-up-success"));
-        debugger;
-        redirectToLogin(false);
-      })
-      .catch((error) => {
-        console.error(error.message);
-        setIsLoading(false);
-      });
+    setSubmitError("");
+    try {
+      await signUp(data, t);
+      toast.success(t("sign-up-success"));
+      window.location.assign(`/${locale}/sign-in/${window.location.search}${window.location.hash}`);
+    } catch {
+      setSubmitError(t("sign-up-error"));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className={cn("grid gap-6", className)} {...props}>
-      <Toaster position="top-center" reverseOrder={false} />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid gap-2">
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="email">
-              {t("email")}
-            </Label>
-            <Input
-              {...register("email")}
-              id="email"
-              type="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              placeholder={t("email")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="email"
-              render={({ message }) => (
-                <p className="text-red-700 text-sm">{message}</p>
-              )}
-            />
-          </div>
-          <div className="grid gap-1">
-            <Label className="sr-only" htmlFor="userName">
-              {t("username")}
-            </Label>
-            <Input
-              {...register("userName")}
-              id="userName"
-              type="text"
-              placeholder={t("username")}
-            />
-            <ErrorMessage
-              errors={errors}
-              name="userName"
-              render={({ message }) => (
-                <p className="text-red-700 text-sm">{message}</p>
-              )}
-            />
-          </div>
-          <div className="grid gap-1">
-            <div className="flex items-center">
-              <Label htmlFor="password"> {t("password")}</Label>
-            </div>
-            <Input {...register("password")} id="password" type="password" />
-            <ErrorMessage
-              errors={errors}
-              name="password"
-              render={({ message }) => (
-                <p className="text-red-700 text-sm">{message}</p>
-              )}
-            />
-          </div>
-          <div className="grid gap-1">
-            <Label htmlFor="passwordConfirm">{t("password-confirm")}</Label>
-            <Input
-              {...register("passwordConfirm")}
-              id="passwordConfirm"
-              type="password"
-            />
-            <ErrorMessage
-              errors={errors}
-              name="passwordConfirm"
-              render={({ message }) => (
-                <p className="text-red-700 text-sm">{message}</p>
-              )}
-            />
-          </div>
-
-          <div className="flex-col items-left ">
-            <Label className="w-32" htmlFor="captcha">
-              {t("captcha")}
-            </Label>
-            <div className="flex flex-row items-left">
-              <Input
-                {...register("captcha")}
-                className="w-32"
-                id="captcha"
-                type="text"
-              />
-              <img
-                ref={captchaRef}
-                alt="captcha"
-                className="w-16 h-8 cursor-pointer"
-              />
-            </div>
-            <ErrorMessage
-              errors={errors}
-              name="captcha"
-              render={({ message }) => (
-                <p className="text-red-700 text-sm">{message}</p>
-              )}
-            />
-          </div>
-
-          <Button disabled={isLoading}>
-            {isLoading && (
-              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+      <form
+        className={styles.form}
+        onSubmit={handleSubmit(onSubmit)}
+        aria-busy={isLoading}
+        noValidate
+      >
+        <div className={styles.field}>
+          <Label className={styles.label} htmlFor="email">
+            {t("email")}
+          </Label>
+          <Input
+            {...register("email")}
+            className={styles.input}
+            id="email"
+            type="email"
+            autoCapitalize="none"
+            autoComplete="email"
+            autoCorrect="off"
+            placeholder={t("email")}
+            disabled={isLoading}
+            required
+            aria-invalid={Boolean(errors.email)}
+            aria-describedby={errors.email ? "email-error" : undefined}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="email"
+            render={({ message }) => (
+              <p id="email-error" className={styles.fieldError} role="alert">
+                {message}
+              </p>
             )}
-            {t("sign-up")}
-          </Button>
+          />
         </div>
-      </form>
-      <div className="relative">
-        <div className="absolute inset-0 flex items-center">
-          <span className="w-full border-t" />
-        </div>
-        <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            {t("continue-with")}
-          </span>
-        </div>
-      </div>
-      <Button variant="outline" type="button" disabled={isLoading}>
-        {isLoading ? (
-          <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-        ) : (
-          <Icons.gitHub className="mr-2 h-4 w-4" />
-        )}{" "}
-        GitHub
-      </Button>
 
-      <div className="mt-4 text-center text-sm">
-        {t("to-sign-in")}
-        <Link href="/sign-in" className="underline">
-          {t("sign-in")}
-        </Link>
-      </div>
+        <div className={styles.field}>
+          <Label className={styles.label} htmlFor="userName">
+            {t("username")}
+          </Label>
+          <Input
+            {...register("userName")}
+            className={styles.input}
+            id="userName"
+            type="text"
+            autoCapitalize="none"
+            autoComplete="username"
+            autoCorrect="off"
+            placeholder={t("username")}
+            disabled={isLoading}
+            required
+            aria-invalid={Boolean(errors.userName)}
+            aria-describedby={errors.userName ? "username-error" : undefined}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="userName"
+            render={({ message }) => (
+              <p id="username-error" className={styles.fieldError} role="alert">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <Label className={styles.label} htmlFor="password">
+            {t("password")}
+          </Label>
+          <Input
+            {...register("password")}
+            className={styles.input}
+            id="password"
+            type="password"
+            autoComplete="new-password"
+            placeholder={t("password")}
+            disabled={isLoading}
+            required
+            aria-invalid={Boolean(errors.password)}
+            aria-describedby={errors.password ? "password-error" : undefined}
+          />
+          <ErrorMessage
+            errors={errors}
+            name="password"
+            render={({ message }) => (
+              <p id="password-error" className={styles.fieldError} role="alert">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <Label className={styles.label} htmlFor="passwordConfirm">
+            {t("password-confirm")}
+          </Label>
+          <Input
+            {...register("passwordConfirm")}
+            className={styles.input}
+            id="passwordConfirm"
+            type="password"
+            autoComplete="new-password"
+            placeholder={t("password-confirm")}
+            disabled={isLoading}
+            required
+            aria-invalid={Boolean(errors.passwordConfirm)}
+            aria-describedby={
+              errors.passwordConfirm ? "password-confirm-error" : undefined
+            }
+          />
+          <ErrorMessage
+            errors={errors}
+            name="passwordConfirm"
+            render={({ message }) => (
+              <p
+                id="password-confirm-error"
+                className={styles.fieldError}
+                role="alert"
+              >
+                {message}
+              </p>
+            )}
+          />
+        </div>
+
+        <div className={styles.field}>
+          <Label className={styles.label} htmlFor="captcha">
+            {t("captcha")}
+          </Label>
+          <div className={styles.captchaRow}>
+            <Input
+              {...register("captcha")}
+              className={styles.input}
+              id="captcha"
+              type="text"
+              autoComplete="off"
+              autoCapitalize="none"
+              autoCorrect="off"
+              placeholder={t("captcha")}
+              disabled={isLoading}
+              required
+              aria-invalid={Boolean(errors.captcha)}
+              aria-describedby={errors.captcha ? "captcha-error" : undefined}
+            />
+            <CaptchaImage
+              imageRef={captchaRef}
+              alt={t("captcha")}
+              refreshLabel={t("captcha-refresh")}
+              disabled={isLoading}
+            />
+          </div>
+          <ErrorMessage
+            errors={errors}
+            name="captcha"
+            render={({ message }) => (
+              <p id="captcha-error" className={styles.fieldError} role="alert">
+                {message}
+              </p>
+            )}
+          />
+        </div>
+
+        {submitError && (
+          <p className={styles.fieldError} role="alert">
+            {submitError}
+          </p>
+        )}
+
+        <Button type="submit" className={styles.primaryButton} disabled={isLoading}>
+          {isLoading && (
+            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" aria-hidden="true" />
+          )}
+          {isLoading ? t("submitting") : t("sign-up")}
+        </Button>
+      </form>
+
+      <p className={styles.formSwitch}>
+        {t("to-sign-in")} <a href={`/${locale}/sign-in/${authSuffix}`}>{t("sign-in")}</a>
+      </p>
     </div>
   );
 }

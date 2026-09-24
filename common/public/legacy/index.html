@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>麻雀窝 Sparrow Zoo · 一体化开发生态</title>
+    <meta name="description" content="麻雀窝 Sparrow Zoo 官方网站：项目脚手架、Passport 统一认证、File 文件服务、Security 权限系统、IM 即时通讯，覆盖从工程脚手架到业务服务的一体化开发生态。"/>
+    <style>
+        :root {
+            --bg: #07070d;
+            --bg-soft: #0c0c16;
+            --panel: rgba(255, 255, 255, 0.04);
+            --panel-strong: rgba(255, 255, 255, 0.07);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-strong: rgba(255, 255, 255, 0.16);
+            --text: #f4f4f7;
+            --text-dim: #9a9ab0;
+            --text-faint: #64647c;
+            --accent-1: #6d5cff;
+            --accent-2: #22d3ee;
+            --accent-3: #a855f7;
+            --ok: #34d399;
+            --warn: #fbbf24;
+            --radius: 18px;
+            --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI",
+                "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        a { color: inherit; }
+
+        /* ---------- ambient background ---------- */
+        .ambient {
+            position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background:
+                radial-gradient(1100px 520px at 12% -5%, rgba(109, 92, 255, 0.16), transparent 60%),
+                radial-gradient(950px 480px at 92% 0%, rgba(34, 211, 238, 0.11), transparent 55%),
+                radial-gradient(900px 650px at 50% 115%, rgba(168, 85, 247, 0.12), transparent 60%);
+        }
+        .grid-noise {
+            position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.4;
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+            background-size: 46px 46px;
+            mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+        }
+
+        /* ---------- top nav ---------- */
+        .topnav {
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 28px; height: 64px;
+            background: rgba(7, 7, 13, 0.72);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+        }
+        .brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none; color: var(--text);
+            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
+        }
+        .brand .logo {
+            width: 32px; height: 32px; border-radius: 10px;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
+            font-size: 16px; color: #fff;
+        }
+        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
+        .nav-links { display: flex; align-items: center; gap: 6px; }
+        .nav-links a {
+            color: var(--text-dim); text-decoration: none;
+            font-size: 13.5px; padding: 7px 15px; border-radius: 9px;
+            transition: color .2s, background .2s;
+        }
+        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
+        .nav-links a.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
+        }
+        .nav-links a.primary:hover { filter: brightness(1.12); }
+
+        /* ---------- hero ---------- */
+        .hero {
+            max-width: 1080px; margin: 0 auto;
+            padding: 108px 24px 80px; text-align: center;
+        }
+        .hero .tag {
+            display: inline-flex; align-items: center; gap: 9px;
+            font-size: 12.5px; letter-spacing: 0.12em; color: var(--text-dim);
+            padding: 7px 18px; border-radius: 100px;
+            background: var(--panel); border: 1px solid var(--border);
+            margin-bottom: 30px;
+            animation: rise .8s var(--ease) both;
+        }
+        .hero .tag .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            box-shadow: 0 0 12px rgba(109, 92, 255, 0.8);
+        }
+        .hero h1 {
+            font-size: clamp(38px, 6.4vw, 66px); font-weight: 800;
+            letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 24px;
+            animation: rise .8s var(--ease) .06s both;
+        }
+        .hero h1 .gradient {
+            background: linear-gradient(120deg, #c4b5fd 0%, #7dd3fc 50%, #f0abfc 100%);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .subtitle {
+            color: var(--text-dim); font-size: 17px; max-width: 640px;
+            margin: 0 auto 38px;
+            animation: rise .8s var(--ease) .12s both;
+        }
+        .hero-actions {
+            display: flex; justify-content: center; align-items: center;
+            gap: 14px; flex-wrap: wrap;
+            animation: rise .8s var(--ease) .18s both;
+        }
+        .hero-btn {
+            display: inline-flex; align-items: center; gap: 9px;
+            padding: 14px 30px; border-radius: 100px;
+            font-size: 15px; font-weight: 600; letter-spacing: .01em;
+            text-decoration: none; border: 1px solid transparent;
+            transition: all .25s var(--ease);
+        }
+        .hero-btn svg { width: 17px; height: 17px; }
+        .hero-btn.primary {
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
+            box-shadow: 0 12px 32px -10px rgba(109, 92, 255, 0.75);
+        }
+        .hero-btn.primary:hover { transform: translateY(-2px); box-shadow: 0 18px 42px -10px rgba(109, 92, 255, 0.9); }
+        .hero-btn.ghost {
+            color: var(--text); background: var(--panel);
+            border: 1px solid var(--border-strong);
+        }
+        .hero-btn.ghost:hover { border-color: var(--accent-2); color: #fff; transform: translateY(-2px); }
+
+        .hero .stats {
+            display: flex; justify-content: center; gap: 54px; flex-wrap: wrap;
+            margin-top: 64px;
+            animation: rise .8s var(--ease) .24s both;
+        }
+        .hero .stat { text-align: center; }
+        .hero .stat .num {
+            font-family: var(--mono); font-size: 30px; font-weight: 700;
+            background: linear-gradient(120deg, #c4b5fd, #7dd3fc);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero .stat .lbl {
+            font-size: 12.5px; color: var(--text-faint);
+            letter-spacing: .08em; margin-top: 3px;
+        }
+
+        /* ---------- section ---------- */
+        section { max-width: 1080px; margin: 0 auto; padding: 16px 24px; }
+        .section-head { margin-bottom: 32px; }
+        .section-head .eyebrow {
+            font-size: 12px; letter-spacing: .16em; color: var(--accent-2);
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+        .section-head h2 {
+            font-size: 28px; font-weight: 800; letter-spacing: -0.02em;
+            display: flex; align-items: center; gap: 12px;
+        }
+        .section-head h2::before {
+            content: ""; width: 5px; height: 26px; border-radius: 3px;
+            background: linear-gradient(180deg, var(--accent-1), var(--accent-2));
+        }
+        .section-head p { color: var(--text-faint); font-size: 14.5px; margin-top: 10px; max-width: 620px; }
+
+        /* ---------- product grid ---------- */
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+
+        .card {
+            position: relative; display: flex; flex-direction: column;
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 30px 28px 26px;
+            text-decoration: none; color: inherit;
+            transition: transform .24s var(--ease), border-color .24s var(--ease), box-shadow .24s var(--ease);
+            overflow: hidden;
+        }
+        .card::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2), var(--accent-3));
+            opacity: 0; transition: opacity .24s var(--ease);
+        }
+        .card::after {
+            content: ""; position: absolute; top: -60px; right: -60px;
+            width: 180px; height: 180px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(109, 92, 255, 0.12), transparent 70%);
+            pointer-events: none; opacity: 0; transition: opacity .3s var(--ease);
+        }
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-strong);
+            box-shadow: 0 22px 50px rgba(0, 0, 0, 0.5);
+        }
+        .card:hover::before { opacity: 1; }
+        .card:hover::after { opacity: 1; }
+
+        .card .top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 20px; }
+        .card .ico {
+            width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+            display: grid; place-items: center;
+            background: linear-gradient(135deg, rgba(109, 92, 255, 0.2), rgba(34, 211, 238, 0.14));
+            border: 1px solid var(--border-strong);
+            color: #c4b5fd;
+        }
+        .card .ico svg { width: 26px; height: 26px; }
+        .card .no {
+            font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+            letter-spacing: .08em;
+        }
+
+        .card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+        .card .en {
+            font-size: 12px; letter-spacing: .12em; color: var(--accent-2);
+            text-transform: uppercase; margin-bottom: 12px;
+        }
+        .card p.desc { color: var(--text-dim); font-size: 14px; flex: 1; }
+
+        .card .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
+        .card .tags span {
+            font-size: 11.5px; color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+            padding: 3px 10px; border-radius: 7px;
+        }
+
+        .card .foot {
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--border);
+        }
+        .card .go {
+            display: inline-flex; align-items: center; gap: 7px;
+            font-size: 14px; font-weight: 600; color: #fff;
+        }
+        .card .go .arr { color: var(--accent-2); transition: transform .2s var(--ease); }
+        .card:hover .go .arr { transform: translateX(4px); }
+
+        .badge {
+            font-size: 11.5px; font-weight: 600; letter-spacing: .04em;
+            padding: 4px 12px; border-radius: 100px;
+            border: 1px solid; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+        .badge.live { color: var(--ok); border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.08); }
+        .badge.core { color: #c4b5fd; border-color: rgba(109, 92, 255, 0.4); background: rgba(109, 92, 255, 0.1); }
+        .badge.soon { color: var(--warn); border-color: rgba(251, 191, 36, 0.35); background: rgba(251, 191, 36, 0.08); }
+
+        /* foundation banner card */
+        .card.foundation { grid-column: 1 / -1; padding: 34px 32px; }
+        .card.foundation .inner { display: flex; align-items: center; gap: 30px; }
+        .card.foundation .ico { width: 68px; height: 68px; border-radius: 18px; }
+        .card.foundation .ico svg { width: 32px; height: 32px; }
+        .card.foundation .body { flex: 1; min-width: 0; }
+        .card.foundation .stack {
+            flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 8px;
+            justify-content: flex-end; max-width: 340px;
+        }
+        .card.foundation .stack span {
+            font-family: var(--mono); font-size: 12px; color: var(--text-dim);
+            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border);
+            padding: 5px 12px; border-radius: 7px;
+        }
+
+        /* ---------- capability strip ---------- */
+        .caps { margin-top: 96px; }
+        .caps .row {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+            margin-top: 6px;
+        }
+        .cap {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: 16px; padding: 24px 22px;
+            transition: border-color .24s var(--ease), transform .24s var(--ease);
+        }
+        .cap:hover { border-color: var(--border-strong); transform: translateY(-4px); }
+        .cap .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; margin-bottom: 16px;
+            background: rgba(109, 92, 255, 0.14); border: 1px solid var(--border); color: #c4b5fd; }
+        .cap .ic svg { width: 19px; height: 19px; }
+        .cap h4 { font-size: 15px; font-weight: 700; margin-bottom: 7px; }
+        .cap p { font-size: 13px; color: var(--text-faint); line-height: 1.6; }
+
+        /* ---------- footer ---------- */
+        footer {
+            margin-top: 96px; padding: 44px 24px 60px;
+            text-align: center; color: var(--text-faint); font-size: 12.5px;
+            border-top: 1px solid var(--border);
+        }
+        footer .sep { margin: 0 8px; opacity: .5; }
+        footer .f-brand {
+            font-weight: 700; color: var(--text); font-size: 15px;
+            margin-bottom: 10px; display: inline-flex; align-items: center; gap: 9px;
+        }
+        footer .f-brand .logo {
+            width: 22px; height: 22px; border-radius: 7px; display: grid; place-items: center;
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-3)); font-size: 11px; color: #fff;
+        }
+
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 760px) {
+            .grid { grid-template-columns: 1fr; }
+            .caps .row { grid-template-columns: repeat(2, 1fr); }
+            .card.foundation .inner { flex-direction: column; align-items: flex-start; }
+            .card.foundation .stack { justify-content: flex-start; max-width: none; }
+            .hero { padding: 72px 20px 60px; }
+            .hero .stats { gap: 30px; }
+        }
+        @media (max-width: 640px) {
+            .topnav { padding: 0 16px; }
+            .brand .zh { display: none; }
+            .nav-links a { padding: 7px 11px; font-size: 12.5px; }
+            section { padding: 16px 20px; }
+        }
+        @media (max-width: 420px) {
+            .caps .row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="ambient"></div>
+<div class="grid-noise"></div>
+
+<nav class="topnav">
+    <a class="brand" href="/index.html">
+        <span class="logo">雀</span>
+        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="/index.html">首页</a>
+        <a href="#products">产品</a>
+        <a href="/docs/index.html">文档</a>
+        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
+    </div>
+</nav>
+
+<header class="hero">
+    <div class="tag"><span class="dot"></span>SPARROW ZOO · 一体化开发生态</div>
+    <h1>一个生态，<span class="gradient">从脚手架到即时通讯</span></h1>
+    <p class="subtitle">
+        麻雀窝 Sparrow Zoo 是一套基于 Spring Boot 的一体化开发生态，
+        以统一工程脚手架为基石，沉淀认证、文件、权限与实时通讯等通用能力，
+        让业务团队开箱即用、专注核心价值。
+    </p>
+    <div class="hero-actions">
+        <a class="hero-btn primary" href="#products">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+            浏览产品
+        </a>
+        <a class="hero-btn ghost" href="/docs/index.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            开发文档
+        </a>
+    </div>
+    <div class="stats">
+        <div class="stat"><div class="num">06</div><div class="lbl">核心产品</div></div>
+        <div class="stat"><div class="num">Spring Boot</div><div class="lbl">技术底座</div></div>
+        <div class="stat"><div class="num">2026</div><div class="lbl">持续迭代</div></div>
+    </div>
+</header>
+
+<main>
+    <section id="products">
+        <div class="section-head">
+            <div class="eyebrow">Products</div>
+            <h2>产品目录</h2>
+            <p>以工程脚手架为基石，向上生长出覆盖身份、文件、权限与实时通讯的产品矩阵。</p>
+        </div>
+
+        <div class="grid">
+            <!-- 01 脚手架（基石，通栏） -->
+            <a class="card foundation" href="/docs/index.html">
+                <div class="inner">
+                    <div class="ico">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    </div>
+                    <div class="body">
+                        <div class="top" style="margin-bottom: 8px;">
+                            <span class="no">01</span>
+                            <span class="badge core">基石</span>
+                        </div>
+                        <h3>项目脚手架 · 基础项目</h3>
+                        <div class="en">Sparrow Scaffold</div>
+                        <p class="desc">
+                            Sparrow 生态的工程起点，提供统一的依赖管理、配置规范与启动骨架，
+                            一键生成标准化的 Spring Boot 基础项目，是所有服务的共同底座。
+                        </p>
+                    </div>
+                    <div class="stack">
+                        <span>Java</span><span>Spring Boot</span><span>Maven</span><span>Lombok</span><span>Druid</span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- 02 Passport -->
+            <a class="card" href="passport.html">
+                <div class="top">
+                    <div class="ico">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                    </div>
+                    <span class="badge live">已上线</span>
+                </div>
+                <h3>Passport 认证服务</h3>
+                <div class="en">Unified Auth</div>
+                <p class="desc">
+                    统一登录、注册、找回密码等身份认证能力，多服务共享同一套账号体系，
+                    一次接入，全生态通用。
+                </p>
+                <div class="tags"><span>登录注册</span><span>找回密码</span><span>会话管理</span><span>OpenAPI</span></div>
+                <div class="foot">
+                    <span class="no">02</span>
+                    <span class="go">进入服务 <span class="arr">→</span></span>
+                </div>
+            </a>
+
+            <!-- 03 File -->
+            <a class="card" href="/file.html">
+                <div class="top">
+                    <div class="ico">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <span class="badge live">已上线</span>
+                </div>
+                <h3>File 文件服务</h3>
+                <div class="en">File Storage</div>
+                <p class="desc">
+                    统一文件上传与存储服务，支持拖拽上传、实时进度与即时预览，
+                    多路径类型隔离，安全可靠。
+                </p>
+                <div class="tags"><span>拖拽上传</span><span>实时进度</span><span>即时预览</span><span>安全存储</span></div>
+                <div class="foot">
+                    <span class="no">03</span>
+                    <span class="go">进入服务 <span class="arr">→</span></span>
+                </div>
+            </a>
+
+            <!-- 04 Security -->
+            <div class="card">
+                <div class="top">
+                    <div class="ico">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    </div>
+                    <span class="badge soon">建设中</span>
+                </div>
+                <h3>Security 权限系统</h3>
+                <div class="en">Access Control</div>
+                <p class="desc">
+                    基于角色的访问控制与细粒度权限管理，为各业务服务提供统一的
+                    鉴权、授权与资源隔离能力。
+                </p>
+                <div class="tags"><span>RBAC</span><span>鉴权</span><span>授权</span><span>资源隔离</span></div>
+                <div class="foot">
+                    <span class="no">04</span>
+                    <span class="go" style="color: var(--text-faint);">即将上线 <span class="arr" style="color: var(--text-faint);">→</span></span>
+                </div>
+            </div>
+
+            <!-- 05 IM -->
+            <div class="card">
+                <div class="top">
+                    <div class="ico">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+                    </div>
+                    <span class="badge soon">建设中</span>
+                </div>
+                <h3>IM 即时通讯</h3>
+                <div class="en">Instant Messaging</div>
+                <p class="desc">
+                    覆盖单聊、群聊与消息推送的实时通讯服务，为生态内业务提供
+                    低延迟、高可靠的即时消息能力。
+                </p>
+                <div class="tags"><span>单聊群聊</span><span>消息推送</span><span>实时通信</span><span>低延迟</span></div>
+                <div class="foot">
+                    <span class="no">05</span>
+                    <span class="go" style="color: var(--text-faint);">即将上线 <span class="arr" style="color: var(--text-faint);">→</span></span>
+                </div>
+            </div>
+
+            <!-- 06 Code Generator -->
+            <div class="card">
+                <div class="top">
+                    <div class="ico">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                    </div>
+                    <span class="badge soon">建设中</span>
+                </div>
+                <h3>代码生成器</h3>
+                <div class="en">Code Generator</div>
+                <p class="desc">
+                    只需提供一个实体类，即可自动生成 CRUD 相关的前后台代码，
+                    后端基于整洁架构、前端基于 React，快速落地标准化增删改查。
+                </p>
+                <div class="tags"><span>实体类</span><span>CRUD 生成</span><span>整洁架构</span><span>React</span></div>
+                <div class="foot">
+                    <span class="no">06</span>
+                    <span class="go" style="color: var(--text-faint);">即将上线 <span class="arr" style="color: var(--text-faint);">→</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="caps">
+        <div class="section-head">
+            <div class="eyebrow">Why Sparrow</div>
+            <h2>生态能力</h2>
+            <p>统一的工程规范与产品矩阵，让通用能力沉淀为可复用的底座。</p>
+        </div>
+        <div class="row">
+            <div class="cap">
+                <div class="ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <h4>统一认证</h4>
+                <p>一套账号体系贯穿所有服务，登录态与安全策略全生态一致。</p>
+            </div>
+            <div class="cap">
+                <div class="ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                </div>
+                <h4>开箱即用</h4>
+                <p>标准化脚手架与 starter 组件，减少重复搭建，快速启动业务。</p>
+            </div>
+            <div class="cap">
+                <div class="ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                </div>
+                <h4>高性能</h4>
+                <p>专注核心链路性能优化，为高并发场景提供稳定支撑。</p>
+            </div>
+            <div class="cap">
+                <div class="ic">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                </div>
+                <h4>模块化</h4>
+                <p>产品之间松耦合、可插拔，按需组合，灵活扩展生态边界。</p>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="f-brand"><span class="logo">雀</span>麻雀窝 Sparrow Zoo</div>
+    <div>
+        一体化开发生态<span class="sep">·</span>Powered by Sparrow OS
+        <span class="sep">·</span>resource: r.sparrowzoo.net
+    </div>
+</footer>
+</body>
+</html>

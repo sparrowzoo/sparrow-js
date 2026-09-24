@@ -1,6 +1,5 @@
 import * as React from "react"
 import {useEffect} from "react"
-import {FieldValues} from "react-hook-form/dist/types/fields";
 import {Label} from "@/components/ui/label";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Button} from "@/components/ui/button";
@@ -8,28 +7,23 @@ import {ChevronDownIcon} from "lucide-react";
 import {Calendar} from "@/components/ui/calendar";
 import dayjs from "dayjs";
 
-export interface FormHookDateProps<TFieldValues extends FieldValues>
+export interface FormHookDateProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     pageTranslate?: (key: string) => string,
     defaultValue?: string,
     format?: string,
-    setValue: (propertyName: string, value: any) => void,
+    setValue: (propertyName: string, value: unknown) => void,
     fieldPropertyName: string,
     readonly?: boolean,
 }
 
-const ValidatableDate = React.forwardRef<HTMLInputElement, FormHookDateProps<FieldValues>>(
-    ({
+const ValidatableDate = ({
          pageTranslate,
          defaultValue,
          setValue,
          format,
          fieldPropertyName,
-         type,
-         className,
-         readonly,
-         ...props
-     }, ref) => {
+     }: FormHookDateProps) => {
         const [open, setOpen] = React.useState(false);
         const dateFormat = format || "YYYY-MM-DD";
         let defaultDate = new Date();
@@ -38,9 +32,10 @@ const ValidatableDate = React.forwardRef<HTMLInputElement, FormHookDateProps<Fie
         } else {
             defaultValue = dayjs(defaultDate).format(dateFormat);
         }
-        //受控组件需要加此条件
+        //受控组件需要加此条件：仅在挂载时初始化一次
         useEffect(() => {
             setValue(fieldPropertyName, defaultValue);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
         const [date, setDate] = React.useState<Date>(defaultDate);
@@ -81,6 +76,5 @@ const ValidatableDate = React.forwardRef<HTMLInputElement, FormHookDateProps<Fie
             </div>
         )
     }
-)
 ValidatableDate.displayName = "ValidatableDate"
 export {ValidatableDate}

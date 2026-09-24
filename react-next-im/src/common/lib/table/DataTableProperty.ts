@@ -3,7 +3,7 @@ import React, {Dispatch, SetStateAction} from "react";
 import {CellContext, Table} from "@tanstack/table-core";
 import {VisibilityState} from "@tanstack/table-core/src/features/ColumnVisibility";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
-import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import Result from "@/common/lib/protocol/Result";
 import KeyValue from "@/common/lib/protocol/KeyValue";
 import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 
@@ -18,19 +18,19 @@ export default interface DataTableProps<
     TData extends BasicData<TData>
 > {
     columns: ColumnDef<TData, string>[];
-    result: Result<PagerResult<TData>>;
+    result: Result;
     primary?: string;
     tableName?: string;
     i18n: boolean;
     hiddenColumns?: VisibilityState | (() => VisibilityState);
-    setData: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
+    setData: React.Dispatch<React.SetStateAction<Result> | undefined>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
     deleteHandler?: (id: IDENTITY) => void;
     initHandler: () => void;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
-    parent?: {},
+    parent?: object,
     defaultPager?: PaginationState;
 }
 
@@ -46,17 +46,17 @@ export interface CellContextProps<TData> {
 
 export interface MyTableMeta<TData> extends TableMeta<TData> {
     primary: string,
-    parent: {},
+    parent: object,
     tableName: string,
     i18n: boolean,
-    setData: React.Dispatch<React.SetStateAction<Result<PagerResult<TData>>> | undefined>;
+    setData: React.Dispatch<React.SetStateAction<Result> | undefined>;
     SearchComponent?: React.ComponentType<TableOperationProps<TData>>;
     OperationComponent?: React.ComponentType<TableOperationProps<TData>>;
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
     deleteHandler?: (id: IDENTITY) => void;
     initHandler: () => void;
     searchHandler: (pager: PaginationState | undefined) => void;
-    result: Result<PagerResult<TData>>;
+    result: Result;
     RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
 }
 
@@ -65,7 +65,7 @@ export interface ColumnOperationProps {
     columnTitle: string;
     showFilter?: boolean;
     showSort?: boolean;
-    column?: Column<any>
+    column?: Column<unknown>
 }
 
 export interface EmptyRowProps {

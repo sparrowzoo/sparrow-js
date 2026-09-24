@@ -2,7 +2,6 @@
 import { useState } from "react";
 import Fetcher from "@/common/lib/Fetcher";
 import useCrosStorage from "@/common/hook/CrosStorageHook";
-import Result from "@/common/lib/protocol/Result";
 
 export default function Login() {
   const crosStorage = useCrosStorage();
@@ -10,13 +9,13 @@ export default function Login() {
 
   function handleLogin() {
     console.log("login", userName);
-    Fetcher.post(
-      "/chat/v2/login.json",
-      JSON.stringify({
+    Fetcher.post<string>({
+      url: "/chat/v2/login.json",
+      body: {
         id: userName,
         category: 1,
-      }) //必须序列化
-    ).then((res: Result) => {
+      }
+    }).then((res) => {
       crosStorage?.setToken(res.data);
       console.log(JSON.stringify(res));
     });
@@ -24,7 +23,7 @@ export default function Login() {
 
   function longHandleLogin() {
     console.log("login", userName);
-    Fetcher.post("/chat/v2/long-login.json", userName).then((res: Result) => {
+    Fetcher.post<string>({url: "/chat/v2/long-login.json", body: userName}).then((res) => {
       crosStorage?.setToken(res.data);
       console.log(JSON.stringify(res));
     }); //必须是字符串

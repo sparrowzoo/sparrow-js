@@ -4,12 +4,13 @@
   "license": "Apache-2.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3003",
     "build": "next build",
     "build-12talk": "next build",
-    "start": "next start",
+    "start": "node ../deploy/serve-static.mjs out 3003",
     "lint": "next lint",
-    "copy": "cpy ./../common/src/common  ./src/ --parents"
+    "copy": "cpy ./../common/src/common  ./src/ --parents",
+    "preview": "node ../deploy/serve-static.mjs out 3003"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -52,16 +53,15 @@
     "clsx": "^2.1.1",
     "cpy-cli": "^5.0.0",
     "date-fns": "^4.0.0",
-    "embla-carousel-react": "^8.6.0",
     "lowlight": "^3.3.0",
     "lucide-react": "^0.511.0",
     "motion": "^12.6.3",
     "motion-plus": "^0.1.6",
-    "next": "15.2.5",
-    "next-intl": "^4.1.0",
+    "next": "15.5.26",
+    "next-intl": "4.14.6",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
-    "react-day-picker": "8.10.1",
+    "react-day-picker": "^9.9.0",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.55.0",
     "react-hot-toast": "^2.4.1",
@@ -75,7 +75,13 @@
     "tailwindcss-animate": "^1.0.7",
     "typedjson": "^1.8.0",
     "util-ts": "^1.0.0",
-    "valibot": "^0.33.3"
+    "valibot": "^0.33.3",
+    "@tanstack/react-table": "^8.21.3",
+    "@radix-ui/react-select": "^2.2.5",
+    "@radix-ui/react-checkbox": "^1.3.2",
+    "@tanstack/table-core": "^8.21.3",
+    "dayjs": "^1.11.13",
+    "raw-loader": "^4.0.2"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",
@@ -85,9 +91,13 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
-    "eslint-config-next": "14.1.0",
+    "eslint-config-next": "15.5.26",
     "postcss": "^8",
     "tailwindcss": "^4.1.3",
     "typescript": "^5"
-  }
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "npm@10.9.2"
 }

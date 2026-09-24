@@ -14,12 +14,12 @@ export default function Page() {
 
     return (
         <div className="admin-page flex flex-1 flex-col gap-8 lg:gap-10">
-            <section className="rounded-2xl border border-border/70 bg-card px-6 py-8 sm:px-9 sm:py-10 lg:px-11 lg:py-12">
-                <div className="inline-flex items-center gap-2 rounded-full bg-primary/8 px-3 py-1.5 text-xs font-medium tracking-wide text-primary">
+            <section className="admin-welcome relative overflow-hidden rounded-2xl px-6 py-9 sm:px-9 sm:py-11 lg:px-11 lg:py-14">
+                <div className="inline-flex items-center gap-2 text-xs font-medium tracking-[0.12em] text-primary">
                     <Sparkles className="size-3.5" aria-hidden="true"/>
                     {t("badge")}
                 </div>
-                <h1 className="mt-5 text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
+                <h1 className="mt-5 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl">
                     {t("welcome")}
                 </h1>
                 <p className="mt-4 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-base">
@@ -28,13 +28,13 @@ export default function Page() {
             </section>
 
             <section aria-labelledby="quick-access-heading">
-                <h2 id="quick-access-heading" className="mb-5 text-base font-semibold tracking-tight text-foreground">{t("quickAccess")}</h2>
+                <h2 id="quick-access-heading" className="mb-5 text-lg font-semibold tracking-tight text-foreground">{t("quickAccess")}</h2>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
                     {modules.map(({key, url, icon: Icon}) => (
                         <button
                             key={key}
                             onClick={() => adminContext.adminBroker.access(url, router)}
-                            className="group flex h-full min-h-48 flex-col rounded-2xl border border-border/70 bg-card p-6 text-left transition-[border-color,background-color,box-shadow] duration-200 hover:border-primary/35 hover:bg-accent/40 hover:shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
+                            className="admin-module-card group flex h-full min-h-48 flex-col rounded-2xl p-6 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:transition-none"
                         >
                             <div className="mb-6 flex w-full items-start justify-between gap-4">
                                 <div className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/8 text-primary">

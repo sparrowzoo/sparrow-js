@@ -202,7 +202,7 @@ The \`ErrorMessage\` namespace in \`messages/default/{locale}.json\` maps error 
 `;
 
 export default function ErrorExamplePage() {
-    const t = useTranslations("ErrorExample");
+    const t = useTranslations("example.ErrorExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

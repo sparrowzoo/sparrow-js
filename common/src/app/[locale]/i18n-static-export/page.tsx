@@ -119,7 +119,7 @@ In \`react-next-admin\`:
 `;
 
 export default function I18nStaticExportPage() {
-    const t = useTranslations("I18nStaticExport");
+    const t = useTranslations("example.I18nStaticExport");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

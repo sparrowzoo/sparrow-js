@@ -1,11 +1,11 @@
 import { cn } from "@/lib/utils";
 import MyAvatar from "@/components/MyAvatar";
-import Link from "next/link";
+import {Link} from "@/common/i18n/navigation";
 import * as React from "react";
 import { SidebarMenuItem } from "@/components/ui/sidebar";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
 import ChatUser from "@/lib/protocol/ChatUser";
-import { AVATAR_URL, NEXT_ASSET_PREFIX } from "@/common/lib/Env";
+import { AVATAR_URL } from "@/common/lib/Env";
 import { Button } from "@/components/ui/button";
 import { AuditStatus } from "@/lib/protocol/audit/AuditStatus";
 import Contact from "@/lib/protocol/contact/Contact";
@@ -47,7 +47,7 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
   if (!newFriend) {
     return <div>user not found {audit.auditId}</div>;
   }
-  const userHomeLink = `${NEXT_ASSET_PREFIX}/chat/friends/contact?friendId=${newFriend.userId}`;
+  const userHomeLink = `/chat/friends/contact/?friendId=${encodeURIComponent(newFriend.userId)}`;
   const userName = newFriend.nickName || newFriend.userName;
   const avatar =
     newFriend.avatar || format(`${AVATAR_URL}`, `${newFriend.userId}`);

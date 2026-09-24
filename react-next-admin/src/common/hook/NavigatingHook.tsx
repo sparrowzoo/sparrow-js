@@ -1,7 +1,7 @@
 //重定向url 不要直接读url 更安全些
 //重定向到指定url
 
-import { LOGIN_URL, PASSPORT_ROOT, WWW_ROOT } from "@/common/lib/Env";
+import { LOGIN_URL, PASSPORT_ROOT, WWW_ROOT, allowOrigin } from "@/common/lib/Env";
 import { useLocale } from "next-intl";
 
 export default function useNavigating() {
@@ -20,8 +20,15 @@ export default function useNavigating() {
 
     public static redirectTo(directUrl: string) {
       if (directUrl) {
-        window.location.href = directUrl;
-        return;
+        try {
+          const target = new URL(directUrl);
+          if (["http:", "https:"].includes(target.protocol) && allowOrigin(target.origin)) {
+            window.location.href = target.href;
+            return;
+          }
+        } catch {
+          // Malformed or untrusted return URLs fall back to the main site.
+        }
       }
       Navigations.redirectToIndex();
     }
@@ -29,9 +36,9 @@ export default function useNavigating() {
       withRef: boolean = true,
       timeout: number = 2000
     ) {
-      let url = `${PASSPORT_ROOT}/${locale}${LOGIN_URL}`;
+      let url = `${PASSPORT_ROOT}/${locale}${LOGIN_URL?.replace(/\/$/, "")}/`;
       if (withRef) {
-        url += `?${window.location.href}`;
+        url += `?${encodeURIComponent(window.location.href)}`;
       }
       setTimeout(() => {
         window.location.href = url;

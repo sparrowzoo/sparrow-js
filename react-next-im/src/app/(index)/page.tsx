@@ -1,17 +1,5 @@
-"use client";
-import { useEffect } from "react";
-import { routing } from "@/i18n/routing";
-import ThreeDotLoading from "@/common/components/ThreeDotLoading";
+import LocaleEntry from "@/components/LocaleEntry";
 
 export default function IndexPage() {
-  useEffect(() => {
-    debugger;
-    const locate = localStorage.getItem("locale");
-    window.location.href = (locate || routing.defaultLocale) + "/hi";
-  }, []);
-  return (
-    <>
-      <ThreeDotLoading />
-    </>
-  );
+  return <LocaleEntry />;
 }

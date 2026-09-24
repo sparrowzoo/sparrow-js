@@ -4,11 +4,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3000",
+    "dev": "next dev -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "node ../deploy/serve-static.mjs out 3001",
     "lint": "next lint",
-    "copy": "cpy ./../common/src/common  ./src/ --parents"
+    "copy": "cpy ./../common/src/common  ./src/ --parents",
+    "preview": "node ../deploy/serve-static.mjs out 3001"
   },
   "dependencies": {
     "@bytemd/plugin-breaks": "^1.21.0",
@@ -48,11 +49,11 @@
     "github-markdown-css": "^5.6.1",
     "html5-file-selector": "^2.1.0",
     "katex": "^0.16.11",
-    "lucide-react": "^0.407.0",
+    "lucide-react": "^0.513.0",
     "mermaid": "^10.9.1",
     "motion-plus": "^0.1.6",
-    "next": "14.2.5",
-    "next-intl": "^4.1.0",
+    "next": "15.5.26",
+    "next-intl": "4.14.6",
     "next-themes": "^0.3.0",
     "primereact": "^10.8.2",
     "raw-loader": "^4.0.2",
@@ -72,7 +73,13 @@
     "valibot": "^0.33.3",
     "vaul": "^0.9.1",
     "yarn": "^1.22.22",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "@tanstack/react-table": "^8.21.3",
+    "react-day-picker": "^9.9.0",
+    "@radix-ui/react-popover": "^1.1.14",
+    "@radix-ui/react-separator": "^1.1.7",
+    "@tanstack/table-core": "^8.21.3",
+    "dayjs": "^1.11.13"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -81,7 +88,7 @@
     "cpy": "^11.1.0",
     "cpy-cli": "^5.0.0",
     "eslint": "^8",
-    "eslint-config-next": "14.2.4",
+    "eslint-config-next": "15.5.26",
     "html-loader": "^5.0.0",
     "nrm": "^1.2.5",
     "postcss": "^8.4.39",
@@ -90,5 +97,9 @@
     "sass": "^1.77.8",
     "tailwindcss": "^3.4.4",
     "typescript": "^5"
-  }
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "packageManager": "npm@10.9.2"
 }

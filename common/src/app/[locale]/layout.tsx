@@ -17,6 +17,10 @@ const geistMono = Geist_Mono({
     subsets: ["latin"],
 });
 
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({locale}));
+}
+
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
     const {locale} = await params;
     const validLocale = hasLocale(routing.locales, locale) ? locale : routing.defaultLocale;

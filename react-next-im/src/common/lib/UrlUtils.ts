@@ -12,7 +12,7 @@ export default class UrlUtils {
         urlObj1.hostname === urlObj2.hostname &&
         urlObj1.port === urlObj2.port
       );
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -21,7 +21,7 @@ export default class UrlUtils {
     if (typeof document === "undefined") {
       return null;
     }
-    var params = new URL(document.location.href).searchParams;
+    const params = new URL(document.location.href).searchParams;
     return params.get(name);
   }
 
@@ -31,9 +31,13 @@ export default class UrlUtils {
     }
     const queryString = window.location.search;
     if (!queryString) {
-      null;
+      return null;
     }
-    return decodeURIComponent(queryString.substring(1));
+    try {
+      return decodeURIComponent(queryString.substring(1));
+    } catch {
+      return queryString.substring(1);
+    }
   }
 
   public static getHrefWithoutQueryString() {

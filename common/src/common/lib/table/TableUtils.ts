@@ -1,3 +1,4 @@
+import type {MyTableMeta} from "@/common/lib/table/DataTableProperty";
 import {Table} from "@tanstack/table-core";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
 import Result from "@/common/lib/protocol/Result";
@@ -8,8 +9,7 @@ type RowRecord = Record<string, unknown>;
 class TableUtils {
 
     static getSelectedIds = <TData,>(table: Table<TData>) => {
-        // @ts-expect-error primary is not declared on TableMeta
-        const primary = table.options.meta.primary;
+        const primary = (table.options.meta as MyTableMeta<TData>).primary;
         const ids: IDENTITY[] = [];
         table.getSelectedRowModel().rows.forEach(row => {
             const original = row.original as unknown as RowRecord;
@@ -43,8 +43,7 @@ class TableUtils {
     }
 
     static removeRowByPrimary = <TData,>(ids: IDENTITY[], table: Table<TData>) => {
-        // @ts-expect-error primary is not declared on TableMeta
-        const primary = table.options.meta.primary;
+        const primary = (table.options.meta as MyTableMeta<TData>).primary;
         const originalData: RowRecord[] = [];
         table.getRowModel().rows.forEach(row => {
             const original = row.original as unknown as RowRecord;
@@ -65,8 +64,7 @@ class TableUtils {
     }
 
     private static changeStatusByPrimary = <TData,>(ids: IDENTITY[], table: Table<TData>, statusField: string, status: Status) => {
-        // @ts-expect-error primary is not declared on TableMeta
-        const primary = table.options.meta.primary;
+        const primary = (table.options.meta as MyTableMeta<TData>).primary;
         const originalData: RowRecord[] = [];
         table.getRowModel().rows.forEach(row => {
             const original = row.original as unknown as RowRecord;

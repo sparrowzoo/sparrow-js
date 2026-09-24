@@ -8,8 +8,8 @@ export default getRequestConfig(async ({requestLocale}) => {
     const locale = hasLocale(routing.locales, requested)
         ? requested
         : routing.defaultLocale;
-    const i18nList = (await import(`../../../messages/list.json`)).default;
-    console.log("i18n file list", i18nList);
+    const listFile = "list.json";
+    const i18nList = (await import(`../../../messages/${listFile}`)).default;
     let messages = {};
     for (const key in i18nList) {
         const path = i18nList[key];
@@ -20,9 +20,7 @@ export default getRequestConfig(async ({requestLocale}) => {
             }
             continue;
         }
-        console.log("i18n path ", path);
         messages[path] = message.default;
-        console.log(messages)
     }
     return {
         locale,

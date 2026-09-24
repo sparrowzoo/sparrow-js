@@ -3,6 +3,12 @@ import Result from "@/common/lib/protocol/Result";
 import QunPlaza from "@/lib/protocol/contact/QunPlaza";
 import Group from "@/lib/protocol/contact/Group";
 import QunDetailWrap from "@/lib/protocol/contact/QunDetailWrap";
+import {Category} from "@/lib/protocol/contact/Category";
+
+interface RemoteQunPlaza {
+    categoryDicts: Record<string, Category>;
+    qunMap: Record<string, Group[]>;
+}
 
 export default class QunAPI {
     public static async joinQun(
@@ -34,8 +40,8 @@ export default class QunAPI {
     }
 
     public static async getQunList(translator: (key: string) => string) {
-        return await Fetcher.get({url: "/qun/plaza.json", translator: translator})
-            .then((res: Result) => {
+        return await Fetcher.get<RemoteQunPlaza>({url: "/qun/plaza.json", translator: translator})
+            .then((res) => {
                 const qunPlaza = new QunPlaza();
                 const remoteData = res.data;
                 const localCategories = new Map();

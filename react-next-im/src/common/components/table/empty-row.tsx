@@ -2,7 +2,7 @@ import {TableCell, TableRow} from "@/components/ui/table";
 import * as React from "react";
 import {EmptyRowProps} from "@/common/lib/table/DataTableProperty";
 
-export function EmptyRow<TData, TValue>({
+export function EmptyRow({
                                             columnSize,
                                         }: EmptyRowProps) {
     return (

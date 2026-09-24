@@ -14,9 +14,9 @@ import {PaginationState} from "@tanstack/table-core/src/features/RowPagination";
 import toast from "react-hot-toast";
 import {useTranslations} from "next-intl";
 
-export default function Pager({table}: TableOperationProps<any>) {
+export default function Pager<TData>({table}: TableOperationProps<TData>) {
     const translate = useTranslations("GlobalForm.pagination")
-    const meta = table.options.meta as MyTableMeta<any>;
+    const meta = table.options.meta as MyTableMeta<TData>;
     const pageCount = table.getPageCount();
     const pagination = table.getState().pagination;
     const firstPageIndex = pagination.pageIndex - 5 < 0 ? 0 : pagination.pageIndex - 5;

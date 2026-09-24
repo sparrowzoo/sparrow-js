@@ -32,9 +32,8 @@ export default function FileUploader({url, uploadCallback, uploadIcon, id, pathT
             const formData = new FormData();
             formData.append("file", file);
             formData.append("pathType", pathType);
-            const token = await CrosStorage.getCrosStorage()?.getToken();
-
             try {
+                const token = await CrosStorage.getCrosStorage().getToken();
                 const response = await axios.post(url, formData, {
                     onUploadProgress: (progressEvent) => {
                         if (progressEvent.total) {

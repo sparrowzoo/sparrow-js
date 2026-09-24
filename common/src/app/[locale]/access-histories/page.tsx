@@ -184,7 +184,7 @@ broker.access("/users", router);
 `;
 
 export default function AccessHistoriesExamplePage() {
-    const t = useTranslations("AccessHistoriesExample");
+    const t = useTranslations("example.AccessHistoriesExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 

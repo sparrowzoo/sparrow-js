@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 208" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Sparrow</title>
+  <desc id="desc">A compact sparrow composed of a head, wing, breast, tail and foot. Small in size, complete in form.</desc>
+  <g fill="#168575">
+    <path fill-rule="evenodd" d="M129 50C150 16 174 4 197 20C213 29 220 39 223 48L242 55C220 62 218 67 218 89C218 123 204 156 166 166L174 180L191 185C196 187 199 189 199 191H140C144 182 150 181 157 181L144 164C175 159 192 132 188 103C185 72 169 54 142 52C137 51 133 51 129 50ZM203 47A6 6 0 1 0 191 47A6 6 0 1 0 203 47Z"/>
+    <path d="M54 97C79 91 102 58 124 55C145 51 163 56 174 72C172 99 151 117 128 123C100 129 80 124 64 112C85 114 111 104 126 87C103 104 77 110 54 97Z"/>
+    <path d="M84 132C132 143 173 123 179 88C190 125 173 156 143 162C120 163 103 150 84 132Z"/>
+    <path d="M52 111L81 139C59 132 46 139 29 139C19 139 15 136 13 134L39 123C19 127 6 129 2 123L52 111Z"/>
+  </g>
+</svg>

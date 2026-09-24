@@ -1,10 +1,19 @@
 {
+  "product": {
+    "passport": "Passport 认证服务",
+    "im": "IM 即时通讯",
+    "coder": "代码生成器",
+    "file": "File 文件服务",
+    "ui": "UI 组件库",
+    "security": "Security 权限系统"
+  },
   "LocaleLayout": {
-    "title": "麻雀窝"
+    "title": "Sparrow Passport · 麻雀窝统一身份认证",
+    "description": "登录、注册与找回密码，连接你的麻雀窝账户。"
   },
   "LocaleSwitcher": {
-    "label": "切换至中文",
-    "locale": "{locale, select, zh {\uD83C\uDDE8\uD83C\uDDF3 中文} en {🇺🇸 English} other {Unbekannt}}"
+    "label": "切换语言",
+    "locale": "{locale, select, zh {中文} en {English} other {Language}}"
   },
   "Header": {
     "index": "首页",
@@ -14,6 +23,7 @@
     "shop": "商城",
     "coder": "代码生成器",
     "playground": "写文章",
+    "study": "学员入口",
     "theme-toggle": "切换皮肤",
     "light-mode": "亮色",
     "dark-mode": "暗黑",
@@ -21,7 +31,8 @@
     "avatar-setting": "头像设置",
     "logout": "登出",
     "sign-in": "登录",
-    "sign-up": "注册"
+    "sign-up": "注册",
+    "logout-success": "已退出登录"
   },
   "Passport": {
     "sign-in": {
@@ -29,8 +40,8 @@
       "username": "用户名/邮箱",
       "user_password_error": "密码错误",
       "user_name_not_exist": "帐号不存在",
-      "sign-in-title": "登录",
-      "sign-in-title2": "帐号、邮箱登录",
+      "sign-in-title": "登录你的账号",
+      "sign-in-title2": "使用用户名或邮箱登录，继续你的探索。",
       "sign-in-success": "登录成功 !",
       "to-sign-up": "还未注册?",
       "sign-up": "注册",
@@ -39,13 +50,18 @@
       "password": "密码",
       "captcha": "验证码",
       "global_validate_code_error": "验证码输入错误",
-      "system_server_error": "系统异常,请稍后重试!"
+      "system_server_error": "系统异常,请稍后重试!",
+      "username-placeholder": "用户名或邮箱地址",
+      "password-placeholder": "输入你的密码",
+      "captcha-placeholder": "输入验证码",
+      "captcha-refresh": "点击刷新验证码",
+      "submitting": "正在登录…"
     },
     "find-password": {
       "forgot-password": "忘记密码?",
-      "input-email-to-find-password": "请输入您注册的email",
+      "input-email-to-find-password": "输入注册时使用的邮箱，我们将发送密码重置链接。",
       "find-password": "找回密码",
-      "send-find-password-email": "发送",
+      "send-find-password-email": "发送重置链接",
       "password-reset-email-sent": "密码重置邮件已发送，请注意查收",
       "close": "关闭",
       "global_validate_code_error": "验证码输入错误",
@@ -54,8 +70,8 @@
     "sign-up": {
       "sign-up": "注册",
       "sign-up-success": "恭喜，注册成功 !",
-      "sign-up-title": "注册",
-      "email": "email",
+      "sign-up-title": "创建你的账号",
+      "email": "邮箱地址",
       "username": "用户名",
       "password-confirm": "确认密码",
       "continue-with": "Or continue with",
@@ -63,10 +79,14 @@
       "sign-in": "登录",
       "user_email_exist": "邮箱已被占用",
       "user_name_exist": "用户名被占用",
-      "global_validate_code_error": "验放码错误，检查后重试",
+      "global_validate_code_error": "验证码输入错误，请检查后重试。",
       "system_server_error": "系统错误，请稍后重试",
       "password": "密码",
-      "captcha": "验证码"
+      "captcha": "验证码",
+      "sign-up-description": "填写以下信息，开启你的麻雀窝之旅。",
+      "captcha-refresh": "刷新验证码",
+      "submitting": "正在创建账户…",
+      "sign-up-error": "注册失败，请稍后重试。"
     },
     "PasswordTokenVerify": {
       "token-not-found": "token 不存在，请从邮箱链接点击进入！",
@@ -80,6 +100,56 @@
       "new-password-title": "新密码",
       "confirm-password-title": "确认密码",
       "confirm": "确认"
+    },
+    "navigation": {
+      "brand": "麻雀窝",
+      "label": "Passport 导航",
+      "home": "官网首页",
+      "product": "产品介绍",
+      "study": "学员入口",
+      "signIn": "登录",
+      "signUp": "创建账号",
+      "backHome": "返回麻雀窝",
+      "footer": "统一身份，连接每一次探索",
+      "skip": "跳到主要内容"
+    },
+    "shell": {
+      "sign-in": {
+        "title": "欢迎回来，",
+        "highlight": "继续你的下一步。",
+        "description": "登录麻雀窝，在熟悉的账户中继续你的探索、交流与创作。"
+      },
+      "sign-up": {
+        "title": "从这里开始，",
+        "highlight": "连接更多可能。",
+        "description": "创建你的麻雀窝账号，让交流、协作与灵感从这里发生。"
+      },
+      "reset": {
+        "title": "设置新的密码，",
+        "highlight": "回到熟悉的工作。",
+        "description": "通过邮件中的重置链接更新密码，重新连接你的账户。"
+      },
+      "identity": {
+        "title": "一个账户，统一身份",
+        "description": "用用户名或邮箱，进入你的麻雀窝。"
+      },
+      "connected": {
+        "title": "连接应用，继续探索",
+        "description": "在 Sparrow 生态中，找到适合你的工具。"
+      },
+      "recovery": {
+        "title": "忘记密码，也有回路",
+        "description": "通过注册邮箱，找回账户的访问权限。"
+      },
+      "about": "了解 Passport 认证服务"
+    },
+    "ui": {
+      "backToSignIn": "返回登录",
+      "emailLabel": "邮箱地址",
+      "sending": "正在发送…",
+      "resetPending": "正在更新密码…",
+      "avatarTitle": "让你的账号，更有辨识度。",
+      "avatarDescription": "选择一张图片，调整裁剪和展示效果，保存你的新头像。"
     }
   },
   "AvatarUploader": {

@@ -199,7 +199,7 @@ function DemoSearch({table}: TableOperationProps<DemoRow>) {
     const controller = meta.parent as unknown as DemoController;
     meta.searchHandler = controller.searchHandler;
 
-    const t = useTranslations("TableExample");
+    const t = useTranslations("example.TableExample");
     const kvs = useTranslations("KVS");
     const gt = useTranslations("GlobalForm");
     const [keyword, setKeyword] = useState("");
@@ -234,7 +234,7 @@ function DemoSearch({table}: TableOperationProps<DemoRow>) {
 function DemoOperation({table}: TableOperationProps<DemoRow>) {
     const meta = table.options.meta as MyTableMeta<DemoRow>;
     const controller = meta.parent as unknown as DemoController;
-    const t = useTranslations("TableExample");
+    const t = useTranslations("example.TableExample");
     const gt = useTranslations("GlobalForm");
 
     return (
@@ -272,7 +272,7 @@ function DemoOperation({table}: TableOperationProps<DemoRow>) {
 }
 
 function DemoEdit({cellContext, callbackHandler}: CellContextProps<DemoRow>) {
-    const t = useTranslations("TableExample");
+    const t = useTranslations("example.TableExample");
     const gt = useTranslations("GlobalForm");
     const original = cellContext.row.original;
     const [name, setName] = useState(original.name);
@@ -312,7 +312,7 @@ function DemoEdit({cellContext, callbackHandler}: CellContextProps<DemoRow>) {
 }
 
 function CopyRowOperation({cellContext}: CellContextProps<DemoRow>) {
-    const t = useTranslations("TableExample");
+    const t = useTranslations("example.TableExample");
     const meta = cellContext.table.options.meta as MyTableMeta<DemoRow>;
     const controller = meta.parent as unknown as DemoController;
     return (
@@ -544,7 +544,7 @@ Each cell factory returns a render component that you assign to a column's \`cel
 /* ------------------------------------------------------------------ */
 
 export default function TableExamplePage() {
-    const t = useTranslations("TableExample");
+    const t = useTranslations("example.TableExample");
     const locale = useLocale();
     const doc = locale === "zh" ? docZh : docEn;
 
@@ -658,7 +658,7 @@ export default function TableExamplePage() {
                             columns={mainColumns}
                             result={result}
                             setData={setResult}
-                            tableName="TableExample"
+                            tableName="example.TableExample"
                             primary="id"
                             i18n={true}
                             initHandler={initHandler}
@@ -687,7 +687,7 @@ export default function TableExamplePage() {
                             result={treeResult}
                             setData={() => {
                             }}
-                            tableName="TableExample"
+                            tableName="example.TableExample"
                             primary="id"
                             i18n={true}
                             initHandler={() => {
