@@ -353,10 +353,6 @@
       "intl": {
         "title": "next-intl 国际化指南",
         "description": "串联语言路由、中间件与消息上下文，理解多文件翻译配置和常见问题。"
-      },
-      "staticDeployment": {
-        "title": "站点域名与 Nginx 静态部署方案",
-        "description": "盘点各站域名与环境配置，评估 Next.js 静态导出、国际化路由及分阶段上线方案。"
       }
     }
   },
