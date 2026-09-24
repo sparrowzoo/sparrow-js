@@ -1,6 +1,5 @@
 // Public documents use absolute paths so locale prefixes never change their URLs.
 export const documents = [
-    {id: "staticDeployment", category: "backend", subcategory: "Nginx", topic: "Nginx", href: "/backend/nginx/static-sites-deployment.html", keywords: "Next.js next-intl i18n HTTPS static export domain 域名 部署 静态导出 国际化"},
     {id: "launchRunbook", category: "backend", subcategory: "Nginx", topic: "Nginx", href: "/backend/nginx/next15-http-launch.html", keywords: "Next.js 15 HTTP WS Nginx static release deploy rollback 上线 操作 构建 发布 回滚 静态"},
     {id: "bom", category: "backend", subcategory: "Java", topic: "Maven", href: "/backend/java/maven/sparrow-parent-bom.html", keywords: "Java Parent BOM Starter architecture 架构 依赖"},
     {id: "openapi", category: "backend", subcategory: "Java", topic: "OpenAPI", href: "/backend/java/open-api/open-api.html", keywords: "Java Spring Boot springdoc Swagger 接口"},

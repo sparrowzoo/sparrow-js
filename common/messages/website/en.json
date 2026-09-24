@@ -353,10 +353,6 @@
       "intl": {
         "title": "Internationalization with next-intl",
         "description": "Connect locale routing, middleware, and message context, with guidance on grouped translations and troubleshooting."
-      },
-      "staticDeployment": {
-        "title": "Site domains and Nginx static deployment",
-        "description": "Review site domains and environment settings, Next.js static export, locale routing, and a phased deployment plan."
       }
     }
   },
