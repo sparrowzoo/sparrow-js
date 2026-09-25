@@ -16,9 +16,7 @@ build/
 *build-dist*/
 
 # 打包文件
-artifacts/
 *.zip
-*.tar.gz
 *.tgz
 *.pack
 *.pack.gz
