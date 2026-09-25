@@ -9,3 +9,18 @@ target
 radix-ui-primitives
 /radix-ui-primitives/
 .next
+
+# 构建产物
+dist/
+build/
+
+# 打包文件
+artifacts/
+*.zip
+*.tar.gz
+*.tgz
+*.pack
+*.pack.gz
+
+# 编译缓存
+*.tsbuildinfo
