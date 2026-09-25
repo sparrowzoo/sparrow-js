@@ -13,6 +13,7 @@ radix-ui-primitives
 # 构建产物
 dist/
 build/
+*build-dist*/
 
 # 打包文件
 artifacts/
