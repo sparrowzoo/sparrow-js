@@ -1,6 +1,6 @@
 import {localeAlternates} from "@/lib/site-metadata";
 import type {Metadata} from "next";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import ServiceProduct from "../_components/service-product";
 
 type PageProps = {params: Promise<{locale: string}>};
@@ -14,6 +14,5 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
 
 export default async function ImPage({params}: PageProps) {
     const {locale} = await params;
-    setRequestLocale(locale);
     return <ServiceProduct id="im" locale={locale}/>;
 }

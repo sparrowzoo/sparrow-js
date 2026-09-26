@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
     trailingSlash: true,
     images: {unoptimized: true},
+    // Next.js 15 requires this flag for locale lookup via next/root-params.
+    experimental: {rootParams: true},
 };
 
 const withNextIntl = createNextIntlPlugin({

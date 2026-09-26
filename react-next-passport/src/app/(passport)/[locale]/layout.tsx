@@ -3,7 +3,7 @@ import "./globals.css";
 import {ThemeProvider} from "@/components/theme-provider";
 import {Toaster} from "react-hot-toast";
 import {hasLocale, Locale, NextIntlClientProvider} from "next-intl";
-import {getMessages, getTranslations, setRequestLocale} from "next-intl/server";
+import {getMessages, getTranslations} from "next-intl/server";
 import {routing} from "@/i18n/routing";
 import {notFound} from "next/navigation";
 import PassportHeader from "@/components/passport/passport-header";
@@ -37,8 +37,6 @@ export default async function RootLayout({children, params}: Props) {
         notFound();
     }
 
-    // Enable static rendering
-    setRequestLocale(locale);
     const t = await getTranslations({locale, namespace: "Passport.navigation"});
     const messages = await getMessages({locale});
     return (

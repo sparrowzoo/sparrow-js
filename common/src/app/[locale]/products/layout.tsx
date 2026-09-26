@@ -1,12 +1,10 @@
 import type {ReactNode} from "react";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import SiteHeader from "../_components/site-header";
 import SiteFooter from "../_components/site-footer";
 import styles from "../home.module.css";
 
-export default async function ProductLayout({children, params}: {children: ReactNode; params: Promise<{locale: string}>}) {
-    const {locale} = await params;
-    setRequestLocale(locale);
+export default async function ProductLayout({children}: {children: ReactNode}) {
     const t = await getTranslations("website.nav");
     return (
         <div className={styles.site} id="top">

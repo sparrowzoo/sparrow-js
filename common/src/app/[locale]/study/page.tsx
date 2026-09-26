@@ -1,7 +1,7 @@
 import {localeAlternates} from "@/lib/site-metadata";
 import type {Metadata} from "next";
 import Image from "next/image";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import {ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Braces, Check, ChevronDown, Compass, GraduationCap, Layers3, MessageCircle, Sparkles, Users} from "lucide-react";
 import {IM_ROOT} from "@/common/lib/Env";
 import SiteHeader from "../_components/site-header";
@@ -31,7 +31,6 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
 
 export default async function StudyPage({params}: PageProps) {
     const {locale} = await params;
-    setRequestLocale(locale);
     const t = await getTranslations("study");
     const nav = await getTranslations("website.nav");
     const chatHref = `${IM_ROOT?.replace(/\/+$/, "")}/${locale}/chat/friends`;

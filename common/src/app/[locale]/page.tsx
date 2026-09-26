@@ -1,6 +1,6 @@
 import {localeAlternates} from "@/lib/site-metadata";
 import type {Metadata} from "next";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import {ArrowDown, ArrowRight, ArrowUpRight, Blocks, BookOpen, Boxes, Braces, Check, Code2, FileUp, Layers3, LockKeyhole, MessageCircle, Radio, ShieldCheck} from "lucide-react";
 import {Link} from "@/common/i18n/navigation";
 import DocumentDirectory from "./_components/document-directory";
@@ -38,9 +38,7 @@ const capabilities = [
     {id: "modular", icon: Boxes},
 ] as const;
 
-export default async function Home({params}: PageProps) {
-    const {locale} = await params;
-    setRequestLocale(locale);
+export default async function Home() {
     const t = await getTranslations("website");
 
     return (
