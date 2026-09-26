@@ -14,3 +14,4 @@ radix-ui-primitives
 /dist/*
 
 /out/
+/src/common

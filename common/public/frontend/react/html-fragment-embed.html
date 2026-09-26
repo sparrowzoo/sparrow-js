@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="把一个 React 组件渲染出的 HTML 片段，嵌入到非 React 架构的页面：从 createRoot 渲染原理、useEffect 客户端挂载，到 HtmlFragment 组件与静态导出的文档外壳，以客服挂件为例端到端说明。">
+  <meta name="author" content="Sparrow Zoo">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="把 React 组件嵌入非 React 页面：HtmlFragment 与客服挂件">
+  <meta property="og:description" content="用 createRoot 与 useEffect 把客服组件接进官网、商城等非 React 架构：讲清 HTML 片段如何生成、注入，以及为什么静态导出会多出 </body></html>。">
+  <meta property="og:url" content="https://www.sparrowzoo.com/frontend/react/html-fragment-embed.html">
+  <meta property="og:site_name" content="Sparrow Zoo">
+  <meta property="og:image" content="https://www.sparrowzoo.com/svg/brand/sparrow-logo.svg">
+  <meta name="twitter:card" content="summary">
+  <title>把 React 组件嵌入非 React 页面 · HtmlFragment 与客服挂件</title>
+  <style>
+    :root{--bg:#07070d;--panel:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#f4f4f7;--secondary:#9a9ab0;--tertiary:#64647c;--purple:#6d5cff;--cyan:#22d3ee;--pink:#a855f7;--code:#0c0c16;--radius:18px;--gradient:linear-gradient(110deg,#6d5cff 0%,#22d3ee 53%,#a855f7 100%);--mono:"SFMono-Regular","JetBrains Mono",Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:105px}body{margin:0;color:var(--text);background:var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.85;letter-spacing:.01em}body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 7% 1%,#6d5cff23,transparent 42%),radial-gradient(ellipse at 88% 15%,#22d3ee0d,transparent 37%),radial-gradient(ellipse at 84% 85%,#a855f710,transparent 42%)}body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px);background-size:64px 64px}
+    a{color:#88dce8;text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:4px}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}::selection{background:#6d5cff60;color:white}h1,h2,h3,h4,p{margin:0}h1,h2,h3{line-height:1.3;letter-spacing:-.035em}h1{font-size:clamp(32px,4vw,54px);font-weight:750}h2{font-size:29px}h3{font-size:21px}h4{font-size:15px;font-weight:650}p+p{margin-top:13px}strong{color:var(--text);font-weight:650}code{font-family:var(--mono);font-size:.88em;color:#c9c5ff;overflow-wrap:anywhere}p code,li code,td code{padding:2px 6px;border-radius:5px;background:#ffffff05}small{font-size:12px}ul,ol{padding-left:23px;margin:14px 0}li+li{margin-top:8px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:15px 18px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}th{background:#ffffff03;color:var(--text);font-weight:600}td{color:var(--secondary)}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#ffffff02}td:first-child{color:var(--text)}.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);margin:22px 0}.table-wrap table{min-width:560px}
+    .wrap{max-width:1232px;padding:0 40px;margin:auto}.gradient-text{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}.eyebrow{font-size:11px;font-weight:650;letter-spacing:.17em;text-transform:uppercase;color:var(--secondary)}.muted{color:var(--secondary)}.fine{color:var(--secondary);font-size:13px;line-height:1.75}.panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel)}.lift{transition:transform .22s,border-color .22s,background .22s}.lift:hover{transform:translateY(-4px);border-color:#ffffff19;background:#ffffff06}.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--secondary);line-height:1.6}.dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;display:inline-block;box-shadow:0 0 12px #22d3ee50}.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:10px 20px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:13px;background:#ffffff04;line-height:1.6;text-decoration:none;transition:transform .2s,filter .2s}.button:hover{transform:translateY(-2px);text-decoration:none;filter:brightness(1.14)}.button.primary{border:0;background:var(--gradient);color:#080c18;font-weight:750}.source{font-size:12px;color:#91c6d3;margin-top:14px;display:block}.source a{color:inherit;text-decoration:underline;text-decoration-color:#91c6d340;text-underline-offset:3px}.skip{position:absolute;left:12px;top:-80px;z-index:99;background:var(--bg);padding:12px;border-radius:8px}.skip:focus{top:12px}
+    .topbar{position:sticky;top:0;z-index:50;background:#07070ddb;backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:30px}.brand{display:flex;align-items:center;gap:12px;color:var(--text);font-size:17px;letter-spacing:-.025em;font-weight:650;white-space:nowrap}.brand:hover{text-decoration:none}.brand-mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid #a39bff40;background:linear-gradient(145deg,#6d5cff26,#22d3ee0c);border-radius:10px;font-family:var(--mono);font-size:19px;color:#c5c0ff}.brand-sub{color:var(--tertiary);font-size:12px;font-weight:400;margin-left:4px;letter-spacing:.06em}.topnav{display:flex;align-items:center;gap:20px}.topnav>a:not(.button){color:var(--secondary);font-size:13px}.reading-progress{position:absolute;bottom:-1px;left:0;height:2px;width:0;background:var(--gradient);transition:width .1s linear}
+    .hero{padding:58px 0 58px;border-bottom:1px solid var(--border)}.crumb{display:flex;align-items:center;gap:12px;margin-bottom:34px;color:var(--secondary);font-size:12px}.crumb span[aria-hidden]{color:var(--tertiary)}.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:56px;align-items:center}.hero h1 span{display:block}.hero h1 .subline{margin-top:10px;font-size:.62em;letter-spacing:-.015em}.hero-desc{font-size:16px;line-height:1.95;color:var(--secondary);max-width:600px;margin-top:23px}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}.meta{display:flex;align-items:center;flex-wrap:wrap;gap:16px;margin-top:26px;color:var(--secondary);font-size:11px}.meta i{height:3px;width:3px;background:var(--tertiary);border-radius:50%}.hero-map{padding:24px;position:relative;box-shadow:0 18px 100px #6d5cff0a;overflow:hidden}.hero-map svg{display:block;width:100%;height:auto}
+    .main-grid{display:grid;grid-template-columns:minmax(0,1fr) 200px;gap:60px;padding-top:48px;padding-bottom:70px}.article{min-width:0}.toc{position:sticky;top:106px;align-self:start;border-left:1px solid var(--border);padding-left:21px;max-height:calc(100vh - 132px);overflow-y:auto}.toc .eyebrow{margin-bottom:16px;color:var(--tertiary)}.toc a{display:block;font-size:12px;color:var(--secondary);padding:7px 0;line-height:1.65;transition:color .2s}.toc a.active{color:var(--cyan)}.toc .sub{padding-left:10px;font-size:11px}.toc .toc-bottom{margin-top:22px;padding-top:16px;border-top:1px solid var(--border)}.toc .toc-bottom p{font-size:11px;color:var(--secondary);line-height:1.7}.toc .toc-bottom a{font-size:11px}.section{margin-bottom:56px;scroll-margin-top:100px}.section-heading{display:flex;align-items:baseline;gap:15px;margin-bottom:22px}.section-number{font:12px var(--mono);color:var(--tertiary);letter-spacing:.06em}.section>p,.subsection>p{color:var(--secondary)}.section-intro{font-size:17px;line-height:1.9}.subsection{margin-top:36px;scroll-margin-top:106px}.subsection h3{margin-bottom:16px}.subsection h3 .step{color:var(--cyan);font:12px var(--mono);margin-right:9px;vertical-align:middle}.conclusion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:24px 0}.conclusion-card{padding:20px 18px}.conclusion-card .tag{font:10px var(--mono);letter-spacing:.09em;color:var(--secondary);margin-bottom:13px}.conclusion-card h3{font-size:16px;letter-spacing:0;margin-bottom:9px}.conclusion-card p{font-size:13px;color:var(--secondary);line-height:1.8}.note{padding:19px 22px;border:1px solid var(--border);border-left:2px solid var(--purple);border-radius:0 14px 14px 0;background:linear-gradient(100deg,#6d5cff0b,#ffffff02);margin:23px 0;color:var(--secondary);font-size:14px}.note.cyan{border-left-color:var(--cyan);background:linear-gradient(100deg,#22d3ee09,#ffffff02)}.note strong{display:block;font-size:14px;margin-bottom:5px}.note p{margin-top:0}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.glossary>div{padding:17px 19px}.glossary dt{font:13px var(--mono);color:var(--text);margin-bottom:6px}.glossary dd{margin:0;font-size:13px;color:var(--secondary)}.codebox{margin-top:16px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--code)}.code-header{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:45px;padding:9px 16px;border-bottom:1px solid var(--border);background:#ffffff015}.code-header span{font:11px var(--mono);color:var(--secondary);overflow-wrap:anywhere}.copy{font-size:11px;white-space:nowrap;padding:4px 11px;border:1px solid var(--border);border-radius:999px;background:#ffffff04;color:var(--secondary)}.copy:hover{color:var(--text);border-color:#ffffff25}pre{margin:0;padding:20px 21px;overflow:auto;tab-size:2;line-height:1.8;font-size:12.5px}pre code{font-size:inherit;color:#c7c8de;white-space:pre;overflow-wrap:normal}.c{color:#73758c;font-style:italic}.diagram-code{padding:20px;font:12px/1.95 var(--mono);white-space:pre;overflow:auto;color:#bcc0d7}.benefits{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:22px}.benefit{padding:22px}.benefit .number{font:11px var(--mono);color:var(--tertiary);margin-bottom:13px}.benefit h4{margin-bottom:8px;font-size:15px}.benefit p{font-size:13px;color:var(--secondary)}.rule-list{list-style:none;padding:0;counter-reset:rule}.rule-list li{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border);color:var(--secondary);font-size:14px}.rule-list li:before{counter-increment:rule;content:counter(rule,decimal-leading-zero);font:11px var(--mono);color:var(--tertiary);padding-top:6px}.rule-list li:last-child{border-bottom:0}.sources{margin:24px 0 0;padding:0;list-style:none}.sources li{display:grid;grid-template-columns:29px 1fr;gap:11px;padding:14px 0;border-bottom:1px solid var(--border)}.sources .ref-number{font:11px var(--mono);color:var(--tertiary);padding-top:5px}.sources a{font-size:13px}.sources p{font-size:12px;color:var(--secondary);margin-top:3px}.closing{padding:29px;margin-top:32px;background:linear-gradient(115deg,#6d5cff13,#22d3ee07,#a855f70c);border:1px solid #ffffff10;border-radius:var(--radius)}.closing h3{font-size:22px;margin-bottom:15px}.closing p{color:var(--secondary);font-size:14px}.footer{border-top:1px solid var(--border);padding:26px 0 36px}.footer-inner{display:flex;justify-content:space-between;gap:20px;color:var(--secondary);font-size:11px}.footer a{color:var(--secondary)}.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#171724;border:1px solid #ffffff16;padding:10px 20px;border-radius:999px;color:var(--text);font-size:12px;z-index:80;box-shadow:0 8px 35px #0006}
+    @media(min-width:1500px){.wrap{max-width:1320px}.hero-grid{gap:80px}.main-grid{gap:72px}}
+    @media(max-width:1050px){.wrap{padding:0 28px}.hero-grid{gap:30px;grid-template-columns:1.3fr 1fr}.hero-map{padding:18px}.main-grid{grid-template-columns:minmax(0,1fr) 165px;gap:28px}.topnav{gap:16px}.brand-sub{display:none}.conclusion-grid{grid-template-columns:1fr}.conclusion-card{display:grid;grid-template-columns:125px 1fr;column-gap:15px;padding:17px 20px}.conclusion-card .tag{grid-column:1;margin:0 0 5px}.conclusion-card h3{grid-column:1;margin:0}.conclusion-card p{grid-column:2;grid-row:1/3}}
+    @media(max-width:760px){html{scroll-padding-top:89px}.wrap{padding:0 21px}.nav-inner{height:63px;gap:15px}.topnav{gap:15px}.topnav>a:not(.button){display:none}.topnav .button{font-size:11px;padding:8px 14px}.hero{padding:30px 0 35px}.crumb{margin-bottom:24px;font-size:10px;gap:9px}.hero-grid{grid-template-columns:1fr;gap:28px}.hero-desc{font-size:14px}.meta{gap:11px;font-size:10px;margin-top:20px}.main-grid{display:block;padding-top:32px}.toc{display:none}.section{margin-bottom:43px}.section-heading{gap:12px;margin-bottom:19px}h2{font-size:26px}h3{font-size:20px}.section-intro{font-size:16px}.conclusion-card{display:block;padding:19px}.conclusion-card .tag{margin-bottom:8px}.conclusion-card h3{margin-bottom:8px}.glossary{grid-template-columns:1fr}.benefits{grid-template-columns:1fr}.footer-inner{display:block}.footer-inner>div+div{margin-top:10px}pre{padding:17px;font-size:11px}.code-header{padding:9px 12px}.closing{padding:23px}.note{padding:17px 18px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.lift:hover,.button:hover{transform:none}}
+    @media print{body{background:white;color:#111;font-size:11pt}body::before,body::after,.topbar,.toc,.hero-map,.hero-actions,.copy,.reading-progress,.toast{display:none!important}.wrap{max-width:none;padding:0}.main-grid{display:block;padding:20px 0}.hero{padding:15px 0}.hero-grid{display:block}h1{font-size:26pt}.gradient-text{background:none;color:#111}.muted,.fine,p,td,li{color:#444!important}.panel,.note,.codebox,.closing{background:white;border-color:#ddd}.table-wrap{overflow:visible}.table-wrap table{min-width:0}pre code{white-space:pre-wrap;color:#222}a{color:#333}}
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#conclusion">跳到文章正文</a>
+  <header class="topbar">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="文章顶部"><span class="brand-mark" aria-hidden="true">s</span>sparrow<span class="brand-sub"> / FRONTEND</span></a>
+      <nav class="topnav" aria-label="文章导航"><a href="#conclusion">结论先行</a><a href="#background">问题背景</a><a href="#details">详细内容</a><a class="button" href="#summary">看结论 <span aria-hidden="true">↓</span></a><button type="button" class="button primary" id="share-btn" aria-label="分享本文">分享 <span aria-hidden="true">⤴</span></button></nav>
+    </div>
+    <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+  </header>
+
+  <div class="wrap">
+    <header class="hero" aria-label="文章 Banner">
+      <div class="crumb"><span>前端工程手记</span><span aria-hidden="true">/</span><span>React 渲染与集成</span><span aria-hidden="true">/</span><span class="pill"><span class="dot" aria-hidden="true"></span>客服挂件落地</span></div>
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow" style="margin-bottom:17px">RENDER WHERE YOU ARE WELCOME.</p>
+          <h1><span class="gradient-text">把 React 组件嵌入非 React 页面</span><span class="subline">从 createRoot 渲染原理，到 HtmlFragment 客服挂件</span></h1>
+          <p class="hero-desc">React 页面是一整栋「房子」，<br>但现在只想把其中一个「房间」——客服面板，<br>搬进官网、商城等非 React 架构的房子里。</p>
+          <div class="hero-actions"><a class="button primary" href="#rendering">从渲染原理看起 <span aria-hidden="true">↓</span></a><a class="button" href="#walkthrough">直接看端到端 <span aria-hidden="true">↗</span></a></div>
+          <div class="meta"><span>SPARROW 前端实践</span><i aria-hidden="true"></i><span>2026.09.27</span><i aria-hidden="true"></i><span>含 React 官方依据与完整代码</span></div>
+        </div>
+        <div class="panel hero-map" aria-label="封面图：React 组件经 HtmlFragment 生成 HTML 片段，再注入非 React 页面的容器">
+          <svg viewBox="0 0 360 340" role="img" aria-labelledby="cover-title" xmlns="http://www.w3.org/2000/svg">
+            <title id="cover-title">React 组件 → HTML 片段 → 非 React 页面</title>
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#6d5cff"/><stop offset=".5" stop-color="#22d3ee"/><stop offset="1" stop-color="#a855f7"/>
+              </linearGradient>
+            </defs>
+            <rect x="18" y="16" width="324" height="308" rx="16" fill="#0c0c16" stroke="#ffffff14"/>
+            <rect x="44" y="40" width="272" height="56" rx="12" fill="#6d5cff14" stroke="#8c7fff30"/>
+            <text x="64" y="64" font-family="monospace" font-size="13" fill="#c5c0ff">Talk / 客服组件</text>
+            <text x="64" y="84" font-family="monospace" font-size="10" fill="#9a9ab0">WebSocket · 会话 · 登录态</text>
+            <line x1="180" y1="96" x2="180" y2="116" stroke="#ffffff22" stroke-width="2"/>
+            <rect x="44" y="116" width="272" height="56" rx="12" fill="#ffffff04" stroke="#ffffff14"/>
+            <text x="64" y="140" font-family="monospace" font-size="13" fill="#f4f4f7">HtmlFragment 组件</text>
+            <text x="64" y="160" font-family="monospace" font-size="10" fill="#9a9ab0">服务端 return null · 客户端 createRoot</text>
+            <line x1="180" y1="172" x2="180" y2="192" stroke="#ffffff22" stroke-width="2"/>
+            <rect x="44" y="192" width="272" height="56" rx="12" fill="#ffffff04" stroke="#ffffff14"/>
+            <text x="64" y="216" font-family="monospace" font-size="13" fill="#f4f4f7">静态导出 index.html</text>
+            <text x="64" y="236" font-family="monospace" font-size="10" fill="#9a9ab0">脚本 + 完整 &lt;html&gt;…&lt;/html&gt; 外壳</text>
+            <line x1="180" y1="248" x2="180" y2="268" stroke="#ffffff22" stroke-width="2"/>
+            <rect x="44" y="268" width="272" height="44" rx="12" fill="url(#g)" opacity=".16" stroke="#ffffff22"/>
+            <text x="64" y="294" font-family="monospace" font-size="13" fill="#e9e6ff">#content-container（非 React 页面）</text>
+          </svg>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <main class="article" id="article">
+        <section id="conclusion" class="section">
+          <div class="section-heading"><span class="section-number">01 /</span><h2>结论先行</h2></div>
+          <p class="section-intro"><strong>把一个 React 组件渲染出的 HTML 片段，嵌入非 React 架构的页面，靠的是两个能力：</strong>React 18 的 <code>createRoot</code> 把「渲染根」挂到任意 DOM 节点，<code>useEffect</code> 把「渲染时机」从服务端推迟到客户端。</p>
+          <p>具体做法：组件在服务端返回 <code>null</code>（不输出任何内容），到了浏览器里再通过 <code>createRoot(container).render(&lt;App/&gt;)</code> 把真实 UI 手动挂进宿主页面预留的容器。这样「React 渲染的片段」就接进了「非 React 的页面」，而宿主不需要知道 React 的存在。</p>
+          <div class="conclusion-grid">
+            <div class="panel conclusion-card lift"><div class="tag">01 · MOUNT POINT</div><h3>挂载点解耦</h3><p><code>createRoot(domNode)</code> 不要求目标节点由 React 管理，任何 <code>getElementById</code> 拿到的容器都能成为 React 树的根。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">02 · RENDER TIMING</div><h3>时机推迟</h3><p><code>useEffect</code> 只在客户端执行，SSR/SSG 阶段组件返回 <code>null</code>，真正渲染被推迟到浏览器挂载之后。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">03 · DOC SHELL</div><h3>外壳剥离</h3><p>静态导出（<code>output:"export"</code>）会生成完整 <code>&lt;html&gt;…&lt;/body&gt;&lt;/html&gt;</code>，宿主侧 strip 掉即可，<code>&lt;/body&gt;&lt;/html&gt;</code> 就是这么来的。</p></div>
+          </div>
+          <div class="note cyan"><strong>一句话总结</strong><p>服务端什么都不渲染，客户端才动手：用 <code>createRoot</code> 把组件「种」进宿主页面的容器里。所谓「HTML 片段嵌入」，本质是<strong>把 React 的客户端渲染结果，注入到非 React 的 DOM 里</strong>，而不是在服务端拼一段静态 HTML 字符串。</p><span class="source">依据：<a href="https://react.dev/reference/react-dom/client/createRoot" target="_blank" rel="noopener noreferrer">React · createRoot</a> / <a href="https://react.dev/reference/react/useEffect" target="_blank" rel="noopener noreferrer">React · useEffect</a></span></div>
+        </section>
+
+        <section id="background" class="section">
+          <div class="section-heading"><span class="section-number">02 /</span><h2>问题背景</h2></div>
+          <p>客服 / IM 是一类典型的重交互组件：要维护 WebSocket 长连接、收发消息、管理会话列表、和登录态打通，还要做多语言。这类需求天然适合用 React 组织——状态、生命周期、组件树都现成。</p>
+          <p>但现实是，官网、商城、门户可能是 jQuery 拼的、模板引擎渲染的，或者干脆是后端直出的 HTML。它们不是 React 架构，也不会为了一个客服功能整体迁到 React。于是问题变成了：<strong>如何不动宿主，把一个 React 组件「贴」进任意一个非 React 页面？</strong></p>
+          <p>拆开看，这里其实有三个子问题：</p>
+          <ol>
+            <li><strong>位置：</strong>React 渲染的结果放到哪？——需要宿主页面先留出一个容器节点。</li>
+            <li><strong>时机：</strong>什么时候渲染？——不能在服务端直出，得等宿主页面加载后、在浏览器里执行。</li>
+            <li><strong>产物：</strong>交付给宿主的是什么？——是一段能自己「长」出 UI 的脚本和样式，而不是写死的 HTML。</li>
+          </ol>
+          <blockquote style="margin:16px 0;padding:12px 18px;border-left:3px solid var(--cyan);background:rgba(34,211,238,.06);border-radius:8px;color:var(--secondary)">对小白友好的一句话：React 页面是一整栋「房子」（<code>html</code> / <code>head</code> / <code>body</code> 齐全），现在只想把其中一个「房间」——客服面板——搬进别人家的房子里。你要做的不是重盖一栋房，而是给房间接上水电（脚本 + 样式），让它能在新房子里的某个位置点亮。</blockquote>
+          <dl class="glossary">
+            <div class="panel"><dt>createRoot · 渲染根</dt><dd>React 18 提供的挂载入口，把一个 DOM 节点交给 React 管理，之后所有渲染都发生在它内部。</dd></div>
+            <div class="panel"><dt>useEffect · 副作用钩子</dt><dd>组件提交到 DOM 后执行的回调，只在客户端运行，服务端渲染时不会触发。</dd></div>
+            <div class="panel"><dt>静态导出 · output:export</dt><dd>Next.js 把每个路由预渲染成完整 HTML 文档，不依赖 Node 服务。</dd></div>
+            <div class="panel"><dt>文档外壳 · Document Shell</dt><dd><code>&lt;html&gt;&lt;head&gt;…&lt;body&gt;…&lt;/body&gt;&lt;/html&gt;</code> 这层固定包裹。</dd></div>
+          </dl>
+        </section>
+
+        <section id="details" class="section">
+          <div class="section-heading"><span class="section-number">03 /</span><h2>详细内容</h2></div>
+
+          <section id="rendering" class="subsection">
+            <h3><span class="step">STEP 01</span>React 渲染的本质：从 render 到 createRoot</h3>
+            <p>React 的渲染，本质是<strong>把一棵「虚拟 DOM 树」通过协调（reconciliation）映射到真实的 DOM</strong>。它先算出一棵描述界面的元素树，再 diff 出与上一次的差异，最后把差异提交给浏览器。这个「提交」需要一个目标：把树「种」到哪个 DOM 节点里。</p>
+            <p>React 18 之前用 <code>ReactDOM.render(&lt;App/&gt;, el)</code>；React 18 起改用 <code>createRoot</code>。变化的关键点：<strong>根节点不再要求是 React 专属的挂载点，任何真实 DOM 元素都可以</strong>。</p>
+            <div class="codebox"><div class="code-header"><span>React 18 · createRoot 基础用法</span><button type="button" class="copy">复制</button></div><pre><code>import { createRoot } from "react-dom/client";
+
+const container = document.getElementById("app");   <span class="c">// 任意 DOM 节点</span>
+const root = createRoot(container);                 <span class="c">// 把它交给 React 管理</span>
+root.render(&lt;App /&gt;);                             <span class="c">// 在它内部渲染 React 树</span></code></pre></div>
+            <p>这个能力是整篇文章的支点：既然 <code>createRoot</code> 不挑节点，那宿主的 <code>&lt;div id="content-container"&gt;</code> 和一个 React 应用自带的根 <code>&lt;div id="root"&gt;</code> 就没有本质区别——React 片段可以「种」进任何人的页面。</p>
+          </section>
+
+          <section id="ssr-client" class="subsection">
+            <h3><span class="step">STEP 02</span>服务端与客户端的分界：useEffect</h3>
+            <p>光有挂载点还不够。如果组件在服务端就被渲染成 HTML，那它输出的是一段写死的字符串，既没有交互，也无法在宿主页面里动态挂载。要「推迟到客户端再渲染」，靠的是 <code>useEffect</code> 的一个特性：<strong>它只在浏览器里、组件提交之后执行，服务端渲染时根本不会运行</strong>。</p>
+            <p>于是有了这样的分工：组件在服务端返回 <code>null</code>（什么都不输出），在客户端用 <code>useEffect</code> 里执行 <code>createRoot(...).render(...)</code>。渲染时机被整体推迟，渲染位置则由代码里的 <code>getElementById</code> 决定。</p>
+            <div class="table-wrap"><table><thead><tr><th>阶段</th><th>发生在哪</th><th>组件返回 <code>null</code> 的结果</th><th>useEffect 是否执行</th></tr></thead><tbody>
+              <tr><td>SSR / 静态导出</td><td>服务端 / 构建时</td><td>生成的 HTML 里没有这个组件的任何 UI</td><td>否</td></tr>
+              <tr><td>浏览器挂载后</td><td>客户端</td><td>执行 <code>createRoot().render()</code>，UI 出现</td><td>是</td></tr>
+            </tbody></table></div>
+            <div class="note"><strong>注意：这不是「水合」，而是「全新挂载」</strong><p>服务端既然返回了 <code>null</code>，宿主页面里就没有可供水合（hydrate）的静态标记。所以这里用的是 <code>createRoot</code> 而非 <code>hydrateRoot</code>——它是一次全新的客户端渲染，而不是把现有 HTML 接管过来。这也是为什么它不要求宿主页面本身是 React 渲染的。</p></div>
+          </section>
+
+          <section id="component" class="subsection">
+            <h3><span class="step">STEP 03</span>HtmlFragment 组件拆解</h3>
+            <p>把上面两步封装成一个可复用组件，就是项目里的 <code>HtmlFragment</code>。它只做一件事：<strong>接收一个要渲染的组件和一个容器 ID，在客户端把它挂进去</strong>。</p>
+            <div class="codebox"><div class="code-header"><span>common/src/common/components/i18n/HtmlFragement.tsx</span><button type="button" class="copy">复制</button></div><pre><code>"use client";
+import { NextIntlClientProvider } from "next-intl";
+import React, { useEffect } from "react";
+import { createRoot } from "react-dom/client";
+
+type Props = {
+  locale: string;
+  messages: React.ComponentProps&lt;typeof NextIntlClientProvider&gt;["messages"];
+  DynamicComponent: React.ComponentType&lt;Record&lt;string, unknown&gt;&gt;;
+  containerId: string;
+};
+
+export default function HtmlFragment(props: Props) {
+  const { locale, messages, containerId, DynamicComponent } = props;
+  useEffect(() =&gt; {
+    <span class="c">// 手动挂载到指定容器（只在客户端执行）</span>
+    const container = document.getElementById(containerId);
+    if (container) {
+      const root = createRoot(container);
+      root.render(
+        &lt;NextIntlClientProvider locale={locale} messages={messages}&gt;
+          &lt;DynamicComponent /&gt;
+        &lt;/NextIntlClientProvider&gt;
+      );
+    }
+    <span class="c">// eslint-disable-next-line react-hooks/exhaustive-deps</span>
+  }, []);
+  return null;  <span class="c">// 服务端什么都不输出</span>
+}</code></pre></div>
+            <p>逐行读下来，每一处都有讲究：</p>
+            <ul>
+              <li><code>return null</code>：服务端阶段不渲染任何 UI，避免生成多余的 <code>&lt;div&gt;</code>，也保证静态 HTML 里没有写死的内容。</li>
+              <li><code>useEffect(..., [])</code>：空依赖，只在挂载后执行一次；同时因为 effect 只在客户端运行，服务端构建不会执行。</li>
+              <li><code>getElementById(containerId)</code>：拿到宿主页面预留的容器，实现「渲染位置」与 React 的完全解耦。</li>
+              <li><code>createRoot(container).render(...)</code>：把组件树（包着 <code>NextIntlClientProvider</code> 的多语言上下文）种进那个容器。</li>
+            </ul>
+            <p>它在 Next.js 的 <code>layout.tsx</code> 里被这样使用：</p>
+            <div class="codebox"><div class="code-header"><span>app/(fragment)/[locale]/talk/layout.tsx · 关键片段</span><button type="button" class="copy">复制</button></div><pre><code>const messages = await getMessages({ locale });
+
+return (
+  &lt;HtmlFragment
+    containerId={"content-container"}
+    locale={locale}
+    messages={messages}
+    DynamicComponent={Talk}   <span class="c">// 客服组件</span>
+  /&gt;
+);</code></pre></div>
+            <p>这里 <code>Talk</code> 就是客服组件本体（含 WebSocket、会话列表、登录态）。它没有在服务端被渲染成 HTML，而是作为「要种进容器的东西」被传下去，等浏览器加载后再长出来。</p>
+          </section>
+
+          <section id="shell" class="subsection">
+            <h3><span class="step">STEP 04</span>静态导出为什么会有 &lt;/body&gt;&lt;/html&gt;</h3>
+            <p>当你用 <code>output: "export"</code> 做静态导出时，Next.js 会为每个路由生成<strong>一个完整的 HTML 文档</strong>。App Router 强制套上内置的文档外壳——<code>&lt;html&gt;&lt;head&gt;…&lt;body&gt;…&lt;/body&gt;&lt;/html&gt;</code>，这层包裹是硬编码的，没有「只输出片段」的开关。</p>
+            <div class="codebox"><div class="code-header"><span>next.config.mjs · 静态导出</span><button type="button" class="copy">复制</button></div><pre><code>const nextConfig = {
+  images: { unoptimized: true },
+  output: "export",        <span class="c">// 静态导出：每个路由生成完整 HTML 文档</span>
+  trailingSlash: true,
+};
+export default withNextIntl(nextConfig);</code></pre></div>
+            <p>所以即使 <code>HtmlFragment</code> 在服务端返回 <code>null</code>（body 是空的），<code>out/zh/talk/index.html</code> 里依然会有：</p>
+            <ul>
+              <li><code>&lt;html&gt;/&lt;head&gt;/&lt;body&gt;</code> 这层外壳；</li>
+              <li>一堆 <code>&lt;script src="/_next/static/..."&gt;</code>（运行时 chunk）；</li>
+              <li>RSC flight 数据（那一大段 <code>self.__next_f.push([...])</code>）；</li>
+              <li>最后的 <code>&lt;/body&gt;&lt;/html&gt;</code>。</li>
+            </ul>
+            <p><strong>所以 <code>&lt;/body&gt;&lt;/html&gt;</code> 不是「多出来的 bug」，而是静态导出的标准外壳。</strong>它提示了一个更重要的事实：这个「片段」的真正内容不在静态 HTML 里，而在那一堆脚本里——真正渲染出客服面板的是浏览器，不是构建时。</p>
+            <div class="note cyan"><strong>如果你想要「纯片段」，先想清楚要的是什么</strong><p>对一个纯客户端渲染的挂件来说，静态 HTML 里本来就没有可见内容。与其纠结怎么去掉外壳，不如换思路：要么在宿主侧剥离外壳（本文做法），要么干脆不要经过 Next 页面路由，把它打成一个独立的 JS/CSS bundle（见 STEP 06 对比）。</p></div>
+          </section>
+
+          <section id="host" class="subsection">
+            <h3><span class="step">STEP 05</span>宿主侧注入：非 React 页面只需两行</h3>
+            <p>到了非 React 的宿主页面，事情反而最简单：先留一个容器，再引入一段安装脚本。</p>
+            <div class="codebox"><div class="code-header"><span>官网 / 商城等非 React 页面 · 接入方式</span><button type="button" class="copy">复制</button></div><pre><code>&lt;!-- 1. 预留容器：客服面板会被挂到这里 --&gt;
+&lt;div id="content-container"&gt;&lt;/div&gt;
+
+&lt;!-- 2. 引入安装脚本，指定要加载的片段与定位 --&gt;
+&lt;script id="talk-script"
+        src="/imInstaller.js?html=/en/talk&amp;r=20rem&amp;b=20rem"&gt;&lt;/script&gt;</code></pre></div>
+            <p>安装脚本 <code>imInstaller.js</code> 负责把导出的 <code>index.html</code> 拉过来、剥掉外壳、注入容器：</p>
+            <div class="codebox"><div class="code-header"><span>imInstaller.js · 注入核心</span><button type="button" class="copy">复制</button></div><pre><code>$.ajax({ url, method: "GET", cache: false, dataType: "html" })
+  .done(function (html) {
+    html = html.replace("&lt;/body&gt;", "");   <span class="c">// 剥掉文档外壳</span>
+    html = html.replace("&lt;/html&gt;", "");
+    container.append(html);                 <span class="c">// 注入脚本 + 标记</span>
+    reloadAssets(container);                <span class="c">// 把 &lt;link&gt; 样式克隆进 &lt;head&gt;</span>
+  });</code></pre></div>
+            <p>注入之后，浏览器加载并执行那些 <code>&lt;script&gt;</code>，React 运行时启动，<code>HtmlFragment</code> 的 <code>useEffect</code> 被触发，<code>createRoot</code> 把客服面板渲染进 <code>#content-container</code>。整条链路就此闭合。</p>
+            <div class="panel diagram-code" role="img" aria-label="端到端链路：宿主页面引入安装脚本，拉取导出的 index.html，注入容器，脚本执行后 createRoot 挂载客服组件">宿主页面（非 React）
+  │  引入 &lt;script src="imInstaller.js?html=…"&gt;
+  ▼
+imInstaller.js  ajax 拉取 out/en/talk/index.html
+  │  strip &lt;/body&gt; / &lt;/html&gt;，append 进 #content-container
+  ▼
+浏览器执行注入的 &lt;script&gt;  →  React 运行时启动
+  │
+  ▼
+HtmlFragment.useEffect  →  createRoot(#content-container).render(&lt;Talk/&gt;)
+  │
+  ▼
+客服面板渲染完成（WebSocket 连接、会话列表就绪）</div>
+          </section>
+
+          <section id="compare" class="subsection">
+            <h3><span class="step">STEP 06</span>三种嵌入方案对比</h3>
+            <p>「把 React 片段嵌入非 React 页面」不止本文这一种做法。根据产物形态和是否愿意起服务，有三条路可走：</p>
+            <div class="table-wrap wide" style="margin-top:16px"><table><thead><tr><th>方案</th><th>产物</th><th>宿主接入成本</th><th>适用 / 代价</th></tr></thead><tbody>
+              <tr><td><strong>A · 页面导出 + 剥离外壳</strong><br>（本文做法）</td><td>Next 静态导出的 <code>index.html</code></td><td>两行：容器 + 安装脚本</td><td>复用 Next 的打包与路由，代价是带着整套 Next 运行时与 flight 数据注入宿主</td></tr>
+              <tr><td><strong>B · 独立 bundle widget</strong></td><td>单独打出的 <code>im.js</code> + <code>im.css</code></td><td>两行：容器 + <code>&lt;script&gt;</code></td><td>最干净，没有 <code>&lt;html&gt;</code> 外壳和 flight 数据；代价是要另起一个打包入口</td></tr>
+              <tr><td><strong>C · Route Handler / 服务端渲染片段</strong></td><td>接口返回的 <code>text/html</code> 片段</td><td>需请求一个运行中的服务</td><td>适合真的需要服务端渲染出静态内容；与 <code>output:"export"</code> 冲突，要起 Node 服务</td></tr>
+            </tbody></table></div>
+            <p>三者的本质差别在「真正的 UI 是在哪里渲染出来的」：A 和 B 都是客户端渲染，只是产物包装不同；C 是服务端渲染。对客服这种带长连接、强交互的组件，客户端渲染（A 或 B）是自然的选择。</p>
+          </section>
+
+          <section id="walkthrough" class="subsection">
+            <h3><span class="step">STEP 07</span>客服场景端到端走查</h3>
+            <p>把整件事串成一条完整的落地链路，以客服（IM）为例：</p>
+            <ol>
+              <li><strong>写客服组件：</strong>用 React 组织 <code>Talk</code>（会话列表、消息、WebSocket、登录态），这是要复用的「房间」。</li>
+              <li><strong>写挂载组件：</strong>用 <code>HtmlFragment</code> 把 <code>Talk</code> 包起来，声明目标容器 <code>content-container</code>，服务端返回 <code>null</code>。</li>
+              <li><strong>配静态导出：</strong><code>output: "export"</code> 生成 <code>out/xx/talk/index.html</code>（含脚本 + 完整外壳）。</li>
+              <li><strong>写安装脚本：</strong><code>imInstaller.js</code> 负责拉取、剥离外壳、注入容器、克隆样式。</li>
+              <li><strong>宿主接入：</strong>非 React 页面只加容器和一句 <code>&lt;script&gt;</code>，其余交给脚本。</li>
+              <li><strong>浏览器运行：</strong>脚本执行 → React 启动 → <code>useEffect</code> → <code>createRoot</code> → 客服面板出现。</li>
+            </ol>
+            <div class="benefits">
+              <div class="panel benefit lift"><div class="number">01 / REUSE</div><h4>组件零改动复用</h4><p>客服组件本身不感知宿主是谁，React 组件树、状态、多语言全部原样复用。</p></div>
+              <div class="panel benefit lift"><div class="number">02 / HOST-NEUTRAL</div><h4>宿主保持中立</h4><p>官网 / 商城无需引入 React，只需一个容器和一句脚本，架构不被绑架。</p></div>
+              <div class="panel benefit lift"><div class="number">03 / AUTH</div><h4>登录态自然打通</h4><p>因为仍在浏览器同一域 / 跨域存储体系内，token 与访客身份照常共享。</p></div>
+              <div class="panel benefit lift"><div class="number">04 / INDEPENDENT</div><h4>独立演进</h4><p>客服功能可以独立构建、独立发布，宿主页面不受影响。</p></div>
+            </div>
+          </section>
+
+          <section id="summary" class="subsection">
+            <div class="closing"><p class="eyebrow" style="margin-bottom:13px">DESIGN DECISION</p><h3 class="gradient-text">服务端不渲染，客户端才接管。</h3><p><strong>用 <code>createRoot</code> 解耦挂载点，用 <code>useEffect</code> 推迟渲染时机，组件在服务端返回 <code>null</code>、在客户端把 React 片段种进宿主页面的容器。</strong>这就是把一个 React 组件嵌入非 React 架构页面的全部秘密。</p><p>静态导出带来的 <code>&lt;/body&gt;&lt;/html&gt;</code> 只是文档外壳，剥掉即可；真正的 UI 由浏览器里的 React 运行时渲染，与宿主是否是 React 无关。</p></div>
+          </section>
+        </section>
+
+        <section id="sources" class="section" style="margin-bottom:0">
+          <div class="section-heading"><span class="section-number">04 /</span><h2>官方依据与阅读</h2></div>
+          <p class="fine">下列文档支撑「createRoot 挂载」与「useEffect 客户端执行」的说明；「HTML 片段嵌入非 React 页面」的整体做法，是结合本项目（客服挂件）背景给出的工程实践。文档核对日期：2026-09-27。</p>
+          <ol class="sources">
+            <li><span class="ref-number">[01]</span><div><a href="https://react.dev/reference/react-dom/client/createRoot" target="_blank" rel="noopener noreferrer">React · createRoot ↗</a><p>createRoot 的挂载语义，以及它与旧 ReactDOM.render 的差异。</p></div></li>
+            <li><span class="ref-number">[02]</span><div><a href="https://react.dev/reference/react/useEffect" target="_blank" rel="noopener noreferrer">React · useEffect ↗</a><p>useEffect 的执行时机：组件提交到 DOM 之后，且只在客户端运行。</p></div></li>
+            <li><span class="ref-number">[03]</span><div><a href="https://react.dev/reference/react-dom/client/hydrateRoot" target="_blank" rel="noopener noreferrer">React · hydrateRoot ↗</a><p>水合与全新挂载的区别，理解本文为何选择 createRoot 而非 hydrateRoot。</p></div></li>
+            <li><span class="ref-number">[04]</span><div><a href="https://nextjs.org/docs/app/building-your-application/deploying/static-exports" target="_blank" rel="noopener noreferrer">Next.js · Static Exports ↗</a><p>output:"export" 的静态导出行为，以及每个路由生成的完整 HTML 文档。</p></div></li>
+          </ol>
+        </section>
+      </main>
+      <aside class="toc" aria-label="文章目录"><p class="eyebrow">ON THIS PAGE</p><a href="#conclusion" class="active">01　结论先行</a><a href="#background">02　问题背景</a><a href="#details">03　详细内容</a><a class="sub" href="#rendering">渲染本质：createRoot</a><a class="sub" href="#ssr-client">分界：useEffect</a><a class="sub" href="#component">HtmlFragment 拆解</a><a class="sub" href="#shell">静态导出的外壳</a><a class="sub" href="#host">宿主侧注入</a><a class="sub" href="#compare">三种方案对比</a><a class="sub" href="#walkthrough">端到端走查</a><a class="sub" href="#summary">归纳与结论</a><a href="#sources">04　官方依据</a><div class="toc-bottom"><p>面向前端与集成开发者<br>基于 Sparrow 客服挂件实践整理</p><a href="#top" style="margin-top:9px">返回顶部 ↑</a></div></aside>
+    </div>
+  </div>
+  <footer class="footer"><div class="wrap footer-inner"><div><strong>sparrow</strong> / 前端工程手记 · React 渲染与集成</div><div>服务端不渲染，客户端才接管。　<a href="#top">返回文章顶部 ↑</a></div></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script>
+    (() => {
+      const toast = document.getElementById('toast'); let toastTimer;
+      function announce(message) { clearTimeout(toastTimer); toast.textContent = message; toast.hidden = false; toastTimer = setTimeout(() => { toast.hidden = true; }, 2100); }
+
+      <span class="c">// 复制代码</span>
+      document.querySelectorAll('.copy').forEach(button => button.addEventListener('click', async () => {
+        const content = button.closest('.codebox').querySelector('code').textContent;
+        try {
+          if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(content);
+          else { const input = document.createElement('textarea'); input.value = content; input.style.position = 'fixed'; input.style.opacity = '0'; document.body.appendChild(input); input.select(); const ok = document.execCommand('copy'); input.remove(); if (!ok) throw new Error('copy unavailable'); }
+          button.textContent = '已复制'; announce('代码已复制'); setTimeout(() => { button.textContent = '复制'; }, 1800);
+        } catch { announce('请选中代码后复制'); }
+      }));
+
+      <span class="c">// 微信分享：优先系统分享，兜底复制链接</span>
+      const shareBtn = document.getElementById('share-btn');
+      if (shareBtn) shareBtn.addEventListener('click', async () => {
+        const shareData = { title: document.title, text: '把 React 组件嵌入非 React 页面 · HtmlFragment 与客服挂件', url: location.href };
+        if (navigator.share) { try { await navigator.share(shareData); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+        try { await navigator.clipboard.writeText(location.href); announce('链接已复制，可粘贴到微信分享'); }
+        catch { announce('请手动复制地址栏链接分享'); }
+      });
+
+      <span class="c">// 阅读进度 + 目录高亮</span>
+      const progress = document.getElementById('reading-progress');
+      const tocLinks = [...document.querySelectorAll('.toc>a')];
+      const sections = tocLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+      let scheduled = false;
+      function onScroll() {
+        if (scheduled) return; scheduled = true;
+        requestAnimationFrame(() => {
+          const maximum = document.documentElement.scrollHeight - window.innerHeight;
+          progress.style.width = (maximum > 0 ? Math.min(100, Math.max(0, window.scrollY / maximum * 100)) : 0) + '%';
+          let current = sections[0];
+          sections.forEach(section => { if (section.getBoundingClientRect().top <= 145) current = section; });
+          tocLinks.forEach(link => { const active = link.getAttribute('href') === '#' + current.id; link.classList.toggle('active', active); });
+          scheduled = false;
+        });
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      onScroll();
+    })();
+  </script>
+</body>
+</html>
