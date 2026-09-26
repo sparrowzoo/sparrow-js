@@ -1,6 +1,6 @@
 import {notFound} from "next/navigation";
 import {hasLocale, Locale, NextIntlClientProvider} from "next-intl";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import {ReactNode} from "react";
 import "@/app/globals.css";
 import "@/app/(full)/theme.css";
@@ -35,9 +35,6 @@ export default async function RootLayout({children, params}: Props) {
     if (!hasLocale(routing.locales, locale)) {
         notFound();
     }
-
-    // Enable static rendering
-    setRequestLocale(locale);
 
     return (
         <html className="h-full" lang={locale} suppressHydrationWarning>

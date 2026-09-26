@@ -1,6 +1,6 @@
 import {localeAlternates} from "@/lib/site-metadata";
 import type {Metadata} from "next";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import {Anchor, ArrowDown, ArrowRight, ArrowUpRight, Blocks, BookOpen, CircleAlert, Download, History, Languages, Loader2, Move, Package, Settings, SunMoon, Table2, UploadCloud} from "lucide-react";
 import {Link} from "@/common/i18n/navigation";
 import SiteHeader from "../_components/site-header";
@@ -60,9 +60,7 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
     alternates: localeAlternates(locale, "/ui"),title: t("title"), description: t("description")};
 }
 
-export default async function UIPlayground({params}: PageProps) {
-    const {locale} = await params;
-    setRequestLocale(locale);
+export default async function UIPlayground() {
     const t = await getTranslations("website.playground");
     const nav = await getTranslations("website.nav");
 

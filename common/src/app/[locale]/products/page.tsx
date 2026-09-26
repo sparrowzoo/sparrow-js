@@ -1,6 +1,6 @@
 import {localeAlternates} from "@/lib/site-metadata";
 import type {Metadata} from "next";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import {ArrowUpRight, Blocks, Code2, FileUp, MessageCircle, ShieldCheck} from "lucide-react";
 import {Link} from "@/common/i18n/navigation";
 import {getProductUrl} from "@/common/lib/ProductRegistry";
@@ -25,7 +25,6 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
 
 export default async function ProductsPage({params}: PageProps) {
     const {locale} = await params;
-    setRequestLocale(locale);
     const t = await getTranslations("website.products");
     return <section className={`${styles.section} ${styles.catalog}`}>
         <div className={styles.eyebrow}>{t("eyebrow")}</div>

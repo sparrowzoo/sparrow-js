@@ -3,7 +3,6 @@ import { hasLocale, Locale } from "next-intl";
 import {
   getMessages,
   getTranslations,
-  setRequestLocale,
 } from "next-intl/server";
 import * as React from "react";
 import "@/app/globals.css";
@@ -36,8 +35,6 @@ export default async function RootLayout({ children, params }: Props) {
   if (!hasLocale(routing.locales, locale)) {
     return notFound();
   }
-  // Enable static rendering
-  setRequestLocale(locale);
   const messages = await getMessages({locale});
 
   return (

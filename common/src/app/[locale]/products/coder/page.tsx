@@ -1,6 +1,6 @@
 import {localeAlternates} from "@/lib/site-metadata";
 import type {Metadata} from "next";
-import {getTranslations, setRequestLocale} from "next-intl/server";
+import {getTranslations} from "next-intl/server";
 import {
     ArrowDown,
     ArrowRight,
@@ -59,7 +59,6 @@ export async function generateMetadata({params}: PageProps): Promise<Metadata> {
 
 export default async function CoderPage({params}: PageProps) {
     const {locale} = await params;
-    setRequestLocale(locale);
     const t = await getTranslations("website.products.coder.page");
     const guide = await getCoderGuide();
     const experienceUrl = getProductUrl("coder", locale);

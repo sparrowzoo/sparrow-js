@@ -10,6 +10,8 @@ const nextConfig = {
     // Each site publishes its own out/ directory and same-origin framework assets.
     output: "export",
     trailingSlash: true,
+    // Next.js 15 requires this flag for locale lookup via next/root-params.
+    experimental: {rootParams: true},
     webpack: (config, options) => {
         config.module.rules.push(
             {

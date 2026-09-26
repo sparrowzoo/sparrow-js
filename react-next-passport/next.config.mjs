@@ -9,6 +9,8 @@ const nextConfig = {
     distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
     output: "export",
     trailingSlash: true,
+    // Next.js 15 requires this flag for locale lookup via next/root-params.
+    experimental: {rootParams: true},
     webpack: (config, options) => {
         //https://webpack.docschina.org/loaders/html-loader/
         config.module.rules.push(
