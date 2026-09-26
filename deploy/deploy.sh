@@ -74,7 +74,7 @@ mkdir -- "$temporary/sites"
 printf '使用压缩包：%s\n部署目录：%s\n' "$archive" "$target"
 
 # 在修改现有站点前，拒绝越界路径、链接和特殊文件，并完整解压验证。
-tar --no-xattrs -tzf "$archive" > "$temporary/paths"
+tar --no-xattrs --warning=no-unknown-keyword -tzf "$archive" > "$temporary/paths"
 while IFS= read -r entry; do
   case "$entry" in
     /*|../*|*/../*|*/..|..) fail "压缩包包含越界路径：$entry" ;;
@@ -84,14 +84,14 @@ while IFS= read -r entry; do
     *) fail "压缩包包含非站点路径：$entry" ;;
   esac
 done < "$temporary/paths"
-tar --no-xattrs -tvzf "$archive" > "$temporary/entries"
+tar --no-xattrs --warning=no-unknown-keyword -tvzf "$archive" > "$temporary/entries"
 while IFS= read -r entry; do
   case "${entry:0:1}" in
     -|d) ;;
     *) fail '压缩包只能包含普通文件和目录。' ;;
   esac
 done < "$temporary/entries"
-tar --no-xattrs -xzf "$archive" -C "$temporary/sites" --no-same-owner --no-same-permissions
+tar --no-xattrs --warning=no-unknown-keyword -xzf "$archive" -C "$temporary/sites" --no-same-owner --no-same-permissions
 for site in "${sites[@]}"; do
   [[ -s $temporary/sites/$site/index.html ]] || fail "压缩包缺少 $site/index.html。"
 done
