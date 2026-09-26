@@ -80,7 +80,7 @@ if [[ -e $archive || -L $archive ]]; then
   printf '压缩包路径已存在：%s\n' "$archive" >&2
   exit 1
 fi
-COPYFILE_DISABLE=1 tar --exclude=.DS_Store -czf "$temporary/release.tar.gz" \
+COPYFILE_DISABLE=1 tar --no-xattrs --exclude=.DS_Store -czf "$temporary/release.tar.gz" \
   -C "$temporary/sites" admin im passport www
 # 暂存与产物位于同一文件系统；硬链接只发布完整压缩包，且拒绝覆盖同名文件。
 ln -- "$temporary/release.tar.gz" "$archive"
