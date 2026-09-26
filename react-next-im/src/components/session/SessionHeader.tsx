@@ -56,7 +56,7 @@ export default function SessionHeader(sessionHeaderProps: SessionHeaderProps) {
   return (
     <div
       className={
-        "flex shrink-0 h-[3rem] flex-row  justify-start items-center gap-2 p-2"
+        "im-session-header flex shrink-0 h-[3rem] flex-row  justify-start items-center gap-2 p-2"
       }
     >
       <MyAvatar
@@ -65,13 +65,13 @@ export default function SessionHeader(sessionHeaderProps: SessionHeaderProps) {
         src={sessionDetail.avatarUrl}
         fallback={sessionDetail.name}
       />{" "}
-      <span className={"text-left text-sm"}>{sessionDetail.name}</span>
-      <span>{sessionDetail.sessionKey}</span>
+      <span className={"im-session-title text-left text-sm"}>{sessionDetail.name}</span>
+      <span className="im-session-key">{sessionDetail.sessionKey}</span>
       {heartStatus === SparrowWebSocket.ACTIVE_STATUS && (
-        <Wifi className={"text-blue-500"} />
+        <Wifi className={"im-connection-active text-blue-500"} />
       )}
       {heartStatus === SparrowWebSocket.INACTIVE_STATUS && (
-        <WifiOff className={"text-red-500"} />
+        <WifiOff className={"im-connection-inactive text-red-500"} />
       )}
     </div>
   );

@@ -96,13 +96,13 @@ export default function GroupedTalk() {
           setIsOpen(!isOpen);
         }}
       >
-        <div className={"flex flex-col items-center justify-center"}>
+        <div className={"im-support-launcher flex flex-col items-center justify-center"}>
           <HeadsetIcon className={"cursor-pointer"} width={64} height={64} />
           {t("title")}
         </div>
       </PopoverTrigger>
-      <PopoverContent className={"w-fit"} side={"top"}>
-        <SidebarProvider className={"min-h-full h-full w-auto flex flex-col"}>
+      <PopoverContent className={"im-support-popover w-fit"} side={"top"}>
+        <SidebarProvider className={"im-support-provider min-h-full h-full w-auto flex flex-col"}>
           <WebSocketContext.Provider
             value={webSocketContextValue as WebSocketContextValue}
           >

@@ -16,15 +16,15 @@ export default function Groups(groupProps: GroupsProps) {
   }
   if (groupProps.quns.length === 0) {
     return (
-      <Link className={"text-center font-bold text-sm"} href={"/"}>
+      <Link className={"im-contact-empty text-center font-bold text-sm"} href={"/"}>
         No groups found.
       </Link>
     );
   }
   return (
-    <SidebarMenu className={"gap-2"}>
+    <SidebarMenu className={"im-contact-list gap-2"}>
       {groupProps?.quns?.map((qun) => (
-        <SidebarMenuItem key={qun.qunId}>
+        <SidebarMenuItem className="im-contact-item" key={qun.qunId}>
           <GroupItem link={true} qun={qun} />
         </SidebarMenuItem>
       ))}

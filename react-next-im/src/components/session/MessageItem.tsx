@@ -17,7 +17,7 @@ export default function MessageItem(props: Props) {
   const webSocketContextValue = useContext(WebSocketContext);
   if (props.message.timeline > 0) {
     return (
-      <div className={"text-gray-500 text-center text-sm"}>
+      <div className={"im-message-timeline text-gray-500 text-center text-sm"}>
         {props.message.getTimeline()}
         <Separator />
       </div>
@@ -29,11 +29,11 @@ export default function MessageItem(props: Props) {
       sender
     );
   const alignProp = align === "left" ? " items-start" : " items-end";
-  const alignClass = `flex h-fit flex-col ${alignProp}`;
+  const alignClass = `im-message-row flex h-fit flex-col ${alignProp}`;
   const itemAlignClass =
     align === "left"
-      ? "flex flex-row  p-4 rounded-lg gap-4"
-      : "flex flex-row-reverse  p-4 rounded-lg gap-4";
+      ? "im-message-item im-message-received flex flex-row  p-4 rounded-lg gap-4"
+      : "im-message-item im-message-sent flex flex-row-reverse  p-4 rounded-lg gap-4";
   return (
     <div key={props.message.messageId} className={alignClass}>
       <div className={itemAlignClass}>
@@ -43,19 +43,19 @@ export default function MessageItem(props: Props) {
           fallback={senderDetail?.userName as string}
           src={senderDetail?.avatar as string}
         />
-        <div className={"flex flex-col text-left"}>
-          <span className={" text-xs dark:text-gray-300 light:text-gray-900"}>
+        <div className={"im-message-body flex flex-col text-left"}>
+          <span className={"im-message-time text-xs dark:text-gray-300 light:text-gray-900"}>
             {props.message.sendTime as string}
           </span>
           <span
-            className={"flex-1 text-xs dark:text-gray-300 light:text-gray-900"}
+            className={"im-message-author flex-1 text-xs dark:text-gray-300 light:text-gray-900"}
           >
             {senderDetail?.userName} @{senderDetail?.nationality}
           </span>
           <p
             dangerouslySetInnerHTML={{ __html: content }}
             className={
-              "p-2 text-xs rounded-lg dark:text-background light:text-gray-900  bg-gray-100"
+              "im-message-bubble p-2 text-xs rounded-lg dark:text-background light:text-gray-900  bg-gray-100"
             }
           ></p>
         </div>

@@ -17,8 +17,8 @@ import NewQunAudits from "@/components/contact/NewQunAudits";
 export default function NewFriendPage() {
 
     return (
-        <SidebarProvider className={"block min-h-full h-full w-full"}>
-            <Sidebar className={"relative min-h-full h-full w-full"}>
+        <SidebarProvider className={"im-requests-provider block min-h-full h-full w-full"}>
+            <Sidebar className={"im-requests-sidebar relative min-h-full h-full w-full"}>
                 <SidebarContent>
                     <Collapsible defaultOpen className="group/collapsible">
                         <SidebarGroup>

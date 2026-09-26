@@ -20,20 +20,20 @@ export default function PopSessionItemTrigger(dialogProps: DialogProps) {
   console.log("PopSessionItemTrigger", session);
   return (
     <Popover>
-      <PopoverTrigger className={"w-full flex flex-row gap-4"}>
+      <PopoverTrigger className={"im-session-trigger w-full flex flex-row gap-4"}>
         <BaseTrigger unreadPosition={Position.TAIL} chatSession={session} />
       </PopoverTrigger>
       <Draggable asChild={true}>
         <PopoverContent
           sideOffset={10}
-          className={"w-fit h-fit"}
+          className={"im-session-popover w-fit h-fit"}
           alignOffset={0}
           draggable={"true"}
           side={"left"}
           align={"center"}
         >
-          <SidebarProvider className={"w-fit h-fit min-h-full"}>
-            <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
+          <SidebarProvider className={"im-session-popover-provider w-fit h-fit min-h-full"}>
+            <Sidebar className={"im-session-popover-sidebar relative min-h-full w-[600px] h-[600px]"}>
               <Session sessionKey={session.sessionKey} />
             </Sidebar>
           </SidebarProvider>

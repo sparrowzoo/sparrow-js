@@ -32,16 +32,17 @@ export default function Login() {
   }
 
   return (
-    <div>
+    <div className="im-login-card">
       <h2>登录</h2>
-      <div>
+      <div className="im-login-fields">
         <input
-          className={"text-red-700"}
+          className={"im-login-input text-red-700"}
           onChange={(e) => setUserName(e.target.value)}
           type="text"
           placeholder="用户名"
         />
         <button
+          className="im-login-primary"
           onClick={() => {
             console.log(userName);
             handleLogin();
@@ -50,6 +51,7 @@ export default function Login() {
           登录
         </button>
         <button
+          className="im-login-secondary"
           onClick={() => {
             console.log(userName);
             longHandleLogin();

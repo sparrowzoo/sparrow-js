@@ -35,28 +35,28 @@ function AuditStatusComp(props: AuditStatusProps) {
   const { status, isApplying } = props;
   if (status == AuditStatus.PENDING) {
     if (isApplying) {
-      return <span className={"text-xs text-gray-400"}>{t("applying")}</span>;
+      return <span className={"im-audit-state text-xs text-gray-400"}>{t("applying")}</span>;
     }
     return (
       <div
         className={
-          "flex flex-row justify-center items-center text-xs h-full text-gray-400 gap-2 w-80"
+          "im-audit-actions flex flex-row justify-center items-center text-xs h-full text-gray-400 gap-2 w-80"
         }
       >
-        <Button onClick={agree} className={"w-12 cursor-pointer p-2"}>
+        <Button onClick={agree} className={"im-audit-approve w-12 cursor-pointer p-2"}>
           {t("agree")}
         </Button>
-        <Button onClick={reject} className={"w-12 cursor-pointer p-2"}>
+        <Button onClick={reject} className={"im-audit-decline w-12 cursor-pointer p-2"}>
           {t("reject")}
         </Button>
       </div>
     );
   }
   if (status == AuditStatus.REJECTED) {
-    return <span className={"text-xs text-gray-400"}>{t("rejected")}</span>;
+    return <span className={"im-audit-state text-xs text-gray-400"}>{t("rejected")}</span>;
   }
   if (status == AuditStatus.APPROVED) {
-    return <span className={"text-xs text-gray-400"}>{t("approved")}</span>;
+    return <span className={"im-audit-state text-xs text-gray-400"}>{t("approved")}</span>;
   }
 }
 
@@ -80,15 +80,15 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
 
   return (
     <SidebarMenuItem
-      className={"flex flex-row justify-between items-center w-full h-10 mt-2"}
+      className={"im-audit-item flex flex-row justify-between items-center w-full h-10 mt-2"}
     >
       <div
         className={
-          "flex flex-row  justify-start items-center w-fix h-fit p-0 gap-2"
+          "im-audit-subject flex flex-row  justify-start items-center w-fix h-fit p-0 gap-2"
         }
       >
         <Link
-          className={cn("flex flex-row w-64 h-fit p-0 ml-2 gap-2")}
+          className={cn("im-audit-person flex flex-row w-64 h-fit p-0 ml-2 gap-2")}
           href={userHomeLink}
         >
           <MyAvatar
@@ -98,14 +98,14 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
             src={avatar}
           />
 
-          <div className={"flex flex-col justify-center items-start w-fix"}>
-            <span className={"text-xs"}>
+          <div className={"im-contact-copy flex flex-col justify-center items-start w-fix"}>
+            <span className={"im-contact-name text-xs"}>
               {userName}-{applyUser.userId}
               {applyUser.nationality && <>【{applyUser.nationality}】</>}
             </span>
             <span
               title={applyUser.signature}
-              className={"text-gray-400 text-xs truncate  w-[10rem]"}
+              className={"im-contact-description text-gray-400 text-xs truncate  w-[10rem]"}
             >
               {applyUser.signature}
             </span>
@@ -113,13 +113,13 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
         </Link>
         <div
           className={
-            "flex flex-col justify-center items-start text-xs text-gray-400 w-32 "
+            "im-audit-group flex flex-col justify-center items-start text-xs text-gray-400 w-32 "
           }
         >
-          <strong className={"text-xs text-gray-400"}>
+          <strong className={"im-audit-group-name text-xs text-gray-400"}>
             {t("apply-to-group")}:{qun.qunName}
           </strong>
-          <span className={"text-xs text-gray-400 ml-1"}>
+          <span className={"im-audit-time text-xs text-gray-400 ml-1"}>
             {Utils.dateFormat(audit.applyTime)}
           </span>
         </div>
@@ -137,7 +137,7 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
       </div>
       <div
         className={
-          "flex  justify-center items-center text-xs h-full text-gray-400 w-80"
+          "im-audit-result flex  justify-center items-center text-xs h-full text-gray-400 w-80"
         }
       >
         <AuditStatusComp

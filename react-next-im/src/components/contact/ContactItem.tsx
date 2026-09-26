@@ -11,7 +11,7 @@ export default function ContactItem(contactProps: ContactProps) {
   const { contact } = contactProps;
   const contactUrl = `/chat/friends/contact?friendId=${contact.userId}`;
   return (
-    <SidebarMenuItem>
+    <SidebarMenuItem className="im-contact-item">
       <CommonItem
         id={contact.userId}
         name={contact.nickName ? contact.nickName : contact.userName}

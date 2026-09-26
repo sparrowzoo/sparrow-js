@@ -10,7 +10,7 @@ export default function DirectSession(sessionProp: { sessionKey: string }) {
     <div className={"flex flex-row items-center justify-center mt-4"}>
       <Link
         className={
-          "w-1/6 text-center  bg-gray-500 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded"
+          "im-direct-session w-1/6 text-center  bg-gray-500 hover:bg-gray-900 text-white font-bold py-2 px-4 rounded"
         }
         href={sessionUrl}
       >

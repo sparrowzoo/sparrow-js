@@ -27,7 +27,7 @@ export default function MessageList(messageListProp: MessageListProps) {
     <>
       <div
         className={
-          "flex flex-col min-h-0 overflow-y-scroll  flex-1 p-2 border border-gray-300 rounded-md"
+          "im-message-list flex flex-col min-h-0 overflow-y-scroll  flex-1 p-2 border border-gray-300 rounded-md"
         }
       >
         {messageList.map((message) => (

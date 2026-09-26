@@ -40,8 +40,8 @@ function Group() {
   const { detail, members, userDicts } = groupDetail;
   debugger;
   return (
-    <div className={"flex flex-col p-4 shadow-md"}>
-      <div className="flex flex-row items-center text-left gap-4">
+    <div className={"im-profile-card flex flex-col p-4 shadow-md"}>
+      <div className="im-profile-heading flex flex-row items-center text-left gap-4">
         <MyAvatar
           unread={0}
           showUnread={false}
@@ -54,13 +54,13 @@ function Group() {
           <span>{detail.nationality}</span>
         </div>
       </div>
-      <p className={"mt-2 text-gray-500 text-left"}>{detail.announcement}</p>
-      <div className={"flex flex-col gap-2"}>
+      <p className={"im-profile-description mt-2 text-gray-500 text-left"}>{detail.announcement}</p>
+      <div className={"im-members-section flex flex-col gap-2"}>
         <h2>Group members</h2>
-        <div className={"grid grid-cols-4 gap-2"}>
+        <div className={"im-members-grid grid grid-cols-4 gap-2"}>
           {members.map((member) => (
             <div
-              className={"flex flex-row items-center text-sm gap-2"}
+              className={"im-member-card flex flex-row items-center text-sm gap-2"}
               key={member.memberId}
             >
               <MyAvatar

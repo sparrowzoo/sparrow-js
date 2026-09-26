@@ -15,15 +15,15 @@ export default function MyAvatar(props: Props) {
       {props.unread > 0 && props.showUnread && (
         <Badge
           className={
-            "absolute bg-red-500 p-1  text-white z-50 font-bold top-[-6px] left-[36px] rounded-full"
+            "im-avatar-badge absolute bg-red-500 p-1  text-white z-50 font-bold top-[-6px] left-[36px] rounded-full"
           }
         >
           {props.unread > 99 ? "99+" : props.unread}
         </Badge>
       )}
-      <Avatar className={" w-10 h-10 rounded-full"}>
-        <AvatarImage src={props.src} />
-        <AvatarFallback className={"text-sm"}>{props.fallback}</AvatarFallback>
+      <Avatar className={"im-avatar w-10 h-10 rounded-full"}>
+        <AvatarImage className="im-avatar-image" src={props.src} />
+        <AvatarFallback className={"im-avatar-fallback text-sm"}>{props.fallback}</AvatarFallback>
       </Avatar>
     </>
   );

@@ -4,7 +4,7 @@ import QunPlazaCom from "@/components/qun/QunPlaza";
 
 export default function Page() {
   return (
-    <div>
+    <div className="im-plaza-page">
       <QunPlazaCom link={true} />
     </div>
   );

@@ -23,7 +23,7 @@ export default function PopSearchTrigger() {
     <Popover open={isOpen}>
       <PopoverTrigger
         asChild={true}
-        className={"w-full cursor-pointer flex flex-row gap-4"}
+        className={"im-history-trigger w-full cursor-pointer flex flex-row gap-4"}
       >
         <Button
           onClick={() => {
@@ -36,14 +36,14 @@ export default function PopSearchTrigger() {
       <Draggable asChild={true}>
         <PopoverContent
           sideOffset={10}
-          className={"w-fit h-fit"}
+          className={"im-search-popover w-fit h-fit"}
           alignOffset={0}
           draggable={"true"}
           side={"left"}
           align={"center"}
         >
-          <SidebarProvider className={"w-fit h-fit min-h-full"}>
-            <Sidebar className={"relative min-h-full w-[600px] h-[600px]"}>
+          <SidebarProvider className={"im-session-popover-provider w-fit h-fit min-h-full"}>
+            <Sidebar className={"im-search-popover-sidebar relative min-h-full w-[600px] h-[600px]"}>
               <MessageSearchBar />
             </Sidebar>
           </SidebarProvider>

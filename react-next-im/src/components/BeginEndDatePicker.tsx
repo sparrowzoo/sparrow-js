@@ -26,7 +26,7 @@ export default function BeginEndDatePicker(datePickerProps: DatePickerProps) {
           id="date"
           variant={"outline"}
           className={cn(
-            "w-[230px] justify-start text-left font-normal",
+            "im-date-trigger w-[230px] justify-start text-left font-normal",
             !date && "text-muted-foreground"
           )}
         >
@@ -45,7 +45,7 @@ export default function BeginEndDatePicker(datePickerProps: DatePickerProps) {
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="im-date-popover w-auto p-0" align="start">
         <Calendar
           initialFocus
           mode="range"

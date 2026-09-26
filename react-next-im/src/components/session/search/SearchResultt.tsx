@@ -16,7 +16,7 @@ export default function SearchResult(searchResultProps: SearchResultProps) {
     return <></>;
   }
   return (
-    <div className={"w-full"}>
+    <div className={"im-history-list w-full"}>
       {messageWrap.historyMessages.map((message, index) => (
         <HistoryMessageItem
           handleSearch={handleSearch}

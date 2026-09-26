@@ -1,0 +1,337 @@
+/* Only the full application opts in. Shared pages and examples retain their theme. */
+.im-theme {
+    --im-bg: #f7f7fc;
+    --im-panel: #ffffff;
+    --im-panel-soft: #f3f2f9;
+    --im-border: #e7e4ef;
+    --im-border-strong: #d5cfe3;
+    --im-text: #292538;
+    --im-muted: #6c657e;
+    --im-faint: #827a93;
+    --im-accent: #7452c6;
+    --im-accent-soft: #f0ebfb;
+    --im-on-accent: #ffffff;
+    --im-shadow: 0 12px 36px rgb(51 37 83 / 6%);
+    --background: 240 45% 98%;
+    --foreground: 253 20% 18%;
+    --card: 0 0% 100%;
+    --card-foreground: 253 20% 18%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 253 20% 18%;
+    --primary: 257 51% 55%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 249 30% 96%;
+    --secondary-foreground: 253 20% 26%;
+    --muted: 249 30% 96%;
+    --muted-foreground: 257 11% 45%;
+    --accent: 260 67% 95%;
+    --accent-foreground: 257 51% 48%;
+    --border: 256 25% 92%;
+    --input: 256 25% 86%;
+    --ring: 257 51% 55%;
+    --radius: 0.75rem;
+    /* Resolve Tailwind aliases here so the full-page palette also reaches utilities. */
+    --color-background: hsl(var(--background));
+    --color-foreground: hsl(var(--foreground));
+    --color-card: hsl(var(--card));
+    --color-card-foreground: hsl(var(--card-foreground));
+    --color-popover: hsl(var(--popover));
+    --color-popover-foreground: hsl(var(--popover-foreground));
+    --color-primary: hsl(var(--primary));
+    --color-primary-foreground: hsl(var(--primary-foreground));
+    --color-secondary: hsl(var(--secondary));
+    --color-secondary-foreground: hsl(var(--secondary-foreground));
+    --color-muted: hsl(var(--muted));
+    --color-muted-foreground: hsl(var(--muted-foreground));
+    --color-accent: hsl(var(--accent));
+    --color-accent-foreground: hsl(var(--accent-foreground));
+    --color-destructive: hsl(var(--destructive));
+    --color-destructive-foreground: hsl(var(--destructive-foreground));
+    --color-border: hsl(var(--border));
+    --color-input: hsl(var(--input));
+    --color-ring: hsl(var(--ring));
+    --sidebar: var(--im-panel);
+    --sidebar-foreground: var(--im-text);
+    --sidebar-primary: var(--im-accent);
+    --sidebar-primary-foreground: var(--im-on-accent);
+    --sidebar-accent: var(--im-accent-soft);
+    --sidebar-accent-foreground: var(--im-accent);
+    --sidebar-border: var(--im-border);
+    --sidebar-ring: var(--im-accent);
+    background: var(--im-bg);
+    color: var(--im-text);
+    color-scheme: light;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+.dark .im-theme {
+    --im-bg: #0c0d16;
+    --im-panel: #13141f;
+    --im-panel-soft: #1a1b2a;
+    --im-border: #292a3d;
+    --im-border-strong: #3c3b53;
+    --im-text: #edecf5;
+    --im-muted: #aaa7bd;
+    --im-faint: #918da7;
+    --im-accent: #b8a8ff;
+    --im-accent-soft: #272239;
+    --im-on-accent: #211936;
+    --im-shadow: 0 16px 40px rgb(0 0 0 / 18%);
+    --background: 234 29% 7%;
+    --foreground: 247 31% 94%;
+    --card: 235 24% 10%;
+    --card-foreground: 247 31% 94%;
+    --popover: 235 24% 10%;
+    --popover-foreground: 247 31% 94%;
+    --primary: 253 63% 63%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 236 24% 13%;
+    --secondary-foreground: 247 31% 94%;
+    --muted: 236 24% 13%;
+    --muted-foreground: 248 14% 70%;
+    --accent: 253 25% 18%;
+    --accent-foreground: 253 100% 83%;
+    --border: 237 20% 20%;
+    --input: 243 17% 28%;
+    --ring: 253 100% 83%;
+    --destructive: 0 68% 54%;
+    color-scheme: dark;
+}
+
+.im-theme .im-shell {
+    min-height: 0;
+    background: var(--im-bg);
+}
+
+.im-theme .im-content {
+    min-width: 0;
+    isolation: isolate;
+    scrollbar-color: var(--im-border-strong) transparent;
+    scrollbar-width: thin;
+}
+
+.im-theme .im-chat-shell {
+    padding: 20px 24px 24px;
+}
+
+.im-theme .im-workspace {
+    max-width: 1600px;
+    margin-inline: auto;
+    min-width: 0;
+    overflow: hidden;
+    border: 1px solid var(--im-border);
+    border-radius: 20px;
+    background: var(--im-panel);
+    box-shadow: var(--im-shadow);
+}
+
+.im-theme .im-navigation {
+    width: 76px;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 10px;
+    border-right: 1px solid var(--im-border);
+    background: var(--im-panel-soft);
+}
+
+.im-theme .im-chat-columns > .im-session {
+    min-width: 0;
+    padding: 20px;
+}
+
+.im-theme .im-session {
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.im-theme .im-navigation-item {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+}
+
+.im-theme .im-navigation-item:first-child {
+    margin-bottom: 18px;
+}
+
+.im-theme .im-navigation-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: inherit;
+    color: var(--im-muted);
+    transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.im-theme .im-navigation-link:hover,
+.im-theme .im-navigation-link:focus-visible {
+    border-color: var(--im-border);
+    background: var(--im-panel);
+    color: var(--im-accent);
+}
+
+.im-theme .im-navigation-link:active {
+    background: var(--im-accent-soft);
+}
+
+.im-theme .im-navigation-link > svg {
+    width: 24px;
+    height: 24px;
+    stroke-width: 1.65;
+}
+
+.im-theme .im-navigation-avatar {
+    width: 40px;
+    height: 40px;
+    border: 2px solid var(--im-panel);
+    border-radius: 13px;
+    object-fit: cover;
+    box-shadow: 0 2px 8px rgb(51 37 83 / 8%);
+}
+
+/* Existing UI primitives are themed in place; their variants and handlers stay intact. */
+.im-theme :where(.im-content, [role="dialog"], [data-slot="popover-content"]) [data-slot="button"] {
+    border-radius: 10px;
+    font-weight: 500;
+    transition-property: color, background-color, border-color, box-shadow;
+    transition-duration: 160ms;
+}
+
+.im-theme [data-slot="input"],
+.im-theme [data-slot="textarea"],
+.im-theme [data-slot="select-trigger"] {
+    border-color: var(--im-border-strong);
+    border-radius: 10px;
+    background: var(--im-panel);
+    color: var(--im-text);
+    box-shadow: 0 1px 2px rgb(30 22 54 / 3%);
+}
+
+.im-theme [data-slot="input"]::placeholder,
+.im-theme [data-slot="textarea"]::placeholder {
+    color: var(--im-faint);
+}
+
+.im-theme [data-slot="input"]:focus-visible,
+.im-theme [data-slot="textarea"]:focus-visible,
+.im-theme [data-slot="select-trigger"]:focus-visible {
+    border-color: var(--im-accent);
+    box-shadow: 0 0 0 3px var(--im-accent-soft);
+}
+
+.im-theme [data-slot="input"][aria-invalid="true"],
+.im-theme [data-slot="textarea"][aria-invalid="true"],
+.im-theme [data-slot="select-trigger"][aria-invalid="true"] {
+    border-color: hsl(var(--destructive));
+}
+
+.im-theme [data-slot="card"] {
+    border-color: var(--im-border);
+    border-radius: 16px;
+    background: var(--im-panel);
+    box-shadow: var(--im-shadow);
+}
+
+.im-theme [data-slot="popover-content"],
+.im-theme [data-slot="select-content"],
+.im-theme [data-slot="dialog-content"] {
+    border-color: var(--im-border);
+    border-radius: 16px;
+    background: var(--im-panel);
+    color: var(--im-text);
+    box-shadow: 0 20px 60px rgb(25 18 45 / 18%);
+}
+
+.im-theme [data-slot="dialog-content"] {
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+}
+
+.im-theme [data-slot="dialog-overlay"],
+.im-theme [data-slot="sheet-overlay"] {
+    background: rgb(10 8 20 / 48%);
+    backdrop-filter: blur(4px);
+}
+
+.im-theme [data-slot="tabs-list"] {
+    height: auto;
+    min-height: 40px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid var(--im-border);
+    border-radius: 12px;
+    background: var(--im-panel-soft);
+}
+
+.im-theme [data-slot="tabs-trigger"] {
+    min-height: 30px;
+    padding-inline: 14px;
+    border-radius: 8px;
+    color: var(--im-muted);
+}
+
+.im-theme [data-slot="tabs-trigger"][data-state="active"] {
+    border-color: var(--im-border);
+    background: var(--im-panel);
+    color: var(--im-accent);
+    box-shadow: 0 2px 5px rgb(25 18 45 / 5%);
+}
+
+.im-theme [data-slot="table-container"] {
+    border: 1px solid var(--im-border);
+    border-radius: 14px;
+}
+
+.im-theme [data-slot="table-head"] {
+    height: 44px;
+    padding-inline: 16px;
+    background: var(--im-panel-soft);
+    color: var(--im-muted);
+    font-size: 12px;
+}
+
+.im-theme [data-slot="table-cell"] {
+    padding: 14px 16px;
+}
+
+.im-theme [data-slot="table-row"] {
+    border-color: var(--im-border);
+}
+
+.im-theme .im-content :where(a, button, [tabindex="0"]):focus-visible {
+    outline: 2px solid var(--im-accent);
+    outline-offset: 3px;
+}
+
+@media (max-width: 1100px) {
+    .im-theme .im-chat-shell { padding: 12px; }
+    .im-theme .im-workspace { border-radius: 16px; }
+    .im-theme .im-navigation { width: 64px; padding-inline: 8px; }
+}
+
+@media (max-width: 767px) {
+    .im-theme .im-chat-shell { padding: 0; }
+    .im-theme .im-workspace { border: 0; border-radius: 0; box-shadow: none; }
+    .im-theme .im-navigation { width: 56px; gap: 12px; padding: 16px 6px; }
+    .im-theme .im-chat-columns > .im-session { padding: 10px; }
+    .im-theme .im-navigation-item { width: 42px; height: 42px; border-radius: 12px; }
+    .im-theme .im-navigation-avatar { width: 36px; height: 36px; border-radius: 11px; }
+    .im-theme [data-slot="input"], .im-theme [data-slot="textarea"] { font-size: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .im-theme .im-content *,
+    .im-theme [data-slot="popover-content"],
+    .im-theme [data-slot="dialog-content"] {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}

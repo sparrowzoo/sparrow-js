@@ -23,7 +23,7 @@ export default function NewFriends() {
     return <ThreeDotLoading />;
   }
   return (
-    <SidebarMenu className={"gap-2 w-full"}>
+    <SidebarMenu className={"im-audit-list gap-2 w-full"}>
       {auditWrap.auditingList.map((item) => (
         <NewFriendItem key={item.auditId} audit={item} auditWrap={auditWrap} />
       ))}

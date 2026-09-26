@@ -21,16 +21,16 @@ export default function QunList(qunListProps: QunListProps) {
   }
 
   return (
-    <div className={"flex flex-col gap-4 w-fit"}>
+    <div className={"im-group-list flex flex-col gap-4 w-fit"}>
       {qunListProps.quns.map((qun) => (
         <div
           key={qun.qunId}
-          className={"flex flex-row w-fit gap-4 justify-between items-center"}
+          className={"im-group-row flex flex-row w-fit gap-4 justify-between items-center"}
         >
           <GroupItem link={qunListProps.link} qun={qun} />
-          <div>
+          <div className="im-group-action">
             <Button
-              className={"cursor-pointer"}
+              className={"im-group-join cursor-pointer"}
               onClick={() => handleClick(qun)}
               variant="outline"
             >

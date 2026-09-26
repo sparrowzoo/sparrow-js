@@ -14,14 +14,14 @@ export default function IconMenu(props: IconMenuProps) {
   return (
     <div
       className={cn(
-        "flex items-center justify-center w-[3rem] h-[3rem] rounded-full text-center text-foreground  cursor-pointer",
+        "im-navigation-item flex items-center justify-center w-[3rem] h-[3rem] rounded-full text-center text-foreground  cursor-pointer",
         props.className
       )}
     >
       <Link
         className={cn(
           props.className,
-          "focus:text-foreground text-gray-500 active:text-foreground   hover:text-foreground"
+          "im-navigation-link focus:text-foreground text-gray-500 active:text-foreground   hover:text-foreground"
         )}
         title={props.title}
         href={props.url}

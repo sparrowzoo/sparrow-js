@@ -66,8 +66,8 @@ export default function MessageEditor(senderProps: SenderProps) {
   }
 
   return (
-    <div className="flex flex-col w-full h-fit">
-      <div className="flex flex-row items-center justify-start h-[3rem] pl-2 gap-4 border-t-1 border-l-1 border-r-1 border-solid border-gray-500 rounded-t-md ">
+    <div className="im-message-editor flex flex-col w-full h-fit">
+      <div className="im-editor-toolbar flex flex-row items-center justify-start h-[3rem] pl-2 gap-4 border-t-1 border-l-1 border-r-1 border-solid border-gray-500 rounded-t-md ">
         <FileUploader
           url={uploadUrl}
           id={"fileUploader"}
@@ -85,17 +85,17 @@ export default function MessageEditor(senderProps: SenderProps) {
           }
         }}
         className={
-          "text-xs w-full overflow-y-scroll border-1 border-solid border-gray-500 rounded-b-md text-left shrink-0  h-[12rem] p-2"
+          "im-editor-content text-xs w-full overflow-y-scroll border-1 border-solid border-gray-500 rounded-b-md text-left shrink-0  h-[12rem] p-2"
         }
       ></div>
 
       <div
         className={
-          "flex shrink-0 h-[2rem] flex-row items-center justify-center m-2"
+          "im-editor-actions flex shrink-0 h-[2rem] flex-row items-center justify-center m-2"
         }
       >
         <Button
-          className={"cursor-pointer"}
+          className={"im-send-button cursor-pointer"}
           onClick={(event) => localSendMessage()}
         >
           {t("send")}

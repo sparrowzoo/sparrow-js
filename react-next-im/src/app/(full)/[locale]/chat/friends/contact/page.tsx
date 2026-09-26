@@ -42,8 +42,8 @@ function ContactDetail() {
   );
 
   return (
-    <div className={"flex flex-col p-4 shadow-md"}>
-      <div className="flex flex-row items-center gap-4 text-left">
+    <div className={"im-profile-card flex flex-col p-4 shadow-md"}>
+      <div className="im-profile-heading flex flex-row items-center gap-4 text-left">
         <Link href={chatSession.sessionUrl}>
           <MyAvatar
             unread={0}
@@ -65,7 +65,7 @@ function ContactDetail() {
           </Link>
         </div>
       </div>
-      <p className={"mt-2 text-gray-500 text-left text-sm"}>
+      <p className={"im-profile-description mt-2 text-gray-500 text-left text-sm"}>
         {contact.signature}
       </p>
       <DirectSession sessionKey={chatSession.sessionKey} />

@@ -16,13 +16,13 @@ export default function Contacts(contactsProps: ContactsProps) {
   }
   if (contactsProps.contacts.length === 0) {
     return (
-      <Link className={"text-center font-bold text-sm"} href={"/"}>
+      <Link className={"im-contact-empty text-center font-bold text-sm"} href={"/"}>
         No contacts found.
       </Link>
     );
   }
   return (
-    <SidebarMenu className={"gap-2"}>
+    <SidebarMenu className={"im-contact-list gap-2"}>
       {contactsProps?.contacts?.map((contact) => (
         <ContactItem contact={contact} key={contact.userId + ""} />
       ))}
