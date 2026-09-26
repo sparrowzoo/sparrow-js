@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>腾讯企业邮箱完整配置指南 — Sparrow Zoo</title>
+    <meta name="description" content="从管理员与成员权限、客户端专用密码，到 SMTP/IMAP/POP3 参数、Foxmail/Outlook、JavaMail/Spring Boot 示例及 535 认证失败排查的完整指南。">
+    <style>
+        :root{--bg:#07070d;--code:#0c0c16;--panel:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#f4f4f7;--muted:#9a9ab0;--faint:#64647c;--purple:#6d5cff;--cyan:#22d3ee;--pink:#a855f7;--radius:18px;--mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace}
+        *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:100px}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.85 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased;isolation:isolate}
+        .ambient,.grid-noise{position:fixed;inset:0;z-index:-1;pointer-events:none}.ambient{background:radial-gradient(900px 600px at 5% 0%,rgba(109,92,255,.17),transparent 66%),radial-gradient(800px 480px at 95% 10%,rgba(34,211,238,.1),transparent 68%),radial-gradient(900px 650px at 65% 100%,rgba(168,85,247,.08),transparent 70%)}.grid-noise{background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(#000,transparent 900px)}
+        a{color:var(--cyan);text-decoration:none;text-underline-offset:4px}a:hover{text-decoration:underline}a:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--cyan);outline-offset:4px}p,li{color:var(--muted)}p{margin:1em 0}li{margin:.5em 0}ul,ol{padding-left:1.6em}strong{color:var(--text)}code{font:.88em/1.6 var(--mono);background:rgba(255,255,255,.055);padding:.16em .38em;border-radius:5px;color:#dedcf0;overflow-wrap:anywhere}pre{max-width:100%;overflow:auto;padding:23px;border:1px solid var(--border);border-radius:14px;background:var(--code);font:13px/1.8 var(--mono);tab-size:4}pre code{padding:0;background:none;white-space:pre;overflow-wrap:normal;color:#d7dbef}.code-caption{margin:25px 0 -6px;font:12px/1.6 var(--mono);color:var(--muted)}
+        .skip-link{position:fixed;top:8px;left:16px;z-index:100;transform:translateY(-160%);padding:9px 18px;background:var(--code);border:1px solid var(--cyan);border-radius:30px}.skip-link:focus{transform:translateY(0)}.banner{position:sticky;top:0;z-index:20;background:rgba(7,7,13,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}.banner-inner{max-width:1320px;margin:auto;min-height:72px;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px;color:var(--text);line-height:1.3;flex-shrink:0}.brand:hover{text-decoration:none}.brand-mark{width:31px;height:31px;background:linear-gradient(135deg,#c4b5fd,#67e8f9);mask:url('/svg/brand/sparrow-logo.svg') center/contain no-repeat}.brand strong{font-size:16px}.brand small{display:block;margin-top:3px;font-size:11px;letter-spacing:.12em;color:var(--muted)}.banner-nav{display:flex;align-items:center;gap:24px;font-size:13px}.banner-nav .wide-link{color:var(--muted)}.pill{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 18px;border-radius:999px;background:linear-gradient(115deg,var(--purple),#407fae);color:#fff;font-size:13px;font-weight:600;transition:transform .2s,box-shadow .2s}.pill:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(109,92,255,.28);text-decoration:none}
+        .shell{max-width:1320px;padding:0 28px;margin:auto}.hero{padding:72px 0 44px;max-width:1050px}.eyebrow{display:flex;align-items:center;gap:10px;font:11px/1.6 var(--mono);letter-spacing:.14em;color:var(--muted)}.eyebrow::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cyan);box-shadow:0 0 16px rgba(34,211,238,.6)}h1{margin:22px 0;font-size:clamp(34px,4.6vw,57px);line-height:1.27;letter-spacing:-.035em;background:linear-gradient(105deg,#a79aff,var(--cyan) 55%,#d497fb);background-clip:text;-webkit-background-clip:text;color:transparent}.lede{max-width:840px;font-size:17px;color:#b2b1c7}.meta{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin-top:24px;font-size:12px;color:var(--muted)}.status{padding:3px 12px;border:1px solid rgba(34,211,238,.22);border-radius:999px;background:rgba(34,211,238,.045);color:#a5e9f2}.topic-strip{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}.topic-strip span{font:11px/1.6 var(--mono);padding:5px 12px;border:1px solid var(--border);border-radius:7px;background:var(--panel);color:var(--muted)}
+        .reading-layout{display:grid;grid-template-columns:214px minmax(0,1fr);gap:42px;align-items:start}.toc{position:sticky;top:98px;max-height:calc(100vh - 125px);overflow:auto;padding-bottom:16px;scrollbar-width:thin}.toc-title{margin:0 0 14px;font-size:11px;letter-spacing:.1em}.toc nav,.mobile-toc nav{display:grid;gap:3px}.toc a,.mobile-toc a{display:flex;gap:10px;padding:7px 9px;border-radius:7px;color:var(--muted);font-size:12px;line-height:1.65}.toc a:hover,.mobile-toc a:hover{color:var(--text);background:var(--panel);text-decoration:none}.toc a span,.mobile-toc a span{color:var(--faint);font:10px/2 var(--mono);min-width:18px}.toc-note{padding:15px 9px 0;border-top:1px solid var(--border);font-size:11px}.mobile-toc{display:none}.article{min-width:0;padding-bottom:64px}.article-section{margin-bottom:54px;scroll-margin-top:100px}.detail-section{margin:36px 0 52px;scroll-margin-top:100px}.article h2{font-size:27px;line-height:1.45;margin:0 0 22px;letter-spacing:-.02em}.article h2::before{content:"";display:inline-block;width:4px;height:23px;background:linear-gradient(var(--purple),var(--cyan));border-radius:3px;margin-right:12px;vertical-align:-2px}.article h3{margin:0 0 22px;font-size:23px;line-height:1.5}.article h3::after{content:"";display:block;height:1px;margin-top:17px;background:linear-gradient(90deg,rgba(109,92,255,.5),var(--border) 50%,transparent)}.article h4{margin:28px 0 12px;font-size:18px;line-height:1.6}.callout,.summary{padding:27px 30px;border:1px solid rgba(109,92,255,.25);border-radius:var(--radius);background:linear-gradient(120deg,rgba(109,92,255,.07),rgba(34,211,238,.03))}.summary{border-color:rgba(34,211,238,.22);background:var(--panel)}.callout p:last-child,.summary p:last-child{margin-bottom:0}.note{padding:14px 20px;border-left:3px solid var(--cyan);background:rgba(34,211,238,.045);border-radius:0 12px 12px 0;color:var(--muted);font-size:14px}.note.warn{border-color:#fbbf24;background:rgba(251,191,36,.035)}.source-note{font-size:12px;color:var(--muted)}
+        .table-wrap{max-width:100%;overflow-x:auto;margin:22px 0;border:1px solid var(--border);border-radius:14px;scrollbar-width:thin}table{width:100%;min-width:680px;border-collapse:collapse;font-size:13px;line-height:1.8}caption{text-align:left;padding:12px 17px;color:var(--muted);font-size:12px;background:rgba(255,255,255,.02)}th,td{padding:14px 17px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border);color:var(--muted)}th{background:rgba(255,255,255,.055);color:var(--text);white-space:nowrap;font-weight:600}td{min-width:100px;overflow-wrap:anywhere}td:first-child{color:#d2d1e4}tr:last-child td{border-bottom:0}tbody tr:hover{background:rgba(255,255,255,.02)}td code{font-size:11px}.flow{margin:28px 0;padding:23px;border:1px solid var(--border);border-radius:var(--radius);background:var(--code)}.flow figcaption{font-size:12px;color:var(--muted);margin-bottom:16px}.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.step{padding:16px 13px;border:1px solid var(--border);border-radius:12px;background:var(--panel);transition:transform .2s,border-color .2s}.step:hover{transform:translateY(-3px);border-color:rgba(34,211,238,.3)}.step b{display:block;font:11px/1.5 var(--mono);color:var(--cyan);margin-bottom:8px}.step strong{font-size:14px}.step p{font-size:12px;line-height:1.7;margin:7px 0 0}.references li{font-size:13px;margin:12px 0}.footer{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding:25px 0 36px;border-top:1px solid var(--border);font-size:12px;color:var(--muted)}.footer p{margin:0}.footer a{color:var(--muted)}
+        @media(max-width:1000px){.shell{padding:0 22px}.reading-layout{grid-template-columns:180px minmax(0,1fr);gap:25px}.banner-inner{padding-inline:22px}.hero{padding-top:54px}.toc a{font-size:11px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+        @media(max-width:760px){html{scroll-padding-top:92px}.shell{padding:0 18px}.banner-inner{min-height:65px;padding:12px 18px}.brand strong{font-size:14px}.brand small{font-size:9px}.brand-mark{width:26px;height:26px}.banner-nav .wide-link{display:none}.banner-nav .pill{padding:7px 13px;font-size:11px}.hero{padding:42px 0 28px}h1{font-size:35px}.lede{font-size:15px}.meta{font-size:11px;gap:8px}.reading-layout{display:block}.toc{display:none}.mobile-toc{display:block;border:1px solid var(--border);border-radius:12px;background:var(--panel);margin-bottom:28px}.mobile-toc summary{padding:12px 16px;font-size:13px;cursor:pointer}.mobile-toc nav{padding:0 10px 12px;grid-template-columns:repeat(2,minmax(0,1fr))}.article{font-size:14px}.article h2{font-size:24px}.article h3{font-size:21px}.article h4{font-size:17px}.article-section{margin-bottom:38px}.detail-section{margin-bottom:42px}.callout,.summary{padding:22px 19px}.note{font-size:13px;padding:12px 16px}.flow{padding:18px 12px}.step{padding:13px 10px}.step strong{font-size:13px}table{font-size:12px;min-width:650px}th,td{padding:12px}pre{padding:17px;font-size:11px}.footer{font-size:11px}}
+        @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important}}
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#article">跳到正文</a>
+<div class="ambient" aria-hidden="true"></div><div class="grid-noise" aria-hidden="true"></div>
+<header class="banner">
+    <div class="banner-inner">
+        <a class="brand" href="/zh/" aria-label="Sparrow Zoo 首页"><span class="brand-mark" aria-hidden="true"></span><span><strong>Sparrow Zoo</strong><small>ENGINEERING / 邮箱接入指南</small></span></a>
+        <nav class="banner-nav" aria-label="文章导航"><a class="wide-link" href="/zh/#docs">开发文档</a><a class="pill" href="/zh/#docs">返回文档目录 <span aria-hidden="true">↗</span></a></nav>
+    </div>
+</header>
+<div class="shell">
+    <header class="hero" id="top">
+        <div class="eyebrow">BACKEND / MAIL / CONFIGURATION GUIDE</div>
+        <h1>腾讯企业邮箱<br>完整配置指南</h1>
+        <p class="lede">从后台权限到第一封测试邮件，逐步配置 Foxmail、Outlook 与 Java 应用。遇到 535 时，沿着连接、加密、认证、投递四个阶段定位问题。</p>
+        <div class="meta"><span class="status">SMTP 465 · IMAP 993 · POP3 995</span><time datetime="2026-09-26">整理日期：2026 / 09 / 26</time><span>适用：腾讯企业邮箱 / 企业微信邮件</span></div>
+        <div class="topic-strip"><span>CLIENT PASSWORD</span><span>JAVAMAIL / JAKARTA MAIL</span><span>SPRING BOOT</span><span>535 TROUBLESHOOTING</span></div>
+    </header>
+    <details class="mobile-toc"><summary>展开阅读目录</summary><nav aria-label="移动端目录">
+        <a href="#conclusion"><span>01</span>结论先行</a><a href="#background"><span>02</span>问题背景</a><a href="#permissions"><span>03</span>两级权限</a><a href="#password"><span>04</span>专用密码</a><a href="#servers"><span>05</span>服务器参数</a><a href="#clients"><span>06</span>桌面客户端</a><a href="#java"><span>07</span>JavaMail 示例</a><a href="#spring"><span>08</span>Spring Boot</a><a href="#diagnostics"><span>09</span>分层排查</a><a href="#acceptance"><span>10</span>验收与维护</a><a href="#summary"><span>11</span>总结</a><a href="#references"><span>12</span>官方资料</a>
+    </nav></details>
+    <div class="reading-layout">
+        <aside class="toc"><p class="toc-title">READING GUIDE / 阅读目录</p><nav aria-label="文章章节">
+            <a href="#conclusion"><span>01</span>结论先行</a><a href="#background"><span>02</span>问题背景</a><a href="#permissions"><span>03</span>两级权限</a><a href="#password"><span>04</span>专用密码</a><a href="#servers"><span>05</span>服务器参数</a><a href="#clients"><span>06</span>桌面客户端</a><a href="#java"><span>07</span>JavaMail 示例</a><a href="#spring"><span>08</span>Spring Boot</a><a href="#diagnostics"><span>09</span>分层排查</a><a href="#acceptance"><span>10</span>验收与维护</a><a href="#summary"><span>11</span>总结</a><a href="#references"><span>12</span>官方资料</a>
+        </nav><p class="toc-note">示例账号：<br><code>server@sparrowzoo.com</code><br>请替换为自己的真实成员邮箱。</p></aside>
+        <main class="article" id="article">
+            <section class="article-section callout" id="conclusion">
+                <h2>结论先行</h2>
+                <p><strong>先确认管理员允许客户端访问、成员启用对应协议；开启安全登录后，使用客户端专用密码；最后填写完整邮箱地址与 SSL/TLS 服务器参数。</strong>发送采用 <code>smtp.exmail.qq.com:465</code>，常规多端收信采用 <code>imap.exmail.qq.com:993</code>。</p>
+                <p>企业微信现行官方说明列出了上述 SSL 参数，并明确海外也使用通用服务器，无需添加 hw 前缀。客户端界面虽然可能显示“SSL”，实际加密协议由客户端与服务器协商；不要为了排障切换到明文连接。<a href="https://open.work.weixin.qq.com/help2/pc/19886">参见企业微信官方参数与 FAQ</a>。</p>
+                <p><strong><code>535 Authentication failed</code> 不能单独证明“把登录密码当成了专用密码”。</strong>它表明认证未通过，用户名错误、凭据失效或访问策略也需要排查。JavaMail 的异常说明同样把用户名或密码错误列为认证失败示例。<a href="https://javaee.github.io/javamail/docs/api/javax/mail/AuthenticationFailedException.html">参见 API 说明</a>。</p>
+            </section>
+
+            <section class="article-section" id="background">
+                <h2>问题背景：网页能登录，为什么程序不能发信？</h2>
+                <p>网页登录、扫码登录与邮件协议登录属于不同入口。网页能正常打开，只能证明网页端登录成功，不能证明该成员已经获准通过 SMTP、IMAP 或 POP3 访问。以 <code>server@sparrowzoo.com</code> 为例，Java 程序发信需要 SMTP；Foxmail 或 Outlook 同时收发邮件通常需要 IMAP + SMTP。</p>
+                <div class="table-wrap" role="region" aria-label="邮件协议区别" tabindex="0"><table>
+                    <caption>先选协议，再检查对应权限</caption><thead><tr><th scope="col">协议</th><th scope="col">负责什么</th><th scope="col">适用场景</th><th scope="col">容易混淆的地方</th></tr></thead>
+                    <tbody><tr><td>SMTP</td><td>提交待发送邮件</td><td>Java 服务通知、客户端发信</td><td>SMTP 成功不代表 IMAP 可用。</td></tr><tr><td>IMAP</td><td>访问和同步服务器邮件</td><td>电脑、手机、网页多端使用</td><td>删除等操作可能同步到服务器，先理解客户端行为。</td></tr><tr><td>POP3</td><td>将邮件下载到客户端</td><td>明确需要本地下载的旧系统</td><td>是否保留服务器副本取决于客户端设置；不能假设永远保留。</td></tr></tbody>
+                </table></div>
+                <p>本文处理已有企业邮箱账号的客户端接入。域名开通、MX 迁移和域名级投递认证应按企业邮箱管理后台单独配置；调整这些 DNS 记录不能直接修复 SMTP 的 535 认证失败。本文中的账号仅用于说明，未对该账号的后台状态作实测判断。</p>
+                <figure class="flow"><figcaption>按顺序完成四个环节，每一步都有独立验收点</figcaption><div class="steps">
+                    <div class="step"><b>01 / PERMISSION</b><strong>确认访问权限</strong><p>管理员服务范围<br>成员协议开关</p></div><div class="step"><b>02 / CREDENTIAL</b><strong>生成有效凭据</strong><p>安全登录状态<br>客户端专用密码</p></div><div class="step"><b>03 / CONNECTION</b><strong>配置加密连接</strong><p>完整邮箱地址<br>正确服务器与端口</p></div><div class="step"><b>04 / DELIVERY</b><strong>验证实际收发</strong><p>认证通过<br>测试邮件到达</p></div>
+                </div></figure>
+            </section>
+
+            <section class="article-section" id="details">
+                <h2>详细配置：从权限到程序接入</h2>
+                <section class="detail-section" id="permissions">
+                    <h3>1. 管理员与成员，两侧分别确认</h3>
+                    <h4>1.1 管理员：把成员加入协议服务范围</h4>
+                    <ol><li>由有邮件管理权限的管理员登录企业微信管理端。</li><li>在相应版本的后台进入 <strong>协作 → 邮件 → 安全管理 → 客户端访问权限</strong>。</li><li>查看 <strong>IMAP/SMTP</strong> 或 <strong>POP/SMTP</strong> 的服务范围，确认 <code>server@sparrowzoo.com</code> 对应成员或其所在组织在范围内。</li><li>保存配置，检查是否同时存在客户端类型、IP 或账号状态方面的限制。</li></ol>
+                    <h4>1.2 成员：启用需要的协议组合</h4>
+                    <ol><li>在电脑浏览器登录自己的企业邮箱。</li><li>进入 <strong>设置 → 收发信设置 → 开启服务</strong>。</li><li>常规收发勾选 <strong>开启 IMAP/SMTP 服务</strong>；旧系统要求 POP3 时选择 <strong>开启 POP/SMTP 服务</strong>。</li><li>点击 <strong>保存更改</strong>，重新进入页面，确认状态已保存。</li></ol>
+                    <p class="note">菜单会随邮箱版本、管理入口及企业策略变化。上述为常见路径；找不到入口时，由管理员在当前后台搜索“客户端访问权限”或“协议服务”。开关灰色或无法保存，优先核对管理员服务范围和当前账号状态，不能仅凭界面现象断定唯一原因。</p>
+                    <p>只需要程序发信时，Java 代码只配置 SMTP 即可；后台如果以 IMAP/SMTP 或 POP/SMTP 组合提供开关，仍需按后台实际支持的组合授权。无需为了 SMTP 发信在程序中建立 IMAP 连接。</p><p class="source-note">两侧开关及路径依据：<a href="https://open.work.weixin.qq.com/help2/pc/19886">企业微信 · 常用邮件客户端软件 POP/IMAP/EXCHANGE 协议设置</a>。</p>
+                </section>
+
+                <section class="detail-section" id="password">
+                    <h3>2. 客户端专用密码：与网页登录密码分清</h3>
+                    <p>在启用安全登录的账号中，第三方客户端使用的是<strong>客户端专用密码</strong>，也常被称作客户端授权码。企业微信扫码凭证、手机验证码、网页登录密码不能直接替代它。</p>
+                    <h4>2.1 生成步骤</h4>
+                    <ol><li>电脑网页版登录邮箱，进入 <strong>设置 → 邮箱绑定</strong>；部分界面可能使用“微信绑定”或安全相关标签。</li><li>按页面要求完成身份绑定与验证，并确认 <strong>安全登录</strong> 已开启。</li><li>在 <strong>客户端专用密码</strong> 区域选择 <strong>生成新密码</strong>。</li><li>如果支持名称，使用便于识别的名称，例如 <code>sparrow-notification-prod</code> 或 <code>office-foxmail</code>。</li><li>生成后立即保存到受控的密码或密钥管理位置，填入客户端的“密码”字段；不要期待以后能再次查看原文。</li></ol>
+                    <div class="table-wrap" role="region" aria-label="密码类型对照" tabindex="0"><table>
+                        <thead><tr><th scope="col">凭据或状态</th><th scope="col">如何使用</th><th scope="col">需要注意</th></tr></thead><tbody>
+                        <tr><td>网页登录密码</td><td>用于支持账号密码的网页入口</td><td>安全登录开启后，不能作为第三方客户端的替代密码。</td></tr>
+                        <tr><td>客户端专用密码</td><td>填入 SMTP / IMAP / POP3 的密码字段</td><td>必须属于正在认证的那个完整邮箱账号。</td></tr>
+                        <tr><td>安全登录未开启</td><td>以当前企业策略和页面说明为准</td><td>部分账号可能允许登录密码；不要写成所有企业一律允许或一律禁止。</td></tr>
+                        <tr><td>生成入口缺失</td><td>检查绑定、安全登录、企业策略与账号类型</td><td>不能直接认定只缺“绑定微信”这一个条件。</td></tr>
+                        </tbody></table></div>
+                    <h4>2.2 失效、更新与保存</h4>
+                    <ul><li>停用某个专用密码后，该密码立即失效；关闭安全登录后，所有已生成的专用密码都会失效。不要把关闭安全登录当作排障手段。</li><li>更换密码后，同步更新应用的密钥配置和所有运行实例；仅修改本地配置文件，不会自动改变已启动进程中的配置。</li><li>检查复制时是否夹带空格、换行或引号；按生成结果准确保存，不要在业务代码中随意改写密码。</li><li>为不同应用分别生成凭据（若后台支持），便于独立撤销。密码不写入 Java 源码、Git、文章截图或公开日志。</li></ul>
+                    <p class="source-note">生成路径与失效规则依据：<a href="https://open.work.weixin.qq.com/help2/pc/19902">企业微信 · 邮箱绑定微信与获取客户端专用密码</a>。生成后立即保存是操作建议；本文不把“只显示一次”作为已核验的官方规则。</p>
+                </section>
+
+                <section class="detail-section" id="servers">
+                    <h3>3. 服务器参数，一次填对</h3>
+                    <div class="table-wrap" role="region" aria-label="腾讯企业邮箱通用与信创服务器参数" tabindex="0"><table>
+                        <caption>现行官方 SSL 参数；通用服务器同样适用于海外，信创地址仅用于已启用信创邮箱的企业</caption><thead><tr><th scope="col">服务</th><th scope="col">通用服务器（含海外）</th><th scope="col">信创邮箱服务器</th><th scope="col">端口</th><th scope="col">加密</th></tr></thead><tbody>
+                        <tr><td>SMTP 发信</td><td><code>smtp.exmail.qq.com</code></td><td><code>xcsmtp.exmail.qq.com</code></td><td><code>465</code></td><td>SSL/TLS</td></tr>
+                        <tr><td>IMAP 收信</td><td><code>imap.exmail.qq.com</code></td><td><code>xcimap.exmail.qq.com</code></td><td><code>993</code></td><td>SSL/TLS</td></tr>
+                        <tr><td>POP3 收信</td><td><code>pop.exmail.qq.com</code></td><td><code>xcpop.exmail.qq.com</code></td><td><code>995</code></td><td>SSL/TLS</td></tr>
+                        </tbody></table></div>
+                    <p class="source-note">参数来源：<a href="https://open.work.weixin.qq.com/help2/pc/19886">企业微信现行官方设置说明</a>。先确认企业是否启用信创邮箱；启用时应使用相应 xc 主机，且不支持 Exchange。<a href="https://main.qcloudimg.com/raw/document/product/pdf/613_46019_cn.pdf#page=25">旧版腾讯云指南</a>曾列出 hwsmtp / hwimap / hwpop；现行 FAQ 已明确海外无需加 hw，本文不将旧地址作为默认方案。</p>
+                    <ul><li><strong>用户名：</strong>完整邮箱地址，如 <code>server@sparrowzoo.com</code>，不是 <code>server</code>、显示姓名或企业微信用户 ID。</li><li><strong>密码：</strong>安全登录场景下填写该成员生成的客户端专用密码。</li><li><strong>发信认证：</strong>启用“SMTP 服务器需要身份验证”；基线配置中收发信使用同一账号与有效凭据。</li><li><strong>服务器类型：</strong>不要把腾讯企业邮箱的 <code>*.exmail.qq.com</code> 与个人 QQ 邮箱的服务器混用。</li></ul>
+                    <h4>465 的 SSL/TLS 与 STARTTLS 有什么区别？</h4>
+                    <p>本指南使用 <strong>465 的隐式 TLS</strong>：连接建立后直接进行 TLS 握手，对应 <code>mail.smtp.ssl.enable=true</code>。STARTTLS 则是在另一种连接模式中通过 SMTP 命令升级加密，不是将 465 上的 SSL 开关换一个名字。本文不把 587 当作已核验的腾讯企业邮箱推荐参数。</p>
+                    <p>示例统一使用 <code>smtp</code> 协议配合 <code>mail.smtp.*</code> 属性。如果你改用 <code>smtps</code>，必须检查实现要求的 <code>mail.smtps.*</code> 属性前缀，避免端口、认证和超时配置没有生效。<a href="https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html">参见 JavaMail SMTP 属性说明</a>。</p>
+                </section>
+
+                <section class="detail-section" id="clients">
+                    <h3>4. Foxmail、Outlook 与其他客户端</h3>
+                    <p>客户端版本和操作系统不同，按钮名称会变化。下面以<strong>手动配置 IMAP + SMTP</strong>为统一核对方式；如果自动识别失败，手动填写服务器与端口。</p>
+                    <h4>4.1 Foxmail</h4>
+                    <ol><li>新建账号，选择腾讯企业邮箱或手动配置入口。</li><li>使用账号密码方式时，输入完整邮箱地址及客户端专用密码；若当前版本提供企业邮箱扫码登录，可按其引导操作。</li><li>收信类型选择 IMAP：服务器 <code>imap.exmail.qq.com</code>，端口 <code>993</code>，开启 SSL/TLS。</li><li>发信服务器 <code>smtp.exmail.qq.com</code>，端口 <code>465</code>，开启 SSL/TLS 和身份验证。</li><li>保存后分别验证收信和发信，不要只看账号添加成功的提示。</li></ol>
+                    <h4>4.2 Outlook</h4>
+                    <ol><li>添加账户，选择高级设置、手动设置或 IMAP 入口（具体名称依版本而定）。</li><li>收信服务器和发信服务器分别填写上述 IMAP、SMTP 参数。</li><li>在提供相关选项的经典版本中，勾选“发送服务器需要验证”，使用与接收服务器相同的账号凭据。</li><li>高级设置中核对 IMAP <code>993</code>、SMTP <code>465</code>，加密选择 SSL/TLS。</li><li>测试收发。若版本不提供这些字段，使用该版本的手动 IMAP 指引，不照搬其他版本截图。</li></ol>
+                    <h4>4.3 手机邮箱或 POP3 客户端</h4>
+                    <p>支持手动 IMAP/SMTP 的手机邮件应用使用同一组参数。确需 POP3 时，将收信改为 <code>pop.exmail.qq.com:995</code>，同时开启对应 POP/SMTP 权限；发信仍为 SMTP 465。第一次同步前，核对“保留服务器邮件副本”和删除策略，避免误把下载当成多端同步。</p>
+                    <p class="source-note">官方示例可参考<a href="https://main.qcloudimg.com/raw/document/product/pdf/613_46019_cn.pdf">腾讯云操作指南中的 Foxmail、Outlook 与移动客户端设置</a>；本文按通用字段重组步骤，当前客户端界面优先。</p>
+                </section>
+
+                <section class="detail-section" id="java">
+                    <h3>5. JavaMail / Jakarta Mail：完整发送示例</h3>
+                    <h4>5.1 先确认依赖属于哪个命名空间</h4>
+                    <p>下面代码使用 <code>javax.mail</code>，适用于已有 JavaMail 1.6.x API 的项目。采用 Jakarta Mail 2.x 的项目，应将全部 <code>javax.mail</code> 导入改为 <code>jakarta.mail</code>，并使用相匹配的运行时实现，例如 Eclipse Angus Mail。不要只加入 API 包后遗漏 SMTP 实现，也不要同时混用两套命名空间。Spring Boot 项目优先使用下一节的 starter 和项目自身的版本管理。</p>
+                    <p>运行前，在应用实际启动环境中配置以下变量。本文不提供真实密码；环境变量也应通过受控部署配置注入，避免把密钥写进命令历史。</p>
+                    <div class="table-wrap" role="region" aria-label="Java示例环境变量" tabindex="0"><table><thead><tr><th scope="col">变量</th><th scope="col">值或用途</th><th scope="col">是否必需</th></tr></thead><tbody>
+                        <tr><td><code>MAIL_USERNAME</code></td><td>完整邮箱地址，例如 <code>server@sparrowzoo.com</code></td><td>是</td></tr><tr><td><code>MAIL_CLIENT_PASSWORD</code></td><td>该账号生成的客户端专用密码</td><td>是</td></tr><tr><td><code>MAIL_TEST_TO</code></td><td>由你控制、用于验收的收件邮箱</td><td>发送测试邮件时需要</td></tr>
+                    </tbody></table></div>
+                    <p class="code-caption">ExmailSmtpExample.java · 运行后发送一封测试邮件</p>
+                    <pre tabindex="0" aria-label="完整 JavaMail 发送代码"><code id="java-example">import java.util.Date;
+import java.util.Properties;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+public final class ExmailSmtpExample {
+    private static String requiredEnv(String name) {
+        String value = System.getenv(name);
+        if (value == null || value.trim().isEmpty()) {
+            throw new IllegalArgumentException("Missing environment variable: " + name);
+        }
+        return value; // 原样使用凭据，不修改密码内容
+    }
+
+    public static void main(String[] args) throws Exception {
+        String username = requiredEnv("MAIL_USERNAME");
+        String password = requiredEnv("MAIL_CLIENT_PASSWORD");
+        String recipient = requiredEnv("MAIL_TEST_TO");
+
+        Properties props = new Properties();
+        props.setProperty("mail.smtp.host", "smtp.exmail.qq.com");
+        props.setProperty("mail.smtp.port", "465");
+        props.setProperty("mail.smtp.auth", "true");
+        props.setProperty("mail.smtp.ssl.enable", "true");
+        props.setProperty("mail.smtp.ssl.checkserveridentity", "true");
+        props.setProperty("mail.smtp.starttls.enable", "false");
+        props.setProperty("mail.smtp.connectiontimeout", "10000");
+        props.setProperty("mail.smtp.timeout", "10000");
+        props.setProperty("mail.smtp.writetimeout", "10000");
+        props.setProperty("mail.debug.auth", "false");
+
+        Session session = Session.getInstance(props);
+        session.setDebug(false);
+
+        MimeMessage message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipient(Message.RecipientType.TO,
+                new InternetAddress(recipient, true));
+        message.setSubject("腾讯企业邮箱 SMTP 配置测试", "UTF-8");
+        message.setText("如果收到此邮件，说明本次 SMTP 提交与投递链路已完成。", "UTF-8");
+        message.setSentDate(new Date());
+
+        Transport.send(message, username, password);
+        System.out.println("SMTP submission completed; check the recipient inbox.");
+    }
+}</code></pre>
+                    <p>示例发件人 <code>From</code> 与认证账号一致，便于先建立可工作的基线。需要别名或代表其他地址发信时，先确认相应的代发权限。超时单位为毫秒，<code>10000</code> 是示例值，可按网络环境调整。不要设置 <code>mail.smtp.ssl.trust=*</code> 或关闭证书校验来“解决”TLS 错误。</p>
+                    <p class="source-note">属性依据：<a href="https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html">SMTP provider 配置</a>；发送方法依据：<a href="https://javaee.github.io/javamail/docs/api/javax/mail/Transport.html">Transport.send API</a>。正常返回表示提交成功，最终是否到达收件箱仍需收件端确认。</p>
+                    <h4>5.2 只验证 SMTP 登录，不发送邮件</h4>
+                    <p>排查认证时，可在上例创建 <code>session</code> 后，以以下代码替换创建消息及发送部分；同时去掉读取 <code>MAIL_TEST_TO</code> 的那一行。这样可以将“认证成功”与“投递成功”分开验证。</p>
+                    <pre tabindex="0" aria-label="只验证 SMTP 认证"><code>try (Transport transport = session.getTransport("smtp")) {
+    transport.connect("smtp.exmail.qq.com", 465, username, password);
+    System.out.println("SMTP authentication succeeded.");
+}</code></pre>
+                    <h4>5.3 如果程序还需要 IMAP 收信</h4>
+                    <p>收信另建一个 <code>Store</code>；以下片段复用前面的 <code>username</code>、<code>password</code>，并额外导入 <code>javax.mail.Store</code>（Jakarta 项目使用对应包）。它只验证连接，不读取或删除邮件。</p>
+                    <pre tabindex="0" aria-label="IMAP SSL 连接示例"><code>Properties imapProps = new Properties();
+imapProps.setProperty("mail.imap.ssl.enable", "true");
+imapProps.setProperty("mail.imap.ssl.checkserveridentity", "true");
+imapProps.setProperty("mail.imap.connectiontimeout", "10000");
+imapProps.setProperty("mail.imap.timeout", "10000");
+Session imapSession = Session.getInstance(imapProps);
+
+try (Store store = imapSession.getStore("imap")) {
+    store.connect("imap.exmail.qq.com", 993, username, password);
+    System.out.println("IMAP authentication succeeded.");
+}</code></pre>
+                </section>
+
+                <section class="detail-section" id="spring">
+                    <h3>6. Spring Boot：交给 JavaMailSender 管理</h3>
+                    <p>在已经使用 Spring Boot parent 或 BOM 管理依赖版本的项目中，加入 mail starter；版本沿用当前项目，避免另引入一套不兼容的邮件实现。</p>
+                    <pre tabindex="0" aria-label="Spring Boot Mail Maven 依赖"><code>&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-mail&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+                    <p class="code-caption">application.yml · 密码来自运行环境</p>
+                    <pre tabindex="0" aria-label="Spring Boot 邮件配置"><code id="spring-config">spring:
+  mail:
+    host: smtp.exmail.qq.com
+    port: 465
+    protocol: smtp
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_CLIENT_PASSWORD}
+    default-encoding: UTF-8
+    properties:
+      "[mail.smtp.auth]": true
+      "[mail.smtp.ssl.enable]": true
+      "[mail.smtp.ssl.checkserveridentity]": true
+      "[mail.smtp.starttls.enable]": false
+      "[mail.smtp.connectiontimeout]": 10000
+      "[mail.smtp.timeout]": 10000
+      "[mail.smtp.writetimeout]": 10000
+      "[mail.debug.auth]": false</code></pre>
+                    <p>方括号包围的键会作为完整 JavaMail 属性名传递。Spring Boot 官方特别提醒，部分邮件超时默认可能为无限等待，因此建议显式设置。若项目配置了 <code>spring.mail.jndi-name</code>，JNDI Session 会优先于其他 Session 设置，排查时也要确认是否存在自定义 <code>JavaMailSender</code> 覆盖自动配置。<a href="https://docs.spring.io/spring-boot/reference/io/email.html">参见 Spring Boot Sending Email</a>。</p>
+                    <p class="code-caption">ExmailTestService.java · 在需要测试时显式调用</p>
+                    <pre tabindex="0" aria-label="Spring Boot 邮件发送服务"><code id="spring-example">import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
+
+@Service
+public class ExmailTestService {
+    private final JavaMailSender sender;
+    private final String from;
+
+    public ExmailTestService(JavaMailSender sender,
+                            @Value("${spring.mail.username}") String from) {
+        this.sender = sender;
+        this.from = from;
+    }
+
+    public void sendTest(String recipient) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(from);
+        message.setTo(recipient);
+        message.setSubject("腾讯企业邮箱配置测试");
+        message.setText("请确认这封测试邮件已到达收件箱。");
+        sender.send(message);
+    }
+}</code></pre>
+                    <p>将 <code>recipient</code> 设为你控制的测试邮箱，再由测试入口调用该方法；不要把示例直接做成无需鉴权、可任意指定收件人的公开接口。部署后还要确认实际启用的 profile、容器或服务进程已读取新的配置。</p>
+                </section>
+            </section>
+
+            <section class="article-section" id="diagnostics">
+                <h2>排查流程：先定位失败发生在哪一层</h2>
+                <p>固定同一个账号、服务器和运行环境，每次只调整一个因素。先保存脱敏后的完整错误信息，包括 SMTP 返回码、失败阶段和发生时间；只提供“发送失败”四个字无法区分网络、认证与投递问题。</p>
+                <h3>7. DNS、TCP 与 TLS：先验证连接</h3>
+                <p>以下命令应在<strong>真正运行 Java 服务的机器或容器网络环境</strong>中执行。Mac 本机能连通，不代表部署服务器也能连通。命令只检查解析、端口或 TLS，不执行账号认证，也不发送邮件。</p>
+                <pre tabindex="0" aria-label="DNS 和端口检查"><code># macOS / Linux；需要安装对应工具
+nslookup smtp.exmail.qq.com
+nc -vz -w 5 smtp.exmail.qq.com 465
+
+# 需要收信时再检查 IMAP
+nc -vz -w 5 imap.exmail.qq.com 993</code></pre>
+                <pre tabindex="0" aria-label="Windows 端口检查"><code># Windows PowerShell
+Resolve-DnsName smtp.exmail.qq.com
+Test-NetConnection smtp.exmail.qq.com -Port 465</code></pre>
+                <p>端口不通，检查 DNS、防火墙、云出口策略、容器网络或代理路径。不要只用 <code>ping</code> 判断邮件端口是否可用。</p>
+                <pre tabindex="0" aria-label="SMTP TLS 验证"><code># OpenSSL 1.1.1+ / 3.x；检查 TLS 与服务端身份
+openssl s_client -connect smtp.exmail.qq.com:465 \
+  -servername smtp.exmail.qq.com \
+  -verify_hostname smtp.exmail.qq.com \
+  -verify_return_error -crlf</code></pre>
+                <p>正常情况下可以看到 TLS 协商信息、证书校验通过，以及 SMTP 的 <code>220</code> 问候；输入 <code>QUIT</code> 退出。工具版本、系统 CA 路径不同可能导致额外配置需求。即使这里成功，Java 的 truststore 或 JDK 环境仍可能不同，必须结合 Java 的异常继续检查。不要在终端手工粘贴密码执行 AUTH。</p>
+                <h3>8. 535 认证失败：按这个顺序检查</h3>
+                <ol><li><strong>确认真实账号：</strong>认证用户名是否是完整邮箱地址，是否误用了显示名、别名或其他成员生成的密码。</li><li><strong>确认密码类型与状态：</strong>安全登录开启时使用专用密码；无法确认凭据有效性时，在后台重新生成并更新受控配置。</li><li><strong>确认两级权限：</strong>管理员服务范围包含该成员，成员协议开关已保存。</li><li><strong>确认程序生效配置：</strong>排除旧环境变量、错误 profile、自定义 Session / Sender、旧进程或某个实例尚未重启。</li><li><strong>确认账号与访问策略：</strong>让管理员核对账号停用、风险限制、客户端限制和适用的 IP 访问策略；以完整服务端返回为准。</li><li><strong>最小化对照：</strong>在同一网络使用客户端或本节认证探针验证；若只有应用失败，重点对比它实际加载的配置与依赖。</li></ol>
+                <p class="note">RFC 4954 将 <code>535 5.7.8</code> 定义为认证凭据无效或不足。它不是“网页登录密码被误用”的专属错误码。没有完整返回信息和后台检查结果时，应写“可能原因”，不能写“已确定直接原因”。<a href="https://www.rfc-editor.org/rfc/rfc4954.html#section-6">参见 RFC 4954 §6</a>。</p>
+                <h3>9. 常见现象与下一步动作</h3>
+                <div class="table-wrap" role="region" aria-label="邮件接入故障排查表" tabindex="0"><table>
+                    <thead><tr><th scope="col">现象 / 日志</th><th scope="col">优先检查</th><th scope="col">下一步</th></tr></thead><tbody>
+                    <tr><td><code>UnknownHostException</code></td><td>域名拼写、DNS、运行环境解析</td><td>在实际服务器解析域名，不先重置密码。</td></tr>
+                    <tr><td>连接超时 / <code>Connection refused</code></td><td>出站网络、端口、路由及防火墙</td><td>检测 465 / 993；区分连接阶段超时与读写阶段超时。</td></tr>
+                    <tr><td><code>SSLHandshakeException</code> / PKIX</td><td>JDK 信任库、证书链、系统时间、TLS 拦截</td><td>检查证书与运行环境；不要关闭校验或信任所有主机。</td></tr>
+                    <tr><td><code>535</code> / <code>AuthenticationFailedException</code></td><td>用户名、专用密码、权限和账号策略</td><td>按上方六步逐项核对，保留脱敏后的服务端原文。</td></tr>
+                    <tr><td>无法勾选协议服务</td><td>管理员服务范围、当前账号和页面权限</td><td>由管理员核对授权；保存后重新登录检查。</td></tr>
+                    <tr><td>没有生成密码按钮</td><td>账号绑定、安全登录及企业策略</td><td>检查当前版本的绑定 / 安全设置，不照搬旧界面。</td></tr>
+                    <tr><td>之前能用，突然失效</td><td>凭据撤销、安全登录变化、账号策略及部署变更</td><td>对照变更时间；必要时生成新凭据并同步各实例。</td></tr>
+                    <tr><td>终端启动正常，supervisord 启动后读不到环境变量</td><td>systemd 服务环境与应用变量名是否一致</td><td>在 supervisord 的 service 中配置 <code>Environment=</code>，重新加载 unit 并重启服务，详见<a href="#supervisord-env">环境变量不生效</a>。</td></tr>
+                    <tr><td>明确提示 IP 不在允许范围</td><td>企业是否启用适用的 IP 访问限制</td><td>由管理员核对服务器实际公网出口 IP；容器私网 IP 不能替代公网出口。</td></tr>
+                    <tr><td>能收不能发</td><td>SMTP 主机、465、TLS、发信认证</td><td>单独测试 SMTP，不能用 IMAP 登录成功代替发信验证。</td></tr>
+                    <tr><td>能发不能收</td><td>IMAP / POP 权限、收信主机与端口</td><td>按实际协议分别检查 993 或 995。</td></tr>
+                    <tr><td>认证成功，但 <code>550</code> / <code>553</code> 等被拒</td><td>完整错误文本、发件人权限、收件地址、投递策略</td><td>先确定拒绝发生在 MAIL FROM、RCPT TO 还是 DATA；错误码不与单一原因绑定。</td></tr>
+                    <tr><td>只收到近 30 天邮件 / 文件夹不同步</td><td>收取时间范围、自定义文件夹与文件夹锁设置</td><td>在网页版收发信设置核对收取范围及“收取我的文件夹”；已发送不同步时检查“保存已发送至服务器”。<a href="https://open.work.weixin.qq.com/help2/pc/19886">官方 FAQ</a></td></tr>
+                    <tr><td>程序提示成功，收件人未收到</td><td>延迟、退信、垃圾箱、隔离区、收件方策略</td><td>查看消息 ID、退信和管理后台日志；提交成功不等于最终送达。</td></tr>
+                    <tr><td><code>NoSuchProviderException</code> / 类缺失</td><td>是否只有 API、是否混用了 javax / jakarta</td><td>检查依赖树及运行时邮件实现，不先修改服务器参数。</td></tr>
+                    </tbody></table></div>
+                <h4>诊断日志应该保留什么？</h4>
+                <p>可临时设置 <code>session.setDebug(true)</code>，并保持 <code>mail.debug.auth=false</code>；Spring Boot 可临时添加 <code>spring.mail.properties[mail.debug]=true</code>。即使关闭认证调试，日志仍可能包含地址、主机和会话信息，分享前要脱敏，排障后关闭。</p>
+                <p>提交给管理员的信息应包括：发生时间与时区、脱敏账号、源环境与出口 IP、主机和端口、使用的 TLS 模式、JDK / 邮件库版本、完整错误码及失败阶段。不要附带专用密码或完整邮件正文。</p>
+                <section class="detail-section" id="supervisord-env">
+                    <h3>10. 常见问题：supervisord 启动后环境变量不生效</h3>
+                    <p><strong>现象：</strong>终端中手动启动 Java 程序可以读取密码，通过 systemd 启动 supervisord 后，程序读不到 <code>email_password</code> 等变量，或仍使用旧值。</p>
+                    <p><strong>原因：</strong>systemd 管理的系统服务不会自动继承当前终端的 <code>export</code>，也不会自动加载该用户的 <code>.bashrc</code>、<code>.bash_profile</code>。环境应沿着 <strong>systemd → supervisord → Java 子进程</strong>传递。Supervisor 会继承启动环境，其全局或 <code>[program:x]</code> 中的 <code>environment=</code> 还可能覆盖同名值。<a href="https://www.supervisord.org/subprocess.html#subprocess-environment">参见 Supervisor 环境继承说明</a>。</p>
+                    <h4>10.1 在 systemd 服务中声明变量</h4>
+                    <p><code>/usr/lib/systemd/system/supervisord.service</code> 通常是安装包提供的原始文件；本机自定义完整 unit 放在 <code>/etc/systemd/system/supervisord.service</code>，同名文件优先。无需同时修改两处。先确认当前加载的文件及附加配置：</p>
+                    <pre tabindex="0" aria-label="确认 supervisord 服务配置位置"><code>sudo systemctl show supervisord.service -p FragmentPath -p DropInPaths
+
+# 查看安装包提供的原始配置
+sudo vi /usr/lib/systemd/system/supervisord.service
+
+# 编辑本机自定义配置；若文件不存在，先从原始 unit 复制并保留必要设置
+sudo vi /etc/systemd/system/supervisord.service</code></pre>
+                    <p>以下沿用当前部署的路径与 <code>Type=forking</code>，关键是 <code>[Service]</code> 内的 <code>Environment=</code>。已有 unit 应保留原有 PIDFile、停止方式、用户和其他必要设置；如果只需追加变量，也可以执行 <code>sudo systemctl edit supervisord.service</code>，在 drop-in 中仅填写 <code>[Service]</code> 与 <code>Environment=</code>。</p>
+                    <pre tabindex="0" aria-label="supervisord systemd service 环境变量配置"><code>[Unit]
+Description=Process Monitoring and Control Daemon
+After=rc-local.service
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/supervisord -c /root/supervisord/supervisord.conf
+RuntimeDirectory=supervisor
+RuntimeDirectoryMode=755
+Environment="authenticator_encrypt_key=111111" "email_password=111111" "mysql_sparrow_password=111111"
+
+[Install]
+WantedBy=multi-user.target</code></pre>
+                    <p><code>After=rc-local.service</code> 只声明启动顺序，不会继承 rc.local 中导出的变量。<code>RuntimeDirectory=supervisor</code> 只负责创建运行目录，PID 文件和 socket 路径仍由 supervisord 配置决定；使用 <code>PIDFile=</code> 时须与 supervisord 的 <code>pidfile</code> 路径一致。</p>
+                    <p><code>111111</code> 全部为占位值，部署时替换；其中 <code>email_password</code> 应填写邮箱客户端专用密码。unit 中的 <code>Environment=</code> 是明文配置，实际密钥应使用受限的部署配置管理，不提交到公开仓库。<code>Type=forking</code> 要求 supervisord 以后台模式启动；若原服务使用 <code>-n</code> 或 <code>nodaemon=true</code>，保留匹配的前台服务类型，不要直接套用这里的 forking 设置。</p>
+                    <h4>10.2 变量名必须与程序读取方式一致</h4>
+                    <p>环境变量名区分大小写。当前部署使用 <code>email_password</code>，而本文前面的示例读取 <code>MAIL_CLIENT_PASSWORD</code>，两者不会自动对应。沿用当前部署变量名时，Java 读取改为 <code>System.getenv("email_password")</code>；Spring Boot 配置改为：</p>
+                    <pre tabindex="0" aria-label="将 email_password 映射到 Spring Boot 邮箱密码"><code>spring:
+  mail:
+    password: ${email_password}</code></pre>
+                    <p>上面的 YAML 只替换原配置中的 password 字段，其他 SMTP 参数和用户名配置保持完整。也可以保留原代码，在 service 中直接声明 <code>MAIL_CLIENT_PASSWORD</code>。不要写成 <code>Environment=MAIL_CLIENT_PASSWORD=$email_password</code>，systemd 的这个字段不进行 shell 变量展开。</p>
+                    <h4>10.3 重新加载 unit，再重启 supervisord</h4>
+                    <p>仅保存文件、执行 <code>source</code>、<code>supervisorctl reread/update</code> 或仅重启受管程序，都不能让已运行的 supervisord 获得新的 systemd 环境。需要让 systemd 重新读取 unit，再重新创建 supervisord 及其子进程：</p>
+                    <pre tabindex="0" aria-label="加载并应用 supervisord 环境配置"><code>sudo systemctl daemon-reload
+sudo systemctl restart supervisord.service
+sudo systemctl status supervisord.service --no-pager
+sudo supervisorctl -c /root/supervisord/supervisord.conf status</code></pre>
+                    <p class="note">重启 supervisord 会影响它管理的程序，应在可接受的重启窗口执行。检查各程序是否重新进入 RUNNING；未配置自动启动的程序需按实际服务名启动。<code>daemon-reload</code> 只加载配置，不会单独改变正在运行的进程环境。</p>
+                    <h4>10.4 在目标 Java 进程验证，避免只检查终端</h4>
+                    <p>在实际受 supervisord 管理的应用中临时检查变量是否存在，输出布尔值即可；终端执行 <code>echo</code> 得到的值不能证明服务进程已经收到配置。</p>
+                    <pre tabindex="0" aria-label="检查邮箱密码变量是否已传入 Java 进程"><code>String emailPassword = System.getenv("email_password");
+System.out.println("email_password configured: "
+        + (emailPassword != null &amp;&amp; !emailPassword.trim().isEmpty()));</code></pre>
+                    <p>确认变量已传入后，再做 SMTP 认证测试。若仍读到旧值，核对是否连到了另一套 supervisord 实例、是否存在同名 <code>environment=</code> 覆盖，以及业务程序是否真正重启。</p>
+                </section>
+            </section>
+
+            <section class="article-section" id="acceptance">
+                <h2>验收与日常维护</h2>
+                <p>按下面顺序验收，避免只看到“已连接”就认为配置全部完成。</p>
+                <ol><li><strong>权限：</strong>记录管理员服务范围与成员协议开关的检查结果。</li><li><strong>认证：</strong>在实际部署环境完成 SMTP 登录；需要收信时另验 IMAP 或 POP3。</li><li><strong>投递：</strong>给可控邮箱发送一封带时间标识的测试邮件，确认收件箱或垃圾箱中的实际到达情况；必要时同时验证企业内和企业外收件地址。</li><li><strong>收信：</strong>使用客户端刷新收件箱，确认邮件可读；IMAP 场景再检查已读状态同步是否符合预期。</li><li><strong>持久化：</strong>重启应用或客户端后复测，确认配置与密钥没有只存在于临时会话。</li><li><strong>维护：</strong>记录凭据用途和责任人；轮换时先部署并验证新凭据，再按管理策略撤销旧凭据。</li></ol>
+                <p>生产通知应设置合理超时、失败告警和有界重试。认证失败时不要高频重试；在提交结果不明确的超时场景下，重试可能导致重复邮件，应使用业务消息标识辅助去重。批量发送能力与额度以企业实际套餐和后台策略为准，本文不假定固定限额。</p>
+            </section>
+
+            <section class="article-section summary" id="summary">
+                <h2>总结：权限、凭据、连接、投递逐层确认</h2>
+                <p><strong>管理员允许访问 + 成员启用协议 + 使用当前策略要求的有效凭据 + 正确的 SSL/TLS 参数</strong>，构成客户端配置的基础。开启安全登录时，凭据就是客户端专用密码。</p>
+                <p>遇到 535，优先核对完整账号、专用密码和两级权限，再看运行配置与安全策略；连接超时先查网络，TLS 异常先查证书，认证成功后的退信再查投递。每一步都用对应的检查结果验证，直到测试邮件真实到达。</p>
+                <a class="pill" href="#permissions">从权限检查开始 <span aria-hidden="true">↑</span></a>
+            </section>
+
+            <section class="article-section references" id="references">
+                <h2>官方资料与适用边界</h2>
+                <p>本指南整理于 2026 年 9 月 26 日。服务器参数参考腾讯官方资料；管理菜单、绑定方式、密码生命周期及企业策略以当前账号后台为准。以下示例为接入方法，不表示已经对示例账号进行真实登录或发送测试。</p>
+                <ol>
+                    <li><a href="https://open.work.weixin.qq.com/help2/pc/19886">企业微信 · 常用邮件客户端软件 POP/IMAP/EXCHANGE 协议设置</a>：两级权限、通用与信创参数、海外无需 hw 前缀及客户端常见问题。</li>
+                    <li><a href="https://open.work.weixin.qq.com/help2/pc/19902">企业微信 · 邮箱绑定微信与获取客户端专用密码</a>：生成路径、安全登录及密码失效规则。</li>
+                    <li><a href="https://main.qcloudimg.com/raw/document/product/pdf/613_46019_cn.pdf">腾讯云 · 腾讯企业邮操作指南（旧版 PDF）</a>：历史参数及客户端示例；海外 hw 主机说明与现行帮助不同，以现行帮助为准。</li>
+                    <li><a href="https://javaee.github.io/javamail/docs/api/com/sun/mail/smtp/package-summary.html">JavaMail · SMTP provider 属性</a>：认证、SSL、STARTTLS、超时和属性前缀。</li>
+                    <li><a href="https://javaee.github.io/javamail/FAQ">JavaMail FAQ</a>：SSL 配置、依赖和常见接入问题。</li>
+                    <li><a href="https://javaee.github.io/javamail/docs/api/javax/mail/Transport.html">JavaMail · Transport API</a>：带用户名和密码的发送方法，以及提交成功与最终送达的区别。</li>
+                    <li><a href="https://javaee.github.io/javamail/docs/api/javax/mail/AuthenticationFailedException.html">JavaMail · AuthenticationFailedException</a>：认证失败异常语义。</li>
+                    <li><a href="https://docs.spring.io/spring-boot/reference/io/email.html">Spring Boot · Sending Email</a>：mail starter、自动配置、超时和 JNDI Session 优先级。</li>
+                    <li><a href="https://www.rfc-editor.org/rfc/rfc4954.html#section-6">RFC 4954 · SMTP Authentication</a>：535 等认证响应码的标准语义。</li>
+                    <li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.exec.html#Environment=">systemd.exec · Environment</a>、<a href="https://www.freedesktop.org/software/systemd/man/latest/systemctl.html">systemctl</a>：服务环境配置、daemon-reload 与重启。</li>
+                    <li><a href="https://www.supervisord.org/subprocess.html#subprocess-environment">Supervisor · Subprocess Environment</a>：子进程环境继承与 environment 配置覆盖关系。</li>
+                </ol>
+            </section>
+        </main>
+    </div>
+    <footer class="footer"><p>Sparrow Zoo · Backend / Mail</p><a href="/zh/#docs">文档目录</a><a href="#top">回到顶部 ↑</a></footer>
+</div>
+</body>
+</html>

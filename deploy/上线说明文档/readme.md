@@ -55,7 +55,7 @@ entered FATAL state, too many start retries too quickly
 chown -R www:www /root/tomcat-sparrow
 chown -R www:www /var/log/supervisor
 chown -R www:www /var/log/sparrow
-chown -R www:www /var/log/sparrow-chat
+chown -R www:www /var/log/sparrowzoo
 chown -R www:www /var/image
 sudo chmod -R 750 /var/image
 chown -R www:www /workspace/upload

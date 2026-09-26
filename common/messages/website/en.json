@@ -315,8 +315,12 @@
     "read": "Read guide",
     "items": {
       "launchRunbook": {
-        "title": "Next.js 15 HTTP static deployment runbook",
-        "description": "Build and package all four sites, configure Nginx, switch releases atomically, verify live flows, and roll back."
+        "title": "Next.js 15 four-site static launch",
+        "description": "Build one archive locally, switch releases on the server with a single command, plus verification and pitfalls."
+      },
+      "tencentExmail": {
+        "title": "Complete Tencent Exmail configuration guide",
+        "description": "Check administrator and member permissions, create client passwords, connect mail clients and Java applications, and diagnose 535 authentication errors."
       },
       "bom": {
         "title": "Sparrow Parent and BOM",

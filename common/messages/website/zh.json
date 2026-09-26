@@ -315,8 +315,12 @@
     "read": "阅读文档",
     "items": {
       "launchRunbook": {
-        "title": "Next.js 15 · HTTP 静态上线操作手册",
-        "description": "按步骤完成四站构建打包、Nginx 配置、原子发布、真实业务验收与回滚。"
+        "title": "Next.js 15 · 四站静态上线",
+        "description": "本机打包单个 tar.gz，上传服务器一条命令切换版本，附浏览器验收与踩坑总结。"
+      },
+      "tencentExmail": {
+        "title": "腾讯企业邮箱完整配置指南",
+        "description": "核对管理员与成员两级权限、客户端专用密码，完成邮件客户端与 Java 接入，并排查 535 等认证问题。"
       },
       "bom": {
         "title": "Sparrow Parent 与 BOM",
