@@ -1,0 +1,491 @@
+/* Page surfaces are scoped to the full application; examples keep their theme. */
+.im-theme .im-chat-columns {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: var(--im-bg);
+}
+
+.im-theme .im-secondary-provider {
+  flex: 0 0 clamp(15rem, 21vw, 18rem);
+  width: clamp(15rem, 21vw, 18rem);
+  min-height: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--im-border);
+  background: var(--im-panel);
+}
+
+.im-theme .im-secondary-provider:has(> [data-collapsible="offcanvas"]) {
+  flex-basis: 0;
+  width: 0;
+  border-right: 0;
+}
+
+.im-theme .im-secondary-provider > [data-slot="sidebar"],
+.im-theme .im-requests-provider > [data-slot="sidebar"] {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+}
+
+.im-theme .im-secondary-provider [data-slot="sidebar-gap"],
+.im-theme .im-requests-provider [data-slot="sidebar-gap"] {
+  display: none;
+}
+
+.im-theme .im-secondary-sidebar,
+.im-theme .im-requests-sidebar {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 0;
+  color: var(--im-text);
+}
+
+.im-theme .im-secondary-provider [data-collapsible="offcanvas"],
+.im-theme .im-requests-provider [data-collapsible="offcanvas"] {
+  width: 0;
+  overflow: hidden;
+}
+
+.im-theme .im-secondary-sidebar [data-sidebar="sidebar"],
+.im-theme .im-requests-sidebar [data-sidebar="sidebar"] {
+  background: var(--im-panel);
+}
+
+.im-theme .im-secondary-sidebar [data-slot="sidebar-content"] {
+  gap: 8px;
+  padding: 16px 10px;
+  overscroll-behavior: contain;
+}
+
+.im-theme .im-secondary-sidebar [data-slot="sidebar-group"] {
+  padding: 0;
+}
+
+.im-theme .im-secondary-sidebar [data-slot="sidebar-group-label"],
+.im-theme .im-requests-sidebar [data-slot="sidebar-group-label"] {
+  min-height: 40px;
+  margin-bottom: 8px;
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 10px;
+  color: var(--im-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.im-theme .im-secondary-sidebar button[data-slot="sidebar-group-label"]:hover,
+.im-theme .im-requests-sidebar button[data-slot="sidebar-group-label"]:hover {
+  color: var(--im-text);
+  background: var(--im-panel-soft);
+}
+
+.im-theme .im-secondary-sidebar [data-slot="sidebar-menu"] {
+  gap: 4px;
+}
+
+.im-theme .im-new-friends-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--im-border);
+  border-radius: 10px;
+  color: var(--im-accent);
+  background: var(--im-accent-soft);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.im-theme .im-new-friends-link:hover {
+  border-color: var(--im-accent);
+}
+
+.im-theme .im-contact-pane {
+  min-width: 0;
+  min-height: 0;
+  padding: 24px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.im-theme .im-profile-card {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 28px;
+  border: 1px solid var(--im-border);
+  border-radius: 20px;
+  color: var(--im-text);
+  background: var(--im-panel);
+  box-shadow: var(--im-shadow);
+}
+
+.im-theme .im-profile-heading {
+  min-width: 0;
+  gap: 16px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--im-border);
+  line-height: 1.8;
+}
+
+.im-theme .im-profile-heading > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.im-theme .im-profile-heading strong {
+  color: var(--im-text);
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.im-theme .im-profile-heading label,
+.im-theme .im-profile-heading span {
+  color: var(--im-muted);
+  font-size: 13px;
+}
+
+.im-theme .im-profile-heading label {
+  margin-right: 6px;
+}
+
+.im-theme .im-profile-description {
+  margin: 20px 0;
+  color: var(--im-muted);
+  font-size: 14px;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.im-theme .im-members-section {
+  gap: 16px;
+  margin: 8px 0 20px;
+}
+
+.im-theme .im-members-section h2 {
+  color: var(--im-text);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.im-theme .im-members-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+  gap: 10px;
+}
+
+.im-theme .im-member-card {
+  min-width: 0;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--im-border);
+  border-radius: 12px;
+  background: var(--im-panel-soft);
+}
+
+.im-theme .im-member-card > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.im-theme .im-member-card span:last-child {
+  color: var(--im-muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.im-theme .im-requests-provider {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--im-border);
+  border-radius: 18px;
+  background: var(--im-panel);
+  box-shadow: var(--im-shadow);
+}
+
+.im-theme .im-requests-sidebar [data-slot="sidebar-content"] {
+  gap: 20px;
+  padding: 16px;
+  overscroll-behavior: contain;
+}
+
+.im-theme .im-requests-sidebar [data-slot="sidebar-group"] {
+  padding: 0;
+}
+
+.im-theme .im-requests-sidebar [data-slot="sidebar-group-label"] {
+  color: var(--im-text);
+  background: var(--im-panel-soft);
+  font-size: 14px;
+}
+
+.im-theme .im-plaza-page,
+.im-theme .im-search-page {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  margin: 0;
+  padding: 24px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.im-theme .im-contact-pane > .im-plaza-page {
+  padding: 0;
+}
+
+.im-theme .im-login-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100%;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.im-theme .im-login-page > h1 {
+  margin: 0 0 10px;
+  color: var(--im-text);
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+
+.im-theme .im-login-page > h2 {
+  margin: 0 0 28px;
+  color: var(--im-muted);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.im-theme .im-login-page > p {
+  width: min(100%, 400px);
+  margin: 0;
+}
+
+.im-theme .im-login-card {
+  width: min(100%, 400px);
+  padding: 32px;
+  border: 1px solid var(--im-border);
+  border-radius: 20px;
+  color: var(--im-text);
+  background: var(--im-panel);
+  box-shadow: var(--im-shadow);
+  text-align: left;
+}
+
+.im-theme .im-login-card h2 {
+  margin-bottom: 24px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.im-theme .im-login-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.im-theme .im-login-input,
+.im-theme .im-login-fields button {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  border: 1px solid var(--im-border-strong);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 14px;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.im-theme .im-login-input {
+  margin-bottom: 6px;
+  color: var(--im-text);
+  background: var(--im-panel-soft);
+}
+
+.im-theme .im-login-input::placeholder {
+  color: var(--im-faint);
+}
+
+.im-theme .im-login-input:focus-visible {
+  outline: 2px solid var(--im-accent);
+  outline-offset: 2px;
+  border-color: var(--im-accent);
+}
+
+.im-theme .im-login-fields button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.im-theme .im-login-fields .im-login-primary {
+  border-color: var(--im-accent);
+  color: var(--im-on-accent);
+  background: var(--im-accent);
+}
+
+.im-theme .im-login-fields .im-login-primary:hover {
+  box-shadow: 0 4px 14px color-mix(in srgb, var(--im-accent) 24%, transparent);
+}
+
+.im-theme .im-login-fields .im-login-secondary {
+  border-color: var(--im-border);
+  color: var(--im-muted);
+  background: var(--im-panel);
+}
+
+.im-theme .im-login-fields .im-login-secondary:hover {
+  color: var(--im-accent);
+  background: var(--im-accent-soft);
+}
+
+.im-theme .im-support-page {
+  position: relative;
+  min-height: 100%;
+  padding: 64px 24px 140px;
+  background: radial-gradient(ellipse at 50% 30%, var(--im-accent-soft), transparent 65%);
+  text-align: center;
+}
+
+.im-theme .im-support-page > h1 {
+  margin-bottom: 16px;
+  color: var(--im-text);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: -0.045em;
+}
+
+.im-theme .im-support-page > h2 {
+  max-width: 500px;
+  color: var(--im-muted);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+.im-theme .im-support-switch {
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 40px;
+  padding: 14px 20px;
+  border: 1px solid var(--im-border);
+  border-radius: 12px;
+  color: var(--im-muted);
+  background: var(--im-panel);
+  font-size: 13px;
+  box-shadow: var(--im-shadow);
+}
+
+.im-theme .im-support-switch svg {
+  width: 18px;
+  height: 18px;
+  color: var(--im-faint);
+}
+
+.im-theme .im-support-switch a {
+  color: var(--im-accent);
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
+
+.im-theme .im-support-switch a:hover {
+  text-decoration: underline;
+}
+
+.im-theme .im-support-position {
+  right: 32px;
+  bottom: 32px;
+  z-index: 20;
+}
+
+.im-theme .im-new-friends-link:focus-visible,
+.im-theme .im-login-fields button:focus-visible,
+.im-theme .im-support-switch a:focus-visible {
+  outline: 2px solid var(--im-accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1023px) {
+  .im-theme .im-secondary-provider {
+    flex-basis: 15rem;
+    width: 15rem;
+  }
+
+  .im-theme .im-contact-pane,
+  .im-theme .im-plaza-page,
+  .im-theme .im-search-page {
+    padding: 16px;
+  }
+
+  .im-theme .im-profile-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 767px) {
+  .im-theme .im-secondary-provider {
+    flex-basis: 0;
+    width: 0;
+    border: 0;
+  }
+
+  .im-theme .im-profile-card {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .im-theme .im-profile-heading {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .im-theme .im-profile-heading strong {
+    font-size: 18px;
+  }
+
+  .im-theme .im-login-page {
+    padding: 32px 16px;
+  }
+
+  .im-theme .im-login-card {
+    padding: 24px;
+  }
+
+  .im-theme .im-support-page {
+    padding: 48px 20px 140px;
+  }
+
+  .im-theme .im-support-switch {
+    padding: 12px 14px;
+  }
+
+  .im-theme .im-support-position {
+    right: 20px;
+    bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .im-theme .im-new-friends-link,
+  .im-theme .im-login-input,
+  .im-theme .im-login-fields button {
+    transition: none;
+  }
+}

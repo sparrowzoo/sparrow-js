@@ -16,24 +16,24 @@ function AuditStatusComp(props: AuditStatusProps) {
   const { status, isApplying } = props;
   if (status == AuditStatus.PENDING) {
     if (isApplying) {
-      return <span className={"text-xs text-gray-400"}>待对方确认</span>;
+      return <span className={"im-audit-state text-xs text-gray-400"}>待对方确认</span>;
     }
     return (
       <div
         className={
-          "flex flex-row justify-center items-center text-xs h-full text-gray-400 gap-2 w-80"
+          "im-audit-actions flex flex-row justify-center items-center text-xs h-full text-gray-400 gap-2 w-80"
         }
       >
-        <Button className={"w-12 cursor-pointer p-2"}>同意</Button>
-        <Button className={"w-12 cursor-pointer p-2"}>拒绝</Button>
+        <Button className={"im-audit-approve w-12 cursor-pointer p-2"}>同意</Button>
+        <Button className={"im-audit-decline w-12 cursor-pointer p-2"}>拒绝</Button>
       </div>
     );
   }
   if (status == AuditStatus.REJECTED) {
-    return <span className={"text-xs text-gray-400"}>拒绝</span>;
+    return <span className={"im-audit-state text-xs text-gray-400"}>拒绝</span>;
   }
   if (status == AuditStatus.APPROVED) {
-    return <span className={"text-xs text-gray-400"}>已同意</span>;
+    return <span className={"im-audit-state text-xs text-gray-400"}>已同意</span>;
   }
 }
 
@@ -53,11 +53,11 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
     newFriend.avatar || format(`${AVATAR_URL}`, `${newFriend.userId}`);
   return (
     <SidebarMenuItem
-      className={"flex flex-row justify-between items-center w-full h-10 mt-2 "}
+      className={"im-audit-item flex flex-row justify-between items-center w-full h-10 mt-2 "}
     >
       <Link
         className={cn(
-          "flex flex-row  gap-2  justify-start items-center ml-2  w-fit h-full p-0"
+          "im-audit-person flex flex-row  gap-2  justify-start items-center ml-2  w-fit h-full p-0"
         )}
         href={userHomeLink}
       >
@@ -68,14 +68,14 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
           src={avatar}
         />
 
-        <div className={"flex flex-col justify-center items-start flex-1"}>
-          <span className={"text-xs"}>
+        <div className={"im-contact-copy flex flex-col justify-center items-start flex-1"}>
+          <span className={"im-contact-name text-xs"}>
             {userName}-{newFriend.userId}
             {newFriend.nationality && <>【{newFriend.nationality}】</>}
           </span>
           <span
             title={newFriend.signature}
-            className={"text-gray-400 text-xs truncate"}
+            className={"im-contact-description text-gray-400 text-xs truncate"}
           >
             {newFriend.signature}
           </span>
@@ -83,7 +83,7 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
       </Link>
       <div
         className={
-          "flex  justify-center items-center text-xs h-full text-gray-400 w-80"
+          "im-audit-result flex  justify-center items-center text-xs h-full text-gray-400 w-80"
         }
       >
         <AuditStatusComp

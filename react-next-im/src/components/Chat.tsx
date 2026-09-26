@@ -80,15 +80,15 @@ export default function ChatLayout({
   const avatarUrl = format(AVATAR_URL, currentUser?.userId);
   const userHome = "/chat/friends/contact?friendId=" + currentUser?.userId;
   return (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className="flex flex-row flex-1 min-h-0 h-full w-full">
-        <div className=" w-[4rem] flex flex-col  gap-4 p-2">
+    <div className="im-chat-shell flex h-full min-h-0 flex-col">
+      <div className="im-workspace flex flex-row flex-1 min-h-0 h-full w-full">
+        <div className="im-navigation w-[4rem] flex flex-col  gap-4 p-2">
           <IconMenu title={t("my")} url={userHome}>
             {(className) => (
               <Image
                 alt={"avatar"}
                 src={avatarUrl}
-                className={cn(className, "rounded-full w-full h-[3rem]")}
+                className={cn(className, "im-navigation-avatar rounded-full w-full h-[3rem]")}
                 width={0}
                 height={0}
               />

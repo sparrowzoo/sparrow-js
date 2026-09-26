@@ -91,14 +91,14 @@ export default function Talk() {
                 }}
             >
                 <div
-                    className="flex cursor-pointer flex-col items-center justify-center w-20 h-20 p-2 rounded-l bg-gray-100 text-gray-500 hover:bg-gray-200">
+                    className="im-support-launcher flex cursor-pointer flex-col items-center justify-center w-20 h-20 p-2 rounded-l bg-gray-100 text-gray-500 hover:bg-gray-200">
                     <HeadsetIcon width={64} height={64}/>
                     {t("title")}
                 </div>
             </PopoverTrigger>
-            <PopoverContent side={"top"}>
-                <SidebarProvider className={"min-h-full h-full w-auto"}>
-                    <Sidebar className={"relative min-h-full h-full"}>
+            <PopoverContent className="im-support-popover" side={"top"}>
+                <SidebarProvider className={"im-support-provider min-h-full h-full w-auto"}>
+                    <Sidebar className={"im-support-sidebar relative min-h-full h-full"}>
                         <WebSocketContext.Provider
                             value={webSocketContextValue as WebSocketContextValue}
                         >

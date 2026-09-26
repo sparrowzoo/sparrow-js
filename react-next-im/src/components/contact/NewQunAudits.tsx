@@ -24,7 +24,7 @@ export default function NewQunAudits() {
     return <ThreeDotLoading />;
   }
   return (
-    <SidebarMenu className={"gap-2 w-full"}>
+    <SidebarMenu className={"im-audit-list gap-2 w-full"}>
       {auditWrap.auditingList.map((audit) => (
         <NewQunAuditItem
           key={audit.auditId}

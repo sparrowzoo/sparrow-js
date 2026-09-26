@@ -8,7 +8,7 @@ export default function SessionItem(props: SessionItemProps) {
   const { chatSession } = props;
   console.log("session item 重渲染");
   return (
-    <SidebarMenuItem>
+    <SidebarMenuItem className="im-session-list-item">
       <SessionItemTrigger
         unreadPosition={props.unreadPosition}
         triggerType={props.triggerType}

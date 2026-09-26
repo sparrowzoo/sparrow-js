@@ -80,8 +80,8 @@ export default function MessageSearchBar() {
   }
 
   return (
-    <div className={"flex flex-col"}>
-      <div className={"flex flex-row w-150"}>
+    <div className={"im-message-search flex flex-col"}>
+      <div className={"im-message-search-filters flex flex-row w-150"}>
         <SessionSearch sessionKey={sessionKey} setSessionKey={setSessionKey} />
         <BeginEndDatePicker date={date} setDate={setDate} />
         <Input
@@ -101,7 +101,7 @@ export default function MessageSearchBar() {
       <div
         ref={containerRef}
         className={
-          "w-full h-[550px] border-1 border-gray-200 rounded-md overflow-y-auto"
+          "im-message-search-results w-full h-[550px] border-1 border-gray-200 rounded-md overflow-y-auto"
         }
       >
         <SearchResult
@@ -110,7 +110,7 @@ export default function MessageSearchBar() {
         />
         {loading && <ThreeDotLoading />}
         {lastId == -1 && (
-          <div className={"text-center text-gray-500 mt-4"}>
+          <div className={"im-search-end text-center text-gray-500 mt-4"}>
             {t("no-more-message")}
           </div>
         )}

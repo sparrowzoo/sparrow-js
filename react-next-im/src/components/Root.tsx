@@ -18,9 +18,9 @@ export default async function Root({
                 enableSystem
                 disableTransitionOnChange
             >
-                <div className="flex h-dvh flex-col">
+                <div className="im-shell flex h-dvh flex-col">
                     <ImHeader/>
-                    <div className="min-h-0 flex-1 overflow-auto">{children}</div>
+                    <div className="im-content min-h-0 flex-1 overflow-auto">{children}</div>
                 </div>
             </ThemeProvider>
         </>

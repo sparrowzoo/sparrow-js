@@ -22,7 +22,7 @@ export default function HistoryMessageItem(props: Props) {
   const receiverDetail = props.messageWrap.userMap.get(receiver?.id);
   return (
     <div
-      className={"flex flex-row justify-start items-start gap-2 mt-2"}
+      className={"im-history-item flex flex-row justify-start items-start gap-2 mt-2"}
       key={props.message.messageId}
     >
       <MyAvatar
@@ -31,10 +31,10 @@ export default function HistoryMessageItem(props: Props) {
         fallback={senderDetail?.userName as string}
         src={senderDetail?.avatar as string}
       />
-      <div className={"flex flex-col text-left gap-2"}>
+      <div className={"im-history-body flex flex-col text-left gap-2"}>
         <span
           className={
-            " flex flex-row text-xs dark:text-gray-300 light:text-gray-900"
+            "im-history-meta flex flex-row text-xs dark:text-gray-300 light:text-gray-900"
           }
         >
           {senderDetail?.userName} {t("at")}
@@ -58,7 +58,7 @@ export default function HistoryMessageItem(props: Props) {
             onClick={() => {
               props.handleSearch(props.message.session.sessionKey, 0);
             }}
-            className={"cursor-pointer pl-2"}
+            className={"im-history-filter cursor-pointer pl-2"}
           >
             {t("only-see")}【{props.message.session.sessionKey}】{t("session")}
           </span>
@@ -66,7 +66,7 @@ export default function HistoryMessageItem(props: Props) {
         <p
           dangerouslySetInnerHTML={{ __html: content }}
           className={
-            "p-2 text-xs rounded-lg dark:text-foreground light:text-gray-900"
+            "im-history-content p-2 text-xs rounded-lg dark:text-foreground light:text-gray-900"
           }
         ></p>
       </div>

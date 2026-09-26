@@ -15,9 +15,9 @@ export default function TabSessions(serverProps: ServerProps) {
   return (
     <Tabs
       defaultValue="account"
-      className="w-[300px] h-[500px] overflow-y-scroll"
+      className="im-session-tabs w-[300px] h-[500px] overflow-y-scroll"
     >
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList className="im-session-tab-list grid w-full grid-cols-3">
         {Array.from(groupedSessions).map(([category, groupedSession]) => (
           <TabsTrigger key={category} value={groupedSession.name}>
             {t(groupedSession.name.toLowerCase())}

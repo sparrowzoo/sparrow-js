@@ -39,9 +39,9 @@ export default function ChatLayout({
     return <ThreeDotLoading />;
   }
   return (
-    <div className="flex flex-row flex-1">
-      <SidebarProvider className={"min-h-full h-full w-auto"}>
-        <Sidebar className={"relative min-h-full h-full"}>
+    <div className="im-chat-columns flex flex-row flex-1">
+      <SidebarProvider className={"im-secondary-provider min-h-full h-full w-auto"}>
+        <Sidebar className={"im-secondary-sidebar relative min-h-full h-full"}>
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel

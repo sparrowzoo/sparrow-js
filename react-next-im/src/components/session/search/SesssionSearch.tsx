@@ -31,23 +31,23 @@ function SessionList(sessionListProp: SessionListProp) {
     return <div>{t("no-session-matched")}</div>;
   }
   return (
-    <div className="w-full h-[550px] border-1 border-gray-200 rounded-md overflow-y-auto p-2">
+    <div className="im-session-search-results w-full h-[550px] border-1 border-gray-200 rounded-md overflow-y-auto p-2">
       <h2 className="text-sm font-bold p-2">{t("select-session-title")}</h2>
       {sessionList.map((sessionMeta: SessionMeta) => (
         <div
-          className="flex flex-row justify-start text-left items-center pb-2 gap-2 w-fit border-b-1 border-gray-300"
+          className="im-session-search-option flex flex-row justify-start text-left items-center pb-2 gap-2 w-fit border-b-1 border-gray-300"
           key={sessionMeta.sessionKey}
           onClick={() => {
             setSessionKey(sessionMeta.sessionKey);
           }}
         >
-          <div className="flex flex-col items-start w-30">
+          <div className="im-session-search-person flex flex-col items-start w-30">
             <span>{sessionMeta.userName}</span>
             <span>ID:{sessionMeta.userId}</span>
             <span className={"truncate w-30"}>{sessionMeta.userNickName}</span>
           </div>
           <span className={"w-4 text-center"}>-</span>
-          <div className="flex flex-col items-start w-30">
+          <div className="im-session-search-person flex flex-col items-start w-30">
             <span>{sessionMeta.oppositeName}</span>
             <span>ID:{sessionMeta.oppositeId}</span>
             <span className={"truncate w-30"}>
@@ -87,7 +87,7 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
       <Popover>
         <PopoverTrigger>
           <Input
-            className={"w-30"}
+            className={"im-session-search-input w-30"}
             placeholder={t("session-placeholder")}
             value={sessionKey}
             onChange={(event) => {
@@ -96,10 +96,10 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
           />
         </PopoverTrigger>
         <Draggable asChild={true}>
-          <PopoverContent className="w-fit border-1 border-gray-300 rounded-md p-4">
+          <PopoverContent className="im-session-search-popover w-fit border-1 border-gray-300 rounded-md p-4">
             <div className="grid gap-4">
               <div className="space-y-2">
-                <div className={"flex flex-row gap-2 w-120"}>
+                <div className={"im-session-search-filters flex flex-row gap-2 w-120"}>
                   {loginUser?.isAdmin() && (
                     <Input
                       value={userId}

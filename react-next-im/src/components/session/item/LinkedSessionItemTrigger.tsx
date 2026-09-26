@@ -31,7 +31,7 @@ export default function LinkedSessionTrigger(
       onClick={() => {
         handleClick();
       }}
-      className={"block w-full h-fit p-0 cursor-pointer"}
+      className={"im-session-trigger block w-full h-fit p-0 cursor-pointer"}
     >
       <BaseTrigger unreadPosition={Position.TAIL} chatSession={chatSession} />
     </Button>

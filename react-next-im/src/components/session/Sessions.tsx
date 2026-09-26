@@ -16,7 +16,7 @@ export default function Sessions(props: SessionsProps) {
     return <ThreeDotLoading />;
   }
   return (
-    <SidebarMenu className={"gap-2"}>
+    <SidebarMenu className={"im-session-list gap-2"}>
       {props.sessions.map((session) => (
         <SessionItem
           unreadPosition={session.unreadPosition}
