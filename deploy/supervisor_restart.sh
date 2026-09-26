@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-export LC_ALL=C
 
 SUPERVISORD=/usr/bin/supervisord
 CONF=/root/supervisord/supervisord.conf
