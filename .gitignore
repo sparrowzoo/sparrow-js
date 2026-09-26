@@ -18,8 +18,12 @@ build/
 # 打包文件
 *.zip
 *.tgz
+*.tar.gz
 *.pack
 *.pack.gz
+
+# 构建产物目录
+/artifacts/
 
 # 编译缓存
 *.tsbuildinfo
