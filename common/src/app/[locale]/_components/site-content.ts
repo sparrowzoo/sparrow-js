@@ -11,6 +11,7 @@ export const documents = [
     {id: "thymeleaf", category: "backend", subcategory: "Java", topic: "Thymeleaf", href: "/backend/java/thymeleaf/thymeleaf.html", keywords: "Java Spring template prefix 模板 路径"},
     {id: "captcha", category: "frontend", subcategory: "React", topic: "React", href: "/frontend/react/captcha.html", keywords: "useCaptcha Hook authentication 验证码"},
     {id: "intl", category: "frontend", subcategory: "React", topic: "Next.js", href: "/frontend/react/next-intl/i18n.html", keywords: "React next-intl i18n locale 国际化 多语言"},
+    {id: "htmlFragmentEmbed", category: "frontend", subcategory: "React", topic: "React", href: "/frontend/react/html-fragment-embed.html", keywords: "React createRoot useEffect HtmlFragment 嵌入 非React 页面 客服 IM HTML片段 挂件 静态导出 output export"},
 ] as const;
 
 export const productIds = ["scaffold", "passport", "file", "security", "im", "coder", "ui"] as const;

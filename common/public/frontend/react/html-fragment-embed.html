@@ -8,7 +8,7 @@
   <meta name="author" content="Sparrow Zoo">
   <meta property="og:type" content="article">
   <meta property="og:title" content="把 React 组件嵌入非 React 页面：HtmlFragment 与客服挂件">
-  <meta property="og:description" content="用 createRoot 与 useEffect 把客服组件接进官网、商城等非 React 架构：讲清 HTML 片段如何生成、注入，以及为什么静态导出会多出 </body></html>。">
+  <meta property="og:description" content="用 createRoot 与 useEffect 把客服组件接进官网、商城等非 React 架构：讲清 HTML 片段如何生成、注入，以及为什么静态导出会多出文档外壳。">
   <meta property="og:url" content="https://www.sparrowzoo.com/frontend/react/html-fragment-embed.html">
   <meta property="og:site_name" content="Sparrow Zoo">
   <meta property="og:image" content="https://www.sparrowzoo.com/svg/brand/sparrow-logo.svg">
@@ -299,7 +299,7 @@ HtmlFragment.useEffect  →  createRoot(#content-container).render(&lt;Talk/&gt;
       const toast = document.getElementById('toast'); let toastTimer;
       function announce(message) { clearTimeout(toastTimer); toast.textContent = message; toast.hidden = false; toastTimer = setTimeout(() => { toast.hidden = true; }, 2100); }
 
-      <span class="c">// 复制代码</span>
+      // 复制代码
       document.querySelectorAll('.copy').forEach(button => button.addEventListener('click', async () => {
         const content = button.closest('.codebox').querySelector('code').textContent;
         try {
@@ -309,7 +309,7 @@ HtmlFragment.useEffect  →  createRoot(#content-container).render(&lt;Talk/&gt;
         } catch { announce('请选中代码后复制'); }
       }));
 
-      <span class="c">// 微信分享：优先系统分享，兜底复制链接</span>
+      // 微信分享：优先系统分享，兜底复制链接
       const shareBtn = document.getElementById('share-btn');
       if (shareBtn) shareBtn.addEventListener('click', async () => {
         const shareData = { title: document.title, text: '把 React 组件嵌入非 React 页面 · HtmlFragment 与客服挂件', url: location.href };
@@ -318,7 +318,7 @@ HtmlFragment.useEffect  →  createRoot(#content-container).render(&lt;Talk/&gt;
         catch { announce('请手动复制地址栏链接分享'); }
       });
 
-      <span class="c">// 阅读进度 + 目录高亮</span>
+      // 阅读进度 + 目录高亮
       const progress = document.getElementById('reading-progress');
       const tocLinks = [...document.querySelectorAll('.toc>a')];
       const sections = tocLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);

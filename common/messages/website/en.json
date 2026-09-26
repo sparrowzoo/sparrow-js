@@ -357,6 +357,10 @@
       "intl": {
         "title": "Internationalization with next-intl",
         "description": "Connect locale routing, middleware, and message context, with guidance on grouped translations and troubleshooting."
+      },
+      "htmlFragmentEmbed": {
+        "title": "Embedding React into non-React pages",
+        "description": "Mount a customer-service widget into non-React sites using createRoot and useEffect, and understand how HTML fragments are generated and injected."
       }
     }
   },
