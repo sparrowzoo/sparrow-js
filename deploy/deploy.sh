@@ -84,14 +84,14 @@ while IFS= read -r entry; do
     *) fail "压缩包包含非站点路径：$entry" ;;
   esac
 done < "$temporary/paths"
-tar -tvzf "$archive" > "$temporary/entries"
+tar --no-xattrs -tvzf "$archive" > "$temporary/entries"
 while IFS= read -r entry; do
   case "${entry:0:1}" in
     -|d) ;;
     *) fail '压缩包只能包含普通文件和目录。' ;;
   esac
 done < "$temporary/entries"
-tar -xzf "$archive" -C "$temporary/sites" --no-same-owner --no-same-permissions
+tar --no-xattrs -xzf "$archive" -C "$temporary/sites" --no-same-owner --no-same-permissions
 for site in "${sites[@]}"; do
   [[ -s $temporary/sites/$site/index.html ]] || fail "压缩包缺少 $site/index.html。"
 done
