@@ -74,7 +74,7 @@ mkdir -- "$temporary/sites"
 printf '使用压缩包：%s\n部署目录：%s\n' "$archive" "$target"
 
 # 在修改现有站点前，拒绝越界路径、链接和特殊文件，并完整解压验证。
-tar -tzf "$archive" > "$temporary/paths"
+tar --no-xattrs -tzf "$archive" > "$temporary/paths"
 while IFS= read -r entry; do
   case "$entry" in
     /*|../*|*/../*|*/..|..) fail "压缩包包含越界路径：$entry" ;;
