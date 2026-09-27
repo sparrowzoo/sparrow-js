@@ -314,6 +314,10 @@
     "count": "{count} guides",
     "read": "Read guide",
     "items": {
+      "session-storage-boundaries-postmessage-sso": {
+        "title": "sessionStorage Boundaries and Client RPC for Cross-Origin SSO",
+        "description": "Explain why Safari and Chrome differ in sessionStorage visibility, then trace CrosStorage and its iframe endpoint through the postMessage RPC protocol, SSO flow, and diagnostic checks."
+      },
       "nginxHttpsLaunch": {
         "title": "Enabling HTTPS across the site with Nginx",
         "description": "Unify public domains on 443 SSL with 80→301 redirects, keep internal domains on 80, and use certbot certonly to issue certificates before rolling out config."

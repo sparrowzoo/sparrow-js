@@ -1,5 +1,6 @@
 // Public documents use absolute paths so locale prefixes never change their URLs.
 export const documents = [
+    {id: "session-storage-boundaries-postmessage-sso", category: "frontend", subcategory: "React", topic: "Web Storage / RPC", href: "/frontend/react/session-storage-boundaries-postmessage-sso.html", keywords: "sessionStorage localStorage Safari Chrome iframe postMessage SSO RPC CrosStorage 存储边界 分区 同源 同站 跨域 单点登录 请求响应"},
     {id: "nginxHttpsLaunch", category: "backend", subcategory: "Nginx", topic: "Nginx", href: "/backend/nginx/nginx-https-launch.html", keywords: "Nginx HTTPS Certbot Let's Encrypt SSL 443 301 证书 签发 续期 X-Forwarded-Proto WebSocket wss 上线 部署"},
     {id: "htmlFragmentEmbed", category: "frontend", subcategory: "React", topic: "React", href: "/frontend/react/html-fragment-embed.html", keywords: "React createRoot useEffect HtmlFragment 嵌入 非React 页面 客服 IM HTML片段 挂件 静态导出 output export"},
     {id: "launchRunbook", category: "backend", subcategory: "Nginx", topic: "Nginx", href: "/backend/nginx/next15-http-launch.html", keywords: "Next.js 15 HTTP WS Nginx static release deploy rollback 上线 操作 构建 发布 回滚 静态"},
