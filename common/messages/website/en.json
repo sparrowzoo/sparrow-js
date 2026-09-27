@@ -316,7 +316,7 @@
     "items": {
       "session-storage-boundaries-postmessage-sso": {
         "title": "Web Storage and Cross-Origin SSO: From Safari Differences to Client RPC",
-        "description": "Distinguish same-origin from same-site, examine sessionStorage boundaries and possible mobile localStorage partitioning, diagnose postMessage exchanges, and compare authorization-code and Cookie session migration paths."
+        "description": "Explain how Cookie tokens or server sessions remove same-site SSO's dependence on shared iframe storage. Compare shared Domain cookies with API host-only HttpOnly cookies, including authentication changes, credentialed requests, and cross-site limits."
       },
       "nginxHttpsLaunch": {
         "title": "Enabling HTTPS across the site with Nginx",
