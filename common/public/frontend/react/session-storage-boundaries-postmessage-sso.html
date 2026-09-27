@@ -1,8 +1,8 @@
 <!doctype html>
 <html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
-<title>sessionStorage 的边界与跨域 SSO：从 Safari 差异到客户端 RPC</title><meta name="description" content="从 Safari 读不到、Chrome 能读到的 sessionStorage 问题出发，对照 CrosStorage 与 cros-storage 源码，解析存储分区、postMessage 客户端 RPC、登录态共享及验证方法。">
-<meta property="og:type" content="article"><meta property="og:locale" content="zh_CN"><meta property="og:title" content="sessionStorage 的边界与跨域 SSO：从 Safari 差异到客户端 RPC"><meta property="og:description" content="从 Safari 读不到、Chrome 能读到的 sessionStorage 问题出发，对照 CrosStorage 与 cros-storage 源码，解析存储分区、postMessage 客户端 RPC、登录态共享及验证方法。"><meta property="article:published_time" content="2026-09-27"><meta name="twitter:card" content="summary">
+<title>Web Storage 的边界与跨域 SSO：从 Safari 差异到客户端 RPC</title><meta name="description" content="结合 sessionStorage 的浏览器差异与手机 localStorage 返回 null 的反馈，区分同源、同站和顶层存储分区，解析 postMessage RPC、验证步骤及授权码与 Cookie 会话方案。">
+<meta property="og:type" content="article"><meta property="og:locale" content="zh_CN"><meta property="og:title" content="Web Storage 的边界与跨域 SSO：从 Safari 差异到客户端 RPC"><meta property="og:description" content="结合 sessionStorage 的浏览器差异与手机 localStorage 返回 null 的反馈，区分同源、同站和顶层存储分区，解析 postMessage RPC、验证步骤及授权码与 Cookie 会话方案。"><meta property="article:published_time" content="2026-09-27"><meta name="twitter:card" content="summary"><meta property="og:image" content="/svg/brand/sparrow-logo.svg"><meta property="og:image:alt" content="Sparrow 官方标志">
 <style>
     :root{--bg:#07070d;--panel:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#f4f4f7;--secondary:#9a9ab0;--tertiary:#64647c;--purple:#6d5cff;--cyan:#22d3ee;--pink:#a855f7;--code:#0c0c16;--radius:18px;--gradient:linear-gradient(110deg,#6d5cff 0%,#22d3ee 53%,#a855f7 100%);--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
     *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:105px}body{margin:0;color:var(--text);background:var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.85;letter-spacing:.01em}body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 7% 1%,#6d5cff23,transparent 42%),radial-gradient(ellipse at 88% 15%,#22d3ee0d,transparent 37%),radial-gradient(ellipse at 84% 85%,#a855f710,transparent 42%)}body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px),url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' opacity='.07' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");background-size:64px 64px,64px 64px,180px 180px}
@@ -37,7 +37,7 @@ caption{text-align:left;padding:13px 18px;background:#ffffff03;font-weight:600;c
 </style></head>
 <body id="top"><a class="skip" href="#conclusion">跳到文章正文</a>
 <header class="topbar"><div class="wrap nav-inner"><a class="brand" href="/zh/" aria-label="Sparrow 首页"><span class="brand-mark" aria-hidden="true">s</span>sparrow<span class="brand-sub"> / ENGINEERING</span></a><nav class="topnav" aria-label="文章导航"><a href="#safari-chrome">浏览器差异</a><a href="#rpc-architecture">客户端 RPC</a><a class="button primary" href="/zh/#docs">返回首页 ↗</a></nav></div><div class="reading-progress" id="reading-progress" aria-hidden="true"></div></header>
-<div class="wrap"><header class="hero" aria-label="文章 Banner"><div class="crumb"><a href="/zh/#docs">开发文档</a><span aria-hidden="true">/</span><span>前端 · React</span><span aria-hidden="true">/</span><span class="pill"><span class="dot" aria-hidden="true"></span>Web Storage / Client RPC</span></div><div class="hero-grid"><div><p class="eyebrow" style="margin-bottom:17px">STORAGE BOUNDARIES · BROWSER RPC · SSO</p><h1><span class="gradient-text">sessionStorage 的边界</span><span class="subline">Safari 读不到，Chrome 能读到<br>从存储分区到 postMessage 客户端 RPC</span></h1><p class="hero-desc">同一个 tab、同一个认证 origin，为什么仍可能读到 null？对照调用端 CrosStorage 与认证 iframe，把浏览器边界、请求协议和 SSO 链路逐层讲清。</p><div class="hero-actions"><a class="button primary" href="#safari-chrome">理解浏览器差异 ↓</a><a class="button" href="#rpc-lab">演示 RPC 往返</a><button type="button" class="button" id="share-btn">微信分享 ↗</button></div><div class="meta"><span>2026.09.27</span><i aria-hidden="true"></i><span>源码对照 · 13 个步骤</span><i aria-hidden="true"></i><span>含官方依据与诊断探针</span></div></div><div class="panel hero-map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 338" role="img" aria-labelledby="hero-title hero-desc">
+<div class="wrap"><header class="hero" aria-label="文章 Banner"><div class="crumb"><a href="/zh/#docs">开发文档</a><span aria-hidden="true">/</span><span>前端 · React</span><span aria-hidden="true">/</span><span class="pill"><span class="dot" aria-hidden="true"></span>Web Storage / Client RPC</span></div><div class="hero-grid"><div><p class="eyebrow" style="margin-bottom:17px">STORAGE BOUNDARIES · BROWSER RPC · SSO</p><h1><span class="gradient-text">Web Storage 的边界</span><span class="subline">从 SESSION 差异到手机 LOCAL 空值<br>存储分区与 postMessage 客户端 RPC</span></h1><p class="hero-desc">认证站独立打开时有值，嵌入业务页后为什么可能返回 null？结合桌面与手机反馈，对照 CrosStorage 与认证 iframe，讲清同源、同站、存储分区和登录态共享方案。</p><div class="hero-actions"><a class="button primary" href="#safari-chrome">理解浏览器差异 ↓</a><a class="button" href="#rpc-lab">演示 RPC 往返</a><button type="button" class="button" id="share-btn">微信分享 ↗</button></div><div class="meta"><span>2026.09.27</span><i aria-hidden="true"></i><span>源码对照 · 13 个步骤</span><i aria-hidden="true"></i><span>含官方依据与诊断探针</span></div></div><div class="panel hero-map"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 338" role="img" aria-labelledby="hero-title hero-desc">
  <title id="hero-title">存储边界与客户端 RPC</title><desc id="hero-desc">业务窗口通过请求和响应调用认证 iframe；iframe 只能访问自己的存储分区。</desc>
  <defs><linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6d5cff"/><stop offset=".55" stop-color="#22d3ee"/><stop offset="1" stop-color="#a855f7"/></linearGradient><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="none" stroke="#22d3ee" stroke-width="1.5"/></marker></defs>
  <rect x="8" y="8" width="424" height="320" rx="18" fill="#07070d" stroke="#ffffff18"/><circle cx="29" cy="28" r="3" fill="#6d5cff"/><circle cx="42" cy="28" r="3" fill="#22d3ee"/><circle cx="55" cy="28" r="3" fill="#a855f7"/>
@@ -52,25 +52,26 @@ caption{text-align:left;padding:13px 18px;background:#ffffff03;font-weight:600;c
 <div class="main-grid"><main class="article" id="article">
 <section id="conclusion" class="section">
  <div class="section-heading"><span class="section-number">01 /</span><h2>结论先行</h2></div>
- <p class="section-intro"><strong>同一个标签页内，认证页面写入的 sessionStorage，Safari 在业务页的认证 iframe 中读不到，Chrome 却能读到。核心差异是浏览器对 sessionStorage 存储边界的划分，而不是 postMessage 的调用语法。</strong></p>
- <div class="incident panel"><div><span class="eyebrow">同一条登录回跳链路</span><h3>Safari：<code>null</code><br>Chrome：读取成功</h3></div><p>写入发生在认证站作为<strong>顶层页面</strong>时；读取发生在认证站作为<strong>另一个 origin 下的 iframe</strong>时。认证代码所属 origin 相同，顶层上下文已经变化。</p></div>
+ <p class="section-intro"><strong>同一认证 origin 在顶层页面和业务页 iframe 中，可能访问不同的 Web Storage 分区。消息正常往返，并不能保证 iframe 读到顶层登录时保存的数据；sessionStorage 和 localStorage 都需要按实际浏览器与页面拓扑验证。</strong></p>
+ <div class="incident panel"><div><span class="eyebrow">后续 LOCAL 测试反馈</span><h3>桌面 LOCAL：读取成功<br>手机 LOCAL：反馈为 <code>null</code></h3></div><p>重点验证<strong>顶层写入 → iframe 读取</strong>这条链路。用户已确认两边使用 localStorage；手机的精确版本、实际 URL、隐私设置与写入上下文尚未完整记录，分区目前是待验证的解释。</p></div>
  <div class="conclusion-grid">
   <div class="panel conclusion-card lift"><div class="tag">01 / STORAGE BOUNDARY</div><h3>同一 tab 不等于同一存储区</h3><p>页面会话、存储 origin，以及浏览器附加的顶层分区条件，共同决定读到哪份数据。</p></div>
   <div class="panel conclusion-card lift"><div class="tag">02 / CLIENT RPC</div><h3>把操作交给 iframe 执行</h3><p>调用端发出命令，认证 iframe 读取自己的存储，携带相同 requestId 返回结果。</p></div>
   <div class="panel conclusion-card lift"><div class="tag">03 / TWO CONDITIONS</div><h3>通信与数据可见性分别成立</h3><p>消息能够往返，不代表 iframe 能看到登录时的 token。RPC 可以成功返回 null。</p></div>
  </div>
- <div class="note cyan"><strong>本文的主结论与适用范围</strong><p>“Safari 不可读、Chrome 可读”是本次同站、不同端口、同一标签页链路中的实际现象。WebKit 已记录的顶层 origin 分区机制与该现象一致。现代 Chrome 也有存储分区，不能把结论扩大为“Chrome 在任何跨站 iframe 中都共享 sessionStorage”。</p><span class="source">依据：<a href="https://bugs.webkit.org/show_bug.cgi?id=247565#c8" target="_blank" rel="noopener noreferrer">WebKit 对分区边界的说明</a> · <a href="https://privacysandbox.google.com/cookies/storage-partitioning" target="_blank" rel="noopener noreferrer">Chrome 存储分区说明</a></span></div>
+ <div class="note cyan"><strong>本文的主结论与适用范围</strong><p>早期 SESSION 测试中出现 Safari 不可读、Chrome 可读；后续 LOCAL 测试则反馈桌面 Chrome、Safari 成功，手机返回 null。这些是不同环境下的记录。WebKit 的顶层 origin 分区与空值现象相符，但手机根因还需探针确认；现代 Chrome 也有分区，不能按浏览器名称或桌面／手机直接判定结果。</p><span class="source">依据：<a href="https://bugs.webkit.org/show_bug.cgi?id=247565#c8" target="_blank" rel="noopener noreferrer">WebKit 对分区边界的说明</a> · <a href="https://privacysandbox.google.com/cookies/storage-partitioning" target="_blank" rel="noopener noreferrer">Chrome 存储分区说明</a></span></div>
 </section>
 <section id="background" class="section">
  <div class="section-heading"><span class="section-number">02 /</span><h2>问题背景</h2></div>
  <p>应用包含一个认证站和多个业务站。用户在认证站登录，前端保存 token，再跳回原业务页。业务页创建指向认证站的隐藏 iframe，通过共享类 <code>CrosStorage</code> 获取 token，供业务 API 请求使用。</p>
- <p>问题出现在 iframe 执行 <code>storage.getItem(request.key)</code> 时：Safari 返回 <code>null</code>，Chrome 正常。排查已经确认操作在同一个标签页中完成，不能继续用“换了 tab，所以 sessionStorage 丢失”解释。</p>
+ <p>早期问题发生在 SESSION 链路：同一标签页中，Safari 的 iframe 读取返回 <code>null</code>，Chrome 正常。后续又收到 LOCAL 反馈：PC 的 Chrome、Safari 可用，手机测试的浏览器返回空值。用户确认两边都选了 <code>localStorage</code>，因此后续排查重点是 key、实际 origin、写入上下文与存储分区。</p>
  <div class="table-wrap"><table><caption>现场记录与证据强度</caption><thead><tr><th>已知事实</th><th>能够得出的判断</th><th>不能据此推断</th></tr></thead><tbody>
- <tr><td>同一 tab，认证站与业务站使用同主机不同端口</td><td>属于不同 origin；本次是同站开发场景</td><td>端口不同就一定是不同 site</td></tr>
- <tr><td>Chrome 能取 token，Safari 在 GET 处读到 null</td><td>执行已经进入 iframe 的存储读取逻辑</td><td>所有 null 都由分区导致，或者 token 一定没有写入</td></tr>
- <tr><td>用户验证 LOCAL 探针：顶层写，iframe 读，成功</td><td>当前 Safari 环境的 localStorage 可用于这条链路的共享</td><td>所有 Safari 版本、隐私设置、生产跨站场景都可读</td></tr>
+ <tr><td>早期 SESSION：同一 tab，认证站与业务站使用同主机不同端口</td><td>属于不同 origin；本次是同站开发场景</td><td>端口不同就一定是不同 site</td></tr>
+ <tr><td>早期 SESSION：Chrome 能取 token，Safari 在 GET 处读到 null</td><td>执行已经进入 iframe 的存储读取逻辑</td><td>所有 null 都由分区导致，或者 token 一定没有写入</td></tr>
+ <tr><td>早期 LOCAL 探针成功；后续反馈 PC Chrome、Safari 可读</td><td>对应桌面环境下，这条 LOCAL 链路可用</td><td>手机、其他版本、隐私模式及不同部署拓扑也必然可读</td></tr>
+ <tr><td>后续手机测试返回 null，两边均选择 localStorage</td><td>优先核对响应事件、key、origin 与顶层／iframe 上下文</td><td>已经证明分区是唯一原因，或所有手机浏览器必然失败</td></tr>
  </tbody></table></div>
- <p>此前把 Safari 的一般分区规则直接推导为“localStorage 也必然失败”，属于过度概括，应由实测结果纠正。<strong>本次 LOCAL 探针成功需要保留；SESSION 差异则从存储边界解释。</strong>未记录浏览器精确版本、普通／无痕模式和隐私设置，文章不补造这些测试条件，也不把探针成功写成完整 SSO 验收通过。</p>
+ <p><strong>保留桌面 LOCAL 成功的记录，同时补充手机失败的反馈。</strong>前者不能覆盖后者，后者也不能推翻前者。手机系统、浏览器精确版本、普通／无痕模式、实际地址及写入位置仍需补齐；本文把存储分区列为优先验证方向，不将推断写成已完成的手机实测。</p>
  <p class="fine">脱敏约定：以 A 表示认证 origin，以 B 表示业务 origin。文中的 <code>auth.example.com</code>、<code>app.example.com</code> 为示意域名；开发端口记作 <code>P_AUTH</code>、<code>P_APP</code>，不是可直接访问的地址。仅保留定位实现所必需的相对代码路径与类名。</p>
 </section>
 <section id="details" class="section">
@@ -91,6 +92,7 @@ caption{text-align:left;padding:13px 18px;background:#ffffff03;font-weight:600;c
 </tbody></table></div>
 <p>因此，讨论“跨域 SSO”时，应进一步说清是<strong>跨 origin 但同 site</strong>，还是<strong>真正跨 site</strong>。把域名字符串简单截掉第一段来计算 site 也不可靠，可注册域取决于 Public Suffix List。</p>
 <span class="source">概念依据：<a href="https://web.dev/articles/same-site-same-origin" target="_blank" rel="noopener noreferrer">web.dev · Same-site and same-origin ↗</a>。</span>
+<div class="note cyan"><strong>“同域”需要拆成同源与同站</strong><p>顶层页面与直接嵌入的 iframe 若协议、完整主机名、端口都相同，且没有 sandbox 等额外隔离，通常共享 localStorage；iframe 本身不会天然得到一份全新的存储。<code>app.example.com</code> 与 <code>auth.example.com</code> 则是同站、不同源。这里要比较的是认证页两次执行：<strong>A 独立打开</strong>与<strong>B 顶层下的 A iframe</strong>，两次 A 的 origin 相同，但顶层环境不同。</p></div>
 <div class="note"><strong>sessionStorage 不是服务端登录 Session</strong><p>浏览器的页面会话决定客户端数据放在哪、活多久；服务端会话／token 校验决定请求能否被授权。浏览器读取不到本地 token，并不能证明服务端会话已经失效。</p></div>
 </section><section id="session-model" class="subsection"><h3><span class="step">STEP 02</span>sessionStorage 的基础边界：标签页内仍按 origin 分组</h3>
 <p>规范层面，session storage 随顶层可遍历上下文维护，并通过 storage key 找到对应存储区域。入门时可以把它理解为 <code>页面会话 × 存储 origin</code>，再叠加浏览器实际的隐私分区规则。单独写“sessionStorage 只按标签页隔离”是不完整的。</p>
@@ -109,7 +111,7 @@ caption{text-align:left;padding:13px 18px;background:#ffffff03;font-weight:600;c
  <tr><td>关闭页面／恢复会话</td><td>正常关闭结束页面会话，但恢复行为也需验证；不能用“关 tab”替代服务端注销。</td></tr>
 </tbody></table></div>
 <span class="source">生命周期与 opener：<a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage" target="_blank" rel="noopener noreferrer">MDN · Window.sessionStorage ↗</a>。</span>
-</section><section id="safari-chrome" class="subsection"><h3><span class="step">STEP 03</span>核心问题：Safari 读不到，Chrome 能读到，边界差在哪里？</h3>
+</section><section id="safari-chrome" class="subsection"><h3><span class="step">STEP 03</span>早期 SESSION 案例：Safari 与 Chrome 的边界差在哪里？</h3>
 <p><strong>读写代码都属于认证 origin A，变化的是 A 所处的顶层上下文。</strong>登录时 top = A；回跳业务站之后，top = B、iframe = A。即使 tab 没变，浏览器也可能把这两次访问映射到不同存储区。</p>
 <div class="boundary-grid">
  <div class="panel boundary-card"><span class="pill">写入阶段</span><h4>认证站作为顶层页面</h4><p>页面会话 T<br>顶层 origin：A<br>存储 origin：A</p><div class="storage-key">T × A × A</div></div>
@@ -125,12 +127,30 @@ caption{text-align:left;padding:13px 18px;background:#ffffff03;font-weight:600;c
  <tr><td>现代 Chrome，简化单层场景</td><td>page session × top-level site × storage origin；复杂嵌套另有条件</td></tr>
 </tbody></table></div>
 <span class="source">Chrome 实现依据：<a href="https://privacysandbox.google.com/cookies/storage-partitioning" target="_blank" rel="noopener noreferrer">Chrome · Storage Partitioning ↗</a>。</span>
-<div class="note cyan"><strong>准确的归纳</strong><p>本次问题的核心，是浏览器对 <code>sessionStorage</code> 存储边界的划分不同。口语上说“不是同一个 session”能够描述现象，文章中应进一步明确：<strong>是可见的客户端存储分区不同，不是 iframe 天然创建了一个新标签页，也不是服务端 Session 发生变化。</strong></p></div>
-</section><section id="local-and-probe" class="subsection"><h3><span class="step">STEP 04</span>LOCAL 实测通过：先验证，再选择存储类型</h3>
-<p>用户进一步测试了 localStorage：在认证站顶层写入探针，再在业务页内的认证 iframe 读取，结果成功。这证明<strong>当前本地环境、当前设置、当前嵌入结构下，LOCAL 可以共享</strong>；它足以支持在这条链路上尝试统一使用 LOCAL。</p>
+<div class="note cyan"><strong>准确的归纳</strong><p>针对早期 SESSION 现象，顶层分区边界差异是与官方实现相符的解释，仍应通过相同 key 与上下文探针验证。口语上的“不是同一个 session”含义不清：<strong>需要核对客户端可见的存储分区；iframe 并不会天然创建新标签页，也不能据此判断服务端 Session 已变化。</strong>手机 LOCAL 的后续反馈按下一节单独排查。</p></div>
+</section><section id="local-and-probe" class="subsection"><h3><span class="step">STEP 04</span>LOCAL 也要逐环境验证：桌面成功，手机为何返回 null？</h3>
+<p>早期顶层写入、iframe 读取的 LOCAL 探针成功，后续 PC 的 Chrome 与 Safari 测试也反馈可读。但手机测试返回 null，且两边都是 localStorage。<strong>改成 LOCAL 只改变存储类型，不能保证不同顶层上下文访问同一个区域。</strong></p>
 <p>localStorage 通常不随单个标签页结束而清空，但“保存得更久”和“跨分区可见”是两个问题。WebKit 也记录过 localStorage 分区行为及其与隐私设置的关系，因此不能从这次成功推断用户关闭了某个设置，也不能把 LOCAL 写成所有 Safari 场景的通用修复。</p>
 <span class="source">适用边界：<a href="https://bugs.webkit.org/show_bug.cgi?id=273193#c10" target="_blank" rel="noopener noreferrer">WebKit #273193 · LocalStorage 分区 ↗</a>。</span>
-<h4>推荐的最小复现：用无敏感内容的探针分离变量</h4>
+<h4 id="local-contexts">同一个认证 origin，为什么还可能读到不同的数据？</h4>
+<div class="table-wrap"><table><caption>localStorage 顶层边界示意：A = auth.example.com，B = app.example.com，均使用 HTTPS</caption><thead><tr><th>认证页的运行方式</th><th>顶层 origin</th><th>存储 origin</th><th>WebKit 分区教学模型</th></tr></thead><tbody>
+ <tr><td>独立打开认证页 A</td><td>A</td><td>A</td><td><code>A × A</code></td></tr>
+ <tr><td>业务页 B 嵌入认证页 A</td><td>B</td><td>A</td><td><code>B × A</code></td></tr>
+</tbody></table></div>
+<p>WebKit 工程师在 localStorage 跨子域共享问题中确认了按 origin 分区的设计，以及它与隐私设置的关系。即使 A、B 属于同一主域，也可能得到不同区域。上表是帮助理解该实现的简化模型，不是所有浏览器统一的公式，也不是对本次手机内部存储键的直接观测。</p>
+<p>Chrome 的分区通常考虑顶层 site、存储 origin 及跨站祖先条件，同站子域与真正跨站应分别验证。桌面 Safari 成功时，还要对照手机的版本、隐私设置和写入位置；不能只凭“同一个浏览器名称”推断两端规则相同。</p>
+<span class="source">官方实现说明：<a href="https://bugs.webkit.org/show_bug.cgi?id=273193#c10" target="_blank" rel="noopener noreferrer">WebKit · LocalStorage 分区</a> · <a href="https://privacysandbox.google.com/cookies/storage-partitioning" target="_blank" rel="noopener noreferrer">Chrome · 顶层 site 与祖先条件</a>。</span>
+<h4 id="mobile-probe">手机端最短排查路径：在当前 iframe 内写，再从父页读</h4>
+<p>当前两个调试页都固定使用 <code>hello</code>，它是测试 key。真正登录 token 的 key 由 <code>TOKEN_KEY</code> 配置。只有匹配 GET 请求的 <code>storage-result</code> 或 <code>response-received</code> 中 <code>value = null</code> 且没有 <code>error</code>，才应按“当前可见区域没有该 key”分析；单独一条请求到达事件不能证明读取结果。</p>
+<ol>
+ <li>手机打开业务读取页，保持当前顶层页面；在页面下方已经嵌入的认证调试 iframe 内选择 localStorage，写入 <code>hello = mobile-probe-v1</code>。</li>
+ <li>立即点击 iframe 自己的读取按钮，确认写入成功；记录所选 storage、key、当前 origin 与事件类型。</li>
+ <li>在同一个页面上，父页也选择 localStorage，再点击读取按钮；对照 requestId，确认是否读到相同的探针值。</li>
+ <li>再比较独立打开认证页时同一 key 的值。若 iframe 自读和父页代读一致，而独立页不同，在排除 URL、模式及写入失败差异后，强烈支持存储上下文隔离。</li>
+</ol>
+<div class="note"><strong>根据结果继续定位</strong><p>iframe 自己也读不到刚写入的值：先检查写入错误与 key。iframe 自读有值、父页返回 null：先核对请求的 storage、key、目标 frame 与部署版本。只有上下文改变时值发生差异，才进一步验证分区。测试完成后分别清理各上下文的测试 key。</p></div>
+<p class="fine">源码复核没有发现 GET 正常值被转换为 null：代理直接返回 getItem 的结果，异常会附 error，客户端收到 error 会拒绝 Promise。另有待补齐的 event.source 校验，见后文加固章节；目前没有证据把它认定为此次手机空值的原因。模拟环境中的逻辑检查也不能替代真实手机的分区验证。</p>
+<h4>通用探针：在开发者工具中分别比较 SESSION 与 LOCAL</h4>
 <div class="codebox"><div class="code-header"><span>诊断示例 1 / 顶层写入两个独立 Storage</span><button type="button" class="copy">复制</button></div><pre tabindex="0"><code class="language-javascript">// 在认证站的顶层页面执行；这是测试值，不是真实 token。
 (() =&gt; {
   const key = &#x27;__storage_boundary_probe__&#x27;;
@@ -163,7 +183,7 @@ caption{text-align:left;padding:13px 18px;background:#ffffff03;font-weight:600;c
  <li>先确认顶层写入成功，再在 iframe 中读取，避免把“未写入”误判成“被分区”。</li>
  <li>比较同一 key、同一 storage 类型；切换 LOCAL 后重新登录，SESSION 数据不会自动搬过去。</li>
  <li>如果 LOCAL 可读而 SESSION 不可读，支持按存储边界继续排查；如果都不可读，还应检查实际地址、上下文、写入失败和浏览器策略。</li>
- <li>本次 LOCAL 只完成探针验证；token 获取、刷新、多标签、登出与生产域名仍应单独验收。</li>
+ <li>LOCAL 的成功记录只覆盖对应探针环境；手机、真实 token 获取、刷新、多标签、登出与生产拓扑仍应单独验收。</li>
 </ol>
 </section><section id="rpc-architecture" class="subsection"><h3><span class="step">STEP 05</span>iframe + postMessage：把跨域访问转换为客户端 RPC</h3>
 <p>业务页不能直接取得跨源 iframe 的 Storage 对象。它持有 <code>iframe.contentWindow</code>，向这个窗口发送操作描述；认证 iframe 收到消息后，在<strong>自己的执行上下文与存储权限</strong>内完成操作，再把结果发回业务页。</p>
@@ -374,7 +394,23 @@ window.parent.postMessage(response, parentOrigin);</code></pre></div>
  <tr><td>token 是否有效、能否访问某个资源</td><td>服务端认证与授权。</td></tr>
 </tbody></table></div>
 <span class="source">网络层边界：<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS" target="_blank" rel="noopener noreferrer">MDN · CORS ↗</a>。</span>
-<div class="note cyan"><strong>对当前案例的落地判断</strong><p>LOCAL 探针已经通过，可以统一登录写入端与业务读取端的配置，重新登录，再验证完整链路。若另一部署拓扑中存储确实被隔离，应选择同源入口、Cookie 会话或顶层授权码回跳等认证设计；不要试图用 RPC 合并分区，也不要把长期 token 直接放进 URL。</p></div>
+<div class="note cyan"><strong>先确认分区，再选择登录方案</strong><p>桌面 LOCAL 成功支持继续验证该环境；手机反馈则需要完成前面的上下文探针。若确认顶层认证页与嵌入代理的数据隔离，扩大 allowlist、开启 CROS_DEBUG 或延长 RPC 超时都不能合并两个分区。登录态共享需要建立在目标浏览器支持的会话机制上。</p></div>
+<h4 id="sso-alternatives">确认隔离后的方案：各业务站建立自己的登录态</h4>
+<p>当前 Fetcher 先取 token，再写入 Authorization；上传与 WebSocket 也依赖 token。希望保留这套接口时，优先评估<strong>顶层认证回跳 + 一次性授权码兑换</strong>：替换 iframe 取登录材料的环节，各业务站在自己的上下文中保存或管理兑换后的凭据。</p>
+<div class="panel diagram-code" role="img" aria-label="业务页跳转认证页，认证后携带一次性 code 回跳，业务端兑换 token 并建立本地登录态">业务站 B 发起登录
+  → 顶层导航至认证站 A
+  → A 确认登录态，服务端签发短期、一次性的 code
+  → 回到 B 的已登记回调地址，携带 code 与 state
+  → B 按协议向服务端兑换 token
+  → B 建立自己的登录态，继续发出 Authorization 请求</div>
+<p>采用成熟的授权码协议时，配套精确回调地址校验、请求绑定与 PKCE 等要求；前端公共客户端不能保管 client secret。URL 只传短期一次性 code，长期凭据通过受保护的兑换流程获取。当前前端尚未发现授权码签发与兑换接口，<strong>这是需要后端配合的迁移建议，并非已实现功能</strong>。</p>
+<div class="table-wrap"><table><thead><tr><th>方案</th><th>如何建立登录态</th><th>项目适配范围</th></tr></thead><tbody>
+ <tr><td>顶层授权码回跳</td><td>认证站以顶层方式访问自己的登录态；业务站兑换凭据并管理本地登录态。</td><td>可保留现有 Authorization 消费方式；需要授权码服务、回调、凭据生命周期及登出流程。</td></tr>
+ <tr><td>服务端 Cookie 会话</td><td>API 设置 HttpOnly、Secure 会话 Cookie；业务前端请求 API 时携带凭据。</td><td>需要后端会话鉴权、credentials 配置、精确的凭据 CORS 和 CSRF 防护；上传、WebSocket、退出登录也需适配。</td></tr>
+ <tr><td>统一到真正同源的入口</td><td>页面与相关存储逻辑在同一协议、主机和端口下运行。</td><td>需要部署及访问路径统一，并设计旧数据迁移；仅反向代理一个 iframe 地址不会自动迁移旧 origin 的存储。</td></tr>
+</tbody></table></div>
+<p>若业务都请求同一个 <code>api.example.com</code>，Cookie 会话可以限定在该 API 主机，不必默认给所有子域共享 Cookie。跨站部署仍需单独评估凭据策略；Cookie 方案不能被概括为绕过一切浏览器限制。</p>
+<span class="source">迁移依据：<a href="https://www.rfc-editor.org/rfc/rfc9700.html" target="_blank" rel="noopener noreferrer">RFC 9700 · OAuth 2.0 安全最佳实践</a> · <a href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/" target="_blank" rel="noopener noreferrer">WebKit · 登录集成与服务端会话建议</a>。项目适配判断来自当前前端源码，未审查后端实现。</span>
 <p>隐藏 iframe 中直接调用 <code>requestStorageAccess()</code> 也不是自动修复。应核对目标浏览器、存储类型、用户手势及权限要求；Cookie 的授权不能直接当作 Web Storage 的解分区保证。</p>
 <span class="source">API 背景：<a href="https://webkit.org/blog/8124/introducing-storage-access-api/" target="_blank" rel="noopener noreferrer">WebKit · Introducing Storage Access API ↗</a>；该早期说明用于解释 Cookie 与其他存储的区别，不作为所有新版本功能支持表。</span>
 </section><section id="hardening" class="subsection"><h3><span class="step">STEP 12</span>以当前源码为准：已有能力与需要补强的部分</h3>
@@ -405,9 +441,9 @@ if (event.origin !== parentOrigin ||
 <p class="fine">另外，同源分支先同步执行 Storage 方法，再包 Promise.resolve；存储异常可能同步抛出。不能把所有分支描述为已经统一的异步异常模型。当前 Utils.randomUUID 使用随机字符串拼接，其用途应限定为请求关联。</p>
 </section><section id="verification" class="subsection"><h3><span class="step">STEP 13</span>验证矩阵：分别验收消息、存储与登录态</h3>
 <div class="table-wrap"><table><thead><tr><th>维度</th><th>至少覆盖</th><th>记录内容</th></tr></thead><tbody>
- <tr><td>浏览器与设置</td><td>Safari / Chrome，普通与无痕窗口</td><td>精确版本、隐私设置；不要混合不同配置的结果。</td></tr>
+ <tr><td>浏览器与设置</td><td>桌面 Safari / Chrome 与目标手机浏览器；普通与无痕窗口</td><td>精确版本、隐私设置；不要混合不同配置的结果。</td></tr>
  <tr><td>站点拓扑</td><td>本地不同端口、同站子域、真正跨站</td><td>顶层 origin/site、iframe origin、跳转链。</td></tr>
- <tr><td>存储类型</td><td>SESSION 与 LOCAL；同一 key 分别验证</td><td>顶层写入结果、iframe 读取结果、异常类型。</td></tr>
+ <tr><td>存储类型</td><td>SESSION 与 LOCAL；同一 key 分别验证</td><td>顶层写入、iframe 内自写自读、父页代读的结果及异常类型。</td></tr>
  <tr><td>页面生命周期</td><td>同 tab 回跳、刷新、新 tab、关闭再开</td><td>存储是否保留、是否是 opener 初始副本。</td></tr>
  <tr><td>RPC 行为</td><td>INIT 延迟、并发请求、null、执行错误、超时</td><td>每个 requestId 是否恰好结束一次，监听器是否释放。</td></tr>
  <tr><td>真实登录链路</td><td>登录、接口鉴权、登出、token 过期</td><td>共享到字符串后，后端是否仍正确认证与拒绝失效 token。</td></tr>
@@ -416,12 +452,13 @@ if (event.origin !== parentOrigin ||
 </section></section>
 <section id="summary" class="section">
  <div class="section-heading"><span class="section-number">04 /</span><h2>总结归纳</h2></div>
- <div class="closing"><p class="eyebrow">BOUNDARY FIRST · RPC SECOND</p><h3 class="gradient-text">先明确存储边界，再设计跨窗口调用。</h3><p><strong>本次 Safari 的 sessionStorage 不可读，而 Chrome 可读，关键在于浏览器对存储边界的划分不同。</strong>同一个 tab、相同认证 origin，不足以排除顶层上下文引起的分区差异。</p><p>客户端 RPC 将“直接取得另一源的 Storage”改为“请该源的 iframe 代为执行”。CrosStorage 负责请求与等待，cros-storage 页面负责校验、执行与返回。它能传递执行结果，但不能改变执行端能够看到的数据范围。</p></div>
+ <div class="closing"><p class="eyebrow">BOUNDARY FIRST · RPC SECOND</p><h3 class="gradient-text">先明确存储边界，再设计跨窗口调用。</h3><p><strong>同源与同站要区分，存储持久性与跨分区可见性也要区分。</strong>真正同源的顶层页面与 iframe 通常共享 localStorage；同一认证 origin 从独立页变为另一源下的 iframe，则可能进入不同分区。桌面 LOCAL 成功与手机空值是分别成立的反馈，手机根因仍需验证。</p><p>客户端 RPC 将“直接取得另一源的 Storage”改为“请该源的 iframe 代为执行”。CrosStorage 负责请求与等待，cros-storage 页面负责校验、执行与返回。它能传递执行结果，但不能改变执行端能够看到的数据范围。</p></div>
  <ol class="rule-list">
   <li><span><strong>讨论边界：</strong>origin、site、页面会话和存储分区分别说明，不把“跨域”当作单一条件。</span></li>
-  <li><span><strong>尊重实测：</strong>当前 LOCAL 探针成功是有效证据；SESSION 的问题不能推广成 LOCAL 必然失败。</span></li>
+  <li><span><strong>尊重实测：</strong>桌面 LOCAL 成功不保证手机成功，手机失败也不证明所有环境必然隔离；按版本、设置和拓扑分别验收。</span></li>
   <li><span><strong>区分成功：</strong>消息送达、存储命中、后端认证成功是三个不同结果。</span></li>
   <li><span><strong>协议闭环：</strong>就绪握手、requestId、响应校验、错误、超时与清理共同构成可用的客户端 RPC。</span></li>
+  <li><span><strong>确认隔离后迁移：</strong>按项目约束选择授权码回跳、服务端 Cookie 会话或同源入口，让各业务站可靠地建立登录态。</span></li>
  </ol>
 </section>
 <section id="sources" class="section">
@@ -430,11 +467,12 @@ if (event.origin !== parentOrigin ||
  <div class="table-wrap"><table><thead><tr><th>代码标识</th><th>本文中的职责</th></tr></thead><tbody>
  <tr><td><code>common/lib/CrosStorage.ts</code></td><td>客户端 stub、同源分支、iframe 初始化、请求生命周期。</td></tr>
  <tr><td><code>(cros)/cros-storage/page.tsx</code></td><td>代理端基础校验、命令分发、Storage 操作与响应。</td></tr>
+ <tr><td><code>(cros)/cros-storage-debug/page.tsx</code></td><td>固定 hello 测试 key 的手动读写、存储事件与 iframe 上下文探针。</td></tr>
  <tr><td><code>CrosProtocol.ts / Env.ts</code></td><td>协议字段、存储配置与来源 allowlist。</td></tr>
  <tr><td><code>sign-in/page.tsx / Fetcher.ts</code></td><td>登录后写入 token，调用 API 前读取 token。</td></tr>
  <tr><td><code>CrosStorageHook.tsx / LoginUser.ts</code></td><td>实例生命周期与用户界面缓存；不能替代服务端鉴权。</td></tr>
  </tbody></table></div>
- <ol class="sources"><li><span class="ref-number">[01]</span><div><a href="https://storage.spec.whatwg.org/#storage-keys" target="_blank" rel="noopener noreferrer">WHATWG · Storage keys 与 Storage sheds ↗</a><p>规范基础模型、origin 与页面会话的关系。</p></div></li><li><span class="ref-number">[02]</span><div><a href="https://html.spec.whatwg.org/multipage/webstorage.html" target="_blank" rel="noopener noreferrer">WHATWG · Web storage ↗</a><p>Storage 接口、存储区域与用户代理的隐私策略。</p></div></li><li><span class="ref-number">[03]</span><div><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage" target="_blank" rel="noopener noreferrer">MDN · Window.sessionStorage ↗</a><p>页面会话、刷新、opener 初始复制与标签页生命周期。</p></div></li><li><span class="ref-number">[04]</span><div><a href="https://web.dev/articles/same-site-same-origin" target="_blank" rel="noopener noreferrer">web.dev · Same-site and same-origin ↗</a><p>协议、主机、端口与可注册域的区别。</p></div></li><li><span class="ref-number">[05]</span><div><a href="https://bugs.webkit.org/show_bug.cgi?id=247565#c8" target="_blank" rel="noopener noreferrer">WebKit #247565 · SessionStorage 分区 ↗</a><p>工程师解释顶层 origin 与 frame origin 的分区边界；该记录可解释本文 SESSION 现象。</p></div></li><li><span class="ref-number">[06]</span><div><a href="https://privacysandbox.google.com/cookies/storage-partitioning" target="_blank" rel="noopener noreferrer">Chrome · Storage Partitioning ↗</a><p>现代 Chrome 也分区，需考虑顶层 site 和嵌套跨站祖先。</p></div></li><li><span class="ref-number">[07]</span><div><a href="https://bugs.webkit.org/show_bug.cgi?id=273193#c10" target="_blank" rel="noopener noreferrer">WebKit #273193 · LocalStorage 分区 ↗</a><p>localStorage 并非全环境免分区；设置与拓扑需要实测。</p></div></li><li><span class="ref-number">[08]</span><div><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage" target="_blank" rel="noopener noreferrer">MDN · Window.postMessage ↗</a><p>消息异步传递、结构化克隆、targetOrigin、origin 与 source。</p></div></li><li><span class="ref-number">[09]</span><div><a href="https://html.spec.whatwg.org/multipage/web-messaging.html#crossDocumentMessages" target="_blank" rel="noopener noreferrer">WHATWG · Cross-document messaging ↗</a><p>跨文档通信、安全检查与应用层协议。</p></div></li><li><span class="ref-number">[10]</span><div><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS" target="_blank" rel="noopener noreferrer">MDN · CORS ↗</a><p>网络响应读取许可，与窗口消息和存储可见性分开理解。</p></div></li><li><span class="ref-number">[11]</span><div><a href="https://webkit.org/blog/8124/introducing-storage-access-api/" target="_blank" rel="noopener noreferrer">WebKit · Introducing Storage Access API ↗</a><p>解释 API 最初围绕 Cookie 的权限设计；不能假设一次调用就会合并 Web Storage。</p></div></li><li><span class="ref-number">[12]</span><div><a href="https://react.dev/reference/react/useEffect" target="_blank" rel="noopener noreferrer">React · useEffect ↗</a><p>浏览器端监听器注册与清理的生命周期。</p></div></li></ol></section></main><aside class="toc" aria-label="文章目录"><p class="eyebrow">ON THIS PAGE</p><a href="#conclusion" class="">01　结论先行</a><a href="#background" class="">02　问题背景</a><a href="#details" class="">03　详细内容</a><a href="#boundary" class="sub">源与站点边界</a><a href="#session-model" class="sub">SESSION 基础模型</a><a href="#safari-chrome" class="sub">Safari / Chrome 差异</a><a href="#local-and-probe" class="sub">LOCAL 与探针验证</a><a href="#rpc-architecture" class="sub">客户端 RPC 架构</a><a href="#protocol" class="sub">协议与请求关联</a><a href="#bootstrap" class="sub">初始化与 INIT</a><a href="#request" class="sub">调用端 request()</a><a href="#executor" class="sub">代理端执行</a><a href="#rpc-lab" class="sub">RPC 交互演示</a><a href="#sso-flow" class="sub">SSO 完整链路</a><a href="#hardening" class="sub">现状与加固建议</a><a href="#verification" class="sub">验证矩阵</a><a href="#summary" class="">04　总结归纳</a><a href="#sources" class="">05　官方依据</a><div class="toc-bottom"><p>现场实测、浏览器规则与源码现状分别说明。</p><a href="#top">返回顶部 ↑</a></div></aside></div></div>
+ <ol class="sources"><li><span class="ref-number">[01]</span><div><a href="https://storage.spec.whatwg.org/#storage-keys" target="_blank" rel="noopener noreferrer">WHATWG · Storage keys 与 Storage sheds ↗</a><p>规范基础模型、origin 与页面会话的关系。</p></div></li><li><span class="ref-number">[02]</span><div><a href="https://html.spec.whatwg.org/multipage/webstorage.html" target="_blank" rel="noopener noreferrer">WHATWG · Web storage ↗</a><p>Storage 接口、存储区域与用户代理的隐私策略。</p></div></li><li><span class="ref-number">[03]</span><div><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/sessionStorage" target="_blank" rel="noopener noreferrer">MDN · Window.sessionStorage ↗</a><p>页面会话、刷新、opener 初始复制与标签页生命周期。</p></div></li><li><span class="ref-number">[04]</span><div><a href="https://web.dev/articles/same-site-same-origin" target="_blank" rel="noopener noreferrer">web.dev · Same-site and same-origin ↗</a><p>协议、主机、端口与可注册域的区别。</p></div></li><li><span class="ref-number">[05]</span><div><a href="https://bugs.webkit.org/show_bug.cgi?id=247565#c8" target="_blank" rel="noopener noreferrer">WebKit #247565 · SessionStorage 分区 ↗</a><p>工程师解释顶层 origin 与 frame origin 的分区边界；该记录可解释本文 SESSION 现象。</p></div></li><li><span class="ref-number">[06]</span><div><a href="https://privacysandbox.google.com/cookies/storage-partitioning" target="_blank" rel="noopener noreferrer">Chrome · Storage Partitioning ↗</a><p>现代 Chrome 也分区，需考虑顶层 site 和嵌套跨站祖先。</p></div></li><li><span class="ref-number">[07]</span><div><a href="https://bugs.webkit.org/show_bug.cgi?id=273193#c10" target="_blank" rel="noopener noreferrer">WebKit #273193 · LocalStorage 分区 ↗</a><p>localStorage 并非全环境免分区；设置与拓扑需要实测。</p></div></li><li><span class="ref-number">[08]</span><div><a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage" target="_blank" rel="noopener noreferrer">MDN · Window.postMessage ↗</a><p>消息异步传递、结构化克隆、targetOrigin、origin 与 source。</p></div></li><li><span class="ref-number">[09]</span><div><a href="https://html.spec.whatwg.org/multipage/web-messaging.html#crossDocumentMessages" target="_blank" rel="noopener noreferrer">WHATWG · Cross-document messaging ↗</a><p>跨文档通信、安全检查与应用层协议。</p></div></li><li><span class="ref-number">[10]</span><div><a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS" target="_blank" rel="noopener noreferrer">MDN · CORS ↗</a><p>网络响应读取许可，与窗口消息和存储可见性分开理解。</p></div></li><li><span class="ref-number">[11]</span><div><a href="https://webkit.org/blog/8124/introducing-storage-access-api/" target="_blank" rel="noopener noreferrer">WebKit · Introducing Storage Access API ↗</a><p>解释 API 最初围绕 Cookie 的权限设计；不能假设一次调用就会合并 Web Storage。</p></div></li><li><span class="ref-number">[12]</span><div><a href="https://react.dev/reference/react/useEffect" target="_blank" rel="noopener noreferrer">React · useEffect ↗</a><p>浏览器端监听器注册与清理的生命周期。</p></div></li><li><span class="ref-number">[13]</span><div><a href="https://www.rfc-editor.org/rfc/rfc9700.html" target="_blank" rel="noopener noreferrer">RFC 9700 · OAuth 2.0 安全最佳实践 ↗</a><p>授权码、PKCE、回调地址与凭据保护；迁移应采用成熟协议。</p></div></li><li><span class="ref-number">[14]</span><div><a href="https://webkit.org/blog/10218/full-third-party-cookie-blocking-and-more/" target="_blank" rel="noopener noreferrer">WebKit · Third-Party Cookie Blocking and More ↗</a><p>跨站登录集成与服务端会话的设计方向。</p></div></li></ol></section></main><aside class="toc" aria-label="文章目录"><p class="eyebrow">ON THIS PAGE</p><a href="#conclusion" class="">01　结论先行</a><a href="#background" class="">02　问题背景</a><a href="#details" class="">03　详细内容</a><a href="#boundary" class="sub">源与站点边界</a><a href="#session-model" class="sub">SESSION 基础模型</a><a href="#safari-chrome" class="sub">Safari / Chrome 差异</a><a href="#local-and-probe" class="sub">LOCAL 与手机差异</a><a href="#local-contexts" class="sub">同源、同站与顶层环境</a><a href="#mobile-probe" class="sub">手机 iframe 验证步骤</a><a href="#rpc-architecture" class="sub">客户端 RPC 架构</a><a href="#protocol" class="sub">协议与请求关联</a><a href="#bootstrap" class="sub">初始化与 INIT</a><a href="#request" class="sub">调用端 request()</a><a href="#executor" class="sub">代理端执行</a><a href="#rpc-lab" class="sub">RPC 交互演示</a><a href="#sso-flow" class="sub">SSO 完整链路</a><a href="#sso-alternatives" class="sub">授权码与 Cookie 方案</a><a href="#hardening" class="sub">现状与加固建议</a><a href="#verification" class="sub">验证矩阵</a><a href="#summary" class="">04　总结归纳</a><a href="#sources" class="">05　官方依据</a><div class="toc-bottom"><p>现场实测、浏览器规则与源码现状分别说明。</p><a href="#top">返回顶部 ↑</a></div></aside></div></div>
 <footer class="footer"><div class="wrap footer-inner"><div><strong>sparrow</strong> / 前端工程手记 · Web Storage 与客户端 RPC</div><div><a href="/zh/#docs">返回文档目录</a>　<a href="#top">返回顶部 ↑</a></div></div></footer><div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <script>
 (() => {

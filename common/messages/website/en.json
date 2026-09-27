@@ -315,8 +315,8 @@
     "read": "Read guide",
     "items": {
       "session-storage-boundaries-postmessage-sso": {
-        "title": "sessionStorage Boundaries and Client RPC for Cross-Origin SSO",
-        "description": "Explain why Safari and Chrome differ in sessionStorage visibility, then trace CrosStorage and its iframe endpoint through the postMessage RPC protocol, SSO flow, and diagnostic checks."
+        "title": "Web Storage and Cross-Origin SSO: From Safari Differences to Client RPC",
+        "description": "Distinguish same-origin from same-site, examine sessionStorage boundaries and possible mobile localStorage partitioning, diagnose postMessage exchanges, and compare authorization-code and Cookie session migration paths."
       },
       "nginxHttpsLaunch": {
         "title": "Enabling HTTPS across the site with Nginx",
