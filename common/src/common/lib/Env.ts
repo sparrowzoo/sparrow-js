@@ -8,6 +8,7 @@ const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY as string;
 
 const NEXT_ASSET_PREFIX = process.env.NEXT_PUBLIC_ASSET_PREFIX || "";
 const STORAGE_PROXY = process.env.NEXT_PUBLIC_STORAGE_PROXY;
+const CROS_DEBUG = process.env.NEXT_PUBLIC_CROS_DEBUG === "true";
 const CAPTCHA_URL = process.env.NEXT_PUBLIC_CAPTCHA_URL;
 
 const LOGIN_URL = process.env.NEXT_PUBLIC_LOGIN_URL;
@@ -49,6 +50,7 @@ export {
     IM_ROOT,
     CODER_ROOT,
     STORAGE_PROXY,
+    CROS_DEBUG,
     API_BASIC_URL,
     TOKEN_KEY,
     TOKEN_STORAGE,
