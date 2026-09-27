@@ -58,7 +58,7 @@
     }
   },
   "MessageBroker": {
-    "token-not-found": "无访问权限，请先登录哟",
+    "token-not-found": "未发现有效token,请先登录！",
     "token-is-visitor": "游客无访问权限，请先登录哟",
     "shake-hands-no-login": "握手失败，请先登录哟，回来志哥陪你砍JAVA！",
     "user_token_abnormal": "请先登录哟，回来志哥陪你砍JAVA！",
