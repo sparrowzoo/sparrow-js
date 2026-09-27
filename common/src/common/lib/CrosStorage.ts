@@ -1,6 +1,6 @@
 "use client";
 import {CommandType, StorageRequest, StorageResponse, StorageType,} from "@/common/lib/protocol/CrosProtocol";
-import {STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE} from "@/common/lib/Env";
+import {CROS_DEBUG, STORAGE_PROXY, TOKEN_KEY, TOKEN_STORAGE} from "@/common/lib/Env";
 import {Utils} from "@/common/lib/Utils";
 import UrlUtils from "@/common/lib/UrlUtils";
 import LoginUser from "@/common/lib/protocol/LoginUser";
@@ -50,8 +50,15 @@ export default class CrosStorage {
     private pending = new Set<() => void>();
     private cros: boolean = false;
     private stopMonitoringFrame?: () => void;
+    private readonly monitor?: CrosStorageMonitor;
 
-    private constructor(private readonly monitor?: CrosStorageMonitor) {
+    private constructor(monitor?: CrosStorageMonitor) {
+        // 显式监控优先；调试开关为普通调用补上默认的 JSON 事件输出。
+        this.monitor = monitor ?? (CROS_DEBUG ? {
+            onEvent(event) {
+                console.log(JSON.stringify(event));
+            },
+        } : undefined);
         if (typeof window === "undefined") {
             return;
         }
