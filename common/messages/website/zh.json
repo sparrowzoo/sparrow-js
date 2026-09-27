@@ -314,6 +314,10 @@
     "count": "{count} 篇文档",
     "read": "阅读文档",
     "items": {
+      "session-storage-boundaries-postmessage-sso": {
+        "title": "sessionStorage 边界与跨域 SSO 客户端 RPC",
+        "description": "从 Safari 读不到、Chrome 能读到的 sessionStorage 问题出发，对照 CrosStorage 与 cros-storage 源码，解析存储分区、postMessage 客户端 RPC、登录态共享及验证方法。"
+      },
       "nginxHttpsLaunch": {
         "title": "Nginx 全站 HTTPS 上线",
         "description": "对外域名统一 443 SSL + 80→301 跳转，内部域名保持 80；用 Certbot 只签不改，先签证书再覆盖配置，附域名清单与上线步骤。"
