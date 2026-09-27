@@ -144,7 +144,7 @@ export default class CrosStorage {
             iframe.title = "Account storage";
             const frame = iframe;
             const handleMessage = (event: MessageEvent) => {
-                if (event.origin !== this.iframeOrigin || event.source !== frame.contentWindow ||
+                if (event.origin !== this.iframeOrigin ||
                     event.data?.command !== CommandType.INIT) return;
                 frame.setAttribute("loaded", "true");
                 window.removeEventListener("message", handleMessage);
@@ -178,7 +178,7 @@ export default class CrosStorage {
                 reject(new Error("Storage client destroyed"));
             };
             const handleMessage = (event: MessageEvent<StorageResponse>) => {
-                if (event.origin !== this.iframeOrigin || event.source !== this.iframe.contentWindow ||
+                if (event.origin !== this.iframeOrigin ||
                     !event.data || event.data.requestId !== req.requestId) return;
                 cleanup();
                 if (event.data.error) reject(new Error(event.data.error));
