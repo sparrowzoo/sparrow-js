@@ -22,8 +22,8 @@ export default async function PassportExperience({locale}: {locale: string}) {
             title: t("monolithic.title"),
             caption: t("monolithic.caption"),
             description: t("monolithic.description"),
-            login: "http://api.sparrowzoo.com/login",
-            register: "http://api.sparrowzoo.com/register",
+            login: "https://api.sparrowzoo.com/login",
+            register: "https://api.sparrowzoo.com/register",
         },
     ];
     return <section className={styles.section} id="experience">
