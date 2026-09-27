@@ -1,5 +1,6 @@
 // Public documents use absolute paths so locale prefixes never change their URLs.
 export const documents = [
+    {id: "nginxHttpsLaunch", category: "backend", subcategory: "Nginx", topic: "Nginx", href: "/backend/nginx/nginx-https-launch.html", keywords: "Nginx HTTPS Certbot Let's Encrypt SSL 443 301 证书 签发 续期 X-Forwarded-Proto WebSocket wss 上线 部署"},
     {id: "htmlFragmentEmbed", category: "frontend", subcategory: "React", topic: "React", href: "/frontend/react/html-fragment-embed.html", keywords: "React createRoot useEffect HtmlFragment 嵌入 非React 页面 客服 IM HTML片段 挂件 静态导出 output export"},
     {id: "launchRunbook", category: "backend", subcategory: "Nginx", topic: "Nginx", href: "/backend/nginx/next15-http-launch.html", keywords: "Next.js 15 HTTP WS Nginx static release deploy rollback 上线 操作 构建 发布 回滚 静态"},
     {id: "tencentExmail", category: "backend", subcategory: "Mail", topic: "SMTP / IMAP", href: "/backend/mail/tencent-exmail-client-configuration.html", keywords: "腾讯企业邮箱 企业微信 Tencent Exmail WeCom JavaMail Spring Boot Foxmail Outlook SMTP IMAP POP3 535 授权码 客户端专用密码 authentication"},
