@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { CommandType, StorageRequest, StorageResponse, StorageType, } from '@/common/lib/protocol/CrosProtocol'
-import { allowOrigin, TOKEN_STORAGE } from '@/common/lib/Env'
+import { allowOrigin, TOKEN_STORAGE, WWW_ROOT } from '@/common/lib/Env'
 import { Utils } from '@/common/lib/Utils'
 
 const MAX_EVENTS = 300
+const MANUAL_KEY = 'hello'
 
 function serializeEvent(event: string, data?: unknown) {
     const timestamp = new Date().toISOString()
@@ -35,13 +36,39 @@ function serializeEvent(event: string, data?: unknown) {
 /** The iframe is a static, unlocalized page; storage access runs in the browser. */
 export default function Page() {
     const [events, setEvents] = useState<{ id: number; json: string }[]>([])
+    const [manualStorage, setManualStorage] = useState<StorageType.LOCAL | StorageType.SESSION>(
+        TOKEN_STORAGE === 'SESSION' ? StorageType.SESSION : StorageType.LOCAL
+    )
+    const [manualValue, setManualValue] = useState('')
     const nextEventId = useRef(1)
-    useEffect(() => {
-        const record = (event: string, data?: unknown) => {
-            const entry = { id: nextEventId.current++, json: serializeEvent(event, data) }
-            setEvents(previous => [entry, ...previous].slice(0, MAX_EVENTS))
-        }
+    const record = useCallback((event: string, data?: unknown) => {
+        const entry = { id: nextEventId.current++, json: serializeEvent(event, data) }
+        setEvents(previous => [entry, ...previous].slice(0, MAX_EVENTS))
+    }, [])
 
+    const readManually = () => {
+        const operation = { command: CommandType.GET, storage: manualStorage, key: MANUAL_KEY }
+        try {
+            const storage = manualStorage === StorageType.LOCAL ? window.localStorage : window.sessionStorage
+            const value = storage.getItem(MANUAL_KEY)
+            record('manual-storage-read', { ...operation, value })
+        } catch (error) {
+            record('manual-storage-error', { ...operation, error })
+        }
+    }
+
+    const writeManually = () => {
+        const operation = { command: CommandType.SET, storage: manualStorage, key: MANUAL_KEY, value: manualValue }
+        try {
+            const storage = manualStorage === StorageType.LOCAL ? window.localStorage : window.sessionStorage
+            storage.setItem(MANUAL_KEY, manualValue)
+            record('manual-storage-write', operation)
+        } catch (error) {
+            record('manual-storage-error', { ...operation, error })
+        }
+    }
+
+    useEffect(() => {
         if (window.parent === window) {
             record('standalone-init', { origin: window.location.origin })
             return
@@ -159,7 +186,7 @@ export default function Page() {
         window.parent.postMessage(ready, parentOrigin)
         record('init-sent', { targetOrigin: parentOrigin, request: ready })
         return () => window.removeEventListener('message', handleMessage)
-    }, [])
+    }, [record])
 
     return (
         <main style={{ fontFamily: 'monospace', fontSize: 12, padding: 12, minHeight: '100vh', boxSizing: 'border-box', colorScheme: 'light dark', background: 'Canvas', color: 'CanvasText' }}>
@@ -167,7 +194,27 @@ export default function Page() {
                 <h1 style={{ fontSize: 16, margin: 0 }}>CrosStorage iframe · {events.length} events</h1>
                 <button type="button" onClick={() => setEvents([])} disabled={!events.length}>Clear</button>
                 <span>Latest first · max {MAX_EVENTS}</span>
+                {WWW_ROOT && (
+                    <a href={`${WWW_ROOT.replace(/\/+$/, '')}/zh/cros/`} target="_top">Token 读取监控页 →</a>
+                )}
             </header>
+            <form onSubmit={event => { event.preventDefault(); readManually() }}
+                  style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginTop: 12 }}>
+                <span>Key: <code>{MANUAL_KEY}</code></span>
+                <label htmlFor="manual-storage">Storage: </label>
+                <select id="manual-storage" value={manualStorage}
+                        onChange={event => setManualStorage(event.target.value as StorageType.LOCAL | StorageType.SESSION)}>
+                    <option value={StorageType.LOCAL}>localStorage</option>
+                    <option value={StorageType.SESSION}>sessionStorage</option>
+                </select>
+                <button type="submit">Read hello</button>
+                <label htmlFor="manual-value">Value: </label>
+                <input id="manual-value" type="text" value={manualValue}
+                       onChange={event => setManualValue(event.target.value)}
+                       autoComplete="off" spellCheck={false}
+                       style={{ width: 280, maxWidth: '100%', minWidth: 0, boxSizing: 'border-box' }} />
+                <button type="button" onClick={writeManually}>Write hello</button>
+            </form>
             {events.map(entry => (
                 <pre key={entry.id} style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', borderTop: '1px solid #d4d4d4', paddingTop: 12 }}>
                     {entry.json}
