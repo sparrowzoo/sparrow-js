@@ -69,23 +69,6 @@ export default class CrosStorage {
         return crosStorage;
     }
 
-    private emit(event: Omit<CrosStorageEvent, "timestamp" | "crossOrigin" | "iframeOrigin">) {
-        if (!this.monitor) return;
-        try {
-            const result = this.monitor.onEvent({
-                ...event,
-                timestamp: Date.now(),
-                crossOrigin: this.cros,
-                iframeOrigin: this.iframeOrigin,
-            });
-            if (result) result.catch(() => {
-                // 监控输出失败不能产生未处理的异步异常。
-            });
-        } catch {
-            // 监控输出失败不能打断原有流程。
-        }
-    }
-
     public set(
         value: string,
         key: string = TOKEN_KEY,
@@ -98,8 +81,10 @@ export default class CrosStorage {
                     storage === StorageType.LOCAL ? localStorage : sessionStorage;
                 store.setItem(key, value);
             } catch (error) {
-                this.emit({type: "storage-error", command: CommandType.SET, storage, key, value,
-                    error: error instanceof Error ? error.message : "Storage set failed"});
+                this.emit({
+                    type: "storage-error", command: CommandType.SET, storage, key, value,
+                    error: error instanceof Error ? error.message : "Storage set failed"
+                });
                 throw error;
             }
             this.emit({type: "storage-operation", command: CommandType.SET, storage, key, value});
@@ -126,8 +111,10 @@ export default class CrosStorage {
                 const store = storage === "local" ? localStorage : sessionStorage;
                 value = store.getItem(key);
             } catch (error) {
-                this.emit({type: "storage-error", command: CommandType.GET, storage, key,
-                    error: error instanceof Error ? error.message : "Storage get failed"});
+                this.emit({
+                    type: "storage-error", command: CommandType.GET, storage, key,
+                    error: error instanceof Error ? error.message : "Storage get failed"
+                });
                 throw error;
             }
             this.emit({type: "storage-operation", command: CommandType.GET, storage, key, value});
@@ -154,8 +141,10 @@ export default class CrosStorage {
                 value = store.getItem(key);
                 store.removeItem(key);
             } catch (error) {
-                this.emit({type: "storage-error", command: CommandType.REMOVE, storage, key,
-                    error: error instanceof Error ? error.message : "Storage remove failed"});
+                this.emit({
+                    type: "storage-error", command: CommandType.REMOVE, storage, key,
+                    error: error instanceof Error ? error.message : "Storage remove failed"
+                });
                 throw error;
             }
             this.emit({type: "storage-operation", command: CommandType.REMOVE, storage, key, value});
@@ -217,13 +206,30 @@ export default class CrosStorage {
         });
     }
 
+    private emit(event: Omit<CrosStorageEvent, "timestamp" | "crossOrigin" | "iframeOrigin">) {
+        if (!this.monitor) return;
+        try {
+            const result = this.monitor.onEvent({
+                ...event,
+                timestamp: Date.now(),
+                crossOrigin: this.cros,
+                iframeOrigin: this.iframeOrigin,
+            });
+            if (result) result.catch(() => {
+                // 监控输出失败不能产生未处理的异步异常。
+            });
+        } catch {
+            // 监控输出失败不能打断原有流程。
+        }
+    }
+
     private initFrame() {
         let iframe = document.querySelector<HTMLIFrameElement>("#cros-storage-iframe");
         const reused = !!iframe;
         if (!iframe) {
             iframe = document.createElement("iframe");
             const storageProxy = this.monitor
-                ? `${STORAGE_PROXY.replace(/\/$/, "")}-debug/`
+                ? `${STORAGE_PROXY?.replace(/\/$/, "")}-debug/`
                 : STORAGE_PROXY;
             iframe.src = `${storageProxy}?${encodeURIComponent(window.location.origin)}`;
             iframe.style.display = "none";
@@ -255,8 +261,10 @@ export default class CrosStorage {
                 borderRadius: "0.75rem",
             });
         }
-        this.emit({type: reused ? "iframe-reused" : "iframe-created",
-            loaded: iframe.getAttribute("loaded") === "true"});
+        this.emit({
+            type: reused ? "iframe-reused" : "iframe-created",
+            loaded: iframe.getAttribute("loaded") === "true"
+        });
     }
 
     /** 独立观察共享 iframe，不改变原有 INIT 判定与 loaded 状态。 */
@@ -290,7 +298,13 @@ export default class CrosStorage {
 
     // Match both origin and iframe window; bound every request to a timeout.
     private request(req: StorageRequest): Promise<string | null> {
-        const context = {requestId: req.requestId, command: req.command, storage: req.storage, key: req.key, value: req.value};
+        const context = {
+            requestId: req.requestId,
+            command: req.command,
+            storage: req.storage,
+            key: req.key,
+            value: req.value
+        };
         return new Promise((resolve, reject) => {
             let poll: ReturnType<typeof setTimeout>;
             let waiting = false;
@@ -338,8 +352,10 @@ export default class CrosStorage {
                 } catch (error) {
                     cleanup();
                     reject(error);
-                    this.emit({type: "request-error", ...context,
-                        error: error instanceof Error ? error.message : "Storage request failed"});
+                    this.emit({
+                        type: "request-error", ...context,
+                        error: error instanceof Error ? error.message : "Storage request failed"
+                    });
                 }
             };
             send();
