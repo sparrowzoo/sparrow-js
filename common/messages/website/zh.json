@@ -316,7 +316,7 @@
     "items": {
       "session-storage-boundaries-postmessage-sso": {
         "title": "Web Storage 的边界与跨域 SSO：从 Safari 差异到客户端 RPC",
-        "description": "区分同源与同站，解析 sessionStorage 边界及移动端 localStorage 可能的存储分区；结合 postMessage 诊断方法，说明顶层上下文对登录态共享的影响，以及授权码与 Cookie 会话的迁移方案。"
+        "description": "区分同源、同站与 Web Storage 分区，说明如何用 Cookie token 或服务端会话解除同站 SSO 对 iframe 存储共享的依赖；比较共享 Domain Cookie 与 API 主机限定的 HttpOnly Cookie，并明确鉴权、凭据请求及跨站限制。"
       },
       "nginxHttpsLaunch": {
         "title": "Nginx 全站 HTTPS 上线",
