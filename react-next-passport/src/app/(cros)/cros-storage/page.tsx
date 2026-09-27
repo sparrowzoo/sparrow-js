@@ -54,7 +54,6 @@ export default function Page() {
                 value: null,
             }
             try {
-                console.log('get message ', request)
                 const local =
                     request.storage === StorageType.LOCAL ||
                     (request.storage === StorageType.AUTOMATIC &&
@@ -64,7 +63,6 @@ export default function Page() {
                     : window.sessionStorage
                 switch (request.command) {
                     case CommandType.GET:
-                        console.log('get token', storage.getItem(request.key))
                         response.value = storage.getItem(request.key)
                         break
                     case CommandType.SET:
@@ -98,5 +96,5 @@ export default function Page() {
         return () => window.removeEventListener('message', handleMessage)
     }, [])
 
-    return null
+    return <></>
 }
