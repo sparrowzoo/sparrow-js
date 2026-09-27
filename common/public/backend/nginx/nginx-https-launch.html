@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="description" content="为 Sparrow Zoo 对外公开域名统一启用 HTTPS：用 Certbot（Let's Encrypt）签发证书，80 端口 301 跳转 443，内部管理域名保持 80 不变，附域名清单、配置改动与上线步骤。">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Sparrow Zoo">
+  <meta property="og:title" content="Nginx 全站 HTTPS 上线：从证书签发到平滑切换">
+  <meta property="og:description" content="对外域名统一 443 SSL + 80→301，内部域名保持 80；证书由 Certbot 自动签发续期，配置完全由仓库文件控制。">
+  <title>Nginx 全站 HTTPS 上线：从证书签发到平滑切换</title>
+  <style>
+    :root{--bg:#07070d;--panel:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#f4f4f7;--secondary:#9a9ab0;--tertiary:#64647c;--purple:#6d5cff;--cyan:#22d3ee;--pink:#a855f7;--code:#0c0c16;--radius:18px;--gradient:linear-gradient(110deg,#6d5cff 0%,#22d3ee 53%,#a855f7 100%);--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:105px}body{margin:0;color:var(--text);background:var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.85;letter-spacing:.01em}body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 7% 1%,#6d5cff23,transparent 42%),radial-gradient(ellipse at 88% 15%,#22d3ee0d,transparent 37%),radial-gradient(ellipse at 84% 85%,#a855f710,transparent 42%)}body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px),url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' opacity='.07' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");background-size:64px 64px,64px 64px,180px 180px}
+    a{color:#88dce8;text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:4px}button,select{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}::selection{background:#6d5cff60;color:white}h1,h2,h3,h4,p{margin:0}h1,h2,h3{line-height:1.3;letter-spacing:-.035em}h1{font-size:clamp(34px,4.1vw,59px);font-weight:750}h2{font-size:30px}h3{font-size:22px}h4{font-size:16px;font-weight:600}p+p{margin-top:13px}strong{color:var(--text);font-weight:650}code{font-family:var(--mono);font-size:.88em;color:#c9c5ff;overflow-wrap:anywhere}p code,li code,td code{padding:2px 5px;border-radius:5px;background:#ffffff05}small{font-size:12px}ul,ol{padding-left:23px;margin:14px 0}li+li{margin-top:8px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:16px 19px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}th{background:#ffffff03;color:var(--text);font-weight:550}td{color:var(--secondary)}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#ffffff02}td:first-child{color:var(--text)}.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);margin:22px 0}.table-wrap table{min-width:590px}.table-wrap.wide table{min-width:740px}
+    .wrap{max-width:1232px;padding:0 40px;margin:auto}.gradient-text{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}.eyebrow{font-size:11px;font-weight:650;letter-spacing:.17em;text-transform:uppercase;color:var(--secondary)}.muted{color:var(--secondary)}.fine{color:var(--secondary);font-size:13px;line-height:1.75}.decorative{color:var(--tertiary)}.panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel)}.lift{transition:transform .22s,border-color .22s,background .22s}.lift:hover{transform:translateY(-4px);border-color:#ffffff19;background:#ffffff06}.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--secondary);line-height:1.6}.dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;display:inline-block;box-shadow:0 0 12px #22d3ee50}.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:10px 20px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:13px;background:#ffffff04;line-height:1.6;text-decoration:none;transition:transform .2s,filter .2s}.button:hover{transform:translateY(-2px);text-decoration:none;filter:brightness(1.14)}.button.primary{border:0;background:var(--gradient);color:#080c18;font-weight:750}.button .arrow{font-size:17px;line-height:1}.source{font-size:12px;color:#91c6d3;margin-top:14px;display:block}.source a{color:inherit;text-decoration:underline;text-decoration-color:#91c6d340;text-underline-offset:3px}.skip{position:absolute;left:12px;top:-80px;z-index:99;background:var(--bg);padding:12px}.skip:focus{top:12px}
+    .topbar{position:sticky;top:0;z-index:50;background:#07070ddb;backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:30px}.brand{display:flex;align-items:center;gap:12px;color:var(--text);font-size:17px;letter-spacing:-.025em;font-weight:650;white-space:nowrap}.brand:hover{text-decoration:none}.brand-mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid #a39bff40;background:linear-gradient(145deg,#6d5cff26,#22d3ee0c);border-radius:10px;font-family:var(--mono);font-size:19px;color:#c5c0ff}.brand-sub{color:var(--tertiary);font-size:12px;font-weight:400;margin-left:4px;letter-spacing:.06em}.topnav{display:flex;align-items:center;gap:26px}.topnav>a:not(.button){color:var(--secondary);font-size:13px}.reading-progress{position:absolute;bottom:-1px;left:0;height:2px;width:0;background:var(--gradient);transition:width .1s linear}
+    .hero{padding:58px 0 58px;border-bottom:1px solid var(--border)}.crumb{display:flex;align-items:center;gap:12px;margin-bottom:35px;color:var(--secondary);font-size:12px}.crumb span[aria-hidden]{color:var(--tertiary)}.hero-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:60px;align-items:center}.hero h1 span{display:block}.hero h1 .subline{margin-top:10px;font-size:.64em;letter-spacing:-.015em}.hero-desc{font-size:16px;line-height:1.95;color:var(--secondary);max-width:600px;margin-top:23px}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}.meta{display:flex;align-items:center;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--secondary);font-size:11px}.meta i{height:3px;width:3px;background:var(--tertiary);border-radius:50%}.hero-map{padding:26px;position:relative;box-shadow:0 18px 100px #6d5cff0a}.hero-map .map-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.map-node{border:1px solid var(--border);border-radius:12px;padding:15px 16px;background:#0c0c16aa}.map-node b{font-family:var(--mono);font-size:15px;font-weight:500;display:block}.map-node span{color:var(--secondary);font-size:12px;display:block;margin-top:4px}.map-node.primary-node{background:linear-gradient(115deg,#6d5cff14,#22d3ee09);border-color:#8c7fff25}.map-line{display:flex;justify-content:center;align-items:center;gap:12px;color:var(--secondary);font-size:11px;height:37px}.map-line:before,.map-line:after{content:"";height:1px;width:26px;background:#ffffff1a}.map-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.map-two .map-node{padding:13px}.map-two b{font-size:12px}.hero-map .fine{border-top:1px solid var(--border);margin-top:19px;padding-top:14px;font-size:11px}
+    .main-grid{display:grid;grid-template-columns:minmax(0,1fr) 195px;gap:64px;padding-top:48px;padding-bottom:70px}.article{min-width:0}.toc{position:sticky;top:106px;align-self:start;border-left:1px solid var(--border);padding-left:21px}.toc .eyebrow{margin-bottom:17px;color:var(--tertiary)}.toc a{display:block;font-size:12px;color:var(--secondary);padding:7px 0;line-height:1.65;transition:color .2s}.toc a.active{color:var(--cyan)}.toc .sub{padding-left:10px;font-size:11px}.toc .toc-bottom{margin-top:23px;padding-top:17px;border-top:1px solid var(--border)}.toc .toc-bottom p{font-size:11px;color:var(--secondary);line-height:1.7}.section{margin-bottom:58px;scroll-margin-top:100px}.section-heading{display:flex;align-items:baseline;gap:15px;margin-bottom:22px}.section-number{font:12px var(--mono);color:var(--tertiary);letter-spacing:.06em}.section>p,.subsection>p{color:var(--secondary)}.subsection{margin-top:36px;scroll-margin-top:106px}.subsection h3{margin-bottom:16px}.subsection h3 .step{color:var(--cyan);font:12px var(--mono);margin-right:9px;vertical-align:middle}.section-intro{font-size:17px;line-height:1.9}.conclusion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:24px 0}.conclusion-card{padding:20px 18px}.conclusion-card .tag{font:10px var(--mono);letter-spacing:.09em;color:var(--secondary);margin-bottom:13px}.conclusion-card h3{font-size:16px;letter-spacing:0;margin-bottom:9px}.conclusion-card p{font-size:13px;color:var(--secondary);line-height:1.8}.note{padding:19px 22px;border:1px solid var(--border);border-left:2px solid var(--purple);border-radius:0 14px 14px 0;background:linear-gradient(100deg,#6d5cff0b,#ffffff02);margin:23px 0;color:var(--secondary);font-size:14px}.note.cyan{border-left-color:var(--cyan);background:linear-gradient(100deg,#22d3ee09,#ffffff02)}.note strong{display:block;font-size:14px;margin-bottom:5px}.note p{margin-top:0}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.glossary>div{padding:17px 19px}.glossary dt{font:13px var(--mono);color:var(--text);margin-bottom:6px}.glossary dd{margin:0;font-size:13px;color:var(--secondary)}
+    .rule-list{list-style:none;padding:0;counter-reset:rule}.rule-list li{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border);color:var(--secondary);font-size:14px}.rule-list li:before{counter-increment:rule;content:counter(rule,decimal-leading-zero);font:11px var(--mono);color:var(--tertiary);padding-top:6px}.rule-list li:last-child{border-bottom:0}
+    [hidden]{display:none!important}.codebox{margin-top:16px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--code)}.code-header{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:45px;padding:9px 16px;border-bottom:1px solid var(--border);background:#ffffff015}.code-header span{font:11px var(--mono);color:var(--secondary);overflow-wrap:anywhere}.copy{font-size:11px;white-space:nowrap;padding:4px 11px;border:1px solid var(--border);border-radius:999px;background:#ffffff04;color:var(--secondary)}.copy:hover{color:var(--text);border-color:#ffffff25}pre{margin:0;padding:20px 21px;overflow:auto;tab-size:2;line-height:1.8;font-size:12px}pre code{font-size:inherit;color:#c7c8de;white-space:pre;overflow-wrap:normal}.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:23px 0}.timeline>div{padding:15px 12px;border:1px solid var(--border);border-radius:12px;position:relative;background:#ffffff02}.timeline b{font:11px var(--mono);color:#9d91ee;display:block;margin-bottom:7px}.timeline span{font-size:12px}.sources{margin:24px 0 0;padding:0;list-style:none}.sources li{display:grid;grid-template-columns:29px 1fr;gap:11px;padding:14px 0;border-bottom:1px solid var(--border)}.sources .ref-number{font:11px var(--mono);color:var(--tertiary);padding-top:5px}.sources a{font-size:13px}.sources p{font-size:12px;color:var(--secondary);margin-top:3px}.closing{padding:29px;margin-top:32px;background:linear-gradient(115deg,#6d5cff13,#22d3ee07,#a855f70c);border:1px solid #ffffff10;border-radius:var(--radius)}.closing h3{font-size:22px;margin-bottom:15px}.closing p{color:var(--secondary);font-size:14px}.footer{border-top:1px solid var(--border);padding:26px 0 36px}.footer-inner{display:flex;justify-content:space-between;gap:20px;color:var(--secondary);font-size:11px}.footer a{color:var(--secondary)}.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#171724;border:1px solid #ffffff16;padding:10px 20px;border-radius:999px;color:var(--text);font-size:12px;z-index:80;box-shadow:0 8px 35px #0006}
+    .toc{max-height:calc(100vh - 132px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#ffffff18 transparent}
+    @media(min-width:1500px){.wrap{max-width:1320px}.hero-grid{gap:85px}.main-grid{gap:75px}}
+    @media(max-width:1050px){.wrap{padding:0 28px}.hero-grid{gap:30px;grid-template-columns:1.35fr 1fr}.hero-map{padding:20px}.main-grid{grid-template-columns:minmax(0,1fr) 160px;gap:30px}.topnav{gap:18px}.brand-sub{display:none}.conclusion-grid{grid-template-columns:1fr}.conclusion-card{display:grid;grid-template-columns:125px 1fr;column-gap:15px;padding:17px 20px}.conclusion-card .tag{grid-column:1;margin:0 0 5px}.conclusion-card h3{grid-column:1;margin:0}.conclusion-card p{grid-column:2;grid-row:1/3}.map-two{grid-template-columns:1fr}.map-two .map-node:last-child{display:none}}
+    @media(max-width:760px){html{scroll-padding-top:89px}.wrap{padding:0 21px}.nav-inner{height:63px;gap:15px}.topnav{gap:15px}.topnav>a:not(.button){display:none}.topnav .button{font-size:11px;padding:8px 14px}.hero{padding:30px 0 35px}.crumb{margin-bottom:25px;font-size:10px;gap:9px}.hero-grid{grid-template-columns:1fr;gap:28px}.hero-desc{font-size:14px}.hero-map{padding:20px}.map-two{grid-template-columns:1fr 1fr}.map-two .map-node:last-child{display:block}.hero-map .map-label{margin-bottom:15px}.meta{gap:11px;font-size:10px;margin-top:20px}.main-grid{display:block;padding-top:32px}.toc{display:none}.section{margin-bottom:43px}.section-heading{gap:12px;margin-bottom:19px}h2{font-size:26px}h3{font-size:20px}.section-intro{font-size:16px}.conclusion-card{display:block;padding:19px}.conclusion-card .tag{margin-bottom:8px}.conclusion-card h3{margin-bottom:8px}.glossary{gap:10px}.glossary>div{padding:14px}.glossary dt{font-size:11px}.glossary dd{font-size:12px}.timeline{grid-template-columns:1fr 1fr}.footer-inner{display:block}.footer-inner>div+div{margin-top:10px}pre{padding:17px;font-size:11px}.code-header{padding:9px 12px}.closing{padding:23px}.note{padding:17px 18px}.section-number{font-size:11px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.lift:hover,.button:hover{transform:none}}
+    @media print{body{background:white;color:#111;font-size:11pt}body::before,body::after,.topbar,.toc,.hero-map,.hero-actions,.copy,.reading-progress,.toast{display:none!important}.wrap{max-width:none;padding:0}.main-grid{display:block;padding:20px 0}.hero{padding:15px 0}.hero-grid{display:block}h1{font-size:28pt}.gradient-text{background:none;color:#111}.muted,.fine,p,td,li,.hero-desc,.conclusion-card p,.closing p{color:#444!important}.panel,.note,.codebox,.closing{background:white;border-color:#ddd}.table-wrap{overflow:visible}.table-wrap table{min-width:0}.codebox pre{white-space:pre-wrap}pre code{white-space:pre-wrap;color:#222}.footer{margin-top:25px}.article section{break-inside:auto}.panel{break-inside:avoid}a{color:#333}.pill{color:#444;border-color:#ddd}}
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#conclusion">跳到文章正文</a>
+  <header class="topbar">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Sparrow 文章顶部"><span class="brand-mark" aria-hidden="true">s</span>sparrow<span class="brand-sub"> / ENGINEERING</span></a>
+      <nav class="topnav" aria-label="文章导航"><a href="#conclusion">结论先行</a><a href="#background">问题背景</a><a href="#details">详细内容</a><a class="button primary" href="#steps">查看上线步骤 <span class="arrow" aria-hidden="true">↗</span></a></nav>
+    </div>
+    <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+  </header>
+
+  <div class="wrap">
+    <header class="hero" aria-label="文章 Banner">
+      <div class="crumb"><span>平台工程手记</span><span aria-hidden="true">/</span><span>Nginx 部署</span><span aria-hidden="true">/</span><span class="pill"><span class="dot" aria-hidden="true"></span>上线方案</span></div>
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow" style="margin-bottom:17px">HTTPS FOR PUBLIC. PLAIN FOR INTERNAL.</p>
+          <h1><span class="gradient-text">Nginx 全站 HTTPS 上线</span><span class="subline">用 Certbot 签发证书，一次切换对外域名到 443</span></h1>
+          <p class="hero-desc">对外公开域名统一启用 HTTPS，内部管理域名保持 80 不变；<br>证书由 Certbot（Let's Encrypt）自动签发与续期，<br>配置完全由仓库文件控制。</p>
+          <div class="hero-actions"><a class="button primary" href="#domains">看清域名分类 <span aria-hidden="true">↓</span></a><a class="button" href="#steps">跟随上线步骤 <span aria-hidden="true">↗</span></a><a class="button" href="#share" id="share-btn">微信分享 <span aria-hidden="true">↗</span></a></div>
+          <div class="meta"><span>SPARROW 部署实践</span><i aria-hidden="true"></i><span>2026.09.27</span><i aria-hidden="true"></i><span>含域名清单、配置改动与上线步骤</span></div>
+        </div>
+        <div class="panel hero-map" aria-label="部署概要：对外公开域名走 443 并 301 跳转，内部管理域名保持 80">
+          <div class="map-label"><span class="eyebrow">PUBLIC HTTPS · INTERNAL PLAIN</span><span class="dot" aria-hidden="true"></span></div>
+          <div class="map-node primary-node"><b>对外公开域名 × 9</b><span>443 ssl 配置块 + 80 → 301 跳转</span></div>
+          <div class="map-line">Certbot 签发并自动续期</div>
+          <div class="map-two"><div class="map-node"><b>证书 / Let's Encrypt</b><span>HTTP-01 校验 · 90 天续期</span></div><div class="map-node"><b>nginx 443 ssl 块</b><span>静态 root / 反向代理</span></div></div>
+          <p class="fine">内部管理域名 × 3 保持 80 不变，不上 HTTPS。<br>先签证书，再覆盖配置，顺序不能反。</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="main-grid">
+      <main class="article" id="article">
+        <section id="conclusion" class="section">
+          <div class="section-heading"><span class="section-number">01 /</span><h2>结论先行</h2></div>
+          <p class="section-intro"><strong>对外公开域名统一走 443 SSL，并做 80 → 301 跳转；内部管理域名保持 80 不变。</strong>证书用 <code>certbot certonly</code> 只签发、不改配置，配置完全由仓库文件控制。上线顺序固定：<strong>先签发证书，再覆盖新配置</strong>。</p>
+          <div class="conclusion-grid">
+            <div class="panel conclusion-card lift"><div class="tag">01 · PUBLIC HTTPS</div><h3>对外域名上 443</h3><p>9 个对外域名新增 <code>443 ssl</code> 块，80 端口统一 <code>301</code> 跳转到 HTTPS。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">02 · INTERNAL PLAIN</div><h3>内部域名保持 80</h3><p>nacos、monitor、ossrh 等内部管理域名不暴露公网 HTTPS，维持 80 不变。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">03 · CERTONLY ONLY</div><h3>certbot 只签不改</h3><p>用 <code>certonly</code> 只签发证书，不触碰 nginx 配置，避免证书与配置相互干扰。</p></div>
+          </div>
+          <div class="note cyan"><strong>顺序不能反：先签证书，再覆盖配置</strong><p><code>443</code> 块引用了证书路径，证书不存在时 <code>nginx -t</code> 会直接失败、nginx 无法启动。因此必须先完成证书签发，再把新配置覆盖到服务器，最后 <code>nginx -t</code> 通过后再 reload。</p><span class="source">依据：<a href="https://nginx.org/en/docs/http/configuring_https_servers.html" target="_blank" rel="noopener noreferrer">Nginx · Configuring HTTPS Servers</a> / <a href="https://eff-certbot.readthedocs.io/en/stable/" target="_blank" rel="noopener noreferrer">Certbot · Documentation</a></span></div>
+        </section>
+
+        <section id="background" class="section">
+          <div class="section-heading"><span class="section-number">02 /</span><h2>问题背景</h2></div>
+          <p>现网 <code>nginx.conf</code> 中，除 <code>www.sparrowzoo.com</code> 已有证书外，其余域名都只配置了 80 端口。所有对外公开域名——静态站点、反向代理、甚至带 WebSocket 的 API——都走明文 HTTP，请求内容可被中间人窃听或篡改。</p>
+          <p>HTTPS 通过 TLS 加密传输，保证机密性与完整性，是浏览器安全基线（安全上下文、Service Worker、剪贴板等能力）的前置条件。本次改动的目标是：<strong>为所有对外公开域名启用 HTTPS，内部管理域名保持 80 不变，证书通过 Certbot（Let's Encrypt）自动签发与续期。</strong></p>
+          <dl class="glossary">
+            <div class="panel"><dt>443 SSL · 加密端口</dt><dd>HTTPS 默认端口，<code>listen 443 ssl</code> 表示该 server 块启用 TLS。</dd></div>
+            <div class="panel"><dt>301 跳转 · 永久重定向</dt><dd>浏览器与搜索引擎都会记住跳转，80 端口访问被永久转到 HTTPS。</dd></div>
+            <div class="panel"><dt>Certbot · 证书客户端</dt><dd>Let's Encrypt 官方工具，自动完成域名校验、签发与续期。</dd></div>
+            <div class="panel"><dt>X-Forwarded-Proto</dt><dd>反向代理向后端透传原始协议，后端据此生成 https 链接与 secure cookie。</dd></div>
+          </dl>
+          <div class="note"><strong>HTTP-01 校验依赖 80 端口</strong><p>Certbot 的 HTTP-01 校验会临时在 80 端口放一个文件让 Let's Encrypt 访问。因此所有待签发域名的 A 记录必须指向本服务器，且 80 端口对外可达。这也是「先签证书、再覆盖配置」的原因之一——签发时旧配置里的 80 块仍在正常工作。</p></div>
+        </section>
+
+        <section id="details" class="section">
+          <div class="section-heading"><span class="section-number">03 /</span><h2>详细内容</h2></div>
+
+          <section id="domains" class="subsection">
+            <h3><span class="step">STEP 01</span>域名清单：对外与内部的边界</h3>
+            <p>先把域名按「是否对外公开」分成两类。只有对外公开的域名才需要证书与 443 块；内部管理域名继续走 80，避免把管理面板暴露到公网 HTTPS 的证书与端口管理里。</p>
+            <h4 style="margin-top:23px">对外公开（启用 HTTPS，80 → 301 跳转 443）</h4>
+            <div class="table-wrap wide"><table><thead><tr><th>域名</th><th>类型</th><th>后端 / root</th><th>备注</th></tr></thead><tbody>
+              <tr><td><code>r.sparrowzoo.net</code></td><td>静态</td><td>/path/to/source</td><td>expires 1h</td></tr>
+              <tr><td><code>passport.sparrowzoo.com</code></td><td>静态</td><td>/path/to/passport</td><td>try_files</td></tr>
+              <tr><td><code>admin.sparrowzoo.com</code></td><td>静态</td><td>/path/to/admin</td><td>try_files</td></tr>
+              <tr><td><code>im.sparrowzoo.com</code></td><td>静态</td><td>/path/to/im</td><td>try_files</td></tr>
+              <tr><td><code>www.sparrowzoo.com</code></td><td>静态</td><td>/path/to/www</td><td>已有证书</td></tr>
+              <tr><td><code>img.im.sparrowzoo.net</code></td><td>静态</td><td>/path/to/images</td><td>expires 0d</td></tr>
+              <tr><td><code>u.r.sparrowzoo.net</code></td><td>静态</td><td>/path/to/upload</td><td>expires 0d</td></tr>
+              <tr><td><code>lottery.sparrowzoo.com</code></td><td>反代</td><td>http://lottery (127.0.0.1:&lt;PORT&gt;)</td><td>no-store</td></tr>
+              <tr><td><code>api.sparrowzoo.com</code></td><td>反代</td><td>http://api (127.0.0.1:&lt;PORT&gt;) + /websocket → http://websocket (127.0.0.1:&lt;PORT&gt;)</td><td>含 WebSocket</td></tr>
+            </tbody></table></div>
+            <h4>内部管理（保持 80，不上 HTTPS）</h4>
+            <div class="table-wrap"><table><thead><tr><th>域名</th><th>类型</th><th>后端 / root</th></tr></thead><tbody>
+              <tr><td><code>nacos.example.com</code></td><td>反代</td><td>http://nacos (127.0.0.1:&lt;PORT&gt;)</td></tr>
+              <tr><td><code>monitor.example.com</code></td><td>反代</td><td>http://monitor (127.0.0.1:&lt;PORT&gt;)</td></tr>
+              <tr><td><code>ossrh.example.com</code></td><td>静态</td><td>/path/to/ossrh</td></tr>
+            </tbody></table></div>
+            <p class="fine">分类原则：能公开访问的域名才需要加密与证书；内部运维面板走内网或由 IP 白名单保护，不必占用 Let's Encrypt 的证书名额。</p>
+          </section>
+
+          <section id="changes" class="subsection">
+            <h3><span class="step">STEP 02</span>本次配置改动</h3>
+            <p>改动集中在五点：对外域名加 443 块、反代透传协议、修复语法 bug、清理无效写法、移除废弃的 juejin 配置。</p>
+            <ol class="rule-list">
+              <li><span><strong>新增 443 ssl 块 + 80→301：</strong>每个对外域名新增 <code>listen 443 ssl</code> 块，原 80 块改为 <code>return 301 https://$host$request_uri;</code>。</span></li>
+              <li><span><strong>透传协议头：</strong>反向代理新增 <code>proxy_set_header X-Forwarded-Proto $scheme;</code>，后端据此判断协议，用于生成 https 链接与 secure cookie。</span></li>
+              <li><span><strong>修复语法 bug：</strong>原配置 <code>server_name api.sparrowzoo.com</code> 缺少分号，会让 <code>nginx -t</code> 直接失败。</span></li>
+              <li><span><strong>清理无效写法：</strong><code>index /;</code> → <code>index index.html;</code>、<code>charset utf_8;</code> → <code>charset utf-8;</code>、移除对 proxy_pass 无意义的 <code>fastcgi_intercept_errors on;</code>。</span></li>
+              <li><span><strong>移除 juejin 配置：</strong>删除 juejin 相关的 upstream 与 server 块。</span></li>
+            </ol>
+
+            <h4 style="margin-top:23px">静态站点：80→301 + 443 ssl</h4>
+            <div class="codebox"><div class="code-header"><span>passport.sparrowzoo.com · 静态站点示例</span><button type="button" class="copy">复制</button></div><pre><code># 80：统一重定向到 HTTPS
+server {
+    listen 80;
+    server_name passport.sparrowzoo.com;
+    return 301 https://$host$request_uri;
+}
+
+# 443：静态站点
+server {
+    listen 443 ssl;
+    server_name passport.sparrowzoo.com;
+
+    ssl_certificate     /etc/letsencrypt/live/passport.sparrowzoo.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/passport.sparrowzoo.com/privkey.pem;
+
+    root /path/to/passport;
+    index index.html;
+    charset utf-8;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}</code></pre></div>
+
+            <h4>反向代理 + WebSocket：透传协议头</h4>
+            <div class="codebox"><div class="code-header"><span>api.sparrowzoo.com · 反代 + WebSocket 示例</span><button type="button" class="copy">复制</button></div><pre><code>server {
+    listen 80;
+    server_name api.sparrowzoo.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name api.sparrowzoo.com;
+
+    ssl_certificate     /etc/letsencrypt/live/api.sparrowzoo.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.sparrowzoo.com/privkey.pem;
+
+    location / {
+        proxy_pass http://api;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+
+    # WebSocket 升级
+    location /websocket {
+        proxy_pass http://websocket;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}</code></pre></div>
+            <p class="fine">证书路径由 Certbot 统一放在 <code>/etc/letsencrypt/live/&lt;域名&gt;/</code> 下，<code>fullchain.pem</code> 是证书链、<code>privkey.pem</code> 是私钥。覆盖配置前要确认这些路径与实际签发目录一致。</p>
+          </section>
+
+          <section id="steps" class="subsection">
+            <h3><span class="step">STEP 03</span>上线步骤：先签证书，再覆盖配置</h3>
+            <p>整个过程七步，核心原则是<strong>证书在前、配置在后</strong>，每一步都有明确的验证点。</p>
+            <div class="timeline" aria-label="上线流程"><div><b>01 / BACKUP</b><span>备份现网配置</span></div><div><b>02 / DNS</b><span>确认解析与 80</span></div><div><b>03 / ISSUE</b><span>certbot 签发证书</span></div><div><b>04 / DEPLOY</b><span>覆盖新配置</span></div><div><b>05 / RELOAD</b><span>校验并平滑重载</span></div><div><b>06 / VERIFY</b><span>验证 HTTPS</span></div><div><b>07 / RENEW</b><span>确认自动续期</span></div></div>
+
+            <h4 style="margin-top:23px">第 1 步 · 备份现网配置</h4>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>sudo cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak-$(date +%F)</code></pre></div>
+            <p class="fine">备份带日期后缀，出问题可以一键还原。</p>
+
+            <h4>第 2 步 · 确认 DNS 与 80 端口</h4>
+            <p>所有待签发域名的 A 记录需指向本服务器，且 80 端口对外可达（Certbot 的 HTTP-01 校验依赖）。这一步不通过，后面签发会失败。</p>
+
+            <h4>第 3 步 · 先用 certbot 签发证书</h4>
+            <p>此时服务器仍是旧配置，80 块正常。需新签发的 8 个域名：<code>r.sparrowzoo.net</code>、<code>img.im.sparrowzoo.net</code>、<code>u.r.sparrowzoo.net</code>、<code>passport/admin/im/lottery/api.sparrowzoo.com</code>。</p>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>for d in r.sparrowzoo.net img.im.sparrowzoo.net u.r.sparrowzoo.net \
+         passport.sparrowzoo.com admin.sparrowzoo.com im.sparrowzoo.com \
+         lottery.sparrowzoo.com api.sparrowzoo.com; do
+  sudo certbot certonly --nginx -d "$d"
+done</code></pre></div>
+            <div class="note"><strong>为什么用 certonly 而不是 --nginx</strong><p><code>certonly</code> 只签发证书、不修改 nginx 配置，配置完全由仓库文件控制；<code>--nginx</code>（不带 certonly）则会直接改写配置，容易和仓库文件冲突。</p></div>
+
+            <h4>第 4 步 · 覆盖新配置到服务器</h4>
+            <p>将仓库中的 <code>nginx.conf</code> 覆盖到服务器 <code>/etc/nginx/nginx.conf</code>，并核对 <code>pid</code> 路径、各 <code>root</code> 路径与服务器实际目录一致。</p>
+
+            <h4>第 5 步 · 校验并平滑重载</h4>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>sudo nginx -t          # 必须先通过
+sudo nginx -s reload</code></pre></div>
+            <p class="fine"><code>nginx -t</code> 是必须通过的前置校验；失败说明配置有语法错误或证书路径缺失，此时不要 reload。</p>
+
+            <h4>第 6 步 · 验证</h4>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>curl -I https://api.sparrowzoo.com        # 应 200
+curl -I http://passport.sparrowzoo.com    # 应 301 跳到 https</code></pre></div>
+            <p>并人工确认 im 聊天（wss）、图片加载、文件上传等正常——HTTPS 下这些走 <code>wss://</code> 与加密上传，要实测链路。</p>
+
+            <h4>第 7 步 · 确认自动续期</h4>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>sudo certbot renew --dry-run</code></pre></div>
+            <p class="fine">Let's Encrypt 证书有效期 90 天，Certbot 会自动续期。<code>--dry-run</code> 做一次模拟续期，确认定时任务与校验链路都正常。</p>
+          </section>
+
+          <section id="cautions" class="subsection">
+            <h3><span class="step">STEP 04</span>注意事项</h3>
+            <ul>
+              <li><strong>顺序不能反：</strong><code>443</code> 块引用了证书路径，证书不存在时 <code>nginx -t</code> 会失败、nginx 无法启动。必须先签发证书，再覆盖新配置。</li>
+              <li><strong>证书与配置解耦：</strong>用 <code>certonly</code> 只签证书，配置完全由仓库文件控制，避免 Certbot 自动改写引入差异。</li>
+              <li><strong>内部域名不上 HTTPS：</strong>nacos、monitor 等管理面板保持 80，不暴露到公网 HTTPS。</li>
+              <li><strong>WebSocket 要单独验证：</strong>HTTPS 下客户端用 <code>wss://</code>，升级头要正确透传，im 聊天才能正常工作。</li>
+            </ul>
+          </section>
+
+          <section id="summary" class="subsection">
+            <div class="closing"><p class="eyebrow" style="margin-bottom:13px">DEPLOYMENT DECISION</p><h3 class="gradient-text">对外上 443，内部保 80，证书先于配置。</h3><p><strong>对外公开域名统一 443 SSL + 80→301 跳转，内部管理域名保持 80；证书用 <code>certbot certonly</code> 只签不改，配置由仓库文件控制。</strong></p><p>上线七步可归为一句：备份、确认 DNS、签发证书、覆盖配置、<code>nginx -t</code> 通过后 reload、验证、模拟续期。真正的风险点只有一个——证书没签好就覆盖了引用证书路径的配置，nginx 起不来，所以<strong>顺序永远不能反</strong>。</p></div>
+          </section>
+        </section>
+
+        <section id="faq" class="section">
+          <div class="section-heading"><span class="section-number">04 /</span><h2>常见问题</h2></div>
+          <p class="section-intro">按文档上线后 HTTPS 依然不生效？大多数情况不是 nginx 配置写错，而是<strong>服务器之外的网络入口没放行 443 端口</strong>——最常见的就是云服务器安全组只开了 22（SSH），没开 80 / 443。下面给出「本机自测三步法」，先把问题隔离到正确的层次。</p>
+
+          <section id="faq-https-invalid" class="subsection">
+            <h3><span class="step">Q1</span>HTTPS 没生效，浏览器报「无法访问此网站 / ERR_CONNECTION_CLOSED」</h3>
+            <h4>现象</h4>
+            <p>访问 <code>https://www.sparrowzoo.com</code> 时，浏览器提示「无法访问此网站…ERR_CONNECTION_CLOSED」或长时间无响应。</p>
+
+            <h4>排查：本机自测三步法</h4>
+            <p>依次执行下面三条命令。每条「通过」都代表 nginx 的某一层是好的，通过后往下走，直到找出断在哪一层。</p>
+
+            <h4 style="margin-top:23px">第 1 步 · 校验配置与证书</h4>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>sudo nginx -t</code></pre></div>
+            <p class="fine">输出 <code>syntax is ok</code> / <code>test is successful</code> 说明配置语法正确、证书路径都能加载。若失败，多半是证书没签好或路径写错。</p>
+
+            <h4>第 2 步 · 确认监听端口</h4>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>sudo ss -tlnp | grep -E ':(80|443)\b'</code></pre></div>
+            <p class="fine">同时出现 <code>0.0.0.0:80</code> 和 <code>0.0.0.0:443</code> 说明 reload 已生效、nginx 正在监听两个端口。只有 80 没有 443，说明还在跑旧配置，先执行 <code>sudo nginx -s reload</code>。</p>
+
+            <h4>第 3 步 · 本机直连 443</h4>
+            <div class="codebox"><div class="code-header"><span>bash</span><button type="button" class="copy">复制</button></div><pre><code>curl -kv https://127.0.0.1 -H "Host: www.sparrowzoo.com"</code></pre></div>
+            <p class="fine">本机能完成 TLS 握手并返回内容，说明 nginx 的 HTTPS 本身完全正常。此时问题一定出在<strong>服务器之外</strong>：云安全组、防火墙或 DNS。</p>
+
+            <div class="note cyan"><strong>三步全通过，问题就在安全组</strong><p>如果第 1、2、3 步都通过，但外网浏览器仍连不上 HTTPS，基本可以锁定是<strong>云服务器安全组没有放行 443（或 80）端口</strong>。阿里云 ECS 默认安全组往往只开了 22，80 / 443 需要手动添加。</p></div>
+
+            <h4>解决：在阿里云安全组放行 80 / 443</h4>
+            <ol class="rule-list">
+              <li><span><strong>进入安全组：</strong>登录 <a href="https://ecs.console.aliyun.com/securityGroup/region/cn-beijing" target="_blank" rel="noopener noreferrer">阿里云 ECS 控制台 → 网络与安全 → 安全组 ↗</a>，找到实例绑定的安全组（如 <code>sg-2zea8r0aht2wpup5yc90</code>）。</span></li>
+              <li><span><strong>添加入方向规则：</strong>点「手动添加」，分别加两条——端口 <code>80</code>（TCP）、授权对象 <code>0.0.0.0/0</code>；端口 <code>443</code>（TCP）、授权对象 <code>0.0.0.0/0</code>。</span></li>
+              <li><span><strong>保存后重试：</strong>安全组规则即时生效、无需重启，直接刷新 <code>https://www.sparrowzoo.com</code> 验证。</span></li>
+            </ol>
+            <div class="note"><strong>为什么本机通、外网不通</strong><p>安全组是云服务器最外层的「网络防火墙」，独立于系统内的 <code>iptables</code> / <code>ufw</code>。它默认丢弃未放行端口的入站流量，因此即使 nginx 在系统内正常监听 443，外网流量也会在到达实例前被安全组拦下。</p></div>
+          </section>
+        </section>
+
+        <section id="sources" class="section" style="margin-bottom:0">
+          <div class="section-heading"><span class="section-number">05 /</span><h2>官方依据与阅读</h2></div>
+          <p class="fine">下列文档支撑 HTTPS 与 Certbot 的机制说明；域名分类与上线顺序是结合本项目背景给出的部署方案。文档核对日期：2026-09-27。</p>
+          <ol class="sources">
+            <li><span class="ref-number">[01]</span><div><a href="https://nginx.org/en/docs/http/configuring_https_servers.html" target="_blank" rel="noopener noreferrer">Nginx · Configuring HTTPS Servers ↗</a><p>listen 443 ssl、ssl_certificate 与 ssl_certificate_key 的标准写法。</p></div></li>
+            <li><span class="ref-number">[02]</span><div><a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#return" target="_blank" rel="noopener noreferrer">Nginx · ngx_http_core_module: return ↗</a><p>return 301 重定向的语义与 <code>$host</code>、<code>$request_uri</code> 变量。</p></div></li>
+            <li><span class="ref-number">[03]</span><div><a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_set_header" target="_blank" rel="noopener noreferrer">Nginx · ngx_http_proxy_module: proxy_set_header ↗</a><p>X-Forwarded-Proto 等代理头如何向后端透传原始协议。</p></div></li>
+            <li><span class="ref-number">[04]</span><div><a href="https://eff-certbot.readthedocs.io/en/stable/" target="_blank" rel="noopener noreferrer">Certbot · Documentation ↗</a><p>certonly 只签不改的用法、HTTP-01 校验与 renew 自动续期。</p></div></li>
+            <li><span class="ref-number">[05]</span><div><a href="https://letsencrypt.org/" target="_blank" rel="noopener noreferrer">Let's Encrypt ↗</a><p>免费证书机构与 90 天证书有效期说明。</p></div></li>
+          </ol>
+        </section>
+      </main>
+      <aside class="toc" aria-label="文章目录"><p class="eyebrow">ON THIS PAGE</p><a href="#conclusion" class="active">01　结论先行</a><a href="#background">02　问题背景</a><a href="#details">03　详细内容</a><a class="sub" href="#domains">域名清单与分类</a><a class="sub" href="#changes">本次配置改动</a><a class="sub" href="#steps">上线步骤（七步）</a><a class="sub" href="#cautions">注意事项</a><a href="#faq">04　常见问题</a><a href="#sources">05　官方依据</a><div class="toc-bottom"><p>面向运维与后端开发者<br>基于 Sparrow 现网部署整理</p><a href="#top" style="margin-top:9px">返回顶部 ↑</a></div></aside>
+    </div>
+  </div>
+  <footer class="footer"><div class="wrap footer-inner"><div><strong>sparrow</strong> / 平台工程手记 · Nginx 部署</div><div>对外上 443，内部保 80。　<a href="#top">返回文章顶部 ↑</a></div></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script>
+    (() => {
+      const toast = document.getElementById('toast'); let toastTimer;
+      function announce(message) { clearTimeout(toastTimer); toast.textContent = message; toast.hidden = false; toastTimer = setTimeout(() => { toast.hidden = true; }, 2100); }
+      document.querySelectorAll('.copy').forEach(button => button.addEventListener('click', async () => {
+        const content = button.closest('.codebox').querySelector('code').textContent;
+        try {
+          if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(content);
+          else { const input = document.createElement('textarea'); input.value = content; input.style.position = 'fixed'; input.style.opacity = '0'; document.body.appendChild(input); input.select(); const ok = document.execCommand('copy'); input.remove(); if (!ok) throw new Error('Copy unavailable'); }
+          button.textContent = '已复制'; announce('代码已复制'); setTimeout(() => { button.textContent = '复制'; }, 1800);
+        } catch { announce('请选中代码后复制'); }
+      }));
+      const shareBtn = document.getElementById('share-btn');
+      if (shareBtn) shareBtn.addEventListener('click', (event) => {
+        event.preventDefault();
+        const url = location.href;
+        if (navigator.clipboard && window.isSecureContext) navigator.clipboard.writeText(url).then(() => announce('链接已复制，粘贴到微信即可分享'));
+        else announce('请复制浏览器地址栏链接后分享');
+      });
+      const progress = document.getElementById('reading-progress'); const tocLinks = [...document.querySelectorAll('.toc>a')]; const sections = tocLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean); let scheduled = false;
+      function onScroll() { if (scheduled) return; scheduled = true; requestAnimationFrame(() => { const maximum = document.documentElement.scrollHeight - window.innerHeight; progress.style.width = (maximum > 0 ? Math.min(100, Math.max(0, window.scrollY / maximum * 100)) : 0) + '%'; let current = sections[0]; sections.forEach(section => { if (section.getBoundingClientRect().top <= 145) current = section; }); tocLinks.forEach(link => { const active = link.getAttribute('href') === '#' + current.id; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current','location'); else link.removeAttribute('aria-current'); }); scheduled = false; }); }
+      window.addEventListener('scroll', onScroll, {passive:true}); window.addEventListener('resize', onScroll); onScroll();
+    })();
+  </script>
+</body>
+</html>

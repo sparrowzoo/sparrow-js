@@ -314,6 +314,10 @@
     "count": "{count} guides",
     "read": "Read guide",
     "items": {
+      "nginxHttpsLaunch": {
+        "title": "Enabling HTTPS across the site with Nginx",
+        "description": "Unify public domains on 443 SSL with 80→301 redirects, keep internal domains on 80, and use certbot certonly to issue certificates before rolling out config."
+      },
       "launchRunbook": {
         "title": "Next.js 15 four-site static launch",
         "description": "Build one archive locally, switch releases on the server with a single command, plus verification and pitfalls."
