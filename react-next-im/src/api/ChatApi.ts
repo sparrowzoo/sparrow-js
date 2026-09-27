@@ -16,7 +16,7 @@ interface RemoteContactGroup {
 
 export default class ChatApi {
     static async getVisitorToken(): Promise<string> {
-        const response = await Fetcher.get<{token: string}>({
+        const response = await Fetcher.get<{ token: string }>({
             url: "/get-visitor-token.json",
         });
         return response.data.token;
@@ -89,7 +89,7 @@ export default class ChatApi {
 
                     const groups = remoteContactGroup.quns;
                     for (let group of groups) {
-                        group.avatar = format(AVATAR_URL, group.qunId);
+                        //group.avatar = format(GROUP_AVATAR_URL, group.qunId);
                     }
                     localContactGroup.quns = groups;
                 }
