@@ -1,0 +1,33 @@
+schema: spec-driven
+
+context: |
+  Language: zh-CN
+  All artifacts must be written in zh-CN.
+  Keep OpenSpec structural headings and SHALL/MUST keywords in English.
+  工程文档统一项目根下 doc/openspec，不建立根 openspec 软链接。
+  源码路径与构建测试命令相对项目根，不相对 doc。
+  实施计划统一 doc/superpowers/plans；Spec 链接指向对应 change。
+  所有 OpenSpec CLI 从项目根下 doc 运行；规划根 doc 不等于代码项目根。
+  本工作流只产出工程文档，实施时将实际项目根和计划路径明确交付给编码流程。
+
+# Per-artifact rules (optional)
+# Add custom rules for specific artifacts.
+# Example:
+#   rules:
+#     proposal:
+#       - Keep proposals under 500 words
+#       - Always include a "Non-goals" section
+#     tasks:
+#       - Break tasks into chunks of max 2 hours
+
+# Per-operation guidance (optional)
+# Add advisory guidance for how apply and archive work should be conducted.
+# This is separate from artifact rules above.
+# Example:
+#   operations:
+#     apply:
+#       guidance:
+#         - Keep test summaries concise
+#     archive:
+#       guidance:
+#         - Summarize the archive outcome before finishing
