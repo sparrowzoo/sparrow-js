@@ -9,7 +9,12 @@ export enum CommandType {
 export enum StorageType{
   LOCAL = "local",
   SESSION = "session",
+  COOKIE = "cookie",
   AUTOMATIC = "automatic"
+}
+
+export interface StorageSaveOptions {
+  remember?: boolean;
 }
 
 export interface StorageRequest {
@@ -18,6 +23,7 @@ export interface StorageRequest {
   key: string;
   requestId: string; // 唯一请求ID，用于匹配响应
   value?: string;
+  saveOptions?: StorageSaveOptions;
 }
 
 export interface StorageResponse {
