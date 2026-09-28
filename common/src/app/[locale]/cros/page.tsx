@@ -12,9 +12,10 @@ import {Label} from "@/components/ui/label";
 
 const MAX_EVENTS = 300;
 const TOKEN_STORAGE_KEY = "hello";
+const DEBUG_FRAME_ID = "cros-storage-iframe-debug";
 
 type EventEntry = { id: number; event: CrosStorageEvent };
-type FrameStatus = "loading" | "waitingInit" | "ready" | "local" | "unavailable";
+type FrameStatus = "idle" | "loading" | "waitingInit" | "ready" | "local" | "unavailable";
 type RequestStatus = "idle" | "pending" | "waiting" | "success" | "error" | "timeout" | "cancelled";
 
 export default function CrosStorageMonitorPage() {
@@ -25,7 +26,7 @@ export default function CrosStorageMonitorPage() {
     const [connection, setConnection] = useState(0);
     const [connected, setConnected] = useState(false);
     const [iframeSrc, setIframeSrc] = useState<string | null>(null);
-    const [frameStatus, setFrameStatus] = useState<FrameStatus>("loading");
+    const [frameStatus, setFrameStatus] = useState<FrameStatus>("idle");
     const [requestStatus, setRequestStatus] = useState<RequestStatus>("idle");
     const [events, setEvents] = useState<EventEntry[]>([]);
     const [storage, setStorage] = useState(StorageType.AUTOMATIC);
@@ -37,20 +38,23 @@ export default function CrosStorageMonitorPage() {
         let active = true;
         let client: CrosStorage | null = null;
         let hasFrame = false;
-        setFrameStatus("loading");
+        setFrameStatus("idle");
         setRequestStatus("idle");
         setIframeSrc(null);
         const monitor: CrosStorageMonitor = {
             onEvent(event) {
-                console.log(JSON.stringify(event))
                 if (!active) return;
-                const entry = {id: nextEventId.current++, event};
+                // Older event producers may still include value; never retain it in the log UI.
+                const {value, ...metadata} = event;
+                const entry = {id: nextEventId.current++, event: {...metadata,
+                    valueLength: event.valueLength ?? (typeof value === "string" ? value.length : undefined)}};
                 setEvents(previous => [entry, ...previous].slice(0, MAX_EVENTS));
                 // 状态独立于事件列表保存，清空记录不会丢失当前状态。
                 switch (event.type) {
                     case "iframe-created":
                     case "iframe-reused":
                         hasFrame = true;
+                        setIframeSrc((document.getElementById(DEBUG_FRAME_ID) as HTMLIFrameElement | null)?.src ?? null);
                         setFrameStatus(event.loaded ? "ready" : "loading");
                         break;
                     case "iframe-load":
@@ -71,6 +75,7 @@ export default function CrosStorageMonitorPage() {
                         setRequestStatus(event.error ? "error" : "success");
                         break;
                     case "storage-operation":
+                        if (!hasFrame) setFrameStatus("local");
                         setRequestStatus("success");
                         break;
                     case "request-error":
@@ -88,16 +93,11 @@ export default function CrosStorageMonitorPage() {
         };
 
         try {
-            // 构造时也会产生事件，因此在创建实例前准备好 monitor。
+            // The transport is lazy; iframe-created/reused supplies its URL later.
             client = CrosStorage.getCrosStorage(monitor);
             clientRef.current = client;
             setConnected(true);
             setError(null);
-            if (hasFrame) {
-                setIframeSrc(document.querySelector<HTMLIFrameElement>("#cros-storage-iframe")?.src ?? null);
-            } else {
-                setFrameStatus("local");
-            }
         } catch (cause) {
             setError(cause instanceof Error ? cause.message : String(cause));
             setConnected(false);
@@ -187,7 +187,7 @@ export default function CrosStorageMonitorPage() {
                     <div className="flex flex-wrap gap-2" role="status">
                         <span className="rounded-md border bg-background px-2 py-1">
                             {t("frameStatus")}: <span
-                            className="font-medium text-foreground">{t(`frameStates.${frameStatus}`)}</span>
+                            className="font-medium text-foreground">{frameStatus === "idle" ? t("requestStates.idle") : t(`frameStates.${frameStatus}`)}</span>
                         </span>
                         <span
                             className={`rounded-md border px-2 py-1 ${requestStatus === "error" || requestStatus === "timeout" ? "bg-destructive/10 text-destructive" : "bg-background"}`}>
@@ -203,7 +203,7 @@ export default function CrosStorageMonitorPage() {
                     )}
                     {iframeSrc && (
                         <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                            <a href="#cros-storage-iframe"
+                            <a href={`#${DEBUG_FRAME_ID}`}
                                className="font-medium text-foreground underline underline-offset-4">{t("viewIframe")}</a>
                             <span>{t("iframeBelow")}</span>
                         </p>
@@ -224,6 +224,7 @@ export default function CrosStorageMonitorPage() {
                         <option value={StorageType.AUTOMATIC}>{t("automatic")}</option>
                         <option value={StorageType.LOCAL}>localStorage</option>
                         <option value={StorageType.SESSION}>sessionStorage</option>
+                        <option value={StorageType.COOKIE}>Cookie</option>
                     </select>
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -281,8 +282,8 @@ export default function CrosStorageMonitorPage() {
                                             {event.key !== undefined &&
                                                 <div><span className="text-muted-foreground">key: </span>{event.key}
                                                 </div>}
-                                            {event.value !== undefined && <div><span
-                                                className="text-muted-foreground">{t("eventValue")}: </span><code>{JSON.stringify(event.value)}</code>
+                                            {event.valueLength !== undefined && <div><span
+                                                className="text-muted-foreground">valueLength: </span><code>{event.valueLength}</code>
                                             </div>}
                                             {event.requestId && <div><span
                                                 className="text-muted-foreground">{t("requestId")}: </span>{event.requestId}

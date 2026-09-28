@@ -1,0 +1,741 @@
+{
+  "kind": "auth-unit-component-regression",
+  "date": "2026-09-28",
+  "environment": {
+    "node": "22.16.0",
+    "runner": "Vitest 4.1.11",
+    "dom": "jsdom 26.1.0",
+    "note": "Real production modules; external network/browser boundaries stubbed. Not a real mobile/browser report."
+  },
+  "projects": [
+    {
+      "project": "common",
+      "command": "yarn --cwd common test:auth",
+      "success": true,
+      "total": 94,
+      "passed": 94,
+      "failed": 0,
+      "startUtc": "2026-09-28T10:36:33.932000+00:00",
+      "suites": [
+        {
+          "file": "common/tests/auth/consumers.test.ts",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "S06/S07 existing consumers retain the original token transport Fetcher GET and POST re-read the Cookie and preserve the Authorization value",
+              "status": "passed"
+            },
+            {
+              "name": "S06/S07 existing consumers retain the original token transport Fetcher download keeps Authorization and the existing explicit credentials option",
+              "status": "passed"
+            },
+            {
+              "name": "S06/S07 existing consumers retain the original token transport leaves business expiry to the backend and preserves its login rejection path",
+              "status": "passed"
+            },
+            {
+              "name": "S06/S07 existing consumers retain the original token transport FileUploader uses the real facade and sends the original token with its multipart request",
+              "status": "passed"
+            },
+            {
+              "name": "S06/S07 existing consumers retain the original token transport SparrowWebSocket passes the unchanged token as its existing subprotocol",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/cookie.test.ts",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "S01 storage strategy selection and opaque values defaults to LOCAL while explicit SESSION and COOKIE remain isolated",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values uses the configured default but gives an explicit strategy priority",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values rejects an invalid configured default without blocking a valid explicit mode",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values re-reads storage instead of retaining a completed token",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values dispatches through a registered strategy rather than bypassing it",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values constructs without browser globals and reports unavailable storage only on use",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values round-trips encoded token bytes without parsing claims or matching a name prefix",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values ignores a nameless Cookie instead of truncating it into the requested name",
+              "status": "passed"
+            },
+            {
+              "name": "S01 storage strategy selection and opaque values treats an empty Cookie value as absent and can still remove its stored entry",
+              "status": "passed"
+            },
+            {
+              "name": "S02 Cookie preservation policy defaults to a session Cookie and writes secure, path and SameSite attributes",
+              "status": "passed"
+            },
+            {
+              "name": "S02 Cookie preservation policy uses configured days plus one only for an explicit remembered write (undefined)",
+              "status": "passed"
+            },
+            {
+              "name": "S02 Cookie preservation policy uses configured days plus one only for an explicit remembered write (2)",
+              "status": "passed"
+            },
+            {
+              "name": "S02 Cookie preservation policy returns the same token in the extra physical day without rewriting it",
+              "status": "passed"
+            },
+            {
+              "name": "S02 Cookie preservation policy replaces a persistent Cookie with a session Cookie when remember is false",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie days 0",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie days -1",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie days 1.5",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie days NaN",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie days 1e40",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie domain or attributes {\"NEXT_PUBLIC_TOKEN_COOKIE_DOMAIN\":\"https://example.com\"}",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie domain or attributes {\"NEXT_PUBLIC_TOKEN_COOKIE_DOMAIN\":\"unrelated.test\"}",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie domain or attributes {\"NEXT_PUBLIC_TOKEN_COOKIE_SAME_SITE\":\"Other\"}",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie domain or attributes {\"NEXT_PUBLIC_TOKEN_COOKIE_SAME_SITE\":\"None\",\"NEXT_PUBLIC_TOKEN_COOKIE_SECURE\":\"false\"}",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects invalid Cookie domain or attributes {\"NEXT_PUBLIC_TOKEN_COOKIE_SECURE\":\"maybe\"}",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations refuses insecure production Cookie configuration",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations allows B to read missing Cookie even when configured A domain cannot be written at B",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects an invalid runtime remember field",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects duplicate visible names even if values are equal",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations reports malformed value encoding without attempting token parsing",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations rejects an oversized encoded assignment without replacing the old token",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations reports silent write rejection and does not claim persistence",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations does not turn denied Cookie access into a normal missing value",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations reports silent deletion rejection while preserving the observable value",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations deletes the configured parent-domain Cookie and treats absence as success",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations identifies only configured shared scope and explicitly removes an independent host-only Cookie",
+              "status": "passed"
+            },
+            {
+              "name": "S03 invalid and rejected Cookie operations will not silently delete an unknown parent Cookie as if it were host-only",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/diagnostic.test.tsx",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "@S04 @S05 diagnostic page starts without an iframe or a false local-mode claim and exposes Cookie",
+              "status": "passed"
+            },
+            {
+              "name": "@S04 @S05 diagnostic page tracks a lazily created debug frame without taking over the normal frame and renders only value length",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/header.test.tsx",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "S11 Header distinguishes unknown credentials from confirmed absence shows a retryable RPC error, keeps cached display data, and recovers from a fresh read",
+              "status": "passed"
+            },
+            {
+              "name": "S11 Header distinguishes unknown credentials from confirmed absence does not call a local storage refusal a visitor or erase cached display data",
+              "status": "passed"
+            },
+            {
+              "name": "S11 Header distinguishes unknown credentials from confirmed absence keeps an unreadable account display distinct from an absent token",
+              "status": "passed"
+            },
+            {
+              "name": "S11 Header distinguishes unknown credentials from confirmed absence shows sign-in and clears old display data only after both sources confirm absence",
+              "status": "passed"
+            },
+            {
+              "name": "S11 Header distinguishes unknown credentials from confirmed absence ignores an old remote result after unmount and leaves a new mounted result intact",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/login-state.test.ts",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "S09–S11 login and logout consistency clears independent B token only after A successfully saved the new value",
+              "status": "passed"
+            },
+            {
+              "name": "S09–S11 login and logout consistency keeps B value and rejects if saving A failed",
+              "status": "passed"
+            },
+            {
+              "name": "S09–S11 login and logout consistency removes B and A and clears display cache on confirmed absence",
+              "status": "passed"
+            },
+            {
+              "name": "S09–S11 login and logout consistency does not claim a shared Cookie save succeeded when B has a same-name host Cookie",
+              "status": "passed"
+            },
+            {
+              "name": "S09–S11 login and logout consistency releases the hook-created instance on unmount",
+              "status": "passed"
+            },
+            {
+              "name": "S09–S11 login and logout consistency logout returns a promise and always releases its storage client",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/monitor.test.ts",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "@S05 StorageMonitor replaces credential values and raw errors with safe diagnostics",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 StorageMonitor uses the same redaction for debug output and drops unknown payload fields",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 StorageMonitor does not propagate callback throw failures",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 StorageMonitor does not propagate callback reject failures",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 StorageMonitor is silent when disabled and gives an explicit observer precedence over console",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/read.test.ts",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "S06–S08 local-first token routing returns an opaque local token without creating or calling an iframe",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing allows a local hit even with missing proxy configuration",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing reads A each time without persisting the returned token at B",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing uses explicit SESSION for the local lookup instead of configured LOCAL",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing preserves visitor generation and the explicit storage strategy",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing normalizes an empty remote value to no token",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing still permits the existing visitor fallback after an empty remote value",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing does not generate a visitor after an RPC failure",
+              "status": "passed"
+            },
+            {
+              "name": "S06–S08 local-first token routing surfaces proxy errors rather than converting them to absence",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/release-config.test.ts",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "S12 four-site release configuration uses one new token key in all environments without reviving the old key",
+              "status": "passed"
+            },
+            {
+              "name": "S12 four-site release configuration enables identical HTTPS shared-domain Cookie settings in production",
+              "status": "passed"
+            },
+            {
+              "name": "S12 four-site release configuration uses host-only Cookie consistently for HTTP localhost development",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "common/tests/auth/rpc.test.ts",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "@S05 @S06 PostMessageRpc releases listeners after consecutive calls from different instances without destroy",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc releases listeners after consecutive calls from the same instance without destroy",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc keeps its listeners until the last concurrent request completes",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc releases a timed-out owner's listeners and restarts the same instance's unready frame",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc preserves a new request started synchronously by a completion observer",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc handles synchronous destroy from a iframe-created observer",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc handles synchronous destroy from a request-created observer",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc handles synchronous destroy from a iframe-ready observer",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc creates its iframe only when an RPC is requested",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc requires origin and iframe source for INIT and a sent request ID for responses",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc returns complete application error responses without logging payloads",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc times out at 10 seconds while waiting for INIT and ignores late ready messages",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc does not reset the deadline when INIT arrives near the timeout",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc retains verified INIT when the iframe load event arrives later",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc shares the target iframe but destroy only cancels its own requests",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc reloads an unready orphan so reconnect can receive INIT again",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc rejects a conflicting target without rewriting another client's iframe",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc rejects a non-iframe ID conflict without replacing the element",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc does not trust an existing iframe's unverified loaded attribute",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc removes listeners on destroy and refuses later requests without creating a frame",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc isolates observer throw failures",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc isolates observer reject failures",
+              "status": "passed"
+            },
+            {
+              "name": "@S05 @S06 PostMessageRpc cleans up a failed postMessage and protects an existing duplicate request",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "project": "react-next-passport",
+      "command": "yarn --cwd react-next-passport test:auth",
+      "success": true,
+      "total": 36,
+      "passed": 36,
+      "failed": 0,
+      "startUtc": "2026-09-28T10:36:34.466000+00:00",
+      "suites": [
+        {
+          "file": "react-next-passport/tests/auth/login.test.tsx",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "S09 sign-in remember option and save ordering preserves the login payload and saves remember=false before redirect",
+              "status": "passed"
+            },
+            {
+              "name": "S09 sign-in remember option and save ordering preserves the login payload and saves remember=true before redirect",
+              "status": "passed"
+            },
+            {
+              "name": "S09 sign-in remember option and save ordering does not report success or redirect when Cookie persistence fails",
+              "status": "passed"
+            }
+          ]
+        },
+        {
+          "file": "react-next-passport/tests/auth/proxy.test.tsx",
+          "status": "passed",
+          "tests": [
+            {
+              "name": "normal production proxy S04 preserves LOCAL/SESSION GET SET REMOVE responses",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S04 uses actual Cookie storage and preserves the original bytes",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 rejects a different window even when its origin is allowed",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 ignores non-object data and requests without a string correlation ID",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 does not announce INIT for an untrusted or malformed parent URL: https://unlisted.test",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 does not announce INIT for an untrusted or malformed parent URL: malformed%",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 rejects unlisted origins and stops listening after unmount",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"local\",\"value\":\"never-log-this-token%==\",\"saveOptions\":{\"remember\":\"yes\"}}",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"local\",\"value\":\"never-log-this-token%==\",\"saveOptions\":null}",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"cookie\",\"value\":123}",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"unknown\",\"value\":\"never-log-this-token%==\"}",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 returns an error for malformed fields without writing: {\"command\":\"unknown\",\"storage\":\"local\",\"value\":\"never-log-this-token%==\"}",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 returns an error for malformed fields without writing: {\"command\":\"get\",\"storage\":\"local\",\"key\":123}",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S05 does not send a raw storage exception or token to the caller or debug log",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S04 INIT accepts the encoded parent URL and uses an exact targetOrigin",
+              "status": "passed"
+            },
+            {
+              "name": "normal production proxy S04 INIT accepts the legacy parent URL and uses an exact targetOrigin",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S04 preserves LOCAL/SESSION GET SET REMOVE responses",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S04 uses actual Cookie storage and preserves the original bytes",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 rejects a different window even when its origin is allowed",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 ignores non-object data and requests without a string correlation ID",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 does not announce INIT for an untrusted or malformed parent URL: https://unlisted.test",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 does not announce INIT for an untrusted or malformed parent URL: malformed%",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 rejects unlisted origins and stops listening after unmount",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"local\",\"value\":\"never-log-this-token%==\",\"saveOptions\":{\"remember\":\"yes\"}}",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"local\",\"value\":\"never-log-this-token%==\",\"saveOptions\":null}",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"cookie\",\"value\":123}",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 returns an error for malformed fields without writing: {\"command\":\"set\",\"storage\":\"unknown\",\"value\":\"never-log-this-token%==\"}",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 returns an error for malformed fields without writing: {\"command\":\"unknown\",\"storage\":\"local\",\"value\":\"never-log-this-token%==\"}",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 returns an error for malformed fields without writing: {\"command\":\"get\",\"storage\":\"local\",\"key\":123}",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S05 does not send a raw storage exception or token to the caller or debug log",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S04 INIT accepts the encoded parent URL and uses an exact targetOrigin",
+              "status": "passed"
+            },
+            {
+              "name": "debug production proxy S04 INIT accepts the legacy parent URL and uses an exact targetOrigin",
+              "status": "passed"
+            },
+            {
+              "name": "S04 debug keeps manual hello operations, adds COOKIE, and displays only value length",
+              "status": "passed"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fileHashes": {
+    "common/.env.development": "2435f3e211c59773ae57be5da9a4df2bd160418e12448934c85b515b72611b71",
+    "common/.env.production": "b78d574507cc5be2f068aa4b6989be0712377f0936fdf89ea333bc2c5e6a8856",
+    "common/package.json": "421885445346ee33cb8c9c08a57508b4f3b3d6e7bacaecf834b1cd69316845b3",
+    "common/src/app/[locale]/cros/page.tsx": "ad053555f5350d1d071ccbaec177da87bfee60da149aae6461892fb38b167e6d",
+    "common/src/common/components/AsChild.tsx": "4d76bd2445c4ce7aac46d1d8de1cf0390eee9f9f85992fceca809f5de0a79983",
+    "common/src/common/components/Draggable.tsx": "78f1446a5d33cca95fa4732d715a51a6a6f4b5bb784741da6b0c1859aabb22e2",
+    "common/src/common/components/DynamicRender.tsx": "3e4eb06f84ba576975e8ab7c9fd8a3a303aaa86107d7eba15b8322fb15da3791",
+    "common/src/common/components/Error.tsx": "cb1f2b40a784b08075c5bf3e4374aaf1fa605665d67c58db688480de9c0843ff",
+    "common/src/common/components/HtmlFragment.tsx": "9e2c7dd014ad22c8a2c2e1bdbb18be3ee33b36764dccc55eb1a2a017f49bba45",
+    "common/src/common/components/LoadingSpinner.tsx": "c67b138171aa564d5774dbeff7ebd7f83b437cdf7dd86f65c3dbb0e7c771204d",
+    "common/src/common/components/ThreeDotLoading.tsx": "db1be517f1b8eb179dccab89492ddefda5b5bd3dbefe1c24a577a5817d2b5d0a",
+    "common/src/common/components/access-histories.tsx": "55c15387efdeeca516f9293702346a4704c4af8c98dc27288dcf181f03231500",
+    "common/src/common/components/file/FileUploader.tsx": "a96df00a07ac29bc1da23930701758c2227a025772db6456541ce322fc32e5ad",
+    "common/src/common/components/file/FileUtils.ts": "d86d3b379bc053af2e05584c407ecf821c2c25341e5d668820d3fae5bd7c3378",
+    "common/src/common/components/forms/search-input.tsx": "fcce814f7c76aa073dce7cf11dc0a12514c4846225a7ef603592535a9ac495e5",
+    "common/src/common/components/forms/search-select.tsx": "90b5197a79f47c9654cfd0cfc272e5a7b920fe1b576c8b22495fc5275de9e021",
+    "common/src/common/components/forms/validatable-date.tsx": "03f7e1f615cc8961cd9bb2ee37eaa714e9ba17947ede366e67b81f5456b0418d",
+    "common/src/common/components/forms/validatable-input.tsx": "dbe9264989f5f581638df36d080a04645850eaac17cd68c605a869c29823e4e0",
+    "common/src/common/components/forms/validatable-select.tsx": "1fec03e38b34d3873b45b5c03c7af4a361af5a958013e348832075a2218b3154",
+    "common/src/common/components/forms/validatable-textarea.tsx": "0b179da2c1f64e108f78086436b9ceb96c6f36450e036bc43df2740e80099a11",
+    "common/src/common/components/header/mode-toggle.tsx": "79a360f84e327d9fb7d902f202d3944de470400be3465d9a269b06672320681f",
+    "common/src/common/components/header/site-banner.tsx": "df19e165a17748fcde644020ac012006e929cce2dfffdb991ba3afa68d4b25a9",
+    "common/src/common/components/header/theme-provider.tsx": "8b4b2ab9376a045bc77419e45ff81dc93e38d5964da024b21abb0cf3b39d9986",
+    "common/src/common/components/header/user-profile.tsx": "f7bd4279faa9f6e8d8d218049a90a8f85fe03708ea21611545d61774c7d6caa3",
+    "common/src/common/components/i18n/ErrorMessage.tsx": "e76b5bbe67be33d7048850132a563d39c598943b002506882834a872197f69c3",
+    "common/src/common/components/i18n/HtmlFragement.tsx": "26c1cc3e9200ba63cf3fe40d9d634762cf8fa935ebbd7bb2f728fffd774c0bfc",
+    "common/src/common/components/i18n/LocaleSwitcher.tsx": "039aebd95c4ab9999efca251416d3e2858faa81a09cf0970c60a15b49d676faf",
+    "common/src/common/components/i18n/LocaleSwitcherSelect.tsx": "7c9df13bfda657349f63ae30e5695b46479c625741be6760d346d8207ba7ac3c",
+    "common/src/common/components/table/cell/check-box.tsx": "8b676a56d7aa512daad613547e9d939e40ce3a8ce71899a406c0112e5890c3f8",
+    "common/src/common/components/table/cell/currency.tsx": "d0ee14bab5e75cccdfa9c4b0e937305aef6581e9e98c993ea893a552035da222",
+    "common/src/common/components/table/cell/input-cell.tsx": "585ffd019df5c6c3bc8d38d8f40db0ebedc3351ea5e648cc9b14a875785c9f3a",
+    "common/src/common/components/table/cell/normal.tsx": "93f5ef265249981c835c85a4510a293d70fdf649d10c0fdbe7ed488fb767fef5",
+    "common/src/common/components/table/cell/operation.tsx": "9f47a773f60f4e066d90eb95d237bcce8edc04b5a3010f2cac49fffc67c051cc",
+    "common/src/common/components/table/cell/pop-operation-item.tsx": "66ad7f8c2b5061cd9c1d013177a075e36a92fb0c49914a2fe9db6b6523264f47",
+    "common/src/common/components/table/cell/select-cell.tsx": "55e658b348850ca37ccfcb1be64e684ede75bd1c212980d9962373b34aaeaee7",
+    "common/src/common/components/table/cell/sortable.tsx": "32c89af8b5e4bbae5c326acbccb8be8c4d434944dc68e68422f8bd4121cd9aa4",
+    "common/src/common/components/table/cell/tree.tsx": "f507e70531eb0954c6ec4c1ecb6db530756ef41309b39597452973ed9ac58e5b",
+    "common/src/common/components/table/cell/unix-timestamp.tsx": "6ac8b4dea38d709146675a62dd32d12b1b8b4f041d8154ad5b10de406d104cc1",
+    "common/src/common/components/table/cell-render.tsx": "b8b85df0475b8f7cc4e7de40d2bafadb0a98844a3d51f8d7eab27a9e2d5d88dc",
+    "common/src/common/components/table/column-operation.tsx": "3d9f4c2de62100e4450b467b4db9304a41846982c52fb63d9ff77583f48efb0b",
+    "common/src/common/components/table/data-table.tsx": "d890b2a8c479b8e64392b5c8c6b7a6c0bfb5e9d307881803cf71724a52aab5bc",
+    "common/src/common/components/table/empty-row.tsx": "9d72ba9ee3b3580577c604ee89fa267c1c146d775324d8d22001a1187edfabd9",
+    "common/src/common/components/table/header/check-box.tsx": "3f8a5e87ac42f53bb53eb45bac9d8c0e46348325938a77c7f4e9f36217013275",
+    "common/src/common/components/table/header/column-filter.tsx": "4cd6ff971aac1d1c073f55a534d807de78eefbb4f90514f68826525d1e61a232",
+    "common/src/common/components/table/header/empty.tsx": "04e082c6005382822bacff89401d531b23ad98d545308c453eef61e6f88abfef",
+    "common/src/common/components/table/header/normal.tsx": "5744b6d754539a628bb63740a12a4c0164bc797cb82f41f1fa718d567c0f7890",
+    "common/src/common/components/table/header/plain-text.tsx": "42afa5dee40b29dea29cf7a5b7626a9436c9f4aee28a9155fee6a8544b9d0cb2",
+    "common/src/common/components/table/pager.tsx": "6aaa5daaf74b35ae0bbc759ccd0d290607f2841bff73aa8d184bcf0b330f0553",
+    "common/src/common/components/table/pagination.tsx": "5e317bae380202f7c317e34d93e27a2a96b9e320b56ebd4e9e90e19da18ca2a2",
+    "common/src/common/hook/CaptchaHook.tsx": "34f0320c97dc68d5d1a5e6f6d41d9fe8997cd94435f324cf32593cb9674a80b1",
+    "common/src/common/hook/CrosStorageHook.tsx": "ddc06e3bdb4d07a0e0cc641a0f7119c2e571ba80d93dc7199d34d5f269419d3e",
+    "common/src/common/hook/NavigatingHook.tsx": "3d7d6032c799a7008b18623dde8ff929a6dcd13b1f99bb38fd44d7bd0fcaceae",
+    "common/src/common/hook/ReachBottomHook.tsx": "8f6aa55ae6b2a0fcd150b1221f437b74982281bdbec913e212a32989b745cb63",
+    "common/src/common/i18n/multi-request.ts": "67c93d4bc83768b03cad1ac54e27edc7646a1eb0620e337a6bb389cf4b4051ca",
+    "common/src/common/i18n/navigation.ts": "60bcc76f15a75399f07ed70424551d6b679d3a9e49a15bc61a46dbd9a3d74b14",
+    "common/src/common/i18n/request.ts": "3cd3268af12504c83dbb90659e05738c8374c59f16a118ab5377d889d7a1b7e3",
+    "common/src/common/lib/CrosStorage.ts": "a4fc9fe1c1ea0bfe18809173c905293afff8c51665665eff13edf82af5a7cafe",
+    "common/src/common/lib/Env.ts": "62917d5d2ff23ff508c28c0b708063c7ca9af14d679fa5e4e3082dc9cd81d229",
+    "common/src/common/lib/Fetcher.ts": "96bd8e9a11fca151c9f4aa07f113c13eff603d1bc596eb31ddce1a35c4ec7730",
+    "common/src/common/lib/ProductRegistry.ts": "301cc3f5e9d12363ab43759b2fd6b2e5ca0e8260a376c3e43ffacb8f5f298498",
+    "common/src/common/lib/SparrowWebSocket.ts": "080ad7f97b75f284eb8b58fb3dea0fd91884f8fece08307b7c06273eb7c088cb",
+    "common/src/common/lib/TranslatorType.ts": "293364a9c9fca8fcdb82d60bc4dd9a1b483ff4ab4bd9851af9ccc64b4a3476b7",
+    "common/src/common/lib/UrlUtils.ts": "0df2f960b7428d5e59c462423008c31534d016cb550cd861883a630778ab5e20",
+    "common/src/common/lib/UserCategory.ts": "8d52f97e9ac75015f38f30953d39abb9fbf1b468dd983f81bf1fadb65493cfb6",
+    "common/src/common/lib/Utils.ts": "78a6232f4b0ac1c7776a30c55fe5c28705b5112ee2a84508f1790410dda7e012",
+    "common/src/common/lib/admin/AccessHistoryContainer.ts": "08b42d81023fd6ffa0ff2021020625331f77114b100caea2e4772f0d84672597",
+    "common/src/common/lib/admin/AccessLog.ts": "7ae9a0190d9b6bc2917f2260986aca2cbb5ff44a70dace5f6063eacdb2ec96bf",
+    "common/src/common/lib/admin/AdminBroker.ts": "580a37662b84c87c3b89747817e32cc22f0869d40d7ce654381f77e1622e1401",
+    "common/src/common/lib/admin/AdminContextProvider.ts": "ed271bffcc1d86a928c3d452da45521111e324c3c80f6fb167911c63738c9c54",
+    "common/src/common/lib/monitor/StorageMonitor.ts": "83bb3291cc49925eef3f4a228e4bb19a4a412a47152119f6dd9bca47412aa926",
+    "common/src/common/lib/protocol/ArrayBufferUtils.ts": "c1552d17abd6c0506aa5c80bed71ad0f7261d943e61266e7d0f8b6a5314bf9b3",
+    "common/src/common/lib/protocol/CrosProtocol.ts": "a6f190e4ae8e23c58036f3b3f372d9329cc73f3e175d6e16ac954bc299b459d3",
+    "common/src/common/lib/protocol/Identity.ts": "e348da8d1ba24370e891b72a35660d065498913c6ee9b2262bd678917ebd5859",
+    "common/src/common/lib/protocol/KeyValue.ts": "221f4853cb53a9e079b799a15dc38cd9f9c7707fa847ad4b15d0296461d6c870",
+    "common/src/common/lib/protocol/LoginUser.ts": "56e8ab39b5f61e06b077122b4c90d33af9d4ee6e561ff8530dcb57145d52f946",
+    "common/src/common/lib/protocol/ProductNavigation.ts": "4f07b0c3ca8a3cd6fe38df0f337a761da7d7e88e5a9367693d45bf379d3bdea7",
+    "common/src/common/lib/protocol/Result.ts": "30c5c54b69403f34a2558610e2fc5cfc302c03d50bc960882d8d8a27c5b67b00",
+    "common/src/common/lib/protocol/Status.ts": "17aaaa0c0a34270891cf14034534c0c091ae3fa73008699fc675fdf8b78a5658",
+    "common/src/common/lib/rpc/PostMessageRpc.ts": "f969db99593e426cab381298efdb36e4d8737f37e7343527ad395b5f0b3d45a9",
+    "common/src/common/lib/rpc/StorageProxy.ts": "54f8464e7c67b5afcc08f1c2fd92a933f15aafd4344a58ef57665c42e79fba37",
+    "common/src/common/lib/storage/CookieStorage.ts": "3a37c86c7d7700d5de64d23fa213bd3e6ba6887c1811590bd2bd1ef814d64c1e",
+    "common/src/common/lib/storage/StorageManager.ts": "6d690ee30d0cdeadff9a28346c18848f56e59b069108104349848e830e2bece6",
+    "common/src/common/lib/storage/WebStorage.ts": "86f93aaa4c88e9e6b29c3276ef67856c12be3b97b5d857e04bb7efcccf06b89d",
+    "common/src/common/lib/storage/types.ts": "6ba4955d72c17380cae8a984fc7655298301c6a070522a43c79b0fbffb583559",
+    "common/src/common/lib/table/DataTableProperty.ts": "5e70c3ea6c6634180c0d7de1b3ba65fa6c04ac149d3e83afb49d87bca02ef3fb",
+    "common/src/common/lib/table/TableUtils.ts": "bc270edb7dbb9a01559c462a9b4e51f2f6c688b7dd0738a87b53bf6e4d985f7d",
+    "common/tests/auth/consumers.test.ts": "24062e227cabd13b2fee5969a6d32ac0cfb2d592a96b0a89974e2fa6e1962a22",
+    "common/tests/auth/cookie.test.ts": "a3c35ae7102dcf4044c6e36db73099570862d261573bf428cfd24cd874a30ef3",
+    "common/tests/auth/diagnostic.test.tsx": "bc12435f44fcfd20ca2ce74a2a1f39c1f4a788bce2bae7a67241640a3af88254",
+    "common/tests/auth/header.test.tsx": "2103d3b38b87783467e5f97fbd283821db9f3277be6f970db2a26c945276f806",
+    "common/tests/auth/login-state.test.ts": "d19d169d545b5fc8d8456db6e49bf18659116a4455b45448f8e016d128c7f0a7",
+    "common/tests/auth/monitor.test.ts": "b1499dbd2da9f596e49cf1449ba8f0146b3018432082ff1d185a1676c8565cd3",
+    "common/tests/auth/read.test.ts": "a28e8da012596ddb26a213ad666a663d315bb69166688a5fb11aee776ab87ab8",
+    "common/tests/auth/release-config.test.ts": "83691dc11d0fa51750ab58b9a7468b36a88458109f98f24a9f6c44e593c8ec1a",
+    "common/tests/auth/rpc.test.ts": "acada32b70d33080d6d1c0109bffc5aff4d58844ead5c5963d3ca632471a3182",
+    "common/yarn.lock": "7b9927085e798b0d3746a5bd695be3f21723adbbb6e55db20076cc6f73901dbb",
+    "react-next-admin/.env.development": "6b3ae820d15fcec2199c87f47a2b17d1d059cea9037164f0d767faef46c1a741",
+    "react-next-admin/.env.production": "e923f41a60198dc44ee743765b94cefbe484bd4a2856eb3d18004632e8d653ef",
+    "react-next-admin/package.json": "cb7af93f59f7102ac2d491789ec505bf28cc2c664a8091eb946ba4e4adec7095",
+    "react-next-admin/yarn.lock": "4d8acd51121b3159efd3d78b442867c36765f798a777672326c7bade42af06bc",
+    "react-next-im/.env.development": "548ad3a9e6b25f8c2db13306730a85f878a0339e5d2c6faa2bb9a4b9a04d3186",
+    "react-next-im/.env.production": "d829429af5f276e2f220d95094df5aac5282eb9480c91853832afae698134c83",
+    "react-next-im/package.json": "93bfdf5dc1951ea187fed619dd4f4c63ed7ebbb00ece815808a95a458ebe8860",
+    "react-next-im/yarn.lock": "6c30064d6fd1ad92f0e6bf90a740aeec5e2c5ebc23ecffd706b7f4f78897597e",
+    "react-next-passport/.env.development": "86dc3a23e2bd4083f325e6779fe27760ced4ae44f0ad71bdacd52cfbc56dbf55",
+    "react-next-passport/.env.production": "d350ee8c32f509a22ab436143d4899619291e3be2741425dfc86180ca943bae7",
+    "react-next-passport/package.json": "ae022555827a55f5e6b5df086de5b121467ede7405d17b41befb60d81545ca2c",
+    "react-next-passport/src/app/(cros)/cros-storage/page.tsx": "1d83619d9a0d2d61f56123fbd9222539c0ac0d86612b09514ddfba70ab20ad09",
+    "react-next-passport/src/app/(cros)/cros-storage-debug/page.tsx": "8f28345f7a9d560c7e80c5d72a4aece0ccdbb353d55d0a8b62346d5e92657c43",
+    "react-next-passport/src/app/(passport)/[locale]/sign-in/page.tsx": "09a7f87ca3b11013ea2ad6ecbc39dd519f87d347f5587fa81e8c34b84efd4486",
+    "react-next-passport/tests/auth/login.test.tsx": "95bc07bb37df7780310b95c00c391cdde3f39432b62bbab699340b6f92b771d5",
+    "react-next-passport/tests/auth/proxy.test.tsx": "bba9fefe2d39bedad032cc40679999a8e183c0d83729f678dcd1dd6366f09b82",
+    "react-next-passport/yarn.lock": "b1683459f9490535130a2b4e58ad05d30139ae0285d18f1c9c479aefb9dc1f8e"
+  },
+  "phase": "pre-commit verification after preserving COOKIE development configuration",
+  "previousRun": {
+    "total": 130,
+    "passed": 130,
+    "note": "Initial implementation validation used LOCAL development configuration; a later pre-commit run found one obsolete LOCAL expectation after all four development settings changed to COOKIE. The assertion and docs now validate host-only HTTP development Cookie configuration."
+  }
+}

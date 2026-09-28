@@ -1,0 +1,257 @@
+{
+  "kind": "desktop-browser-validation",
+  "date": "2026-09-28",
+  "requirement": "doc/req-r01-sso-token-storage/technical.md",
+  "command": "npm --prefix common run test:auth:e2e -- tests/auth/e2e/sso.spec.ts",
+  "summary": {
+    "passed": 9,
+    "behaviorTests": 7,
+    "crossRootObservations": 2,
+    "failed": 0,
+    "durationMs": 6736.253000000001
+  },
+  "environment": {
+    "timestamp": "2026-09-28T10:17:57.299Z",
+    "browser": "153.0.8010.53",
+    "node": "v22.16.0",
+    "platform": "darwin",
+    "origins": {
+      "auth": "https://auth.sso.test:57454",
+      "app": "https://app.sso.test:57454",
+      "other": "https://app.other.test:57454"
+    },
+    "privacyPolicy": "default browser policy; no third-party-cookie bypass flags",
+    "featureSwitches": [
+      "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion",
+      "--disable-features"
+    ],
+    "browserArguments": [
+      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      "--disable-field-trial-config",
+      "--disable-background-networking",
+      "--disable-background-timer-throttling",
+      "--disable-backgrounding-occluded-windows",
+      "--disable-back-forward-cache",
+      "--disable-breakpad",
+      "--disable-client-side-phishing-detection",
+      "--disable-component-extensions-with-background-pages",
+      "--disable-component-update",
+      "--no-default-browser-check",
+      "--disable-default-apps",
+      "--disable-dev-shm-usage",
+      "--disable-edgeupdater",
+      "--disable-extensions",
+      "--disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,Translate,AutoDeElevate,OptimizationHints,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion",
+      "--enable-features=CDPScreenshotNewSurface",
+      "--allow-pre-commit-input",
+      "--disable-hang-monitor",
+      "--disable-ipc-flooding-protection",
+      "--disable-popup-blocking",
+      "--disable-prompt-on-repost",
+      "--disable-renderer-backgrounding",
+      "--disable-updater-scheduler",
+      "--force-color-profile=srgb",
+      "--metrics-recording-only",
+      "--no-first-run",
+      "--password-store=basic",
+      "--use-mock-keychain",
+      "--no-service-autorun",
+      "--export-tagged-pdf",
+      "--disable-search-engine-choice-screen",
+      "--unsafely-disable-devtools-self-xss-warnings",
+      "--edge-skip-compat-layer-relaunch",
+      "--disable-infobars",
+      "--disable-search-engine-choice-screen",
+      "--disable-sync",
+      "--enable-unsafe-swiftshader",
+      "--headless",
+      "--hide-scrollbars",
+      "--mute-audio",
+      "--blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4",
+      "--no-sandbox",
+      "--disable-features",
+      "--enable-automation",
+      "--host-resolver-rules=MAP app.sso.test 127.0.0.1, MAP auth.sso.test 127.0.0.1, MAP app.other.test 127.0.0.1",
+      "--no-proxy-server",
+      "--user-data-dir=${temp}/playwright_chromiumdev_profile-hVXSYw",
+      "--remote-debugging-pipe",
+      "--no-startup-window",
+      "--noerrdialogs",
+      "--flag-switches-begin",
+      "--flag-switches-end",
+      "--enable-unsafe-swiftshader"
+    ],
+    "mobileAcceptance": "NOT EXECUTED: desktop automation is not iOS Safari/Android Chrome evidence"
+  },
+  "environmentConsistency": "All 9 tests recorded the same browser version, launched arguments and fixture origins.",
+  "scope": {
+    "syntheticDataOnly": true,
+    "productionModules": true,
+    "realProxyPages": [
+      "normal",
+      "debug"
+    ],
+    "sameRootMobileAcceptance": "NOT EXECUTED; desktop automation does not satisfy iOS Safari/Android Chrome acceptance.",
+    "crossRootGuarantee": "None; records this browser run only.",
+    "fixtureTemporaryDirectoriesRemaining": []
+  },
+  "tests": [
+    {
+      "title": "S13 desktop portion / S02 S06: shared Cookie keeps expired token bytes and 14+1 days without iframe or renewal",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 71,
+      "status": "passed",
+      "durationMs": 1067,
+      "annotations": [],
+      "observations": {
+        "persistent-cookie-observation": {
+          "domain": ".sso.test",
+          "path": "/",
+          "secure": true,
+          "sameSite": "Lax",
+          "expires": 1791886677.166078,
+          "retentionDays": 15,
+          "valueLength": 65,
+          "matchesInput": true,
+          "valueAndExpiryUnchangedAfterReads": true,
+          "iframeCount": 0,
+          "authorityRequests": 0
+        }
+      }
+    },
+    {
+      "title": "S13 desktop portion / S02 S11: unchecked remember creates a session Cookie and logout removes the shared credential",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 105,
+      "status": "passed",
+      "durationMs": 602,
+      "annotations": [],
+      "observations": {
+        "session-cookie-observation": {
+          "domain": ".sso.test",
+          "path": "/",
+          "secure": true,
+          "sameSite": "Lax",
+          "expires": -1,
+          "valueLength": 16,
+          "sharedReadMatchesInput": true,
+          "remainingCookieCountAfterLogout": 0,
+          "authorityReadAfterLogoutHasValue": false,
+          "repeatedRemovalReturnsNull": true
+        }
+      }
+    },
+    {
+      "title": "S04: normal production proxy preserves public get/set/remove and Cookie save options",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 127,
+      "status": "passed",
+      "durationMs": 321,
+      "annotations": [],
+      "observations": {}
+    },
+    {
+      "title": "S04: debug production proxy preserves public get/set/remove and Cookie save options",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 127,
+      "status": "passed",
+      "durationMs": 424,
+      "annotations": [],
+      "observations": {}
+    },
+    {
+      "title": "S07: local RPC results are queried afresh and never written into B",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 148,
+      "status": "passed",
+      "durationMs": 375,
+      "annotations": [],
+      "observations": {}
+    },
+    {
+      "title": "S07: session RPC results are queried afresh and never written into B",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 148,
+      "status": "passed",
+      "durationMs": 637,
+      "annotations": [],
+      "observations": {}
+    },
+    {
+      "title": "S07: Cookie RPC reads A host-only state twice without writing or caching it in B",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 163,
+      "status": "passed",
+      "durationMs": 395,
+      "annotations": [],
+      "observations": {}
+    },
+    {
+      "title": "S14 observation: cross-root Lax+Secure records the actual value, empty result or restriction",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 180,
+      "status": "passed",
+      "durationMs": 536,
+      "annotations": [
+        {
+          "type": "cross-root-observation",
+          "description": "Lax: empty; not mobile acceptance"
+        }
+      ],
+      "observations": {
+        "cross-root-Lax": {
+          "sameSite": "Lax",
+          "secure": true,
+          "classification": "empty",
+          "returnedExpectedToken": false,
+          "error": null,
+          "bLocalStorageEmpty": true,
+          "scope": "Observed desktop browser result; empty/error does not establish successful cross-root SSO",
+          "mobileAcceptance": "not executed"
+        }
+      }
+    },
+    {
+      "title": "S14 observation: cross-root None+Secure records the actual value, empty result or restriction",
+      "file": "common/tests/auth/e2e/sso.spec.ts",
+      "line": 180,
+      "status": "passed",
+      "durationMs": 531,
+      "annotations": [
+        {
+          "type": "cross-root-observation",
+          "description": "None: value; not mobile acceptance"
+        }
+      ],
+      "observations": {
+        "cross-root-None": {
+          "sameSite": "None",
+          "secure": true,
+          "classification": "value",
+          "returnedExpectedToken": true,
+          "error": null,
+          "bLocalStorageEmpty": true,
+          "scope": "Observed desktop browser result; empty/error does not establish successful cross-root SSO",
+          "mobileAcceptance": "not executed"
+        }
+      }
+    }
+  ],
+  "keySourceSha256": {
+    "common/playwright.auth.config.ts": "77d155d610e6346316b2304763217e5d13cea02b5df9b5a628463a67ed740221",
+    "common/tests/auth/e2e/fixture-server.mjs": "056839cbcbc36ba420a8b8f9292e5016c9111a8b2eac769701ce40e8af39917e",
+    "common/tests/auth/e2e/sso.spec.ts": "f6538803d4e4fe3b3bd01a8c54a7c5981c3653de0c118dcd91e0cafb3a22c016",
+    "common/src/common/lib/CrosStorage.ts": "a4fc9fe1c1ea0bfe18809173c905293afff8c51665665eff13edf82af5a7cafe",
+    "common/src/common/lib/Env.ts": "62917d5d2ff23ff508c28c0b708063c7ca9af14d679fa5e4e3082dc9cd81d229",
+    "common/src/common/lib/protocol/CrosProtocol.ts": "a6f190e4ae8e23c58036f3b3f372d9329cc73f3e175d6e16ac954bc299b459d3",
+    "common/src/common/lib/storage/StorageManager.ts": "6d690ee30d0cdeadff9a28346c18848f56e59b069108104349848e830e2bece6",
+    "common/src/common/lib/storage/CookieStorage.ts": "3a37c86c7d7700d5de64d23fa213bd3e6ba6887c1811590bd2bd1ef814d64c1e",
+    "common/src/common/lib/storage/WebStorage.ts": "86f93aaa4c88e9e6b29c3276ef67856c12be3b97b5d857e04bb7efcccf06b89d",
+    "common/src/common/lib/rpc/StorageProxy.ts": "54f8464e7c67b5afcc08f1c2fd92a933f15aafd4344a58ef57665c42e79fba37",
+    "common/src/common/lib/rpc/PostMessageRpc.ts": "f969db99593e426cab381298efdb36e4d8737f37e7343527ad395b5f0b3d45a9",
+    "common/src/common/lib/monitor/StorageMonitor.ts": "83bb3291cc49925eef3f4a228e4bb19a4a412a47152119f6dd9bca47412aa926",
+    "react-next-passport/src/app/(cros)/cros-storage/page.tsx": "1d83619d9a0d2d61f56123fbd9222539c0ac0d86612b09514ddfba70ab20ad09",
+    "react-next-passport/src/app/(cros)/cros-storage-debug/page.tsx": "8f28345f7a9d560c7e80c5d72a4aece0ccdbb353d55d0a8b62346d5e92657c43"
+  },
+  "rawRunnerReport": "Temporary runner report retained outside the repository; only this redacted summary is intended for requirement evidence."
+}
