@@ -1,0 +1,23 @@
+merge
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# On branch master
+# Your branch is up to date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   ../AGENTS.md
+#	new file:   ../doc/open-back/openspec/changes/archive/.gitkeep
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/.openspec.yaml
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/design.md
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/proposal.md
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/review.md
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/specs/sso-release-validation/spec.md
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/specs/sso-session-lifecycle/spec.md
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/specs/sso-token-storage/spec.md
+#	new file:   ../doc/open-back/openspec/changes/local-first-sso-token-storage/tasks.md
+#	new file:   ../doc/open-back/openspec/config.yaml
+#	new file:   ../doc/open-back/openspec/specs/.gitkeep
+#	new file:   ../doc/open-back/superpowers/plans/local-first-sso-token-storage.md
+#
