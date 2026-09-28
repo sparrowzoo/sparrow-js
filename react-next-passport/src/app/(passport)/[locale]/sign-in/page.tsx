@@ -21,6 +21,7 @@ import AuthShell from "@/components/passport/auth-shell";
 import CaptchaImage from "@/components/passport/captcha-image";
 import styles from "@/components/passport/passport.module.css";
 import useAuthSuffix from "@/components/passport/use-auth-suffix";
+import {StorageType} from "@/common/lib/protocol/CrosProtocol";
 
 export default function SignInPage() {
     const t = useTranslations("Passport.sign-in");
@@ -42,7 +43,7 @@ export default function SignInPage() {
         try {
             const result = await signIn(data, t);
             if (!crosStorage) throw new Error("Login storage is not ready");
-            await crosStorage.setToken(result.data.token);
+            await crosStorage.setToken(result.data.token, StorageType.AUTOMATIC, {remember: data.rememberMe === true});
             toast.success(t("sign-in-success"));
             setTimeout(() => redirectTo(UrlUtils.getQueryString() || ""), 2000);
         } catch (error) {

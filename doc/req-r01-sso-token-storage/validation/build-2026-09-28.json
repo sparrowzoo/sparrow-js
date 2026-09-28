@@ -1,0 +1,102 @@
+{
+  "date": "2026-09-28",
+  "kind": "production-build-verification",
+  "node": "22.16.0",
+  "framework": "Next.js 15.5.26",
+  "projects": [
+    {
+      "project": "common",
+      "command": "yarn build",
+      "workingDirectory": "${temp}/sso-build-verify/<project>",
+      "exitCode": 0,
+      "staticPagesReported": 47,
+      "sourceFilesCompared": 192,
+      "sourceMatchesWorkspace": true,
+      "buildInputsSha256": "b87556c9fc8f79179e741fb27ba04239fe7300d954fa281a62686f66ae6325fa",
+      "checks": [
+        "compile",
+        "lint",
+        "type-check",
+        "static-generation",
+        "static-export"
+      ],
+      "originalOutOverwritten": false
+    },
+    {
+      "project": "react-next-admin",
+      "command": "yarn build",
+      "workingDirectory": "${temp}/sso-build-verify/<project>",
+      "exitCode": 0,
+      "staticPagesReported": 15,
+      "sourceFilesCompared": 172,
+      "sourceMatchesWorkspace": true,
+      "buildInputsSha256": "f2cd6be98ec92ded6f2f97ed3ccfb3bc0fd26e5c262bf262a538d1b0e68354b7",
+      "checks": [
+        "compile",
+        "lint",
+        "type-check",
+        "static-generation",
+        "static-export"
+      ],
+      "originalOutOverwritten": false
+    },
+    {
+      "project": "react-next-im",
+      "command": "yarn build",
+      "workingDirectory": "${temp}/sso-build-verify/<project>",
+      "exitCode": 0,
+      "staticPagesReported": 33,
+      "sourceFilesCompared": 246,
+      "sourceMatchesWorkspace": true,
+      "buildInputsSha256": "a2b6157190d429152342aba5329fd601f2271a4ba67f11ab555105958cac2dea",
+      "checks": [
+        "compile",
+        "lint",
+        "type-check",
+        "static-generation",
+        "static-export"
+      ],
+      "originalOutOverwritten": false
+    },
+    {
+      "project": "react-next-passport",
+      "command": "yarn build",
+      "workingDirectory": "${temp}/sso-build-verify/<project>",
+      "exitCode": 0,
+      "staticPagesReported": 16,
+      "sourceFilesCompared": 181,
+      "sourceMatchesWorkspace": true,
+      "buildInputsSha256": "4677f67c741d214ef903df742c3023b163f25a3e215223efea655bc1b931a1af",
+      "checks": [
+        "compile",
+        "lint",
+        "type-check",
+        "static-generation",
+        "static-export"
+      ],
+      "originalOutOverwritten": false
+    }
+  ],
+  "sharedCopies": {
+    "files": 86,
+    "consumers": [
+      "react-next-admin",
+      "react-next-im",
+      "react-next-passport"
+    ],
+    "byteIdentical": true
+  },
+  "warnings": [
+    "Existing next-intl dynamic-import cache-analysis warning in Passport/IM; builds exited 0."
+  ],
+  "environmentLimitation": "Original .next/out contain root-owned files. Builds ran against byte-compared source copies with each project node_modules reused; original published outputs untouched.",
+  "laterChanges": {
+    "paths": [
+      "common/.env.development",
+      "react-next-admin/.env.development",
+      "react-next-im/.env.development",
+      "react-next-passport/.env.development"
+    ],
+    "change": "Development mode LOCAL to COOKIE and corresponding comments; production configuration and business source unchanged. Production builds remain applicable; original input digests describe the build-time snapshot."
+  }
+}

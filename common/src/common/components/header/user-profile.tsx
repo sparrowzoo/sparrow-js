@@ -15,10 +15,13 @@ import { CircleUser } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { PASSPORT_ROOT } from "@/common/lib/Env";
 import useNavigating from "@/common/hook/NavigatingHook";
+import toast from "react-hot-toast";
 
 export default function UserProfile() {
   const { redirectToLogin } = useNavigating();
   const [loginUser, setLoginUser] = React.useState<LoginUser | null>(null);
+  const [readFailed, setReadFailed] = React.useState(false);
+  const [readAttempt, setReadAttempt] = React.useState(0);
   const crosStorage = useCrosStorage();
   const t = useTranslations("Header");
   const locale = useLocale();
@@ -31,12 +34,32 @@ export default function UserProfile() {
       return;
     }
 
-    //同步token 到本域，方便后续使用getCurrentUser()
-    crosStorage?.locateToken().then((token) => {
-      console.log("token located", token);
-      setLoginUser(token ?? LoginUser.visitor());
-    }).catch(() => setLoginUser(LoginUser.visitor()));
-  }, [crosStorage]);
+    let active = true;
+    setLoginUser(null);
+    setReadFailed(false);
+    // 只更新用户展示信息；不会将 RPC token 回写本域。
+    crosStorage.locateToken().then((user) => {
+      if (!active) return;
+      // 确认无凭证时 locateToken 返回 Visitor；null 表示现有凭证无法提供展示资料。
+      if (user) setLoginUser(user);
+      else setReadFailed(true);
+    }).catch(() => {
+      // 读取失败时凭证状态未知，不能当作访客或清除旧展示资料。
+      if (active) setReadFailed(true);
+    });
+    return () => { active = false; };
+  }, [crosStorage, readAttempt]);
+
+  if (readFailed) {
+    return (
+      <span role="alert" className="inline-flex items-center gap-2 text-sm">
+        <span>{locale.startsWith("zh") ? "账户读取失败" : "Unable to load account"}</span>
+        <Button type="button" variant="ghost" size="sm" onClick={() => setReadAttempt(attempt => attempt + 1)}>
+          {locale.startsWith("zh") ? "重试" : "Retry"}
+        </Button>
+      </span>
+    );
+  }
 
   if (loginUser === null) {
     return (
@@ -73,7 +96,9 @@ export default function UserProfile() {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={() => {
-            LoginUser.logout(redirectToLogin, t("logout-success"));
+            LoginUser.logout(redirectToLogin, t("logout-success")).catch(() => {
+              toast.error(locale.startsWith("zh") ? "退出失败，请重试" : "Sign out failed. Please retry.");
+            });
           }}
         >
           {t("logout")}

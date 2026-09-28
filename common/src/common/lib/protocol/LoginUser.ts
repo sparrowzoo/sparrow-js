@@ -16,14 +16,16 @@ export default class LoginUser {
     public expireAt: number;
     public extensions: Map<string, unknown>;
 
-    public static logout(redirectToLogin: () => void, message) {
-        CrosStorage.getCrosStorage()
-            .removeToken()
-            .then(() => {
-                sessionStorage.removeItem(USER_INFO_KEY);
-                toast.success(message);
-                redirectToLogin();
-            });
+    public static async logout(redirectToLogin: () => void, message: string) {
+        const storage = CrosStorage.getCrosStorage();
+        try {
+            await storage.removeToken();
+            sessionStorage.removeItem(USER_INFO_KEY);
+            toast.success(message);
+            redirectToLogin();
+        } finally {
+            storage.destroy();
+        }
     }
 
     public static getCurrentUser() {
