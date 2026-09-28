@@ -308,12 +308,17 @@
     "all": "All guides",
     "backend": "Backend",
     "frontend": "Frontend",
+    "ai-coding": "AI Coding",
     "search": "Search titles and topics…",
     "empty": "No matching guides. Try another search term.",
     "clear": "Clear search and filters",
     "count": "{count} guides",
     "read": "Read guide",
     "items": {
+      "cross-project-skills-git-workflow": {
+        "title": "Reusable Codex Skills: Local Iteration and GitHub Sync",
+        "description": "Manage shared skills with a dedicated Git repository and user-level symlinks, covering discovery, local edits, multi-machine sync, and project-specific conventions."
+      },
       "session-storage-boundaries-postmessage-sso": {
         "title": "Web Storage and Cross-Origin SSO: From Safari Differences to Client RPC",
         "description": "Explain how Cookie tokens or server sessions remove same-site SSO's dependence on shared iframe storage. Compare shared Domain cookies with API host-only HttpOnly cookies, including authentication changes, credentialed requests, and cross-site limits."

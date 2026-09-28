@@ -1,5 +1,6 @@
 // Public documents use absolute paths so locale prefixes never change their URLs.
 export const documents = [
+    {id: "cross-project-skills-git-workflow", category: "ai-coding", subcategory: "Codex", topic: "Skills", href: "/ai-coding/cross-project-skills-git-workflow.html", keywords: "Codex Skill Skills SKILL.md AGENTS.md AI coding Git GitHub symlink 跨项目 复用 通用技能 用户级 软链接 自定义目录 本地迭代 版本管理 同步"},
     {id: "session-storage-boundaries-postmessage-sso", category: "frontend", subcategory: "React", topic: "Web Storage / RPC", href: "/frontend/react/session-storage-boundaries-postmessage-sso.html", keywords: "Web Storage sessionStorage localStorage Safari Chrome mobile iOS iframe postMessage SSO RPC CrosStorage Cookie HttpOnly credentials SameSite Domain host-only authorization code same-origin same-site top-level context 移动端 存储边界 分区 同源 同站 顶层上下文 跨域 单点登录 请求响应 诊断 授权码 会话 Cookie鉴权"},
     {id: "nginxHttpsLaunch", category: "backend", subcategory: "Nginx", topic: "Nginx", href: "/backend/nginx/nginx-https-launch.html", keywords: "Nginx HTTPS Certbot Let's Encrypt SSL 443 301 证书 签发 续期 X-Forwarded-Proto WebSocket wss 上线 部署"},
     {id: "htmlFragmentEmbed", category: "frontend", subcategory: "React", topic: "React", href: "/frontend/react/html-fragment-embed.html", keywords: "React createRoot useEffect HtmlFragment 嵌入 非React 页面 客服 IM HTML片段 挂件 静态导出 output export"},
