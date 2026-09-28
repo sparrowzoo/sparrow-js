@@ -308,12 +308,17 @@
     "all": "全部文档",
     "backend": "后端工程",
     "frontend": "前端开发",
+    "ai-coding": "AI 编程",
     "search": "搜索文档标题、主题…",
     "empty": "没有找到匹配的文档，试试其他关键词。",
     "clear": "清除搜索与筛选",
     "count": "{count} 篇文档",
     "read": "阅读文档",
     "items": {
+      "cross-project-skills-git-workflow": {
+        "title": "Codex Skill 跨项目复用：本地迭代与 GitHub 同步",
+        "description": "用独立 Git 仓库与用户级软链接管理通用 Skill，讲清目录发现、本地修改、多机同步，以及通用流程与项目约定的分工。"
+      },
       "session-storage-boundaries-postmessage-sso": {
         "title": "Web Storage 的边界与跨域 SSO：从 Safari 差异到客户端 RPC",
         "description": "区分同源、同站与 Web Storage 分区，说明如何用 Cookie token 或服务端会话解除同站 SSO 对 iframe 存储共享的依赖；比较共享 Domain Cookie 与 API 主机限定的 HttpOnly Cookie，并明确鉴权、凭据请求及跨站限制。"

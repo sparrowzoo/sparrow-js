@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Codex Skill 跨项目复用：本地迭代与 GitHub 同步</title>
+  <meta name="description" content="把 Codex skill 源码放入独立 Git 仓库，通过用户级软链接跨项目复用；从目录设计、SKILL.md、首次配置到 GitHub 同步，建立可持续迭代的工作流程。">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:title" content="Codex Skill 跨项目复用：本地迭代与 GitHub 同步">
+  <meta property="og:description" content="一份 skill 源码，多个项目使用。用独立 Git 仓库和用户级软链接，管理本地改进、版本记录与多机同步。">
+  <meta property="og:image" content="/svg/brand/sparrow-logo.svg">
+  <meta property="og:image:alt" content="Sparrow 官方标志">
+  <meta property="article:published_time" content="2026-09-28">
+  <meta name="twitter:card" content="summary">
+  <style>
+    
+    :root{--bg:#07070d;--panel:rgba(255,255,255,.04);--border:rgba(255,255,255,.08);--text:#f4f4f7;--secondary:#9a9ab0;--tertiary:#64647c;--purple:#6d5cff;--cyan:#22d3ee;--pink:#a855f7;--code:#0c0c16;--radius:18px;--gradient:linear-gradient(110deg,#6d5cff 0%,#22d3ee 53%,#a855f7 100%);--mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:105px}body{margin:0;color:var(--text);background:var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:15px;line-height:1.85;letter-spacing:.01em}body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 7% 1%,#6d5cff23,transparent 42%),radial-gradient(ellipse at 88% 15%,#22d3ee0d,transparent 37%),radial-gradient(ellipse at 84% 85%,#a855f710,transparent 42%)}body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px),url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' opacity='.07' filter='url(%23n)' d='M0 0h180v180H0z'/%3E%3C/svg%3E");background-size:64px 64px,64px 64px,180px 180px}
+    a{color:#88dce8;text-decoration:none}a:hover{text-decoration:underline;text-underline-offset:4px}button,select{font:inherit}button,a,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button:focus-visible,a:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--cyan);outline-offset:5px}::selection{background:#6d5cff60;color:white}h1,h2,h3,h4,p{margin:0}h1,h2,h3{line-height:1.3;letter-spacing:-.035em}h1{font-size:clamp(34px,4.1vw,59px);font-weight:750}h2{font-size:30px}h3{font-size:22px}h4{font-size:16px;font-weight:600}p+p{margin-top:13px}strong{color:var(--text);font-weight:650}code{font-family:var(--mono);font-size:.88em;color:#c9c5ff;overflow-wrap:anywhere}p code,li code,td code{padding:2px 5px;border-radius:5px;background:#ffffff05}small{font-size:12px}ul,ol{padding-left:23px;margin:14px 0}li+li{margin-top:8px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:16px 19px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}th{background:#ffffff03;color:var(--text);font-weight:550}td{color:var(--secondary)}tbody tr:last-child td{border-bottom:0}tbody tr:hover{background:#ffffff02}td:first-child{color:var(--text)}.table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);margin:22px 0}.table-wrap table{min-width:590px}.table-wrap.wide table{min-width:740px}
+    .wrap{max-width:1232px;padding:0 40px;margin:auto}.gradient-text{background:var(--gradient);-webkit-background-clip:text;background-clip:text;color:transparent}.eyebrow{font-size:11px;font-weight:650;letter-spacing:.17em;text-transform:uppercase;color:var(--secondary)}.muted{color:var(--secondary)}.fine{color:var(--secondary);font-size:13px;line-height:1.75}.decorative{color:var(--tertiary)}.panel{border:1px solid var(--border);border-radius:var(--radius);background:var(--panel)}.lift{transition:transform .22s,border-color .22s,background .22s}.lift:hover{transform:translateY(-4px);border-color:#ffffff19;background:#ffffff06}.pill{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border:1px solid var(--border);border-radius:999px;font-size:11px;color:var(--secondary);line-height:1.6}.dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;display:inline-block;box-shadow:0 0 12px #22d3ee50}.button{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:10px 20px;border-radius:999px;border:1px solid var(--border);color:var(--text);font-size:13px;background:#ffffff04;line-height:1.6;text-decoration:none;transition:transform .2s,filter .2s}.button:hover{transform:translateY(-2px);text-decoration:none;filter:brightness(1.14)}.button.primary{border:0;background:var(--gradient);color:#080c18;font-weight:750}.button .arrow{font-size:17px;line-height:1}.source{font-size:12px;color:#91c6d3;margin-top:14px;display:block}.source a{color:inherit;text-decoration:underline;text-decoration-color:#91c6d340;text-underline-offset:3px}.skip{position:absolute;left:12px;top:-80px;z-index:99;background:var(--bg);padding:12px}.skip:focus{top:12px}
+    .topbar{position:sticky;top:0;z-index:50;background:#07070ddb;backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}.nav-inner{height:72px;display:flex;align-items:center;justify-content:space-between;gap:30px}.brand{display:flex;align-items:center;gap:12px;color:var(--text);font-size:17px;letter-spacing:-.025em;font-weight:650;white-space:nowrap}.brand:hover{text-decoration:none}.brand-mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid #a39bff40;background:linear-gradient(145deg,#6d5cff26,#22d3ee0c);border-radius:10px;font-family:var(--mono);font-size:19px;color:#c5c0ff}.brand-sub{color:var(--tertiary);font-size:12px;font-weight:400;margin-left:4px;letter-spacing:.06em}.topnav{display:flex;align-items:center;gap:26px}.topnav>a:not(.button){color:var(--secondary);font-size:13px}.reading-progress{position:absolute;bottom:-1px;left:0;height:2px;width:0;background:var(--gradient);transition:width .1s linear}
+    .hero{padding:58px 0 58px;border-bottom:1px solid var(--border)}.crumb{display:flex;align-items:center;gap:12px;margin-bottom:35px;color:var(--secondary);font-size:12px}.crumb span[aria-hidden]{color:var(--tertiary)}.hero-grid{display:grid;grid-template-columns:1.45fr 1fr;gap:60px;align-items:center}.hero h1 span{display:block}.hero h1 .subline{margin-top:10px;font-size:.64em;letter-spacing:-.015em}.hero-desc{font-size:16px;line-height:1.95;color:var(--secondary);max-width:600px;margin-top:23px}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:27px}.meta{display:flex;align-items:center;flex-wrap:wrap;gap:18px;margin-top:26px;color:var(--secondary);font-size:11px}.meta i{height:3px;width:3px;background:var(--tertiary);border-radius:50%}.hero-map{padding:26px;position:relative;box-shadow:0 18px 100px #6d5cff0a}.hero-map .map-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}.map-node{border:1px solid var(--border);border-radius:12px;padding:15px 16px;background:#0c0c16aa}.map-node b{font-family:var(--mono);font-size:15px;font-weight:500;display:block}.map-node span{color:var(--secondary);font-size:12px;display:block;margin-top:4px}.map-node.primary-node{background:linear-gradient(115deg,#6d5cff14,#22d3ee09);border-color:#8c7fff25}.map-line{display:flex;justify-content:center;align-items:center;gap:12px;color:var(--secondary);font-size:11px;height:37px}.map-line:before,.map-line:after{content:"";height:1px;width:26px;background:#ffffff1a}.map-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.map-two .map-node{padding:13px}.map-two b{font-size:12px}.hero-map .fine{border-top:1px solid var(--border);margin-top:19px;padding-top:14px;font-size:11px}
+    .main-grid{display:grid;grid-template-columns:minmax(0,1fr) 195px;gap:64px;padding-top:48px;padding-bottom:70px}.article{min-width:0}.toc{position:sticky;top:106px;align-self:start;border-left:1px solid var(--border);padding-left:21px}.toc .eyebrow{margin-bottom:17px;color:var(--tertiary)}.toc a{display:block;font-size:12px;color:var(--secondary);padding:7px 0;line-height:1.65;transition:color .2s}.toc a.active{color:var(--cyan)}.toc .sub{padding-left:10px;font-size:11px}.toc .toc-bottom{margin-top:23px;padding-top:17px;border-top:1px solid var(--border)}.toc .toc-bottom p{font-size:11px;color:var(--secondary);line-height:1.7}.section{margin-bottom:58px;scroll-margin-top:100px}.section-heading{display:flex;align-items:baseline;gap:15px;margin-bottom:22px}.section-number{font:12px var(--mono);color:var(--tertiary);letter-spacing:.06em}.section>p,.subsection>p{color:var(--secondary)}.subsection{margin-top:36px;scroll-margin-top:106px}.subsection h3{margin-bottom:16px}.subsection h3 .step{color:var(--cyan);font:12px var(--mono);margin-right:9px;vertical-align:middle}.section-intro{font-size:17px;line-height:1.9}.conclusion-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:24px 0}.conclusion-card{padding:20px 18px}.conclusion-card .tag{font:10px var(--mono);letter-spacing:.09em;color:var(--secondary);margin-bottom:13px}.conclusion-card h3{font-size:16px;letter-spacing:0;margin-bottom:9px}.conclusion-card p{font-size:13px;color:var(--secondary);line-height:1.8}.note{padding:19px 22px;border:1px solid var(--border);border-left:2px solid var(--purple);border-radius:0 14px 14px 0;background:linear-gradient(100deg,#6d5cff0b,#ffffff02);margin:23px 0;color:var(--secondary);font-size:14px}.note.cyan{border-left-color:var(--cyan);background:linear-gradient(100deg,#22d3ee09,#ffffff02)}.note strong{display:block;font-size:14px;margin-bottom:5px}.note p{margin-top:0}.glossary{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:24px 0}.glossary>div{padding:17px 19px}.glossary dt{font:13px var(--mono);color:var(--text);margin-bottom:6px}.glossary dd{margin:0;font-size:13px;color:var(--secondary)}
+    .architecture{padding:24px;margin:24px 0}.architecture-head{display:flex;justify-content:space-between;gap:15px;align-items:center;margin-bottom:20px}.architecture-head h4{font-size:14px}.architecture-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.arch-column{border:1px solid var(--border);border-radius:13px;padding:18px;background:#07070d55}.arch-column>p:first-child{font-size:11px;letter-spacing:.08em;color:var(--secondary);margin-bottom:13px}.arch-row{background:#ffffff03;border:1px solid var(--border);border-radius:10px;padding:12px 13px;line-height:1.6}.arch-row+.arch-row{margin-top:10px}.arch-row b{font:12px var(--mono)}.arch-row span{display:block;font-size:11px;color:var(--secondary);margin-top:5px}.arch-arrow{text-align:center;color:#aca4ed;font-size:11px;line-height:1.8;padding:9px 0}.arch-column .fine{font-size:12px;margin-top:13px}.architecture-foot{padding-top:18px;margin-top:18px;border-top:1px solid var(--border);font-size:12px;color:var(--secondary)}.rule-list{list-style:none;padding:0;counter-reset:rule}.rule-list li{display:flex;gap:13px;align-items:flex-start;padding:13px 0;border-bottom:1px solid var(--border);color:var(--secondary);font-size:14px}.rule-list li:before{counter-increment:rule;content:counter(rule,decimal-leading-zero);font:11px var(--mono);color:var(--tertiary);padding-top:6px}.rule-list li:last-child{border-bottom:0}
+    .switcher{display:flex;gap:5px;padding:5px;background:#ffffff03;border:1px solid var(--border);border-radius:999px;width:fit-content;margin:21px 0;max-width:100%;flex-wrap:wrap}.switcher button{padding:9px 17px;border-radius:999px;border:0;color:var(--secondary);font-size:12px;background:transparent;line-height:1.6}.switcher button[aria-selected=true],.switcher button[aria-pressed=true]{color:var(--text);background:linear-gradient(115deg,#6d5cff42,#22d3ee18,#a855f72b);box-shadow:inset 0 0 0 1px #ffffff12}.route-panel{padding:23px}.route-panel h4{margin-bottom:11px}.route-panel p,.route-panel li{font-size:14px;color:var(--secondary)}.route-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.route-tags .pill{font-size:11px;color:#b7c8dc}.tradeoff{font-size:13px;color:var(--secondary);padding-top:16px;margin-top:17px;border-top:1px solid var(--border)}[hidden]{display:none!important}.codebox{margin-top:16px;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--code)}.code-header{display:flex;align-items:center;justify-content:space-between;gap:15px;min-height:45px;padding:9px 16px;border-bottom:1px solid var(--border);background:#ffffff015}.code-header span{font:11px var(--mono);color:var(--secondary);overflow-wrap:anywhere}.copy{font-size:11px;white-space:nowrap;padding:4px 11px;border:1px solid var(--border);border-radius:999px;background:#ffffff04;color:var(--secondary)}.copy:hover{color:var(--text);border-color:#ffffff25}pre{margin:0;padding:20px 21px;overflow:auto;tab-size:2;line-height:1.8;font-size:12px}pre code{font-size:inherit;color:#c7c8de;white-space:pre;overflow-wrap:normal}.xml-tag{color:#adabff}.xml-attr{color:#83d3df}.xml-comment{color:#73758c}.example-notes{font-size:12px;color:var(--secondary);margin-top:12px}.example-group{margin-top:16px}.example-group summary{cursor:pointer;padding:17px 19px;display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:14px;list-style:none}.example-group summary::-webkit-details-marker{display:none}.example-group summary:after{content:"+";font:18px var(--mono);color:var(--secondary)}.example-group[open] summary:after{content:"−"}.example-content{padding:0 18px 19px}.example-content .codebox{margin-top:0}.example-group summary span{color:var(--secondary);font:10px var(--mono);margin-left:auto}.diagram-code{padding:20px;font:12px/1.95 var(--mono);white-space:pre;overflow:auto;color:#bcc0d7}.benefits{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:22px}.benefit{padding:22px}.benefit .number{font:11px var(--mono);color:var(--tertiary);margin-bottom:13px}.benefit h4{margin-bottom:8px;font-size:15px}.benefit p{font-size:13px;color:var(--secondary)}.version-lab{padding:23px;margin-top:22px}.version-lab h4{font-size:15px}.version-lab .switcher{margin:16px 0}.version-lab table{font-size:12px;min-width:460px}.version-lab th,.version-lab td{padding:12px 15px}.version-lab .table-wrap{margin-bottom:16px}.changed{color:var(--cyan);font-weight:650}.version-result{font-size:13px;color:var(--secondary);min-height:64px;padding:14px 17px;border-radius:10px;background:#ffffff03}.version-result strong{font-size:13px}.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:23px 0}.timeline>div{padding:15px 12px;border:1px solid var(--border);border-radius:12px;position:relative;background:#ffffff02}.timeline b{font:11px var(--mono);color:#9d91ee;display:block;margin-bottom:7px}.timeline span{font-size:12px}.sources{margin:24px 0 0;padding:0;list-style:none}.sources li{display:grid;grid-template-columns:29px 1fr;gap:11px;padding:14px 0;border-bottom:1px solid var(--border)}.sources .ref-number{font:11px var(--mono);color:var(--tertiary);padding-top:5px}.sources a{font-size:13px}.sources p{font-size:12px;color:var(--secondary);margin-top:3px}.closing{padding:29px;margin-top:32px;background:linear-gradient(115deg,#6d5cff13,#22d3ee07,#a855f70c);border:1px solid #ffffff10;border-radius:var(--radius)}.closing h3{font-size:22px;margin-bottom:15px}.closing p{color:var(--secondary);font-size:14px}.footer{border-top:1px solid var(--border);padding:26px 0 36px}.footer-inner{display:flex;justify-content:space-between;gap:20px;color:var(--secondary);font-size:11px}.footer a{color:var(--secondary)}.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%);background:#171724;border:1px solid #ffffff16;padding:10px 20px;border-radius:999px;color:var(--text);font-size:12px;z-index:80;box-shadow:0 8px 35px #0006}
+    .repo-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin:23px 0}.repo-card{padding:23px;display:flex;flex-direction:column;min-width:0}.repo-card .repo-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:17px}.repo-card h4{font:15px/1.5 var(--mono);overflow-wrap:anywhere;margin-bottom:12px}.repo-card h4 a{color:var(--text)}.repo-card p{color:var(--secondary);font-size:13px;line-height:1.9}.repo-card .repo-role{font-size:12px;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}.repo-card .repo-links{display:flex;gap:18px;margin-top:auto;padding-top:18px;font-size:12px}.toc{max-height:calc(100vh - 132px);overflow-y:auto;scrollbar-width:thin;scrollbar-color:#ffffff18 transparent}
+    @media(min-width:1500px){.wrap{max-width:1320px}.hero-grid{gap:85px}.main-grid{gap:75px}}
+    @media(max-width:1050px){.wrap{padding:0 28px}.hero-grid{gap:30px;grid-template-columns:1.35fr 1fr}.hero-map{padding:20px}.main-grid{grid-template-columns:minmax(0,1fr) 160px;gap:30px}.topnav{gap:18px}.brand-sub{display:none}.conclusion-grid{grid-template-columns:1fr}.conclusion-card{display:grid;grid-template-columns:125px 1fr;column-gap:15px;padding:17px 20px}.conclusion-card .tag{grid-column:1;margin:0 0 5px}.conclusion-card h3{grid-column:1;margin:0}.conclusion-card p{grid-column:2;grid-row:1/3}.map-two{grid-template-columns:1fr}.map-two .map-node:last-child{display:none}}
+    @media(max-width:760px){html{scroll-padding-top:89px}.wrap{padding:0 21px}.nav-inner{height:63px;gap:15px}.topnav{gap:15px}.topnav>a:not(.button){display:none}.topnav .button{font-size:11px;padding:8px 14px}.hero{padding:30px 0 35px}.crumb{margin-bottom:25px;font-size:10px;gap:9px}.hero-grid{grid-template-columns:1fr;gap:28px}.hero-desc{font-size:14px}.hero-map{padding:20px}.map-two{grid-template-columns:1fr 1fr}.map-two .map-node:last-child{display:block}.hero-map .map-label{margin-bottom:15px}.meta{gap:11px;font-size:10px;margin-top:20px}.main-grid{display:block;padding-top:32px}.toc{display:none}.section{margin-bottom:43px}.section-heading{gap:12px;margin-bottom:19px}h2{font-size:26px}h3{font-size:20px}.section-intro{font-size:16px}.architecture{padding:17px}.architecture-grid{grid-template-columns:1fr}.architecture-head{align-items:flex-start}.architecture-head .pill{font-size:9px;padding:4px 9px}.conclusion-card{display:block;padding:19px}.conclusion-card .tag{margin-bottom:8px}.conclusion-card h3{margin-bottom:8px}.glossary{gap:10px}.glossary>div{padding:14px}.glossary dt{font-size:11px}.glossary dd{font-size:12px}.route-panel{padding:18px}.switcher button{font-size:11px;padding:8px 12px}.switcher{border-radius:18px}.benefits{grid-template-columns:1fr}.benefit{padding:20px}.timeline{grid-template-columns:1fr 1fr}.version-lab{padding:17px}.version-result{min-height:0}.footer-inner{display:block}.footer-inner>div+div{margin-top:10px}.example-group summary{padding:15px}.example-group summary span{display:none}.example-content{padding:0 12px 14px}pre{padding:17px;font-size:11px}.code-header{padding:9px 12px}.closing{padding:23px}.note{padding:17px 18px}.section-number{font-size:11px}}
+    @media(max-width:760px){.repo-grid{grid-template-columns:1fr}.repo-card{padding:20px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}.lift:hover,.button:hover{transform:none}}
+    @media print{body{background:white;color:#111;font-size:11pt}body::before,body::after,.topbar,.toc,.hero-map,.hero-actions,.switcher,.copy,.reading-progress,.toast{display:none!important}.wrap{max-width:none;padding:0}.main-grid{display:block;padding:20px 0}.hero{padding:15px 0}.hero-grid{display:block}h1{font-size:28pt}.gradient-text{background:none;color:#111}.muted,.fine,p,td,li,.hero-desc,.conclusion-card p,.benefit p,.closing p{color:#444!important}.panel,.note,.codebox,.closing{background:white;border-color:#ddd}.table-wrap{overflow:visible}.table-wrap table{min-width:0}.codebox pre{white-space:pre-wrap}pre code{white-space:pre-wrap;color:#222}.xml-tag,.xml-attr,.xml-comment{color:#444}.footer{margin-top:25px}.article section{break-inside:auto}.panel{break-inside:avoid}a{color:#333}.pill{color:#444;border-color:#ddd}}
+  
+    .hero-map svg{display:block;width:100%;height:auto}.crumb{flex-wrap:wrap}.hero-grid>*{min-width:0}.article h2{background:var(--gradient);background-clip:text;-webkit-background-clip:text;color:transparent}.mini-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:24px 0}.mini-flow>div{padding:20px}.mini-flow b{display:block;font:12px var(--mono);color:var(--cyan);margin-bottom:8px}.mini-flow p{font-size:13px;color:var(--secondary)}.section li{color:var(--secondary)}.article .sources{margin-top:18px}.table-wrap:focus-visible,pre:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}.table-wrap caption{text-align:left;padding:12px 18px;font-size:12px;color:var(--secondary)}.toast{max-width:calc(100vw - 36px);width:max-content;text-align:center}.codebox pre{max-width:100%}.hero h1 .subline{font-size:.59em}.scope{margin-top:18px;font-size:12px;color:var(--secondary)}
+    @media(max-width:760px){.mini-flow{grid-template-columns:1fr}.hero h1{font-size:36px}.glossary{grid-template-columns:1fr}.hero-map{padding:14px}.crumb{gap:8px}.hero h1 .subline{font-size:.62em}}
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#conclusion">跳到文章正文</a>
+  <header class="topbar">
+    <div class="wrap nav-inner">
+      <a class="brand" href="/zh/" aria-label="Sparrow 首页"><span class="brand-mark" aria-hidden="true">s</span>sparrow<span class="brand-sub"> / ENGINEERING</span></a>
+      <nav class="topnav" aria-label="文章导航"><a href="#layout">目录设计</a><a href="#link">配置软链接</a><a class="button primary" href="/zh/#docs">返回首页 ↗</a></nav>
+    </div>
+    <div class="reading-progress" id="reading-progress" aria-hidden="true"></div>
+  </header>
+  <div class="wrap">
+    <header class="hero" aria-label="文章 Banner">
+      <div class="crumb"><a href="/zh/#docs">开发文档</a><span aria-hidden="true">/</span><span>AI 编程</span><span aria-hidden="true">/</span><span class="pill"><span class="dot" aria-hidden="true"></span>Codex · Skills</span></div>
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow" style="margin-bottom:17px">ONE SOURCE · MANY PROJECTS</p>
+          <h1><span class="gradient-text">让 Skill 跨项目生长</span><span class="subline">自定义源码目录<br>本地迭代与 GitHub 同步</span></h1>
+          <p class="hero-desc">把反复使用的方法沉淀为独立资产：在自己的仓库中维护，通过用户级入口供不同项目调用，让每一次有效改进都有记录、能同步。</p>
+          <div class="hero-actions"><a class="button primary" href="#setup">从首次配置开始 ↓</a><a class="button" href="#adaptation">看项目适配</a><button type="button" class="button" id="share-btn">微信分享 ↗</button></div>
+          <div class="meta"><span>2026.09.28</span><i aria-hidden="true"></i><span>6 个步骤</span><i aria-hidden="true"></i><span>macOS / Linux 命令示例</span></div>
+        </div>
+        <figure class="panel hero-map" style="margin:0">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 350" role="img" aria-labelledby="cover-title cover-desc">
+            <title id="cover-title">一份 skill 源码连接多个项目与 GitHub</title><desc id="cover-desc">本地 Git 仓库通过软链接进入用户级 skills 目录，项目 A 和 B 都读取它；提交通过 push 和 pull 在 GitHub 与本机间同步。</desc>
+            <defs><linearGradient id="cover-grad" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6d5cff"/><stop offset=".55" stop-color="#22d3ee"/><stop offset="1" stop-color="#a855f7"/></linearGradient><marker id="cover-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="none" stroke="#22d3ee" stroke-width="1.5"/></marker></defs>
+            <rect x="10" y="10" width="420" height="330" rx="18" fill="#07070d" stroke="#ffffff18"/>
+            <circle cx="30" cy="30" r="3" fill="#6d5cff"/><circle cx="43" cy="30" r="3" fill="#22d3ee"/><circle cx="56" cy="30" r="3" fill="#a855f7"/><text x="78" y="34" fill="#9a9ab0" font-family="monospace" font-size="11">SKILL DEVELOPMENT LOOP</text>
+            <rect x="35" y="58" width="170" height="75" rx="12" fill="#6d5cff16" stroke="#6d5cff55"/><text x="51" y="86" fill="#f4f4f7" font-size="15">本地 Git 仓库</text><text x="51" y="111" fill="#b7b6ce" font-family="monospace" font-size="11">skills/technical-writing</text>
+            <rect x="276" y="58" width="128" height="75" rx="12" fill="#a855f714" stroke="#a855f744"/><text x="295" y="87" fill="#f4f4f7" font-size="15">GitHub</text><text x="295" y="111" fill="#9a9ab0" font-size="11">版本与同步</text>
+            <path d="M212 82H269" stroke="#22d3ee" marker-end="url(#cover-arrow)"/><path d="M269 114H212" stroke="#22d3ee" marker-end="url(#cover-arrow)"/><text x="224" y="72" fill="#9a9ab0" font-size="10">push</text><text x="229" y="130" fill="#9a9ab0" font-size="10">pull</text>
+            <path d="M120 139V168" stroke="#22d3ee" marker-end="url(#cover-arrow)"/><text x="135" y="158" fill="#9a9ab0" font-size="11">软链接 · 读取同一份文件</text>
+            <rect x="35" y="178" width="369" height="64" rx="12" fill="url(#cover-grad)" opacity=".10"/><rect x="35" y="178" width="369" height="64" rx="12" fill="none" stroke="#ffffff24"/><text x="52" y="205" fill="#f4f4f7" font-size="14">用户级发现入口</text><text x="52" y="226" fill="#b7b6ce" font-family="monospace" font-size="12">~/.agents/skills/technical-writing</text>
+            <path d="M120 244V269M320 244V269" stroke="#22d3ee" marker-end="url(#cover-arrow)"/>
+            <rect x="35" y="279" width="170" height="40" rx="10" fill="#ffffff05" stroke="#ffffff18"/><text x="70" y="304" fill="#f4f4f7" font-size="13">项目 A · 项目约定</text><rect x="235" y="279" width="169" height="40" rx="10" fill="#ffffff05" stroke="#ffffff18"/><text x="269" y="304" fill="#f4f4f7" font-size="13">项目 B · 项目约定</text>
+          </svg>
+          <figcaption class="fine">源码只有一份。项目提供上下文，Git 保存演进过程。</figcaption>
+        </figure>
+      </div>
+    </header>
+    <div class="main-grid">
+      <main class="article" id="article">
+        <section id="conclusion" class="section">
+          <div class="section-heading"><span class="section-number">01 /</span><h2>结论先行</h2></div>
+          <p class="section-intro"><strong>Skill 源码目录可以自己选；自动发现入口需要遵循 Codex 的目录约定。</strong>推荐把源码放入独立 Git 仓库，再将单个 skill 文件夹软链接到 <code>~/.agents/skills/</code>。</p>
+          <div class="conclusion-grid">
+            <div class="panel conclusion-card lift"><div class="tag">SOURCE</div><h3>独立维护</h3><p>源码脱离某个业务仓库，修改、评审和版本记录集中进行。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">DISCOVERY</div><h3>跨项目可用</h3><p>用户级入口指向源码，切换项目仍能使用同一个 skill。</p></div>
+            <div class="panel conclusion-card lift"><div class="tag">SYNC</div><h3>按需同步</h3><p>本地先验证改进，再提交并推送；其他电脑拉取后采用新内容。</p></div>
+          </div>
+          <span class="source">官方依据：<a href="https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills" target="_blank" rel="noopener noreferrer">OpenAI · 本地 skill 加载位置</a>列出用户级 <code>$HOME/.agents/skills</code>，并明确支持 skill 文件夹软链接。</span>
+          <div class="note cyan"><strong>本文解决个人跨项目使用与源码同步</strong><p>适用于能访问这些本地文件的 Codex 环境。若要让其他人通过安装入口分发使用，可以再封装为 plugin；见 <a href="https://developers.openai.com/plugins/build/plugins" target="_blank" rel="noopener noreferrer">官方插件打包文档</a>。</p></div>
+        </section>
+        <section id="background" class="section">
+          <div class="section-heading"><span class="section-number">02 /</span><h2>问题背景</h2></div>
+          <p>在项目 A 里整理出一套写文档的方法后，项目 B 也需要使用。如果每个项目各复制一份，修正一次流程就要到处同步；不同副本还可能逐渐出现差异。把方法放到个人目录能扩大使用范围，但还需要一个便于编辑、回看历史和跨电脑同步的源码仓库。</p>
+          <p>因此，需要把<strong>维护源码的位置</strong>与<strong>Codex 找到 skill 的入口</strong>连接起来。软链接相当于文件系统中的指针：从发现入口打开文件，实际读取的是源码目录内的文件。</p>
+          <dl class="glossary">
+            <div class="panel"><dt>源码仓库</dt><dd>你在编辑器中打开的独立项目，保存 SKILL.md 和配套资源。</dd></div>
+            <div class="panel"><dt>发现入口</dt><dd>让 Codex 找到 skill 的目录；它可以只放一个指向源码的链接。</dd></div>
+            <div class="panel"><dt>项目约定</dt><dd>当前业务仓库的输出路径、模板、命令和交付要求。</dd></div>
+            <div class="panel"><dt>版本同步</dt><dd>用 Git 记录修改，通过 GitHub 在多台电脑间传递提交。</dd></div>
+          </dl>
+          <p>下面以通用写作 skill <code>technical-writing</code> 为例。示例仓库名 <code>my-skills</code>、GitHub 所有者 <code>YOUR_ACCOUNT</code> 都是占位值，按自己的情况替换。</p>
+        </section>
+        <section id="details" class="section">
+          <div class="section-heading"><span class="section-number">03 /</span><h2>详细内容</h2></div>
+          <section id="layout" class="subsection">
+            <h3><span class="step">STEP 01</span>确定源码与发现入口</h3>
+            <div class="table-wrap"><table><caption>目录职责与使用范围</caption><thead><tr><th>目录</th><th>用途</th><th>本文建议</th></tr></thead><tbody>
+              <tr><td><code>~/workspace/my-skills/</code></td><td>自己选定的源码仓库</td><td>在这里编辑、提交、推送；放在业务仓库之外。</td></tr>
+              <tr><td><code>~/.agents/skills/</code></td><td>用户级 skill 入口</td><td>为需要跨项目使用的 skill 建立链接。</td></tr>
+              <tr><td><code>项目/.agents/skills/</code></td><td>项目相关的 skill 入口</td><td>保留只适用于该项目的工作流程。</td></tr>
+            </tbody></table></div>
+            <p>项目范围内，Codex 会沿当前工作目录向上扫描到仓库根目录的 <code>.agents/skills</code>。本地出现 <code>~/.codex/skills</code> 或插件缓存目录，并不意味着它们适合直接充当你的源码仓库；新建个人入口时，按当前官方文档采用 <code>~/.agents/skills</code>。</p>
+            <div class="codebox"><div class="code-header"><span>建议布局 · 配套目录按需增加</span><button type="button" class="copy">复制</button></div><pre><code>~/workspace/my-skills/                 # Git 仓库
+└── skills/
+    └── technical-writing/
+        ├── SKILL.md                   # 必需
+        ├── references/                # 可选：参考规范
+        ├── scripts/                   # 可选：确定性操作
+        └── assets/                    # 可选：模板与素材
+
+~/.agents/skills/
+└── technical-writing
+    → ~/workspace/my-skills/skills/technical-writing</code></pre></div>
+            <p class="scope">一个仓库可以维护多个 skill，每个 skill 对应独立文件夹。链接应指向包含 <code>SKILL.md</code> 的文件夹。</p>
+            <div class="note"><strong>配置中的 path 需要看它的用途</strong><p><code>skills.config</code> 在官方配置参考中用于单个 skill 的启用／禁用控制。不能仅凭它带有 <code>path</code> 字段，就将其理解为任意目录扫描配置。本文使用有明确文档支持的软链接方案。</p></div>
+            <span class="source">依据：<a href="https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills" target="_blank" rel="noopener noreferrer">加载位置</a> · <a href="https://learn.chatgpt.com/docs/config-file/config-reference" target="_blank" rel="noopener noreferrer">配置参考中的 skills.config</a>。</span>
+          </section>
+          <section id="setup" class="subsection">
+            <h3><span class="step">STEP 02</span>创建一个最小可用 skill</h3>
+            <p>以下命令假设 <code>~/workspace/my-skills</code> 是新建的独立仓库，终端使用 macOS / Linux 的 Bash 或 Zsh。先创建目录并初始化 Git：</p>
+            <div class="codebox"><div class="code-header"><span>首次创建 · 在终端执行</span><button type="button" class="copy">复制</button></div><pre><code class="language-bash">mkdir -p "$HOME/workspace/my-skills/skills/technical-writing"
+git -C "$HOME/workspace/my-skills" init -b main</code></pre></div>
+            <p class="muted" style="margin-top:18px">随后在编辑器中创建 <code>skills/technical-writing/SKILL.md</code>。下面是本文设计的可复用起点：</p>
+            <div class="codebox"><div class="code-header"><span>skills/technical-writing/SKILL.md</span><button type="button" class="copy">复制</button></div><pre><code class="language-markdown">---
+name: technical-writing
+description: 将工程讨论、实现方案或排查经验整理为技术文档；用户要求写文档、写文章或沉淀实践时使用，遵循当前项目的格式与发布约定。
+---
+
+# 技术文档编写
+
+1. 读取当前任务适用的 AGENTS.md，确认输出格式、目录、
+   文章模板与目录登记要求；用户的明确要求优先。
+2. 读取项目指定的规范与范例。缺少必要信息时，先检查现有
+   文档结构；仍无法确定的交付位置或格式，再询问用户。
+3. 区分已验证事实、方案建议和示例。涉及工具机制、版本或
+   配置时核对官方资料，并给出支持关键结论的链接。
+4. 按项目模板组织内容；项目未约定结构时，可采用
+   “结论、背景、操作步骤、验证方式、参考资料”。
+5. 检查命令、路径和示例是否前后一致，并将敏感信息替换为
+   通用占位符。仅在项目要求时维护文档目录与多语言入口。
+6. 核对成品结构和相关链接；有视觉要求时检查展示效果。
+   报告交付文件、验证结果与仍需处理的问题。</code></pre></div>
+            <p class="scope"><code>name</code> 和 <code>description</code> 是必需的元数据；触发描述应写清任务范围。参考规范、脚本和模板可按需要增加，并从正文链接到它们。这里无需预先创建空目录。</p>
+            <span class="source">格式依据：<a href="https://developers.openai.com/plugins/build/skills" target="_blank" rel="noopener noreferrer">OpenAI · Build skills</a>。以上具体写作流程是本文示例。</span>
+          </section>
+          <section id="link" class="subsection">
+            <h3><span class="step">STEP 03</span>链接到用户级目录并验证</h3>
+            <p>先确认源码存在，再建立入口。下面同时检查普通路径与软链接，避免重复执行时覆盖已有内容，或在现有目录中误建一层链接。</p>
+            <div class="codebox"><div class="code-header"><span>创建入口 · 可重复检查，已有目标时停止创建</span><button type="button" class="copy">复制</button></div><pre><code class="language-bash">skill_source="$HOME/workspace/my-skills/skills/technical-writing"
+skill_link="$HOME/.agents/skills/technical-writing"
+
+if [ ! -f "$skill_source/SKILL.md" ]; then
+  printf '%s\n' "未找到源码中的 SKILL.md，请先完成上一步。"
+elif [ -e "$skill_link" ] || [ -L "$skill_link" ]; then
+  printf '%s\n' "入口已存在，请先核对它的目标："
+  ls -ld "$skill_link"
+else
+  mkdir -p "$HOME/.agents/skills" &amp;&amp;
+    ln -s "$skill_source" "$skill_link"
+fi</code></pre></div>
+            <div class="codebox"><div class="code-header"><span>确认链接目标与文件可读</span><button type="button" class="copy">复制</button></div><pre><code class="language-bash">readlink "$HOME/.agents/skills/technical-writing"
+cat "$HOME/.agents/skills/technical-writing/SKILL.md"</code></pre></div>
+            <p class="muted" style="margin-top:18px">预期输出中，链接指向你选定的源码目录，读到的内容与编辑器中的文件一致。然后在一个业务项目的 Codex 会话中显式调用：</p>
+            <div class="codebox"><div class="code-header"><span>在 Codex 对话中发送，不是在终端执行</span><button type="button" class="copy">复制</button></div><pre><code>$technical-writing 将刚才的工程讨论整理为文档，遵循当前项目约定。</code></pre></div>
+            <p class="scope">官方说明 Codex 会自动检测 skill 修改；未显示更新时可重启。验证新版本时建议开启新会话，并确认读取的是这份源码，避免把旧对话上下文误认为最新文件内容。</p>
+            <span class="source">依据：<a href="https://learn.chatgpt.com/docs/build-skills#create-a-skill" target="_blank" rel="noopener noreferrer">创建与更新 skill</a>。新会话验证是本文的操作建议。</span>
+            <div class="note"><strong>链接不复制文件，也不授予额外写权限</strong><p>源码目录移动后需要修正入口；换电脑后也要重新建立本机链接。若要让 Codex 修改独立 skill 仓库，可直接把该仓库作为当前工作项目打开，文件访问仍受会话权限约束。</p></div>
+          </section>
+          <section id="github" class="subsection">
+            <h3><span class="step">STEP 04</span>推送到 GitHub，并在其他电脑同步</h3>
+            <p>先在 GitHub 创建一个空的 <code>my-skills</code> 仓库。采用下面的首次推送流程时，远端先不初始化 README 等文件。把 <code>YOUR_ACCOUNT</code> 替换为实际所有者，并完成 GitHub 的 Git 身份认证。</p>
+            <div class="codebox"><div class="code-header"><span>首次提交与推送 · 每一步成功后再执行下一步</span><button type="button" class="copy">复制</button></div><pre><code class="language-bash">cd "$HOME/workspace/my-skills"
+git status --short
+git add skills/technical-writing/SKILL.md
+git diff --cached
+git commit -m "feat: add reusable technical-writing skill"
+git remote add origin https://github.com/YOUR_ACCOUNT/my-skills.git
+git push -u origin main</code></pre></div>
+            <p class="scope">这里提交的是实际 skill 文件。用户级软链接是本机安装入口，不需要放进源码仓库。如果源码来自已有 GitHub 仓库，直接 clone，再建立链接即可，无需再次 init 或添加 origin。</p>
+            <span class="source">流程依据：<a href="https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github" target="_blank" rel="noopener noreferrer">GitHub · Adding locally hosted code to GitHub</a>。</span>
+            <h4 style="margin-top:25px">另一台电脑：克隆一次，再建立自己的链接</h4>
+            <div class="codebox"><div class="code-header"><span>首次获取 · 目标目录应尚不存在</span><button type="button" class="copy">复制</button></div><pre><code class="language-bash">mkdir -p "$HOME/workspace"
+git clone https://github.com/YOUR_ACCOUNT/my-skills.git \
+  "$HOME/workspace/my-skills"</code></pre></div>
+            <p class="muted" style="margin-top:15px">克隆后执行 STEP 03 的链接配置。此后更新前先查看本地状态；存在未提交修改时先提交或妥善保存，再拉取：</p>
+            <div class="codebox"><div class="code-header"><span>后续更新 · 工作区清理好后执行 pull</span><button type="button" class="copy">复制</button></div><pre><code class="language-bash">git -C "$HOME/workspace/my-skills" status --short
+git -C "$HOME/workspace/my-skills" pull --ff-only</code></pre></div>
+            <p class="scope"><code>--ff-only</code> 只接受快进更新；本地与远端提交已分叉时会停止，需要先决定如何整合两边的修改。它不负责自动处理所有冲突。</p>
+            <span class="source">依据：<a href="https://git-scm.com/docs/git-pull" target="_blank" rel="noopener noreferrer">Git · git pull</a>。</span>
+          </section>
+          <section id="iteration" class="subsection">
+            <h3><span class="step">STEP 05</span>建立可验证的迭代循环</h3>
+            <p>“持续迭代”来自真实任务反馈：发现缺失的判断条件，修改相应规则，再用代表性任务验证。建议一次改进一个明确问题，把项目特例留在项目约定中。</p>
+            <div class="mini-flow"><div class="panel lift"><b>01 / EDIT</b><p>编辑源码，说明本次要改善的任务与判断。</p></div><div class="panel lift"><b>02 / VERIFY</b><p>在不同项目试用，检查触发、输出及项目适配。</p></div><div class="panel lift"><b>03 / SHARE</b><p>检查 diff，提交验证过的修改，再推送同步。</p></div></div>
+            <div class="table-wrap"><table><caption>不同动作实际改变了什么</caption><thead><tr><th>动作</th><th>本地文件</th><th>版本记录 / 其他电脑</th></tr></thead><tbody>
+              <tr><td>保存 SKILL.md</td><td>链接指向的文件随即改变</td><td>尚未生成 Git 提交，也未同步远端</td></tr>
+              <tr><td>git commit</td><td>保存当前选中的修改快照</td><td>只增加本地提交</td></tr>
+              <tr><td>git push</td><td>无需为本机加载额外复制</td><td>将本地提交推送到远端</td></tr>
+              <tr><td>另一台电脑 git pull</td><td>更新该电脑的本地检出</td><td>该电脑的链接继续指向更新后的文件</td></tr>
+            </tbody></table></div>
+            <p>共享一个工作目录意味着各项目采用该目录的当前内容，<strong>尚未提交的修改也可能被后续任务读到</strong>。如果需要试验版本与稳定版本并存，可以使用两个独立检出，并分别采用明确区分的 skill 名称和入口。</p>
+            <h4 style="margin-top:22px">验证要覆盖“该用”和“不该用”的情况</h4>
+            <ul><li>明确要求编写技术文档：能否触发并读取项目模板？</li><li>同样的写作任务换到另一个项目：是否采用了新项目的路径与格式？</li><li>仅要求解释一个术语：是否避免无依据地创建整篇文件？</li><li>项目缺少输出约定：能否提出必要问题，而不是沿用上一个项目的目录？</li></ul>
+            <span class="source">验证思路参考：<a href="https://developers.openai.com/plugins/build/skills#test-the-skill" target="_blank" rel="noopener noreferrer">OpenAI · Test the skill</a>；以上用例针对本文写作 skill 设计。</span>
+            <div class="codebox"><div class="code-header"><span>一次改进验证通过后的提交</span><button type="button" class="copy">复制</button></div><pre><code class="language-bash">cd "$HOME/workspace/my-skills"
+git diff -- skills/technical-writing
+git add skills/technical-writing/SKILL.md
+git diff --cached
+git commit -m "refactor: clarify project-specific writing rules"
+git push</code></pre></div>
+            <p class="scope">新增参考文件或脚本时，将相应文件一起加入提交。Git 记录的是你做出的改进；使用次数本身不会自动修改 skill 文件。</p>
+          </section>
+          <section id="adaptation" class="subsection">
+            <h3><span class="step">STEP 06</span>把通用流程与项目约定分开</h3>
+            <p>能被多个项目发现，只解决了可访问性。要真正复用，还要移除写死的业务仓库路径、站点视觉和发布文件位置。以项目专用的 <code>write-doc</code> 为例，可以按下面的边界提取通用能力。</p>
+            <div class="table-wrap"><table><caption>通用写作 skill 与各项目的职责</caption><thead><tr><th>内容</th><th>建议归属</th><th>示例</th></tr></thead><tbody>
+              <tr><td>资料核对、事实与建议区分、操作步骤检查</td><td>通用 skill</td><td>核实关键机制，检查命令与引用。</td></tr>
+              <tr><td>输出格式与文章保存位置</td><td>项目 AGENTS.md 或指定规范</td><td>本站要求 HTML 并放入 common/public/。</td></tr>
+              <tr><td>主站主题、Banner、页面组件</td><td>项目模板</td><td>复用当前站点样式与导航。</td></tr>
+              <tr><td>首页登记与中英文简介</td><td>项目发布约定</td><td>说明要修改哪些目录入口与翻译文件。</td></tr>
+              <tr><td>与项目无关的检查脚本或模板</td><td>通用 skill 的配套资源</td><td>按输入参数运行，避免写死业务路径。</td></tr>
+            </tbody></table></div>
+            <p>通用 skill 中应明确要求读取当前项目规范，并用 skill 自身位置定位随包参考资料、用当前项目根目录定位交付文件。若自行设计配置文件，要在 skill 中说明文件名、字段与读取时机；它不会因为存在就自动成为 Codex 的标准配置。</p>
+            <div class="note cyan"><strong>为通用版与项目版使用清晰的不同名称</strong><p>例如通用版叫 <code>technical-writing</code>，项目专用版保留 <code>write-doc</code>。同名 skill 不会自动合并，不应依赖“项目版一定覆盖全局版”的假设。</p></div>
+            <span class="source">同名行为依据：<a href="https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills" target="_blank" rel="noopener noreferrer">OpenAI · 本地 skill 加载说明</a>。</span>
+          </section>
+          <section id="troubleshooting" class="subsection">
+            <h3>常见问题：沿“源码 → 链接 → 调用”排查</h3>
+            <div class="table-wrap wide"><table><caption>常见现象与处理顺序</caption><thead><tr><th>现象</th><th>优先检查</th><th>处理方向</th></tr></thead><tbody>
+              <tr><td>源码有了，其他项目找不到</td><td>用户级链接是否存在，目标内是否包含 SKILL.md</td><td>先执行 STEP 03 的 readlink 与 cat，再检查元数据。</td></tr>
+              <tr><td>入口已存在</td><td>它是目录、正常链接还是断链</td><td>先核对现有目标与内容；不要直接强制覆盖。</td></tr>
+              <tr><td>链接目标中出现字面量 ~</td><td>是否使用了 <code>"~/workspace/..."</code></td><td>终端示例使用 <code>"$HOME/workspace/..."</code>。</td></tr>
+              <tr><td>修改后仍表现得像旧版本</td><td>调用的 skill 名称、实际读取路径、旧会话内容</td><td>确认文件已保存，开启新会话；仍未显示时重启。</td></tr>
+              <tr><td>已 push，另一台电脑没变化</td><td>另一台电脑是否拉取、是否链接到该检出</td><td>检查状态并 pull，然后重新验证。</td></tr>
+              <tr><td>能找到 skill，却输出到错误目录</td><td>通用正文是否残留项目专用路径</td><td>将路径移入当前项目规范，补充跨项目用例。</td></tr>
+              <tr><td>移动仓库后无法读取</td><td>readlink 是否仍指向原位置</td><td>核对并重建本机入口，源码继续由 Git 管理。</td></tr>
+            </tbody></table></div>
+          </section>
+        </section>
+        <section id="summary" class="section" style="margin-bottom:0">
+          <div class="section-heading"><span class="section-number">04 /</span><h2>总结归纳</h2></div>
+          <div class="closing" style="margin-top:0"><p class="eyebrow" style="margin-bottom:12px">REUSABLE WORKFLOW</p><h3 class="gradient-text">一份源码，项目适配，版本可追溯。</h3><p>把 skill 当作持续维护的工程资产：独立仓库存源码，用户级软链接提供入口，项目约定决定交付细节。真实任务推动改进，Git 记录版本，GitHub 同步提交。</p><p>首次完成创建与链接后，日常工作就是<strong>修改 → 验证 → commit → push</strong>；其他电脑通过 pull 获取更新。面向更广泛的可安装分发时，再采用插件包装。</p></div>
+          <h3 id="sources" style="margin-top:32px;scroll-margin-top:106px">官方依据与参考</h3>
+          <p class="fine" style="margin-top:12px">核对日期：2026-09-28。官方资料支持工具机制与命令语义；仓库布局、写作流程和项目分工是本文的实践建议。文中个人路径与仓库所有者均使用通用示例。</p>
+          <ol class="sources">
+            <li><span class="ref-number">[01]</span><div><a href="https://learn.chatgpt.com/docs/build-skills" target="_blank" rel="noopener noreferrer">OpenAI · Build skills ↗</a><p>加载目录、软链接、调用方式、更新检测与同名行为。</p></div></li>
+            <li><span class="ref-number">[02]</span><div><a href="https://learn.chatgpt.com/docs/config-file/config-reference" target="_blank" rel="noopener noreferrer">OpenAI · Configuration Reference ↗</a><p>skills.config 的启用与禁用用途。</p></div></li>
+            <li><span class="ref-number">[03]</span><div><a href="https://developers.openai.com/plugins/build/skills" target="_blank" rel="noopener noreferrer">OpenAI · Build skills for plugins ↗</a><p>SKILL.md 格式、配套资源与行为验证。</p></div></li>
+            <li><span class="ref-number">[04]</span><div><a href="https://docs.github.com/en/migrations/importing-source-code/using-the-command-line-to-import-source-code/adding-locally-hosted-code-to-github" target="_blank" rel="noopener noreferrer">GitHub · Adding locally hosted code to GitHub ↗</a><p>本地仓库连接远端与首次推送。</p></div></li>
+            <li><span class="ref-number">[05]</span><div><a href="https://git-scm.com/docs/git-pull" target="_blank" rel="noopener noreferrer">Git · git pull ↗</a><p>拉取更新、快进与分叉处理。</p></div></li>
+            <li><span class="ref-number">[06]</span><div><a href="https://developers.openai.com/plugins/build/plugins" target="_blank" rel="noopener noreferrer">OpenAI · Package your plugin ↗</a><p>需要可安装分发时的后续包装方式。</p></div></li>
+          </ol>
+        </section>
+      </main>
+      <aside class="toc" aria-label="文章目录"><p class="eyebrow">ON THIS PAGE</p><a href="#conclusion" class="active">01　结论先行</a><a href="#background">02　问题背景</a><a href="#details">03　详细内容</a><a class="sub" href="#layout">源码与发现入口</a><a class="sub" href="#setup">创建最小 skill</a><a class="sub" href="#link">配置与验证软链接</a><a class="sub" href="#github">GitHub 与多机同步</a><a class="sub" href="#iteration">持续迭代循环</a><a class="sub" href="#adaptation">项目适配与职责</a><a class="sub" href="#troubleshooting">常见问题排查</a><a href="#summary">04　总结归纳</a><a class="sub" href="#sources">官方依据与参考</a><div class="toc-bottom"><p>AI 编程 · Codex Skills<br>本地维护，跨项目使用</p><a href="#top" style="margin-top:9px">返回顶部 ↑</a></div></aside>
+    </div>
+  </div>
+  <footer class="footer"><div class="wrap footer-inner"><div><strong>sparrow</strong> / AI 编程实践 · Codex Skills</div><div><a href="/zh/#docs">返回文档目录</a>　<a href="#top">返回顶部 ↑</a></div></div></footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script>
+    (() => {
+      const toast = document.getElementById('toast'); let timer;
+      function announce(text) { clearTimeout(timer); toast.textContent = text; toast.hidden = false; timer = setTimeout(() => { toast.hidden = true; }, 2800); }
+      async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+        const input = document.createElement('textarea'); input.value = text; input.style.position = 'fixed'; input.style.opacity = '0'; document.body.append(input); input.select();
+        const copied = document.execCommand('copy'); input.remove(); if (!copied) throw new Error('Copy unavailable');
+      }
+      document.querySelectorAll('.copy').forEach(button => button.addEventListener('click', async () => {
+        try { await copyText(button.closest('.codebox').querySelector('code').textContent); announce('代码已复制'); } catch { announce('请选中代码后复制'); }
+      }));
+      document.getElementById('share-btn').addEventListener('click', async () => {
+        if (/MicroMessenger/i.test(navigator.userAgent)) { announce('请点击微信右上角菜单，发送给朋友或分享到朋友圈'); return; }
+        const url = new URL(location.href); url.hash = '';
+        const data = { title: document.title, text: document.querySelector('meta[name="description"]').content, url: url.href };
+        if (navigator.share) { try { await navigator.share(data); return; } catch (error) { if (error.name === 'AbortError') return; } }
+        try { await copyText(data.url); announce('链接已复制，可粘贴到微信分享'); } catch { announce('请复制地址栏链接到微信分享'); }
+      });
+      const links = [...document.querySelectorAll('.toc > a')]; const sections = links.map(link => document.querySelector(link.getAttribute('href'))); let scheduled = false;
+      function update() {
+        if (scheduled) return; scheduled = true;
+        requestAnimationFrame(() => {
+          const maximum = document.documentElement.scrollHeight - innerHeight;
+          document.getElementById('reading-progress').style.width = (maximum > 0 ? Math.min(100, Math.max(0, scrollY / maximum * 100)) : 0) + '%';
+          let current = sections[0]; sections.forEach(section => { if (section.getBoundingClientRect().top <= 150) current = section; });
+          links.forEach(link => { const active = link.hash === '#' + current.id; link.classList.toggle('active', active); if (active) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current'); });
+          scheduled = false;
+        });
+      }
+      addEventListener('scroll', update, { passive: true }); addEventListener('resize', update); update();
+      document.querySelectorAll('.table-wrap').forEach(element => { element.tabIndex = 0; element.setAttribute('role', 'region'); element.setAttribute('aria-label', element.querySelector('caption').textContent); });
+      document.querySelectorAll('pre').forEach(element => { element.tabIndex = 0; });
+    })();
+  </script>
+</body>
+</html>

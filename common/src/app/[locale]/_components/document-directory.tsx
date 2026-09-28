@@ -21,7 +21,7 @@ export default function DocumentDirectory() {
         <>
             <div className={styles.directoryToolbar}>
                 <div className={styles.filters} role="group" aria-label={t("title")}>
-                    {["all", "backend", "frontend"].map((key) => (
+                    {["all", "backend", "frontend", "ai-coding"].map((key) => (
                         <button key={key} type="button" aria-pressed={category === key} onClick={() => setCategory(key)}>
                             {t(key)}
                             <span>{key === "all" ? documents.length : documents.filter((document) => document.category === key).length}</span>
