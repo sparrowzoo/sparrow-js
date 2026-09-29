@@ -6,7 +6,8 @@
 
 - 面向主站发布的文章保存到 `common/public/`，按内容归入对应子目录，并以 HTML 作为交付格式。
 - 先检查现有分类；没有合适分类时，先告知用户分类缺失及拟采用的目录，不要无提示地新建分类或把文档放到其他位置。
-- 编写或改写文章前，必须先读取 `common/ai/文章编写提示词.md`，遵循其中的文章结构和视觉要求。
+- 编写或改写文章前，读取 `.agents/skills/write-doc/SKILL.md` 及技能内的 `templates/article.html`；写作规范、模板和组件示例随技能维护，不再维护 `common/ai/` 副本。
+- 文章 CSS、JS 与默认分享图统一维护于 `sparrow/source/article/`，文章直接引用 `https://r.sparrowzoo.net/article/`，不逐篇内联或复制公共资源。
 - HTML 与主站主题保持一致，保留 Banner 导航；参考现有文章和主站样式，保证移动端表格、代码块可阅读。
 - 不再将 `common/docs/` 或其他目录中的 Markdown 作为文章最终交付。发布到主站文档目录时，同步维护目录入口及所需的中英文标题、简介。
 
