@@ -170,6 +170,22 @@
       shareButton.hidden = false;
     }
 
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+      const root = document.documentElement;
+      const renderTheme = () => {
+        const light = root.dataset.theme === 'light';
+        themeToggle.setAttribute('aria-pressed', String(light));
+        themeToggle.textContent = light ? '深色' : '浅色';
+      };
+      themeToggle.addEventListener('click', () => {
+        root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
+        try { localStorage.setItem('theme', root.dataset.theme); } catch { /* Ignore storage errors. */ }
+        renderTheme();
+      });
+      renderTheme();
+    }
+
     const groups = new Map();
     const tabPanels = [];
     document.querySelectorAll('[data-tab-group][data-target]').forEach(button => {
