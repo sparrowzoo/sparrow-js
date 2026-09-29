@@ -98,12 +98,6 @@ hr { margin: 32px 0; border: 0; border-top: 1px solid var(--border); }
 .topbar .button:hover { transform: translateY(-2px); }
 .topbar .button:not(.primary):hover { border-color: rgba(255, 255, 255, .08); }
 .topbar .reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 0; background: linear-gradient(110deg, #6d5cff, #22d3ee 53%, #a855f7); transition: width .1s linear; }
-.topbar .share-wrap { position: relative; display: inline-flex; }
-.share-hint { position: absolute; top: calc(100% + 14px); right: 0; z-index: 70; width: max-content; max-width: min(340px, calc(100vw - 32px)); padding: 12px 34px 12px 16px; border: 1px solid rgba(109, 92, 255, .38); border-radius: 12px; background: #171724; color: var(--secondary); font-size: 13px; line-height: 1.75; text-align: left; white-space: normal; box-shadow: 0 14px 44px rgba(0, 0, 0, .55); }
-.share-hint::before { content: ""; position: absolute; top: -6px; right: 40px; width: 11px; height: 11px; border-left: 1px solid rgba(109, 92, 255, .38); border-top: 1px solid rgba(109, 92, 255, .38); background: #171724; transform: rotate(45deg); }
-.share-hint-close { position: absolute; top: 8px; right: 10px; width: 22px; height: 22px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .06); color: var(--tertiary); font-size: 15px; line-height: 1; cursor: pointer; }
-.share-hint-close:hover { color: var(--text); background: rgba(255, 255, 255, .12); }
-.share-hint[hidden] { display: none; }
 
 /* Article actions and introduction. */
 .button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 10px 18px; border: 1px solid var(--border); border-radius: 999px; background: #ffffff04; color: var(--text); font-size: 13px; line-height: 1.6; text-align: center; transition: transform .2s, border-color .2s; }
