@@ -148,34 +148,9 @@
 
     const shareButton = document.getElementById('share-btn');
     if (shareButton) {
-      const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
-
-      if (isWeChat) {
-        const shareWrap = document.createElement('span');
-        shareWrap.className = 'share-wrap';
-        shareButton.replaceWith(shareWrap);
-        shareWrap.appendChild(shareButton);
-
-        const shareHint = document.createElement('span');
-        shareHint.id = 'share-hint';
-        shareHint.className = 'share-hint';
-        shareHint.setAttribute('role', 'note');
-        shareHint.textContent = '微信内请点击右上角“…”菜单分享；或者选择“用浏览器打开后”再点击此按钮分享，体验效果更佳！';
-        shareWrap.appendChild(shareHint);
-        shareButton.setAttribute('aria-describedby', 'share-hint');
-
-        const shareHintClose = document.createElement('button');
-        shareHintClose.type = 'button';
-        shareHintClose.className = 'share-hint-close';
-        shareHintClose.setAttribute('aria-label', '关闭分享提示');
-        shareHintClose.textContent = '×';
-        shareHintClose.addEventListener('click', () => { shareHint.hidden = true; });
-        shareHint.appendChild(shareHintClose);
-      }
-
       shareButton.addEventListener('click', async () => {
-        if (isWeChat) {
-          announce('请点击微信右上角“…”菜单，选择“发送给朋友”或“分享到朋友圈”；或者选择“用浏览器打开后”再点击此按钮分享，体验效果更佳！');
+        if (/MicroMessenger/i.test(navigator.userAgent)) {
+          window.alert('请点击微信右上角“…”菜单，选择“发送给朋友”或“分享到朋友圈”。\n也可选择“在浏览器打开”后，再点击分享按钮。');
           return;
         }
         const url = shareUrl();
@@ -189,7 +164,7 @@
             if (error && error.name === 'AbortError') return;
           }
         }
-        try { await copyText(url); announce('文章链接已复制，可粘贴到微信分享'); }
+        try { await copyText(url); announce('文章链接已复制，可粘贴分享'); }
         catch { announce('复制未完成，请复制浏览器地址栏链接后分享'); }
       });
       shareButton.hidden = false;
