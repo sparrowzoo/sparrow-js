@@ -64,50 +64,6 @@
             -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
         }
 
-        /* Banner 导航 */
-        .banner {
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            padding: 12px 24px;
-            background: rgba(7, 7, 13, 0.75);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .banner .crumb {
-            font-size: 13px;
-            color: var(--text-3);
-        }
-
-        .banner .crumb b {
-            color: var(--text-2);
-            font-weight: 500;
-        }
-
-        .btn-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 18px;
-            border-radius: 999px;
-            font-size: 13px;
-            text-decoration: none;
-            color: #fff;
-            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .btn-pill:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(109, 92, 255, 0.35);
-        }
-
         .container {
             max-width: 860px;
             margin: 0 auto;
@@ -291,10 +247,6 @@
             .card {
                 padding: 18px 18px;
             }
-
-            .banner {
-                padding: 10px 16px;
-            }
         }
     </style>
 <style>
@@ -316,7 +268,7 @@
 </style></head>
 <body>
 
-<header class="sz-topbar"><div class="sz-nav-inner"><a class="sz-brand" href="/zh/" aria-label="Sparrow 首页"><span class="sz-brand-mark" aria-hidden="true">s</span>sparrow<span class="sz-brand-sub"> / ENGINEERING</span></a><nav class="sz-topnav" aria-label="文章导航"><a class="sz-link" href="/zh/doc">文档</a><button type="button" class="sz-button" id="share-btn">微信分享 ↗</button><a class="sz-button sz-primary" href="/zh/">返回首页 ↗</a></nav></div><div class="sz-reading-progress" id="reading-progress" aria-hidden="true"></div></header>
+<header class="sz-topbar"><div class="sz-nav-inner"><a class="sz-brand" href="/zh/" aria-label="Sparrow 首页"><span class="sz-brand-mark" aria-hidden="true">s</span>sparrow<span class="sz-brand-sub"> / ENGINEERING</span></a><nav class="sz-topnav" aria-label="文章导航"><a class="sz-link" href="/zh/doc">文档</a><button type="button" class="sz-button" id="share-btn">微信分享 ↗</button><a class="sz-button sz-primary" href="/zh/doc">返回首页 ↗</a></nav></div><div class="sz-reading-progress" id="reading-progress" aria-hidden="true"></div></header>
 
 <main class="container">
     <h1 class="title">next-intl 国际化权威指南及使用说明</h1>
