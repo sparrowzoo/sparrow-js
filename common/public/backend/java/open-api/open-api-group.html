@@ -237,23 +237,28 @@
             h2 { font-size: 19px; }
         }
     </style>
-</head>
+<style>
+.sz-topbar,.sz-topbar *{box-sizing:border-box;margin:0;padding:0}
+.sz-topbar{position:sticky;top:0;z-index:50;margin:0;background:#07070ddb;-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.08)}
+.sz-nav-inner{max-width:1232px;margin:0 auto;padding:0 40px;height:72px;display:flex;align-items:center;justify-content:space-between;gap:30px}
+.sz-brand{display:flex;align-items:center;gap:12px;color:#f4f4f7;font-size:17px;letter-spacing:-.025em;font-weight:650;text-decoration:none;white-space:nowrap}
+.sz-brand-mark{display:grid;place-items:center;width:32px;height:32px;border:1px solid rgba(163,155,255,.25);background:linear-gradient(145deg,rgba(109,92,255,.15),rgba(34,211,238,.05));border-radius:10px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:19px;color:#c5c0ff}
+.sz-brand-sub{color:#64647c;font-size:12px;font-weight:400;margin-left:4px;letter-spacing:.06em}
+.sz-topnav{display:flex;align-items:center;gap:22px}
+.sz-topnav>a{text-decoration:none}
+.sz-topnav>a.sz-link{color:#9a9ab0;font-size:13px}
+.sz-topnav>a.sz-link:hover{color:#f4f4f7}
+.sz-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);color:#f4f4f7;font:inherit;font-size:13px;line-height:1.6;text-decoration:none;cursor:pointer;transition:transform .2s}
+.sz-button.sz-primary{border:0;background:linear-gradient(110deg,#6d5cff,#22d3ee 53%,#a855f7);color:#080c18;font-weight:700}
+.sz-button:hover{transform:translateY(-2px)}
+.sz-reading-progress{position:absolute;bottom:-1px;left:0;height:2px;width:0;background:linear-gradient(110deg,#6d5cff,#22d3ee 53%,#a855f7);transition:width .1s linear}
+@media(max-width:760px){.sz-nav-inner{height:62px;padding:0 20px;gap:15px}.sz-brand-sub{display:none}.sz-topnav{gap:14px}.sz-topnav>a.sz-link{display:none}}
+</style></head>
 <body>
 <div class="ambient"></div>
 <div class="grid-noise"></div>
 
-<nav class="topnav">
-    <a class="brand" href="/index.html">
-        <span class="logo">雀</span>
-        <span>麻雀窝 <span class="zh">Sparrow Zoo</span></span>
-    </a>
-    <div class="nav-links">
-        <a href="/index.html">首页</a>
-        <a href="/index.html#products">产品</a>
-        <a href="/docs/index.html">文档</a>
-        <a href="/swagger-ui/index.html" class="primary">Swagger UI</a>
-    </div>
-</nav>
+<header class="sz-topbar"><div class="sz-nav-inner"><a class="sz-brand" href="/zh/" aria-label="Sparrow 首页"><span class="sz-brand-mark" aria-hidden="true">s</span>sparrow<span class="sz-brand-sub"> / ENGINEERING</span></a><nav class="sz-topnav" aria-label="文章导航"><a class="sz-link" href="/zh/doc">文档</a><button type="button" class="sz-button" id="share-btn">微信分享 ↗</button><a class="sz-button sz-primary" href="/zh/">返回首页 ↗</a></nav></div><div class="sz-reading-progress" id="reading-progress" aria-hidden="true"></div></header>
 
 <header class="hero">
     <div class="tag"><span class="dot"></span>SPARROW FILE · 接口文档</div>
@@ -498,5 +503,5 @@ curl http://localhost:9999/v3/api-docs/passport</code></pre>
     <div class="f-brand"><span class="logo">雀</span>麻雀窝 Sparrow Zoo</div>
     <div>Sparrow File<span class="sep">·</span>OpenAPI 分组策略说明<span class="sep">·</span>Powered by Sparrow OS</div>
 </footer>
-</body>
+<script>(function(){function copy(t){if(navigator.clipboard&&isSecureContext)return navigator.clipboard.writeText(t);var i=document.createElement('textarea');i.value=t;i.style.position='fixed';i.style.opacity='0';document.body.appendChild(i);i.select();var ok=document.execCommand('copy');i.remove();if(!ok)throw new Error('copy');}var b=document.getElementById('share-btn');if(b)b.addEventListener('click',async function(){var u=new URL(location.href);u.hash='';var m=document.querySelector('meta[name="description"]');var d={title:document.title,text:m?m.content:'',url:u.href};if(navigator.share){try{await navigator.share(d);return;}catch(e){if(e.name==='AbortError')return;}}try{await copy(d.url);}catch(e){}});var bar=document.getElementById('reading-progress');function up(){var max=document.documentElement.scrollHeight-innerHeight;if(bar)bar.style.width=(max>0?Math.min(100,Math.max(0,scrollY/max*100)):0)+'%';}if(bar){addEventListener('scroll',up,{passive:true});addEventListener('resize',up);up();}})();</script></body>
 </html>

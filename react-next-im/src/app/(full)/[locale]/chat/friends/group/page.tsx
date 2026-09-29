@@ -2,8 +2,6 @@
 import * as React from "react";
 import { Suspense, useContext, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { format } from "util";
-import { AVATAR_URL } from "@/common/lib/Env";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import DirectSession from "@/components/session/DirectSession";
@@ -16,7 +14,6 @@ function Group() {
   const groupId = searchParams?.get("groupId");
   const webSocketContextValue = useContext(WebSocketContext);
   const messageBroker = webSocketContextValue.messageBroker;
-  const headSrc = format(AVATAR_URL, groupId);
   const chatSession = ChatSession.createGroupSession(groupId as string);
   const [groupDetail, setGroupDetail] = useState<QunDetailWrap | undefined>();
 
@@ -46,7 +43,7 @@ function Group() {
           unread={0}
           showUnread={false}
           fallback={detail?.qunName}
-          src={headSrc}
+          src={detail?.avatar}
         />
         <div>
           <strong>{detail?.qunName}</strong>

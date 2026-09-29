@@ -4,9 +4,7 @@ import ContactContainer from "@/lib/im/ContactContainer";
 import Message from "@/lib/protocol/Message";
 import ChatUser from "@/lib/protocol/ChatUser";
 import UserCategory from "@/common/lib/UserCategory";
-import { format } from "util";
 import {
-  AVATAR_URL,
   SESSION_CATEGORY_GROUP,
   SESSION_CATEGORY_NAME_MAPPING,
 } from "@/common/lib/Env";
@@ -251,7 +249,7 @@ export default class SessionContainer {
     }
     const group = this.contactContainer.getGroupDetail(session?.id as string);
     session.name = group?.qunName as string;
-    session.avatarUrl = format(AVATAR_URL, group?.qunId);
+    session.avatarUrl = group?.avatar as string;
   }
 
   public fetchNewMessageCount() {

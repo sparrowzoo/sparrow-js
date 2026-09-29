@@ -1,8 +1,6 @@
 "use client";
 import * as React from "react";
-import { AVATAR_URL } from "@/common/lib/Env";
 import Group from "@/lib/protocol/contact/Group";
-import { format } from "util";
 import CommonItem from "@/components/CommonItem";
 
 interface GroupProps {
@@ -15,7 +13,7 @@ export default function GroupItem(groupProps: GroupProps) {
   const groupUrl = link
     ? `/chat/friends/group?groupId=${qun.qunId}`
     : "javascript:void(0)";
-  const avatar = format(AVATAR_URL, qun.qunId);
+  const avatar = qun.avatar;
   return (
     <CommonItem
       id={qun.qunId}

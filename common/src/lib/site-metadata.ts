@@ -1,6 +1,6 @@
 import {WWW_ROOT} from "@/common/lib/Env";
 
-export const publicSitePaths = ["", "/products", "/products/coder", "/products/passport", "/products/im", "/products/file", "/study", "/ui"];
+export const publicSitePaths = ["", "/products", "/products/coder", "/products/passport", "/products/im", "/products/file", "/study", "/ui", "/doc"];
 
 export function localeAlternates(locale: string, path: string) {
     const url = (language: string) => `${WWW_ROOT}/${language}${path}/`;

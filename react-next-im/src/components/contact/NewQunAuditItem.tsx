@@ -75,7 +75,7 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
   const userHomeLink = `/chat/friends/contact/?friendId=${encodeURIComponent(applyUser.userId)}`;
   const userName = applyUser.nickName || applyUser.userName;
   const avatar =
-    applyUser.avatar || format(`${AVATAR_URL}`, `${applyUser.userId}`);
+    applyUser.avatar || format(`${AVATAR_URL}`, `${Number(applyUser.userId) % 10}`);
   const qun: Group = newQunProps.auditWrap.qunMap[audit.businessId];
 
   return (

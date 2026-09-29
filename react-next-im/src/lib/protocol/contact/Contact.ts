@@ -39,7 +39,7 @@ export default class Contact {
     if (this._avatar && this._avatar != "") {
       return this._avatar;
     }
-    return format(`${AVATAR_URL}`, this.userId);
+    return format(`${AVATAR_URL}`, Number(this.userId) % 10);
   }
 
   set avatar(value: string) {

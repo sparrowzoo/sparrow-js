@@ -33,7 +33,7 @@ function ContactDetail() {
     ) as Contact;
   const headSrc = contact.avatar
     ? contact.avatar
-    : format(AVATAR_URL, friendId);
+    : format(AVATAR_URL, Number(friendId) % 10);
   const userName = contact.nickName ? contact.nickName : contact.userName;
   friend = new ChatUser(contact.userId, contact.category);
   const chatSession = ChatSession.create121Session(

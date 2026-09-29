@@ -54,7 +54,7 @@ export default async function Home() {
                         <p className={styles.heroDescription}>{t("hero.description")}</p>
                         <div className={styles.heroActions}>
                             <a href="#products" className={styles.primaryButton}>{t("hero.primary")}<ArrowRight size={17} aria-hidden="true"/></a>
-                            <a href="#docs" className={styles.secondaryButton}><BookOpen size={17} aria-hidden="true"/>{t("hero.secondary")}</a>
+                            <Link href="/doc" className={styles.secondaryButton}><BookOpen size={17} aria-hidden="true"/>{t("hero.secondary")}</Link>
                         </div>
                         <p className={styles.heroNote}><span/>{t("hero.note")}</p>
                     </div>
@@ -119,7 +119,7 @@ export default async function Home() {
                         <div><p className={styles.eyebrow}>{t("docs.eyebrow")}</p><h2 id="docs-heading">{t("docs.title")}</h2></div>
                         <p className={styles.sectionDescription}>{t("docs.description")}</p>
                     </div>
-                    <DocumentDirectory/>
+                    <DocumentDirectory limit={10} showAllHref="/doc"/>
                 </section>
 
                 <section id="ecosystem" className={styles.section} aria-labelledby="ecosystem-heading">
@@ -141,7 +141,7 @@ export default async function Home() {
                         <div><p className={styles.eyebrow}>{t("cta.eyebrow")}</p><h2 id="cta-heading">{t("cta.title")}</h2><p className={styles.ctaDescription}>{t("cta.description")}</p></div>
                         <div className={styles.ctaActions}>
                             <a href="/backend/java/maven/sparrow-parent-bom.html" className={styles.primaryButton}>{t("cta.primary")}<ArrowRight size={16} aria-hidden="true"/></a>
-                            <a href="#docs" className={styles.textButton}>{t("cta.secondary")}<ArrowUpRight size={16} aria-hidden="true"/></a>
+                            <Link href="/doc" className={styles.textButton}>{t("cta.secondary")}<ArrowUpRight size={16} aria-hidden="true"/></Link>
                         </div>
                     </div>
                 </section>

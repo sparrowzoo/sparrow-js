@@ -17,7 +17,7 @@ export default function SiteHeader() {
             closeMenuLabel={t("nav.closeMenu")}
             items={[
                 ...getProductNavigations(t, locale, false, tProduct),
-                {label: t("nav.docs"), href: `${getPathname({locale, href: "/"})}#docs`},
+                {label: t("nav.docs"), href: getPathname({locale, href: "/doc"})},
                 {label: t("nav.study"), href: getPathname({locale, href: "/study"}), emphasized: true, icon: "graduation-cap", group: "utility"},
             ]}
         />

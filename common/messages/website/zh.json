@@ -314,6 +314,8 @@
     "clear": "清除搜索与筛选",
     "count": "{count} 篇文档",
     "read": "阅读文档",
+    "pageTitle": "开发文档",
+    "viewAll": "查看全部",
     "items": {
       "cross-project-skills-git-workflow": {
         "title": "Codex Skill 跨项目复用：本地迭代与 GitHub 同步",
