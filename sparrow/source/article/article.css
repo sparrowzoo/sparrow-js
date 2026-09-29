@@ -71,27 +71,38 @@ hr { margin: 32px 0; border: 0; border-top: 1px solid var(--border); }
 .skip { position: absolute; top: -100px; left: 16px; z-index: 100; padding: 12px 18px; background: var(--bg); }
 .skip:focus { top: 12px; }
 
-/* Navigation and article introduction. */
+/* Existing site banner visuals, scoped to the published article classes. */
+.topbar, .topbar * { box-sizing: border-box; margin: 0; padding: 0; }
 .topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  border-bottom: 1px solid var(--border);
-  background: #07070deb;
-  -webkit-backdrop-filter: blur(18px);
-  backdrop-filter: blur(18px);
+  margin: 0;
+  background: #07070ddb;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, .08);
+  font-size: 15px;
+  letter-spacing: .01em;
 }
-.nav-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; min-height: 72px; padding-block: 12px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); font-size: 17px; font-weight: 650; white-space: nowrap; }
-.brand:hover { text-decoration: none; }
-.brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid #a39bff40; border-radius: 10px; background: linear-gradient(145deg, #6d5cff26, #22d3ee0d); color: #c5c0ff; font: 19px var(--mono); }
-.brand-sub { color: var(--tertiary); font-size: 11px; font-weight: 400; letter-spacing: .05em; }
-.topnav { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; font-size: 13px; }
-.topnav > a { color: var(--secondary); }
+.topbar .nav-inner { max-width: 1232px; margin: 0 auto; padding: 0 40px; height: 72px; display: flex; align-items: center; justify-content: space-between; gap: 30px; }
+.topbar .brand { display: flex; align-items: center; gap: 12px; color: #f4f4f7; font-size: 17px; letter-spacing: -.025em; font-weight: 650; text-decoration: none; white-space: nowrap; }
+.topbar .brand-mark { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid rgba(163, 155, 255, .25); background: linear-gradient(145deg, rgba(109, 92, 255, .15), rgba(34, 211, 238, .05)); border-radius: 10px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 19px; color: #c5c0ff; }
+.topbar .brand-sub { color: #64647c; font-size: 12px; font-weight: 400; margin-left: 4px; letter-spacing: .06em; }
+.topbar .topnav { display: flex; align-items: center; gap: 22px; }
+.topbar .topnav > a { text-decoration: none; }
+.topbar .topnav > a.nav-link { color: #9a9ab0; font-size: 13px; }
+.topbar .topnav > a.nav-link:hover { color: #f4f4f7; }
+.topbar .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .08); background: rgba(255, 255, 255, .02); color: #f4f4f7; font: inherit; font-size: 13px; line-height: 1.6; text-decoration: none; cursor: pointer; transition: transform .2s; }
+.topbar .button.primary { border: 0; background: linear-gradient(110deg, #6d5cff, #22d3ee 53%, #a855f7); color: #080c18; font-weight: 700; }
+.topbar .button:hover { transform: translateY(-2px); }
+.topbar .button:not(.primary):hover { border-color: rgba(255, 255, 255, .08); }
+.topbar .reading-progress { position: absolute; bottom: -1px; left: 0; height: 2px; width: 0; background: linear-gradient(110deg, #6d5cff, #22d3ee 53%, #a855f7); transition: width .1s linear; }
+
+/* Article actions and introduction. */
 .button { display: inline-flex; justify-content: center; align-items: center; gap: 8px; padding: 10px 18px; border: 1px solid var(--border); border-radius: 999px; background: #ffffff04; color: var(--text); font-size: 13px; line-height: 1.6; text-align: center; transition: transform .2s, border-color .2s; }
 .button:hover { transform: translateY(-2px); border-color: #ffffff35; text-decoration: none; }
 .button.primary { border-color: transparent; background: var(--gradient); color: #080c18; font-weight: 750; }
-.reading-progress { position: absolute; bottom: -1px; left: 0; width: 0; height: 2px; background: var(--gradient); pointer-events: none; }
 .hero { padding-block: 46px; border-bottom: 1px solid var(--border); }
 .crumb { display: flex; flex-wrap: wrap; align-items: center; gap: 5px 10px; margin-bottom: 24px; color: var(--secondary); font-size: 12px; }
 .crumb [aria-hidden] { color: var(--tertiary); }
@@ -184,11 +195,10 @@ pre code { padding: 0; background: none; color: inherit; font: inherit; white-sp
   html { scroll-padding-top: 82px; }
   body { font-size: 15px; }
   .wrap { padding-inline: 20px; }
-  .nav-inner { min-height: 62px; gap: 8px 16px; padding-block: 10px; }
-  .brand { gap: 8px; font-size: 16px; }
-  .brand-sub, .topnav > a:not(.button) { display: none; }
-  .topnav { gap: 8px 14px; font-size: 12px; }
-  .topnav .button { padding: 7px 13px; font-size: 12px; }
+  .topbar .nav-inner { height: 62px; padding: 0 20px; gap: 15px; }
+  .topbar .brand-sub { display: none; }
+  .topbar .topnav { gap: 14px; }
+  .topbar .topnav > a.nav-link { display: none; }
   .hero { padding-block: 24px 28px; }
   .crumb { gap: 4px 8px; margin-bottom: 18px; font-size: 11px; }
   .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
@@ -216,14 +226,19 @@ pre code { padding: 0; background: none; color: inherit; font: inherit; white-sp
   .example-group > summary { padding: 15px; }
   .example-content { padding: 0 12px 16px; }
 }
+@media (max-width: 389px) {
+  .topbar .nav-inner { padding-inline: 12px; gap: 8px; }
+  .topbar .topnav { gap: 8px; }
+  .topbar .button { padding: 9px 10px; font-size: 12px; white-space: nowrap; }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .button:hover { transform: none; }
+  .button:hover, .topbar .button:hover { transform: none; }
 }
 @media (forced-colors: active) {
   .gradient-text { background: none; color: CanvasText; }
-  .button.primary { color: ButtonText; border-color: ButtonText; }
+  .button.primary, .topbar .button.primary { color: ButtonText; border-color: ButtonText; }
 }
 @media print {
   :root { color-scheme: light; --text: #111; --secondary: #444; --tertiary: #555; --border: #ccc; }
