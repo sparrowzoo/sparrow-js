@@ -58,41 +58,6 @@
             -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
         }
 
-        .topnav {
-            position: sticky; top: 0; z-index: 20;
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0 28px; height: 64px;
-            background: rgba(7, 7, 13, 0.72);
-            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-        }
-        .brand {
-            display: flex; align-items: center; gap: 11px;
-            text-decoration: none; color: var(--text);
-            font-weight: 700; font-size: 16px; letter-spacing: 0.02em;
-        }
-        .brand .logo {
-            width: 32px; height: 32px; border-radius: 10px;
-            display: grid; place-items: center;
-            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
-            box-shadow: 0 4px 18px rgba(109, 92, 255, 0.45);
-            font-size: 16px; color: #fff;
-        }
-        .brand .zh { color: var(--text-dim); font-weight: 500; font-size: 13.5px; }
-        .nav-links { display: flex; align-items: center; gap: 6px; }
-        .nav-links a {
-            color: var(--text-dim); text-decoration: none;
-            font-size: 13.5px; padding: 7px 15px; border-radius: 9px;
-            transition: color .2s, background .2s;
-        }
-        .nav-links a:hover { color: #fff; background: var(--panel-strong); }
-        .nav-links a.primary {
-            color: #fff;
-            background: linear-gradient(135deg, var(--accent-1), var(--accent-3));
-            box-shadow: 0 4px 16px rgba(109, 92, 255, 0.35);
-        }
-        .nav-links a.primary:hover { filter: brightness(1.12); }
-
         .hero {
             max-width: 1080px; margin: 0 auto;
             padding: 96px 24px 64px; text-align: center;
@@ -233,9 +198,6 @@
             .hero { padding: 72px 20px 52px; }
         }
         @media (max-width: 640px) {
-            .topnav { padding: 0 16px; }
-            .brand .zh { display: none; }
-            .nav-links a { padding: 7px 11px; font-size: 12.5px; }
             .article { padding: 8px 20px 80px; }
             h2 { font-size: 19px; }
         }
@@ -261,7 +223,7 @@
 <div class="ambient"></div>
 <div class="grid-noise"></div>
 
-<header class="sz-topbar"><div class="sz-nav-inner"><a class="sz-brand" href="/zh/" aria-label="Sparrow 首页"><span class="sz-brand-mark" aria-hidden="true">s</span>sparrow<span class="sz-brand-sub"> / ENGINEERING</span></a><nav class="sz-topnav" aria-label="文章导航"><a class="sz-link" href="/zh/doc">文档</a><button type="button" class="sz-button" id="share-btn">微信分享 ↗</button><a class="sz-button sz-primary" href="/zh/">返回首页 ↗</a></nav></div><div class="sz-reading-progress" id="reading-progress" aria-hidden="true"></div></header>
+<header class="sz-topbar"><div class="sz-nav-inner"><a class="sz-brand" href="/zh/" aria-label="Sparrow 首页"><span class="sz-brand-mark" aria-hidden="true">s</span>sparrow<span class="sz-brand-sub"> / ENGINEERING</span></a><nav class="sz-topnav" aria-label="文章导航"><a class="sz-link" href="/zh/doc">文档</a><button type="button" class="sz-button" id="share-btn">微信分享 ↗</button><a class="sz-button sz-primary" href="/zh/doc">返回首页 ↗</a></nav></div><div class="sz-reading-progress" id="reading-progress" aria-hidden="true"></div></header>
 
 <header class="hero">
     <div class="tag"><span class="dot"></span>SPARROW ZOO · 前端组件</div>
