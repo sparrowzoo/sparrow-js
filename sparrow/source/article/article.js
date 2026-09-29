@@ -174,13 +174,15 @@
     if (themeToggle) {
       const root = document.documentElement;
       const renderTheme = () => {
-        const light = root.dataset.theme === 'light';
+        const light = root.classList.contains('light');
         themeToggle.setAttribute('aria-pressed', String(light));
-        themeToggle.textContent = light ? '深色' : '浅色';
+        themeToggle.setAttribute('aria-label', light ? '切换到深色模式' : '切换到浅色模式');
       };
       themeToggle.addEventListener('click', () => {
-        root.dataset.theme = root.dataset.theme === 'light' ? 'dark' : 'light';
-        try { localStorage.setItem('theme', root.dataset.theme); } catch { /* Ignore storage errors. */ }
+        const light = root.classList.contains('light');
+        root.classList.remove('light', 'dark');
+        root.classList.add(light ? 'dark' : 'light');
+        try { localStorage.setItem('theme', light ? 'dark' : 'light'); } catch { /* Ignore storage errors. */ }
         renderTheme();
       });
       renderTheme();

@@ -6,13 +6,13 @@
     <meta content="light dark" name="color-scheme">
     <script>
       (function () {
-        var theme = 'dark';
+        var theme;
         try {
           var saved = localStorage.getItem('theme');
           if (saved === 'light' || saved === 'dark') theme = saved;
-          else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
-        } catch (e) {}
-        document.documentElement.dataset.theme = theme;
+          else theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        } catch (e) { theme = 'dark'; }
+        document.documentElement.classList.add(theme);
       })();
     </script>
     <meta content="noindex" name="robots">
@@ -49,7 +49,10 @@
             class="brand-sub"> / ENGINEERING</span></a>
         <nav aria-label="文章导航" class="topnav"><a class="nav-link" href="/zh/doc">文档</a>
             <button class="button" id="share-btn" type="button">微信分享 ↗</button>
-            <button class="button" id="theme-toggle" type="button" aria-pressed="false" aria-label="切换主题">浅色</button>
+            <button class="button" id="theme-toggle" type="button" aria-pressed="false" aria-label="切换主题">
+                <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+            </button>
             <a class="button primary" href="/zh/doc">返回首页 ↗</a></nav>
     </div>
     <div aria-hidden="true" class="reading-progress" id="reading-progress"></div>
