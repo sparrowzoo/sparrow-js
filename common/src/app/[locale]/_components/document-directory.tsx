@@ -3,19 +3,22 @@
 import {useState} from "react";
 import {useTranslations} from "next-intl";
 import {ArrowUpRight, BookOpen, Search, X} from "lucide-react";
+import {Link} from "@/common/i18n/navigation";
 import {documents} from "./site-content";
 import styles from "../home.module.css";
 
-export default function DocumentDirectory() {
+export default function DocumentDirectory({limit, showAllHref}: {limit?: number; showAllHref?: string}) {
     const t = useTranslations("website.docs");
     const [category, setCategory] = useState("all");
     const [query, setQuery] = useState("");
     const search = query.trim().toLocaleLowerCase();
-    const filtered = documents.filter((document) => (
+    const sorted = [...documents].sort((a, b) => b.date.localeCompare(a.date));
+    const filtered = sorted.filter((document) => (
         (category === "all" || document.category === category) &&
         `${t(`items.${document.id}.title`)} ${t(`items.${document.id}.description`)} ${document.topic} ${document.keywords}`
             .toLocaleLowerCase().includes(search)
     ));
+    const visible = limit ? filtered.slice(0, limit) : filtered;
 
     return (
         <>
@@ -40,7 +43,7 @@ export default function DocumentDirectory() {
                 <span role="status" aria-live="polite" aria-atomic="true">{t("count", {count: filtered.length})}</span>
             </div>
             <div id="document-results" className={styles.documentGrid}>
-                {filtered.map((document) => (
+                {visible.map((document) => (
                     <a key={document.id} href={document.href} className={styles.documentCard}>
                         <div className={styles.documentTop}><span>{document.topic}</span><ArrowUpRight size={17} aria-hidden="true"/></div>
                         <h3>{t(`items.${document.id}.title`)}</h3>
@@ -56,6 +59,11 @@ export default function DocumentDirectory() {
                     </div>
                 )}
             </div>
+            {limit && showAllHref && filtered.length > visible.length && (
+                <div className={styles.directoryFooter}>
+                    <Link href={showAllHref} className={styles.viewAllButton}>{t("viewAll")}<ArrowUpRight size={16} aria-hidden="true"/></Link>
+                </div>
+            )}
         </>
     );
 }

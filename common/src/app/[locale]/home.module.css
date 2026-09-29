@@ -191,6 +191,7 @@ article.compactCard .productFooter > span:last-child { color: var(--site-faint);
 .diagramFooter > span { width: 4px; height: 4px; background: var(--site-green); border-radius: 50%; }
 
 .docsSection { padding-top: 100px; }
+.docSection { padding-top: 72px; padding-bottom: 88px; }
 .directoryToolbar { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
 .filters button { display: inline-flex; align-items: center; gap: 8px; min-height: 38px; padding: 7px 13px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: var(--site-muted); font-size: 12px; transition: color .2s, background .2s; }
@@ -220,6 +221,9 @@ article.compactCard .productFooter > span:last-child { color: var(--site-faint);
 .documentCategory > span { margin-left: -2px; color: var(--site-faint); }
 .emptyState { grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 60px 20px; border: 1px dashed var(--site-border); border-radius: 10px; color: var(--site-muted); text-align: center; }
 .emptyState button { padding: 6px 15px; border: 1px solid var(--site-border); border-radius: 6px; background: var(--site-panel); color: var(--site-violet); }
+.directoryFooter { display: flex; justify-content: center; margin-top: 26px; }
+.viewAllButton { display: inline-flex; align-items: center; gap: 8px; padding: 11px 22px; border: 1px solid var(--site-border-strong); border-radius: 9px; color: var(--site-soft-text); font-size: 13px; font-weight: 600; transition: border-color .2s, color .2s, transform .2s; }
+.viewAllButton:hover { border-color: var(--site-violet); color: var(--site-violet); transform: translateY(-2px); }
 
 .capabilities { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
 .capability { padding-top: 24px; border-top: 1px solid var(--site-border); }

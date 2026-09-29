@@ -11,7 +11,7 @@ export default function SiteFooter() {
                 <div><Link href="/" className={styles.brand}><span className={styles.brandMark} aria-hidden="true"/>{t("brand.name")}</Link><p>{t("footer.description")}</p></div>
                 <nav aria-label={t("nav.label")}>
                     <Link href={{pathname: "/", hash: "products"}}>{t("nav.products")}</Link>
-                    <Link href={{pathname: "/", hash: "docs"}}>{t("nav.docs")}</Link>
+                    <Link href="/doc">{t("nav.docs")}</Link>
                     <Link href="/ui">{t("nav.playground")}</Link>
                 </nav>
             </div>

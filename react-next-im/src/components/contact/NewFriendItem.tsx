@@ -50,7 +50,7 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
   const userHomeLink = `/chat/friends/contact/?friendId=${encodeURIComponent(newFriend.userId)}`;
   const userName = newFriend.nickName || newFriend.userName;
   const avatar =
-    newFriend.avatar || format(`${AVATAR_URL}`, `${newFriend.userId}`);
+    newFriend.avatar || format(`${AVATAR_URL}`, `${Number(newFriend.userId) % 10}`);
   return (
     <SidebarMenuItem
       className={"im-audit-item flex flex-row justify-between items-center w-full h-10 mt-2 "}

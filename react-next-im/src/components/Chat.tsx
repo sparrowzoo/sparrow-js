@@ -77,7 +77,7 @@ export default function ChatLayout({
   if (!currentUser) {
     return <ThreeDotLoading />;
   }
-  const avatarUrl = format(AVATAR_URL, currentUser?.userId);
+  const avatarUrl = format(AVATAR_URL, Number(currentUser?.userId) % 10);
   const userHome = "/chat/friends/contact?friendId=" + currentUser?.userId;
   return (
     <div className="im-chat-shell flex h-full min-h-0 flex-col">

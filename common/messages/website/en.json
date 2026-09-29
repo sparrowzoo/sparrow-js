@@ -314,6 +314,8 @@
     "clear": "Clear search and filters",
     "count": "{count} guides",
     "read": "Read guide",
+    "pageTitle": "Documentation",
+    "viewAll": "View all",
     "items": {
       "cross-project-skills-git-workflow": {
         "title": "Reusable Codex Skills: Local Iteration and GitHub Sync",

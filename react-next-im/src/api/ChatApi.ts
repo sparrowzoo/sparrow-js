@@ -73,7 +73,7 @@ export default class ChatApi {
                         }
                         const remoteContact = userMap[userId];
                         if (!remoteContact.avatar) {
-                            remoteContact.avatar = format(AVATAR_URL, userId);
+                            remoteContact.avatar = format(AVATAR_URL, Number(userId) % 10);
                         }
                         localContactGroup.userMap.set(userId, remoteContact);
                     }
@@ -87,11 +87,7 @@ export default class ChatApi {
                     }
                     localContactGroup.contacts = contacts;
 
-                    const groups = remoteContactGroup.quns;
-                    for (let group of groups) {
-                        //group.avatar = format(GROUP_AVATAR_URL, group.qunId);
-                    }
-                    localContactGroup.quns = groups;
+                    localContactGroup.quns = remoteContactGroup.quns;
                 }
             }
         );
@@ -120,7 +116,7 @@ export default class ChatApi {
             }
             for (let user of users) {
                 if (!user.avatar) {
-                    user.avatar = format(AVATAR_URL, user.userId);
+                    user.avatar = format(AVATAR_URL, Number(user.userId) % 10);
                 }
             }
         });
