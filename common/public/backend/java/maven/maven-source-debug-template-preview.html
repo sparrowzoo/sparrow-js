@@ -3,7 +3,18 @@
 <head>
     <meta charset="utf-8">
     <meta content="width=device-width,initial-scale=1" name="viewport">
-    <meta content="dark" name="color-scheme">
+    <meta content="light dark" name="color-scheme">
+    <script>
+      (function () {
+        var theme = 'dark';
+        try {
+          var saved = localStorage.getItem('theme');
+          if (saved === 'light' || saved === 'dark') theme = saved;
+          else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
+        } catch (e) {}
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <meta content="noindex" name="robots">
     <title>Maven 源码调试：定位断点错位的四个步骤</title>
     <meta content="从实际运行的 JAR、字节码行号表与配套源码入手，定位断点错位；用 Maven 同步生成源码包，并在 IntelliJ IDEA 中关联正确版本。"
@@ -38,6 +49,7 @@
             class="brand-sub"> / ENGINEERING</span></a>
         <nav aria-label="文章导航" class="topnav"><a class="nav-link" href="/zh/doc">文档</a>
             <button class="button" id="share-btn" type="button">微信分享 ↗</button>
+            <button class="button" id="theme-toggle" type="button" aria-pressed="false" aria-label="切换主题">浅色</button>
             <a class="button primary" href="/zh/doc">返回首页 ↗</a></nav>
     </div>
     <div aria-hidden="true" class="reading-progress" id="reading-progress"></div>
