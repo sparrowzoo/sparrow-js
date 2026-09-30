@@ -57,7 +57,7 @@ export default function ColumnEditor({cellContext}: CellContextProps<TableConfig
     } as Result<PagerResult<ColumnConfig>>;
     const [data, setData] = useState(columnResult);
     return (
-        <div className="min-w-0 w-full">
+        <div className="admin-table-editor-columns min-w-0 w-full">
             <DataTable<ColumnConfig>
                 initHandler={() => {
                 }}

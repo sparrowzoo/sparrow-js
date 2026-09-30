@@ -421,8 +421,8 @@
   }
 }
 
-[data-slot="dialog-content"]:has(.admin-table-editor) {
-  width: min(72rem, calc(100vw - 3rem));
+[data-slot="dialog-content"]:has(.admin-table-editor):not(:has(.admin-form-wide)) {
+  width: calc(100vw - 3rem);
   max-width: calc(100vw - 3rem);
   padding: 1.25rem;
 }
@@ -438,6 +438,29 @@
   clip-path: inset(50%);
   white-space: nowrap;
   border: 0;
+}
+
+/* 列配置表格：紧凑列宽，尽量一行看全，避免横向滚动 */
+.admin-table-editor-columns [data-slot="table-head"],
+.admin-table-editor-columns [data-slot="table-cell"] {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.admin-table-editor-columns [data-slot="table-head"] strong {
+  display: inline-block;
+  max-width: 3.5rem;
+  white-space: normal;
+  line-height: 1.2;
+}
+/* 开关列（可隐藏/隐藏/编辑/列表/搜索/可为空/只读，第 5~11 列）表头竖排，进一步压缩列宽 */
+.admin-table-editor-columns [data-slot="table-head"]:nth-child(n + 5):nth-child(-n + 11) strong {
+  max-width: 1.4rem;
+  text-align: center;
+}
+.admin-table-editor-columns [data-slot="select-trigger"] {
+  width: 5.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 @media (max-width: 639px) {
