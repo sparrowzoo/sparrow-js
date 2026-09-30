@@ -105,6 +105,13 @@ export default function Page({callbackHandler}: TableOperationProps<ProjectConfi
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   fieldPropertyName={"scaffold"}/>
+                <ValidatableInput readonly={false} defaultValue="com.sparrow.example" {...register("fullBasePackageName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  fieldPropertyName={"fullBasePackageName"}
+                                  placeholder="com.sparrow.example"
+                                  description={pageTranslate("fullBasePackageNameHint")}/>
             </div>
             <DialogFooter>
                 <DialogClose asChild>

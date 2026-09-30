@@ -21,7 +21,8 @@ modulePrefix:string;
 architectures:string; 
 config:string; 
 wrapWithParent:boolean; 
-scaffold:string; 
+scaffold:string;
+fullBasePackageName:string;
 createUserName:string; 
 createUserId:number; 
 modifiedUserId:number; 
@@ -92,6 +93,11 @@ enableHiding: true
 accessorKey: "scaffold",
 header: PlainTextHeader({columnTitle: "脚手架"} as ColumnOperationProps),
 cell: NormalCell("scaffold"),
+enableHiding: true
+},{
+accessorKey: "fullBasePackageName",
+header: PlainTextHeader({columnTitle: "Base包的全限定名"} as ColumnOperationProps),
+cell: NormalCell("fullBasePackageName"),
 enableHiding: true
 },{
 accessorKey: "createUserName",

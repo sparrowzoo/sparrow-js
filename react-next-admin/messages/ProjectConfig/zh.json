@@ -14,6 +14,8 @@
   "deleted": "是否删除",
   "modifiedUserId": "更新人ID",
   "scaffold": "脚手架",
+  "fullBasePackageName": "Base包的全限定名",
+  "fullBasePackageNameHint": "这里对应@SpringBootApplication(scanBasePackages=\"com.sparrow.example\")",
   "name": "项目名称",
   "chineseName": "项目中文名称",
   "id": "ID",
@@ -41,6 +43,7 @@
     "i18n": {},
     "modulePrefix": {
       "empty-message": "不允许为空"
-    }
+    },
+    "fullBasePackageName": {}
   }
 }

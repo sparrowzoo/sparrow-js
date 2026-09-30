@@ -11,6 +11,7 @@ export interface FormHookInputProps
     errorMessage?: string,
     isSubmitted?: boolean,
     readonly?: boolean,
+    description?: string,
 }
 
 const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps>(
@@ -22,6 +23,7 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps>(
          type,
          className,
          readonly,
+         description,
          ...props
      }, ref) => {
         if (type === "hidden") {
@@ -54,6 +56,7 @@ const ValidatableInput = React.forwardRef<HTMLInputElement, FormHookInputProps>(
                         readOnly={type === "label" ? true : readonly}
                         ref={ref}
                         {...props}></input>
+                    {description && <p className="mt-1 text-xs text-muted-foreground">{description}</p>}
                 </div>
                 <div className={"w-[10rem]"}>
                     <ErrorMessage messageClass={"text-sm text-red-500"}

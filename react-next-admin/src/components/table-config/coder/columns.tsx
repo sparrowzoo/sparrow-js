@@ -46,10 +46,10 @@ export const columns: ColumnDef<ColumnConfig>[] = [
         cell: NormalCell("propertyName", 20),
         enableHiding: false
     }, {
-        accessorKey: "chineseName",
-        header: PlainTextHeader({columnTitle: "中文名"} as ColumnOperationProps),
-        cell: InputCell("chineseName", "text", 20),
-        enableHiding: false
+        accessorKey: "placeholder",
+        header: PlainTextHeader({columnTitle: "Placeholder"} as ColumnOperationProps),
+        cell: InputCell("placeholder", "text", 14),
+        enableHiding: true
     }, {
         accessorKey: "javaType",
         header: PlainTextHeader({columnTitle: "类型"} as ColumnOperationProps),
@@ -95,10 +95,10 @@ export const columns: ColumnDef<ColumnConfig>[] = [
         enableHiding: false
     },
     {
-        accessorKey: "placeholder",
-        header: PlainTextHeader({columnTitle: "Placeholder"} as ColumnOperationProps),
-        cell: InputCell("placeholder", "text", 20),
-        enableHiding: true
+        accessorKey: "chineseName",
+        header: PlainTextHeader({columnTitle: "中文名"} as ColumnOperationProps),
+        cell: InputCell("chineseName", "text", 20),
+        enableHiding: false
     }, {
         accessorKey: "searchType",
         header: PlainTextHeader({columnTitle: "查询方式"} as ColumnOperationProps),

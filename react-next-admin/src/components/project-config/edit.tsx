@@ -109,6 +109,13 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   fieldPropertyName={"scaffold"}/>
+                <ValidatableInput readonly={false} defaultValue={original.fullBasePackageName} {...register("fullBasePackageName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  fieldPropertyName={"fullBasePackageName"}
+                                  placeholder="com.sparrow.example"
+                                  description={pageTranslate("fullBasePackageNameHint")}/>
             </div>
             <DialogFooter>
                 <DialogClose asChild>

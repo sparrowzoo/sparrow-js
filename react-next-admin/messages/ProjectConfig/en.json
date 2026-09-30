@@ -14,6 +14,8 @@
   "deleted": "Deleted",
   "modifiedUserId": "Updated By ID",
   "scaffold": "Scaffold",
+  "fullBasePackageName": "Full Base Package Name",
+  "fullBasePackageNameHint": "Corresponds to @SpringBootApplication(scanBasePackages=\"com.sparrow.example\")",
   "name": "Project Name",
   "chineseName": "Chinese Name",
   "id": "ID",
@@ -41,6 +43,7 @@
     "i18n": {},
     "modulePrefix": {
       "empty-message": "Cannot be empty"
-    }
+    },
+    "fullBasePackageName": {}
   }
 }
