@@ -58,6 +58,8 @@
     "class_not_found": "找不到类..."
   },
   "Header": {
+    "brand": "麻雀窝",
+    "label": "主导航",
     "index": "首页",
     "blog": "博客",
     "im": "IM",

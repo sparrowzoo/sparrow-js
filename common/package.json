@@ -5,11 +5,10 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "start": "node ../deploy/serve-static.mjs out 3000",
     "lint": "eslint .",
-    "preview": "node ../deploy/serve-static.mjs out 3000",
     "test:auth": "vitest run --config vitest.auth.config.mjs",
-    "test:auth:e2e": "playwright test --config playwright.auth.config.ts"
+    "test:auth:e2e": "playwright test --config playwright.auth.config.ts",
+    "copy": "cp ./public/header.html ../../sparrowzoo/src/main/resources/templates/article/header.html"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
