@@ -4,6 +4,7 @@ import {type ReactNode, useEffect, useId, useRef, useState} from "react";
 import {ArrowUpRight, FlaskConical, GraduationCap, Menu, X} from "lucide-react";
 import LocaleSwitcher from "@/common/components/i18n/LocaleSwitcher";
 import {ModeToggle} from "./mode-toggle";
+import UserProfile from "./user-profile";
 import styles from "./site-banner.module.css";
 
 export type BannerMenuItem = {
@@ -46,6 +47,10 @@ export type SiteBannerProps = {
     actions?: ReactNode;
     /** 追加到根 <header> 上的 className。 */
     className?: string;
+    /** 是否显示语言切换；静态/单语场景传 false 隐藏 LocaleSwitcher。默认 true。 */
+    i18n?: boolean;
+    /** 是否显示用户账户/登录入口；传 false 隐藏 UserProfile。默认 true。 */
+    profile?: boolean;
 };
 
 /** 共享页头基础组件：只负责展示，品牌、导航、文案、链接均由宿主项目提供。 */
@@ -61,6 +66,8 @@ export default function SiteBanner({
     closeMenuLabel,
     actions,
     className,
+    i18n = true,
+    profile = true,
 }: SiteBannerProps) {
     const navigationId = useId();
     const navigationRef = useRef<HTMLElement>(null);
@@ -130,9 +137,12 @@ export default function SiteBanner({
                 </nav>
 
                 <div className={styles.actions}>
-                    <LocaleSwitcher className={styles.localeControl} selectClassName={styles.localeSelect}
-                                    contentClassName={styles.themeMenu}/>
+                    {i18n !== false && (
+                        <LocaleSwitcher className={styles.localeControl} selectClassName={styles.localeSelect}
+                                        contentClassName={styles.themeMenu}/>
+                    )}
                     <ModeToggle className={styles.iconButton} contentClassName={styles.themeMenu}/>
+                    {profile && <UserProfile/>}
                     {actions && <div className={styles.extraActions}>{actions}</div>}
                     <button ref={toggleRef} type="button" className={`${styles.iconButton} ${styles.menuToggle}`}
                             aria-controls={navigationId} aria-expanded={menuOpen}

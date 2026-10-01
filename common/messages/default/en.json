@@ -58,6 +58,8 @@
     "class_not_found": "Class not found..."
   },
   "Header": {
+    "brand": "Sparrow Zoo",
+    "label": "Main navigation",
     "index": "Home",
     "blog": "Blog",
     "im": "IM",
