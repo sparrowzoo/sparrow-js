@@ -1,9 +1,10 @@
 import {useLocale, useTranslations} from "next-intl";
 import {getPathname} from "@/common/i18n/navigation";
 import {getProductNavigations} from "@/common/lib/protocol/ProductNavigation";
+import UserProfile from "@/common/components/header/user-profile";
 import SiteBanner from "../../../common/components/header/site-banner";
 
-export default function SiteHeader() {
+export default function SiteHeader({i18n = true, profile = false}: {i18n?: boolean; profile?: boolean}) {
     const t = useTranslations("website");
     const tProduct = useTranslations("product");
     const locale = useLocale();
@@ -20,6 +21,8 @@ export default function SiteHeader() {
                 {label: t("nav.docs"), href: getPathname({locale, href: "/doc"})},
                 {label: t("nav.study"), href: getPathname({locale, href: "/study"}), emphasized: true, icon: "graduation-cap", group: "utility"},
             ]}
+            i18n={i18n}
+            actions={profile ? <UserProfile/> : undefined}
         />
     );
 }

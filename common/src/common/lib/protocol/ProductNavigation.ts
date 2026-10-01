@@ -1,5 +1,4 @@
-import {productRegistry, type Item} from "@/common/lib/ProductRegistry";
-import {WWW_ROOT} from "@/common/lib/Env";
+import {type Item, productRegistry} from "@/common/lib/ProductRegistry";
 import type {Translator} from "@/common/lib/TranslatorType";
 
 /**
@@ -22,13 +21,6 @@ export function getProductNavigations(
             id: product.id,
             label: productTranslator(product.id),
             href: url.replace("lang", locale)
-        });
-    }
-    if (live) {
-        items.unshift({
-            id: "home",
-            label: homeTranslator("home"),
-            href: `${WWW_ROOT}/${locale}`
         });
     }
     return items;
