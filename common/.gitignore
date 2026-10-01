@@ -15,7 +15,11 @@
 
 # next.js
 /.next/
+/.next.root-owned/
 /out/
+
+# 文章模板抽取产物（postbuild 生成，copy 到 sparrowzoo）
+/thymeleaf.html
 
 # production
 /build

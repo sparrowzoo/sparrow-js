@@ -1,4 +1,4 @@
-/* Shared article enhancements. The document remains readable without JavaScript. */
+/* Progressive enhancement for article pages: TOC, reading progress, code copy, share, theme toggle, tabs, print. Content stays readable without JavaScript. */
 (() => {
   'use strict';
 
