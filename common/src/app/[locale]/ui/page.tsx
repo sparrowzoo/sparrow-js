@@ -1,10 +1,26 @@
 import {localeAlternates} from "@/lib/site-metadata";
 import type {Metadata} from "next";
 import {getTranslations} from "next-intl/server";
-import {Anchor, ArrowDown, ArrowRight, ArrowUpRight, Blocks, BookOpen, CircleAlert, Download, History, Languages, Loader2, Move, Package, Settings, SunMoon, Table2, UploadCloud} from "lucide-react";
+import {
+    Anchor,
+    ArrowDown,
+    ArrowRight,
+    ArrowUpRight,
+    Blocks,
+    BookOpen,
+    CircleAlert,
+    Download,
+    History,
+    Languages,
+    Loader2,
+    Move,
+    Package,
+    Settings,
+    SunMoon,
+    Table2,
+    UploadCloud
+} from "lucide-react";
 import {Link} from "@/common/i18n/navigation";
-import SiteHeader from "../_components/site-header";
-import SiteFooter from "../_components/site-footer";
 import siteStyles from "../home.module.css";
 import styles from "./ui.module.css";
 
@@ -51,13 +67,14 @@ const features = [
 ] as const;
 
 const exampleCount = groups.reduce((count, group) => count + group.examples.length, 0);
-type PageProps = {params: Promise<{locale: string}>};
+type PageProps = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({params}: PageProps): Promise<Metadata> {
     const {locale} = await params;
     const t = await getTranslations({locale, namespace: "website.playground.metadata"});
     return {
-    alternates: localeAlternates(locale, "/ui"),title: t("title"), description: t("description")};
+        alternates: localeAlternates(locale, "/ui"), title: t("title"), description: t("description")
+    };
 }
 
 export default async function UIPlayground() {
@@ -67,7 +84,6 @@ export default async function UIPlayground() {
     return (
         <div className={siteStyles.site} id="top">
             <a href="#main-content" className={siteStyles.skipLink}>{nav("skip")}</a>
-            <SiteHeader/>
             <main id="main-content">
                 <section className={styles.hero} aria-labelledby="playground-heading">
                     <div className={siteStyles.heroGrid} aria-hidden="true"/>
@@ -80,7 +96,8 @@ export default async function UIPlayground() {
                                 {t("hero.primary")}<ArrowDown size={15} aria-hidden="true"/>
                             </a>
                             <Link href={{pathname: "/", hash: "docs"}} className={styles.textLink}>
-                                <BookOpen size={16} aria-hidden="true"/>{t("hero.secondary")}<ArrowUpRight size={14} aria-hidden="true"/>
+                                <BookOpen size={16} aria-hidden="true"/>{t("hero.secondary")}<ArrowUpRight size={14}
+                                                                                                           aria-hidden="true"/>
                             </Link>
                         </div>
                         <p className={styles.stack}>React · Next.js · TypeScript</p>
@@ -117,19 +134,28 @@ export default async function UIPlayground() {
 
                         <div className={styles.groups}>
                             {groups.map((group, index) => (
-                                <section key={group.id} id={`examples-${group.id}`} className={styles.group} aria-labelledby={`group-${group.id}`}>
+                                <section key={group.id} id={`examples-${group.id}`} className={styles.group}
+                                         aria-labelledby={`group-${group.id}`}>
                                     <div className={styles.groupHead}>
-                                        <div><span className={styles.groupNumber}>{String(index + 1).padStart(2, "0")}</span><h3 id={`group-${group.id}`}>{t(`groups.${group.id}.title`)}</h3></div>
+                                        <div><span
+                                            className={styles.groupNumber}>{String(index + 1).padStart(2, "0")}</span>
+                                            <h3 id={`group-${group.id}`}>{t(`groups.${group.id}.title`)}</h3></div>
                                         <p>{t(`groups.${group.id}.description`)}</p>
                                     </div>
-                                    <ul className={styles.exampleList} data-columns={group.examples.length === 3 ? 3 : 2}>
+                                    <ul className={styles.exampleList}
+                                        data-columns={group.examples.length === 3 ? 3 : 2}>
                                         {group.examples.map(({id, href, icon: Icon}) => (
                                             <li key={id}>
                                                 <Link href={href} className={styles.exampleCard}>
-                                                    <div className={styles.cardTop}><span className={styles.cardIcon}><Icon size={21} strokeWidth={1.6} aria-hidden="true"/></span><ArrowUpRight className={styles.cardArrow} size={17} aria-hidden="true"/></div>
+                                                    <div className={styles.cardTop}><span
+                                                        className={styles.cardIcon}><Icon size={21} strokeWidth={1.6}
+                                                                                          aria-hidden="true"/></span><ArrowUpRight
+                                                        className={styles.cardArrow} size={17} aria-hidden="true"/>
+                                                    </div>
                                                     <h4>{t(`examples.${id}.title`)}</h4>
                                                     <p>{t(`examples.${id}.description`)}</p>
-                                                    <span className={styles.cardLink}>{t("catalog.open")}<ArrowRight size={13} aria-hidden="true"/></span>
+                                                    <span className={styles.cardLink}>{t("catalog.open")}<ArrowRight
+                                                        size={13} aria-hidden="true"/></span>
                                                 </Link>
                                             </li>
                                         ))}
@@ -145,11 +171,11 @@ export default async function UIPlayground() {
                             <h2 id="guide-heading">{t("guide.title")}</h2>
                             <p className={styles.sectionDescription}>{t("guide.description")}</p>
                         </div>
-                        <a href={NEXT_INTL_GUIDE_URL} className={styles.textLink}>{t("guide.action")}<ArrowUpRight size={16} aria-hidden="true"/></a>
+                        <a href={NEXT_INTL_GUIDE_URL} className={styles.textLink}>{t("guide.action")}<ArrowUpRight
+                            size={16} aria-hidden="true"/></a>
                     </section>
                 </div>
             </main>
-            <SiteFooter/>
         </div>
     );
 }

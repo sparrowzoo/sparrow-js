@@ -16,7 +16,7 @@ import {
     Monitor,
     Settings2
 } from "lucide-react";
-import {getProductUrl} from "@/common/lib/ProductRegistry";
+import {menuRegistry} from "@/common/lib/MenuRegistry";
 import {getCoderGuide} from "../_content/coder-guide";
 import {ProductHero, ProductLink, SectionHeading} from "../_components/product-ui";
 import CodeBlock from "../_components/code-block";
@@ -61,7 +61,7 @@ export default async function CoderPage({params}: PageProps) {
     const {locale} = await params;
     const t = await getTranslations("website.products.coder.page");
     const guide = await getCoderGuide();
-    const experienceUrl = getProductUrl("coder", locale);
+    const experienceUrl = menuRegistry.coder.entry?.live?.replace("/lang/", `/${locale}/`);
     const icons = [Code2, Layers3, Settings2];
     const tags = t.raw("tags") as string[];
     const nav = t.raw("nav") as string[];

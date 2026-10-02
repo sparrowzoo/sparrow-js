@@ -8,7 +8,9 @@ declare const messages: {
     "coder": "Code Generator",
     "file": "File Service",
     "ui": "UI Components",
-    "security": "Security"
+    "security": "Security",
+    "blog": "Blog",
+    "study": "Learning"
   },
   "LocaleLayout": {
     "title": "Sparrow Passport · Your Sparrow Zoo identity",
@@ -19,6 +21,8 @@ declare const messages: {
     "locale": "{locale, select, zh {中文} en {English} other {Language}}"
   },
   "Header": {
+    "brand": "Sparrow Zoo",
+    "label": "Passport navigation",
     "index": "Home",
     "blog": "Blog",
     "im": "IM",

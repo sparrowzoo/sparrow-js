@@ -17,6 +17,8 @@ declare const messages: {
     "support": "Support"
   },
   "Header": {
+    "brand": "Sparrow Zoo",
+    "label": "IM navigation",
     "index": "Home",
     "blog": "Blog",
     "im": "IM",
@@ -93,7 +95,9 @@ declare const messages: {
     "coder": "Code Generator",
     "file": "File Service",
     "ui": "UI Components",
-    "security": "Security"
+    "security": "Security",
+    "blog": "Blog",
+    "study": "Learning"
   },
   "ClientServer": {
     "title": "Server",

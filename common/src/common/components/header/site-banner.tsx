@@ -6,23 +6,7 @@ import LocaleSwitcher from "@/common/components/i18n/LocaleSwitcher";
 import {ModeToggle} from "./mode-toggle";
 import UserProfile from "./user-profile";
 import styles from "./site-banner.module.css";
-
-export type BannerMenuItem = {
-    /** 稳定标识，作为列表 key 的兜底；同组内 href 可能重复时务必提供。 */
-    id?: string;
-    /** 菜单项文字，由上游通过 i18n 传入，组件不内置任何文案。 */
-    label: string;
-    /** 链接地址，原样透传给 <a href>。不校验、不补 locale 前缀，内/外链合法性均由上游决定。 */
-    href: string;
-    /** 是否高亮强调（一般用于主 CTA 按钮）。 */
-    emphasized?: boolean;
-    /** 是否标记为当前页。仅接受显式指定，组件不做 pathname 自动匹配。 */
-    active?: boolean;
-    /** 前置图标，仅支持内置的两种。 */
-    icon?: "graduation-cap" | "flask";
-    /** 分组：值为 "utility" 时渲染到右侧工具链接区，其余归入主导航。 */
-    group?: "utility";
-};
+import type {BannerMenuLink} from "@/common/lib/MenuRegistry";
 
 export type SiteBannerProps = {
     /** 品牌名（文字）。 */
@@ -36,7 +20,7 @@ export type SiteBannerProps = {
     /** 品牌/首页链接地址，原样透传，合法性由上游保证。 */
     homeHref?: string;
     /** 导航菜单项，顺序即渲染顺序。 */
-    items: BannerMenuItem[];
+    items: BannerMenuLink[];
     /** 导航区域的 aria-label（无障碍，需 i18n）。 */
     navigationLabel: string;
     /** 打开菜单按钮的 aria-label（需 i18n）。 */
@@ -77,7 +61,7 @@ export default function SiteBanner({
     const mainItems = items.filter((item) => item.group !== "utility");
     const utilityItems = items.filter((item) => item.group === "utility");
 
-    const renderItem = (item: BannerMenuItem) => {
+    const renderItem = (item: BannerMenuLink) => {
         const Icon = item.icon === "graduation-cap" ? GraduationCap : item.icon === "flask" ? FlaskConical : undefined;
         return (
             <a key={item.id ?? item.href} href={item.href} onClick={() => setMenuOpen(false)}

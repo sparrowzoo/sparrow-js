@@ -4,5 +4,7 @@
   "coder": "代码生成器",
   "file": "File 文件服务",
   "ui": "UI 组件库",
-  "security": "Security 权限系统"
+  "security": "Security 权限系统",
+  "blog": "博客",
+  "study": "学员入口"
 }

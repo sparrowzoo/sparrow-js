@@ -1,27 +1,44 @@
 "use client";
 
 import {useLocale, useTranslations} from "next-intl";
-import {getProductNavigations} from "@/common/lib/protocol/ProductNavigation";
+import type {BannerMenuLink} from "@/common/lib/MenuRegistry";
+import {getMenuNavigations} from "@/common/lib/MenuRegistry";
 import SiteBanner from "@/common/components/header/site-banner";
+import {WWW_ROOT} from "@/common/lib/Env";
 
-/** IM supplies its navigation; the shared Header owns all banner rendering. */
-export default function Header({i18n = true, prefile = true}: { i18n?: boolean, prefile?: boolean }) {
+type HeaderProps = {
+    i18n?: boolean;
+    profile?: boolean;
+    brandCaption?: string;
+    homePath?: string;
+    live?: boolean;
+};
+
+/** Shared site header: menu comes from MenuRegistry, brand/home are host-provided. */
+export default function Header({
+                                   i18n = true,
+                                   profile = true,
+                                   brandCaption = "Sparrow Zoo",
+                                   homePath = `${WWW_ROOT}`,
+                                   live = true,
+                               }: HeaderProps) {
     const locale = useLocale();
     const t = useTranslations("Header");
     const productTranslator = useTranslations("product");
+    const homeHref = `${homePath}/${locale}`;
+    const items: BannerMenuLink[] = [...getMenuNavigations(locale, live, productTranslator)];
     return (
         <SiteBanner
             brandName={t("brand")}
-            brandCaption="sparrow Zoo"
+            brandCaption={brandCaption}
             logoSrc="/svg/brand/sparrow-logo.svg"
-            homeHref={`/${locale}/`}
+            homeHref={homeHref}
             navigationLabel={t("label")}
-            items={[
-                ...getProductNavigations(t, locale, true, productTranslator)]}
+            items={items}
             openMenuLabel=""
             closeMenuLabel=""
             i18n={i18n}
-            profile={prefile}
+            profile={profile}
         />
     );
 }

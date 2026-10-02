@@ -2,10 +2,11 @@
 
 import {useEffect, useState} from "react";
 
-/** Preserve the raw callback query, repeated parameters and hash between auth pages. */
-export default function useAuthSuffix() {
+/** Preserve the raw callback query + hash between auth pages (OAuth flows). */
+export default function useAuthSuffix(enabled = true) {
     const [suffix, setSuffix] = useState("");
     useEffect(() => {
+        if (!enabled) return;
         const update = () => setSuffix(window.location.search + window.location.hash);
         update();
         window.addEventListener("popstate", update);
@@ -14,6 +15,6 @@ export default function useAuthSuffix() {
             window.removeEventListener("popstate", update);
             window.removeEventListener("hashchange", update);
         };
-    }, []);
+    }, [enabled]);
     return suffix;
 }
