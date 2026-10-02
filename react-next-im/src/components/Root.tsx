@@ -1,7 +1,7 @@
 import * as React from "react";
 import {Toaster} from "react-hot-toast";
 import {ThemeProvider} from "@/common/components/header/theme-provider";
-import ImHeader from "@/components/im-header";
+import Header from "@/common/components/header/header";
 
 export default async function Root({
                                        children,
@@ -19,7 +19,7 @@ export default async function Root({
                 disableTransitionOnChange
             >
                 <div className="im-shell flex h-dvh flex-col">
-                    <ImHeader/>
+                    <Header brandCaption="SPARROW Zoo" homePath="/"/>
                     <div className="im-content min-h-0 flex-1 overflow-auto">{children}</div>
                 </div>
             </ThemeProvider>

@@ -17,4 +17,4 @@ export const documents = [
     {id: "intl", category: "frontend", subcategory: "React", topic: "Next.js", href: "/frontend/react/next-intl/i18n.html", date: "2026-09-24", keywords: "React next-intl i18n locale 国际化 多语言"},
 ] as const;
 
-export const productIds = ["scaffold", "passport", "file", "security", "im", "coder", "ui"] as const;
+export const productIds = ["scaffold", "passport", "file", "security", "im", "coder", "ui", "blog"] as const;

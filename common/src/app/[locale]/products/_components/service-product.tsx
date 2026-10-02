@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import {getTranslations} from "next-intl/server";
 import {type ServiceId} from "../_content/services";
-import {getProductUrl} from "@/common/lib/ProductRegistry";
+import {menuRegistry} from "@/common/lib/MenuRegistry";
 import {ProductHero, ProductLink, SectionHeading} from "./product-ui";
 import PassportExperience from "./passport-experience";
 import styles from "../product.module.css";
@@ -26,7 +26,7 @@ const featureIcons = {
 export default async function ServiceProduct({id, locale}: {id: ServiceId; locale: string}) {
     const t = await getTranslations(`website.products.${id}.page`);
     const icons = featureIcons[id];
-    const experienceUrl = id === "file" ? undefined : getProductUrl(id, locale);
+    const experienceUrl = id === "file" ? undefined : menuRegistry[id].entry?.live?.replace("/lang/", `/${locale}/`);
     const tags = t.raw("tags") as string[];
     const features = t.raw("features") as {title: string; description: string}[];
     const flow = t.raw("flow") as {label: string; detail: string}[];

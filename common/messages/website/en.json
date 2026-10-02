@@ -298,7 +298,8 @@
       "subtitle": "UI Components",
       "description": "React and Next.js component examples — forms, tables, uploads and drag-and-drop — ready to reuse in your projects.",
       "tags": ["React", "Next.js", "Components"]
-    }
+    },
+    "blog": {"title": "Blog", "subtitle": "Sparrow Blog", "description": "Articles on Sparrow products and engineering practices, covering backend, frontend, and delivery experience.", "tags": ["Tech articles", "Engineering practices", "Product updates"]}
   },
   "docs": {
     "eyebrow": "DOCUMENTATION / ENGINEERING NOTES",

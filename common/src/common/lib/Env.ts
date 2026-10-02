@@ -25,6 +25,7 @@ const WWW_ROOT = process.env.NEXT_PUBLIC_WWW_ROOT;
 const PASSPORT_ROOT = process.env.NEXT_PUBLIC_PASSPORT_ROOT;
 const ADMIN_ROOT = process.env.NEXT_PUBLIC_ADMIN_ROOT;
 const IM_ROOT = process.env.NEXT_PUBLIC_IM_ROOT;
+const BLOG_ROOT = process.env.NEXT_PUBLIC_BLOG_ROOT;
 const CODER_ROOT = ADMIN_ROOT;
 
 
@@ -52,6 +53,7 @@ export {
     PASSPORT_ROOT,
     ADMIN_ROOT,
     IM_ROOT,
+    BLOG_ROOT,
     CODER_ROOT,
     STORAGE_PROXY,
     CROS_DEBUG,

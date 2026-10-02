@@ -4,5 +4,7 @@
   "coder": "Code Generator",
   "file": "File Service",
   "ui": "UI Components",
-  "security": "Security"
+  "security": "Security",
+  "blog": "Blog",
+  "study": "Learning"
 }

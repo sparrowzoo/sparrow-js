@@ -298,7 +298,8 @@
       "subtitle": "UI Components",
       "description": "基于 React 与 Next.js 的组件示例与交互演示，覆盖表单、表格、上传、拖拽等常见场景，可直接复用。",
       "tags": ["React", "Next.js", "组件示例"]
-    }
+    },
+    "blog": {"title": "博客", "subtitle": "Sparrow Blog", "description": "记录 Sparrow 产品与技术实践的文章站点，覆盖后端、前端与工程化经验。", "tags": ["技术文章", "工程实践", "产品动态"]}
   },
   "docs": {
     "eyebrow": "DOCUMENTATION / 开发文档",

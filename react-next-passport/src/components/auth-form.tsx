@@ -14,7 +14,7 @@ import signUp from "@/api/signup";
 import toast from "react-hot-toast";
 import useCaptcha from "@/common/hook/CaptchaHook";
 import { useLocale, useTranslations } from "next-intl";
-import useAuthSuffix from "@/components/passport/use-auth-suffix";
+import useAuthSuffix from "@/common/hook/use-auth-suffix";
 import CaptchaImage from "@/components/passport/captcha-image";
 import styles from "@/components/passport/passport.module.css";
 

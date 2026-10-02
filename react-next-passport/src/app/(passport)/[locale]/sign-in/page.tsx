@@ -20,7 +20,7 @@ import FindPassword from "@/components/password/Find";
 import AuthShell from "@/components/passport/auth-shell";
 import CaptchaImage from "@/components/passport/captcha-image";
 import styles from "@/components/passport/passport.module.css";
-import useAuthSuffix from "@/components/passport/use-auth-suffix";
+import useAuthSuffix from "@/common/hook/use-auth-suffix";
 import {StorageType} from "@/common/lib/protocol/CrosProtocol";
 
 export default function SignInPage() {
