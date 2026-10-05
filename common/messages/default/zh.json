@@ -85,7 +85,8 @@
       "TREE": "树形",
       "OPERATION": "操作",
       "CURRENCY": "币种",
-      "UNIX_TIMESTAMP": "时间戳"
+      "UNIX_TIMESTAMP": "时间戳",
+      "IMAGE": "图片"
     },
     "columnType": {
       "ACTION": "操作菜单",
@@ -108,7 +109,8 @@
       "NULL": "文本输入",
       "DICTIONARY": "字典",
       "TABLE": "表格",
-      "ENUM": "枚举"
+      "ENUM": "枚举",
+      "UPLOAD": "文件上传"
     },
     "controlType": {
       "LABEL": "标签",
@@ -146,6 +148,7 @@
     "validateType": {
       "string": "字符串",
       "digital": "数字",
+      "float": "浮点数",
       "email": "邮箱",
       "mobile": "手机号",
       "tel": "电话号",
@@ -173,7 +176,11 @@
   "FileUploader": {
     "select-file": "请选择文件",
     "upload-success": "上传成功",
-    "upload-failed": "上传失败: {message}"
+    "upload-failed": "上传失败: {message}",
+    "invalid-file-type": "文件类型不支持",
+    "pathType": "上传路径",
+    "upload-image": "上传图片",
+    "remove": "移除"
   },
   "AccessHistories": {
     "label": "访问历史",

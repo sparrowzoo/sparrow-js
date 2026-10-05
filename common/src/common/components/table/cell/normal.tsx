@@ -6,7 +6,7 @@ import {PagerResult} from "@/common/lib/protocol/Result";
 
 const NormalCell = (field: string, width?: number, handler?: (value: unknown) => string) => {
     const widthClass = width ? `w-${width}` : "w-fit";
-    const Cell= ({row, table}) => {
+    const Cell = ({row, table}) => {
         const translator = useTranslations("KVS");
         let value = row.getValue(field);
         if (handler) {
@@ -21,7 +21,10 @@ const NormalCell = (field: string, width?: number, handler?: (value: unknown) =>
                     if (meta.i18n && translator.has(field)) {
                         value = translator(field + "." + currentItem.value);
                     } else {
-                        value = currentItem.value;
+                        value = currentItem.key + ":" + currentItem.value;
+                    }
+                    if (Number.isSafeInteger(currentItem.key) && Number(currentItem.key) === -1) {
+                        value = "-1";
                     }
                 }
             }
@@ -32,7 +35,7 @@ const NormalCell = (field: string, width?: number, handler?: (value: unknown) =>
         }
         return <div className={widthClass}>{value}</div>
     }
-    Cell.displayName="NormalCell";
+    Cell.displayName = "NormalCell";
     return Cell;
 }
 export default NormalCell;
