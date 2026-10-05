@@ -46,7 +46,7 @@
         "@tanstack/table-core": "^8.21.3",
         "add": "^2.0.6",
         "autoprefixer": "^10.4.19",
-        "axios": "^1.9.0",
+        "axios": "^1.20.0",
         "class-variance-authority": "^0.7.0",
         "classnames": "^2.5.1",
         "clsx": "^2.1.1",
