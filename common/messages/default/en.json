@@ -94,7 +94,11 @@
   "FileUploader": {
     "select-file": "Please select a file",
     "upload-success": "Upload successful",
-    "upload-failed": "Upload failed: {message}"
+    "upload-failed": "Upload failed: {message}",
+    "invalid-file-type": "Unsupported file type",
+    "pathType": "Upload path",
+    "upload-image": "Upload image",
+    "remove": "Remove"
   },
   "AccessHistories": {
     "label": "History",

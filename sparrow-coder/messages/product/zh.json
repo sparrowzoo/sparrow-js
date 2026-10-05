@@ -1,0 +1,8 @@
+{
+  "passport": "Passport 认证服务",
+  "im": "IM 即时通讯",
+  "coder": "代码生成器",
+  "file": "File 文件服务",
+  "ui": "UI 组件库",
+  "security": "Security 权限系统"
+}

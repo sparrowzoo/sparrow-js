@@ -34,7 +34,7 @@ export class Utils {
             return undefined;
         }
         return dictionary.find((e) => {
-            return e.key == key;
+            return e.key === key;
         })
     }
 }

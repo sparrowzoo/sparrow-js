@@ -13,9 +13,21 @@ interface FileUploaderProps {
     uploadIcon: React.ReactNode;
     id: string;
     pathType?: string;
+    accept?: string;
 }
 
-export default function FileUploader({url, uploadCallback, uploadIcon, id, pathType = "im"}: FileUploaderProps) {
+function acceptsFile(file: File, accept?: string): boolean {
+    if (!accept) return true;
+    return accept.split(",").some((entry) => {
+        const pattern = entry.trim().toLowerCase();
+        if (pattern === "*" || pattern === "*/*") return true;
+        if (pattern.endsWith("/*")) return file.type.toLowerCase().startsWith(pattern.slice(0, -1));
+        if (pattern.startsWith(".")) return file.name.toLowerCase().endsWith(pattern);
+        return file.type.toLowerCase() === pattern;
+    });
+}
+
+export default function FileUploader({url, uploadCallback, uploadIcon, id, pathType = "im", accept}: FileUploaderProps) {
     const t = useTranslations("FileUploader");
     const [uploading, setUploading] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0);
@@ -26,8 +38,12 @@ export default function FileUploader({url, uploadCallback, uploadIcon, id, pathT
                 toast.error(t("select-file"));
                 return;
             }
-            setUploading(true);
             const file = fileList[0];
+            if (!acceptsFile(file, accept)) {
+                toast.error(t("invalid-file-type"));
+                return;
+            }
+            setUploading(true);
             const clientName = file.name.split("/").pop() ?? file.name;
             const formData = new FormData();
             formData.append("file", file);
@@ -64,19 +80,25 @@ export default function FileUploader({url, uploadCallback, uploadIcon, id, pathT
                 setProgress(0);
             }
         },
-        [url, uploadCallback, pathType, t]
+        [url, uploadCallback, pathType, accept, t]
     );
 
     return (
         <>
             <label
                 htmlFor={id}
-                className={"flex items-center justify-center cursor-pointer"}
+                className={"relative flex items-center justify-center cursor-pointer"}
             >
                 {uploadIcon}
                 {uploading && (
-                    <span className="ml-2 text-xs text-muted-foreground">
-                        {progress}%
+                    <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 rounded bg-background/70">
+                        <span className="text-xs font-medium text-foreground">{progress}%</span>
+                        <span className="h-1 w-16 overflow-hidden rounded-full bg-muted">
+                            <span
+                                className="block h-full rounded-full bg-violet-500 transition-all duration-200"
+                                style={{width: `${progress}%`}}
+                            />
+                        </span>
                     </span>
                 )}
             </label>
@@ -89,6 +111,7 @@ export default function FileUploader({url, uploadCallback, uploadIcon, id, pathT
                     display: "none",
                 }}
                 type="file"
+                accept={accept}
                 disabled={uploading}
                 onChange={(event) => handleUpload(event.target.files)}
             />

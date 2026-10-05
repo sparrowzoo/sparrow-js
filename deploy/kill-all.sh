@@ -9,9 +9,9 @@ mkdir -p -- "$logs"
 # 四个前端站点：端口 -> 源码目录
 sites=(
   "3000 common"
-  "3001 react-next-passport"
-  "3002 react-next-admin"
-  "3003 react-next-im"
+  "3001 sparrow-passport"
+  "3002 sparrow-admin"
+  "3003 sparrow-chat"
 )
 
 command -v lsof >/dev/null 2>&1 || { printf '缺少 lsof 命令。\n' >&2; exit 1; }

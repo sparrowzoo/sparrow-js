@@ -1,0 +1,128 @@
+"use client";
+import {SubmitHandler, useForm} from "react-hook-form";
+import {valibotResolver} from "@hookform/resolvers/valibot";
+import crateScheme from "@/schema/project-config";
+import {Button} from "@/components/ui/button";
+import {DialogClose, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import ProjectConfigApi from "@/api/auto/project-config";
+import {ProjectConfig} from "@/components/project-config/columns";
+import toast from "react-hot-toast";
+import {ValidatableTextarea} from "@/common/components/forms/validatable-textarea";
+import {ValidatableInput} from "@/common/components/forms/validatable-input";
+import {useTranslations} from "next-intl";
+import * as v from "valibot";
+import {CellContextProps} from "@/common/lib/table/DataTableProperty";
+import useNavigating from "@/common/hook/NavigatingHook";
+
+
+export default function EditPage({cellContext, callbackHandler}: CellContextProps<ProjectConfig>) {
+    const globalTranslate = useTranslations("GlobalForm");
+    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage")
+    const pageTranslate = useTranslations("ProjectConfig")
+    const validateTranslate = useTranslations("ProjectConfig.validate")
+    const FormSchema = crateScheme(validateTranslate);
+    type FormData = v.InferOutput<typeof FormSchema>;
+    const original = cellContext.row.original;
+    const Navigations = useNavigating();
+
+
+    const onSubmit: SubmitHandler<FormData> = (
+        data: FormData,
+    ) => {
+        ProjectConfigApi.save(data, errorTranslate, Navigations.redirectToLogin).then(
+            () => {
+                if (callbackHandler) {
+                    callbackHandler();
+                }
+                toast.success(globalTranslate("save") + globalTranslate("operation-success"));
+            }
+        ).catch(() => {
+        });
+    };
+
+    const {
+        register,
+        handleSubmit,
+        formState: {
+            errors,
+            isSubmitted
+        },
+    } = useForm<FormData>({
+        //相当于v.parse
+        resolver: valibotResolver(
+            FormSchema,
+            //https://valibot.dev/guides/parse-data/
+            {abortEarly: false, lang: "zh-CN"}
+        ),
+    });
+
+
+    return (
+        <form className="admin-form" onSubmit={handleSubmit(onSubmit)}>
+            <DialogHeader>
+                <DialogTitle>{globalTranslate("edit")}</DialogTitle>
+                <DialogDescription>
+                </DialogDescription>
+            </DialogHeader>
+            <div className="admin-form-fields">
+                <ValidatableInput defaultValue={original.id} {...register("id")}
+                                  type={"hidden"}
+                                  fieldPropertyName={"id"}/>
+                <ValidatableInput readonly={false} defaultValue={original.name} {...register("name")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+                <ValidatableInput readonly={false} defaultValue={original.frontendName} {...register("frontendName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  errorMessage={errors.frontendName?.message} fieldPropertyName={"frontendName"}/>
+                <ValidatableInput readonly={false} defaultValue={original.chineseName} {...register("chineseName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  errorMessage={errors.chineseName?.message} fieldPropertyName={"chineseName"}/>
+                <ValidatableInput readonly={false} defaultChecked={original.i18n} {...register("i18n")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  fieldPropertyName={"i18n"}/>
+                <ValidatableTextarea className="min-h-28 w-full" readonly={false}
+                                     defaultValue={original.description} {...register("description")}
+                                     isSubmitted={isSubmitted}
+                                     pageTranslate={pageTranslate}
+                                     fieldPropertyName={"description"}/>
+                <ValidatableInput readonly={false} defaultValue={original.modulePrefix} {...register("modulePrefix")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  errorMessage={errors.modulePrefix?.message} fieldPropertyName={"modulePrefix"}/>
+                <ValidatableInput readonly={false}
+                                  defaultChecked={original.wrapWithParent} {...register("wrapWithParent")}
+                                  type={"checkbox"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  fieldPropertyName={"wrapWithParent"}/>
+                <ValidatableInput readonly={false} defaultValue={original.scaffold} {...register("scaffold")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  fieldPropertyName={"scaffold"}/>
+                <ValidatableInput readonly={false} defaultValue={original.fullBasePackageName} {...register("fullBasePackageName")}
+                                  type={"text"}
+                                  isSubmitted={isSubmitted}
+                                  pageTranslate={pageTranslate}
+                                  fieldPropertyName={"fullBasePackageName"}
+                                  placeholder="com.sparrow.example"
+                                  description={pageTranslate("fullBasePackageNameHint")}/>
+            </div>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="outline">{globalTranslate("cancel")}</Button>
+                </DialogClose>
+                <Button type="submit">{globalTranslate("save")}</Button>
+            </DialogFooter>
+        </form>
+    );
+};
