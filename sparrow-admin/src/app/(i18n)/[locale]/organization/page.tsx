@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -7,6 +6,9 @@ import {columns, Organization} from "@/components/organization/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/organization/search";
 import Operation from "@/components/organization/operation";
+
+import AddPage from "@/components/organization/add";
+
 import EditPage from "@/components/organization/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import OrganizationApi from "@/api/auto/organization";
@@ -46,6 +48,12 @@ export default function Page() {
             }).catch(()=>{});
         }
 
+        
+        const childrenHandler = async (row) => {
+                        const result = await OrganizationApi.search({parentId: row.id}, errorTranslate, Navigations.redirectToLogin);
+                        return result.data.list;
+                };
+        
     if (!dataState) {
         return (
             <div className="admin-page admin-data-page space-y-3">
@@ -70,8 +78,15 @@ export default function Page() {
                     EditComponent={EditPage}
                     deleteHandler={deleteHandler}
                     initHandler={init}
+                    loadSubRows={childrenHandler}
                     defaultPager={{pageIndex: 0, pageSize: -1}}
-                    RowOperationComponents={[]}
+                    RowOperationComponents={[
+                                            {
+                                                component: AddPage,
+                                                displayText: globalTranslate("add-child"),
+                                                pop: true
+                                             }
+                                            ]}
                 ></DataTable>
             </div>
         </div>

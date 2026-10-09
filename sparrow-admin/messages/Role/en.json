@@ -1,0 +1,33 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "code": "Role Code",
+  "createUserName": "Created By",
+  "priority": "Role priority, higher takes precedence",
+  "gmtCreate": "Created At",
+  "filter": "Filter Column",
+  "modifiedUserId": "Updated By ID",
+  "tenantId": "Tenant ID",
+  "name": "Role Name",
+  "id": "",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "code": {
+      "empty-message": "Cannot be empty"
+    },
+    "tenantId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "name": {
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "priority": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    }
+  }
+}

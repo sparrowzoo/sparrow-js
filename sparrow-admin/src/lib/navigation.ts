@@ -17,6 +17,10 @@ export const modules: MenuItem[] = [
     {key: "userGroup", url: "/user-group", icon: "UsersRound"},
     {key: "role", url: "/role", icon: "UserCog"},
     {key: "permission", url: "/permission", icon: "KeyRound"},
+    {key: "dictType", url: "/dict-type", icon: "Database"},
+    {key: "dictItem", url: "/dict-item", icon: "List"},
+    {key: "dictTypeI18n", url: "/dict-type-i18n", icon: "Languages"},
+    {key: "dictItemI18n", url: "/dict-item-i18n", icon: "Globe"},
 ];
 
 export interface MenuParent {
@@ -35,6 +39,11 @@ export const navParents: MenuParent[] = [
         key: "permissionManagement",
         icon: "ShieldCheck",
         items: ["app", "microService", "organization", "position", "adminUser", "userGroup", "role", "permission"],
+    },
+    {
+        key: "systemSettings",
+        icon: "Settings2",
+        items: ["dictType", "dictItem", "dictTypeI18n", "dictItemI18n"],
     },
 ];
 

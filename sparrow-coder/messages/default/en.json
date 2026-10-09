@@ -137,6 +137,7 @@
     }
   },
   "KVS": {
+    "notSelected": "None (default -1)",
     "cellType": {
       "CHECK_BOX": "Checkbox",
       "NORMAL": "Normal",

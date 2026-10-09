@@ -28,7 +28,7 @@
     "tableName": {
       "empty-message": "Cannot be empty"
     },
-    "statusCommand": {},
+    "isTree": {},
     "columnFilter": {
       "check-message": "Please enter a valid number",
       "empty-message": "Cannot be empty"
@@ -51,7 +51,7 @@
   },
   "checkable": "Selection Order",
   "gmtCreate": "Created At",
-  "statusCommand": "Show Status Command",
+  "isTree": "Show Tree Structure",
   "filter": "Filter Column",
   "deleted": "Deleted",
   "columnFilter": "Column Filter Order",
@@ -61,7 +61,8 @@
   "ErrorMessage": {
     "system_server_error": "System error, please try again later...",
     "global_parameter_null": "Parameter cannot be null...",
-    "user_not_login": "User not logged in..."
+    "user_not_login": "User not logged in...",
+    "table_locked": "Operation done, but table {table} is locked, code generation skipped!"
   },
   "projectId": "Project",
   "actions": "Actions",

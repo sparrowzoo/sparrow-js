@@ -67,6 +67,7 @@ import {Table, TableBody, TableHead, TableHeader, TableRow} from "@/components/u
 
 /* ------------------------------------------------------------------ */
 /* 数据模型 & 字典                                                     */
+
 /* ------------------------------------------------------------------ */
 
 interface DemoRow extends BasicData<DemoRow> {
@@ -89,18 +90,186 @@ const TS = 1700000000000;
 
 function createInitialRows(): DemoRow[] {
     return [
-        {id: 1, name: "Alice", email: "alice@example.com", status: "ENABLE", gender: "FEMALE", amount: 1280.5, currency: "USD", age: 28, active: true, remark: "Senior engineer", sort: 1, gmtCreate: TS, gmtModified: TS + 1000},
-        {id: 2, name: "Bob", email: "bob@example.com", status: "ENABLE", gender: "MALE", amount: 640, currency: "EUR", age: 35, active: true, remark: "Product manager", sort: 2, gmtCreate: TS + 2000, gmtModified: TS + 3000},
-        {id: 3, name: "Carol", email: "carol@example.com", status: "DISABLE", gender: "FEMALE", amount: 3200, currency: "USD", age: 42, active: false, remark: "Designer", sort: 3, gmtCreate: TS + 4000, gmtModified: TS + 5000},
-        {id: 4, name: "David", email: "david@example.com", status: "ENABLE", gender: "MALE", amount: 900, currency: "CNY", age: 31, active: true, remark: "QA", sort: 4, gmtCreate: TS + 6000, gmtModified: TS + 7000},
-        {id: 5, name: "Eve", email: "eve@example.com", status: "DISABLE", gender: "FEMALE", amount: 1560, currency: "JPY", age: 26, active: true, remark: "Ops", sort: 5, gmtCreate: TS + 8000, gmtModified: TS + 9000},
-        {id: 6, name: "Frank", email: "frank@example.com", status: "ENABLE", gender: "MALE", amount: 2200, currency: "USD", age: 45, active: false, remark: "Architect", sort: 6, gmtCreate: TS + 10000, gmtModified: TS + 11000},
-        {id: 7, name: "Grace", email: "grace@example.com", status: "ENABLE", gender: "FEMALE", amount: 780, currency: "EUR", age: 24, active: true, remark: "Intern", sort: 7, gmtCreate: TS + 12000, gmtModified: TS + 13000},
-        {id: 8, name: "Henry", email: "henry@example.com", status: "DISABLE", gender: "MALE", amount: 4100, currency: "USD", age: 38, active: true, remark: "Tech lead", sort: 8, gmtCreate: TS + 14000, gmtModified: TS + 15000},
-        {id: 9, name: "Ivy", email: "ivy@example.com", status: "ENABLE", gender: "FEMALE", amount: 1250, currency: "CNY", age: 29, active: true, remark: "Data analyst", sort: 9, gmtCreate: TS + 16000, gmtModified: TS + 17000},
-        {id: 10, name: "Jack", email: "jack@example.com", status: "ENABLE", gender: "MALE", amount: 980, currency: "JPY", age: 33, active: false, remark: "Support", sort: 10, gmtCreate: TS + 18000, gmtModified: TS + 19000},
-        {id: 11, name: "Kate", email: "kate@example.com", status: "DISABLE", gender: "FEMALE", amount: 2750, currency: "EUR", age: 40, active: true, remark: "Finance", sort: 11, gmtCreate: TS + 20000, gmtModified: TS + 21000},
-        {id: 12, name: "Leo", email: "leo@example.com", status: "ENABLE", gender: "MALE", amount: 1350, currency: "USD", age: 27, active: true, remark: "Mobile dev", sort: 12, gmtCreate: TS + 22000, gmtModified: TS + 23000},
+        {
+            id: 1,
+            name: "Alice",
+            email: "alice@example.com",
+            status: "ENABLE",
+            gender: "FEMALE",
+            amount: 1280.5,
+            currency: "USD",
+            age: 28,
+            active: true,
+            remark: "Senior engineer",
+            sort: 1,
+            gmtCreate: TS,
+            gmtModified: TS + 1000
+        },
+        {
+            id: 2,
+            name: "Bob",
+            email: "bob@example.com",
+            status: "ENABLE",
+            gender: "MALE",
+            amount: 640,
+            currency: "EUR",
+            age: 35,
+            active: true,
+            remark: "Product manager",
+            sort: 2,
+            gmtCreate: TS + 2000,
+            gmtModified: TS + 3000
+        },
+        {
+            id: 3,
+            name: "Carol",
+            email: "carol@example.com",
+            status: "DISABLE",
+            gender: "FEMALE",
+            amount: 3200,
+            currency: "USD",
+            age: 42,
+            active: false,
+            remark: "Designer",
+            sort: 3,
+            gmtCreate: TS + 4000,
+            gmtModified: TS + 5000
+        },
+        {
+            id: 4,
+            name: "David",
+            email: "david@example.com",
+            status: "ENABLE",
+            gender: "MALE",
+            amount: 900,
+            currency: "CNY",
+            age: 31,
+            active: true,
+            remark: "QA",
+            sort: 4,
+            gmtCreate: TS + 6000,
+            gmtModified: TS + 7000
+        },
+        {
+            id: 5,
+            name: "Eve",
+            email: "eve@example.com",
+            status: "DISABLE",
+            gender: "FEMALE",
+            amount: 1560,
+            currency: "JPY",
+            age: 26,
+            active: true,
+            remark: "Ops",
+            sort: 5,
+            gmtCreate: TS + 8000,
+            gmtModified: TS + 9000
+        },
+        {
+            id: 6,
+            name: "Frank",
+            email: "frank@example.com",
+            status: "ENABLE",
+            gender: "MALE",
+            amount: 2200,
+            currency: "USD",
+            age: 45,
+            active: false,
+            remark: "Architect",
+            sort: 6,
+            gmtCreate: TS + 10000,
+            gmtModified: TS + 11000
+        },
+        {
+            id: 7,
+            name: "Grace",
+            email: "grace@example.com",
+            status: "ENABLE",
+            gender: "FEMALE",
+            amount: 780,
+            currency: "EUR",
+            age: 24,
+            active: true,
+            remark: "Intern",
+            sort: 7,
+            gmtCreate: TS + 12000,
+            gmtModified: TS + 13000
+        },
+        {
+            id: 8,
+            name: "Henry",
+            email: "henry@example.com",
+            status: "DISABLE",
+            gender: "MALE",
+            amount: 4100,
+            currency: "USD",
+            age: 38,
+            active: true,
+            remark: "Tech lead",
+            sort: 8,
+            gmtCreate: TS + 14000,
+            gmtModified: TS + 15000
+        },
+        {
+            id: 9,
+            name: "Ivy",
+            email: "ivy@example.com",
+            status: "ENABLE",
+            gender: "FEMALE",
+            amount: 1250,
+            currency: "CNY",
+            age: 29,
+            active: true,
+            remark: "Data analyst",
+            sort: 9,
+            gmtCreate: TS + 16000,
+            gmtModified: TS + 17000
+        },
+        {
+            id: 10,
+            name: "Jack",
+            email: "jack@example.com",
+            status: "ENABLE",
+            gender: "MALE",
+            amount: 980,
+            currency: "JPY",
+            age: 33,
+            active: false,
+            remark: "Support",
+            sort: 10,
+            gmtCreate: TS + 18000,
+            gmtModified: TS + 19000
+        },
+        {
+            id: 11,
+            name: "Kate",
+            email: "kate@example.com",
+            status: "DISABLE",
+            gender: "FEMALE",
+            amount: 2750,
+            currency: "EUR",
+            age: 40,
+            active: true,
+            remark: "Finance",
+            sort: 11,
+            gmtCreate: TS + 20000,
+            gmtModified: TS + 21000
+        },
+        {
+            id: 12,
+            name: "Leo",
+            email: "leo@example.com",
+            status: "ENABLE",
+            gender: "MALE",
+            amount: 1350,
+            currency: "USD",
+            age: 27,
+            active: true,
+            remark: "Mobile dev",
+            sort: 12,
+            gmtCreate: TS + 22000,
+            gmtModified: TS + 23000
+        },
     ];
 }
 
@@ -135,19 +304,86 @@ function buildResult(rows: DemoRow[], pageIndex: number, pageSize: number): Resu
 
 const mainColumns: ColumnDef<DemoRow>[] = [
     {id: "select", header: CheckboxHeader, cell: CheckBoxCell, enableHiding: false},
-    {accessorKey: "id", header: PlainTextHeader({columnTitle: "ID"} as ColumnOperationProps), cell: NormalCell("id"), enableHiding: true},
-    {accessorKey: "name", header: NormalHeader({showSort: true, showFilter: true, columnTitle: "Name"} as ColumnOperationProps), filterFn: filterFns.includesString, cell: NormalCell("name"), enableHiding: true},
-    {accessorKey: "email", header: PlainTextHeader({columnTitle: "Email"} as ColumnOperationProps), cell: NormalCell("email"), enableHiding: true},
-    {accessorKey: "status", header: NormalHeader({showSort: true, showFilter: true, columnTitle: "Status"} as ColumnOperationProps), filterFn: filterFns.includesString, cell: NormalCell("status"), enableHiding: true},
-    {accessorKey: "gender", header: PlainTextHeader({columnTitle: "Gender"} as ColumnOperationProps), cell: SelectCell("gender", true), enableHiding: true},
-    {accessorKey: "amount", header: NormalHeader({columnTitle: "Amount", showSort: true} as ColumnOperationProps), cell: CurrencyCell("amount", "currency"), enableHiding: true},
-    {accessorKey: "currency", header: PlainTextHeader({columnTitle: "Currency"} as ColumnOperationProps), cell: NormalCell("currency"), enableHiding: true},
-    {accessorKey: "age", header: PlainTextHeader({columnTitle: "Age"} as ColumnOperationProps), cell: NormalCell("age"), enableHiding: true},
-    {accessorKey: "active", header: PlainTextHeader({columnTitle: "Active"} as ColumnOperationProps), cell: InputCell("active", "checkbox"), enableHiding: true},
-    {accessorKey: "remark", header: PlainTextHeader({columnTitle: "Remark"} as ColumnOperationProps), cell: InputCell("remark", "text"), enableHiding: true},
-    {accessorKey: "sort", header: PlainTextHeader({columnTitle: "Sort"} as ColumnOperationProps), cell: SortableCell("sort"), enableHiding: false},
-    {accessorKey: "gmtCreate", header: PlainTextHeader({columnTitle: "Created"} as ColumnOperationProps), cell: UnixTimestampCell("gmtCreate"), enableHiding: true},
-    {id: "actions", header: PlainTextHeader({columnTitle: "Actions"} as ColumnOperationProps), cell: "Actions", enableHiding: false},
+    {
+        accessorKey: "id",
+        header: PlainTextHeader({columnTitle: "ID"} as ColumnOperationProps),
+        cell: NormalCell("id"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "name",
+        header: NormalHeader({showSort: true, showFilter: true, columnTitle: "Name"} as ColumnOperationProps),
+        filterFn: filterFns.includesString,
+        cell: NormalCell("name"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "email",
+        header: PlainTextHeader({columnTitle: "Email"} as ColumnOperationProps),
+        cell: NormalCell("email"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "status",
+        header: NormalHeader({showSort: true, showFilter: true, columnTitle: "Status"} as ColumnOperationProps),
+        filterFn: filterFns.includesString,
+        cell: NormalCell("status"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "gender",
+        header: PlainTextHeader({columnTitle: "Gender"} as ColumnOperationProps),
+        cell: SelectCell("gender", true),
+        enableHiding: true
+    },
+    {
+        accessorKey: "amount",
+        header: NormalHeader({columnTitle: "Amount", showSort: true} as ColumnOperationProps),
+        cell: CurrencyCell("amount", "currency"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "currency",
+        header: PlainTextHeader({columnTitle: "Currency"} as ColumnOperationProps),
+        cell: NormalCell("currency"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "age",
+        header: PlainTextHeader({columnTitle: "Age"} as ColumnOperationProps),
+        cell: NormalCell("age"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "active",
+        header: PlainTextHeader({columnTitle: "Active"} as ColumnOperationProps),
+        cell: InputCell("active", "checkbox"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "remark",
+        header: PlainTextHeader({columnTitle: "Remark"} as ColumnOperationProps),
+        cell: InputCell("remark", "text"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "sort",
+        header: PlainTextHeader({columnTitle: "Sort"} as ColumnOperationProps),
+        cell: SortableCell("sort"),
+        enableHiding: false
+    },
+    {
+        accessorKey: "gmtCreate",
+        header: PlainTextHeader({columnTitle: "Created"} as ColumnOperationProps),
+        cell: UnixTimestampCell("gmtCreate"),
+        enableHiding: true
+    },
+    {
+        id: "actions",
+        header: PlainTextHeader({columnTitle: "Actions"} as ColumnOperationProps),
+        cell: "Actions",
+        enableHiding: false
+    },
     {id: "filter-column", header: ColumnFilter(), cell: "", enableHiding: false},
 ];
 
@@ -156,16 +392,72 @@ const treeRows: DemoRow[] = [
         id: 100, name: "Engineering", email: "eng@example.com", status: "ENABLE", gender: "MALE",
         amount: 5000, currency: "USD", age: 0, active: true, remark: "", sort: 1, gmtCreate: TS, gmtModified: TS,
         subRows: [
-            {id: 101, name: "Frontend", email: "fe@example.com", status: "ENABLE", gender: "MALE", amount: 2000, currency: "USD", age: 0, active: true, remark: "", sort: 1, gmtCreate: TS, gmtModified: TS},
-            {id: 102, name: "Backend", email: "be@example.com", status: "DISABLE", gender: "FEMALE", amount: 3000, currency: "USD", age: 0, active: true, remark: "", sort: 2, gmtCreate: TS, gmtModified: TS},
+            {
+                id: 101,
+                name: "Frontend",
+                email: "fe@example.com",
+                status: "ENABLE",
+                gender: "MALE",
+                amount: 2000,
+                currency: "USD",
+                age: 0,
+                active: true,
+                remark: "",
+                sort: 1,
+                gmtCreate: TS,
+                gmtModified: TS
+            },
+            {
+                id: 102,
+                name: "Backend",
+                email: "be@example.com",
+                status: "DISABLE",
+                gender: "FEMALE",
+                amount: 3000,
+                currency: "USD",
+                age: 0,
+                active: true,
+                remark: "",
+                sort: 2,
+                gmtCreate: TS,
+                gmtModified: TS
+            },
         ],
     },
     {
         id: 200, name: "Marketing", email: "mkt@example.com", status: "ENABLE", gender: "FEMALE",
         amount: 1500, currency: "EUR", age: 0, active: true, remark: "", sort: 2, gmtCreate: TS, gmtModified: TS,
         subRows: [
-            {id: 201, name: "Growth", email: "growth@example.com", status: "ENABLE", gender: "FEMALE", amount: 800, currency: "EUR", age: 0, active: true, remark: "", sort: 1, gmtCreate: TS, gmtModified: TS},
-            {id: 202, name: "Brand", email: "brand@example.com", status: "ENABLE", gender: "MALE", amount: 700, currency: "EUR", age: 0, active: true, remark: "", sort: 2, gmtCreate: TS, gmtModified: TS},
+            {
+                id: 201,
+                name: "Growth",
+                email: "growth@example.com",
+                status: "ENABLE",
+                gender: "FEMALE",
+                amount: 800,
+                currency: "EUR",
+                age: 0,
+                active: true,
+                remark: "",
+                sort: 1,
+                gmtCreate: TS,
+                gmtModified: TS
+            },
+            {
+                id: 202,
+                name: "Brand",
+                email: "brand@example.com",
+                status: "ENABLE",
+                gender: "MALE",
+                amount: 700,
+                currency: "EUR",
+                age: 0,
+                active: true,
+                remark: "",
+                sort: 2,
+                gmtCreate: TS,
+                gmtModified: TS
+            },
         ],
     },
 ];
@@ -173,15 +465,36 @@ const treeRows: DemoRow[] = [
 const treeColumns: ColumnDef<DemoRow>[] = [
     {id: "expander", enableHiding: false, header: EmptyHeader, cell: TreeCell("name")},
     {id: "select", header: CheckboxHeader, cell: CheckBoxCell, enableHiding: false},
-    {accessorKey: "name", header: PlainTextHeader({columnTitle: "Name"} as ColumnOperationProps), cell: NormalCell("name"), enableHiding: true},
-    {accessorKey: "email", header: PlainTextHeader({columnTitle: "Email"} as ColumnOperationProps), cell: NormalCell("email"), enableHiding: true},
-    {accessorKey: "amount", header: NormalHeader({columnTitle: "Amount", showSort: true} as ColumnOperationProps), cell: CurrencyCell("amount", "currency"), enableHiding: true},
-    {accessorKey: "status", header: PlainTextHeader({columnTitle: "Status"} as ColumnOperationProps), cell: NormalCell("status"), enableHiding: true},
+    {
+        accessorKey: "name",
+        header: PlainTextHeader({columnTitle: "Name"} as ColumnOperationProps),
+        cell: NormalCell("name"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "email",
+        header: PlainTextHeader({columnTitle: "Email"} as ColumnOperationProps),
+        cell: NormalCell("email"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "amount",
+        header: NormalHeader({columnTitle: "Amount", showSort: true} as ColumnOperationProps),
+        cell: CurrencyCell("amount", "currency"),
+        enableHiding: true
+    },
+    {
+        accessorKey: "status",
+        header: PlainTextHeader({columnTitle: "Status"} as ColumnOperationProps),
+        cell: NormalCell("status"),
+        enableHiding: true
+    },
     {id: "filter-column", header: ColumnFilter(), cell: "", enableHiding: false},
 ];
 
 /* ------------------------------------------------------------------ */
 /* 控制器 & 子组件                                                     */
+
 /* ------------------------------------------------------------------ */
 
 interface DemoController {
@@ -347,14 +660,23 @@ function StandalonePaginationDemo() {
         <Pagination>
             <PaginationContent>
                 <PaginationItem>
-                    <PaginationFirst href="#" onClick={(e) => {e.preventDefault(); go(1);}}/>
+                    <PaginationFirst href="#" onClick={(e) => {
+                        e.preventDefault();
+                        go(1);
+                    }}/>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationPrevious href="#" onClick={(e) => {e.preventDefault(); go(page - 1);}}/>
+                    <PaginationPrevious href="#" onClick={(e) => {
+                        e.preventDefault();
+                        go(page - 1);
+                    }}/>
                 </PaginationItem>
                 {pages.map((p) => (
                     <PaginationItem key={p}>
-                        <PaginationLink href="#" isActive={p === page} onClick={(e) => {e.preventDefault(); go(p);}}>
+                        <PaginationLink href="#" isActive={p === page} onClick={(e) => {
+                            e.preventDefault();
+                            go(p);
+                        }}>
                             {p}
                         </PaginationLink>
                     </PaginationItem>
@@ -363,10 +685,16 @@ function StandalonePaginationDemo() {
                     <PaginationEllipsis/>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationNext href="#" onClick={(e) => {e.preventDefault(); go(page + 1);}}/>
+                    <PaginationNext href="#" onClick={(e) => {
+                        e.preventDefault();
+                        go(page + 1);
+                    }}/>
                 </PaginationItem>
                 <PaginationItem>
-                    <PaginationLast href="#" onClick={(e) => {e.preventDefault(); go(total);}}/>
+                    <PaginationLast href="#" onClick={(e) => {
+                        e.preventDefault();
+                        go(total);
+                    }}/>
                 </PaginationItem>
             </PaginationContent>
         </Pagination>
@@ -493,7 +821,7 @@ import {DataTable} from "@/common/components/table/data-table";
 | columns | \`ColumnDef<T,string>[]\` | Yes | Column definitions |
 | result | \`Result\` | Yes | Data source; \`result.data = { list, recordTotal, dictionary }\` |
 | setData | \`Dispatch<SetStateAction<Result>>\` | Yes | setState used to update \`result\` |
-| initHandler | \`() => void\` | Yes | Reload (reset to page 1); called after row edit/delete |
+| initHandler | \`() => void\` | Yes | Reload (reset to page 1) called after row edit/delete |
 | primary | string | No | Primary-key field name (used by \`deleteHandler\`) |
 | tableName | string | No | i18n namespace; headers translate via \`useTranslations(tableName)\` |
 | i18n | boolean | No | Translate headers (\`t.has(column.id)\`) and cell dictionaries (\`KVS.<field>.<value>\`) |
@@ -506,14 +834,14 @@ import {DataTable} from "@/common/components/table/data-table";
 | parent | \`{}\` | No | Arbitrary context (the demo passes a controller via \`parent\`) |
 | defaultPager | \`PaginationState\` | No | Default pagination |
 
-> Because \`manualPagination\` is true, \`result.data.list\` must already be the **current page**; sorting/filtering stay client-side over the current page.
+> Because \`manualPagination\` is true, \`result.data.list\` must already be the **current page** sorting/filtering stay client-side over the current page.
 
 ## Cells (cell/)
 
 Each cell factory returns a render component that you assign to a column's \`cell\`.
 
 - **NormalCell(field, width?, handler?)** — plain text; maps through \`result.data.dictionary[field]\` and translates via \`KVS.<field>.<value>\` when i18n is on.
-- **CheckBoxCell** — row selection; pair with \`CheckboxHeader\`; get selected ids via \`TableUtils.getSelectedIds(table)\`.
+- **CheckBoxCell** — row selection; pair with \`CheckboxHeader\` get selected ids via \`TableUtils.getSelectedIds(table)\`.
 - **CurrencyCell(field, currencyField)** — formats the amount with \`Intl.NumberFormat\` using the currency field.
 - **InputCell(field, type, width?)** — inline edit; \`type="checkbox"\` renders a checkbox, otherwise an \`<Input>\`; writes back to \`row.original[field]\`.
 - **SelectCell(field, i18n?, readOnly?)** — inline select from \`result.data.dictionary[field]\`; \`readOnly\` renders text only.
@@ -664,7 +992,7 @@ export default function TableExamplePage() {
                             initHandler={initHandler}
                             deleteHandler={deleteHandler}
                             EditComponent={DemoEdit}
-                            RowOperationComponents={[CopyRowOperation]}
+                            RowOperationComponents={[{component: CopyRowOperation, pop: false}]}
                             SearchComponent={DemoSearch}
                             OperationComponent={DemoOperation}
                             parent={controller}

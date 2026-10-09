@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -9,7 +8,7 @@ import OrganizationApi from "@/api/auto/organization";
 import toast from "react-hot-toast";
 import * as v from "valibot";
 import {useTranslations} from "next-intl";
-import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {TableOperationProps,MyTableMeta,CellContextProps} from "@/common/lib/table/DataTableProperty";
 import {Organization} from "@/components/organization/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
 import {PagerResult} from "@/common/lib/protocol/Result";
@@ -18,17 +17,29 @@ import {ValidatableSelect} from "@/common/components/forms/validatable-select";
 
 
 
-export default function Page({callbackHandler,table}: TableOperationProps<Organization>) {
+export default function AddPage({
+                                 callbackHandler
+                                 
+                                 ,table,
+                                 cellContext
+                             }: Partial<TableOperationProps<Organization>> & Partial<CellContextProps<Organization>>)  {
     const globalTranslate = useTranslations("GlobalForm");
-    const errorTranslate = useTranslations("Organization.ErrorMessage")
+    const errorTranslate = useTranslations("ErrorMessage")
     const pageTranslate = useTranslations("Organization")
     const validateTranslate = useTranslations("Organization.validate")
 
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
     const  Navigations=useNavigating();
-    const meta = table.options.meta as MyTableMeta<Organization>;
+    
+    const currentTable = table ?? cellContext!.table;
+    const meta = currentTable.options.meta as MyTableMeta<Organization>;
     const pageResult=(meta.result.data as PagerResult<Organization>)
+    
+
+    
+       const original = cellContext ? cellContext.row.original : null;
+    
 
 
 
@@ -46,11 +57,14 @@ export default function Page({callbackHandler,table}: TableOperationProps<Organi
     const {
         register,
         handleSubmit,
-        setValue,
+        
+                setValue,
+                setError,
+        
         formState: {
             errors,
             isSubmitted
-        },
+        }
     } = useForm<FormData>({
         //相当于v.parse
         resolver: valibotResolver(
@@ -70,46 +84,15 @@ export default function Page({callbackHandler,table}: TableOperationProps<Organi
                                            </DialogDescription>
                                        </DialogHeader>
                 <div className="admin-form-fields">
-                <ValidatableInput defaultValue={""} {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("tenantId")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.tenantId?.message}                                  fieldPropertyName={"tenantId"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("level")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.level?.message}                                  fieldPropertyName={"level"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["parentId"]} pageTranslate={pageTranslate} defaultValue={""}setValue={setValue}
-fieldPropertyName={"parentId"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("code")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.code?.message}                                  fieldPropertyName={"code"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("name")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("manager")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.manager?.message}                                  fieldPropertyName={"manager"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("telephone")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.telephone?.message}                                  fieldPropertyName={"telephone"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("sort")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.sort?.message}                                  fieldPropertyName={"sort"}/>
+                <ValidatableInput readonly={false} defaultValue={""}  {...register("code")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.code?.message} fieldPropertyName={"code"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("name")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+<ValidatableInput defaultValue={""}  {...register("id")} type={"hidden"} fieldPropertyName={"id"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("level")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.level?.message} fieldPropertyName={"level"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("tenantId")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.tenantId?.message} fieldPropertyName={"tenantId"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["parentId"]} pageTranslate={pageTranslate}  defaultValue={String(original ? original.id :0)}  setValue={setValue} errorMessage={errors.parentId?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"parentId"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("manager")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.manager?.message} fieldPropertyName={"manager"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("telephone")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.telephone?.message} fieldPropertyName={"telephone"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("sort")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.sort?.message} fieldPropertyName={"sort"}/>
             </div>
                          <DialogFooter>
                                         <DialogClose asChild>

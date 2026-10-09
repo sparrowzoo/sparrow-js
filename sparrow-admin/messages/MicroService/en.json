@@ -1,0 +1,46 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "remark": "Remark",
+  "createUserName": "Created By",
+  "sort": "Sort",
+  "gmtCreate": "Created At",
+  "url": "Microservice URL/Path",
+  "filter": "Filter Column",
+  "modifiedUserId": "Updated By ID",
+  "appId": "App ID",
+  "tenantId": "Tenant ID",
+  "name": "Microservice Name",
+  "logo": "Logo URL",
+  "id": "",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "appId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "tenantId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "name": {
+      "empty-message": "Cannot be empty"
+    },
+    "logo": {
+      "empty-message": "Cannot be empty"
+    },
+    "remark": {
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "sort": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "url": {
+      "empty-message": "Cannot be empty"
+    }
+  }
+}

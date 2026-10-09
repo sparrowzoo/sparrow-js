@@ -1,6 +1,7 @@
 {
   "GlobalForm": {
     "add": "Add",
+    "add-child": "Add Child Node",
     "edit": "Edit",
     "delete": "Delete",
     "enable": "Enable",
@@ -56,7 +57,8 @@
   "ErrorMessage": {
     "system_server_error": "System error, please try again later...",
     "global_parameter_null": "Parameter cannot be null...",
-    "class_not_found": "Class not found..."
+    "class_not_found": "Class not found...",
+    "class_can_not_assignable_po": "The implementation class must be a subclass of PO"
   },
   "Header": {
     "index": "Home",
@@ -102,10 +104,6 @@
       "dashboard": {
         "title": "Dashboard",
         "description": "Resizable analytics workspace"
-      },
-      "menu": {
-        "title": "Menu",
-        "description": "Manage navigation menus"
       },
       "projectConfig": {
         "title": "Project Config",
@@ -155,6 +153,22 @@
         "title": "Permission",
         "description": "Manage permissions"
       },
+      "dictType": {
+        "title": "Dict Type",
+        "description": "Manage dict types"
+      },
+      "dictItem": {
+        "title": "Dict Item",
+        "description": "Manage dict items"
+      },
+      "dictTypeI18n": {
+        "title": "Dict Type I18n",
+        "description": "Manage dict type translations"
+      },
+      "dictItemI18n": {
+        "title": "Dict Item I18n",
+        "description": "Manage dict item translations"
+      },
       "accessHistory": {
         "title": "Access History",
         "description": "Recent navigation history"
@@ -167,25 +181,22 @@
       "gettingStarted": "Getting Started"
     },
     "parents": {
-      "systemManagement": "System Management",
-      "permissionManagement": "Permission Management"
+      "systemManagement": "Code Generator",
+      "permissionManagement": "Permission Management",
+      "systemSettings": "System Settings"
     }
   },
   "KVS": {
+    "all": "All",
+    "notSelected": "None (default -1)",
     "cellType": {
       "CHECK_BOX": "Checkbox",
       "NORMAL": "Normal",
       "TREE": "Tree",
       "OPERATION": "Operation",
       "CURRENCY": "Currency",
-      "UNIX_TIMESTAMP": "Timestamp"
-    },
-    "columnType": {
-      "ACTION": "Action Menu",
-      "CHECK": "Checkbox",
-      "FILTER": "Filter",
-      "TREE": "Tree",
-      "NORMAL": "Normal"
+      "UNIX_TIMESTAMP": "Timestamp",
+      "IMAGE": "Image"
     },
     "headerType": {
       "CHECK_BOX": "Checkbox",
@@ -194,14 +205,16 @@
       "NORMAL_SORT": "Normal (sortable)",
       "NORMAL_FILTER": "Normal (filterable)",
       "NORMAL_SORT_FILTER": "Normal (filterable, sortable)",
-      "PLAIN_TEXT": "Action",
+      "MENU": "Column Menu",
+      "TREE": "Tree",
       "EMPTY": "Empty"
     },
     "datasourceType": {
       "NULL": "Text Input",
       "DICTIONARY": "Dictionary",
       "TABLE": "Table",
-      "ENUM": "Enum"
+      "ENUM": "Enum",
+      "UPLOAD": "File Upload"
     },
     "controlType": {
       "LABEL": "Label",
@@ -239,6 +252,8 @@
     "validateType": {
       "string": "String",
       "digital": "Number",
+      "float": "Float",
+      "signedDigital": "Signed Integer",
       "email": "Email",
       "mobile": "Mobile",
       "tel": "Telephone",
@@ -249,14 +264,12 @@
     },
     "status": {
       "ENABLE": "Enabled",
-      "DISABLE": "Disabled",
-      "all": "All"
+      "DISABLE": "Disabled"
     },
     "gender": {
       "NULL": "Unknown",
       "MALE": "Male",
-      "FEMALE": "Female",
-      "all": "All"
+      "FEMALE": "Female"
     }
   }
 }

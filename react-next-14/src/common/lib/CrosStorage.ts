@@ -1,254 +1,159 @@
 "use client";
-import {
-  CommandType,
-  StorageRequest,
-  StorageResponse,
-  StorageType,
-} from "@/common/lib/protocol/CrosProtocol";
-import {
-  STORAGE_PROXY,
-  TOKEN_KEY,
-  TOKEN_STORAGE,
-  USER_INFO_KEY,
-} from "@/common/lib/Env";
-import { Utils } from "@/common/lib/Utils";
-import UrlUtils from "@/common/lib/UrlUtils";
-import { redirectToLogin } from "@/common/lib/Navigating";
+import {CommandType, StorageRequest, StorageResponse, StorageSaveOptions, StorageType} from "@/common/lib/protocol/CrosProtocol";
+import {CROS_DEBUG, STORAGE_PROXY, TOKEN_KEY, USER_INFO_KEY} from "@/common/lib/Env";
+import {Utils} from "@/common/lib/Utils";
 import LoginUser from "@/common/lib/protocol/LoginUser";
+import StorageManager from "@/common/lib/storage/StorageManager";
+import PostMessageRpc from "@/common/lib/rpc/PostMessageRpc";
+import StorageMonitor, {CrosStorageMonitor} from "@/common/lib/monitor/StorageMonitor";
+export type {CrosStorageEvent, CrosStorageEventType, CrosStorageMonitor} from "@/common/lib/monitor/StorageMonitor";
 
+/** Storage facade: chooses the authority; strategies and transport own their mechanics. */
 export default class CrosStorage {
-  private iframe: HTMLIFrameElement;
-  private iframeOrigin: string | undefined = STORAGE_PROXY;
-  private cros: boolean = false;
-  private loaded: boolean = false;
+    private readonly stores = new StorageManager();
+    private readonly events: StorageMonitor;
+    private rpc?: PostMessageRpc;
+    private destroyed = false;
 
-  private constructor() {
-    if (typeof window === "undefined") {
-      return;
-    }
-    console.log("cros storage init");
-    this.cros = UrlUtils.isCros(window.location.href, STORAGE_PROXY as string);
-    if (!this.cros) {
-      return;
-    }
-    this.resetIframe();
-  }
-
-  public static getCrosStorage() {
-    return new CrosStorage();
-  }
-
-  public set(
-    value: string,
-    key: string = TOKEN_KEY,
-    storage: StorageType = StorageType.AUTOMATIC
-  ) {
-    storage = this.getStorageType(storage);
-    if (!this.cros) {
-      const store =
-        storage === StorageType.LOCAL ? localStorage : sessionStorage;
-      store.setItem(key, value);
-      return Promise.resolve(value);
+    private constructor(private readonly monitor?: CrosStorageMonitor) {
+        let origin = "";
+        try { origin = new URL(STORAGE_PROXY || "").origin; } catch { /* Local reads do not need a proxy. */ }
+        this.events = new StorageMonitor({monitor, debug: CROS_DEBUG, iframeOrigin: origin,
+            crossOrigin: typeof window !== "undefined" && !!origin && origin !== window.location.origin});
     }
 
-    return this.request({
-      requestId: Utils.randomUUID(),
-      command: CommandType.SET,
-      storage: storage,
-      key: key,
-      value: value,
-    });
-  }
+    public static getCrosStorage(monitor?: CrosStorageMonitor) { return new CrosStorage(monitor); }
 
-  public get(
-    key: string = TOKEN_KEY,
-    storage: StorageType = StorageType.AUTOMATIC
-  ) {
-    storage = this.getStorageType(storage);
-    if (!this.cros) {
-      const store = storage === "local" ? localStorage : sessionStorage;
-      return Promise.resolve(store.getItem(key));
+    public async get(key: string = TOKEN_KEY, storage: StorageType = StorageType.AUTOMATIC): Promise<string | null> {
+        return this.operate(CommandType.GET, key, storage);
     }
-    return this.request({
-      requestId: Utils.randomUUID(),
-      command: CommandType.GET,
-      storage: storage,
-      key,
-    });
-  }
 
-  public remove(
-    key: string = TOKEN_KEY,
-    storage: StorageType = StorageType.AUTOMATIC
-  ) {
-    storage = this.getStorageType(storage);
-    if (!this.cros) {
-      const store =
-        storage === StorageType.LOCAL ? localStorage : sessionStorage;
-      const value = store.getItem(key);
-      store.removeItem(key);
-      return Promise.resolve(value);
+    public async set(value: string, key: string = TOKEN_KEY, storage: StorageType = StorageType.AUTOMATIC,
+                     saveOptions?: StorageSaveOptions): Promise<string | null> {
+        return this.operate(CommandType.SET, key, storage, value, saveOptions);
     }
-    return this.request({
-      requestId: Utils.randomUUID(),
-      command: CommandType.REMOVE,
-      storage: storage,
-      key,
-    });
-  }
 
-  destroy() {
-    if (this.cros && document.body.contains(this.iframe)) {
-      document.body.removeChild(this.iframe);
+    public async remove(key: string = TOKEN_KEY, storage: StorageType = StorageType.AUTOMATIC): Promise<string | null> {
+        return this.operate(CommandType.REMOVE, key, storage);
     }
-  }
 
-  public async getToken(
-    storage: StorageType = StorageType.AUTOMATIC,
-    generateVisitorToken:
-      | (() => Promise<string>)
-      | null
-      | "REDIRECT-TO-LOGIN" = null
-  ) {
-    const token = await this.get(TOKEN_KEY, storage);
-    if (token) {
-      console.log("get token from storage", token);
-      return token;
+    public async getToken(storage: StorageType = StorageType.AUTOMATIC,
+                          generateVisitorToken: (() => Promise<string>) | null = null): Promise<string | null> {
+        this.assertActive();
+        const mode = this.stores.resolve(storage);
+        const local = this.local(CommandType.GET, TOKEN_KEY, mode);
+        if (local) return local;
+        // At A, the local lookup above is authoritative; do not issue a self RPC.
+        const token = this.isRemote() ? await this.get(TOKEN_KEY, mode) : null;
+        if (token || !generateVisitorToken) return token || null;
+        const visitor = await generateVisitorToken();
+        await this.setToken(visitor, mode);
+        return visitor;
     }
-    if (generateVisitorToken) {
-      if (generateVisitorToken === "REDIRECT-TO-LOGIN") {
-        redirectToLogin();
-        return null;
-      }
-      const visitorToken = await generateVisitorToken();
-      await this.setToken(visitorToken);
-      console.log("generate visitor token", visitorToken);
-      return visitorToken;
-    }
-    console.log("no token found");
-    return null;
-  }
 
-  public setToken(token: string, storage: StorageType = StorageType.AUTOMATIC) {
-    return this.set(token, TOKEN_KEY, storage);
-  }
-
-  public removeToken(storage: StorageType = StorageType.AUTOMATIC) {
-    return this.remove(TOKEN_KEY, storage);
-  }
-
-  //用户基本信息本地化
-  public async locateToken() {
-    //如果不是cros环境，则不进行本地化
-    if (!this.cros) {
-      return null;
-    }
-    const locationUser = sessionStorage.getItem(USER_INFO_KEY);
-    if (locationUser) {
-      return LoginUser.getCurrentUser();
-    }
-    return await this.getToken().then((token) => {
-      console.log("token", token);
-      if (token) {
-        const decodeToken = decodeURIComponent(token);
-        const parts: string[] = decodeToken.split(".");
-        const userInfo: string = parts[0];
-        if (!userInfo) {
-          return null;
+    public async setToken(token: string, storage: StorageType = StorageType.AUTOMATIC,
+                          saveOptions?: StorageSaveOptions): Promise<string | null> {
+        const mode = this.stores.resolve(storage);
+        const remote = this.isRemote();
+        const result = await this.set(token, TOKEN_KEY, mode, saveOptions);
+        if (remote) {
+            // Saving A must succeed before removing an independent stale B credential.
+            if (mode !== StorageType.COOKIE) this.local(CommandType.REMOVE, TOKEN_KEY, mode);
+            else if (!this.stores.sharesCookieScopeWith(this.authority().origin)) {
+                this.stores.removeHostOnlyCookie(TOKEN_KEY);
+            } else if (this.local(CommandType.GET, TOKEN_KEY, mode) !== token) {
+                throw new Error("COOKIE_WRITE_FAILED: Shared Cookie could not be confirmed");
+            }
         }
-        const userJson = atob(userInfo);
-        sessionStorage.setItem(USER_INFO_KEY, userJson);
-        return LoginUser.getCurrentUser();
-      }
-    });
-  }
-
-  private resetIframe() {
-    this.destroy();
-    const iframe = document.createElement("iframe");
-    iframe.src = STORAGE_PROXY as string;
-    iframe.src = iframe.src + "?" + UrlUtils.getHrefWithoutQueryString();
-    iframe.style.display = "none";
-    this.iframe = iframe;
-    console.log("reset and append iframe " + STORAGE_PROXY);
-
-    const handleMessage = (event: MessageEvent<StorageRequest>) => {
-      console.log("receive message from iframe", event.data);
-      if (!this.iframeOrigin || this.iframeOrigin?.indexOf(event.origin) < 0) {
-        return;
-      }
-      this.loaded = true;
-      window.removeEventListener("message", handleMessage); // 清理监听
-    };
-    window.addEventListener("message", handleMessage);
-
-    // iframe.addEventListener("DOMContentLoaded", () => {
-    //   console.log("iframe DOMContentLoaded");
-    //   this.loaded = true;
-    // });
-    // iframe.addEventListener("load", () => {
-    //   console.log("iframe loaded");
-    //   this.loaded = true;
-    // });
-    document.body.appendChild(iframe);
-    this.iframeOrigin = STORAGE_PROXY;
-  }
-
-  private getStorageType(storageType: StorageType) {
-    if (storageType === StorageType.AUTOMATIC) {
-      storageType =
-        TOKEN_STORAGE === "SESSION" ? StorageType.SESSION : StorageType.LOCAL;
+        return result;
     }
-    return storageType;
-  }
 
-  // 发送请求
-  private request(req: StorageRequest): Promise<string | null> {
-    return new Promise((resolve, reject) => {
-      // 监听响应
-      const handleMessage = (event: MessageEvent<StorageResponse>) => {
-        if (
-          !this.iframeOrigin ||
-          this.iframeOrigin?.indexOf(event.origin) < 0 ||
-          event.data.requestId !== req.requestId
-        )
-          return;
+    public async removeToken(storage: StorageType = StorageType.AUTOMATIC): Promise<string | null> {
+        this.assertActive();
+        const mode = this.stores.resolve(storage);
+        const remote = this.isRemote();
+        const local = mode === StorageType.COOKIE && remote && !this.stores.sharesCookieScopeWith(this.authority().origin)
+            ? this.stores.removeHostOnlyCookie(TOKEN_KEY)
+            : this.local(CommandType.REMOVE, TOKEN_KEY, mode);
+        const source = remote ? await this.remove(TOKEN_KEY, mode) : null;
+        return local ?? source;
+    }
 
-        window.removeEventListener("message", handleMessage); // 清理监听
+    public async locateToken(token: string | null = null) {
+        const current = token || await this.getToken();
+        if (current) return LoginUser.localize(current);
+        sessionStorage.removeItem(USER_INFO_KEY);
+        return LoginUser.visitor();
+    }
 
-        if (event.data.error) {
-          reject(new Error(event.data.error));
-        } else {
-          resolve(event.data.value);
+    public destroy(): void {
+        if (this.destroyed) return;
+        this.destroyed = true;
+        this.rpc?.destroy();
+        if (!this.rpc) this.events.emit({type: "destroy"});
+    }
+
+    private assertActive(): void {
+        if (this.destroyed) throw new Error("Storage client destroyed");
+    }
+
+    private authority(): URL {
+        if (!STORAGE_PROXY) throw new Error("NEXT_PUBLIC_STORAGE_PROXY is required");
+        const url = new URL(STORAGE_PROXY);
+        if (!["https:", "http:"].includes(url.protocol) || url.username || url.password) {
+            throw new Error("Invalid storage proxy URL");
         }
-      };
-      window.addEventListener("message", handleMessage);
+        return url;
+    }
 
-      const send = () => {
-        console.log("send request", this.loaded);
-        if (!this.loaded) {
-          setTimeout(send, 1000);
-          return;
-        }
+    private isRemote(): boolean {
+        if (typeof window === "undefined") throw new Error("STORAGE_UNAVAILABLE: Browser storage is required");
+        return this.authority().origin !== window.location.origin;
+    }
+
+    private local(command: CommandType, key: string, storage: StorageType, value?: string,
+                  saveOptions?: StorageSaveOptions): string | null {
         try {
-          if (!this.iframe.contentWindow) {
-            this.resetIframe();
-          }
-          this.iframe.contentWindow?.postMessage(
-            req,
-            this.iframeOrigin as string
-          );
-        } catch (e) {
-          setTimeout(send, 1000);
+            const result = command === CommandType.GET ? this.stores.get(key, storage)
+                : command === CommandType.SET ? this.stores.set(key, value!, storage, saveOptions)
+                : this.stores.remove(key, storage);
+            this.events.emit({type: "storage-operation", command, storage, key, valueLength: result?.length ?? 0});
+            return result;
+        } catch (error) {
+            this.events.emit({type: "storage-error", command, storage, key, error: "Storage operation failed"});
+            throw error;
         }
-      };
-      send();
+    }
 
-      // 超时处理
-      // setTimeout(() => {
-      //   window.removeEventListener("message", handleMessage);
-      //   reject(new Error("Request timeout"));
-      // }, 5000);
-    });
-  }
+    private async operate(command: CommandType, key: string, storage: StorageType, value?: string,
+                          saveOptions?: StorageSaveOptions): Promise<string | null> {
+        this.assertActive();
+        const mode = this.stores.resolve(storage);
+        if (!this.isRemote()) return this.local(command, key, mode, value, saveOptions);
+        if (!this.rpc) {
+            const url = this.authority();
+            const debug = !!this.monitor || CROS_DEBUG;
+            if (debug) url.pathname = `${url.pathname.replace(/\/$/, "")}-debug/`;
+            url.search = encodeURIComponent(window.location.origin);
+            this.rpc = new PostMessageRpc({url: url.href,
+                frameId: debug ? "cros-storage-iframe-debug" : "cros-storage-iframe",
+                visible: debug,
+                isReady: data => !!data && typeof data === "object" && (data as {command?: unknown}).command === CommandType.INIT,
+                onEvent: event => this.events.emit({type: event.type, requestId: event.requestId, loaded: event.loaded})});
+        }
+        const request: StorageRequest = {requestId: Utils.randomUUID(), command, key, storage: mode};
+        if (command === CommandType.SET) { request.value = value; request.saveOptions = saveOptions; }
+        try {
+            const response = await this.rpc.request<StorageResponse>(request);
+            if (response.error) throw new Error(response.error);
+            if (response.value !== null && typeof response.value !== "string") throw new Error("Invalid storage response");
+            this.events.emit({type: "storage-operation", requestId: request.requestId, command, key,
+                storage: mode, valueLength: response.value?.length ?? 0});
+            return response.value;
+        } catch (error) {
+            this.events.emit({type: "storage-error", requestId: request.requestId, command, key,
+                storage: mode, error: "Storage request failed"});
+            throw error;
+        }
+    }
 }

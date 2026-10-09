@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -19,16 +18,17 @@ import {ValidatableSelect} from "@/common/components/forms/validatable-select";
 
 export default function EditPage({cellContext,callbackHandler}: CellContextProps<Position>) {
      const globalTranslate = useTranslations("GlobalForm");
-        const errorTranslate = useTranslations("Position.ErrorMessage")
+        const errorTranslate = useTranslations("ErrorMessage")
         const pageTranslate = useTranslations("Position")
         const validateTranslate = useTranslations("Position.validate")
         const FormSchema = crateScheme(validateTranslate);
         type FormData = v.InferOutput<typeof FormSchema>;
         const original = cellContext.row.original;
         const  Navigations=useNavigating();
+        
         const meta = cellContext.table.options.meta as MyTableMeta<Position>;
-       const pageResult=(meta.result.data as PagerResult<Position>)
-
+        const pageResult=(meta.result.data as PagerResult<Position>)
+        
 
 
 
@@ -46,8 +46,10 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
     const {
         register,
         handleSubmit,
-                setValue,
-
+        
+        setValue,
+        setError,
+        
         formState: {
             errors,
             isSubmitted
@@ -70,31 +72,12 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                             </DialogDescription>
                         </DialogHeader>
             <div className="admin-form-fields">
-            <ValidatableInput defaultValue={original.id} {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={original.tenantId} {...register("tenantId")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.tenantId?.message}                                  fieldPropertyName={"tenantId"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["organizationId"]} pageTranslate={pageTranslate} defaultValue={original.organizationId}setValue={setValue}
-fieldPropertyName={"organizationId"}/>
-<ValidatableInput readonly={false} defaultValue={original.code} {...register("code")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.code?.message}                                  fieldPropertyName={"code"}/>
-<ValidatableInput readonly={false} defaultValue={original.name} {...register("name")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
-<ValidatableInput readonly={false} defaultValue={original.sort} {...register("sort")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.sort?.message}                                  fieldPropertyName={"sort"}/>
+            <ValidatableInput defaultValue={String(original.id)}  {...register("id")} type={"hidden"} fieldPropertyName={"id"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.tenantId)}  {...register("tenantId")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.tenantId?.message} fieldPropertyName={"tenantId"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["organizationId"]} pageTranslate={pageTranslate} defaultValue={String(original.organizationId)}  setValue={setValue} errorMessage={errors.organizationId?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"organizationId"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.code)}  {...register("code")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.code?.message} fieldPropertyName={"code"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.name)}  {...register("name")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.sort)}  {...register("sort")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.sort?.message} fieldPropertyName={"sort"}/>
              </div>
            <DialogFooter>
                                        <DialogClose asChild>

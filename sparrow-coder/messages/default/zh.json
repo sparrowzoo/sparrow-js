@@ -1,6 +1,7 @@
 {
   "GlobalForm": {
     "add": "添加",
+    "add-child": "添加子节点",
     "edit": "编辑",
     "delete": "删除",
     "enable": "启用",
@@ -137,6 +138,7 @@
     }
   },
   "KVS": {
+    "notSelected": "不选(默认-1)",
     "cellType": {
       "CHECK_BOX": "选择框",
       "NORMAL": "标准",
@@ -146,21 +148,15 @@
       "UNIX_TIMESTAMP": "时间戳",
       "IMAGE": "图片"
     },
-    "columnType": {
-      "ACTION": "操作菜单",
-      "CHECK": "选择框",
-      "FILTER": "筛选",
-      "TREE": "树形",
-      "NORMAL": "标准"
-    },
     "headerType": {
       "CHECK_BOX": "选择",
-      "COLUMN_FILTER": "过滤",
+      "COLUMN_FILTER": "列过滤",
       "NORMAL": "标准",
       "NORMAL_SORT": "标准(可排序)",
       "NORMAL_FILTER": "标准(可过滤)",
       "NORMAL_SORT_FILTER": "标准(可过滤,可排序)",
-      "PLAIN_TEXT": "操作",
+      "MENU": "列菜单",
+      "TREE": "树",
       "EMPTY": "空白"
     },
     "datasourceType": {

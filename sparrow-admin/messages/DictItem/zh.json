@@ -1,0 +1,43 @@
+{
+  "modifiedUserName": "更新人",
+  "createUserId": "创建人ID",
+  "gmtModified": "更新时间",
+  "itemCode": "字典项编码",
+  "itemValue": "字典项值",
+  "remark": "备注",
+  "createUserName": "创建人",
+  "sort": "排序号",
+  "gmtCreate": "创建时间",
+  "parentId": "父ID",
+  "filter": "过滤列",
+  "modifiedUserId": "更新人ID",
+  "dictTypeId": "字典类型",
+  "tenantId": "租户ID",
+  "id": "",
+  "actions": "操作",
+  "status": "状态",
+  "validate": {
+    "dictTypeId": {
+      "check-message": "请输入正确的正整数",
+      "empty-message": "不允许为空"
+    },
+    "itemCode": {
+      "empty-message": "不允许为空"
+    },
+    "itemValue": {},
+    "tenantId": {
+      "check-message": "请输入正确的正整数",
+      "empty-message": "不允许为空"
+    },
+    "remark": {},
+    "id": {},
+    "sort": {
+      "check-message": "请输入正确的数字（允许为负）",
+      "empty-message": "不允许为空"
+    },
+    "parentId": {
+      "check-message": "请输入正确的数字（允许为负）",
+      "empty-message": "不允许为空"
+    }
+  }
+}

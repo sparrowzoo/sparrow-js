@@ -28,7 +28,7 @@
     "tableName": {
       "empty-message": "不允许为空"
     },
-    "statusCommand": {},
+    "isTree": {},
     "columnFilter": {
       "check-message": "请输入正确的数字",
       "empty-message": "不允许为空"
@@ -51,7 +51,7 @@
   },
   "checkable": "选择框序号",
   "gmtCreate": "创建时间",
-  "statusCommand": "是否显示状态命令",
+  "isTree": "是否显示树结构",
   "filter": "过滤列",
   "deleted": "是否删除",
   "columnFilter": "列过滤器序号",

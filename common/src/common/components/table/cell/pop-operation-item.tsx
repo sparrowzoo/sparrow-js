@@ -9,7 +9,7 @@ import {CellContextProps, MyTableMeta} from "@/common/lib/table/DataTablePropert
 interface PopItemProps<TData> {
     cellContext: CellContext<TData, string>;
     ItemComponent?: React.ComponentType<CellContextProps<TData>>
-    displayText: string
+    displayText?: string
 }
 
 export default function PopItem<TData>({cellContext, ItemComponent, displayText}: PopItemProps<TData>) {

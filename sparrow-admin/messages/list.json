@@ -1,1 +1,19 @@
-["default","App","product","Organization","ColumnConfig","DictTypeI18n","Position","DictType","MicroService","UserGroup","ProjectConfig","Role","Permission","TableConfig","AdminUser","DictItem"]
+[
+  "default",
+  "App",
+  "product",
+  "Organization",
+  "ColumnConfig",
+  "DictTypeI18n",
+  "Position",
+  "DictType",
+  "MicroService",
+  "DictItemI18n",
+  "UserGroup",
+  "ProjectConfig",
+  "Role",
+  "Permission",
+  "TableConfig",
+  "AdminUser",
+  "DictItem"
+]

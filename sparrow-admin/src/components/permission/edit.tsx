@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -19,16 +18,17 @@ import {ValidatableSelect} from "@/common/components/forms/validatable-select";
 
 export default function EditPage({cellContext,callbackHandler}: CellContextProps<Permission>) {
      const globalTranslate = useTranslations("GlobalForm");
-        const errorTranslate = useTranslations("Permission.ErrorMessage")
+        const errorTranslate = useTranslations("ErrorMessage")
         const pageTranslate = useTranslations("Permission")
         const validateTranslate = useTranslations("Permission.validate")
         const FormSchema = crateScheme(validateTranslate);
         type FormData = v.InferOutput<typeof FormSchema>;
         const original = cellContext.row.original;
         const  Navigations=useNavigating();
+        
         const meta = cellContext.table.options.meta as MyTableMeta<Permission>;
-       const pageResult=(meta.result.data as PagerResult<Permission>)
-
+        const pageResult=(meta.result.data as PagerResult<Permission>)
+        
 
 
 
@@ -46,8 +46,10 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
     const {
         register,
         handleSubmit,
-                setValue,
-
+        
+        setValue,
+        setError,
+        
         formState: {
             errors,
             isSubmitted
@@ -70,61 +72,21 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                             </DialogDescription>
                         </DialogHeader>
             <div className="admin-form-fields">
-            <ValidatableInput defaultValue={original.id} {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={original.tenantId} {...register("tenantId")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.tenantId?.message}                                  fieldPropertyName={"tenantId"}/>
-<ValidatableInput readonly={false} defaultValue={original.permissionCode} {...register("permissionCode")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.permissionCode?.message}                                  fieldPropertyName={"permissionCode"}/>
-<ValidatableInput readonly={false} defaultValue={original.permissionName} {...register("permissionName")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.permissionName?.message}                                  fieldPropertyName={"permissionName"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["permissionType"]} pageTranslate={pageTranslate} defaultValue={original.permissionType}setValue={setValue}
-fieldPropertyName={"permissionType"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["appId"]} pageTranslate={pageTranslate} defaultValue={original.appId}setValue={setValue}
-fieldPropertyName={"appId"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["microServiceId"]} pageTranslate={pageTranslate} defaultValue={original.microServiceId}setValue={setValue}
-fieldPropertyName={"microServiceId"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["parentId"]} pageTranslate={pageTranslate} defaultValue={original.parentId}setValue={setValue}
-fieldPropertyName={"parentId"}/>
-<ValidatableInput readonly={false} defaultValue={original.operation} {...register("operation")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.operation?.message}                                  fieldPropertyName={"operation"}/>
-<ValidatableInput readonly={false} defaultValue={original.object} {...register("object")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.object?.message}                                  fieldPropertyName={"object"}/>
-<ValidatableInput readonly={false} defaultValue={original.url} {...register("url")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.url?.message}                                  fieldPropertyName={"url"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["method"]} pageTranslate={pageTranslate} defaultValue={original.method}setValue={setValue}
-fieldPropertyName={"method"}/>
-<ValidatableInput readonly={false} defaultValue={original.icon} {...register("icon")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.icon?.message}                                  fieldPropertyName={"icon"}/>
-<ValidatableSelect dictionary={pageResult.dictionary["target"]} pageTranslate={pageTranslate} defaultValue={original.target}setValue={setValue}
-fieldPropertyName={"target"}/>
-<ValidatableInput readonly={false} defaultValue={original.sort} {...register("sort")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.sort?.message}                                  fieldPropertyName={"sort"}/>
+            <ValidatableInput defaultValue={String(original.id)}  {...register("id")} type={"hidden"} fieldPropertyName={"id"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.tenantId)}  {...register("tenantId")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.tenantId?.message} fieldPropertyName={"tenantId"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.permissionCode)}  {...register("permissionCode")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.permissionCode?.message} fieldPropertyName={"permissionCode"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.permissionName)}  {...register("permissionName")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.permissionName?.message} fieldPropertyName={"permissionName"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["permissionType"]} pageTranslate={pageTranslate} defaultValue={String(original.permissionType)}  setValue={setValue} errorMessage={errors.permissionType?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"permissionType"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["appId"]} pageTranslate={pageTranslate} defaultValue={String(original.appId)}  setValue={setValue} errorMessage={errors.appId?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"appId"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["microServiceId"]} pageTranslate={pageTranslate} defaultValue={String(original.microServiceId)}  setValue={setValue} errorMessage={errors.microServiceId?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"microServiceId"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["parentId"]} pageTranslate={pageTranslate} defaultValue={String(original.parentId)}  setValue={setValue} errorMessage={errors.parentId?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"parentId"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.operation)}  {...register("operation")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.operation?.message} fieldPropertyName={"operation"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.object)}  {...register("object")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.object?.message} fieldPropertyName={"object"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.url)}  {...register("url")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.url?.message} fieldPropertyName={"url"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["method"]} pageTranslate={pageTranslate} defaultValue={String(original.method)}  setValue={setValue} errorMessage={errors.method?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"method"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.icon)}  {...register("icon")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.icon?.message} fieldPropertyName={"icon"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["target"]} pageTranslate={pageTranslate} defaultValue={String(original.target)}  setValue={setValue} errorMessage={errors.target?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"target"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.sort)}  {...register("sort")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.sort?.message} fieldPropertyName={"sort"}/>
              </div>
            <DialogFooter>
                                        <DialogClose asChild>

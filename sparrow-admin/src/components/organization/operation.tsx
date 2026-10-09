@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {Organization} from "@/components/organization/columns";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";

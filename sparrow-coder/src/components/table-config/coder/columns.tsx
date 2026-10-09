@@ -25,7 +25,6 @@ export interface ColumnConfig extends BasicData<ColumnConfig> {
     validator: unknown;
     dataSourceType: number;
     dataSourceParams: string;
-    columnType: number;
     headerType: number;
     cellType: number;
     controlType: number;
@@ -49,6 +48,11 @@ export const columns: ColumnDef<ColumnConfig>[] = [
         accessorKey: "placeholder",
         header: PlainTextHeader({columnTitle: "Placeholder"} as ColumnOperationProps),
         cell: InputCell("placeholder", "text", 14),
+        enableHiding: true
+    }, {
+        accessorKey: "defaultValue",
+        header: PlainTextHeader({columnTitle: "默认值"} as ColumnOperationProps),
+        cell: InputCell("defaultValue", "text", 14),
         enableHiding: true
     }, {
         accessorKey: "javaType",
@@ -118,11 +122,6 @@ export const columns: ColumnDef<ColumnConfig>[] = [
         accessorKey: "datasourceParams",
         header: PlainTextHeader({columnTitle: "数据源参数"} as ColumnOperationProps),
         cell: NormalCell("datasourceParams"),
-        enableHiding: true
-    }, {
-        accessorKey: "columnType",
-        header: PlainTextHeader({columnTitle: "列类型"} as ColumnOperationProps),
-        cell: SelectCell("columnType", true),
         enableHiding: true
     }, {
         accessorKey: "headerType",

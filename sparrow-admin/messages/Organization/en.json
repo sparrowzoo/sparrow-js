@@ -1,0 +1,52 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "code": "Department Code",
+  "manager": "Manager",
+  "level": "Department Level",
+  "telephone": "Department Phone",
+  "createUserName": "Created By",
+  "sort": "Sort",
+  "gmtCreate": "Created At",
+  "parentId": "Parent Department ID",
+  "filter": "Filter Column",
+  "modifiedUserId": "Updated By ID",
+  "name": "Department Name",
+  "tenantId": "Tenant ID",
+  "id": "",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "code": {
+      "empty-message": "Cannot be empty"
+    },
+    "manager": {
+      "empty-message": "Cannot be empty"
+    },
+    "level": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "name": {
+      "empty-message": "Cannot be empty"
+    },
+    "tenantId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "telephone": {
+      "check-message": "Please enter a valid mobile number",
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "sort": {
+      "check-message": "Please enter a valid number (negative allowed)",
+      "empty-message": "Cannot be empty"
+    },
+    "parentId": {
+      "check-message": "Please enter a valid number (negative allowed)",
+      "empty-message": "Cannot be empty"
+    }
+  }
+}

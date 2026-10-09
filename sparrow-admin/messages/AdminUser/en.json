@@ -1,0 +1,35 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "createUserName": "Created By",
+  "gmtCreate": "Created At",
+  "userId": "Passport User ID",
+  "organizationId": "Department ID",
+  "filter": "Filter Column",
+  "positionId": "Position ID",
+  "modifiedUserId": "Updated By ID",
+  "tenantId": "Tenant ID",
+  "id": "",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "organizationId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "positionId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "tenantId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "userId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    }
+  }
+}

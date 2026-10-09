@@ -55,7 +55,8 @@
   "ErrorMessage": {
     "system_server_error": "系统错误，请稍侯再试...",
     "global_parameter_null": "参数不能为空...",
-    "class_not_found": "找不到类..."
+    "class_not_found": "找不到类...",
+    "class_can_not_assignable_po": "实现类必须是PO的子类"
   },
   "Header": {
     "brand": "麻雀窝",
@@ -79,6 +80,7 @@
     "logout-success": "您已退出登录!"
   },
   "KVS": {
+    "notSelected": "不选(默认)",
     "cellType": {
       "CHECK_BOX": "选择框",
       "NORMAL": "标准",

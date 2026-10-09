@@ -1,0 +1,28 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "dictItemId": "Dict Item",
+  "createUserName": "Created By",
+  "locale": "Locale",
+  "gmtCreate": "Created At",
+  "itemLabel": "Dict Item I18n",
+  "filter": "Filter Column",
+  "modifiedUserId": "Updated By ID",
+  "id": "",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "dictItemId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "locale": {
+      "empty-message": "Cannot be empty"
+    },
+    "itemLabel": {
+      "empty-message": "Cannot be empty"
+    }
+  }
+}
