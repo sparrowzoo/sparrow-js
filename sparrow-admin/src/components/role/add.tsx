@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -9,25 +8,29 @@ import RoleApi from "@/api/auto/role";
 import toast from "react-hot-toast";
 import * as v from "valibot";
 import {useTranslations} from "next-intl";
-import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {TableOperationProps,CellContextProps} from "@/common/lib/table/DataTableProperty";
 import {Role} from "@/components/role/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
-import {PagerResult} from "@/common/lib/protocol/Result";
+
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 
 
 
-export default function Page({callbackHandler,table}: TableOperationProps<Role>) {
+export default function AddPage({
+                                 callbackHandler
+                                 
+                             }: Partial<TableOperationProps<Role>> & Partial<CellContextProps<Role>>)  {
     const globalTranslate = useTranslations("GlobalForm");
-    const errorTranslate = useTranslations("Role.ErrorMessage")
+    const errorTranslate = useTranslations("ErrorMessage")
     const pageTranslate = useTranslations("Role")
     const validateTranslate = useTranslations("Role.validate")
 
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
     const  Navigations=useNavigating();
-    const meta = table.options.meta as MyTableMeta<Role>;
-    const pageResult=(meta.result.data as PagerResult<Role>)
+    
+
+    
 
 
 
@@ -45,11 +48,11 @@ export default function Page({callbackHandler,table}: TableOperationProps<Role>)
     const {
         register,
         handleSubmit,
-        setValue,
+        
         formState: {
             errors,
             isSubmitted
-        },
+        }
     } = useForm<FormData>({
         //相当于v.parse
         resolver: valibotResolver(
@@ -69,29 +72,11 @@ export default function Page({callbackHandler,table}: TableOperationProps<Role>)
                                            </DialogDescription>
                                        </DialogHeader>
                 <div className="admin-form-fields">
-                <ValidatableInput defaultValue={""} {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={"0"} {...register("tenantId")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.tenantId?.message}                                  fieldPropertyName={"tenantId"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("code")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.code?.message}                                  fieldPropertyName={"code"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("name")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
-<ValidatableInput readonly={false} defaultValue={"0"} {...register("priority")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.priority?.message}                                  fieldPropertyName={"priority"}/>
+                <ValidatableInput defaultValue={""}  {...register("id")} type={"hidden"} fieldPropertyName={"id"}/>
+<ValidatableInput readonly={false} defaultValue={"0"}  {...register("tenantId")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.tenantId?.message} fieldPropertyName={"tenantId"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("code")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.code?.message} fieldPropertyName={"code"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("name")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+<ValidatableInput readonly={false} defaultValue={"0"}  {...register("priority")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.priority?.message} fieldPropertyName={"priority"}/>
             </div>
                          <DialogFooter>
                                         <DialogClose asChild>

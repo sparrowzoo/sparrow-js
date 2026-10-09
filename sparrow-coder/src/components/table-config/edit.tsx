@@ -121,12 +121,12 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
 
                                   errorMessage={errors.columnFilter?.message} fieldPropertyName={"columnFilter"}/>
                 <ValidatableInput readonly={false}
-                                  defaultChecked={original.statusCommand} {...register("statusCommand")}
+                                  defaultChecked={original.isTree} {...register("isTree")}
                                   type={"checkbox"}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
 
-                                  errorMessage={errors.statusCommand?.message} fieldPropertyName={"statusCommand"}/>
+                                  errorMessage={errors.isTree?.message} fieldPropertyName={"isTree"}/>
                 <ValidatableInput defaultValue={original.columnConfigs} {...register("columnConfigs")}
                                   type={"hidden"}
                                   fieldPropertyName={"columnConfigs"}/>

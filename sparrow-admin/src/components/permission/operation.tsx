@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import {Permission} from "@/components/permission/columns";
 import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";

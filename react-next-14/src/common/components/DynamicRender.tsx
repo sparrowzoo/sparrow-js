@@ -1,4 +1,4 @@
-import useSWR from "swr";
+import useSWR, {SWRConfiguration} from "swr";
 import React from "react";
 import ErrorShower from "@/common/components/Error";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
@@ -14,8 +14,8 @@ export const defaultOptions = {
 interface Prop {
   url: string;
   fetcher: (url: string) => Promise<string>;
-  children: (data: any) => React.ReactNode;
-  options?: {};
+  children: (data: unknown) => React.ReactNode;
+  options?: SWRConfiguration;
 }
 
 export default function DynamicRender(prop: Prop) {

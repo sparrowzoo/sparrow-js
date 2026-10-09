@@ -9,7 +9,8 @@ export const PlainTextHeader = ({columnTitle}: ColumnOperationProps) => {
         const i18n = table?.options.meta.i18n;
         const t = useTranslations(tableName);
         if (i18n && t.has(column.id)) {
-            columnTitle = t(column.id);
+            columnTitle = t(column.id) ||
+                columnTitle;
         }
         return (<strong>{columnTitle}</strong>
         );

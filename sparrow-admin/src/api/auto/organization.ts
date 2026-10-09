@@ -1,14 +1,14 @@
-
 import Fetcher from "@/common/lib/Fetcher";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
-import Result from "@/common/lib/protocol/Result";
+import Result, {PagerResult} from "@/common/lib/protocol/Result";
+import {Organization} from "@/components/organization/columns";
 
 export default class OrganizationApi {
     public static search(
         query: object,
         translator: (key: string) => string,
         redirectToLogin:()=>void
-    ): Promise<Result> {
+    ): Promise<Result<PagerResult<Organization>>> {
         const body = JSON.stringify(query);
         return Fetcher.post({
             url: "/organization/search.json",

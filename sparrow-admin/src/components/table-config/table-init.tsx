@@ -10,9 +10,8 @@ import {useTranslations} from "next-intl";
 import useNavigating from "@/common/hook/NavigatingHook";
 import {DialogTitle} from "@/components/ui/dialog";
 
-export default function TableInit({table}: TableOperationProps<TableConfig>) {
+export default function TableInit({table, callbackHandler}: TableOperationProps<TableConfig>) {
     const meta = table.options.meta as MyTableMeta<TableConfig>;
-    const initHandler = meta?.initHandler;
     const parent = meta?.parent as KeyValue;
     const [localFullClassName, setLocalFullClassName] = useState("");
     const errorTranslate = useTranslations("ErrorMessage")
@@ -40,7 +39,7 @@ export default function TableInit({table}: TableOperationProps<TableConfig>) {
                 <Button onClick={() => {
                     CoderApi.initByLocal(parent.key, localFullClassName, errorTranslate, Navigations.redirectToLogin)
                         .then(() => {
-                            initHandler?.();
+                            callbackHandler?.();
                         }).catch(() => {
                     });
                 }}>生成</Button>

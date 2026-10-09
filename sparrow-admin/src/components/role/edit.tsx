@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -10,24 +9,22 @@ import {Role} from "@/components/role/columns";
 import toast from "react-hot-toast";
 import {useTranslations} from "next-intl";
 import * as v from "valibot";
-import {CellContextProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {CellContextProps} from "@/common/lib/table/DataTableProperty";
 import useNavigating from "@/common/hook/NavigatingHook";
-import {PagerResult} from "@/common/lib/protocol/Result";
+
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
 
 
 export default function EditPage({cellContext,callbackHandler}: CellContextProps<Role>) {
      const globalTranslate = useTranslations("GlobalForm");
-        const errorTranslate = useTranslations("Role.ErrorMessage")
+        const errorTranslate = useTranslations("ErrorMessage")
         const pageTranslate = useTranslations("Role")
         const validateTranslate = useTranslations("Role.validate")
         const FormSchema = crateScheme(validateTranslate);
         type FormData = v.InferOutput<typeof FormSchema>;
         const original = cellContext.row.original;
         const  Navigations=useNavigating();
-        const meta = cellContext.table.options.meta as MyTableMeta<Role>;
-       const pageResult=(meta.result.data as PagerResult<Role>)
-
+        
 
 
 
@@ -45,8 +42,7 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
     const {
         register,
         handleSubmit,
-                setValue,
-
+        
         formState: {
             errors,
             isSubmitted
@@ -69,29 +65,11 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                             </DialogDescription>
                         </DialogHeader>
             <div className="admin-form-fields">
-            <ValidatableInput defaultValue={original.id} {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={original.tenantId} {...register("tenantId")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.tenantId?.message}                                  fieldPropertyName={"tenantId"}/>
-<ValidatableInput readonly={false} defaultValue={original.code} {...register("code")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.code?.message}                                  fieldPropertyName={"code"}/>
-<ValidatableInput readonly={false} defaultValue={original.name} {...register("name")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
-<ValidatableInput readonly={false} defaultValue={original.priority} {...register("priority")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.priority?.message}                                  fieldPropertyName={"priority"}/>
+            <ValidatableInput defaultValue={String(original.id)}  {...register("id")} type={"hidden"} fieldPropertyName={"id"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.tenantId)}  {...register("tenantId")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.tenantId?.message} fieldPropertyName={"tenantId"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.code)}  {...register("code")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.code?.message} fieldPropertyName={"code"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.name)}  {...register("name")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.priority)}  {...register("priority")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.priority?.message} fieldPropertyName={"priority"}/>
              </div>
            <DialogFooter>
                                        <DialogClose asChild>

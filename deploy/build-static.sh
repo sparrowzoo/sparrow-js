@@ -8,9 +8,9 @@ usage() {
 依次同步公共代码、执行 npm run build，全部校验成功后生成：
   artifacts/yyyyMMddHHmmss.tar.gz（使用本机时间）
 压缩包顶层目录及内容：
-  admin/    <- react-next-admin/out/
-  im/       <- react-next-im/out/
-  passport/ <- react-next-passport/out/
+  admin/    <- sparrow-admin/out/
+  im/       <- sparrow-chat/out/
+  passport/ <- sparrow-passport/out/
   www/      <- common/out/
 打包完成后清理暂存文件；保留已有压缩包，同名时停止并报错。
 HELP
@@ -27,7 +27,7 @@ fi
 
 root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
 target="$root/artifacts"
-projects=(common react-next-admin react-next-im react-next-passport)
+projects=(common sparrow-admin sparrow-chat sparrow-passport)
 sites=(www admin im passport)
 
 for command in node npm tar; do

@@ -19,12 +19,16 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
     const errorTranslate = useTranslations("TableConfig.ErrorMessage")
     const [open, setOpen] = React.useState(false);
     const meta = table.options.meta as MyTableMeta<TableConfig>;
-    debugger
     const setData = meta.setData;
     const result = meta.result as Result<PagerResult>;
     const parent = meta.parent as KeyValue;
     const projectId = parent.key;
     const Navigations = useNavigating();
+
+    const callbackHandler = () => {
+        setOpen(false);
+        meta.initHandler();
+    }
 
     return (<div className="flex justify-between gap-4">
             <Dialog onOpenChange={setOpen} open={open}>
@@ -32,7 +36,7 @@ export default function Operation({table}: TableOperationProps<TableConfig>) {
                     <Button onClick={() => setOpen(true)} variant="outline">{globalTranslate("add")}</Button>
                 </DialogTrigger>
                 <DialogContent className="w-[800px] sm:max-w-[625px]">
-                    <TableInit table={table}/>
+                    <TableInit callbackHandler={callbackHandler} table={table}/>
                 </DialogContent>
             </Dialog>
             <Button onClick={() => {

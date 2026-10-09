@@ -1,4 +1,3 @@
-
 import * as v from "valibot";
 function createSchema(translate:(key:string)=>string) {
     const InnerFormSchema = v.object({
@@ -8,7 +7,7 @@ v.string()
 v.pipe(
  v.string(),
 v.nonEmpty(translate("tenantId.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("tenantId.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("tenantId.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,permissionCode:
@@ -25,28 +24,28 @@ v.nonEmpty(translate("permissionName.empty-message")))
 v.pipe(
  v.string(),
 v.nonEmpty(translate("permissionType.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("permissionType.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("permissionType.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,appId:
 v.pipe(
  v.string(),
 v.nonEmpty(translate("appId.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("appId.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("appId.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,microServiceId:
 v.pipe(
  v.string(),
 v.nonEmpty(translate("microServiceId.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("microServiceId.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("microServiceId.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,parentId:
 v.pipe(
  v.string(),
 v.nonEmpty(translate("parentId.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("parentId.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("parentId.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,operation:
@@ -71,7 +70,7 @@ v.nonEmpty(translate("target.empty-message")))
 v.pipe(
  v.string(),
 v.nonEmpty(translate("sort.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("sort.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("sort.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 

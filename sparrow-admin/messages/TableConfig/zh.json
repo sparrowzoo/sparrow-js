@@ -28,7 +28,7 @@
     "tableName": {
       "empty-message": "不允许为空"
     },
-    "statusCommand": {},
+    "isTree": {},
     "columnFilter": {
       "check-message": "请输入正确的数字",
       "empty-message": "不允许为空"
@@ -51,7 +51,7 @@
   },
   "checkable": "选择框序号",
   "gmtCreate": "创建时间",
-  "statusCommand": "是否显示状态命令",
+  "isTree": "是否显示树结构",
   "filter": "过滤列",
   "deleted": "是否删除",
   "columnFilter": "列过滤器序号",
@@ -61,7 +61,8 @@
   "ErrorMessage": {
     "system_server_error": "系统错误，请稍侯再试...",
     "global_parameter_null": "参数不能为空...",
-    "user_not_login": "用户未登录..."
+    "user_not_login": "用户未登录...",
+    "table_locked": "操作完成，但{tableNames}表格被锁定，跳过代码生成！"
   },
   "projectId": "项目",
   "actions": "操作",

@@ -12,7 +12,7 @@ export default function SearchSelect<T>({
     const className = "w-fit";
     const translator = useTranslations("KVS");
     const i18n = translator.has(propertyName);
-    const allText = i18n ? translator(propertyName + ".all") : "all";
+    const allText = translator.has("all") ? translator("all") : "ALL";
     return (
         <Select onValueChange={(value) => {
             setSearchCondition((prevState) => {

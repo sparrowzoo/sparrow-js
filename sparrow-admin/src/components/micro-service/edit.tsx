@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -21,16 +20,17 @@ import {ValidatableImage} from "@/common/components/forms/validatable-image";
 
 export default function EditPage({cellContext,callbackHandler}: CellContextProps<MicroService>) {
      const globalTranslate = useTranslations("GlobalForm");
-        const errorTranslate = useTranslations("MicroService.ErrorMessage")
+        const errorTranslate = useTranslations("ErrorMessage")
         const pageTranslate = useTranslations("MicroService")
         const validateTranslate = useTranslations("MicroService.validate")
         const FormSchema = crateScheme(validateTranslate);
         type FormData = v.InferOutput<typeof FormSchema>;
         const original = cellContext.row.original;
         const  Navigations=useNavigating();
+        
         const meta = cellContext.table.options.meta as MyTableMeta<MicroService>;
-       const pageResult=(meta.result.data as PagerResult<MicroService>)
-
+        const pageResult=(meta.result.data as PagerResult<MicroService>)
+        
 
 
 
@@ -48,8 +48,10 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
     const {
         register,
         handleSubmit,
-                setValue,
-
+        
+        setValue,
+        setError,
+        
         formState: {
             errors,
             isSubmitted
@@ -72,42 +74,20 @@ export default function EditPage({cellContext,callbackHandler}: CellContextProps
                             </DialogDescription>
                         </DialogHeader>
             <div className="admin-form-fields">
-            <ValidatableInput defaultValue={original.id} {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={original.tenantId} {...register("tenantId")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.tenantId?.message}                                  fieldPropertyName={"tenantId"}/>
-<ValidatableInput readonly={false} defaultValue={original.name} {...register("name")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
-<ValidatableInput readonly={false} defaultValue={original.sort} {...register("sort")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.sort?.message}                                  fieldPropertyName={"sort"}/>
-<ValidatableImage readonly={false} defaultValue={original.logo}
+            <ValidatableInput defaultValue={String(original.id)}  {...register("id")} type={"hidden"} fieldPropertyName={"id"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.tenantId)}  {...register("tenantId")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.tenantId?.message} fieldPropertyName={"tenantId"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.name)}  {...register("name")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.sort)}  {...register("sort")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.sort?.message} fieldPropertyName={"sort"}/>
+<ValidatableImage readonly={false} defaultValue={String(original.logo)} 
                                   pathType={"micro_service_logo"}
                                   setValue={setValue}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   errorMessage={errors.logo?.message}                                  fieldPropertyName={"logo"}/>
 
-<ValidatableSelect dictionary={pageResult.dictionary["appId"]} pageTranslate={pageTranslate} defaultValue={original.appId}setValue={setValue}
-fieldPropertyName={"appId"}/>
-<ValidatableInput readonly={false} defaultValue={original.url} {...register("url")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.url?.message}                                  fieldPropertyName={"url"}/>
-<ValidatableTextarea className={"w-80 h-60"} readonly={false} defaultValue={original.remark} {...register("remark")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.remark?.message}                                  fieldPropertyName={"remark"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["appId"]} pageTranslate={pageTranslate} defaultValue={String(original.appId)}  setValue={setValue} errorMessage={errors.appId?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"appId"}/>
+<ValidatableInput readonly={false} defaultValue={String(original.url)}  {...register("url")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.url?.message} fieldPropertyName={"url"}/>
+<ValidatableTextarea className={"w-80 h-60"} readonly={false} defaultValue={String(original.remark)}  {...register("remark")} isSubmitted={isSubmitted} pageTranslate={pageTranslate}errorMessage={errors.remark?.message} fieldPropertyName={"remark"}/>
              </div>
            <DialogFooter>
                                        <DialogClose asChild>

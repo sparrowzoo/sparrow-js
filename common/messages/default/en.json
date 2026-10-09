@@ -79,6 +79,7 @@
     "logout-success": "Logout success"
   },
   "KVS": {
+    "notSelected": "None (default -1)",
     "gender": {
       "NULL": "Unknown",
       "MALE": "Male",

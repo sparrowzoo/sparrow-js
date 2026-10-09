@@ -1,0 +1,69 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "icon": "Menu Icon",
+  "createUserName": "Created By",
+  "appId": "App ID",
+  "id": "",
+  "permissionCode": "Permission Code",
+  "validate": {
+    "permissionType": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "microServiceId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "method": {
+      "empty-message": "Cannot be empty"
+    },
+    "icon": {},
+    "sort": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "parentId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "url": {},
+    "target": {
+      "empty-message": "Cannot be empty"
+    },
+    "appId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "tenantId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "permissionCode": {
+      "empty-message": "Cannot be empty"
+    },
+    "operation": {},
+    "permissionName": {
+      "empty-message": "Cannot be empty"
+    },
+    "object": {}
+  },
+  "permissionType": "Type",
+  "microServiceId": "Microservice ID",
+  "method": "HTTP Method",
+  "sort": "Sort",
+  "gmtCreate": "Created At",
+  "parentId": "Parent Node ID",
+  "url": "Menu/Page Redirect URL",
+  "target": "Target",
+  "filter": "Filter Column",
+  "modifiedUserId": "Updated By ID",
+  "tenantId": "Tenant ID",
+  "operation": "Operation",
+  "actions": "Actions",
+  "permissionName": "Permission/Menu Name",
+  "object": "Object/Resource Domain",
+  "status": "Status"
+}

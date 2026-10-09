@@ -54,7 +54,7 @@ v.nonEmpty(translate("columnFilter.empty-message")),
 v.check((val) => {return /^\d+$/.test(val);},translate("columnFilter.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
-,statusCommand:
+,isTree:
 v.boolean()
 ,columnConfigs:
 v.string()

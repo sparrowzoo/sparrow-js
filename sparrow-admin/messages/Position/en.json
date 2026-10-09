@@ -1,0 +1,38 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "code": "Position Code",
+  "createUserName": "Created By",
+  "sort": "Sort",
+  "gmtCreate": "Created At",
+  "organizationId": "Department ID",
+  "filter": "Filter Column",
+  "modifiedUserId": "Updated By ID",
+  "tenantId": "Tenant ID",
+  "name": "Position Name",
+  "id": "",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "organizationId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "code": {
+      "empty-message": "Cannot be empty"
+    },
+    "tenantId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "name": {
+      "empty-message": "Cannot be empty"
+    },
+    "id": {},
+    "sort": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    }
+  }
+}

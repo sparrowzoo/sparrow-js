@@ -1,12 +1,11 @@
-
 import {ColumnDef, filterFns} from "@tanstack/react-table";
-import * as React from "react";
 import {BasicData, ColumnOperationProps} from "@/common/lib/table/DataTableProperty";
 import CheckBoxCell from "@/common/components/table/cell/check-box";
+import TreeCell from "@/common/components/table/cell/tree";
 import NormalCell from "@/common/components/table/cell/normal";
 import CheckboxHeader from "@/common/components/table/header/check-box";
+import NormalHeader from "@/common/components/table/header/normal";
 import UnixTimestampCell from "@/common/components/table/cell/unix-timestamp";
-import OperationCell from "@/common/components/table/cell/operation";
 import ColumnFilter from "@/common/components/table/header/column-filter";
 import PlainTextHeader from "@/common/components/table/header/plain-text";
 
@@ -27,25 +26,25 @@ modifiedUserId:number;
 modifiedUserName:string; 
 gmtCreate:number; 
 gmtModified:number; 
-deleted:boolean; 
 status:string; 
 
 }
 export const columns: ColumnDef<Organization>[] = [
 {
- accessorKey: "id",
-header: PlainTextHeader({columnTitle: ""} as ColumnOperationProps),
-cell: NormalCell("id"),
-enableHiding: true
-},{
  id: "select",
 header: CheckboxHeader,
 cell:CheckBoxCell,
 enableHiding: false
 },{
- accessorKey: "tenantId",
-header: PlainTextHeader({columnTitle: "租户ID"} as ColumnOperationProps),
-cell: NormalCell("tenantId"),
+ accessorKey: "code",
+header: PlainTextHeader({columnTitle: "部门编码"} as ColumnOperationProps),
+cell: TreeCell("code"),
+enableHiding: true
+},{
+ accessorKey: "name",
+header: NormalHeader({showSort: true,showFilter: true,columnTitle: "部门名称"} as ColumnOperationProps),
+filterFn: filterFns.includesString,
+cell: NormalCell("name"),
 enableHiding: true
 },{
  accessorKey: "level",
@@ -53,19 +52,14 @@ header: PlainTextHeader({columnTitle: "部门级别"} as ColumnOperationProps),
 cell: NormalCell("level"),
 enableHiding: true
 },{
+ accessorKey: "tenantId",
+header: PlainTextHeader({columnTitle: "租户ID"} as ColumnOperationProps),
+cell: NormalCell("tenantId"),
+enableHiding: true
+},{
  accessorKey: "parentId",
 header: PlainTextHeader({columnTitle: "父部门ID"} as ColumnOperationProps),
 cell: NormalCell("parentId"),
-enableHiding: true
-},{
- accessorKey: "code",
-header: PlainTextHeader({columnTitle: "部门编码"} as ColumnOperationProps),
-cell: NormalCell("code"),
-enableHiding: true
-},{
- accessorKey: "name",
-header: PlainTextHeader({columnTitle: "部门名称"} as ColumnOperationProps),
-cell: NormalCell("name"),
 enableHiding: true
 },{
  accessorKey: "manager",
@@ -82,6 +76,16 @@ enableHiding: true
 header: PlainTextHeader({columnTitle: "排序"} as ColumnOperationProps),
 cell: NormalCell("sort"),
 enableHiding: true
+},{
+ id: "actions",
+header: PlainTextHeader({columnTitle: "操作"} as ColumnOperationProps),
+cell:'Actions',
+enableHiding: false
+},{
+ id: "filter-column",
+header: ColumnFilter(),
+cell:"",
+enableHiding: false
 },{
  accessorKey: "createUserName",
 header: PlainTextHeader({columnTitle: "创建人"} as ColumnOperationProps),
@@ -113,24 +117,9 @@ header: PlainTextHeader({columnTitle: "更新时间"} as ColumnOperationProps),
 cell: UnixTimestampCell("gmtModified"),
 enableHiding: true
 },{
- accessorKey: "deleted",
-header: PlainTextHeader({columnTitle: "是否删除"} as ColumnOperationProps),
-cell: NormalCell("deleted"),
-enableHiding: true
-},{
  accessorKey: "status",
 header: PlainTextHeader({columnTitle: "状态"} as ColumnOperationProps),
 cell: NormalCell("status"),
 enableHiding: true
-},{
- id: "actions",
-header: PlainTextHeader({columnTitle: "操作"} as ColumnOperationProps),
-cell:"Actions",
-enableHiding: false
-},{
- id: "filter-column",
-header: ColumnFilter(),
-cell:"",
-enableHiding: false
 }
 ];

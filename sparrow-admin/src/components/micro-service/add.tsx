@@ -1,4 +1,3 @@
-
 "use client";
 import {SubmitHandler, useForm} from "react-hook-form";
 import {valibotResolver} from "@hookform/resolvers/valibot";
@@ -9,7 +8,7 @@ import MicroServiceApi from "@/api/auto/micro-service";
 import toast from "react-hot-toast";
 import * as v from "valibot";
 import {useTranslations} from "next-intl";
-import {TableOperationProps,MyTableMeta} from "@/common/lib/table/DataTableProperty";
+import {TableOperationProps,MyTableMeta,CellContextProps} from "@/common/lib/table/DataTableProperty";
 import {MicroService} from "@/components/micro-service/columns";
 import useNavigating from "@/common/hook/NavigatingHook";
 import {PagerResult} from "@/common/lib/protocol/Result";
@@ -20,17 +19,27 @@ import {ValidatableImage} from "@/common/components/forms/validatable-image";
 
 
 
-export default function Page({callbackHandler,table}: TableOperationProps<MicroService>) {
+export default function AddPage({
+                                 callbackHandler
+                                 
+                                 ,table,
+                                 cellContext
+                             }: Partial<TableOperationProps<MicroService>> & Partial<CellContextProps<MicroService>>)  {
     const globalTranslate = useTranslations("GlobalForm");
-    const errorTranslate = useTranslations("MicroService.ErrorMessage")
+    const errorTranslate = useTranslations("ErrorMessage")
     const pageTranslate = useTranslations("MicroService")
     const validateTranslate = useTranslations("MicroService.validate")
 
     const FormSchema = crateScheme(validateTranslate);
     type FormData = v.InferOutput<typeof FormSchema>;
     const  Navigations=useNavigating();
-    const meta = table.options.meta as MyTableMeta<MicroService>;
+    
+    const currentTable = table ?? cellContext!.table;
+    const meta = currentTable.options.meta as MyTableMeta<MicroService>;
     const pageResult=(meta.result.data as PagerResult<MicroService>)
+    
+
+    
 
 
 
@@ -48,11 +57,14 @@ export default function Page({callbackHandler,table}: TableOperationProps<MicroS
     const {
         register,
         handleSubmit,
-        setValue,
+        
+                setValue,
+                setError,
+        
         formState: {
             errors,
             isSubmitted
-        },
+        }
     } = useForm<FormData>({
         //相当于v.parse
         resolver: valibotResolver(
@@ -72,42 +84,20 @@ export default function Page({callbackHandler,table}: TableOperationProps<MicroS
                                            </DialogDescription>
                                        </DialogHeader>
                 <div className="admin-form-fields">
-                <ValidatableInput defaultValue={""} {...register("id")}
-                                  type={"hidden"}
-                                  fieldPropertyName={"id"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("tenantId")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.tenantId?.message}                                  fieldPropertyName={"tenantId"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("name")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.name?.message}                                  fieldPropertyName={"name"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("sort")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.sort?.message}                                  fieldPropertyName={"sort"}/>
-<ValidatableImage readonly={false} defaultValue={""}
+                <ValidatableInput defaultValue={""}  {...register("id")} type={"hidden"} fieldPropertyName={"id"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("tenantId")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.tenantId?.message} fieldPropertyName={"tenantId"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("name")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.name?.message} fieldPropertyName={"name"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("sort")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.sort?.message} fieldPropertyName={"sort"}/>
+<ValidatableImage readonly={false} defaultValue={""} 
                                   pathType={"micro_service_logo"}
                                   setValue={setValue}
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   errorMessage={errors.logo?.message}                                  fieldPropertyName={"logo"}/>
 
-<ValidatableSelect dictionary={pageResult.dictionary["appId"]} pageTranslate={pageTranslate} defaultValue={""}setValue={setValue}
-fieldPropertyName={"appId"}/>
-<ValidatableInput readonly={false} defaultValue={""} {...register("url")}
-                                  type={"text"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.url?.message}                                  fieldPropertyName={"url"}/>
-<ValidatableTextarea className={"w-80 h-60"} readonly={false} defaultValue={""} {...register("remark")}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  errorMessage={errors.remark?.message}                                  fieldPropertyName={"remark"}/>
+<ValidatableSelect dictionary={pageResult.dictionary["appId"]} pageTranslate={pageTranslate} defaultValue={""}  setValue={setValue} errorMessage={errors.appId?.message} isSubmitted={isSubmitted} setError={setError} fieldPropertyName={"appId"}/>
+<ValidatableInput readonly={false} defaultValue={""}  {...register("url")} type={"text"} isSubmitted={isSubmitted} pageTranslate={pageTranslate} errorMessage={errors.url?.message} fieldPropertyName={"url"}/>
+<ValidatableTextarea className={"w-80 h-60"} readonly={false} defaultValue={""}  {...register("remark")} isSubmitted={isSubmitted} pageTranslate={pageTranslate}errorMessage={errors.remark?.message} fieldPropertyName={"remark"}/>
             </div>
                          <DialogFooter>
                                         <DialogClose asChild>

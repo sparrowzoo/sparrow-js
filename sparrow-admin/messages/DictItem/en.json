@@ -1,0 +1,43 @@
+{
+  "modifiedUserName": "Updated By",
+  "createUserId": "Creator ID",
+  "gmtModified": "Updated At",
+  "itemCode": "Dict Item Code",
+  "itemValue": "Dict Item Value",
+  "remark": "Remark",
+  "createUserName": "Created By",
+  "sort": "Sort Order",
+  "gmtCreate": "Created At",
+  "parentId": "Parent ID",
+  "filter": "Filter Column",
+  "modifiedUserId": "Updated By ID",
+  "dictTypeId": "Dict Type",
+  "tenantId": "Tenant ID",
+  "id": "",
+  "actions": "Actions",
+  "status": "Status",
+  "validate": {
+    "dictTypeId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "itemCode": {
+      "empty-message": "Cannot be empty"
+    },
+    "itemValue": {},
+    "tenantId": {
+      "check-message": "Please enter a valid positive integer",
+      "empty-message": "Cannot be empty"
+    },
+    "remark": {},
+    "id": {},
+    "sort": {
+      "check-message": "Please enter a valid number (negative allowed)",
+      "empty-message": "Cannot be empty"
+    },
+    "parentId": {
+      "check-message": "Please enter a valid number (negative allowed)",
+      "empty-message": "Cannot be empty"
+    }
+  }
+}

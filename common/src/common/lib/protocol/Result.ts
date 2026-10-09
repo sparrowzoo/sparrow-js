@@ -6,6 +6,7 @@ export default interface Result<T = unknown> {
     data: T;
     key?: string;
     instruction?: string;
+    parameters?: Record<string, string>;
 }
 
 export interface PagerResult<T = unknown> {

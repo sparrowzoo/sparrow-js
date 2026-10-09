@@ -28,7 +28,7 @@
     "tableName": {
       "empty-message": "Cannot be empty"
     },
-    "statusCommand": {},
+    "isTree": {},
     "columnFilter": {
       "check-message": "Please enter a valid number",
       "empty-message": "Cannot be empty"
@@ -51,7 +51,7 @@
   },
   "checkable": "Selection Order",
   "gmtCreate": "Created At",
-  "statusCommand": "Show Status Command",
+  "isTree": "Show Tree Structure",
   "filter": "Filter Column",
   "deleted": "Deleted",
   "columnFilter": "Column Filter Order",

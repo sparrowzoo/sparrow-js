@@ -1,4 +1,3 @@
-
 import * as v from "valibot";
 function createSchema(translate:(key:string)=>string) {
     const InnerFormSchema = v.object({
@@ -8,7 +7,7 @@ v.string()
 v.pipe(
  v.string(),
 v.nonEmpty(translate("tenantId.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("tenantId.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("tenantId.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,code:
@@ -25,7 +24,7 @@ v.nonEmpty(translate("name.empty-message")))
 v.pipe(
  v.string(),
 v.nonEmpty(translate("sort.empty-message")),
-v.check((val) => {return /^-?\d+$/.test(val);},translate("sort.check-message")),
+v.check((val) => {return /^\d+$/.test(val);},translate("sort.check-message")),
 v.transform((input): number | string => {return parseInt(input,10);}))
 
 ,logo:

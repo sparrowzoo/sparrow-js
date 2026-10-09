@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -7,6 +6,7 @@ import {columns, AdminUser} from "@/components/admin-user/columns";
 import {DataTable} from "@/common/components/table/data-table";
 import Search from "@/components/admin-user/search";
 import Operation from "@/components/admin-user/operation";
+
 import EditPage from "@/components/admin-user/edit";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import AdminUserApi from "@/api/auto/admin-user";
@@ -46,6 +46,7 @@ export default function Page() {
             }).catch(()=>{});
         }
 
+        
     if (!dataState) {
         return (
             <div className="admin-page admin-data-page space-y-3">
@@ -70,6 +71,7 @@ export default function Page() {
                     EditComponent={EditPage}
                     deleteHandler={deleteHandler}
                     initHandler={init}
+                    
                     defaultPager={{pageIndex: 0, pageSize: -1}}
                     RowOperationComponents={[]}
                 ></DataTable>

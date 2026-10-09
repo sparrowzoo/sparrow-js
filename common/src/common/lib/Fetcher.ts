@@ -54,14 +54,17 @@ export default class Fetcher {
             .then(async (response) => {
                 const result = (await response.json()) as Result<T>;
                 if (result.code != "0") {
-                    const message: string = translator ? translator(result.key as string) : result.message as string;
+                    const message: string = translator
+                        ? translator(result.key as string, result.parameters)
+                        : result.message as string;
                     toast.error(message);
+
                     if (result.key == "user_not_login") {
                         if (redirectToLogin) {
                             redirectToLogin();
                         }
                     }
-                    return Promise.reject(result);
+                    return Promise.reject(new Error(message));
                 }
                 return result;
             });
@@ -100,15 +103,17 @@ export default class Fetcher {
             .then(async (response) => {
                 const result = (await response.json()) as Result<T>;
                 if (result.code != "0") {
-                    const message: string = translator ? translator(result.key as string) : result.message as string;
+                    const message: string = translator
+                        ? translator(result.key as string, result.parameters)
+                        : result.message as string;
                     toast.error(message);
-                    
+
                     if (result.key == "user_not_login") {
                         if (redirectToLogin) {
                             redirectToLogin();
                         }
                     }
-                    return Promise.reject(result);
+                    return Promise.reject(new Error(message));
                 }
                 return result;
             });
@@ -154,14 +159,16 @@ export default class Fetcher {
         const contentType = response.headers.get("content-type") || "";
         if (contentType.indexOf("application/json") >= 0) {
             const result = (await response.json()) as Result;
-            const message: string = translator ? translator(result.key as string) : result.message as string;
+            const message: string = translator
+                ? translator(result.key as string, result.parameters)
+                : result.message as string;
             toast.error(message);
             if (result.key == "user_not_login") {
                 if (redirectToLogin) {
                     redirectToLogin();
                 }
             }
-            return Promise.reject(result);
+            return Promise.reject(new Error(message));
         }
 
         // 成功分支：读取二进制流，并从 Content-Disposition 解析下载文件名

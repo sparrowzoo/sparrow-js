@@ -4,14 +4,19 @@ import {Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVal
 import {useTranslations} from "next-intl";
 import {Utils} from "@/common/lib/Utils";
 import {ValidatableInput} from "@/common/components/forms/validatable-input";
+import ErrorMessage from "@/common/components/i18n/ErrorMessage";
+import * as React from "react";
 
 export interface FormHookSelectProps
     extends React.InputHTMLAttributes<HTMLInputElement> {
     pageTranslate?: (key: string) => string,
     fieldPropertyName: string,
     setValue: (propertyName: string, value: unknown) => void,
+    setError?: (propertyName: string, error: { message?: string }) => void,
     defaultValue?: string,
     dictionary?: KeyValue[],
+    errorMessage?: string,
+    isSubmitted?: boolean
 }
 
 const ValidatableSelect = ({
@@ -20,13 +25,41 @@ const ValidatableSelect = ({
                                dictionary,
                                defaultValue,
                                setValue,
+                               setError,
                                className,
+                               errorMessage,
+                               isSubmitted,
                            }: FormHookSelectProps) => {
 
     const translator = useTranslations("KVS");
 
+    const defaultOption: KeyValue = {
+        key: "0",
+        value: translator.has("notSelected") ? translator("notSelected") : "None (default -1)",
+    };
+
     let defaultValueStr = defaultValue?.toString();
-    if (!dictionary || dictionary.length == 0) {
+    const hasDictionary = !!dictionary && dictionary.length > 0;
+
+    let currentItem: KeyValue | undefined;
+    if (hasDictionary) {
+        currentItem = Utils.getValue(dictionary, defaultValue);
+        if (!currentItem) {
+            currentItem = defaultOption;
+            defaultValueStr = defaultOption.key;
+        }
+    }
+
+    React.useEffect(() => {
+        if (hasDictionary) {
+            setValue(fieldPropertyName, defaultValueStr);
+        }
+        // setValue is intentionally excluded: react-hook-form recreates it each
+        // render, so including it would re-run on every render and reset the value.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [hasDictionary, fieldPropertyName, defaultValueStr]);
+
+    if (!hasDictionary) {
         return <ValidatableInput
             pageTranslate={pageTranslate}
             fieldPropertyName={fieldPropertyName}
@@ -38,18 +71,11 @@ const ValidatableSelect = ({
         />
     }
 
-    let currentItem = Utils.getValue(dictionary, defaultValue);
-    if (!currentItem) {
-        currentItem = dictionary[0];
-        defaultValueStr = currentItem.key.toString();
-    }
-    let displayText = currentItem.value;
+    let displayText = currentItem!.value;
     const i18n = translator.has(fieldPropertyName);
-    if (i18n) {
-        displayText = translator(fieldPropertyName + "." + currentItem.value);
+    if (i18n && currentItem !== defaultOption) {
+        displayText = translator(fieldPropertyName + "." + currentItem!.value);
     }
-
-    setValue(fieldPropertyName, defaultValueStr);
 
     return (
 
@@ -61,6 +87,7 @@ const ValidatableSelect = ({
 
                 <Select defaultValue={defaultValueStr} onValueChange={(value) => {
                     setValue(fieldPropertyName, value);
+                    setError?.(fieldPropertyName, {message: undefined});
                 }
                 }>
                     <SelectTrigger className={className}>
@@ -69,6 +96,8 @@ const ValidatableSelect = ({
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem key={defaultOption.key}
+                                        value={defaultOption.key}>{defaultOption.value}</SelectItem>
                             {
                                 dictionary?.map((item) => {
                                     let displayText = item.value;
@@ -84,6 +113,10 @@ const ValidatableSelect = ({
                 </Select>
             </div>
             <div className={"w-[10rem]"}>
+                <ErrorMessage messageClass={"text-sm text-red-500"}
+                              submitted={isSubmitted as boolean}
+                              message={errorMessage}
+                />
             </div>
         </div>
     )
