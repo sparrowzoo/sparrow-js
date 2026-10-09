@@ -54,7 +54,7 @@
         "dayjs": "^1.11.13",
         "github-markdown-css": "^5.6.1",
         "html5-file-selector": "^2.1.0",
-        "katex": "^0.16.11",
+        "katex": "^0.18.2",
         "lucide-react": "^0.513.0",
         "mermaid": "^10.9.1",
         "motion-plus": "^0.1.6",
