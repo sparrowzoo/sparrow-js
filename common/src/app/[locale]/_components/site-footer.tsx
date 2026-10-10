@@ -13,6 +13,7 @@ export default function SiteFooter() {
                     <Link href={{pathname: "/", hash: "products"}}>{t("nav.products")}</Link>
                     <Link href="/doc">{t("nav.docs")}</Link>
                     <Link href="/ui">{t("nav.playground")}</Link>
+                    <a href="/release.html">{t("nav.releases")}</a>
                 </nav>
             </div>
             <div className={styles.footerBottom}><span>© {new Date().getFullYear()} Sparrow Zoo<span className={styles.footerCredit}> · {t("footer.credit")}</span></span><a href="#top">{t("footer.backToTop")}<ArrowUp size={14} aria-hidden="true"/></a></div>
