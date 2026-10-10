@@ -17,590 +17,765 @@
 
   需替换的域名/路径：
     - logo：/svg/brand/sparrow-logo.svg（sparrowzoo 站内资源）
-    - 产品入口：passport / im / admin / www（下方面包 nav 的 href，含 {locale} 占位符）
+    - 产品入口：passport / im / coder(admin) / file(www) / ui(www) / blog / study(www)
+      （下方 nav 的 href，含 {locale} 占位符；blog 为 BLOG_ROOT 无 locale 前缀）
 -->
 <header class="sz-banner">
-  <style>
-    .sz-banner {
-      --banner-bg: rgba(250, 250, 254, .97);
-      --banner-panel: #fff;
-      --banner-border: rgba(73, 62, 116, .13);
-      --banner-text: #252337;
-      --banner-muted: #69667e;
-      --banner-accent: #7054c5;
-      --banner-hover: rgba(112, 84, 197, .07);
-      --banner-logo: linear-gradient(135deg, #7857c8, #238a9a);
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      width: 100%;
-      flex-shrink: 0;
-      border-bottom: 1px solid var(--banner-border);
-      background: var(--banner-bg);
-      color: var(--banner-text);
-      color-scheme: light;
-      font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-    }
-    html.dark .sz-banner {
-      --banner-bg: rgba(8, 9, 16, .97);
-      --banner-panel: #10111c;
-      --banner-border: rgba(178, 184, 222, .15);
-      --banner-text: #f0f1f8;
-      --banner-muted: #a0a3bb;
-      --banner-accent: #c4b5fd;
-      --banner-hover: rgba(184, 168, 255, .08);
-      --banner-logo: linear-gradient(135deg, #d5c6ff, #86d9ef);
-      color-scheme: dark;
-    }
+    <style>
+        .sz-banner {
+            --banner-bg: rgba(250, 250, 254, .97);
+            --banner-panel: #fff;
+            --banner-border: rgba(73, 62, 116, .13);
+            --banner-text: #252337;
+            --banner-muted: #69667e;
+            --banner-accent: #7054c5;
+            --banner-hover: rgba(112, 84, 197, .07);
+            --banner-logo: linear-gradient(135deg, #7857c8, #238a9a);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            width: 100%;
+            flex-shrink: 0;
+            border-bottom: 1px solid var(--banner-border);
+            background: var(--banner-bg);
+            color: var(--banner-text);
+            color-scheme: light;
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
 
-    .sz-banner .inner {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      align-items: center;
-      gap: 24px;
-      max-width: 1232px;
-      min-height: 78px;
-      margin: 0 auto;
-      padding: 0 32px;
-    }
-    .sz-banner .brand {
-      display: inline-flex;
-      justify-self: start;
-      flex-shrink: 0;
-      align-items: center;
-      gap: 12px;
-      color: var(--banner-text);
-      text-decoration: none;
-    }
-    .sz-banner .logo {
-      width: 39px;
-      height: 34px;
-      flex-shrink: 0;
-      background: var(--banner-logo);
-      mask-position: center;
-      mask-repeat: no-repeat;
-      mask-size: contain;
-      -webkit-mask-position: center;
-      -webkit-mask-repeat: no-repeat;
-      -webkit-mask-size: contain;
-    }
-    .sz-banner .wordmark {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      font-size: 18px;
-      font-weight: 700;
-      line-height: 1.3;
-      letter-spacing: .035em;
-    }
-    .sz-banner .caption {
-      color: var(--banner-muted);
-      font-size: 9px;
-      font-weight: 500;
-      letter-spacing: .18em;
-    }
-    .sz-banner .navigation {
-      display: flex;
-      justify-self: center;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin: 0;
-    }
-    .sz-banner .navigation a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      min-height: 38px;
-      padding: 8px 10px;
-      border-radius: 7px;
-      color: var(--banner-muted);
-      font-size: 13px;
-      font-weight: 500;
-      line-height: 1.5;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: color .18s, background .18s;
-    }
-    .sz-banner .navigation a:hover {
-      background: var(--banner-hover);
-      color: var(--banner-accent);
-    }
-    .sz-banner .linkLabel {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-    }
-    .sz-banner .actions {
-      display: flex;
-      justify-self: end;
-      align-items: center;
-      flex-shrink: 0;
-      gap: 8px;
-    }
-    .sz-banner .profile {
-      display: inline-flex;
-      align-items: center;
-      font-size: 13px;
-      white-space: nowrap;
-    }
-    .sz-banner .profile a {
-      color: var(--banner-text);
-      text-decoration: none;
-    }
-    .sz-banner .profile a:hover {
-      color: var(--banner-accent);
-    }
-    .sz-banner .iconButton {
-      position: relative;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      width: 38px;
-      height: 38px;
-      padding: 0;
-      border: 0;
-      border-radius: 12px;
-      background: transparent;
-      color: var(--banner-muted);
-      box-shadow: none;
-      cursor: pointer;
-      transition: color .2s ease, background-color .2s ease;
-    }
-    .sz-banner .iconButton:hover,
-    .sz-banner .iconButton[aria-expanded="true"] {
-      background: var(--banner-hover);
-      color: var(--banner-text);
-    }
-    .sz-banner .menuToggle {
-      display: none;
-    }
-    .sz-banner :is(a, button):focus-visible {
-      outline: 2px solid var(--banner-accent);
-      outline-offset: 4px;
-    }
+        html.dark .sz-banner {
+            --banner-bg: rgba(8, 9, 16, .97);
+            --banner-panel: #10111c;
+            --banner-border: rgba(178, 184, 222, .15);
+            --banner-text: #f0f1f8;
+            --banner-muted: #a0a3bb;
+            --banner-accent: #c4b5fd;
+            --banner-hover: rgba(184, 168, 255, .08);
+            --banner-logo: linear-gradient(135deg, #d5c6ff, #86d9ef);
+            color-scheme: dark;
+        }
 
-    /* 主题切换图标交叉淡入淡出 */
-    .sz-banner .themeIconSun {
-      transition: transform .3s ease-out, opacity .3s ease-out;
-    }
-    .sz-banner .themeIconMoon {
-      position: absolute;
-      transform: rotate(90deg) scale(.75);
-      opacity: 0;
-      transition: transform .3s ease-out, opacity .3s ease-out;
-    }
-    html.dark .sz-banner .themeIconSun {
-      transform: rotate(-90deg) scale(.75);
-      opacity: 0;
-    }
-    html.dark .sz-banner .themeIconMoon {
-      transform: rotate(0) scale(1);
-      opacity: 1;
-    }
+        .sz-banner .inner {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            gap: 24px;
+            max-width: 1232px;
+            min-height: 78px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
 
-    /* 主题下拉菜单 */
-    .sz-banner .themeControl {
-      position: relative;
-      display: inline-flex;
-    }
-    .sz-banner .themeMenu {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      z-index: 50;
-      min-width: 166px;
-      padding: 6px;
-      border: 0;
-      border-radius: 12px;
-      background: #fff;
-      color: #252337;
-      box-shadow: 0 8px 28px rgba(28, 20, 57, .08), 0 24px 64px rgba(28, 20, 57, .06);
-    }
-    .sz-banner .themeMenu[hidden] {
-      display: none;
-    }
-    .sz-banner .themeMenu [role="menuitemradio"] {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      width: 100%;
-      min-height: 38px;
-      padding: 0 10px;
-      border: 0;
-      border-radius: 7px;
-      background: transparent;
-      color: inherit;
-      font-size: 12px;
-      text-align: left;
-      cursor: pointer;
-      transition: color .2s ease, background-color .2s ease;
-    }
-    .sz-banner .themeMenu [role="menuitemradio"]:hover {
-      background: #f0edf9;
-      color: #6746b7;
-    }
-    .sz-banner .themeMenu [role="menuitemradio"][aria-checked="true"] {
-      color: #6746b7;
-      font-weight: 600;
-    }
-    html.dark .sz-banner .themeMenu {
-      background: #141521;
-      color: #ecebf5;
-      box-shadow: 0 8px 28px rgba(0, 0, 0, .2), 0 24px 64px rgba(0, 0, 0, .22);
-    }
-    html.dark .sz-banner .themeMenu [role="menuitemradio"]:hover {
-      background: #252237;
-      color: #d4c6ff;
-    }
-    html.dark .sz-banner .themeMenu [role="menuitemradio"][aria-checked="true"] {
-      color: #d4c6ff;
-    }
+        .sz-banner .brand {
+            display: inline-flex;
+            justify-self: start;
+            flex-shrink: 0;
+            align-items: center;
+            gap: 12px;
+            color: var(--banner-text);
+            text-decoration: none;
+        }
 
-    .sz-sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
+        .sz-banner .logo {
+            width: 39px;
+            height: 34px;
+            flex-shrink: 0;
+            background: var(--banner-logo);
+            mask-position: center;
+            mask-repeat: no-repeat;
+            mask-size: contain;
+            -webkit-mask-position: center;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-size: contain;
+        }
 
-    @media (max-width: 1100px) {
-      .sz-banner .inner {
-        display: flex;
-        min-height: 68px;
-        gap: 18px;
-        padding: 0 20px;
-      }
-      .sz-banner .brand { gap: 9px; }
-      .sz-banner .wordmark { font-size: 17px; }
-      .sz-banner .logo { width: 33px; height: 30px; }
-      .sz-banner .actions { margin-left: auto; padding-left: 0; border-left: 0; }
-      .sz-banner .menuToggle { display: inline-flex; }
-      .sz-banner .navigation {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        display: none;
-        justify-self: stretch;
-        align-items: stretch;
-        justify-content: flex-start;
-        gap: 4px;
-        max-height: calc(100dvh - 68px);
-        overflow-y: auto;
-        padding: 12px 20px 18px;
-        border-bottom: 1px solid var(--banner-border);
-        background: var(--banner-panel);
-        box-shadow: 0 18px 28px rgba(0, 0, 0, .1);
-      }
-      .sz-banner .navigation.navigationOpen {
-        display: flex;
-        flex-direction: column;
-      }
-      .sz-banner .navigation a {
-        justify-content: space-between;
-        min-height: 44px;
-        padding: 11px 14px;
-        font-size: 14px;
-      }
-    }
+        .sz-banner .wordmark {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: .035em;
+        }
 
-    @media (max-width: 480px) {
-      .sz-banner .inner { gap: 10px; padding: 0 16px; }
-      .sz-banner .brand { gap: 7px; }
-      .sz-banner .wordmark { font-size: 15px; }
-      .sz-banner .caption { font-size: 8px; letter-spacing: .12em; }
-      .sz-banner .logo { width: 29px; height: 27px; }
-      .sz-banner .actions { gap: 6px; }
-    }
+        .sz-banner .caption {
+            color: var(--banner-muted);
+            font-size: 9px;
+            font-weight: 500;
+            letter-spacing: .18em;
+        }
 
-    @media (max-width: 360px) {
-      .sz-banner .inner { padding-right: 12px; padding-left: 12px; }
-      .sz-banner .logo { width: 25px; height: 25px; }
-      .sz-banner .wordmark { max-width: 77px; font-size: 13px; }
-      .sz-banner .caption { font-size: 7px; }
-    }
+        .sz-banner .navigation {
+            display: flex;
+            justify-self: center;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0;
+        }
 
-    @media (prefers-reduced-motion: reduce) {
-      .sz-banner *,
-      .sz-banner .themeMenu,
-      .sz-banner .themeMenu * {
-        transition: none;
-        animation: none;
-      }
-    }
-  </style>
+        .sz-banner .navigation a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 38px;
+            padding: 8px 10px;
+            border-radius: 7px;
+            color: var(--banner-muted);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.5;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: color .18s, background .18s;
+        }
 
-  <div class="inner">
-    <a class="brand" href="/{locale}/" aria-label="麻雀窝 sparrow Zoo">
-      <span class="logo" aria-hidden="true"
+        .sz-banner .navigation a:hover,
+        .sz-banner .navigation a[aria-current="page"] {
+            background: var(--banner-hover);
+            color: var(--banner-accent);
+        }
+
+        .sz-banner .navigation .emphasized {
+            color: var(--banner-text);
+        }
+
+        .sz-banner .linkLabel {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .sz-banner .linkLabel svg {
+            flex-shrink: 0;
+            color: var(--banner-accent);
+        }
+
+        .sz-banner .utilityLinks {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 6px;
+            padding-left: 16px;
+            border-left: 1px solid var(--banner-border);
+        }
+
+        .sz-banner .utilityLinks a {
+            background: var(--banner-hover);
+        }
+
+        .sz-banner .utilityLinks a:hover,
+        .sz-banner .utilityLinks a[aria-current="page"] {
+            color: var(--banner-accent);
+        }
+
+        .sz-banner .actions {
+            display: flex;
+            justify-self: end;
+            align-items: center;
+            flex-shrink: 0;
+            gap: 8px;
+        }
+
+        .sz-banner .profile {
+            display: inline-flex;
+            align-items: center;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .sz-banner .profile a {
+            color: var(--banner-text);
+            text-decoration: none;
+        }
+
+        .sz-banner .profile a:hover {
+            color: var(--banner-accent);
+        }
+
+        .sz-banner .iconButton {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 38px;
+            height: 38px;
+            padding: 0;
+            border: 0;
+            border-radius: 12px;
+            background: transparent;
+            color: var(--banner-muted);
+            box-shadow: none;
+            cursor: pointer;
+            transition: color .2s ease, background-color .2s ease;
+        }
+
+        .sz-banner .iconButton:hover,
+        .sz-banner .iconButton[aria-expanded="true"] {
+            background: var(--banner-hover);
+            color: var(--banner-text);
+        }
+
+        .sz-banner .menuToggle {
+            display: none;
+        }
+
+        .sz-banner :is(a, button):focus-visible {
+            outline: 2px solid var(--banner-accent);
+            outline-offset: 4px;
+        }
+
+        /* 主题切换图标交叉淡入淡出 */
+        .sz-banner .themeIconSun {
+            transition: transform .3s ease-out, opacity .3s ease-out;
+        }
+
+        .sz-banner .themeIconMoon {
+            position: absolute;
+            transform: rotate(90deg) scale(.75);
+            opacity: 0;
+            transition: transform .3s ease-out, opacity .3s ease-out;
+        }
+
+        html.dark .sz-banner .themeIconSun {
+            transform: rotate(-90deg) scale(.75);
+            opacity: 0;
+        }
+
+        html.dark .sz-banner .themeIconMoon {
+            transform: rotate(0) scale(1);
+            opacity: 1;
+        }
+
+        /* 主题下拉菜单 */
+        .sz-banner .themeControl {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .sz-banner .themeMenu {
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            z-index: 50;
+            min-width: 166px;
+            padding: 6px;
+            border: 0;
+            border-radius: 12px;
+            background: #fff;
+            color: #252337;
+            box-shadow: 0 8px 28px rgba(28, 20, 57, .08), 0 24px 64px rgba(28, 20, 57, .06);
+        }
+
+        .sz-banner .themeMenu[hidden] {
+            display: none;
+        }
+
+        .sz-banner .themeMenu [role="menuitemradio"] {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            min-height: 38px;
+            padding: 0 10px;
+            border: 0;
+            border-radius: 7px;
+            background: transparent;
+            color: inherit;
+            font-size: 12px;
+            text-align: left;
+            cursor: pointer;
+            transition: color .2s ease, background-color .2s ease;
+        }
+
+        .sz-banner .themeMenu [role="menuitemradio"]:hover {
+            background: #f0edf9;
+            color: #6746b7;
+        }
+
+        .sz-banner .themeMenu [role="menuitemradio"][aria-checked="true"] {
+            color: #6746b7;
+            font-weight: 600;
+        }
+
+        html.dark .sz-banner .themeMenu {
+            background: #141521;
+            color: #ecebf5;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .2), 0 24px 64px rgba(0, 0, 0, .22);
+        }
+
+        html.dark .sz-banner .themeMenu [role="menuitemradio"]:hover {
+            background: #252237;
+            color: #d4c6ff;
+        }
+
+        html.dark .sz-banner .themeMenu [role="menuitemradio"][aria-checked="true"] {
+            color: #d4c6ff;
+        }
+
+        .sz-sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 1100px) {
+            .sz-banner .inner {
+                display: flex;
+                min-height: 68px;
+                gap: 18px;
+                padding: 0 20px;
+            }
+
+            .sz-banner .brand {
+                gap: 9px;
+            }
+
+            .sz-banner .wordmark {
+                font-size: 17px;
+            }
+
+            .sz-banner .logo {
+                width: 33px;
+                height: 30px;
+            }
+
+            .sz-banner .actions {
+                margin-left: auto;
+                padding-left: 0;
+                border-left: 0;
+            }
+
+            .sz-banner .menuToggle {
+                display: inline-flex;
+            }
+
+            .sz-banner .navigation {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                display: none;
+                justify-self: stretch;
+                align-items: stretch;
+                justify-content: flex-start;
+                gap: 4px;
+                max-height: calc(100dvh - 68px);
+                overflow-y: auto;
+                padding: 12px 20px 18px;
+                border-bottom: 1px solid var(--banner-border);
+                background: var(--banner-panel);
+                box-shadow: 0 18px 28px rgba(0, 0, 0, .1);
+            }
+
+            .sz-banner .navigation.navigationOpen {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .sz-banner .navigation a {
+                justify-content: space-between;
+                min-height: 44px;
+                padding: 11px 14px;
+                font-size: 14px;
+            }
+
+            .sz-banner .utilityLinks {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+                margin: 8px 0 0;
+                padding: 12px 0 0;
+                border-left: 0;
+                border-top: 1px solid var(--banner-border);
+            }
+
+            .sz-banner .utilityLinks a {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sz-banner .inner {
+                gap: 10px;
+                padding: 0 16px;
+            }
+
+            .sz-banner .brand {
+                gap: 7px;
+            }
+
+            .sz-banner .wordmark {
+                font-size: 15px;
+            }
+
+            .sz-banner .caption {
+                font-size: 8px;
+                letter-spacing: .12em;
+            }
+
+            .sz-banner .logo {
+                width: 29px;
+                height: 27px;
+            }
+
+            .sz-banner .actions {
+                gap: 6px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .sz-banner .inner {
+                padding-right: 12px;
+                padding-left: 12px;
+            }
+
+            .sz-banner .logo {
+                width: 25px;
+                height: 25px;
+            }
+
+            .sz-banner .wordmark {
+                max-width: 77px;
+                font-size: 13px;
+            }
+
+            .sz-banner .caption {
+                font-size: 7px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .sz-banner *,
+            .sz-banner .themeMenu,
+            .sz-banner .themeMenu * {
+                transition: none;
+                animation: none;
+            }
+        }
+    </style>
+
+    <div class="inner">
+        <a aria-label="麻雀窝 Sparrow Zoo" class="brand" href="https://www.sparrowzoo.com/{locale}/">
+      <span aria-hidden="true" class="logo"
             style="mask-image: url('/svg/brand/sparrow-logo.svg'); -webkit-mask-image: url('/svg/brand/sparrow-logo.svg')"></span>
-      <span class="wordmark">
+            <span class="wordmark">
         <span data-i18n="brand">麻雀窝</span>
-        <span class="caption">sparrow Zoo</span>
+        <span class="caption">Sparrow Zoo</span>
       </span>
-    </a>
+        </a>
 
-    <nav id="site-nav" class="navigation" aria-label="主导航" data-i18n-aria-label="nav">
-      <a href="https://passport.sparrowzoo.com/{locale}/sign-in/"><span class="linkLabel" data-i18n="passport">Passport 认证服务</span></a>
-      <a href="https://im.sparrowzoo.com/{locale}/chat/friends/contact/"><span class="linkLabel" data-i18n="im">IM 即时通讯</span></a>
-      <a href="https://admin.sparrowzoo.com/{locale}/"><span class="linkLabel" data-i18n="coder">代码生成器</span></a>
-      <a href="https://www.sparrowzoo.com/{locale}/upload/"><span class="linkLabel" data-i18n="file">File 文件服务</span></a>
-      <a href="https://www.sparrowzoo.com/{locale}/ui/"><span class="linkLabel" data-i18n="ui">UI 组件库</span></a>
-    </nav>
+        <nav aria-label="主导航" class="navigation" data-i18n-aria-label="nav" id="site-nav">
+            <a href="https://passport.sparrowzoo.com/{locale}/sign-in/"><span class="linkLabel" data-i18n="passport">Passport 认证服务</span></a>
+            <a href="https://im.sparrowzoo.com/{locale}/chat/friends/contact/"><span class="linkLabel" data-i18n="im">IM 即时通讯</span></a>
+            <a href="https://admin.sparrowzoo.com/{locale}/"><span class="linkLabel" data-i18n="coder">代码生成器</span></a>
+            <a href="https://www.sparrowzoo.com/{locale}/upload/"><span class="linkLabel"
+                                                                        data-i18n="file">File 文件服务</span></a>
+            <a href="https://www.sparrowzoo.com/{locale}/ui/"><span class="linkLabel"
+                                                                    data-i18n="ui">UI 组件库</span></a>
+            <a href="https://blog.sparrowzoo.com/article"><span class="linkLabel" data-i18n="blog">博客</span></a>
+            <div class="utilityLinks">
+                <a class="emphasized" href="https://www.sparrowzoo.com/{locale}/study/">
+          <span class="linkLabel">
+            <svg aria-hidden="true" fill="none" height="17" stroke="currentColor" stroke-linecap="round"
+                 stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24" width="17">
+              <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/>
+              <path d="M22 10v6"/>
+              <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/>
+            </svg>
+            <span data-i18n="study">学员入口</span>
+          </span>
+                </a>
+            </div>
+        </nav>
 
-    <div class="actions">
-      <!-- 主题切换 -->
-      <div class="themeControl">
-        <button type="button" class="iconButton themeToggle" aria-haspopup="menu" aria-expanded="false"
-                title="切换皮肤" data-i18n-title="themeToggle">
-          <svg class="themeIconSun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="4"/>
-            <path d="M12 2v2"/>
-            <path d="M12 20v2"/>
-            <path d="m4.93 4.93 1.41 1.41"/>
-            <path d="m17.66 17.66 1.41 1.41"/>
-            <path d="M2 12h2"/>
-            <path d="M20 12h2"/>
-            <path d="m6.34 17.66-1.41 1.41"/>
-            <path d="m19.07 4.93-1.41 1.41"/>
-          </svg>
-          <svg class="themeIconMoon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-          </svg>
-          <span class="sz-sr-only" data-i18n="themeToggle">切换皮肤</span>
-        </button>
-        <div class="themeMenu" role="menu" hidden>
-          <button type="button" role="menuitemradio" data-theme="light" aria-checked="false">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="4"/>
-              <path d="M12 2v2"/>
-              <path d="M12 20v2"/>
-              <path d="m4.93 4.93 1.41 1.41"/>
-              <path d="m17.66 17.66 1.41 1.41"/>
-              <path d="M2 12h2"/>
-              <path d="M20 12h2"/>
-              <path d="m6.34 17.66-1.41 1.41"/>
-              <path d="m19.07 4.93-1.41 1.41"/>
-            </svg>
-            <span data-i18n="light">亮色</span>
-          </button>
-          <button type="button" role="menuitemradio" data-theme="dark" aria-checked="false">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
-            </svg>
-            <span data-i18n="dark">暗黑</span>
-          </button>
-          <button type="button" role="menuitemradio" data-theme="system" aria-checked="false">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <rect width="20" height="14" x="2" y="3" rx="2"/>
-              <line x1="8" x2="16" y1="21" y2="21"/>
-              <line x1="12" x2="12" y1="17" y2="21"/>
-            </svg>
-            <span data-i18n="system">系统</span>
-          </button>
+        <div class="actions">
+            <!-- 主题切换 -->
+            <div class="themeControl">
+                <button aria-expanded="false" aria-haspopup="menu" class="iconButton themeToggle" data-i18n-title="themeToggle"
+                        title="切换皮肤" type="button">
+                    <svg aria-hidden="true" class="themeIconSun" fill="none" height="18" stroke="currentColor"
+                         stroke-linecap="round"
+                         stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24" width="18">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2"/>
+                        <path d="M12 20v2"/>
+                        <path d="m4.93 4.93 1.41 1.41"/>
+                        <path d="m17.66 17.66 1.41 1.41"/>
+                        <path d="M2 12h2"/>
+                        <path d="M20 12h2"/>
+                        <path d="m6.34 17.66-1.41 1.41"/>
+                        <path d="m19.07 4.93-1.41 1.41"/>
+                    </svg>
+                    <svg aria-hidden="true" class="themeIconMoon" fill="none" height="18" stroke="currentColor"
+                         stroke-linecap="round"
+                         stroke-linejoin="round" stroke-width="1.7" viewBox="0 0 24 24" width="18">
+                        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                    </svg>
+                    <span class="sz-sr-only" data-i18n="themeToggle">切换皮肤</span>
+                </button>
+                <div class="themeMenu" hidden role="menu">
+                    <button aria-checked="false" data-theme="light" role="menuitemradio" type="button">
+                        <svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-linecap="round"
+                             stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16">
+                            <circle cx="12" cy="12" r="4"/>
+                            <path d="M12 2v2"/>
+                            <path d="M12 20v2"/>
+                            <path d="m4.93 4.93 1.41 1.41"/>
+                            <path d="m17.66 17.66 1.41 1.41"/>
+                            <path d="M2 12h2"/>
+                            <path d="M20 12h2"/>
+                            <path d="m6.34 17.66-1.41 1.41"/>
+                            <path d="m19.07 4.93-1.41 1.41"/>
+                        </svg>
+                        <span data-i18n="light">亮色</span>
+                    </button>
+                    <button aria-checked="false" data-theme="dark" role="menuitemradio" type="button">
+                        <svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-linecap="round"
+                             stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16">
+                            <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                        </svg>
+                        <span data-i18n="dark">暗黑</span>
+                    </button>
+                    <button aria-checked="false" data-theme="system" role="menuitemradio" type="button">
+                        <svg aria-hidden="true" fill="none" height="16" stroke="currentColor" stroke-linecap="round"
+                             stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="16">
+                            <rect height="14" rx="2" width="20" x="2" y="3"/>
+                            <line x1="8" x2="16" y1="21" y2="21"/>
+                            <line x1="12" x2="12" y1="17" y2="21"/>
+                        </svg>
+                        <span data-i18n="system">系统</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 用户账户（默认访客态：登录入口） -->
+            <div class="profile">
+                <a data-i18n="signIn" href="https://passport.sparrowzoo.com/{locale}/sign-in/">登录</a>
+            </div>
+
+            <!--
+              登录态时，将上方 .profile 替换为下面的头像下拉（后端按会话注入，登出为服务端动作）：
+
+              <div class="themeControl">
+                <button type="button" class="iconButton profileToggle" aria-haspopup="menu" aria-expanded="false" title="账户菜单">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/>
+                    <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
+                  </svg>
+                  <span class="sz-sr-only">user account menu</span>
+                </button>
+                <div class="themeMenu" role="menu" hidden>
+                  <a href="https://passport.sparrowzoo.com/{locale}/avatar-editor/" role="menuitem">头像设置</a>
+                  <button type="button" role="menuitem">登出</button>
+                </div>
+              </div>
+            -->
+
+            <!-- 移动端菜单按钮（aria-label 原组件传空串，可按需补齐） -->
+            <button aria-controls="site-nav" aria-expanded="false" aria-label="" class="iconButton menuToggle"
+                    type="button">
+                <svg aria-hidden="true" class="menuIcon" fill="none" height="20" stroke="currentColor" stroke-linecap="round"
+                     stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20">
+                    <line x1="4" x2="20" y1="6" y2="6"/>
+                    <line x1="4" x2="20" y1="12" y2="12"/>
+                    <line x1="4" x2="20" y1="18" y2="18"/>
+                </svg>
+                <svg aria-hidden="true" class="closeIcon" fill="none" height="20" hidden stroke="currentColor"
+                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="20">
+                    <path d="M18 6 6 18"/>
+                    <path d="m6 6 12 12"/>
+                </svg>
+            </button>
         </div>
-      </div>
-
-      <!-- 用户账户（默认访客态：登录入口） -->
-      <div class="profile">
-        <a href="https://passport.sparrowzoo.com/{locale}/sign-in/" data-i18n="signIn">登录</a>
-      </div>
-
-      <!--
-        登录态时，将上方 .profile 替换为下面的头像下拉（后端按会话注入，登出为服务端动作）：
-
-        <div class="themeControl">
-          <button type="button" class="iconButton profileToggle" aria-haspopup="menu" aria-expanded="false" title="账户菜单">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="10"/><circle cx="12" cy="10" r="3"/>
-              <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662"/>
-            </svg>
-            <span class="sz-sr-only">user account menu</span>
-          </button>
-          <div class="themeMenu" role="menu" hidden>
-            <a href="https://passport.sparrowzoo.com/{locale}/avatar-editor/" role="menuitem">头像设置</a>
-            <button type="button" role="menuitem">登出</button>
-          </div>
-        </div>
-      -->
-
-      <!-- 移动端菜单按钮（aria-label 原组件传空串，可按需补齐） -->
-      <button type="button" class="iconButton menuToggle" aria-controls="site-nav" aria-expanded="false" aria-label="">
-        <svg class="menuIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="4" x2="20" y1="6" y2="6"/>
-          <line x1="4" x2="20" y1="12" y2="12"/>
-          <line x1="4" x2="20" y1="18" y2="18"/>
-        </svg>
-        <svg class="closeIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
-          <path d="M18 6 6 18"/>
-          <path d="m6 6 12 12"/>
-        </svg>
-      </button>
     </div>
-  </div>
 </header>
 
 <script>
-  (function () {
-    var root = document.querySelector('.sz-banner');
-    if (!root) return;
+    (function () {
+        var root = document.querySelector('.sz-banner');
+        if (!root) return;
 
-    /* ---------- i18n：根据 <html lang> 选择中/英，默认中文 ---------- */
-    var I18N = {
-      zh: {
-        brand: '麻雀窝', nav: '主导航',
-        themeToggle: '切换皮肤', light: '亮色', dark: '暗黑', system: '系统',
-        signIn: '登录',
-        passport: 'Passport 认证服务', im: 'IM 即时通讯', coder: '代码生成器',
-        file: 'File 文件服务', ui: 'UI 组件库'
-      },
-      en: {
-        brand: 'Sparrow Zoo', nav: 'Main navigation',
-        themeToggle: 'Toggle Theme', light: 'Light Mode', dark: 'Dark Mode', system: 'System Mode',
-        signIn: 'Sign In',
-        passport: 'Passport Identity', im: 'Instant Messaging', coder: 'Code Generator',
-        file: 'File Service', ui: 'UI Components'
-      }
-    };
-    function detectLocale() {
-      var lang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
-      if (lang.indexOf('zh') === 0) return 'zh';
-      if (lang.indexOf('en') === 0) return 'en';
-      return 'zh';
-    }
-    var locale = detectLocale();
-    var t = I18N[locale] || I18N.zh;
+        /* ---------- i18n：根据 <html lang> 选择中/英，默认中文 ---------- */
+        var I18N = {
+            zh: {
+                brand: '麻雀窝', nav: '主导航',
+                themeToggle: '切换皮肤', light: '亮色', dark: '暗黑', system: '系统',
+                signIn: '登录',
+                passport: 'Passport 认证服务', im: 'IM 即时通讯', coder: '代码生成器',
+                file: 'File 文件服务', ui: 'UI 组件库', blog: '博客', study: '学员入口'
+            },
+            en: {
+                brand: 'Sparrow Zoo', nav: 'Main navigation',
+                themeToggle: 'Toggle Theme', light: 'Light Mode', dark: 'Dark Mode', system: 'System Mode',
+                signIn: 'Sign In',
+                passport: 'Passport Identity', im: 'Instant Messaging', coder: 'Code Generator',
+                file: 'File Service', ui: 'UI Components', blog: 'Blog', study: 'Learning'
+            }
+        };
 
-    root.querySelectorAll('[data-i18n]').forEach(function (el) {
-      var key = el.getAttribute('data-i18n');
-      if (t[key] != null) el.textContent = t[key];
-    });
-    root.querySelectorAll('[data-i18n-title]').forEach(function (el) {
-      var key = el.getAttribute('data-i18n-title');
-      if (t[key] != null) el.setAttribute('title', t[key]);
-    });
-    root.querySelectorAll('[data-i18n-aria-label]').forEach(function (el) {
-      var key = el.getAttribute('data-i18n-aria-label');
-      if (t[key] != null) el.setAttribute('aria-label', t[key]);
-    });
-    root.querySelectorAll('[href*="{locale}"]').forEach(function (el) {
-      el.setAttribute('href', el.getAttribute('href').replace('{locale}', locale));
-    });
-    var brandLink = root.querySelector('.brand');
-    if (brandLink) brandLink.setAttribute('aria-label', t.brand + ' sparrow Zoo');
+        function detectLocale() {
+            var lang = (document.documentElement.getAttribute('lang') || '').toLowerCase();
+            if (lang.indexOf('zh') === 0) return 'zh';
+            if (lang.indexOf('en') === 0) return 'en';
+            return 'zh';
+        }
 
-    /* ---------- 主题（next-themes 兼容：localStorage "theme" + <html class="dark">） ---------- */
-    var THEME_KEY = 'theme';
-    function getTheme() {
-      try { return localStorage.getItem(THEME_KEY) || 'system'; } catch (e) { return 'system'; }
-    }
-    function isDark(theme) {
-      if (theme === 'dark') return true;
-      if (theme === 'light') return false;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    function applyTheme(theme) {
-      document.documentElement.classList.toggle('dark', isDark(theme));
-    }
-    var theme = getTheme();
-    applyTheme(theme);
+        var locale = detectLocale();
+        var t = I18N[locale] || I18N.zh;
 
-    var themeToggle = root.querySelector('.themeToggle');
-    var themeMenu = root.querySelector('.themeMenu');
-    var themeItems = root.querySelectorAll('.themeMenu [role="menuitemradio"]');
+        root.querySelectorAll('[data-i18n]').forEach(function (el) {
+            var key = el.getAttribute('data-i18n');
+            if (t[key] != null) el.textContent = t[key];
+        });
+        root.querySelectorAll('[data-i18n-title]').forEach(function (el) {
+            var key = el.getAttribute('data-i18n-title');
+            if (t[key] != null) el.setAttribute('title', t[key]);
+        });
+        root.querySelectorAll('[data-i18n-aria-label]').forEach(function (el) {
+            var key = el.getAttribute('data-i18n-aria-label');
+            if (t[key] != null) el.setAttribute('aria-label', t[key]);
+        });
+        root.querySelectorAll('[href*="{locale}"]').forEach(function (el) {
+            el.setAttribute('href', el.getAttribute('href').replace('{locale}', locale));
+        });
+        var brandLink = root.querySelector('.brand');
+        if (brandLink) brandLink.setAttribute('aria-label', t.brand + ' Sparrow Zoo');
 
-    function syncThemeMenu(current) {
-      themeItems.forEach(function (item) {
-        var checked = item.getAttribute('data-theme') === current;
-        item.setAttribute('aria-checked', String(checked));
-      });
-    }
-    syncThemeMenu(theme);
+        /* ---------- 主题（next-themes 兼容：localStorage "theme" + <html class="dark">） ---------- */
+        var THEME_KEY = 'theme';
 
-    function closeThemeMenu() {
-      if (themeMenu) themeMenu.hidden = true;
-      if (themeToggle) themeToggle.setAttribute('aria-expanded', 'false');
-    }
-    if (themeToggle && themeMenu) {
-      themeToggle.addEventListener('click', function (e) {
-        e.stopPropagation();
-        var open = themeMenu.hidden;
-        themeMenu.hidden = !open;
-        themeToggle.setAttribute('aria-expanded', String(!open));
-      });
-    }
-    themeItems.forEach(function (item) {
-      item.addEventListener('click', function () {
-        var value = item.getAttribute('data-theme');
-        try { localStorage.setItem(THEME_KEY, value); } catch (e) {}
-        theme = value;
+        function getTheme() {
+            try {
+                return localStorage.getItem(THEME_KEY) || 'system';
+            } catch (e) {
+                return 'system';
+            }
+        }
+
+        function isDark(theme) {
+            if (theme === 'dark') return true;
+            if (theme === 'light') return false;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches;
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.classList.toggle('dark', isDark(theme));
+        }
+
+        var theme = getTheme();
         applyTheme(theme);
+
+        var themeToggle = root.querySelector('.themeToggle');
+        var themeMenu = root.querySelector('.themeMenu');
+        var themeItems = root.querySelectorAll('.themeMenu [role="menuitemradio"]');
+
+        function syncThemeMenu(current) {
+            themeItems.forEach(function (item) {
+                var checked = item.getAttribute('data-theme') === current;
+                item.setAttribute('aria-checked', String(checked));
+            });
+        }
+
         syncThemeMenu(theme);
-        closeThemeMenu();
-        if (themeToggle) themeToggle.focus();
-      });
-    });
 
-    /* ---------- 移动端折叠菜单 ---------- */
-    var nav = root.querySelector('.navigation');
-    var menuToggle = root.querySelector('.menuToggle');
-    var menuIcon = root.querySelector('.menuIcon');
-    var closeIcon = root.querySelector('.closeIcon');
-    function setMenuOpen(open) {
-      if (!nav) return;
-      nav.classList.toggle('navigationOpen', open);
-      if (menuToggle) menuToggle.setAttribute('aria-expanded', String(open));
-      if (menuIcon) menuIcon.hidden = open;
-      if (closeIcon) closeIcon.hidden = !open;
-    }
-    if (menuToggle) {
-      menuToggle.addEventListener('click', function (e) {
-        e.stopPropagation();
-        setMenuOpen(!nav.classList.contains('navigationOpen'));
-      });
-    }
-    if (nav) {
-      nav.querySelectorAll('a').forEach(function (link) {
-        link.addEventListener('click', function () { setMenuOpen(false); });
-      });
-    }
-    var desktop = window.matchMedia('(min-width: 1101px)');
-    function onBreakpoint() { if (desktop.matches) setMenuOpen(false); }
-    if (desktop.addEventListener) desktop.addEventListener('change', onBreakpoint);
-    else if (desktop.addListener) desktop.addListener(onBreakpoint);
+        function closeThemeMenu() {
+            if (themeMenu) themeMenu.hidden = true;
+            if (themeToggle) themeToggle.setAttribute('aria-expanded', 'false');
+        }
 
-    /* ---------- 点击外部 / Escape 关闭 ---------- */
-    document.addEventListener('click', function (e) {
-      if (themeMenu && !themeMenu.hidden && !themeMenu.contains(e.target) && e.target !== themeToggle) closeThemeMenu();
-      if (nav && nav.classList.contains('navigationOpen') && !root.contains(e.target)) setMenuOpen(false);
-    });
-    document.addEventListener('keydown', function (e) {
-      if (e.key !== 'Escape') return;
-      if (themeMenu && !themeMenu.hidden) { closeThemeMenu(); if (themeToggle) themeToggle.focus(); }
-      else if (nav && nav.classList.contains('navigationOpen')) { setMenuOpen(false); if (menuToggle) menuToggle.focus(); }
-    });
+        if (themeToggle && themeMenu) {
+            themeToggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                var open = themeMenu.hidden;
+                themeMenu.hidden = !open;
+                themeToggle.setAttribute('aria-expanded', String(!open));
+            });
+        }
+        themeItems.forEach(function (item) {
+            item.addEventListener('click', function () {
+                var value = item.getAttribute('data-theme');
+                try {
+                    localStorage.setItem(THEME_KEY, value);
+                } catch (e) {
+                }
+                theme = value;
+                applyTheme(theme);
+                syncThemeMenu(theme);
+                closeThemeMenu();
+                if (themeToggle) themeToggle.focus();
+            });
+        });
 
-    /* ---------- 系统主题变化时跟随（theme=system） ---------- */
-    var mql = window.matchMedia('(prefers-color-scheme: dark)');
-    var onSystemChange = function () { if (getTheme() === 'system') applyTheme('system'); };
-    if (mql.addEventListener) mql.addEventListener('change', onSystemChange);
-    else if (mql.addListener) mql.addListener(onSystemChange);
-  })();
+        /* ---------- 移动端折叠菜单 ---------- */
+        var nav = root.querySelector('.navigation');
+        var menuToggle = root.querySelector('.menuToggle');
+        var menuIcon = root.querySelector('.menuIcon');
+        var closeIcon = root.querySelector('.closeIcon');
+
+        function setMenuOpen(open) {
+            if (!nav) return;
+            nav.classList.toggle('navigationOpen', open);
+            if (menuToggle) menuToggle.setAttribute('aria-expanded', String(open));
+            if (menuIcon) menuIcon.hidden = open;
+            if (closeIcon) closeIcon.hidden = !open;
+        }
+
+        if (menuToggle) {
+            menuToggle.addEventListener('click', function (e) {
+                e.stopPropagation();
+                setMenuOpen(!nav.classList.contains('navigationOpen'));
+            });
+        }
+        if (nav) {
+            nav.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function () {
+                    setMenuOpen(false);
+                });
+            });
+        }
+        var desktop = window.matchMedia('(min-width: 1101px)');
+
+        function onBreakpoint() {
+            if (desktop.matches) setMenuOpen(false);
+        }
+
+        if (desktop.addEventListener) desktop.addEventListener('change', onBreakpoint);
+        else if (desktop.addListener) desktop.addListener(onBreakpoint);
+
+        /* ---------- 点击外部 / Escape 关闭 ---------- */
+        document.addEventListener('click', function (e) {
+            if (themeMenu && !themeMenu.hidden && !themeMenu.contains(e.target) && e.target !== themeToggle) closeThemeMenu();
+            if (nav && nav.classList.contains('navigationOpen') && !root.contains(e.target)) setMenuOpen(false);
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key !== 'Escape') return;
+            if (themeMenu && !themeMenu.hidden) {
+                closeThemeMenu();
+                if (themeToggle) themeToggle.focus();
+            } else if (nav && nav.classList.contains('navigationOpen')) {
+                setMenuOpen(false);
+                if (menuToggle) menuToggle.focus();
+            }
+        });
+
+        /* ---------- 系统主题变化时跟随（theme=system） ---------- */
+        var mql = window.matchMedia('(prefers-color-scheme: dark)');
+        var onSystemChange = function () {
+            if (getTheme() === 'system') applyTheme('system');
+        };
+        if (mql.addEventListener) mql.addEventListener('change', onSystemChange);
+        else if (mql.addListener) mql.addListener(onSystemChange);
+    })();
 </script>

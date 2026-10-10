@@ -58,7 +58,8 @@
     "system_server_error": "System error, please try again later...",
     "global_parameter_null": "Parameter cannot be null...",
     "class_not_found": "Class not found...",
-    "class_can_not_assignable_po": "The implementation class must be a subclass of PO"
+    "class_can_not_assignable_po": "The implementation class must be a subclass of PO",
+    "user_not_login": "Please Login !"
   },
   "Header": {
     "index": "Home",
