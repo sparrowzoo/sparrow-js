@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>2026-10-10 发版说明</title>
+  <meta name="description" content="修复邮件发送被 Gmail 拒收、博客页导航错误与切换中文后导航条错位三处问题。">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:site_name" content="Sparrow Zoo">
+  <meta property="og:title" content="2026-10-10 发版说明">
+  <meta property="og:description" content="修复邮件发送被 Gmail 拒收、博客页导航错误与切换中文后导航条错位三处问题。">
+  <style>
+    :root{--bg:#07070d;--panel:rgba(255,255,255,.03);--border:rgba(255,255,255,.10);--text:#f4f4f7;--muted:#a0a3bb;--faint:#69667e;--a:#6d5cff;--a2:#22d3ee;--a3:#a855f7;--r:18px}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,rgba(109,92,255,.14),transparent 60%),radial-gradient(900px 500px at 10% 10%,rgba(34,211,238,.10),transparent 55%),var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
+    a{color:var(--a2);text-decoration:none}
+    a:hover{color:var(--a3)}
+    .bar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border);background:rgba(7,7,13,.82);backdrop-filter:blur(16px)}
+    .brand{font-weight:700;color:var(--text)}
+    .brand span{background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .bar nav{display:flex;gap:20px;font-size:13px}
+    .bar nav a{color:var(--muted)}
+    .bar nav a:hover{color:var(--text)}
+    .wrap{max-width:880px;margin:0 auto;padding:48px 24px 64px}
+    .crumb{font-size:12px;color:var(--muted);letter-spacing:.04em}
+    .head h1{margin:.3em 0 .3em;font-size:34px;line-height:1.25;background:linear-gradient(90deg,var(--a),var(--a2),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .meta{font-size:13px;color:var(--faint)}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-top:28px}
+    .card h2,.changes h2{font-size:18px;margin:0 0 16px}
+    .card p{margin:.4em 0;color:var(--muted)}
+    .changes{margin-top:32px}
+    .group{margin-top:24px}
+    .group h3{font-size:15px;margin:0 0 10px;color:var(--a2)}
+    .group ul{margin:0;padding-left:20px}
+    .group li{margin:6px 0;color:var(--muted)}
+    .foot{max-width:880px;margin:0 auto;padding:20px 24px 48px;display:flex;justify-content:space-between;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
+  </style>
+</head>
+<body id="top">
+  <header class="bar">
+    <a class="brand" href="/">sparrow <span>/ RELEASE</span></a>
+    <nav><a href="/release.html">发版记录</a><a href="/">返回首页</a></nav>
+  </header>
+  <main class="wrap">
+    <header class="head">
+      <p class="crumb">2026-10-10</p>
+      <h1>2026-10-10 发版说明</h1>
+      <p class="meta">发布于 <time datetime="2026-10-10">2026-10-10</time></p>
+    </header>
+    <section class="card">
+      <h2>摘要</h2>
+      <p>本次发版聚焦稳定性与体验修复，共解决三处问题：邮件因缺少 SPF / DKIM / DMARC 认证被 Gmail 拒收、博客页导航链接错误，以及切换为中文后导航条错位。</p>
+    </section>
+    <section class="changes">
+      <h2>变更明细</h2>
+      <section class="group">
+        <h3>问题修复</h3>
+        <ul>
+          <li><strong>邮件发送</strong>：修复 Gmail 因 SPF / DKIM / DMARC 认证不通过导致的 550 5.7.26 拒收与邮件回退问题，详见<a href="https://blog.sparrowzoo.com/article/gmail-550-5-7-26-spf-dkim-dmarc" target="_blank" rel="noopener">配置文档</a>。</li>
+          <li><strong>博客页导航</strong>：修复博客页面导航链接错误的问题。</li>
+          <li><strong>导航条</strong>：修复切换为中文后导航条布局错位的问题。</li>
+        </ul>
+      </section>
+    </section>
+  </main>
+  <footer class="foot">
+    <a href="/release.html">← 返回发版记录</a><a href="#top">返回顶部 ↑</a>
+  </footer>
+</body>
+</html>
