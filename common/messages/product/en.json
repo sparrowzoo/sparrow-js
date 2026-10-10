@@ -1,8 +1,8 @@
 {
-  "passport": "Passport Identity",
-  "im": "Instant Messaging",
-  "coder": "Code Generator",
-  "file": "File Service",
+  "passport": "Passport",
+  "im": "IM",
+  "coder": "Coder",
+  "file": "File",
   "ui": "UI Components",
   "security": "Security",
   "blog": "Blog",
