@@ -1,7 +1,6 @@
 import CrosStorage from "@/common/lib/CrosStorage";
 import {StorageType} from "@/common/lib/protocol/CrosProtocol";
 import Result from "@/common/lib/protocol/Result";
-import {USER_INFO_KEY} from "@/common/lib/Env";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import toast from "react-hot-toast";
 import {Translator} from "@/common/lib/TranslatorType";
@@ -52,7 +51,6 @@ class SparrowWebSocket {
 
     public userAuthCallback(data: Result) {
         if (data.code == "0") {
-            sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(data.data));
             if (!this.handshakeSuccess) {
                 console.warn("please defined handshakeSuccess callback method  ");
             } else {

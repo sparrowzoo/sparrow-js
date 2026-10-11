@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>2026-10-11 发版说明</title>
-  <meta name="description" content="统一头像回退逻辑，新增 AvatarUtils 单一来源，并修复聊天导航当前用户头像可能渲染为 NaN 的问题。">
+  <meta name="description" content="统一头像回退逻辑到 AvatarUtils 单一来源，修复聊天导航头像 NaN 问题，并在 token 中携带头像字段、统一 websocket 与 http 的 token 解析逻辑。">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:site_name" content="Sparrow Zoo">
   <meta property="og:title" content="2026-10-11 发版说明">
-  <meta property="og:description" content="统一头像回退逻辑，新增 AvatarUtils 单一来源，并修复聊天导航当前用户头像可能渲染为 NaN 的问题。">
+  <meta property="og:description" content="统一头像回退逻辑到 AvatarUtils 单一来源，修复聊天导航头像 NaN 问题，并在 token 中携带头像字段、统一 websocket 与 http 的 token 解析逻辑。">
   <style>
     :root{--bg:#07070d;--panel:rgba(255,255,255,.03);--border:rgba(255,255,255,.10);--text:#f4f4f7;--muted:#a0a3bb;--faint:#69667e;--a:#6d5cff;--a2:#22d3ee;--a3:#a855f7;--r:18px}
     *{box-sizing:border-box}
@@ -52,14 +52,21 @@
     </header>
     <section class="card">
       <h2>摘要</h2>
-      <p>本次发版聚焦头像逻辑的收敛：把散落在多个模块中的「头像为空则按用户 ID 回退默认头像」重复实现，统一收口到 <strong>AvatarUtils.resolveAvatar()</strong> 单一来源，并顺带修复聊天导航中当前用户头像可能回退成 NaN 默认头像的问题。</p>
+      <p>本次发版围绕用户身份与头像两条链路收口：其一，把散落在多个模块中的「头像为空则按用户 ID 回退默认头像」重复实现，统一收口到 <strong>AvatarUtils.resolveAvatar()</strong> 单一来源，并修复聊天导航中当前用户头像可能回退成 NaN 默认头像的问题；其二，在鉴权 token 中携带 avatar 头像字段，并统一 websocket 与 http 的 token 解析逻辑——websocket 鉴权回调不再直接写 sessionStorage，改由 <strong>LoginUser.localize()</strong> 统一解析，避免两条链路写入不一致的用户信息。</p>
     </section>
     <section class="changes">
       <h2>变更明细</h2>
       <section class="group">
+        <h3>新增功能</h3>
+        <ul>
+          <li><strong>token 携带头像字段</strong>：鉴权 token 的 body 新增 avatar 头像字段，LoginUser.parseLoginJSON() 解析为 avatar 属性，getAvatar() 返回真实头像或按 userId 回退默认头像。</li>
+        </ul>
+      </section>
+      <section class="group">
         <h3>问题修复</h3>
         <ul>
           <li><strong>聊天导航头像</strong>：修复当前用户头像因错误读取 avatar?.userId 而回退到 NaN 默认头像的问题，改为正确按 userId 取余。</li>
+          <li><strong>统一 token 解析</strong>：websocket 鉴权回调移除直接向 sessionStorage 写入 USER_INFO_KEY 的逻辑，统一走 LoginUser.localize() 的 token 解析路径，消除 websocket 与 http 两条链路写入不一致用户信息的问题。</li>
         </ul>
       </section>
       <section class="group">
