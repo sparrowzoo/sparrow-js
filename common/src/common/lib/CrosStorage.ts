@@ -1,11 +1,18 @@
 "use client";
-import {CommandType, StorageRequest, StorageResponse, StorageSaveOptions, StorageType} from "@/common/lib/protocol/CrosProtocol";
+import {
+    CommandType,
+    StorageRequest,
+    StorageResponse,
+    StorageSaveOptions,
+    StorageType
+} from "@/common/lib/protocol/CrosProtocol";
 import {CROS_DEBUG, STORAGE_PROXY, TOKEN_KEY, USER_INFO_KEY} from "@/common/lib/Env";
 import {Utils} from "@/common/lib/Utils";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import StorageManager from "@/common/lib/storage/StorageManager";
 import PostMessageRpc from "@/common/lib/rpc/PostMessageRpc";
 import StorageMonitor, {CrosStorageMonitor} from "@/common/lib/monitor/StorageMonitor";
+
 export type {CrosStorageEvent, CrosStorageEventType, CrosStorageMonitor} from "@/common/lib/monitor/StorageMonitor";
 
 /** Storage facade: chooses the authority; strategies and transport own their mechanics. */
@@ -17,12 +24,19 @@ export default class CrosStorage {
 
     private constructor(private readonly monitor?: CrosStorageMonitor) {
         let origin = "";
-        try { origin = new URL(STORAGE_PROXY || "").origin; } catch { /* Local reads do not need a proxy. */ }
-        this.events = new StorageMonitor({monitor, debug: CROS_DEBUG, iframeOrigin: origin,
-            crossOrigin: typeof window !== "undefined" && !!origin && origin !== window.location.origin});
+        try {
+            origin = new URL(STORAGE_PROXY || "").origin;
+        } catch { /* Local reads do not need a proxy. */
+        }
+        this.events = new StorageMonitor({
+            monitor, debug: CROS_DEBUG, iframeOrigin: origin,
+            crossOrigin: typeof window !== "undefined" && !!origin && origin !== window.location.origin
+        });
     }
 
-    public static getCrosStorage(monitor?: CrosStorageMonitor) { return new CrosStorage(monitor); }
+    public static getCrosStorage(monitor?: CrosStorageMonitor) {
+        return new CrosStorage(monitor);
+    }
 
     public async get(key: string = TOKEN_KEY, storage: StorageType = StorageType.AUTOMATIC): Promise<string | null> {
         return this.operate(CommandType.GET, key, storage);
@@ -81,7 +95,9 @@ export default class CrosStorage {
 
     public async locateToken(token: string | null = null) {
         const current = token || await this.getToken();
-        if (current) return LoginUser.localize(current);
+        if (current) {
+            return LoginUser.localize(current);
+        }
         sessionStorage.removeItem(USER_INFO_KEY);
         return LoginUser.visitor();
     }
@@ -116,7 +132,7 @@ export default class CrosStorage {
         try {
             const result = command === CommandType.GET ? this.stores.get(key, storage)
                 : command === CommandType.SET ? this.stores.set(key, value!, storage, saveOptions)
-                : this.stores.remove(key, storage);
+                    : this.stores.remove(key, storage);
             this.events.emit({type: "storage-operation", command, storage, key, valueLength: result?.length ?? 0});
             return result;
         } catch (error) {
@@ -135,24 +151,35 @@ export default class CrosStorage {
             const debug = !!this.monitor || CROS_DEBUG;
             if (debug) url.pathname = `${url.pathname.replace(/\/$/, "")}-debug/`;
             url.search = encodeURIComponent(window.location.origin);
-            this.rpc = new PostMessageRpc({url: url.href,
+            this.rpc = new PostMessageRpc({
+                url: url.href,
                 frameId: debug ? "cros-storage-iframe-debug" : "cros-storage-iframe",
                 visible: debug,
-                isReady: data => !!data && typeof data === "object" && (data as {command?: unknown}).command === CommandType.INIT,
-                onEvent: event => this.events.emit({type: event.type, requestId: event.requestId, loaded: event.loaded})});
+                isReady: data => !!data && typeof data === "object" && (data as {
+                    command?: unknown
+                }).command === CommandType.INIT,
+                onEvent: event => this.events.emit({type: event.type, requestId: event.requestId, loaded: event.loaded})
+            });
         }
         const request: StorageRequest = {requestId: Utils.randomUUID(), command, key, storage: mode};
-        if (command === CommandType.SET) { request.value = value; request.saveOptions = saveOptions; }
+        if (command === CommandType.SET) {
+            request.value = value;
+            request.saveOptions = saveOptions;
+        }
         try {
             const response = await this.rpc.request<StorageResponse>(request);
             if (response.error) throw new Error(response.error);
             if (response.value !== null && typeof response.value !== "string") throw new Error("Invalid storage response");
-            this.events.emit({type: "storage-operation", requestId: request.requestId, command, key,
-                storage: mode, valueLength: response.value?.length ?? 0});
+            this.events.emit({
+                type: "storage-operation", requestId: request.requestId, command, key,
+                storage: mode, valueLength: response.value?.length ?? 0
+            });
             return response.value;
         } catch (error) {
-            this.events.emit({type: "storage-error", requestId: request.requestId, command, key,
-                storage: mode, error: "Storage request failed"});
+            this.events.emit({
+                type: "storage-error", requestId: request.requestId, command, key,
+                storage: mode, error: "Storage request failed"
+            });
             throw error;
         }
     }
