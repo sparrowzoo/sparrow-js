@@ -2,11 +2,10 @@
 import * as React from "react";
 import { Suspense, useContext } from "react";
 import { useSearchParams } from "next/navigation";
-import { AVATAR_URL } from "@/common/lib/Env";
+import { resolveAvatar } from "@/common/lib/AvatarUtils";
 import DirectSession from "@/components/session/DirectSession";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import ChatUser from "@/lib/protocol/ChatUser";
-import { format } from "util";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import Contact from "@/lib/protocol/contact/Contact";
 import UserCategory from "@/common/lib/UserCategory";
@@ -31,9 +30,7 @@ function ContactDetail() {
     webSocketContextValue.messageBroker.contactContainer.getContactDetail(
       friend
     ) as Contact;
-  const headSrc = contact.avatar
-    ? contact.avatar
-    : format(AVATAR_URL, Number(friendId) % 10);
+  const headSrc = resolveAvatar(contact.avatar, friendId);
   const userName = contact.nickName ? contact.nickName : contact.userName;
   friend = new ChatUser(contact.userId, contact.category);
   const chatSession = ChatSession.create121Session(

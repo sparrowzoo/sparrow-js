@@ -5,11 +5,10 @@ import * as React from "react";
 import { SidebarMenuItem } from "@/components/ui/sidebar";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
 import ChatUser from "@/lib/protocol/ChatUser";
-import { AVATAR_URL } from "@/common/lib/Env";
+import { resolveAvatar } from "@/common/lib/AvatarUtils";
 import { Button } from "@/components/ui/button";
 import { AuditStatus } from "@/lib/protocol/audit/AuditStatus";
 import Contact from "@/lib/protocol/contact/Contact";
-import { format } from "util";
 import AuditStatusProps from "@/lib/protocol/audit/AuditStatusProps";
 
 function AuditStatusComp(props: AuditStatusProps) {
@@ -49,8 +48,7 @@ export default function NewFriendItem(newFriendProps: AuditItemProps) {
   }
   const userHomeLink = `/chat/friends/contact/?friendId=${encodeURIComponent(newFriend.userId)}`;
   const userName = newFriend.nickName || newFriend.userName;
-  const avatar =
-    newFriend.avatar || format(`${AVATAR_URL}`, `${Number(newFriend.userId) % 10}`);
+  const avatar = resolveAvatar(newFriend.avatar, newFriend.userId);
   return (
     <SidebarMenuItem
       className={"im-audit-item flex flex-row justify-between items-center w-full h-10 mt-2 "}

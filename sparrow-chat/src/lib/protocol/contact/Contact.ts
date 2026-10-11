@@ -1,7 +1,7 @@
 import ChatUser from "@/lib/protocol/ChatUser";
-import { AVATAR_URL, VISITOR_AVATAR_URL } from "@/common/lib/Env";
+import { VISITOR_AVATAR_URL } from "@/common/lib/Env";
 import UserCategory from "@/common/lib/UserCategory";
-import { format } from "util";
+import { resolveAvatar } from "@/common/lib/AvatarUtils";
 
 export default class Contact {
   /**
@@ -36,10 +36,7 @@ export default class Contact {
   private _avatar: string;
 
   get avatar(): string {
-    if (this._avatar && this._avatar != "") {
-      return this._avatar;
-    }
-    return format(`${AVATAR_URL}`, Number(this.userId) % 10);
+    return resolveAvatar(this._avatar, this.userId);
   }
 
   set avatar(value: string) {

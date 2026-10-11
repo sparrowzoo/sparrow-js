@@ -12,6 +12,7 @@ export interface BasicData<TData> {
     parentId?: number;
     subRows?: TData[];
     depth?: number;
+    hasChildren?: boolean;
 }
 
 export default interface DataTableProps<
@@ -29,13 +30,15 @@ export default interface DataTableProps<
     EditComponent?: React.ComponentType<CellContextProps<TData>>;
     deleteHandler?: (id: IDENTITY) => void;
     initHandler: () => void;
-    RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
+    RowOperationComponents?: RowOperation<TData>[];
     parent?: object,
     defaultPager?: PaginationState;
+    loadSubRows?: (row: TData) => Promise<TData[]>;
 }
 
 export interface TableOperationProps<TData> {
     table: Table<TData>;
+    //回调函数保留在pop 中有使用
     callbackHandler?: () => void;
 }
 
@@ -43,6 +46,13 @@ export interface CellContextProps<TData> {
     cellContext: CellContext<TData, string>;
     callbackHandler?: () => void;
 }
+
+export type RowOperation<TData> =
+    {
+        pop?: boolean;
+        component: React.ComponentType<CellContextProps<TData>>;
+        displayText?: string
+    }
 
 export interface MyTableMeta<TData> extends TableMeta<TData> {
     primary: string,
@@ -57,7 +67,10 @@ export interface MyTableMeta<TData> extends TableMeta<TData> {
     initHandler: () => void;
     searchHandler: (pager: PaginationState | undefined) => void;
     result: Result;
-    RowOperationComponents?: React.ComponentType<CellContextProps<TData>>[];
+    RowOperationComponents?: RowOperation<TData>[];
+    loadSubRowsInto?: (row: TData) => Promise<void>;
+    isNodeLoading?: (id: string) => boolean;
+    removeExpansionKey: () => void;
 }
 
 

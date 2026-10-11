@@ -1,6 +1,7 @@
 import {USER_INFO_KEY} from "@/common/lib/Env";
 import UserCategory from "@/common/lib/UserCategory";
 import CrosStorage from "@/common/lib/CrosStorage";
+import { resolveAvatar } from "@/common/lib/AvatarUtils";
 import toast from "react-hot-toast";
 
 export default class LoginUser {
@@ -84,5 +85,9 @@ export default class LoginUser {
 
     public isVisitor(): boolean {
         return this.category == UserCategory.VISITOR;
+    }
+
+    public getAvatar(): string {
+        return resolveAvatar(this.avatar, this.userId);
     }
 }
