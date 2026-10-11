@@ -90,11 +90,11 @@ declare const messages: {
     "only-see": " Click here to see only "
   },
   "product": {
-    "passport": "Passport Identity",
-    "im": "Instant Messaging",
-    "coder": "Code Generator",
-    "file": "File Service",
-    "ui": "UI Components",
+    "passport": "Passport",
+    "im": "IM",
+    "coder": "Coder",
+    "file": "File",
+    "ui": "UI",
     "security": "Security",
     "blog": "Blog",
     "study": "Learning"

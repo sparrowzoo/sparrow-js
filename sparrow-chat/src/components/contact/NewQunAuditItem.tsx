@@ -8,11 +8,10 @@ import { Button } from "@/components/ui/button";
 import AuditStatusProps from "@/lib/protocol/audit/AuditStatusProps";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Contact from "@/lib/protocol/contact/Contact";
-import { AVATAR_URL } from "@/common/lib/Env";
+import { resolveAvatar } from "@/common/lib/AvatarUtils";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
 import Group from "@/lib/protocol/contact/Group";
 import AuditApi from "@/api/AuditApi";
-import { format } from "util";
 import { Utils } from "@/common/lib/Utils";
 import { useTranslations } from "next-intl";
 import toast from "react-hot-toast";
@@ -74,8 +73,7 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
 
   const userHomeLink = `/chat/friends/contact/?friendId=${encodeURIComponent(applyUser.userId)}`;
   const userName = applyUser.nickName || applyUser.userName;
-  const avatar =
-    applyUser.avatar || format(`${AVATAR_URL}`, `${Number(applyUser.userId) % 10}`);
+  const avatar = resolveAvatar(applyUser.avatar, applyUser.userId);
   const qun: Group = newQunProps.auditWrap.qunMap[audit.businessId];
 
   return (

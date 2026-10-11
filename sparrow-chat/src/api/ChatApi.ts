@@ -3,10 +3,9 @@ import ChatSession from "@/lib/protocol/session/ChatSession";
 import Message from "@/lib/protocol/Message";
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import Contact from "@/lib/protocol/contact/Contact";
-import {format} from "util";
-import {AVATAR_URL} from "@/common/lib/Env";
 import {Translator} from "@/common/lib/TranslatorType";
 import Group from "@/lib/protocol/contact/Group";
+import { resolveAvatar } from "@/common/lib/AvatarUtils";
 
 interface RemoteContactGroup {
     userMap: Record<string, Contact>;
@@ -72,9 +71,7 @@ export default class ChatApi {
                             continue;
                         }
                         const remoteContact = userMap[userId];
-                        if (!remoteContact.avatar) {
-                            remoteContact.avatar = format(AVATAR_URL, Number(userId) % 10);
-                        }
+                        remoteContact.avatar = resolveAvatar(remoteContact.avatar, userId);
                         localContactGroup.userMap.set(userId, remoteContact);
                     }
 
@@ -115,9 +112,7 @@ export default class ChatApi {
                 return;
             }
             for (let user of users) {
-                if (!user.avatar) {
-                    user.avatar = format(AVATAR_URL, Number(user.userId) % 10);
-                }
+                user.avatar = resolveAvatar(user.avatar, user.userId);
             }
         });
         return users;

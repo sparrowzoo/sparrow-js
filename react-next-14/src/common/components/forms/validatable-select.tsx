@@ -33,6 +33,11 @@ const ValidatableSelect = ({
 
     const translator = useTranslations("KVS");
 
+    const defaultOption: KeyValue = {
+        key: "0",
+        value: translator.has("notSelected") ? translator("notSelected") : "None (default -1)",
+    };
+
     let defaultValueStr = defaultValue?.toString();
     const hasDictionary = !!dictionary && dictionary.length > 0;
 
@@ -40,8 +45,8 @@ const ValidatableSelect = ({
     if (hasDictionary) {
         currentItem = Utils.getValue(dictionary, defaultValue);
         if (!currentItem) {
-            currentItem = dictionary![0];
-            defaultValueStr = currentItem.key.toString();
+            currentItem = defaultOption;
+            defaultValueStr = defaultOption.key;
         }
     }
 
@@ -68,7 +73,7 @@ const ValidatableSelect = ({
 
     let displayText = currentItem!.value;
     const i18n = translator.has(fieldPropertyName);
-    if (i18n) {
+    if (i18n && currentItem !== defaultOption) {
         displayText = translator(fieldPropertyName + "." + currentItem!.value);
     }
 
@@ -91,6 +96,8 @@ const ValidatableSelect = ({
                     </SelectTrigger>
                     <SelectContent>
                         <SelectGroup>
+                            <SelectItem key={defaultOption.key}
+                                        value={defaultOption.key}>{defaultOption.value}</SelectItem>
                             {
                                 dictionary?.map((item) => {
                                     let displayText = item.value;
