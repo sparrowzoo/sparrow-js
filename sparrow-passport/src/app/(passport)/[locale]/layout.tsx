@@ -7,6 +7,7 @@ import { getMessages, getTranslations } from 'next-intl/server'
 import { routing } from '@/i18n/routing'
 import { notFound } from 'next/navigation'
 import Header from '@/common/components/header/header'
+import { LoginUserProvider } from '@/common/lib/LoginUserProvider'
 import PassportFooter from '@/components/passport/passport-footer'
 import styles from '@/components/passport/passport.module.css'
 
@@ -52,22 +53,24 @@ export default async function RootLayout({ children, params }: Props) {
                     disableTransitionOnChange
                 >
                     <NextIntlClientProvider locale={locale} messages={messages}>
-                        <div className={styles.site}>
-                            <a href="#main-content" className={styles.skipLink}>
-                                {t('skip')}
-                            </a>
-                            <Suspense
-                                fallback={
-                                    <div className={styles.headerPlaceholder} />
-                                }
-                            >
-                                <Header />
-                            </Suspense>
-                            <main id="main-content" className={styles.main}>
-                                {children}
-                            </main>
-                            <PassportFooter />
-                        </div>
+                        <LoginUserProvider>
+                            <div className={styles.site}>
+                                <a href="#main-content" className={styles.skipLink}>
+                                    {t('skip')}
+                                </a>
+                                <Suspense
+                                    fallback={
+                                        <div className={styles.headerPlaceholder} />
+                                    }
+                                >
+                                    <Header />
+                                </Suspense>
+                                <main id="main-content" className={styles.main}>
+                                    {children}
+                                </main>
+                                <PassportFooter />
+                            </div>
+                        </LoginUserProvider>
                         <Toaster
                             position="top-center"
                             reverseOrder={false}

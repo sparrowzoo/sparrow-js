@@ -28,16 +28,14 @@ describe("S09–S11 login and logout consistency", () => {
         expect(localStorage.getItem("sso-test-token")).toBe("old-b");
         c.destroy();
     });
-    it("removes B and A and clears display cache on confirmed absence", async () => {
+    it("removes B and A and falls back to visitor on confirmed absence", async () => {
         localStorage.setItem("sso-test-token", "old-b");
-        sessionStorage.setItem("sparrow_user_info", '{"userId":1}');
         const c=await client();
         expect(await c.removeToken()).toBe("old-b");
         expect(localStorage.getItem("sso-test-token")).toBeNull();
         expect(rpc.request.mock.calls[0][0]).toMatchObject({command:"remove"});
         rpc.request.mockImplementation(async r=>({requestId:r.requestId,value:null}));
-        expect((await c.locateToken())?.isVisitor()).toBe(true);
-        expect(sessionStorage.getItem("sparrow_user_info")).toBeNull();
+        expect((await c.getCurrentUser())?.isVisitor()).toBe(true);
         c.destroy();
     });
     it("does not claim a shared Cookie save succeeded when B has a same-name host Cookie", async () => {
@@ -73,12 +71,11 @@ describe("S09–S11 login and logout consistency", () => {
     });
     it("logout returns a promise and always releases its storage client", async () => {
         const {default:CrosStorage}=await import("@/common/lib/CrosStorage");
-        const {default:LoginUser}=await import("@/common/lib/protocol/LoginUser");
         const removeToken=vi.fn().mockRejectedValue(new Error("remote failed"));
         const destroy=vi.fn();
         vi.spyOn(CrosStorage,"getCrosStorage").mockReturnValue({removeToken,destroy} as never);
         const redirect=vi.fn();
-        await expect(LoginUser.logout(redirect,"done")).rejects.toThrow("remote failed");
+        await expect(CrosStorage.logout(redirect,"done")).rejects.toThrow("remote failed");
         expect(destroy).toHaveBeenCalledOnce();expect(redirect).not.toHaveBeenCalled();
     });
 });

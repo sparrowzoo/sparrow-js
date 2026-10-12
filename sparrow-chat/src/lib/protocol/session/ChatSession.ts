@@ -108,8 +108,7 @@ export default class ChatSession {
         return this.chatType == ChatType.CHAT_1_TO_1;
     }
 
-    public getOppositeUser() {
-        const currentUser = ChatUser.getCurrentUser();
+    public getOppositeUser(currentUser: ChatUser) {
         if (currentUser == null) {
             return null;
         }

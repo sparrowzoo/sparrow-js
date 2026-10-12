@@ -39,7 +39,11 @@ declare const messages: {
     "logout": "Logout",
     "sign-in": "Sign In",
     "sign-up": "Sign Up",
-    "logout-success": "Signed out"
+    "logout-success": "Signed out",
+    "account-load-failed": "Unable to load account",
+    "retry": "Retry",
+    "loading-account": "Loading account",
+    "logout-failed": "Sign out failed. Please retry."
   },
   "Passport": {
     "sign-in": {

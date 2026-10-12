@@ -13,14 +13,16 @@ export default class ContactContainer {
    */
   private container: Map<string, Contact> = new Map<string, Contact>();
   private translator: Translator = null;
+  private currentUser: ChatUser;
   private groupContainer: Map<string, QunDetailWrap> = new Map<
     string,
     QunDetailWrap
   >();
   private contactGroup: ContactGroup | null = null;
 
-  constructor(translator: Translator) {
+  constructor(translator: Translator, currentUser: ChatUser) {
     this.translator = translator;
+    this.currentUser = currentUser;
   }
 
   public initContact(contacts: Contact[]) {
@@ -38,9 +40,8 @@ export default class ContactContainer {
       console.log("getContactGroup from local " + new Date().getTime());
       return localGroup;
     }
-    const currentUser = ChatUser.getCurrentUser();
     //游客没有联系人
-    if (currentUser?.isVisitor()) {
+    if (this.currentUser?.isVisitor()) {
       return new ContactGroup();
     }
     console.log("fetching  from server " + new Date().getTime());

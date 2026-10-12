@@ -1,7 +1,6 @@
 import CrosStorage from "@/common/lib/CrosStorage";
 import {StorageType} from "@/common/lib/protocol/CrosProtocol";
 import Result from "@/common/lib/protocol/Result";
-import LoginUser from "@/common/lib/protocol/LoginUser";
 import toast from "react-hot-toast";
 import {Translator} from "@/common/lib/TranslatorType";
 
@@ -18,7 +17,7 @@ class SparrowWebSocket {
     public translate: Translator;
     // 接收到信息后需要执行的事件
     public onMsgCallback: (data: ArrayBufferLike) => void;
-    public handshakeSuccess: (loginUser: LoginUser) => void;
+    public handshakeSuccess: () => void;
     public handshakeFail: (data: Result) => void;
     public redirectLogin: () => void;
     public offlineCallback: (data: { offline: boolean }) => void;
@@ -54,7 +53,7 @@ class SparrowWebSocket {
             if (!this.handshakeSuccess) {
                 console.warn("please defined handshakeSuccess callback method  ");
             } else {
-                this.handshakeSuccess(LoginUser.getCurrentUser() as LoginUser);
+                this.handshakeSuccess();
             }
             //鉴权成功后，启动心跳
             this.connectionTimestamp = new Date().getTime();

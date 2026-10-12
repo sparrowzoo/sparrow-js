@@ -7,6 +7,7 @@ import {ThemeProvider} from "@/common/components/header/theme-provider";
 import "../globals.css";
 import Header from "@/common/components/header/header";
 import SiteFooter from "@/app/[locale]/_components/site-footer";
+import LoginUserProvider from "@/common/lib/LoginUserProvider";
 
 export function generateStaticParams() {
     return routing.locales.map((locale) => ({locale}));
@@ -45,9 +46,11 @@ export default async function RootLayout({
             disableTransitionOnChange
         >
             <NextIntlClientProvider>
-                <Header live={false} profile={true}/>
-                {children}
-                <SiteFooter/>
+                <LoginUserProvider>
+                    <Header live={false} profile={true}/>
+                    {children}
+                    <SiteFooter/>
+                </LoginUserProvider>
             </NextIntlClientProvider>
         </ThemeProvider>
         </body>

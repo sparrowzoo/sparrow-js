@@ -11,6 +11,7 @@ import MessageApi from "@/api/MessageApi";
 import { Utils } from "@/common/lib/Utils";
 import SessionMeta from "@/lib/protocol/session/SessionMeta";
 import ChatUser from "@/lib/protocol/ChatUser";
+import {useLoginUser} from "@/common/lib/LoginUserProvider";
 import { useTranslations } from "next-intl";
 import Draggable from "@/common/components/Draggable";
 
@@ -72,7 +73,8 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
   const [userNickName, setUserNickName] = useState("");
-  const loginUser = ChatUser.getCurrentUser();
+  const {user} = useLoginUser();
+  const currentUser = user ? ChatUser.fromLoginUser(user) : null;
 
   function searchSession() {
     MessageApi.querySessions(userId, userName, userNickName, t).then(
@@ -100,7 +102,7 @@ export default function SessionSearch(sessionSearchProp: SessionSearchProp) {
             <div className="grid gap-4">
               <div className="space-y-2">
                 <div className={"im-session-search-filters flex flex-row gap-2 w-120"}>
-                  {loginUser?.isAdmin() && (
+                  {currentUser?.isAdmin() && (
                     <Input
                       value={userId}
                       onChange={(event) => setUserId(event.target.value)}

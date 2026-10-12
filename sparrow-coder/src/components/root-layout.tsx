@@ -9,6 +9,7 @@ import {SidebarInset, SidebarProvider} from "@/components/ui/sidebar";
 import {AppSidebar} from "@/components/app-sidebar";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import {ThemeProvider} from "@/common/components/header/theme-provider";
+import {LoginUserProvider} from "@/common/lib/LoginUserProvider";
 import Header from "@/components/header";
 
 export default function AdminRootLayout({
@@ -37,20 +38,22 @@ export default function AdminRootLayout({
 
     return (
         <AdminContext.Provider value={adminContextValue as AdminContextValue}>
-            <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-            >
-                <SidebarProvider style={{"--sidebar-width": "15rem"} as React.CSSProperties}>
-                    <AppSidebar/>
-                    <SidebarInset className="min-w-0">
-                        <Header showProfile={true}/>
-                        <div className="flex min-w-0 flex-1 flex-col">{children}</div>
-                    </SidebarInset>
-                </SidebarProvider>
-            </ThemeProvider>
+            <LoginUserProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <SidebarProvider style={{"--sidebar-width": "15rem"} as React.CSSProperties}>
+                        <AppSidebar/>
+                        <SidebarInset className="min-w-0">
+                            <Header showProfile={true}/>
+                            <div className="flex min-w-0 flex-1 flex-col">{children}</div>
+                        </SidebarInset>
+                    </SidebarProvider>
+                </ThemeProvider>
+            </LoginUserProvider>
         </AdminContext.Provider>
     );
 }

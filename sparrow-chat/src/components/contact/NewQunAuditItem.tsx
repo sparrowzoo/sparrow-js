@@ -7,6 +7,7 @@ import { AuditStatus } from "@/lib/protocol/audit/AuditStatus";
 import { Button } from "@/components/ui/button";
 import AuditStatusProps from "@/lib/protocol/audit/AuditStatusProps";
 import ChatUser from "@/lib/protocol/ChatUser";
+import {useLoginUser} from "@/common/lib/LoginUserProvider";
 import Contact from "@/lib/protocol/contact/Contact";
 import { resolveAvatar } from "@/common/lib/AvatarUtils";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
@@ -63,8 +64,9 @@ export default function NewQunAuditItem(newQunProps: AuditItemProps) {
   const t = useTranslations("Contact.Audit");
   const userInfoMap = newQunProps.auditWrap.contactMap;
   const audit = newQunProps.audit;
-  const currentUser = ChatUser.getCurrentUser();
-  const isApplying = currentUser.id == audit.applyUserId + "";
+  const {user} = useLoginUser();
+  const currentUser = user ? ChatUser.fromLoginUser(user) : null;
+  const isApplying = currentUser?.id == audit.applyUserId + "";
   const applyUser: Contact = userInfoMap[audit.applyUserId + ""];
   if (!applyUser) {
     console.error("applyUser not found in userInfoMap");

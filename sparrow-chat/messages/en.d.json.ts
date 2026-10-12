@@ -35,7 +35,11 @@ declare const messages: {
     "logout": "Logout",
     "sign-in": "Sign In",
     "sign-up": "Sign Up",
-    "logout-success": "Logout success"
+    "logout-success": "Logout success",
+    "account-load-failed": "Unable to load account",
+    "retry": "Retry",
+    "loading-account": "Loading account",
+    "logout-failed": "Sign out failed. Please retry."
   },
   "Navigation": {
     "contact": "Contact",

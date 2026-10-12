@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Toaster} from "react-hot-toast";
 import {ThemeProvider} from "@/common/components/header/theme-provider";
+import {LoginUserProvider} from "@/common/lib/LoginUserProvider";
 import Header from "@/common/components/header/header";
 
 export default async function Root({
@@ -18,10 +19,12 @@ export default async function Root({
                 enableSystem
                 disableTransitionOnChange
             >
-                <div className="im-shell flex h-dvh flex-col">
-                    <Header/>
-                    <div className="im-content min-h-0 flex-1 overflow-auto">{children}</div>
-                </div>
+                <LoginUserProvider>
+                    <div className="im-shell flex h-dvh flex-col">
+                        <Header/>
+                        <div className="im-content min-h-0 flex-1 overflow-auto">{children}</div>
+                    </div>
+                </LoginUserProvider>
             </ThemeProvider>
         </>
     );

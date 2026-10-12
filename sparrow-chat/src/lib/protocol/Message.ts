@@ -17,6 +17,8 @@ export default class Message {
   public session: ChatSession;
   public clientSendTime: number;
   public serverTime: number;
+  // Stamped by MessageBroker before rendering so isSender/align can resolve the current user.
+  public currentUser: ChatUser;
   private _timeline: number;
 
   get timeline() {
@@ -93,7 +95,6 @@ export default class Message {
   }
 
   public isSender() {
-    const currentUser = ChatUser.getCurrentUser();
-    return this.sender.equals(currentUser);
+    return this.currentUser != null && this.sender.equals(this.currentUser);
   }
 }

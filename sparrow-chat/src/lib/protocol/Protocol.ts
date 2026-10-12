@@ -61,17 +61,17 @@ class Protocol {
   }
 
   public static create121Chat(
+    sender: ChatUser,
     messageType: MessageType,
     receiver: ChatUser,
     content: string,
     clientSendTime: number
   ): Protocol {
     const protocol: Protocol = new Protocol();
-    const loginUser = ChatUser.getCurrentUser();
     protocol.version = 1;
     protocol.chatType = ChatType.CHAT_1_TO_1;
     protocol.messageType = messageType;
-    protocol.sender = loginUser as ChatUser;
+    protocol.sender = sender;
     protocol.receiver = receiver;
     protocol.chatSession = ChatSession.create121Session(
       protocol.sender,
@@ -83,6 +83,7 @@ class Protocol {
   }
 
   public static createGroupChat(
+    sender: ChatUser,
     sessionKey: string,
     messageType: MessageType,
     content: string,
@@ -91,8 +92,7 @@ class Protocol {
     const protocol: Protocol = new Protocol();
     protocol.version = 1;
     protocol.chatType = ChatType.GROUP;
-    const loginUser = ChatUser.getCurrentUser();
-    protocol.sender = loginUser as ChatUser;
+    protocol.sender = sender;
     protocol.messageType = messageType;
     protocol.chatSession = ChatSession.parse(sessionKey) as ChatSession;
     protocol.content = ArrayBufferUtils.str2Buffer(content);

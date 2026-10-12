@@ -5,6 +5,7 @@ import * as React from "react";
 import { SidebarMenuItem } from "@/components/ui/sidebar";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
 import ChatUser from "@/lib/protocol/ChatUser";
+import {useLoginUser} from "@/common/lib/LoginUserProvider";
 import { resolveAvatar } from "@/common/lib/AvatarUtils";
 import { Button } from "@/components/ui/button";
 import { AuditStatus } from "@/lib/protocol/audit/AuditStatus";
@@ -39,8 +40,9 @@ function AuditStatusComp(props: AuditStatusProps) {
 export default function NewFriendItem(newFriendProps: AuditItemProps) {
   const userInfoMap = newFriendProps.auditWrap.contactMap;
   const audit = newFriendProps.audit;
-  const currentUser = ChatUser.getCurrentUser();
-  const isApplying = currentUser.id == audit.applyUserId + "";
+  const {user} = useLoginUser();
+  const currentUser = user ? ChatUser.fromLoginUser(user) : null;
+  const isApplying = currentUser?.id == audit.applyUserId + "";
   const newFriendId = isApplying ? audit.businessId : audit.applyUserId;
   const newFriend: Contact = userInfoMap[newFriendId];
   if (!newFriend) {

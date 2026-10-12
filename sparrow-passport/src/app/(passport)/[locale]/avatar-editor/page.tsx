@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import { ImageCropperParam, Uploader } from '@/api/uploader'
 import { useTranslations } from 'next-intl'
 import useNavigating from '@/common/hook/NavigatingHook'
-import LoginUser from '@/common/lib/protocol/LoginUser'
+import CrosStorage from '@/common/lib/CrosStorage'
 import toast from 'react-hot-toast'
 import styles from '@/components/passport/passport.module.css'
 
@@ -21,12 +21,12 @@ export default function AvatarEditorPage() {
         clientFileName: string,
         crop: ImageCropperParam
     ) {
-        Uploader.uploadAvatar(base64, clientFileName, crop, t).then((url) => {
-            // 头像 URL 路径通常不变，浏览器会命中缓存显示旧图，追加随机参数强制刷新
-            const avatar = `${url}${url.includes('?') ? '&' : '?'}v=${Date.now()}`
-            LoginUser.updateAvatar(avatar)
-            toast.success(t('upload-success'))
-            Navigations.redirectToIndex()
+        Uploader.uploadAvatar(base64, clientFileName, crop, t).then(({token}) => {
+            const storage = CrosStorage.getCrosStorage()
+            storage.setToken(token).then(() => {
+                toast.success(t('upload-success'))
+                Navigations.redirectToIndex()
+            }).finally(() => storage.destroy())
         })
     }
 
