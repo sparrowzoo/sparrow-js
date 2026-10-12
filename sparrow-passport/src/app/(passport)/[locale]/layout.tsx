@@ -61,10 +61,7 @@ export default async function RootLayout({ children, params }: Props) {
                                     <div className={styles.headerPlaceholder} />
                                 }
                             >
-                                <Header
-                                    brandCaption="SPARROW Zoo"
-                                    homePath="/"
-                                />
+                                <Header />
                             </Suspense>
                             <main id="main-content" className={styles.main}>
                                 {children}
