@@ -276,6 +276,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
                   backgroundColor={state.backgroundColor}
                   onLoadFailure={handleLoadFailure}
                   onImageReady={handleImageReady}
+                  crossOrigin="anonymous"
                   image={state.image}
                   disableCanvasRotation={state.disableCanvasRotation}
                   borderColor={hexToRgba(state.borderColor)}
