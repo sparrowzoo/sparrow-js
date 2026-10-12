@@ -78,6 +78,8 @@
         <h3>问题修复</h3>
         <ul>
           <li><strong>头像缓存不刷新</strong>：上传成功后头像 URL 追加时间戳参数，强制浏览器加载新头像，避免显示旧图。</li>
+          <li><strong>canvas 污染报错</strong>：跨域头像绘制后 canvas 被污染，预览 toDataURL 抛 SecurityError，已捕获并跳过，避免未捕获异常。</li>
+          <li><strong>头像预览跨域</strong>：客户端加载头像时设置 crossOrigin=anonymous，nginx 为头像资源添加 Access-Control-Allow-Origin 响应头，让初始跨域头像也能正常生成预览。</li>
           <li><strong>清理调试断点</strong>：移除上传链路中遗留的 debugger 断点。</li>
           <li><strong>加载失败兜底</strong>：头像无法渲染时自动回退默认头像，避免空白。</li>
         </ul>
