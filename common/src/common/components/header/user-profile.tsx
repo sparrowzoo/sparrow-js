@@ -22,6 +22,7 @@ export default function UserProfile() {
   const [loginUser, setLoginUser] = React.useState<LoginUser | null>(null);
   const [readFailed, setReadFailed] = React.useState(false);
   const [readAttempt, setReadAttempt] = React.useState(0);
+  const [avatarError, setAvatarError] = React.useState(false);
   const crosStorage = useCrosStorage();
   const t = useTranslations("Header");
   const locale = useLocale();
@@ -37,6 +38,7 @@ export default function UserProfile() {
     let active = true;
     setLoginUser(null);
     setReadFailed(false);
+    setAvatarError(false);
     // 只更新用户展示信息；不会将 RPC token 回写本域。
     crosStorage.locateToken().then((user) => {
       if (!active) return;
@@ -79,8 +81,17 @@ export default function UserProfile() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="secondary" size="icon" className="rounded-full">
-          <CircleUser className="h-5 w-5" />
+        <Button variant="secondary" size="icon" className="rounded-full overflow-hidden">
+          {avatarError ? (
+            <CircleUser className="h-5 w-5" />
+          ) : (
+            <img
+              src={loginUser.getAvatar()}
+              alt=""
+              className="h-full w-full rounded-full object-cover"
+              onError={() => setAvatarError(true)}
+            />
+          )}
           <span className="sr-only">user account menu</span>
         </Button>
       </DropdownMenuTrigger>
