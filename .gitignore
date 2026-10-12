@@ -28,3 +28,6 @@ build/
 # 编译缓存
 *.tsbuildinfo
 /react-next-14/src/common/
+
+# Next.js 自动生成
+next-env.d.ts
