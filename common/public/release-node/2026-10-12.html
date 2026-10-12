@@ -1,106 +1,277 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="color-scheme" content="dark">
-  <title>2026-10-12 发版说明</title>
-  <meta name="description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，完成头像上传架构解耦、编辑页重构与缓存刷新，并落地跨域 SSO 用户信息共享与 HTTP/WebSocket 职责解耦。">
-  <meta property="og:type" content="article">
-  <meta property="og:locale" content="zh_CN">
-  <meta property="og:site_name" content="Sparrow Zoo">
-  <meta property="og:title" content="2026-10-12 发版说明">
-  <meta property="og:description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，完成头像上传架构解耦、编辑页重构与缓存刷新，并落地跨域 SSO 用户信息共享与 HTTP/WebSocket 职责解耦。">
-  <style>
-    :root{--bg:#07070d;--panel:rgba(255,255,255,.03);--border:rgba(255,255,255,.10);--text:#f4f4f7;--muted:#a0a3bb;--faint:#69667e;--a:#6d5cff;--a2:#22d3ee;--a3:#a855f7;--r:18px}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,rgba(109,92,255,.14),transparent 60%),radial-gradient(900px 500px at 10% 10%,rgba(34,211,238,.10),transparent 55%),var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7}
-    a{color:var(--a2);text-decoration:none}
-    a:hover{color:var(--a3)}
-    .bar{position:sticky;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid var(--border);background:rgba(7,7,13,.82);backdrop-filter:blur(16px)}
-    .brand{font-weight:700;color:var(--text)}
-    .brand span{background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;background-clip:text;color:transparent}
-    .bar nav{display:flex;gap:20px;font-size:13px}
-    .bar nav a{color:var(--muted)}
-    .bar nav a:hover{color:var(--text)}
-    .wrap{max-width:880px;margin:0 auto;padding:48px 24px 64px}
-    .crumb{font-size:12px;color:var(--muted);letter-spacing:.04em}
-    .head h1{margin:.3em 0 .3em;font-size:34px;line-height:1.25;background:linear-gradient(90deg,var(--a),var(--a2),var(--a3));-webkit-background-clip:text;background-clip:text;color:transparent}
-    .meta{font-size:13px;color:var(--faint)}
-    .card{background:var(--panel);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-top:28px}
-    .card h2,.changes h2{font-size:18px;margin:0 0 16px}
-    .card p{margin:.4em 0;color:var(--muted)}
-    .changes{margin-top:32px}
-    .group{margin-top:24px}
-    .group h3{font-size:15px;margin:0 0 10px;color:var(--a2)}
-    .group ul{margin:0;padding-left:20px}
-    .group li{margin:6px 0;color:var(--muted)}
-    .foot{max-width:880px;margin:0 auto;padding:20px 24px 48px;display:flex;justify-content:space-between;border-top:1px solid var(--border);color:var(--muted);font-size:13px}
-  </style>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <meta content="dark" name="color-scheme">
+    <title>2026-10-12 发版说明</title>
+    <meta content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，完成头像上传架构解耦、编辑页重构与缓存刷新，并落地跨域 SSO 用户信息共享与 HTTP/WebSocket 职责解耦。"
+          name="description">
+    <meta content="article" property="og:type">
+    <meta content="zh_CN" property="og:locale">
+    <meta content="Sparrow Zoo" property="og:site_name">
+    <meta content="2026-10-12 发版说明" property="og:title">
+    <meta content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，完成头像上传架构解耦、编辑页重构与缓存刷新，并落地跨域 SSO 用户信息共享与 HTTP/WebSocket 职责解耦。"
+          property="og:description">
+    <style>
+        :root {
+            --bg: #07070d;
+            --panel: rgba(255, 255, 255, .03);
+            --border: rgba(255, 255, 255, .10);
+            --text: #f4f4f7;
+            --muted: #a0a3bb;
+            --faint: #69667e;
+            --a: #6d5cff;
+            --a2: #22d3ee;
+            --a3: #a855f7;
+            --r: 18px
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            margin: 0;
+            background: radial-gradient(1200px 600px at 80% -10%, rgba(109, 92, 255, .14), transparent 60%), radial-gradient(900px 500px at 10% 10%, rgba(34, 211, 238, .10), transparent 55%), var(--bg);
+            color: var(--text);
+            font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            line-height: 1.7
+        }
+
+        a {
+            color: var(--a2);
+            text-decoration: none
+        }
+
+        a:hover {
+            color: var(--a3)
+        }
+
+        .bar {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(7, 7, 13, .82);
+            backdrop-filter: blur(16px)
+        }
+
+        .brand {
+            font-weight: 700;
+            color: var(--text)
+        }
+
+        .brand span {
+            background: linear-gradient(135deg, var(--a), var(--a2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .bar nav {
+            display: flex;
+            gap: 20px;
+            font-size: 13px
+        }
+
+        .bar nav a {
+            color: var(--muted)
+        }
+
+        .bar nav a:hover {
+            color: var(--text)
+        }
+
+        .wrap {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 48px 24px 64px
+        }
+
+        .crumb {
+            font-size: 12px;
+            color: var(--muted);
+            letter-spacing: .04em
+        }
+
+        .head h1 {
+            margin: .3em 0 .3em;
+            font-size: 34px;
+            line-height: 1.25;
+            background: linear-gradient(90deg, var(--a), var(--a2), var(--a3));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .meta {
+            font-size: 13px;
+            color: var(--faint)
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            margin-top: 28px
+        }
+
+        .card h2, .changes h2 {
+            font-size: 18px;
+            margin: 0 0 16px
+        }
+
+        .card p {
+            margin: .4em 0;
+            color: var(--muted)
+        }
+
+        .changes {
+            margin-top: 32px
+        }
+
+        .group {
+            margin-top: 24px
+        }
+
+        .group h3 {
+            font-size: 15px;
+            margin: 0 0 10px;
+            color: var(--a2)
+        }
+
+        .group ul {
+            margin: 0;
+            padding-left: 20px
+        }
+
+        .group li {
+            margin: 6px 0;
+            color: var(--muted)
+        }
+
+        .foot {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 20px 24px 48px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 13px
+        }
+    </style>
 </head>
 <body id="top">
-  <header class="bar">
+<header class="bar">
     <a class="brand" href="/">sparrow <span>/ RELEASE</span></a>
     <nav><a href="/release.html">发版记录</a><a href="/">返回首页</a></nav>
-  </header>
-  <main class="wrap">
+</header>
+<main class="wrap">
     <header class="head">
-      <p class="crumb">2026-10-12</p>
-      <h1>2026-10-12 发版说明</h1>
-      <p class="meta">发布于 <time datetime="2026-10-12">2026-10-12</time></p>
+        <p class="crumb">2026-10-12</p>
+        <h1>2026-10-12 发版说明</h1>
+        <p class="meta">发布于
+            <time datetime="2026-10-12">2026-10-12</time>
+        </p>
     </header>
     <section class="card">
-      <h2>摘要</h2>
-      <p>本次发版围绕四条线展开：<strong>SEO 完善</strong>、<strong>登录态头像展示</strong>、<strong>头像上传体验升级</strong>与<strong>跨域 SSO 用户信息共享与解耦</strong>。其一，新增 JSON-LD 结构化数据与 openGraph 元信息，并统一站点各入口的标题与描述文案，帮助搜索引擎更准确地理解站点与产品。其二，登录后 header 用户菜单由占位图标改为展示用户真实头像，缺失自定义头像时回退系统占位图、加载失败兜底默认图标。其三，头像上传在能力下沉 sparrow-file、编辑页左右分栏的基础上，进一步修复上传后旧图缓存不刷新的问题，并优化预览触发时机。其四，把「读用户」收敛到 LoginUserProvider 单一 Context，父子组件通过 useLoginUser 共享同一份 LoginUser，HTTP（Fetcher/ChatApi）与 WebSocket（SparrowWebSocket）职责解耦，修改头像由后端重签 token 守护数据一致。</p>
+        <h2>摘要</h2>
+        <p>本次发版围绕四条线展开：<strong>SEO
+            完善</strong>、<strong>登录态头像展示</strong>、<strong>头像上传体验升级</strong>与<strong>跨域 SSO
+            用户信息共享与解耦</strong>。其一，新增 JSON-LD 结构化数据与 openGraph
+            元信息，并统一站点各入口的标题与描述文案，帮助搜索引擎更准确地理解站点与产品。其二，登录后 header
+            用户菜单由占位图标改为展示用户真实头像，缺失自定义头像时回退系统占位图、加载失败兜底默认图标。其三，头像上传在能力下沉
+            sparrow-file、编辑页左右分栏的基础上，进一步修复上传后旧图缓存不刷新的问题，并优化预览触发时机。其四，把「读用户」收敛到
+            LoginUserProvider 单一 Context，父子组件通过 useLoginUser 共享同一份 LoginUser，HTTP（Fetcher/ChatApi）与
+            WebSocket（SparrowWebSocket）职责解耦，修改头像由后端重签 token 守护数据一致。</p>
     </section>
     <section class="card">
-      <h2>相关文章</h2>
-      <p>本次登录态重构的设计与取舍，详见技术博客 <a href="http://www.sparrowzoo.com/article/cross-domain-sso-user-sharing" target="_blank" rel="noopener">《跨域 SSO 下的用户信息共享与解耦：Context、职责边界与 token 重签》</a>。</p>
+        <h2>相关文章</h2>
+        <p>本次登录态重构的设计与取舍，详见技术博客 <a
+                href="http://blog.sparrowzoo.com/article/cross-domain-sso-user-sharing" rel="noopener" target="_blank">《跨域
+            SSO 下的用户信息共享与解耦：Context、职责边界与 token 重签》</a>。</p>
     </section>
     <section class="changes">
-      <h2>变更明细</h2>
-      <section class="group">
-        <h3>新增功能</h3>
-        <ul>
-          <li><strong>SEO 结构化数据</strong>：新增 <strong>JsonLd</strong> 组件与五类 JSON-LD 生成器（Organization / WebSite / SoftwareApplication / Course / Person），首页注入 Organization + WebSite，产品页注入 SoftwareApplication，学习页注入 Course + Person，帮助搜索引擎理解站点结构。</li>
-          <li><strong>产品页元信息</strong>：file / im / passport / coder 产品页补齐 openGraph 标题、描述与类型。</li>
-          <li><strong>登录态头像展示</strong>：header 用户菜单由占位图标改为展示真实头像（getAvatar），无自定义头像回退系统占位图，加载失败兜底默认图标。</li>
-          <li><strong>登录用户共享</strong>：新增 <strong>LoginUserProvider</strong> 与 <strong>useLoginUser</strong>，把登录用户收敛为单一 Context 数据源，父子组件共享同一份 LoginUser，避免各处重复取 token、重复解码。</li>
-          <li><strong>token 变更订阅</strong>：<strong>CrosStorage</strong> 新增 <strong>onTokenChange / notifyTokenChange</strong>，登录、登出、换头像等 token 变更统一广播，订阅组件自动刷新。</li>
-        </ul>
-      </section>
-      <section class="group">
-        <h3>重构优化</h3>
-        <ul>
-          <li><strong>文件能力下沉</strong>：sparrow-file 服务新增通用裁剪参数 <strong>ImageCropperParam</strong> 与后处理策略 <strong>CropPostProcessStrategy</strong>，上传与剪切能力与业务解耦。</li>
-          <li><strong>passport 业务化</strong>：上传接口拆分为通用文件上传 <strong>uploadImage</strong> 与修改用户头像 <strong>modifyUserAvatar</strong> 两步，文件存储与业务存储职责分离。</li>
-          <li><strong>头像编辑页重构</strong>：改为左右分栏布局，统一 passport 设计系统。</li>
-          <li><strong>预览时机优化</strong>：预览触发改用 <strong>onImageReady</strong> 回调，setState 改为函数式更新。</li>
-          <li><strong>HTTP 与 WebSocket 职责解耦</strong>：<strong>Fetcher / ChatApi</strong> 专注请求-响应与 Authorization 头，<strong>SparrowWebSocket</strong> 专注实时通道、握手鉴权与鉴权失败清 token，<strong>MessageBroker</strong> 作为组装点接收 LoginUser 而非 token。</li>
-          <li><strong>头像重签保证一致</strong>：修改头像由后端重新签发包含新头像的 token，前端 <strong>setToken</strong> 覆盖并触发全局通知，父子组件与后续请求读到一致的用户信息。</li>
-        </ul>
-      </section>
-      <section class="group">
-        <h3>问题修复</h3>
-        <ul>
-          <li><strong>头像缓存不刷新</strong>：上传成功后头像 URL 追加时间戳参数，强制浏览器加载新头像，避免显示旧图。</li>
-          <li><strong>canvas 污染报错</strong>：跨域头像绘制后 canvas 被污染，预览 toDataURL 抛 SecurityError，已捕获并跳过，避免未捕获异常。</li>
-          <li><strong>头像预览跨域</strong>：客户端加载头像时设置 crossOrigin=anonymous，nginx 为头像资源添加 Access-Control-Allow-Origin 响应头，让初始跨域头像也能正常生成预览。</li>
-          <li><strong>清理调试断点</strong>：移除上传链路中遗留的 debugger 断点。</li>
-          <li><strong>加载失败兜底</strong>：头像无法渲染时自动回退默认头像，避免空白。</li>
-        </ul>
-      </section>
-      <section class="group">
-        <h3>其他</h3>
-        <ul>
-          <li><strong>文案定位统一</strong>：网站、产品与学习入口的 title / description 统一为「跟着做过项目的人一起做项目」定位，强化 SEO 与品牌表达。</li>
-        </ul>
-      </section>
+        <h2>变更明细</h2>
+        <section class="group">
+            <h3>新增功能</h3>
+            <ul>
+                <li><strong>SEO 结构化数据</strong>：新增 <strong>JsonLd</strong> 组件与五类 JSON-LD 生成器（Organization
+                    / WebSite / SoftwareApplication / Course / Person），首页注入 Organization + WebSite，产品页注入
+                    SoftwareApplication，学习页注入 Course + Person，帮助搜索引擎理解站点结构。
+                </li>
+                <li><strong>产品页元信息</strong>：file / im / passport / coder 产品页补齐 openGraph 标题、描述与类型。
+                </li>
+                <li><strong>登录态头像展示</strong>：header 用户菜单由占位图标改为展示真实头像（getAvatar），无自定义头像回退系统占位图，加载失败兜底默认图标。
+                </li>
+                <li><strong>登录用户共享</strong>：新增 <strong>LoginUserProvider</strong> 与
+                    <strong>useLoginUser</strong>，把登录用户收敛为单一 Context 数据源，父子组件共享同一份
+                    LoginUser，避免各处重复取 token、重复解码。
+                </li>
+                <li><strong>token 变更订阅</strong>：<strong>CrosStorage</strong> 新增 <strong>onTokenChange /
+                    notifyTokenChange</strong>，登录、登出、换头像等 token 变更统一广播，订阅组件自动刷新。
+                </li>
+            </ul>
+        </section>
+        <section class="group">
+            <h3>重构优化</h3>
+            <ul>
+                <li><strong>文件能力下沉</strong>：sparrow-file 服务新增通用裁剪参数 <strong>ImageCropperParam</strong>
+                    与后处理策略 <strong>CropPostProcessStrategy</strong>，上传与剪切能力与业务解耦。
+                </li>
+                <li><strong>passport 业务化</strong>：上传接口拆分为通用文件上传 <strong>uploadImage</strong> 与修改用户头像
+                    <strong>modifyUserAvatar</strong> 两步，文件存储与业务存储职责分离。
+                </li>
+                <li><strong>头像编辑页重构</strong>：改为左右分栏布局，统一 passport 设计系统。</li>
+                <li><strong>预览时机优化</strong>：预览触发改用 <strong>onImageReady</strong> 回调，setState 改为函数式更新。
+                </li>
+                <li><strong>HTTP 与 WebSocket 职责解耦</strong>：<strong>Fetcher / ChatApi</strong> 专注请求-响应与
+                    Authorization 头，<strong>SparrowWebSocket</strong> 专注实时通道、握手鉴权与鉴权失败清 token，<strong>MessageBroker</strong>
+                    作为组装点接收 LoginUser 而非 token。
+                </li>
+                <li><strong>头像重签保证一致</strong>：修改头像由后端重新签发包含新头像的 token，前端
+                    <strong>setToken</strong> 覆盖并触发全局通知，父子组件与后续请求读到一致的用户信息。
+                </li>
+            </ul>
+        </section>
+        <section class="group">
+            <h3>问题修复</h3>
+            <ul>
+                <li><strong>头像缓存不刷新</strong>：上传成功后头像 URL 追加时间戳参数，强制浏览器加载新头像，避免显示旧图。
+                </li>
+                <li><strong>canvas 污染报错</strong>：跨域头像绘制后 canvas 被污染，预览 toDataURL 抛
+                    SecurityError，已捕获并跳过，避免未捕获异常。
+                </li>
+                <li><strong>头像预览跨域</strong>：客户端加载头像时设置 crossOrigin=anonymous，nginx 为头像资源添加
+                    Access-Control-Allow-Origin 响应头，让初始跨域头像也能正常生成预览。
+                </li>
+                <li><strong>清理调试断点</strong>：移除上传链路中遗留的 debugger 断点。</li>
+                <li><strong>加载失败兜底</strong>：头像无法渲染时自动回退默认头像，避免空白。</li>
+            </ul>
+        </section>
+        <section class="group">
+            <h3>其他</h3>
+            <ul>
+                <li><strong>文案定位统一</strong>：网站、产品与学习入口的 title / description 统一为「跟着做过项目的人一起做项目」定位，强化
+                    SEO 与品牌表达。
+                </li>
+            </ul>
+        </section>
     </section>
-  </main>
-  <footer class="foot">
+</main>
+<footer class="foot">
     <a href="/release.html">← 返回发版记录</a><a href="#top">返回顶部 ↑</a>
-  </footer>
+</footer>
 </body>
 </html>
