@@ -24,6 +24,7 @@ import {BLOG_ROOT} from "@/common/lib/Env";
 import DocumentDirectory from "./_components/document-directory";
 import {documents, productIds} from "./_components/site-content";
 import styles from "./home.module.css";
+import {JsonLd, organizationJsonLd, websiteJsonLd} from "@/lib/jsonld";
 
 type PageProps = { params: Promise<{ locale: string }> };
 
@@ -55,11 +56,14 @@ const capabilities = [
     {id: "modular", icon: Boxes},
 ] as const;
 
-export default async function Home() {
+export default async function Home({params}: PageProps) {
+    const {locale} = await params;
     const t = await getTranslations("website");
 
     return (
-        <div className={styles.site} id="top">
+        <>
+            <JsonLd data={[organizationJsonLd(locale), websiteJsonLd(locale)]} />
+            <div className={styles.site} id="top">
             <a href="#main-content" className={styles.skipLink}>{t("nav.skip")}</a>
             <main id="main-content">
                 <section className={styles.hero} aria-labelledby="hero-heading">
@@ -198,5 +202,6 @@ export default async function Home() {
             </main>
 
         </div>
+        </>
     );
 }
