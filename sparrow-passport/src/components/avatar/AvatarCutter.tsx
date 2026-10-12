@@ -160,22 +160,26 @@ const AvatarCutter = (uploadProps: UploadProps) => {
   };
 
   const preview = () => {
-    const img = editor.current?.getImageScaledToCanvas().toDataURL();
-    const rect = editor.current?.getCroppingRect();
+    try {
+      const img = editor.current?.getImageScaledToCanvas().toDataURL();
+      const rect = editor.current?.getCroppingRect();
 
-    if (!img || !rect) return;
+      if (!img || !rect) return;
 
-    setState((prev) => ({
-      ...prev,
-      preview: {
-        img,
-        rect,
-        scale: prev.scale,
-        width: prev.width,
-        height: prev.height,
-        borderRadius: prev.borderRadius,
-      },
-    }));
+      setState((prev) => ({
+        ...prev,
+        preview: {
+          img,
+          rect,
+          scale: prev.scale,
+          width: prev.width,
+          height: prev.height,
+          borderRadius: prev.borderRadius,
+        },
+      }));
+    } catch {
+      // 跨域头像（无 CORS）会污染 canvas，toDataURL 抛 SecurityError，跳过预览即可
+    }
   };
 
   const handleImageReady = () => {
