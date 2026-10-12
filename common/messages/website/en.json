@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "Sparrow Zoo · An Integrated Development Ecosystem",
-    "description": "Explore Sparrow Zoo's engineering foundation, identity and file services, and development guides, connecting Java / Spring Boot with React / Next.js."
+    "title": "Sparrow Zoo · Build Real Projects with People Who've Shipped Them",
+    "description": "From clean-architecture scaffold to agent platform, learn by building real projects with a mentor who has shipped them. Start with Java / Spring Boot, ship with React / Next.js and AI coding agents."
   },
   "brand": {
     "name": "Sparrow Zoo",
@@ -22,9 +22,9 @@
   },
   "hero": {
     "eyebrow": "SPARROW ZOO · A CONNECTED ECOSYSTEM",
-    "title": "One ecosystem.",
-    "highlight": "From scaffolding to an AI agent platform.",
-    "description": "A shared engineering foundation for identity, files, access control, and real-time communication. Build on reusable capabilities and bring your next application to life.",
+    "title": "Build real projects,",
+    "highlight": "with people who've shipped them.",
+    "description": "From clean-architecture scaffold to agent platform — a shared engineering foundation for identity, files, access control, and real-time communication. Learn by building with a mentor who has shipped real projects.",
     "primary": "Explore products",
     "secondary": "Read the docs",
     "note": "Java / Spring Boot · React / Next.js"
@@ -196,11 +196,11 @@
       "description": "Turn entity models into CRUD code for Clean Architecture backends and React frontends, reducing repetitive implementation work.",
       "tags": ["CRUD", "Clean Architecture", "React"],
       "page": {
-        "meta": "Sparrow Coder · Clean Architecture Code Generator",
+        "meta": "Sparrow Coder · AI Code Generator / Coding Agent",
         "eyebrow": "SPARROW CODER / ADMIN APPLICATION GENERATOR",
         "title": "From a PO class",
         "highlight": "to your application.",
-        "description": "Turn your PO classes into a Clean Architecture backend and frontend pages that follow your package conventions. Templates and metadata handle the repetitive work.",
+        "description": "From clean-architecture scaffold to agent platform — turn your PO classes into a Clean Architecture backend and frontend pages that follow your package conventions. Templates and metadata handle the repetitive work.",
         "start": "Get started",
         "experience": "Try Coder",
         "source": "View source",

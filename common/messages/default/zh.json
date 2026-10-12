@@ -45,8 +45,8 @@
     }
   },
   "LocaleLayout": {
-    "title": "麻雀窝",
-    "description": "基于React的Next.js Admin Dashboard模板"
+    "title": "麻雀窝 Sparrow Zoo",
+    "description": "从整洁架构脚手架到智能体平台，跟着做过项目的人一起做项目。"
   },
   "LocaleSwitcher": {
     "label": "切换语言",

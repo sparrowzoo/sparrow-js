@@ -1,7 +1,7 @@
 {
   "metadata": {
-    "title": "麻雀窝 Sparrow Zoo · 一体化开发生态",
-    "description": "探索麻雀窝 Sparrow Zoo 的工程脚手架、统一认证、文件服务与开发文档，从 Java / Spring Boot 到 React / Next.js，连接工程实践与业务开发。"
+    "title": "麻雀窝 Sparrow Zoo · 跟着做过项目的人一起做项目",
+    "description": "从整洁架构脚手架到智能体平台，跟着志哥在真实项目里学编程——Java / Spring Boot 起步，到 React / Next.js 与 AI 编码智能体，边做边学，把项目真正做上线。"
   },
   "brand": {
     "name": "麻雀窝",
@@ -22,9 +22,9 @@
   },
   "hero": {
     "eyebrow": "SPARROW ZOO · 一体化开发生态",
-    "title": "一个生态，",
-    "highlight": "从脚手架到智能体平台",
-    "description": "以统一工程规范为起点，连接认证、文件、权限与实时通讯。沉淀可复用的通用能力，让每一次业务开发都有基础可循。",
+    "title": "跟着做过项目的人，",
+    "highlight": "一起做项目",
+    "description": "从整洁架构脚手架到智能体平台——以统一工程规范为起点，连接认证、文件、权限与实时通讯，跟着志哥在真实项目里边做边学，把项目真正做上线。",
     "primary": "探索产品",
     "secondary": "阅读开发文档",
     "note": "Java / Spring Boot · React / Next.js"
@@ -196,11 +196,11 @@
       "description": "以实体模型为起点，生成整洁架构后端与 React 前端的 CRUD 代码，减少重复编写。",
       "tags": ["CRUD", "整洁架构", "React"],
       "page": {
-        "meta": "Sparrow Coder · 整洁架构代码生成器",
+        "meta": "Sparrow Coder · AI 代码生成器 / 编码智能体",
         "eyebrow": "SPARROW CODER / 后台管理系统代码生成器",
         "title": "从一个 PO 类，",
         "highlight": "到一套业务工程。",
-        "description": "基于整洁架构，将你定义的 PO 类转化为符合企业包规范的后端代码与前端页面。纯模板与元数据驱动，让重复开发止于模型。",
+        "description": "从整洁架构脚手架到智能体平台——基于整洁架构，把你定义的 PO 类转化为符合企业包规范的后端代码与前端页面。纯模板与元数据驱动，让重复开发止于模型。",
         "start": "快速开始",
         "experience": "立即体验",
         "source": "查看源码",

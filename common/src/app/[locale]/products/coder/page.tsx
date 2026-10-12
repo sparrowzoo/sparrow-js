@@ -22,6 +22,7 @@ import {ProductHero, ProductLink, SectionHeading} from "../_components/product-u
 import CodeBlock from "../_components/code-block";
 import home from "../../home.module.css";
 import styles from "../product.module.css";
+import {JsonLd, softwareApplicationJsonLd} from "@/lib/jsonld";
 
 type PageProps = { params: Promise<{ locale: string }> };
 
@@ -68,6 +69,7 @@ export default async function CoderPage({params}: PageProps) {
     const features = t.raw("features") as { title: string; description: string }[];
     const layers = t.raw("layers") as string[];
     return <>
+        <JsonLd data={softwareApplicationJsonLd({locale, name: t("meta"), description: t("description"), path: "/products/coder", category: "DeveloperApplication"})} />
         <ProductHero name="sparrow-coder" eyebrow={t("eyebrow")} title={t("title")} highlight={t("highlight")}
                      description={t("description")} tags={tags}
                      primary={{label: t("experience"), href: experienceUrl, newTab: true}}

@@ -45,8 +45,8 @@
     }
   },
   "LocaleLayout": {
-    "title": "sparrow admin",
-    "description": "A React Admin Dashboard with Next.js"
+    "title": "Sparrow Zoo",
+    "description": "From clean-architecture scaffold to agent platform — build real projects with people who've shipped them."
   },
   "LocaleSwitcher": {
     "label": "Change language",

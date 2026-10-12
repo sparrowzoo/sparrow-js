@@ -21,6 +21,7 @@ import {IM_ROOT} from "@/common/lib/Env";
 import CourseGallery from "./course-gallery";
 import siteStyles from "../home.module.css";
 import styles from "./study.module.css";
+import {JsonLd, courseJsonLd, personJsonLd} from "@/lib/jsonld";
 
 const OUTLINE_URL = "https://sparrowzoo.feishu.cn/docx/UrHddloNeojIR7xWZFJc1ViRnbe";
 const KNOWLEDGE_URL = "https://wx.zsxq.com/group/48848482481288";
@@ -70,7 +71,12 @@ export default async function StudyPage({params}: PageProps) {
     ] as const;
 
     return (
-        <div className={siteStyles.site} id="top">
+        <>
+            <JsonLd data={[
+                ...courses.map(({id}) => courseJsonLd({locale, name: t(`courses.${id}.title`), description: t(`courses.${id}.description`), path: "/study"})),
+                personJsonLd(locale),
+            ]} />
+            <div className={siteStyles.site} id="top">
             <a href="#main-content" className={siteStyles.skipLink}>{nav("skip")}</a>
             <main id="main-content">
                 <section className={styles.hero} aria-labelledby="study-heading">
@@ -243,5 +249,6 @@ export default async function StudyPage({params}: PageProps) {
                 </div>
             </main>
         </div>
+        </>
     );
 }
