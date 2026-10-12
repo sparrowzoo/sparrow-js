@@ -1,8 +1,5 @@
-import {USER_INFO_KEY} from "@/common/lib/Env";
 import UserCategory from "@/common/lib/UserCategory";
-import CrosStorage from "@/common/lib/CrosStorage";
-import { resolveAvatar } from "@/common/lib/AvatarUtils";
-import toast from "react-hot-toast";
+import {resolveAvatar} from "@/common/lib/AvatarUtils";
 
 export default class LoginUser {
     public userId: string;
@@ -17,43 +14,6 @@ export default class LoginUser {
     public expireAt: number;
     public extensions: Map<string, unknown>;
 
-    public static async logout(redirectToLogin: () => void, message: string) {
-        const storage = CrosStorage.getCrosStorage();
-        try {
-            await storage.removeToken();
-            sessionStorage.removeItem(USER_INFO_KEY);
-            toast.success(message);
-            redirectToLogin();
-        } finally {
-            storage.destroy();
-        }
-    }
-
-    public static getCurrentUser() {
-        if (typeof window === "undefined") {
-            console.error("This component should not render on server");
-            return null;
-        }
-        const userJson = sessionStorage.getItem(USER_INFO_KEY);
-        if (userJson) {
-            return LoginUser.parseLoginJSON(userJson);
-        }
-        return LoginUser.visitor();
-    }
-
-    public static updateAvatar(avatar: string) {
-        if (typeof window === "undefined") {
-            return;
-        }
-        const userJson = sessionStorage.getItem(USER_INFO_KEY);
-        if (!userJson) {
-            return;
-        }
-        const loginUserJSON = JSON.parse(userJson);
-        loginUserJSON.avatar = avatar;
-        sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(loginUserJSON));
-    }
-
     public static visitor() {
         const loginUser = new LoginUser();
         loginUser.userId = "visitor";
@@ -64,6 +24,7 @@ export default class LoginUser {
         return loginUser;
     }
 
+
     public static localize(token: string) {
         const decodeToken = decodeURIComponent(token);
         const parts: string[] = decodeToken.split(".");
@@ -73,7 +34,6 @@ export default class LoginUser {
         }
         const userJson = atob(body);
         const userInfo = JSON.parse(userJson).body;
-        sessionStorage.setItem(USER_INFO_KEY, userInfo);
         return LoginUser.parseLoginJSON(userInfo);
     }
 
@@ -102,5 +62,10 @@ export default class LoginUser {
 
     public getAvatar(): string {
         return resolveAvatar(this.avatar, this.userId);
+    }
+
+    public getSmallAvatar(){
+        const  avatar=this.getAvatar();
+        return avatar.replace("origin","small");
     }
 }

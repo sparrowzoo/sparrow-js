@@ -46,12 +46,8 @@ export default class ChatUser {
     return new ChatUser(id, role);
   }
 
-  public static getCurrentUser() {
-    const loginUser = LoginUser.getCurrentUser();
-    return new ChatUser(
-      loginUser?.userId as string,
-      loginUser?.category as number
-    );
+  public static fromLoginUser(loginUser: LoginUser): ChatUser {
+    return new ChatUser(loginUser.userId, loginUser.category);
   }
 
   public getSessionCategory(): number {

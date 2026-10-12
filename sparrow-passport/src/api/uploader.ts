@@ -1,5 +1,5 @@
 import Fetcher from '@/common/lib/Fetcher'
-import {Translator} from '@/common/lib/TranslatorType'
+import { Translator } from '@/common/lib/TranslatorType'
 
 export interface ImageCropperParam {
     x: number
@@ -15,20 +15,28 @@ export interface UploadImageParams {
     crop?: ImageCropperParam
 }
 
+export interface ModifyAvatarResult {
+    avatar: string
+    token: string
+}
+
 export class Uploader {
-    public static uploadImage(params: UploadImageParams, translator: Translator) {
-        const {crop, ...body} = params
+    public static uploadImage(
+        params: UploadImageParams,
+        translator: Translator
+    ) {
+        const { crop, ...body } = params
         return Fetcher.post<string>({
             url: '/base64-upload.json',
-            body: crop ? {...body, ...crop} : body,
+            body: crop ? { ...body, ...crop } : body,
             translator: translator,
         })
     }
 
     public static modifyUserAvatar(avatar: string, translator: Translator) {
-        return Fetcher.post({
+        return Fetcher.post<ModifyAvatarResult>({
             url: '/profile/modify-user-avatar.json',
-            body: {avatar: avatar},
+            body: { avatar: avatar },
             translator: translator,
         })
     }
@@ -38,7 +46,7 @@ export class Uploader {
         clientFileName: string,
         crop: ImageCropperParam,
         translator: Translator
-    ): Promise<string> {
+    ): Promise<ModifyAvatarResult> {
         return Uploader.uploadImage(
             {
                 pathKey: 'avatar',
@@ -48,8 +56,10 @@ export class Uploader {
             },
             translator
         ).then((res) => {
-            const url = res.data
-            return Uploader.modifyUserAvatar(url, translator).then(() => url)
+            const avatar = res.data
+            return Uploader.modifyUserAvatar(avatar, translator).then(
+                (modifyRes) => modifyRes.data
+            )
         })
     }
 }

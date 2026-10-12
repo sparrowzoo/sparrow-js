@@ -6,17 +6,19 @@ import {
     StorageSaveOptions,
     StorageType
 } from "@/common/lib/protocol/CrosProtocol";
-import {CROS_DEBUG, STORAGE_PROXY, TOKEN_KEY, USER_INFO_KEY} from "@/common/lib/Env";
+import {CROS_DEBUG, STORAGE_PROXY, TOKEN_KEY} from "@/common/lib/Env";
 import {Utils} from "@/common/lib/Utils";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import StorageManager from "@/common/lib/storage/StorageManager";
 import PostMessageRpc from "@/common/lib/rpc/PostMessageRpc";
 import StorageMonitor, {CrosStorageMonitor} from "@/common/lib/monitor/StorageMonitor";
+import toast from "react-hot-toast";
 
 export type {CrosStorageEvent, CrosStorageEventType, CrosStorageMonitor} from "@/common/lib/monitor/StorageMonitor";
 
 /** Storage facade: chooses the authority; strategies and transport own their mechanics. */
 export default class CrosStorage {
+    private static readonly tokenListeners = new Set<() => void>();
     private readonly stores = new StorageManager();
     private readonly events: StorageMonitor;
     private rpc?: PostMessageRpc;
@@ -36,6 +38,32 @@ export default class CrosStorage {
 
     public static getCrosStorage(monitor?: CrosStorageMonitor) {
         return new CrosStorage(monitor);
+    }
+
+    /** Subscribes to token mutations (login/logout/avatar) across all instances. Returns an unsubscribe fn. */
+    public static onTokenChange(listener: () => void): () => void {
+        CrosStorage.tokenListeners.add(listener);
+        return () => CrosStorage.tokenListeners.delete(listener);
+    }
+
+    private static notifyTokenChange(): void {
+        CrosStorage.tokenListeners.forEach((listener) => {
+            try {
+                listener();
+            } catch { /* A listener must not break the storage operation. */
+            }
+        });
+    }
+
+    public static async logout(redirectToLogin: () => void, message: string) {
+        const storage = CrosStorage.getCrosStorage();
+        try {
+            await storage.removeToken();
+            toast.success(message);
+            redirectToLogin();
+        } finally {
+            storage.destroy();
+        }
     }
 
     public async get(key: string = TOKEN_KEY, storage: StorageType = StorageType.AUTOMATIC): Promise<string | null> {
@@ -79,6 +107,7 @@ export default class CrosStorage {
                 throw new Error("COOKIE_WRITE_FAILED: Shared Cookie could not be confirmed");
             }
         }
+        CrosStorage.notifyTokenChange();
         return result;
     }
 
@@ -90,16 +119,8 @@ export default class CrosStorage {
             ? this.stores.removeHostOnlyCookie(TOKEN_KEY)
             : this.local(CommandType.REMOVE, TOKEN_KEY, mode);
         const source = remote ? await this.remove(TOKEN_KEY, mode) : null;
+        CrosStorage.notifyTokenChange();
         return local ?? source;
-    }
-
-    public async locateToken(token: string | null = null) {
-        const current = token || await this.getToken();
-        if (current) {
-            return LoginUser.localize(current);
-        }
-        sessionStorage.removeItem(USER_INFO_KEY);
-        return LoginUser.visitor();
     }
 
     public destroy(): void {
@@ -107,6 +128,14 @@ export default class CrosStorage {
         this.destroyed = true;
         this.rpc?.destroy();
         if (!this.rpc) this.events.emit({type: "destroy"});
+    }
+
+    public async getCurrentUser(token: string | null = null) {
+        const current = token || await this.getToken();
+        if (current) {
+            return LoginUser.localize(current);
+        }
+        return LoginUser.visitor();
     }
 
     private assertActive(): void {
@@ -183,4 +212,5 @@ export default class CrosStorage {
             throw error;
         }
     }
+
 }

@@ -34,20 +34,21 @@ export default class SessionContainer {
   public currentSession: ChatSession;
   private contactContainer: ContactContainer;
   private translator: Translator;
+  private currentUser: ChatUser;
 
-  constructor(translator: Translator, contactContainer: ContactContainer) {
+  constructor(translator: Translator, contactContainer: ContactContainer, currentUser: ChatUser) {
     this.translator = translator;
     this.contactContainer = contactContainer;
+    this.currentUser = currentUser;
   }
 
   public async initSessions(contacts: string[]) {
     this.chatSessions = [];
-    const currentUser = ChatUser.getCurrentUser();
     for (const contact of contacts) {
       //从后台获取用户类别，此时暂不知道用户类型，都暂设为普通用户
       const oppositeUser = new ChatUser(contact, UserCategory.REGISTER);
       const session = ChatSession.create121Session(
-        currentUser as ChatUser,
+        this.currentUser,
         oppositeUser
       );
       this.chatSessions?.push(session);
@@ -139,7 +140,7 @@ export default class SessionContainer {
     const userIds: string[] = [];
     this.chatSessions?.forEach((session) => {
       if (session.isOne2One()) {
-        const oppositeUser = session.getOppositeUser();
+        const oppositeUser = session.getOppositeUser(this.currentUser);
         if (!oppositeUser?.isVisitor()) {
           userIds.push(oppositeUser?.id as string);
         }
@@ -196,7 +197,7 @@ export default class SessionContainer {
     for (const session of sessions) {
       const category = session.isGroup()
         ? 99
-        : (session.getOppositeUser()?.category as number);
+        : (session.getOppositeUser(this.currentUser)?.category as number);
 
       const currentGroupSession = groupedSessions.get(category);
       if (!currentGroupSession) {
@@ -228,7 +229,7 @@ export default class SessionContainer {
 
   public fill(session: ChatSession) {
     if (session?.isOne2One()) {
-      const oppositeUser = session.getOppositeUser();
+      const oppositeUser = session.getOppositeUser(this.currentUser);
       const contact = this.contactContainer.getContactDetail(
         oppositeUser as ChatUser
       );
@@ -240,7 +241,7 @@ export default class SessionContainer {
       //根据后台的类型重新生成session id
       const newSession = ChatSession.create121Session(
         newOppositeUser,
-        ChatUser.getCurrentUser()
+        this.currentUser
       );
       session.name = contact?.userName as string;
       session.avatarUrl = contact?.avatar as string;

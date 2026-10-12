@@ -14,9 +14,7 @@ import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/im/MessageBroker";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import LoginUser from "@/common/lib/protocol/LoginUser";
 import TabSessions from "@/components/session/TabSessions";
-import ChatUser from "@/lib/protocol/ChatUser";
 import PopSearchTrigger from "@/components/session/search/PopSearchTrigger";
 import useNavigating from "@/common/hook/NavigatingHook";
 import { useTranslations } from "next-intl";
@@ -37,9 +35,12 @@ export default function GroupedTalk() {
     }
 
     //token 个人信息本地化
-    crosStorage?.locateToken().then((loginUser: LoginUser) => {
+    crosStorage?.getCurrentUser().then((loginUser) => {
+      if (!loginUser) {
+        return;
+      }
       console.log("token", JSON.stringify(loginUser));
-      const messageBroker = new MessageBroker(translator, redirectToLogin);
+      const messageBroker = new MessageBroker(translator, redirectToLogin, loginUser);
       const localContext = WebSocketContextValue.create(messageBroker);
       messageBroker.newMessageSignal = () => {
         setWebSocketContextValue(localContext?.newReference());
@@ -48,7 +49,7 @@ export default function GroupedTalk() {
       messageBroker.webSocket.handshakeSuccess = () => {
         messageBroker.initSessions().then(() => {
           console.log("initSessions success");
-          const currentUser = ChatUser.getCurrentUser();
+          const currentUser = messageBroker.currentUser;
           //将session 信息分组
           messageBroker.sessionContainer
             .getGroupedSessions(currentUser.category)
@@ -71,7 +72,7 @@ export default function GroupedTalk() {
       const messageBroker = webSocketContextValue.messageBroker;
       messageBroker.initSessions().then(() => {
         console.log("initSessions success");
-        const currentUser = ChatUser.getCurrentUser();
+        const currentUser = messageBroker.currentUser;
         //将session 信息分组
         messageBroker.sessionContainer
           .getGroupedSessions(currentUser.category)

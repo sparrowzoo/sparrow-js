@@ -2,6 +2,7 @@
 import { NextIntlClientProvider } from "next-intl";
 import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { LoginUserProvider } from "@/common/lib/LoginUserProvider";
 
 type Props = {
   locale: string;
@@ -19,7 +20,9 @@ export default function HtmlFragment(props: Props) {
       const root = createRoot(container);
       root.render(
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <DynamicComponent />
+          <LoginUserProvider>
+            <DynamicComponent />
+          </LoginUserProvider>
         </NextIntlClientProvider>
       );
     }

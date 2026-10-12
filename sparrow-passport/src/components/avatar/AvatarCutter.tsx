@@ -1,9 +1,9 @@
-import React, { ChangeEvent, MouseEventHandler, useRef, useState } from "react";
+import React, { ChangeEvent, MouseEventHandler, useEffect, useRef, useState } from "react";
 import AvatarEditor, { Position } from "@/components/ui/avatar-editor";
 import Dropzone from "react-dropzone";
 import { ImageCropperParam } from "@/api/uploader";
 import AvatarState, { initialState } from "@/components/avatar/state";
-import LoginUser from "@/common/lib/protocol/LoginUser";
+import { useLoginUser } from "@/common/lib/LoginUserProvider";
 import { Eye, RotateCcw, RotateCw, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
@@ -14,11 +14,6 @@ interface UploadProps {
 }
 
 const DEFAULT_AVATAR = "/avatar.jpg";
-
-const getInitialImage = (): string => {
-  const user = LoginUser.getCurrentUser();
-  return user ? user.getAvatar() : DEFAULT_AVATAR;
-};
 
 const readAsDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -130,13 +125,23 @@ const prepareUpload = async (
 
 const AvatarCutter = (uploadProps: UploadProps) => {
   const t = useTranslations("AvatarUploader");
+  const { user } = useLoginUser();
 
   const editor = useRef<AvatarEditor>(null);
   const [state, setState] = useState<AvatarState>(() => ({
     ...initialState,
-    image: getInitialImage(),
+    image: DEFAULT_AVATAR,
   }));
   const [clientName, setClientName] = useState<string>("");
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    setState((prev) =>
+      prev.image.startsWith("data:") ? prev : { ...prev, image: user.getAvatar() }
+    );
+  }, [user]);
 
   async function localSaveAvatar() {
     if (!state.image.startsWith("data:")) {

@@ -8,6 +8,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import MessageSearchBar from "@/components/session/search/MessageSearchBar";
 import ChatUser from "@/lib/protocol/ChatUser";
+import {useLoginUser} from "@/common/lib/LoginUserProvider";
 import { useTranslations } from "next-intl";
 import Draggable from "@/common/components/Draggable";
 
@@ -15,7 +16,8 @@ export default function PopSearchTrigger() {
   const t = useTranslations("ClientServer");
 
   const [isOpen, setIsOpen] = React.useState(false);
-  const currentUser = ChatUser.getCurrentUser();
+  const {user} = useLoginUser();
+  const currentUser = user ? ChatUser.fromLoginUser(user) : null;
   if (!currentUser || !currentUser.isAdmin()) {
     return <></>;
   }

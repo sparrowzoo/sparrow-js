@@ -1,4 +1,3 @@
-const USER_INFO_KEY = "sparrow_user_info";
 const NODE_ENV = process.env.NODE_ENV;
 const API_BASIC_URL = process.env.NEXT_PUBLIC_API;
 
@@ -64,7 +63,6 @@ export {
     COOKIE_SAME_SITE,
     COOKIE_SECURE,
     COOKIE_DAYS,
-    USER_INFO_KEY,
     NEXT_ASSET_PREFIX,
     WEBSOCKET,
     SESSION_CATEGORY_GROUP,

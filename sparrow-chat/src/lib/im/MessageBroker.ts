@@ -5,6 +5,7 @@ import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
 import ChatSession from "@/lib/protocol/session/ChatSession";
 import { ChatType, MessageType } from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
+import LoginUser from "@/common/lib/protocol/LoginUser";
 import toast from "react-hot-toast";
 import { WEBSOCKET } from "@/common/lib/Env";
 import { ContactStatus } from "@/lib/protocol/ContactStatus";
@@ -17,15 +18,18 @@ export default class MessageBroker {
   public sessionContainer: SessionContainer;
   public translator: Translator;
   public webSocket: SparrowWebSocket;
+  public currentUser: ChatUser;
   //key:session key,value:message list
   private messageMap: Map<string, Message[]> = new Map();
 
-  constructor(translator: Translator, redirectLogin: () => void) {
+  constructor(translator: Translator, redirectLogin: () => void, loginUser: LoginUser) {
     this.translator = translator;
-    this.contactContainer = new ContactContainer(this.translator);
+    this.currentUser = ChatUser.fromLoginUser(loginUser);
+    this.contactContainer = new ContactContainer(this.translator, this.currentUser);
     this.sessionContainer = new SessionContainer(
       this.translator,
-      this.contactContainer
+      this.contactContainer,
+      this.currentUser
     );
     const sparrowWebSocket = new SparrowWebSocket(
       WEBSOCKET as string,
@@ -72,8 +76,9 @@ export default class MessageBroker {
     const chatSession = ChatSession.parse(sessionKey);
     let protocol;
     if (chatSession?.chatType == ChatType.CHAT_1_TO_1) {
-      const oppositeUser = chatSession.getOppositeUser();
+      const oppositeUser = chatSession.getOppositeUser(this.currentUser);
       protocol = Protocol.create121Chat(
+        this.currentUser,
         MessageType.TEXT_MESSAGE,
         oppositeUser as ChatUser,
         content,
@@ -81,6 +86,7 @@ export default class MessageBroker {
       );
     } else {
       protocol = Protocol.createGroupChat(
+        this.currentUser,
         sessionKey,
         MessageType.TEXT_MESSAGE,
         content,
@@ -135,6 +141,7 @@ export default class MessageBroker {
     let preTime: number = 0;
     const newMessages: Message[] = [];
     for (const message of messages) {
+      message.currentUser = this.currentUser;
       newMessages.push(message);
       if (message.clientSendTime - preTime > 1000 * 60 * 5) {
         newMessages.push(Message.newTimeLine(message.clientSendTime));
