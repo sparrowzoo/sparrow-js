@@ -167,6 +167,7 @@ declare const messages: {
     "upload-success": "Upload Success !",
     "system_server_error": "System error, please try again later",
     "image_not_found": "Image not found,please upload image",
+    "avatar_load_failed": "Failed to load avatar, please try again",
     "preview": "Preview",
     "settings": "Settings",
     "dragging-image-to-upload": "Drag image to upload",

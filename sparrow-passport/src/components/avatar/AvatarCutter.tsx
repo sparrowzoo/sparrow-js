@@ -15,12 +15,12 @@ interface UploadProps {
 
 const DEFAULT_AVATAR = "/avatar.jpg";
 
-const readAsDataUrl = (file: File): Promise<string> =>
+const readAsDataUrl = (blob: Blob): Promise<string> =>
   new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = () => reject(reader.error);
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(blob);
   });
 
 const loadImage = (src: string): Promise<HTMLImageElement> =>
@@ -138,14 +138,35 @@ const AvatarCutter = (uploadProps: UploadProps) => {
     if (!user) {
       return;
     }
+    const avatarUrl = user.getAvatar();
     setState((prev) =>
-      prev.image.startsWith("data:") ? prev : { ...prev, image: user.getAvatar() }
+      prev.image.startsWith("data:") ? prev : { ...prev, image: avatarUrl }
     );
+    fetch(avatarUrl)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("fetch avatar failed");
+        }
+        return res.blob();
+      })
+      .then(readAsDataUrl)
+      .then((dataUrl) => {
+        setState((prev) =>
+          prev.image === avatarUrl ? { ...prev, image: dataUrl } : prev
+        );
+      })
+      .catch(() => {
+        // 加载失败保留 URL，保存时再给明确错误
+      });
   }, [user]);
 
   async function localSaveAvatar() {
     if (!state.image.startsWith("data:")) {
-      toast.error(`${t("image_not_found")}`);
+      toast.error(
+        `${t(
+          state.image === DEFAULT_AVATAR ? "image_not_found" : "avatar_load_failed"
+        )}`
+      );
       return;
     }
     const rect = editor.current?.getCroppingRect();

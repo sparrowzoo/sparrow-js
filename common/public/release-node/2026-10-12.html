@@ -192,7 +192,7 @@
             用户信息共享与解耦</strong>。其一，新增 JSON-LD 结构化数据与 openGraph
             元信息，并统一站点各入口的标题与描述文案，帮助搜索引擎更准确地理解站点与产品。其二，登录后 header
             用户菜单由占位图标改为展示用户真实头像，缺失自定义头像时回退系统占位图、加载失败兜底默认图标。其三，头像上传在能力下沉
-            sparrow-file、编辑页左右分栏的基础上，进一步修复上传后旧图缓存不刷新的问题，并优化预览触发时机。其四，把「读用户」收敛到
+            sparrow-file、编辑页左右分栏的基础上，进一步修复上传后旧图缓存不刷新的问题，并优化预览触发时机，修复已有头像无法重新保存的问题。其四，把「读用户」收敛到
             LoginUserProvider 单一 Context，父子组件通过 useLoginUser 共享同一份 LoginUser，HTTP（Fetcher/ChatApi）与
             WebSocket（SparrowWebSocket）职责解耦，修改头像由后端重签 token 守护数据一致。</p>
     </section>
@@ -258,6 +258,7 @@
                 </li>
                 <li><strong>清理调试断点</strong>：移除上传链路中遗留的 debugger 断点。</li>
                 <li><strong>加载失败兜底</strong>：头像无法渲染时自动回退默认头像，避免空白。</li>
+                <li><strong>旧头像无法保存</strong>：已有头像（远程 URL 而非 base64）点击保存被误判为「请先上传图片」，改为加载时将头像 fetch 转为 data URL，保存与预览均正常，加载失败则给出明确提示。</li>
             </ul>
         </section>
         <section class="group">

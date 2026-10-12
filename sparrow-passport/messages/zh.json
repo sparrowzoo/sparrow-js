@@ -164,6 +164,7 @@
     "upload-success": "头象上传成功 !",
     "system_server_error": "系统错误，请稍后重试",
     "image_not_found": "请先上传图片",
+    "avatar_load_failed": "头像加载失败，请重试",
     "preview": "预览",
     "settings": "设置",
     "dragging-image-to-upload": "拖拽图片到此处上传",
