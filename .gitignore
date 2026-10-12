@@ -27,3 +27,4 @@ build/
 
 # 编译缓存
 *.tsbuildinfo
+/react-next-14/src/common/
