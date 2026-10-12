@@ -16,7 +16,9 @@ export default function AvatarEditorPage() {
 
   function handleUpload(base64: string, clientFileName: string, crop: ImageCropperParam) {
     Uploader.uploadAvatar(base64, clientFileName, crop, t).then((url) => {
-      LoginUser.updateAvatar(url);
+      // 头像 URL 路径通常不变，浏览器会命中缓存显示旧图，追加随机参数强制刷新
+      const avatar = `${url}${url.includes("?") ? "&" : "?"}v=${Date.now()}`;
+      LoginUser.updateAvatar(avatar);
       toast.success(t("upload-success"));
       Navigations.redirectToIndex();
     });

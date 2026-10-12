@@ -159,29 +159,27 @@ const AvatarCutter = (uploadProps: UploadProps) => {
     });
   };
 
-  const handleNewImage = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files?.[0]) {
-      applyFile(e.target.files[0]);
-    }
-  };
-
   const preview = () => {
     const img = editor.current?.getImageScaledToCanvas().toDataURL();
     const rect = editor.current?.getCroppingRect();
 
     if (!img || !rect) return;
 
-    setState({
-      ...state,
+    setState((prev) => ({
+      ...prev,
       preview: {
         img,
         rect,
-        scale: state.scale,
-        width: state.width,
-        height: state.height,
-        borderRadius: state.borderRadius,
+        scale: prev.scale,
+        width: prev.width,
+        height: prev.height,
+        borderRadius: prev.borderRadius,
       },
-    });
+    }));
+  };
+
+  const handleImageReady = () => {
+    preview();
   };
 
   const handleScale = (e: ChangeEvent<HTMLInputElement>) => {
@@ -273,6 +271,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
                   borderRadius={state.width / (100 / state.borderRadius)}
                   backgroundColor={state.backgroundColor}
                   onLoadFailure={handleLoadFailure}
+                  onImageReady={handleImageReady}
                   image={state.image}
                   disableCanvasRotation={state.disableCanvasRotation}
                   borderColor={hexToRgba(state.borderColor)}
@@ -280,7 +279,6 @@ const AvatarCutter = (uploadProps: UploadProps) => {
                 <input
                   {...getInputProps()}
                   accept="image/*"
-                  onChange={handleNewImage}
                   id="imgAvatarUploader"
                   type="file"
                 />
