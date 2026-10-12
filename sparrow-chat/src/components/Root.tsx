@@ -19,7 +19,7 @@ export default async function Root({
                 disableTransitionOnChange
             >
                 <div className="im-shell flex h-dvh flex-col">
-                    <Header brandCaption="SPARROW Zoo" homePath="/"/>
+                    <Header/>
                     <div className="im-content min-h-0 flex-1 overflow-auto">{children}</div>
                 </div>
             </ThemeProvider>
