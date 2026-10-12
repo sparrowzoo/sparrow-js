@@ -41,6 +41,19 @@ export default class LoginUser {
         return LoginUser.visitor();
     }
 
+    public static updateAvatar(avatar: string) {
+        if (typeof window === "undefined") {
+            return;
+        }
+        const userJson = sessionStorage.getItem(USER_INFO_KEY);
+        if (!userJson) {
+            return;
+        }
+        const loginUserJSON = JSON.parse(userJson);
+        loginUserJSON.avatar = avatar;
+        sessionStorage.setItem(USER_INFO_KEY, JSON.stringify(loginUserJSON));
+    }
+
     public static visitor() {
         const loginUser = new LoginUser();
         loginUser.userId = "visitor";

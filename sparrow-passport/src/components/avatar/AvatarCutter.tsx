@@ -1,57 +1,167 @@
 import React, { ChangeEvent, MouseEventHandler, useRef, useState } from "react";
 import AvatarEditor, { Position } from "@/components/ui/avatar-editor";
-import Dropzone, { useDropzone } from "react-dropzone";
+import Dropzone from "react-dropzone";
+import { ImageCropperParam } from "@/api/uploader";
 import AvatarState, { initialState } from "@/components/avatar/state";
-import { Button } from "@/components/ui/button";
-import {
-  ArrowBigUp,
-  ArrowRightToLine,
-  RotateCcw,
-  RotateCw,
-} from "lucide-react";
-import { UploadIcon } from "@radix-ui/react-icons";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import LoginUser from "@/common/lib/protocol/LoginUser";
+import { Eye, RotateCcw, RotateCw, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 import { useTranslations } from "next-intl";
+import styles from "@/components/passport/passport.module.css";
 
 interface UploadProps {
-  saveAvatar: (avatar: string, clientFileName: string) => void;
+  saveAvatar: (base64: string, clientFileName: string, crop: ImageCropperParam) => void;
 }
+
+const DEFAULT_AVATAR = "/avatar.jpg";
+
+const getInitialImage = (): string => {
+  const user = LoginUser.getCurrentUser();
+  return user ? user.getAvatar() : DEFAULT_AVATAR;
+};
+
+const readAsDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+
+const loadImage = (src: string): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error("image load failed"));
+    img.src = src;
+  });
+
+interface CropRect {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+const prepareUpload = async (
+  dataUrl: string,
+  rotate: number,
+  rect: CropRect
+): Promise<{base64: string; crop: ImageCropperParam}> => {
+  const img = await loadImage(dataUrl);
+  const W = img.naturalWidth;
+  const H = img.naturalHeight;
+
+  const px = rect.x * W;
+  const py = rect.y * H;
+  const pw = rect.width * W;
+  const ph = rect.height * H;
+
+  const stripPrefix = (s: string) => s.substring(s.indexOf(",") + 1);
+
+  if (!rotate) {
+    return {
+      base64: stripPrefix(dataUrl),
+      crop: {
+        x: Math.round(px),
+        y: Math.round(py),
+        width: Math.round(pw),
+        height: Math.round(ph),
+      },
+    };
+  }
+
+  const cx = px + pw / 2;
+  const cy = py + ph / 2;
+  const rad = (rotate * Math.PI) / 180;
+  const cos = Math.cos(rad);
+  const sin = Math.sin(rad);
+  const rot = (dx: number, dy: number): [number, number] => [
+    dx * cos - dy * sin,
+    dx * sin + dy * cos,
+  ];
+
+  const hw = pw / 2;
+  const hh = ph / 2;
+  const cCorners = [[-hw, -hh], [hw, -hh], [hw, hh], [-hw, hh]].map(
+    ([dx, dy]) => rot(dx, dy)
+  );
+  const rw =
+    Math.max(...cCorners.map((p) => p[0])) - Math.min(...cCorners.map((p) => p[0]));
+  const rh =
+    Math.max(...cCorners.map((p) => p[1])) - Math.min(...cCorners.map((p) => p[1]));
+
+  const oCorners = [
+    [-cx, -cy],
+    [W - cx, -cy],
+    [W - cx, H - cy],
+    [-cx, H - cy],
+  ].map(([dx, dy]) => rot(dx, dy));
+  const minOx = Math.min(...oCorners.map((p) => p[0]));
+  const maxOx = Math.max(...oCorners.map((p) => p[0]));
+  const minOy = Math.min(...oCorners.map((p) => p[1]));
+  const maxOy = Math.max(...oCorners.map((p) => p[1]));
+  const bw = Math.ceil(maxOx - minOx);
+  const bh = Math.ceil(maxOy - minOy);
+
+  const canvas = document.createElement("canvas");
+  canvas.width = bw;
+  canvas.height = bh;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    throw new Error("no canvas context");
+  }
+  ctx.translate(bw / 2, bh / 2);
+  ctx.rotate(rad);
+  ctx.translate(-cx, -cy);
+  ctx.drawImage(img, 0, 0);
+
+  const data = canvas.toDataURL();
+  return {
+    base64: stripPrefix(data),
+    crop: {
+      x: Math.max(0, Math.round(bw / 2 - rw / 2)),
+      y: Math.max(0, Math.round(bh / 2 - rh / 2)),
+      width: Math.min(Math.round(rw), bw),
+      height: Math.min(Math.round(rh), bh),
+    },
+  };
+};
 
 const AvatarCutter = (uploadProps: UploadProps) => {
   const t = useTranslations("AvatarUploader");
 
-  function localSaveAvatar() {
-    const img = editor.current?.getImage().toDataURL();
-    editor;
-    if (!img) {
+  const editor = useRef<AvatarEditor>(null);
+  const [state, setState] = useState<AvatarState>(() => ({
+    ...initialState,
+    image: getInitialImage(),
+  }));
+  const [clientName, setClientName] = useState<string>("");
+
+  async function localSaveAvatar() {
+    if (!state.image.startsWith("data:")) {
       toast.error(`${t("image_not_found")}`);
       return;
     }
-    uploadProps.saveAvatar(img, clientName);
+    const rect = editor.current?.getCroppingRect();
+    if (!rect) {
+      toast.error(`${t("image_not_found")}`);
+      return;
+    }
+    const { base64, crop } = await prepareUpload(state.image, state.rotate, rect);
+    uploadProps.saveAvatar(base64, clientName, crop);
   }
 
-  const onDrop = (acceptedFiles: File[]) => {
-    const fileUrl = URL.createObjectURL(acceptedFiles[0]);
-    setState({ ...state, image: fileUrl });
+  const applyFile = (file: File) => {
+    setClientName(file.name);
+    readAsDataUrl(file).then((dataUrl) => {
+      setState((prev) => ({ ...prev, image: dataUrl }));
+    });
   };
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-  //const rootProps = getRootProps();
-  //const inputProps = getInputProps();
-  const editor = useRef<AvatarEditor>(null);
-  const [state, setState] = useState<AvatarState>(initialState);
-  const [clientName, setClientName] = useState<string>("");
+
   const handleNewImage = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
-      setClientName(e.target.files?.[0].name);
-      const fileUrl = URL.createObjectURL(e.target.files?.[0]);
-      setState({ ...state, image: fileUrl });
+      applyFile(e.target.files[0]);
     }
   };
 
@@ -75,16 +185,7 @@ const AvatarCutter = (uploadProps: UploadProps) => {
   };
 
   const handleScale = (e: ChangeEvent<HTMLInputElement>) => {
-    const scale = parseFloat(e.target.value);
-    setState({ ...state, scale });
-  };
-
-  const handleAllowZoomOut = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, allowZoomOut: e.target.checked });
-  };
-
-  const handleDisableCanvasRotation = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, disableCanvasRotation: e.target.checked });
+    setState({ ...state, scale: parseFloat(e.target.value) });
   };
 
   const rotateScale = (e: ChangeEvent<HTMLInputElement>) => {
@@ -106,20 +207,6 @@ const AvatarCutter = (uploadProps: UploadProps) => {
     setState({ ...state, borderRadius: parseInt(e.target.value) });
   };
 
-  const handleXPosition = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      position: { ...state.position, x: parseFloat(e.target.value) },
-    });
-  };
-
-  const handleYPosition = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({
-      ...state,
-      position: { ...state.position, y: parseFloat(e.target.value) },
-    });
-  };
-
   const handleWidth = (e: ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, width: parseInt(e.target.value) });
   };
@@ -128,8 +215,8 @@ const AvatarCutter = (uploadProps: UploadProps) => {
     setState({ ...state, height: parseInt(e.target.value) });
   };
 
-  const logCallback = (e: any) => {
-    console.log("callback", e);
+  const handleShowGrid = (e: ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, showGrid: e.target.checked });
   };
 
   const handlePositionChange = (position: Position) => {
@@ -140,24 +227,21 @@ const AvatarCutter = (uploadProps: UploadProps) => {
     setState({ ...state, backgroundColor: e.target.value });
   };
 
-  const setTransparent = (e: ChangeEvent<HTMLInputElement>) => {
-    const isTransparent = e.target.checked;
-    // set color to white initially
-    const backgroundColor = isTransparent ? "#fff" : undefined;
-    setState({ ...state, backgroundColor, isTransparent });
-  };
-
-  const handleShowGrid = (e: ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, showGrid: e.target.checked });
-  };
-
   const handleBorderColorChange = (e: ChangeEvent<HTMLInputElement>) => {
-    debugger;
-    console.log(e.target.value);
     setState({ ...state, borderColor: e.target.value });
   };
 
-  // Helper function to convert hex color with alpha to RGBA array
+  const handleBorderOpacity = (e: ChangeEvent<HTMLInputElement>) => {
+    const opacity = parseInt(e.target.value).toString(16).padStart(2, "0");
+    setState({ ...state, borderColor: state.borderColor.slice(0, 7) + opacity });
+  };
+
+  const handleLoadFailure = () => {
+    setState((prev) =>
+      prev.image === DEFAULT_AVATAR ? prev : { ...prev, image: DEFAULT_AVATAR }
+    );
+  };
+
   function hexToRgba(hex: string): [number, number, number, number] {
     const r = parseInt(hex.slice(1, 3), 16);
     const g = parseInt(hex.slice(3, 5), 16);
@@ -167,231 +251,230 @@ const AvatarCutter = (uploadProps: UploadProps) => {
   }
 
   return (
-    <div>
-      <div className={"flex flex-row items-center justify-start gap-4"}>
-        <Dropzone
-          onDrop={([image]) => {
-            setClientName(image.name);
-            const base64Url = URL.createObjectURL(image);
-            setState({ ...state, image: base64Url });
-          }}
-          noClick={!state.clickable}
-          multiple={false}
-        >
-          {({ getRootProps, getInputProps }) => (
-            <div {...getRootProps()} className="preview">
-              <AvatarEditor
-                ref={editor}
-                scale={state.scale}
-                width={state.width}
-                height={state.height}
-                position={state.position}
-                showGrid={state.showGrid}
-                onPositionChange={handlePositionChange}
-                rotate={state.rotate}
-                borderRadius={state.width / (100 / state.borderRadius)}
-                backgroundColor={state.backgroundColor}
-                onLoadFailure={logCallback.bind(this, "onLoadFailed")}
-                onLoadSuccess={logCallback.bind(this, "onLoadSuccess")}
-                onImageReady={logCallback.bind(this, "onImageReady")}
-                image={state.image}
-                disableCanvasRotation={state.disableCanvasRotation}
-                borderColor={hexToRgba(state.borderColor)}
-              />
-              <input
-                onChange={handleNewImage}
-                id="imgAvatarUploader"
-                type="file"
-                {...getInputProps()}
-              />
-            </div>
-          )}
-        </Dropzone>
-        <div>
-          <Button onClick={preview}>
-            {t("preview")}
-            <ArrowRightToLine />
-          </Button>
+    <div className={styles.avatarEditor}>
+      <div className={styles.editorStage}>
+        <div className={styles.stageCanvas}>
+          <Dropzone
+            onDrop={([image]) => image && applyFile(image)}
+            noClick
+            multiple={false}
+          >
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps()}>
+                <AvatarEditor
+                  ref={editor}
+                  scale={state.scale}
+                  width={state.width}
+                  height={state.height}
+                  position={state.position}
+                  showGrid={state.showGrid}
+                  onPositionChange={handlePositionChange}
+                  rotate={state.rotate}
+                  borderRadius={state.width / (100 / state.borderRadius)}
+                  backgroundColor={state.backgroundColor}
+                  onLoadFailure={handleLoadFailure}
+                  image={state.image}
+                  disableCanvasRotation={state.disableCanvasRotation}
+                  borderColor={hexToRgba(state.borderColor)}
+                />
+                <input
+                  {...getInputProps()}
+                  accept="image/*"
+                  onChange={handleNewImage}
+                  id="imgAvatarUploader"
+                  type="file"
+                />
+              </div>
+            )}
+          </Dropzone>
         </div>
-        <div>
-          {state.preview && (
-            <>
-              <img
-                alt=""
-                src={state.preview.img}
-                style={{
-                  borderRadius: `${
-                    (Math.min(state.preview.height, state.preview.width) + 10) *
-                    (state.preview.borderRadius / 2 / 100)
-                  }px`,
-                }}
-              />
-            </>
-          )}
+        <div className={styles.stageHint}>
+          <span>{t("dragging-image-to-upload")}</span>
+          <span>{t("or")}</span>
+          <label className={styles.uploadLabel} htmlFor="imgAvatarUploader">
+            <Upload size={14} aria-hidden="true" />
+            {t("upload-image")}
+          </label>
         </div>
       </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("settings")}</CardTitle>
-          <CardDescription
-            className={"flex items-center justify-start gap-2 flex-row"}
-          >
-            {t("dragging-image-to-upload")}
-            <ArrowBigUp
-              className={"bg-accent-foreground text-background"}
-            />{" "}
-            {t("or")} {t("click")}
-            <label
-              className={
-                "flex flex-row items-center justify-start cursor-pointer text-background  bg-accent-foreground py-2 px-4 rounded-md text-sm"
-              }
-              htmlFor="imgAvatarUploader"
+
+      <div className={styles.editorPanel}>
+        <div className={styles.panelCard}>
+          <div className={styles.panelEyebrow}>
+            <span />
+            {t("preview")}
+          </div>
+          <div className={styles.previewBox}>
+            <div
+              className={styles.previewAvatar}
+              style={{ borderRadius: `${(132 * state.borderRadius) / 100}px` }}
             >
-              {t("upload-image")}
-              <UploadIcon />
-            </label>
-          </CardDescription>
-        </CardHeader>
-
-        <CardContent className={"flex flex-col gap-2"}>
-          <div className={"flex flex-row items-center justify-start gap-2"}>
-            <label className={"text-sm font-bold inline-block w-14"}>
-              {t("width")}
-            </label>
-            <input
-              name="scale"
-              type="range"
-              onChange={handleWidth}
-              min={200}
-              max="600"
-              step="10"
-              defaultValue="200"
-            />
-          </div>
-          <div className={"flex flex-row items-center justify-start gap-2"}>
-            <label className={"text-sm font-bold inline-block w-14"}>
-              {t("height")}
-            </label>
-            <input
-              name="scale"
-              type="range"
-              onChange={handleHeight}
-              min={200}
-              max="600"
-              step="10"
-              defaultValue="200"
-            />
-          </div>
-          <div className={"flex flex-row items-center justify-start gap-2"}>
-            <label className={"text-sm font-bold inline-block w-14"}>
-              {t("scale")}
-            </label>
-            <input
-              name="scale"
-              type="range"
-              onChange={handleScale}
-              min={state.allowZoomOut ? "0.1" : "1"}
-              max="2"
-              step="0.01"
-              defaultValue="1"
-            />
-          </div>
-          <div className={"flex flex-row items-center justify-start gap-2"}>
-            <label className={"text-sm font-bold inline-block w-14"}>
-              {t("show-grid")}
-            </label>
-            <input
-              type="checkbox"
-              checked={state.showGrid}
-              onChange={handleShowGrid}
-            />
-          </div>
-          <div className={"flex flex-row items-center justify-start gap-2"}>
-            <label className={"text-sm font-bold inline-block w-14"}>
-              {t("border-radius")}
-            </label>
-            <input
-              name="scale"
-              type="range"
-              onChange={handleBorderRadius}
-              min="0"
-              max="50"
-              step="1"
-              defaultValue="0"
-            />
-          </div>
-          <div className={"flex flex-row items-center justify-start gap-2"}>
-            <label className={"text-sm font-bold inline-block w-14"}>
-              {t("rotate-scale")}
-            </label>
-            <input
-              name="rotation"
-              type="range"
-              onChange={rotateScale}
-              min="0"
-              max="180"
-              step="1"
-              defaultValue="0"
-            />
-            <button onClick={rotateLeft}>
-              <RotateCcw />
-            </button>
-            <button onClick={rotateRight}>
-              <RotateCw />
+              {state.preview ? (
+                <img alt="" src={state.preview.img} />
+              ) : (
+                <span className={styles.previewEmpty}>{t("preview")}</span>
+              )}
+            </div>
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              style={{ width: "100%" }}
+              onClick={preview}
+            >
+              <Eye size={15} aria-hidden="true" />
+              {t("preview")}
             </button>
           </div>
+        </div>
 
-          {state.isTransparent && (
-            <>
-              <div className={"flex flex-row items-center justify-start gap-2"}>
-                <label className={"text-sm font-bold inline-block w-14"}>
-                  {t("background-color")}
-                </label>
-                <input
-                  name="backgroundColor"
-                  type="color"
-                  defaultValue={state.backgroundColor}
-                  onChange={setBackgroundColor}
-                />
-              </div>
-
-              <div className={"flex flex-row items-center justify-start gap-2"}>
-                <label className={"text-sm font-bold inline-block w-14"}>
-                  {t("border-color")}
-                </label>
-                <input
-                  name="borderColor"
-                  type="color"
-                  value={state.borderColor.slice(0, 7)}
-                  onChange={handleBorderColorChange}
-                />
-
-                {t("opacity")}
-                <input
-                  className={"bg-accent-foreground text-background"}
-                  name="borderOpacity"
-                  type="range"
-                  min="0"
-                  max="255"
-                  value={parseInt(state.borderColor.slice(7, 9), 16)}
-                  onChange={(e) => {
-                    const opacity = parseInt(e.target.value)
-                      .toString(16)
-                      .padStart(2, "0");
-                    setState({
-                      ...state,
-                      borderColor: state.borderColor.slice(0, 7) + opacity,
-                    });
-                  }}
-                />
-              </div>
-            </>
-          )}
-          <div className={"flex flex-row items-center justify-center gap-2"}>
-            <Button onClick={localSaveAvatar}>{t("save")}</Button>
+        <div className={styles.panelCard}>
+          <div className={styles.panelEyebrow}>
+            <span />
+            {t("settings")}
           </div>
-        </CardContent>
-      </Card>
+          <div className={styles.settingsGroup}>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t("width")}</span>
+              <input
+                className={styles.range}
+                type="range"
+                min={200}
+                max={600}
+                step={10}
+                value={state.width}
+                onChange={handleWidth}
+                aria-label={t("width")}
+              />
+            </div>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t("height")}</span>
+              <input
+                className={styles.range}
+                type="range"
+                min={200}
+                max={600}
+                step={10}
+                value={state.height}
+                onChange={handleHeight}
+                aria-label={t("height")}
+              />
+            </div>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t("scale")}</span>
+              <input
+                className={styles.range}
+                type="range"
+                min={state.allowZoomOut ? 0.1 : 1}
+                max={2}
+                step={0.01}
+                value={state.scale}
+                onChange={handleScale}
+                aria-label={t("scale")}
+              />
+            </div>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t("rotate-scale")}</span>
+              <input
+                className={styles.range}
+                type="range"
+                min={0}
+                max={360}
+                step={1}
+                value={state.rotate}
+                onChange={rotateScale}
+                aria-label={t("rotate-scale")}
+              />
+              <button
+                type="button"
+                className={styles.iconButton}
+                onClick={rotateLeft}
+                aria-label="rotate left"
+              >
+                <RotateCcw size={15} />
+              </button>
+              <button
+                type="button"
+                className={styles.iconButton}
+                onClick={rotateRight}
+                aria-label="rotate right"
+              >
+                <RotateCw size={15} />
+              </button>
+            </div>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t("border-radius")}</span>
+              <input
+                className={styles.range}
+                type="range"
+                min={0}
+                max={50}
+                step={1}
+                value={state.borderRadius}
+                onChange={handleBorderRadius}
+                aria-label={t("border-radius")}
+              />
+            </div>
+            <div className={styles.settingsRow}>
+              <span className={styles.settingsLabel}>{t("show-grid")}</span>
+              <span className={styles.switch}>
+                <input
+                  type="checkbox"
+                  checked={state.showGrid}
+                  onChange={handleShowGrid}
+                  id="avatarShowGrid"
+                />
+                <span className={styles.switchTrack} />
+              </span>
+            </div>
+
+            {state.isTransparent && (
+              <>
+                <div className={styles.settingsRow}>
+                  <span className={styles.settingsLabel}>
+                    {t("background-color")}
+                  </span>
+                  <input
+                    className={styles.colorInput}
+                    type="color"
+                    value={state.backgroundColor || "#ffffff"}
+                    onChange={setBackgroundColor}
+                    aria-label={t("background-color")}
+                  />
+                </div>
+                <div className={styles.settingsRow}>
+                  <span className={styles.settingsLabel}>
+                    {t("border-color")}
+                  </span>
+                  <input
+                    className={styles.colorInput}
+                    type="color"
+                    value={state.borderColor.slice(0, 7)}
+                    onChange={handleBorderColorChange}
+                    aria-label={t("border-color")}
+                  />
+                  <input
+                    className={styles.range}
+                    type="range"
+                    min={0}
+                    max={255}
+                    value={parseInt(state.borderColor.slice(7, 9), 16)}
+                    onChange={handleBorderOpacity}
+                    aria-label={t("opacity")}
+                  />
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        <button
+          type="button"
+          className={styles.primaryButton}
+          onClick={localSaveAvatar}
+        >
+          {t("save")}
+        </button>
+      </div>
     </div>
   );
 };
