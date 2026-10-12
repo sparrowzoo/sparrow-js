@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>2026-10-12 发版说明</title>
-  <meta name="description" content="头像上传架构解耦：文件上传与裁剪能力下沉 sparrow-file 服务，passport 专注业务头像存储，前端接口适配并重构头像编辑页为左右分栏。">
+  <meta name="description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，并完成头像上传架构解耦、编辑页重构与缓存刷新。">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:site_name" content="Sparrow Zoo">
   <meta property="og:title" content="2026-10-12 发版说明">
-  <meta property="og:description" content="头像上传架构解耦：文件上传与裁剪能力下沉 sparrow-file 服务，passport 专注业务头像存储，前端接口适配并重构头像编辑页为左右分栏。">
+  <meta property="og:description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，并完成头像上传架构解耦、编辑页重构与缓存刷新。">
   <style>
     :root{--bg:#07070d;--panel:rgba(255,255,255,.03);--border:rgba(255,255,255,.10);--text:#f4f4f7;--muted:#a0a3bb;--faint:#69667e;--a:#6d5cff;--a2:#22d3ee;--a3:#a855f7;--r:18px}
     *{box-sizing:border-box}
@@ -52,30 +52,40 @@
     </header>
     <section class="card">
       <h2>摘要</h2>
-      <p>本次发版围绕「头像上传」做了一次架构解耦与体验升级。其一，把文件上传与图片裁剪能力从业务系统中下沉到 <strong>sparrow-file</strong> 文件服务统一复用——服务侧新增通用裁剪参数与后处理策略，只关注技术性剪切、不耦合具体业务；passport 只保留业务侧的头像存储，上传接口拆分为「通用文件上传」与「修改用户头像」两步。其二，前端相应适配接口，并将头像编辑页重构为左右分栏布局，统一 passport 设计系统。</p>
+      <p>本次发版围绕三条线展开：<strong>SEO 完善</strong>、<strong>登录态头像展示</strong>与<strong>头像上传体验升级</strong>。其一，新增 JSON-LD 结构化数据与 openGraph 元信息，并统一站点各入口的标题与描述文案，帮助搜索引擎更准确地理解站点与产品。其二，登录后 header 用户菜单由占位图标改为展示用户真实头像，缺失自定义头像时回退系统占位图、加载失败兜底默认图标。其三，头像上传在能力下沉 sparrow-file、编辑页左右分栏的基础上，进一步修复上传后旧图缓存不刷新的问题，并优化预览触发时机。</p>
     </section>
     <section class="changes">
       <h2>变更明细</h2>
       <section class="group">
-        <h3>重构优化</h3>
+        <h3>新增功能</h3>
         <ul>
-          <li><strong>文件能力下沉</strong>：sparrow-file 服务新增通用图片裁剪参数 <strong>ImageCropperParam</strong> 与裁剪后处理策略 <strong>CropPostProcessStrategy</strong>，上传与剪切能力与业务系统解耦，只做技术性剪切。</li>
-          <li><strong>passport 业务化</strong>：上传接口拆分为通用文件上传 <strong>uploadImage</strong>（携带裁剪参数）与修改用户头像 <strong>modifyUserAvatar</strong> 两步，文件存储与业务存储职责分离。</li>
-          <li><strong>头像编辑页重构</strong>：改为左右分栏结构（左画布 + 右预览/设置/保存），统一 passport 设计系统（深浅色自适应、自定义滑杆与开关）。</li>
+          <li><strong>SEO 结构化数据</strong>：新增 <strong>JsonLd</strong> 组件与五类 JSON-LD 生成器（Organization / WebSite / SoftwareApplication / Course / Person），首页注入 Organization + WebSite，产品页注入 SoftwareApplication，学习页注入 Course + Person，帮助搜索引擎理解站点结构。</li>
+          <li><strong>产品页元信息</strong>：file / im / passport / coder 产品页补齐 openGraph 标题、描述与类型。</li>
+          <li><strong>登录态头像展示</strong>：header 用户菜单由占位图标改为展示真实头像（getAvatar），无自定义头像回退系统占位图，加载失败兜底默认图标。</li>
+          <li><strong>会话头像刷新</strong>：LoginUser 新增 <strong>updateAvatar()</strong>，头像保存成功后同步刷新本地会话缓存。</li>
         </ul>
       </section>
       <section class="group">
-        <h3>新增功能</h3>
+        <h3>重构优化</h3>
         <ul>
-          <li><strong>会话头像刷新</strong>：LoginUser 新增 <strong>updateAvatar()</strong>，头像保存成功后同步刷新本地会话缓存。</li>
-          <li><strong>默认头像回退</strong>：头像编辑器默认加载当前用户头像，缺失时按用户 ID 生成默认图，渲染失败回退默认头像。</li>
+          <li><strong>文件能力下沉</strong>：sparrow-file 服务新增通用裁剪参数 <strong>ImageCropperParam</strong> 与后处理策略 <strong>CropPostProcessStrategy</strong>，上传与剪切能力与业务解耦。</li>
+          <li><strong>passport 业务化</strong>：上传接口拆分为通用文件上传 <strong>uploadImage</strong> 与修改用户头像 <strong>modifyUserAvatar</strong> 两步，文件存储与业务存储职责分离。</li>
+          <li><strong>头像编辑页重构</strong>：改为左右分栏布局，统一 passport 设计系统。</li>
+          <li><strong>预览时机优化</strong>：预览触发改用 <strong>onImageReady</strong> 回调，setState 改为函数式更新。</li>
         </ul>
       </section>
       <section class="group">
         <h3>问题修复</h3>
         <ul>
+          <li><strong>头像缓存不刷新</strong>：上传成功后头像 URL 追加时间戳参数，强制浏览器加载新头像，避免显示旧图。</li>
           <li><strong>清理调试断点</strong>：移除上传链路中遗留的 debugger 断点。</li>
-          <li><strong>加载失败兜底</strong>：头像无法渲染时自动回退到默认头像，避免空白。</li>
+          <li><strong>加载失败兜底</strong>：头像无法渲染时自动回退默认头像，避免空白。</li>
+        </ul>
+      </section>
+      <section class="group">
+        <h3>其他</h3>
+        <ul>
+          <li><strong>文案定位统一</strong>：网站、产品与学习入口的 title / description 统一为「跟着做过项目的人一起做项目」定位，强化 SEO 与品牌表达。</li>
         </ul>
       </section>
     </section>
