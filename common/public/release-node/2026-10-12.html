@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="dark">
   <title>2026-10-12 发版说明</title>
-  <meta name="description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，并完成头像上传架构解耦、编辑页重构与缓存刷新。">
+  <meta name="description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，完成头像上传架构解耦、编辑页重构与缓存刷新，并落地跨域 SSO 用户信息共享与 HTTP/WebSocket 职责解耦。">
   <meta property="og:type" content="article">
   <meta property="og:locale" content="zh_CN">
   <meta property="og:site_name" content="Sparrow Zoo">
   <meta property="og:title" content="2026-10-12 发版说明">
-  <meta property="og:description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，并完成头像上传架构解耦、编辑页重构与缓存刷新。">
+  <meta property="og:description" content="本次发版完善 SEO 结构化数据与页面元信息，登录态 header 展示真实头像，完成头像上传架构解耦、编辑页重构与缓存刷新，并落地跨域 SSO 用户信息共享与 HTTP/WebSocket 职责解耦。">
   <style>
     :root{--bg:#07070d;--panel:rgba(255,255,255,.03);--border:rgba(255,255,255,.10);--text:#f4f4f7;--muted:#a0a3bb;--faint:#69667e;--a:#6d5cff;--a2:#22d3ee;--a3:#a855f7;--r:18px}
     *{box-sizing:border-box}
@@ -52,7 +52,11 @@
     </header>
     <section class="card">
       <h2>摘要</h2>
-      <p>本次发版围绕三条线展开：<strong>SEO 完善</strong>、<strong>登录态头像展示</strong>与<strong>头像上传体验升级</strong>。其一，新增 JSON-LD 结构化数据与 openGraph 元信息，并统一站点各入口的标题与描述文案，帮助搜索引擎更准确地理解站点与产品。其二，登录后 header 用户菜单由占位图标改为展示用户真实头像，缺失自定义头像时回退系统占位图、加载失败兜底默认图标。其三，头像上传在能力下沉 sparrow-file、编辑页左右分栏的基础上，进一步修复上传后旧图缓存不刷新的问题，并优化预览触发时机。</p>
+      <p>本次发版围绕四条线展开：<strong>SEO 完善</strong>、<strong>登录态头像展示</strong>、<strong>头像上传体验升级</strong>与<strong>跨域 SSO 用户信息共享与解耦</strong>。其一，新增 JSON-LD 结构化数据与 openGraph 元信息，并统一站点各入口的标题与描述文案，帮助搜索引擎更准确地理解站点与产品。其二，登录后 header 用户菜单由占位图标改为展示用户真实头像，缺失自定义头像时回退系统占位图、加载失败兜底默认图标。其三，头像上传在能力下沉 sparrow-file、编辑页左右分栏的基础上，进一步修复上传后旧图缓存不刷新的问题，并优化预览触发时机。其四，把「读用户」收敛到 LoginUserProvider 单一 Context，父子组件通过 useLoginUser 共享同一份 LoginUser，HTTP（Fetcher/ChatApi）与 WebSocket（SparrowWebSocket）职责解耦，修改头像由后端重签 token 守护数据一致。</p>
+    </section>
+    <section class="card">
+      <h2>相关文章</h2>
+      <p>本次登录态重构的设计与取舍，详见技术博客 <a href="http://www.sparrowzoo.com/article/cross-domain-sso-user-sharing" target="_blank" rel="noopener">《跨域 SSO 下的用户信息共享与解耦：Context、职责边界与 token 重签》</a>。</p>
     </section>
     <section class="changes">
       <h2>变更明细</h2>
@@ -62,7 +66,8 @@
           <li><strong>SEO 结构化数据</strong>：新增 <strong>JsonLd</strong> 组件与五类 JSON-LD 生成器（Organization / WebSite / SoftwareApplication / Course / Person），首页注入 Organization + WebSite，产品页注入 SoftwareApplication，学习页注入 Course + Person，帮助搜索引擎理解站点结构。</li>
           <li><strong>产品页元信息</strong>：file / im / passport / coder 产品页补齐 openGraph 标题、描述与类型。</li>
           <li><strong>登录态头像展示</strong>：header 用户菜单由占位图标改为展示真实头像（getAvatar），无自定义头像回退系统占位图，加载失败兜底默认图标。</li>
-          <li><strong>会话头像刷新</strong>：LoginUser 新增 <strong>updateAvatar()</strong>，头像保存成功后同步刷新本地会话缓存。</li>
+          <li><strong>登录用户共享</strong>：新增 <strong>LoginUserProvider</strong> 与 <strong>useLoginUser</strong>，把登录用户收敛为单一 Context 数据源，父子组件共享同一份 LoginUser，避免各处重复取 token、重复解码。</li>
+          <li><strong>token 变更订阅</strong>：<strong>CrosStorage</strong> 新增 <strong>onTokenChange / notifyTokenChange</strong>，登录、登出、换头像等 token 变更统一广播，订阅组件自动刷新。</li>
         </ul>
       </section>
       <section class="group">
@@ -72,6 +77,8 @@
           <li><strong>passport 业务化</strong>：上传接口拆分为通用文件上传 <strong>uploadImage</strong> 与修改用户头像 <strong>modifyUserAvatar</strong> 两步，文件存储与业务存储职责分离。</li>
           <li><strong>头像编辑页重构</strong>：改为左右分栏布局，统一 passport 设计系统。</li>
           <li><strong>预览时机优化</strong>：预览触发改用 <strong>onImageReady</strong> 回调，setState 改为函数式更新。</li>
+          <li><strong>HTTP 与 WebSocket 职责解耦</strong>：<strong>Fetcher / ChatApi</strong> 专注请求-响应与 Authorization 头，<strong>SparrowWebSocket</strong> 专注实时通道、握手鉴权与鉴权失败清 token，<strong>MessageBroker</strong> 作为组装点接收 LoginUser 而非 token。</li>
+          <li><strong>头像重签保证一致</strong>：修改头像由后端重新签发包含新头像的 token，前端 <strong>setToken</strong> 覆盖并触发全局通知，父子组件与后续请求读到一致的用户信息。</li>
         </ul>
       </section>
       <section class="group">
