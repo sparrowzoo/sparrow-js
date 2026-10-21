@@ -79,7 +79,7 @@ export default class MessageBroker {
       const oppositeUser = chatSession.getOppositeUser(this.currentUser);
       protocol = Protocol.create121Chat(
         this.currentUser,
-        MessageType.TEXT_MESSAGE,
+        MessageType.TEXT,
         oppositeUser as ChatUser,
         content,
         new Date().getTime()
@@ -88,7 +88,7 @@ export default class MessageBroker {
       protocol = Protocol.createGroupChat(
         this.currentUser,
         sessionKey,
-        MessageType.TEXT_MESSAGE,
+        MessageType.TEXT,
         content,
         new Date().getTime()
       );

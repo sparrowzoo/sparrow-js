@@ -30,7 +30,7 @@ export default function Page() {
 
 function TableConfigContent() {
     const pageTranslate = useTranslations("TableConfig");
-    const errorTranslate = useTranslations("TableConfig.ErrorMessage");
+    const errorTranslate = useTranslations("ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
     const [dataState, setDataState] = useState<Result | undefined>();
     const searchParams = useSearchParams();

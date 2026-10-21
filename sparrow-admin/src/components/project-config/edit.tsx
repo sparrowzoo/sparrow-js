@@ -98,12 +98,6 @@ export default function EditPage({cellContext, callbackHandler}: CellContextProp
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   errorMessage={errors.modulePrefix?.message} fieldPropertyName={"modulePrefix"}/>
-                <ValidatableInput readonly={false}
-                                  defaultChecked={original.wrapWithParent} {...register("wrapWithParent")}
-                                  type={"checkbox"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  fieldPropertyName={"wrapWithParent"}/>
                 <ValidatableInput readonly={false} defaultValue={original.scaffold} {...register("scaffold")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}

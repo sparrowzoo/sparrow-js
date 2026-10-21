@@ -6,7 +6,6 @@
   "frontendName": "Frontend Project Name",
   "description": "Description",
   "createUserName": "Created By",
-  "wrapWithParent": "Use Parent Module",
   "gmtCreate": "Created At",
   "i18n": "i18n",
   "modulePrefix": "Module Prefix",
@@ -39,7 +38,6 @@
     },
     "description": {},
     "id": {},
-    "wrapWithParent": {},
     "i18n": {},
     "modulePrefix": {
       "empty-message": "Cannot be empty"
