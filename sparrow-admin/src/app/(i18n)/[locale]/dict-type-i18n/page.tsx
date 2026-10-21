@@ -16,15 +16,13 @@ import Result from "@/common/lib/protocol/Result";
 import useNavigating from "@/common/hook/NavigatingHook";
 
 
-
-
 const pagination = {pageIndex: 0, pageSize: 10};
 
 export default function Page() {
-    const errorTranslate = useTranslations("DictTypeI18n.ErrorMessage");
+    const errorTranslate = useTranslations("ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
     const [dataState, setDataState] = useState<Result | undefined>();
-    const  Navigations=useNavigating();
+    const Navigations = useNavigating();
     const redirectToLoginRef = useRef(Navigations.redirectToLogin);
     const init = useCallback(() => {
         DictTypeI18nApi.search({...pagination}, errorTranslate, redirectToLoginRef.current).then(
@@ -39,14 +37,15 @@ export default function Page() {
     }, [init]);
 
 
-      const deleteHandler= (id: number) => {
-            DictTypeI18nApi.delete(id, errorTranslate,Navigations.redirectToLogin).then(()=>{
-                toast.success(globalTranslate("delete")+globalTranslate("operation-success"));
-                init();
-            }).catch(()=>{});
-        }
+    const deleteHandler = (id: number) => {
+        DictTypeI18nApi.delete(id, errorTranslate, Navigations.redirectToLogin).then(() => {
+            toast.success(globalTranslate("delete") + globalTranslate("operation-success"));
+            init();
+        }).catch(() => {
+        });
+    }
 
-        
+
     if (!dataState) {
         return (
             <div className="admin-page admin-data-page space-y-3">
@@ -71,7 +70,7 @@ export default function Page() {
                     EditComponent={EditPage}
                     deleteHandler={deleteHandler}
                     initHandler={init}
-                    
+
                     defaultPager={{pageIndex: 0, pageSize: -1}}
                     RowOperationComponents={[]}
                 ></DataTable>

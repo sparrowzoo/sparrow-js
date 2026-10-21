@@ -20,7 +20,6 @@ description:string;
 modulePrefix:string; 
 architectures:string; 
 config:string; 
-wrapWithParent:boolean; 
 scaffold:string;
 fullBasePackageName:string;
 createUserName:string; 
@@ -83,11 +82,6 @@ enableHiding: true
 accessorKey: "architectures",
 header: PlainTextHeader({columnTitle: "代码架构"} as ColumnOperationProps),
 cell: NormalCell("architectures"),
-enableHiding: true
-},{
-accessorKey: "wrapWithParent",
-header: PlainTextHeader({columnTitle: "是否使用父module"} as ColumnOperationProps),
-cell: NormalCell("wrapWithParent"),
 enableHiding: true
 },{
 accessorKey: "scaffold",

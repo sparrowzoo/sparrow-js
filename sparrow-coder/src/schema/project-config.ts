@@ -28,8 +28,7 @@ function createSchema(translate: (key: string) => string) {
                 v.string(),
                 v.nonEmpty(translate("modulePrefix.empty-message")))
 
-        , wrapWithParent: v.boolean(),
-        scaffold:v.string(),
+        , scaffold:v.string(),
         fullBasePackageName: v.string()
 
     });

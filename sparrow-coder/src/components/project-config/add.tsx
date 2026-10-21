@@ -95,11 +95,6 @@ export default function Page({callbackHandler}: TableOperationProps<ProjectConfi
                                   isSubmitted={isSubmitted}
                                   pageTranslate={pageTranslate}
                                   errorMessage={errors.modulePrefix?.message} fieldPropertyName={"modulePrefix"}/>
-                <ValidatableInput readonly={false}  {...register("wrapWithParent")}
-                                  type={"checkbox"}
-                                  isSubmitted={isSubmitted}
-                                  pageTranslate={pageTranslate}
-                                  fieldPropertyName={"wrapWithParent"}/>
                 <ValidatableInput readonly={false}  {...register("scaffold")}
                                   type={"text"}
                                   isSubmitted={isSubmitted}

@@ -22,7 +22,7 @@ import DownloadScaffold from "@/components/project-config/operations/download";
 const pagination = {pageIndex: 0, pageSize: 10};
 
 export default function Page() {
-    const errorTranslate = useTranslations("ProjectConfig.ErrorMessage");
+    const errorTranslate = useTranslations("ErrorMessage");
     const globalTranslate = useTranslations("GlobalForm");
     const [dataState, setDataState] = useState<Result | undefined>();
     const Navigations = useNavigating();

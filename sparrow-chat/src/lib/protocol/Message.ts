@@ -48,7 +48,7 @@ export default class Message {
     message.sender = protocol.sender;
     message.session = protocol.chatSession;
     message.receiver = protocol.receiver;
-    message.content = protocol.getStringContent();
+    message.content = protocol.getStringPayload();
     message.clientSendTime = protocol.clientSendTime;
     message.serverTime = protocol.serverTime;
     message.messageId = protocol.clientSendTime + "" + protocol.sender.id;
