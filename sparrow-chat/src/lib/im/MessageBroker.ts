@@ -85,13 +85,15 @@ export default class MessageBroker {
         if (chatSession?.chatType == ChatType.CHAT_1_TO_1) {
             const oppositeUser = chatSession.getOppositeUser(this.currentUser);
             let protocolType = ProtocolType.IM;
+            let messageType = MessageType.TEXT;
             if (oppositeUser?.category == process.env.NEXT_PUBLIC_USER_CATEGORY_AI) {
                 protocolType = ProtocolType.AI_REQUEST;
+                messageType = MessageType.CONSULT;
             }
             protocol = Protocol.create121Chat(
                 protocolType,
                 this.currentUser,
-                MessageType.TEXT,
+                messageType,
                 oppositeUser as ChatUser,
                 content,
                 new Date().getTime()

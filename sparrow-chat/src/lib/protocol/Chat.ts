@@ -3,7 +3,7 @@ export enum ChatType {
     GROUP = 1,
 }
 
-export enum MessageType { TEXT = 0 }
+export enum MessageType { TEXT = 0, HTML = 1, MARKDOWN = 2, CONSULT = 10}
 
 export enum DeviceType { UNKNOW = 0, PC = 1, MOBILE = 2, APP = 3 }
 
