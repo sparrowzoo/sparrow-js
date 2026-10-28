@@ -1,15 +1,15 @@
 import {readFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {describe, expect, it} from 'vitest';
-const projects=['common','react-next-admin','react-next-im','react-next-passport'];
+const projects=['common','sparrow-admin','sparrow-chat','sparrow-passport'];
 function config(project:string,mode:string) {
     const text=readFileSync(resolve(process.cwd(),'..',project,`.env.${mode}`),'utf8');
     return Object.fromEntries(text.split('\n').filter(l=>l&&!l.startsWith('#')).map(l=>{const i=l.indexOf('=');return [l.slice(0,i),l.slice(i+1)];}));
 }
 describe('S12 four-site release configuration',()=>{
-    it('uses one new token key in all environments without reviving the old key',()=>{
+    it('uses the backend Authorization token key across all sites and environments',()=>{
         const configs=projects.flatMap(p=>['development','production'].map(m=>config(p,m)));
-        expect(new Set(configs.map(c=>c.NEXT_PUBLIC_TOKEN_KEY))).toEqual(new Set(['sparrow_sso_token']));
+        expect(new Set(configs.map(c=>c.NEXT_PUBLIC_TOKEN_KEY))).toEqual(new Set(['Authorization']));
     });
     it('enables identical HTTPS shared-domain Cookie settings in production',()=>{
         for(const project of projects) {

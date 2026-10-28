@@ -16,7 +16,7 @@ import {useTranslations} from "next-intl";
 import Result from "@/common/lib/protocol/Result";
 
 export interface TalkProps {
-    ai: boolean
+    ai?: boolean
 }
 
 export default function Talk(talkProps: TalkProps) {

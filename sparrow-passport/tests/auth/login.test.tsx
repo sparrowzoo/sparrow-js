@@ -9,7 +9,7 @@ vi.mock('next-intl', () => ({useLocale:()=> 'zh', useTranslations:()=> (key:stri
 vi.mock('react-hot-toast', () => ({default:{success:api.success,error:api.error}}));
 vi.mock('@/common/hook/NavigatingHook', () => ({default:()=>({redirectTo:api.redirect})}));
 vi.mock('@/common/hook/CaptchaHook', () => ({default:()=>({current:null})}));
-vi.mock('@/components/passport/use-auth-suffix', () => ({default:()=>''}));
+vi.mock('@/common/hook/use-auth-suffix', () => ({default:()=>''}));
 vi.mock('@/components/password/Find', () => ({default:()=>null}));
 vi.mock('@/components/passport/captcha-image', () => ({default:()=>null}));
 vi.mock('@/components/passport/auth-shell', () => ({default:({children}:React.PropsWithChildren)=> <main>{children}</main>}));
@@ -40,14 +40,14 @@ async function submit(remember:boolean) {
             input.dispatchEvent(new Event('input',{bubbles:true}));
         });
     }
-    if(remember) await act(async()=>container.querySelector<HTMLInputElement>('#rememberMe')!.click());
+    if(remember) await act(async()=>container.querySelector<HTMLInputElement>('#remember')!.click());
     await act(async()=>{container.querySelector('form')!.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));});
 }
 describe('S09 sign-in remember option and save ordering',()=>{
     it.each([false,true])('preserves the login payload and saves remember=%s before redirect',async remember=>{
         const writes=vi.spyOn(document,'cookie','set');
         await submit(remember);
-        expect(api.signIn).toHaveBeenCalledWith({userName:'alice',password:'Password1!',captcha:'abcd',rememberMe:remember},expect.any(Function));
+        expect(api.signIn).toHaveBeenCalledWith({userName:'alice',password:'Password1!',captcha:'abcd',remember:remember},expect.any(Function));
         expect(document.cookie).toContain('login-test=opaque.%2525%3D%3Dtoken');
         const assignment=writes.mock.calls.at(-1)![0];
         if(remember) expect(assignment).toContain('Max-Age=1296000');
@@ -56,9 +56,10 @@ describe('S09 sign-in remember option and save ordering',()=>{
         await act(async()=>vi.advanceTimersByTime(2000));expect(api.redirect).toHaveBeenCalledOnce();
     });
     it('does not report success or redirect when Cookie persistence fails',async()=>{
+        vi.spyOn(console,'error').mockImplementation(()=>{});
         vi.spyOn(document,'cookie','set').mockImplementation(()=>{});
         await submit(true);
-        expect(api.signIn).toHaveBeenCalledOnce();expect(api.error).toHaveBeenCalledOnce();
+        expect(api.signIn).toHaveBeenCalledOnce();expect(api.error).toHaveBeenCalledExactlyOnceWith('system_server_error');
         expect(api.success).not.toHaveBeenCalled();
         await act(async()=>vi.advanceTimersByTime(3000));expect(api.redirect).not.toHaveBeenCalled();
     });

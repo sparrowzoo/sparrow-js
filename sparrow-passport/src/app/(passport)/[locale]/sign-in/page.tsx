@@ -52,16 +52,21 @@ export default function SignInPage() {
         setIsLoading(true)
         try {
             const result = await signIn(data, t)
-            if (!crosStorage) throw new Error('Login storage is not ready')
-            await crosStorage.setToken(
-                result.data.token,
-                StorageType.AUTOMATIC,
-                { remember: data.remember === true }
-            )
+            try {
+                if (!crosStorage) throw new Error('Login storage is not ready')
+                await crosStorage.setToken(
+                    result.data.token,
+                    StorageType.AUTOMATIC,
+                    { remember: data.remember === true }
+                )
+            } catch (error) {
+                toast.error(t('system_server_error'))
+                throw error
+            }
             toast.success(t('sign-in-success'))
             setTimeout(() => redirectTo(UrlUtils.getQueryString() || ''), 2000)
         } catch (error) {
-            // Business errors are translated by Fetcher; network failures still need feedback.
+            // Fetcher reports request errors; token persistence errors are reported above.
             if (error instanceof Error) console.error(error)
         } finally {
             setIsLoading(false)

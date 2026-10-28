@@ -11,7 +11,7 @@ const singleFrame = Uint8Array.from([
     5, 49, 50, 95, 51, 52, 1, 49, 1, 1, 50, 2,
 ]);
 function single() {
-    return Protocol.create121Chat(new ChatUser("1", 1), 65535,
+    return Protocol.create121Chat(ProtocolType.IM, new ChatUser("1", 1), 65535,
         new ChatUser("2", 2), "你", 12);
 }
 function event(type: ProtocolType) {
@@ -30,7 +30,7 @@ describe("Java protocol compatibility", () => {
     });
 
     it("preserves a leading UTF-8 BOM in payload and user IDs like Java", () => {
-        const p = Protocol.create121Chat(new ChatUser("\uFEFF1", 1), 0, new ChatUser("2", 1), "\uFEFFtext", 1);
+        const p = Protocol.create121Chat(ProtocolType.IM, new ChatUser("\uFEFF1", 1), 0, new ChatUser("2", 1), "\uFEFFtext", 1);
         const decoded = Protocol.fromBytes(p.toBytes());
         expect(decoded.payload).toBe("\uFEFFtext");
         expect(decoded.sender?.id).toBe("\uFEFF1");
@@ -95,7 +95,7 @@ describe("Java protocol compatibility", () => {
 
     it("supports AI and a group key measured in UTF-8 bytes", () => {
         const p = Protocol.createGroupChat(new ChatUser("中", 255), "1群", 256, "", 1);
-        p.protocolType = ProtocolType.AI;
+        p.protocolType = ProtocolType.AI_REQUEST;
         const decoded = Protocol.fromBytes(p.toBytes());
         expect(decoded.protocolType).toBe(0);
         expect(decoded.sessionLength).toBe(4);
