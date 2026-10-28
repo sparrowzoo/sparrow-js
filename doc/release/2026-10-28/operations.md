@@ -6,7 +6,7 @@
 
 本次覆盖 11 个相关仓库：sparrow-shell、sparrow-starter、sparrow-messaging-gateway、sparrow-chat、sparrow-agent、sparrow-js、sparrow-passport-ddd、sparrow-file、sparrow-security、sparrow-coder、sparrowzoo。完整提交前 SHA、分支、暂存与未暂存差异、未跟踪文件见 diff-inventory.json/md。shell 已有最新提交，本次没有再修改。
 
-前端上一次发版记录是 2026-10-14（f7bde8b），本次包含其后的 d0fb80c 及所有相关工作树改动。shell 使用 RELEASE-20261016..e702d6e 作候选历史参照；该 tag 已声明 Java25/Boot4.0.8/AI2.0.1，不能写成此 tag 之后才首次升级 AI2.0。gateway 按新项目全部源码；agent 以 main 的 19fcddc 脚手架作全量参照，实际当前是 feature_req-r04-token-counter，不是 main。其他依赖按当前 HEAD 与工作树差异，不能据此声称已经覆盖生产旧版本以来的所有历史迁移。
+前端上一次发版记录是 2026-10-14（f7bde8b），本次包含其后的 d0fb80c 及所有相关工作树改动。shell 使用 RELEASE-20261016..e702d6e 作候选历史参照；该 tag 已声明 Java25/Boot4.0.8/AI2.0.1，不能写成此 tag 之后才首次升级 AI2.0。gateway 按新项目全部源码；agent 以 main 的 19fcddc 脚手架作全量参照，调查开始位于 feature_req-r04-token-counter；过程中另一会话切到 feature_req-r05-agent-skills，最终源码锁定为 d272e8f，不是 main。其他依赖按当前 HEAD 与工作树差异，不能据此声称已经覆盖生产旧版本以来的所有历史迁移。
 
 主要改动：
 
@@ -74,7 +74,10 @@ NEXT_PUBLIC_*会写入静态产物，必须在执行build前配置；只在Nginx
 Agent模型二选一：
 
 - 默认配置spring.ai.model.chat=codex-cli，CODEX_EXECUTABLE指定绝对可执行路径，运行账号需要有效Codex登录状态；当前模型名和60秒超时需按目标环境核对，不继承开发者个人登录态或依赖某次本机CLI安装。
-- Anthropic：设置spring.ai.model.chat=anthropic（可用SPRING_AI_MODEL_CHAT），ANTHROPIC_API_KEY或ANTHROPIC_AUTH_TOKEN、ANTHROPIC_BASE_URL、ANTHROPIC_MODEL；不要同时误启另一套模型。base-url当前嵌套同名变量，无配置时需确认解析结果。
+- Anthropic：设置spring.ai.model.chat=anthropic（可用SPRING_AI_MODEL_CHAT），ANTHROPIC_API_KEY或ANTHROPIC_AUTH_TOKEN、ANTHROPIC_BASE_URL、ANTHROPIC_MODEL；不要同时误启另一套模型。最终源码已将base-url回退值改为空；部署方仍须提供正确服务入口。
+- 新增共享Skills/工具配置：启动前必须设置SPARROW_AGENT_SKILL_WORKSPACE为服务账号可读的技能目录，或显式设置agent.skills.dirs覆盖。空值/无效目录会导致初始化失败。不要依赖开发机相对目录；部署方提供目录内容和来源SHA。本机AICoding@954036e仅为参考技能来源，不由本轮安装到项目目录。
+- BRAVE_API_KEY为可选搜索密钥，缺失时WebSearch不注册；SPARROW_LOG_FILE为可选日志路径，默认logs/sparrow-agent.log，服务账号需可写。Spring AI Agent Utils固定0.13.0。
+- 当前模型注册Skills、Shell、FileSystem与网页抓取工具。面向公网客服前要验证服务账号最小权限、工作目录/技能可执行范围以及不能越权读写或执行命令；不能仅以“模型能回答”代替工具权限验收。
 - 数据库/Redis/认证配置使用目标环境外置值；文档不复制开发账号密码。MySQL schema、Redis DB/前缀、JWT密钥及可信域必须与登录站及业务服务一致。
 
 ## 5. SQL执行准备与顺序
@@ -151,3 +154,9 @@ DEPLOY_DIR=/workspace/deploy ARTIFACTS_DIR=/workspace/artifacts bash deploy/depl
 ## 9. 本轮交付与授权记录
 
 用户确认版本按日期2026-10-28；明确允许一并提交本项目依赖源码。AI环境变量值由用户提供。Git提交记录另见提交清单；未推送、未合并、未打发布tag、未执行SQL、未部署。当前结论为“发版资料已整理，仍有上线前必须处理/核对事项”，不是“生产可直接放行”。
+
+## 10. 最终提交快照补充
+
+初始diff-inventory记录的是调查开始时状态，便于追溯；最终全部提交文件以committed-inventory.json及提交清单为准。agent期间新增共同工具装配、SLF4J日志Advisor、Skills目录/可选Brave配置和测试，已核对并纳入源码提交。两条旧测试路径在最终HEAD中不存在，新codex目录测试已提交；工作区仍显示的旧路径删除为其他会话遗留的index intent-to-add状态，本轮不清理其他会话索引。后续新增功能不自动纳入本次固定SHA。
+
+本次原始证据中的旧base-url嵌套默认值描述已被最终源码修正；不得按旧快照重复报告该项为现存问题。原始backend/sql审计保留调查时点，生产操作以本文件及最终源码为准。
