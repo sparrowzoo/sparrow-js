@@ -31,3 +31,9 @@ build/
 
 # Next.js 自动生成
 next-env.d.ts
+
+# 依赖统一使用 Yarn
+package-lock.json
+
+# 安装失败日志
+yarn-error.log
