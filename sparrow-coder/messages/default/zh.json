@@ -33,6 +33,19 @@
     "clear-scaffold": "清除脚手架",
     "init-scaffold": "初始化脚手架",
     "generate-code": "生成代码",
+    "generate-ddl": "生成DDL",
+    "create-tables": "执行建表",
+    "create-tables-results": "建表结果（当前连接的数据库）",
+    "create-tables-complete": "建表处理完成，请查看各表结果",
+    "create-tables-partial-failure": "部分表建表失败，请查看各表结果",
+    "create-table-created": "建表成功",
+    "create-table-skipped": "表已存在，已跳过",
+    "create-table-ddl-not-found": "未找到DDL文件，请先点击“生成DDL”",
+    "create-table-invalid-ddl": "DDL内容不符合要求，请重新生成DDL",
+    "create-table-not-in-project": "该表不属于当前项目的已启用表",
+    "create-table-failed": "建表失败，请检查数据库权限和后端日志",
+    "create-tables-invalid-response": "未收到有效的建表结果，请检查后端服务",
+    "ddl-network-error": "请求失败，请检查网络连接",
     "zip-download": "压缩并下载",
     "pagination": {
       "previous": "上一页",
@@ -57,7 +70,13 @@
   "ErrorMessage": {
     "system_server_error": "系统错误，请稍侯再试...",
     "global_parameter_null": "参数不能为空...",
-    "class_not_found": "找不到类..."
+    "class_not_found": "找不到类...",
+    "user_not_login": "请先登录",
+    "http_forbidden": "没有权限执行此操作",
+    "http_bad_request": "请求内容有误",
+    "http_invalid_response": "服务器响应格式错误",
+    "http_request_failed": "请求失败（HTTP {status}）",
+    "business_error": "请求失败（错误码 {code}）"
   },
   "Header": {
     "index": "首页",

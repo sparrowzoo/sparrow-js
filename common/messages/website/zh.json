@@ -181,6 +181,23 @@
           {"label": "进入联系人与会话", "detail": "选择联系人或群组，加载会话与消息记录。"},
           {"label": "收发与查询消息", "detail": "通过实时连接交换消息，并通过接口查询历史。"}
         ],
+        "customerService": {
+          "eyebrow": "CUSTOMER SERVICE / 在线客服",
+          "title": "人工客服与 AI 智能客服，分别体验。",
+          "description": "在页面右下角打开客服窗口，体验人工沟通或 AI 问答两种服务方式。",
+          "human": {
+            "caption": "HUMAN SUPPORT",
+            "title": "人工客服",
+            "description": "通过即时聊天与客服人员沟通，体验人工接待与消息交流。",
+            "action": "体验人工客服"
+          },
+          "ai": {
+            "caption": "AI SUPPORT",
+            "title": "AI 智能客服",
+            "description": "在客服窗口向 AI 提问，体验由大语言模型生成回复的智能问答。",
+            "action": "体验 AI 智能客服"
+          }
+        },
         "integrationTitle": "从界面到连接，都有工程参考。",
         "integrationDescription": "react-next-im 提供 React / Next.js 通讯界面与消息处理实现，公共库沉淀 WebSocket 连接能力。结合 Netty 实践文档，理解消息处理与内存管理的细节。",
         "resources": [

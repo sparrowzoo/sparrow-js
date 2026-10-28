@@ -55,7 +55,7 @@ describe("S06/S07 existing consumers retain the original token transport", () =>
         ]);
         const storage = CrosStorage.getCrosStorage();
         cleanups.push(() => storage.destroy());
-        const fetchRequest = vi.fn().mockResolvedValue({json: async () => ({code: "0", data: "ok"})});
+        const fetchRequest = vi.fn().mockResolvedValue({ok: true, status: 200, json: async () => ({code: "0", data: "ok"})});
         vi.stubGlobal("fetch", fetchRequest);
         await Fetcher.get({url: "/read.json", crosStorage: storage});
         saveCookie("second.token%25");
@@ -77,6 +77,8 @@ describe("S06/S07 existing consumers retain the original token transport", () =>
         const {default: Fetcher} = await import("../../src/common/lib/Fetcher");
         const blob = new Blob(["zip-data"], {type: "application/zip"});
         const fetchRequest = vi.fn().mockResolvedValue({
+            ok: true,
+            status: 200,
             headers: new Headers({"content-type": "application/zip", "content-disposition": 'attachment; filename="export.zip"'}),
             blob: async () => blob,
         });
@@ -96,10 +98,10 @@ describe("S06/S07 existing consumers retain the original token transport", () =>
     it("leaves business expiry to the backend and preserves its login rejection path", async () => {
         const {default: Fetcher} = await import("../../src/common/lib/Fetcher");
         const rejected = {code: "1", key: "user_not_login", message: "Please sign in", data: null};
-        const fetchRequest = vi.fn().mockResolvedValue({json: async () => rejected});
+        const fetchRequest = vi.fn().mockResolvedValue({ok: false, status: 400, json: async () => rejected});
         const redirectToLogin = vi.fn();
         vi.stubGlobal("fetch", fetchRequest);
-        await expect(Fetcher.get({url: "/protected", redirectToLogin})).rejects.toEqual(rejected);
+        await expect(Fetcher.get({url: "/protected", redirectToLogin})).rejects.toThrow("Please sign in");
         expect(fetchRequest).toHaveBeenCalledTimes(1);
         expect(fetchRequest.mock.calls[0][1].headers.Authorization).toBe(originalToken);
         expect(redirectToLogin).toHaveBeenCalledTimes(1);

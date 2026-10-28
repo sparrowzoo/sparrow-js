@@ -7,7 +7,7 @@ const COOKIE_SAME_SITE = process.env.NEXT_PUBLIC_TOKEN_COOKIE_SAME_SITE;
 const COOKIE_SECURE = process.env.NEXT_PUBLIC_TOKEN_COOKIE_SECURE;
 const COOKIE_DAYS = process.env.NEXT_PUBLIC_TOKEN_COOKIE_DAYS;
 
-const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY as string;
+const TOKEN_KEY = process.env.NEXT_PUBLIC_TOKEN_KEY as string || 'Authorization';
 
 const NEXT_ASSET_PREFIX = process.env.NEXT_PUBLIC_ASSET_PREFIX || "";
 const STORAGE_PROXY = process.env.NEXT_PUBLIC_STORAGE_PROXY;

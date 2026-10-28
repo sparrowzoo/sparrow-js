@@ -62,7 +62,12 @@
     "system_server_error": "System error, please try again later...",
     "global_parameter_null": "Parameter cannot be null...",
     "user_not_login": "User not logged in...",
-    "table_locked": "Operation done, but table {table} is locked, code generation skipped!"
+    "table_locked": "Operation done, but table {table} is locked, code generation skipped!",
+    "http_forbidden": "You do not have permission to do this",
+    "http_bad_request": "Invalid request",
+    "http_invalid_response": "Invalid server response",
+    "http_request_failed": "Request failed (HTTP {status})",
+    "business_error": "Request failed (code {code})"
   },
   "projectId": "Project",
   "actions": "Actions",

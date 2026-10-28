@@ -21,5 +21,14 @@
   "showInList": "列表",
   "chineseName": "中文名",
   "headerType": "表头",
-  "datasourceType": "数据源"
+  "datasourceType": "数据源",
+  "ErrorMessage": {
+    "user_not_login": "请先登录",
+    "http_forbidden": "没有权限执行此操作",
+    "http_bad_request": "请求内容有误",
+    "system_server_error": "服务器错误，请稍后再试",
+    "http_invalid_response": "服务器响应格式错误",
+    "http_request_failed": "请求失败（HTTP {status}）",
+    "business_error": "请求失败（错误码 {code}）"
+  }
 }

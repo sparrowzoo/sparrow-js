@@ -33,6 +33,19 @@
     "clear-scaffold": "Clear Scaffold",
     "init-scaffold": "Init Scaffold",
     "generate-code": "Generate Code",
+    "generate-ddl": "Generate DDL",
+    "create-tables": "Create Tables",
+    "create-tables-results": "Table creation results (current database)",
+    "create-tables-complete": "Table creation processed. See the results for each table.",
+    "create-tables-partial-failure": "Some tables could not be created. See the results for each table.",
+    "create-table-created": "Table created",
+    "create-table-skipped": "Table already exists; skipped",
+    "create-table-ddl-not-found": "DDL file not found. Click Generate DDL first.",
+    "create-table-invalid-ddl": "Invalid DDL content. Generate the DDL again.",
+    "create-table-not-in-project": "This table is not enabled in the current project.",
+    "create-table-failed": "Table creation failed. Check database permissions and backend logs.",
+    "create-tables-invalid-response": "No valid table creation results received. Check the backend service.",
+    "ddl-network-error": "Request failed. Check your network connection.",
     "zip-download": "Compress & Download",
     "pagination": {
       "previous": "Previous",
@@ -59,7 +72,12 @@
     "global_parameter_null": "Parameter cannot be null...",
     "class_not_found": "Class not found...",
     "class_can_not_assignable_po": "The implementation class must be a subclass of PO",
-    "user_not_login": "Please Login !"
+    "user_not_login": "Please Login !",
+    "http_forbidden": "You do not have permission to do this",
+    "http_bad_request": "Invalid request",
+    "http_invalid_response": "Invalid server response",
+    "http_request_failed": "Request failed (HTTP {status})",
+    "business_error": "Request failed (code {code})"
   },
   "Header": {
     "index": "Home",

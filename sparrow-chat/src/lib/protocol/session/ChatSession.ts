@@ -1,3 +1,4 @@
+import {encodeUtf8} from "@/lib/protocol/Utf8";
 import {ChatType} from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import Message from "@/lib/protocol/Message";
@@ -79,14 +80,12 @@ export default class ChatSession {
     }
 
     public static parse(sessionKey: string) {
-        if (sessionKey == null) {
+        if (sessionKey == null || sessionKey.length === 0) {
             return null;
         }
         const chatSession = new ChatSession();
-        const chatType: ChatType = parseInt(
-            sessionKey.substring(0, 1),
-            10
-        ) as ChatType;
+        if (!/^[0-9]/.test(sessionKey)) throw new Error("Session chat type must be a decimal digit");
+        const chatType = Number(sessionKey[0]) as ChatType;
         const id = sessionKey.substring(1);
         chatSession.chatType = chatType;
         chatSession.id = id;
@@ -109,43 +108,45 @@ export default class ChatSession {
     }
 
     public getOppositeUser(currentUser: ChatUser) {
-        if (currentUser == null) {
-            return null;
-        }
-        if (this.chatType === ChatType.GROUP) {
-            return null;
-        }
+        if (!this.isOne2One() || currentUser == null) return null;
+        const [bigUser, smallUser] = this.get1To1Members();
+        if (bigUser.equals(currentUser)) return smallUser;
+        if (smallUser.equals(currentUser)) return bigUser;
+        return null;
+    }
 
-        const bigUserCategory = this.id.substring(0, 1);
-        const smallUserCategory = this.id.substring(1, 2);
-        const bitUserLength = parseInt(this.id.substring(2, 4), 10);
-        const bigUserId = this.id.substring(4, 4 + bitUserLength);
-        const smallUserId = this.id.substring(4 + bitUserLength);
-
-        const bigUser = new ChatUser(bigUserId, parseInt(bigUserCategory, 10));
-        const smallUser = new ChatUser(
-            smallUserId,
-            parseInt(smallUserCategory, 10)
-        );
-
-        if (bigUser.equals(currentUser)) {
-            return smallUser;
+    public get1To1Members(): [ChatUser, ChatUser] {
+        if (!this.id || this.id.length < 6 || !/^[0-9]{4}/.test(this.id)) {
+            throw new Error("Invalid single-chat session key");
         }
-        return bigUser;
+        const bigLength = Number(this.id.substring(2, 4));
+        if (bigLength === 0 || 4 + bigLength >= this.id.length) throw new Error("Invalid single-chat user ID length");
+        const bigUser = new ChatUser(this.id.substring(4, 4 + bigLength), Number(this.id[0]));
+        const smallUser = new ChatUser(this.id.substring(4 + bigLength), Number(this.id[1]));
+        ChatSession.validateOneToOneUser(bigUser);
+        ChatSession.validateOneToOneUser(smallUser);
+        return [bigUser, smallUser];
+    }
+
+    public static validateOneToOneUser(user: ChatUser | null): asserts user is ChatUser {
+        if (user == null || typeof user.id !== "string" || user.id.length === 0 || user.id.length > 99) {
+            throw new Error("Single-chat user ID must contain 1–99 characters");
+        }
+        if (!Number.isInteger(user.category) || user.category < 0 || user.category > 9) {
+            throw new Error("Single-chat user category must be between 0 and 9");
+        }
     }
 
     public toBytes(): Uint8Array {
-        const encoder = new TextEncoder();
-        return encoder.encode(this.chatType + this.id);
+        return encodeUtf8(this.chatType + this.id);
     }
 
     private generateId(sender: ChatUser, receiver: ChatUser): string {
-        if (sender == null || receiver == null) {
-            return "";
-        }
+        ChatSession.validateOneToOneUser(sender);
+        ChatSession.validateOneToOneUser(receiver);
         let bigUser = sender;
         let smallUser = receiver;
-        if (sender.id <= receiver.id) {
+        if (sender.id < receiver.id || (sender.id === receiver.id && sender.getSessionCategory() <= receiver.getSessionCategory())) {
             bigUser = receiver;
             smallUser = sender;
         }

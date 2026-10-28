@@ -63,7 +63,13 @@
       "password-placeholder": "输入你的密码",
       "captcha-placeholder": "输入验证码",
       "captcha-refresh": "点击刷新验证码",
-      "submitting": "正在登录…"
+      "submitting": "正在登录…",
+      "user_not_login": "请先登录",
+      "http_forbidden": "没有权限执行此操作",
+      "http_bad_request": "请求内容有误",
+      "http_invalid_response": "服务器响应格式错误",
+      "http_request_failed": "请求失败（HTTP {status}）",
+      "business_error": "请求失败（错误码 {code}）"
     },
     "find-password": {
       "forgot-password": "忘记密码?",
@@ -73,7 +79,13 @@
       "password-reset-email-sent": "密码重置邮件已发送，请注意查收",
       "close": "关闭",
       "global_validate_code_error": "验证码输入错误",
-      "system_server_error": "系统异常,请稍后重试!"
+      "system_server_error": "系统异常,请稍后重试!",
+      "user_not_login": "请先登录",
+      "http_forbidden": "没有权限执行此操作",
+      "http_bad_request": "请求内容有误",
+      "http_invalid_response": "服务器响应格式错误",
+      "http_request_failed": "请求失败（HTTP {status}）",
+      "business_error": "请求失败（错误码 {code}）"
     },
     "sign-up": {
       "sign-up": "注册",
@@ -94,7 +106,13 @@
       "sign-up-description": "填写以下信息，开启你的麻雀窝之旅。",
       "captcha-refresh": "刷新验证码",
       "submitting": "正在创建账户…",
-      "sign-up-error": "注册失败，请稍后重试。"
+      "sign-up-error": "注册失败，请稍后重试。",
+      "user_not_login": "请先登录",
+      "http_forbidden": "没有权限执行此操作",
+      "http_bad_request": "请求内容有误",
+      "http_invalid_response": "服务器响应格式错误",
+      "http_request_failed": "请求失败（HTTP {status}）",
+      "business_error": "请求失败（错误码 {code}）"
     },
     "PasswordTokenVerify": {
       "token-not-found": "token 不存在，请从邮箱链接点击进入！",
@@ -180,6 +198,12 @@
     "border-color": "边框色",
     "opacity": "透明度",
     "save": "保存",
-    "or": "或"
+    "or": "或",
+    "user_not_login": "请先登录",
+    "http_forbidden": "没有权限执行此操作",
+    "http_bad_request": "请求内容有误",
+    "http_invalid_response": "服务器响应格式错误",
+    "http_request_failed": "请求失败（HTTP {status}）",
+    "business_error": "请求失败（错误码 {code}）"
   }
 }

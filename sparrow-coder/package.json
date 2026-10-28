@@ -33,7 +33,7 @@
     "cpy-cli": "^5.0.0",
     "date-fns": "^4.1.0",
     "dayjs": "^1.11.13",
-    "lucide-react": "^0.511.0",
+    "lucide-react": "^0.513.0",
     "motion-plus": "^0.1.9",
     "next": "15.5.26",
     "next-intl": "4.14.6",

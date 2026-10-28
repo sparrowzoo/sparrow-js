@@ -1,99 +1,82 @@
-import ArrayBufferUtils from "@/common/lib/protocol/ArrayBufferUtils";
+import {decodeUtf8, encodeUtf8} from "@/lib/protocol/Utf8";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import UserCategory from "@/common/lib/UserCategory";
 
 interface ChatUserWithOffset {
-  chatUser: NullableChatUser;
-  offset: number;
+    chatUser: NullableChatUser;
+    offset: number;
 }
 
+
 export default class ChatUser {
-  public id: string;
-  public category: number;
-  public key: string;
+    public id: string;
+    public category: number;
+    public key: string;
 
-  constructor(id: string, category: number) {
-    // 确保 id 是字符串
-    this.id = id + "";
-    this.category = category;
-    this.key = this.id + "_" + this.getSessionCategory();
-  }
-
-  static fromBytes(dateView: DataView, offset: number): ChatUserWithOffset {
-    const bytes: ArrayBufferLike = dateView.buffer;
-    const idLength: number = dateView.getUint8(offset);
-    offset += 1;
-    const idBytes: Uint8Array = new Uint8Array(
-      bytes.slice(offset, offset + idLength)
-    );
-    offset += idLength;
-    const id = new TextDecoder().decode(idBytes); // 默认 UTF-8 编码
-    const category: number = dateView.getUint8(offset);
-    const chatUser: ChatUser = new ChatUser(id, category);
-    return {
-      chatUser: chatUser,
-      offset: offset + 1,
-    };
-  }
-
-  static parse(key: string): NullableChatUser {
-    const parts: string[] = key.split("_");
-    if (parts.length != 2) {
-      return null;
+    constructor(id: string, category: number) {
+        // 确保 id 是字符串
+        this.id = id == null ? id : String(id);
+        this.category = category;
+        this.key = this.id + "_" + this.getSessionCategory();
     }
-    const id: string = parts[0];
-    const role: number = Number(parts[1]);
-    return new ChatUser(id, role);
-  }
 
-  public static fromLoginUser(loginUser: LoginUser): ChatUser {
-    return new ChatUser(loginUser.userId, loginUser.category);
-  }
-
-  public getSessionCategory(): number {
-    if (this.category == UserCategory.VISITOR) {
-      return UserCategory.VISITOR;
+    static fromBytes(dataView: DataView, offset: number): ChatUserWithOffset {
+        if (!Number.isInteger(offset) || offset < 0 || offset >= dataView.byteLength) {
+            throw new Error("Invalid user offset");
+        }
+        const idLength = dataView.getUint8(offset++);
+        if (idLength === 0) throw new Error("User ID must not be empty");
+        if (idLength + 1 > dataView.byteLength - offset) throw new Error("Invalid user length");
+        const id = decodeUtf8(new Uint8Array(dataView.buffer, dataView.byteOffset + offset, idLength));
+        offset += idLength;
+        return {chatUser: new ChatUser(id, dataView.getUint8(offset)), offset: offset + 1};
     }
-    return UserCategory.REGISTER;
-  }
 
-  public equals(chatUser: NullableChatUser): boolean {
-    if (chatUser == null) {
-      return false;
+    static parse(key: string): NullableChatUser {
+        if (key == null) return null;
+        const separator = key.lastIndexOf("_");
+        if (separator <= 0 || separator === key.length - 1) return null;
+        const category = key.substring(separator + 1);
+        if (!/^[+-]?[0-9]+$/.test(category) || !Number.isSafeInteger(Number(category))) {
+            throw new Error("User category must be a decimal integer");
+        }
+        return new ChatUser(key.substring(0, separator), Number(category));
     }
-    if (chatUser.isVisitor()) {
-      return this.id == chatUser.id && this.category == chatUser.category;
+
+    public static fromLoginUser(loginUser: LoginUser): ChatUser {
+        return new ChatUser(loginUser.userId, loginUser.category);
     }
-    return this.id == chatUser.id;
-  }
 
-  /**
-   * 用户ID长度(1字节) + 用户ID([用户ID长度个字节]) + 用户类型(1字节)
-   */
-  public toBytes(): Uint8Array {
-    const idBytes: Uint8Array = ArrayBufferUtils.str2Buffer(this.id + "");
-    const categoryBytes: Uint8Array = new Uint8Array([this.category]);
-    const bytesLength: number = 1 + idBytes.byteLength + 1;
-    let userBytes: Uint8Array = new Uint8Array(bytesLength);
-    const idBytesLength: number = idBytes.byteLength;
-    let offset: number = 0;
-    offset = ArrayBufferUtils.appendBytes(
-      userBytes,
-      new Uint8Array([idBytesLength]),
-      offset
-    );
-    offset = ArrayBufferUtils.appendBytes(userBytes, idBytes, offset);
-    ArrayBufferUtils.appendBytes(userBytes, categoryBytes, offset);
-    return userBytes;
-  }
+    public getSessionCategory(): number {
+        return this.category;
+    }
 
-  public isVisitor(): boolean {
-    return this.category == UserCategory.VISITOR;
-  }
+    public equals(chatUser: NullableChatUser): boolean {
+        return chatUser != null && this.id === chatUser.id && this.category === chatUser.category;
+    }
 
-  public isAdmin(): boolean {
-    return this.category == UserCategory.ADMIN;
-  }
+    /** User ID UTF-8 byte length (1), ID bytes, category (1). */
+    public toBytes(): Uint8Array {
+        if (typeof this.id !== "string" || this.id.length === 0) throw new Error("User ID must not be empty");
+        const idBytes = encodeUtf8(this.id);
+        if (idBytes.length > 255) throw new Error("User ID UTF-8 byte length must not exceed 255");
+        if (!Number.isInteger(this.category) || this.category < 0 || this.category > 255) {
+            throw new Error("User category must be between 0 and 255");
+        }
+        const bytes = new Uint8Array(idBytes.length + 2);
+        bytes[0] = idBytes.length;
+        bytes.set(idBytes, 1);
+        bytes[bytes.length - 1] = this.category;
+        return bytes;
+    }
+
+    public isVisitor(): boolean {
+        return this.category == UserCategory.VISITOR;
+    }
+
+    public isAdmin(): boolean {
+        return this.category == UserCategory.ADMIN;
+    }
 }
 
 export type NullableChatUser = ChatUser | null;

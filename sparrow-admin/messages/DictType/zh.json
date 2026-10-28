@@ -1,1 +1,11 @@
-{"modifiedUserName":"更新人","createUserId":"创建人ID","gmtModified":"更新时间","remark":"备注","createUserName":"创建人","sort":"排序号","gmtCreate":"创建时间","typeCode":"字典类型编码","filter":"过滤列","modifiedUserId":"更新人ID","tenantId":"租户ID","id":"","actions":"操作","status":"状态","validate":{"tenantId":{"check-message":"请输入正确的正整数","empty-message":"不允许为空"},"remark":{},"id":{},"sort":{"check-message":"请输入正确的数字（允许为负）","empty-message":"不允许为空"},"typeCode":{"empty-message":"不允许为空"}}}
+{"modifiedUserName":"更新人","createUserId":"创建人ID","gmtModified":"更新时间","remark":"备注","createUserName":"创建人","sort":"排序号","gmtCreate":"创建时间","typeCode":"字典类型编码","filter":"过滤列","modifiedUserId":"更新人ID","tenantId":"租户ID","id":"","actions":"操作","status":"状态","validate":{"tenantId":{"check-message":"请输入正确的正整数","empty-message":"不允许为空"},"remark":{},"id":{},"sort":{"check-message":"请输入正确的数字（允许为负）","empty-message":"不允许为空"},"typeCode":{"empty-message":"不允许为空"}},
+  "ErrorMessage": {
+    "user_not_login": "请先登录",
+    "http_forbidden": "没有权限执行此操作",
+    "http_bad_request": "请求内容有误",
+    "system_server_error": "服务器错误，请稍后再试",
+    "http_invalid_response": "服务器响应格式错误",
+    "http_request_failed": "请求失败（HTTP {status}）",
+    "business_error": "请求失败（错误码 {code}）"
+  }
+}

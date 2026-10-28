@@ -732,7 +732,7 @@ class AvatarEditor extends React.Component<PropsWithDefaults, State> {
       touchAction: "none",
     };
 
-    const attributes: JSX.IntrinsicElements["canvas"] = {
+    const attributes: React.JSX.IntrinsicElements["canvas"] = {
       width: dimensions.canvas.width * this.pixelRatio,
       height: dimensions.canvas.height * this.pixelRatio,
       onMouseDown: this.handleMouseDown,

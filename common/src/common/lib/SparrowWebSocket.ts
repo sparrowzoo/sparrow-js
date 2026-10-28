@@ -16,7 +16,7 @@ class SparrowWebSocket {
     private static connectionStatus: string = SparrowWebSocket.INACTIVE_STATUS;
     public translate: Translator;
     // 接收到信息后需要执行的事件
-    public onMsgCallback: (data: ArrayBufferLike) => void;
+    public onMsgCallback: (data: ArrayBuffer) => void;
     public handshakeSuccess: () => void;
     public handshakeFail: (data: Result) => void;
     public redirectLogin: () => void;
@@ -31,8 +31,6 @@ class SparrowWebSocket {
     private url: string;
     // websocket 连接的 token
     private crosStorage: CrosStorage;
-    // 心跳超时时间 ms
-    private heartTimeout = this.heartTime * 3;
     // 重连重试时间 ms
     private reconnectTime = 15000;
     private heartTimer: NodeJS.Timeout;
@@ -47,6 +45,11 @@ class SparrowWebSocket {
         this.translate = translate;
         this.crosStorage = CrosStorage.getCrosStorage();
     }
+
+    public heartbeatMessage: () => string | Uint8Array<ArrayBuffer> = () => "PING";
+
+    public statusMonitorMessage: (contacts: []) => string | Uint8Array<ArrayBuffer> = contacts =>
+        contacts.length > 0 ? "STATUS|" + JSON.stringify(contacts) : "STATUS";
 
     public userAuthCallback(data: Result) {
         if (data.code == "0") {
@@ -72,6 +75,11 @@ class SparrowWebSocket {
         });
     }
 
+    public receiveHeartbeat() {
+        this.lastHeartTime = Date.now();
+        SparrowWebSocket.heartStatus = SparrowWebSocket.ACTIVE_STATUS;
+    }
+
     public getHeartStatus() {
         return SparrowWebSocket.heartStatus;
     }
@@ -79,10 +87,6 @@ class SparrowWebSocket {
     public reconnectWebSocket() {
         //关闭现有链接
         this.close();
-        //停止心跳
-        this.stopHeartBeat();
-        //停止上一次重连
-        this.stopRetryConnect();
         //立即尝试重连
         this.connect();
         //发起重连
@@ -176,8 +180,8 @@ class SparrowWebSocket {
         this.lastHeartTime = new Date().getTime();
         this.heartTimer = setInterval(() => {
             const heartDiff = new Date().getTime() - this.lastHeartTime;
-            // 如果超过两个周期未拿到心跳，说明超时
-            if (heartDiff > this.heartTimeout) {
+            // 按当前配置计算超时，避免调整发送周期后仍使用旧的等待时长。
+            if (heartDiff > this.heartTime * 3) {
                 console.log("超时重连 heart diff {}", heartDiff);
                 this.stopHeartBeat();
                 this.reconnectWebSocket();
@@ -185,17 +189,13 @@ class SparrowWebSocket {
             }
             // 开启一个心跳
             try {
-                this.ws.send("PING");
+                this.ws.send(this.heartbeatMessage());
                 if (
                     new Date().getTime() - this.lastStatusMonitoredTime >
                     this.monitorTime
                 ) {
                     const contactsStatus = this.monitorStatus();
-                    if (contactsStatus.length > 0) {
-                        this.ws.send("STATUS|" + JSON.stringify(contactsStatus));
-                    } else {
-                        this.ws.send("STATUS");
-                    }
+                    this.ws.send(this.statusMonitorMessage(contactsStatus));
                 }
             } catch (e) {
                 console.log("heart beat error:" + e);
@@ -205,12 +205,12 @@ class SparrowWebSocket {
 
     // 关闭心跳
     public stopHeartBeat() {
-        clearTimeout(this.heartTimer);
+        clearInterval(this.heartTimer);
         SparrowWebSocket.heartStatus = SparrowWebSocket.INACTIVE_STATUS;
     }
 
     public stopRetryConnect() {
-        clearTimeout(this.reconnectionTimer);
+        clearInterval(this.reconnectionTimer);
     }
 
     public increaseTxid(): number {
@@ -219,9 +219,16 @@ class SparrowWebSocket {
     }
 
     //发送消息
-    public sendMessage(data: ArrayBufferLike) {
+    public sendMessage(data: string | ArrayBufferLike | ArrayBufferView) {
         this.increaseTxid();
-        this.ws.send(data);
+        if (typeof data === "string") {
+            this.ws.send(data);
+            return;
+        }
+        // Copy the effective view, including typed arrays with an offset.
+        const bytes = ArrayBuffer.isView(data)
+            ? new Uint8Array(data.buffer, data.byteOffset, data.byteLength) : new Uint8Array(data);
+        this.ws.send(new Uint8Array(bytes).buffer);
     }
 
     public reconnectionCallback() {
@@ -230,6 +237,8 @@ class SparrowWebSocket {
 
     // 关闭连接
     public close() {
+        this.stopHeartBeat();
+        this.stopRetryConnect();
         if (this.ws == null) {
             console.log("websocket is null");
             return;
@@ -255,38 +264,15 @@ class SparrowWebSocket {
     private _onMsg() {
         this.ws.onmessage = async (e) => {
             if (typeof e.data === "string") {
-                // 加个判断,如果是PONG，说明当前是后端返回的心跳包 停止下面的代码执行
-                if (e.data === "PONG") {
-                    this.lastHeartTime = new Date().getTime();
-                    console.log("收到心跳 at" + this.lastHeartTime);
-
-                    SparrowWebSocket.heartStatus = SparrowWebSocket.ACTIVE_STATUS;
-                    return;
-                }
-                //1 对1 聊天时，对方不在线
-                if (e.data === "OFFLINE") {
-                    if (this.offlineCallback) {
-                        this.offlineCallback({offline: true});
-                    }
-                    return;
-                }
                 const result = JSON.parse(e.data);
-                if (result.instruction == "STATUS") {
-                    const contactsStatus = result.data;
-                    if (this.monitorStatusCallback) {
-                        this.monitorStatusCallback(contactsStatus);
-                    }
-                    this.lastStatusMonitoredTime = new Date().getTime();
-                    return;
-                }
-                if (result.instruction == "AUTH") {
+                if (result.instruction === "AUTH_BIND" || result.instruction === "AUTH") {
                     if (this.userAuthCallback) {
                         this.userAuthCallback(result);
                     }
                 }
                 return;
             }
-            const buf = await e.data.arrayBuffer();
+            const buf: ArrayBuffer = e.data instanceof ArrayBuffer ? e.data : await e.data.arrayBuffer();
             this.increaseTxid();
             if (this.onMsgCallback) {
                 this.onMsgCallback(buf);

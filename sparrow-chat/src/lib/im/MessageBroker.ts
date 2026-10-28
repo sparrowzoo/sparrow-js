@@ -3,151 +3,184 @@ import Message from "@/lib/protocol/Message";
 import Protocol from "@/lib/protocol/Protocol";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
 import ChatSession from "@/lib/protocol/session/ChatSession";
-import { ChatType, MessageType } from "@/lib/protocol/Chat";
+import {ChatType, MessageType, ProtocolType} from "@/lib/protocol/Chat";
 import ChatUser from "@/lib/protocol/ChatUser";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import toast from "react-hot-toast";
-import { WEBSOCKET } from "@/common/lib/Env";
-import { ContactStatus } from "@/lib/protocol/ContactStatus";
+import {WEBSOCKET} from "@/common/lib/Env";
+import {ContactStatus} from "@/lib/protocol/ContactStatus";
 import ContactContainer from "@/lib/im/ContactContainer";
 import SessionContainer from "@/lib/im/SessionContainer";
-import { Translator } from "@/common/lib/TranslatorType";
+import {Translator} from "@/common/lib/TranslatorType";
 
 export default class MessageBroker {
-  public contactContainer: ContactContainer;
-  public sessionContainer: SessionContainer;
-  public translator: Translator;
-  public webSocket: SparrowWebSocket;
-  public currentUser: ChatUser;
-  //key:session key,value:message list
-  private messageMap: Map<string, Message[]> = new Map();
+    public contactContainer: ContactContainer;
+    public sessionContainer: SessionContainer;
+    public translator: Translator;
+    public webSocket: SparrowWebSocket;
+    public currentUser: ChatUser;
+    //key:session key,value:message list
+    private messageMap: Map<string, Message[]> = new Map();
 
-  constructor(translator: Translator, redirectLogin: () => void, loginUser: LoginUser) {
-    this.translator = translator;
-    this.currentUser = ChatUser.fromLoginUser(loginUser);
-    this.contactContainer = new ContactContainer(this.translator, this.currentUser);
-    this.sessionContainer = new SessionContainer(
-      this.translator,
-      this.contactContainer,
-      this.currentUser
-    );
-    const sparrowWebSocket = new SparrowWebSocket(
-      WEBSOCKET as string,
-      this.translator
-    );
-    sparrowWebSocket.connect();
-    this.webSocket = sparrowWebSocket;
-    sparrowWebSocket.redirectLogin = redirectLogin;
-    this.webSocket.onMsgCallback = (buf: ArrayBuffer) => {
-      this.websocketMsgCallback(buf);
-    };
-    this.webSocket.offlineCallback = () => {
-      if (this.translator) {
-        toast.error(this.translator("offline"));
-      }
-    };
-    this.webSocket.monitorStatus = () => {
-      console.log("websocket monitor status");
-      return [];
-    };
-    this.webSocket.monitorStatusCallback = (data: ContactStatus[]) => {
-      console.log("websocket monitor status callback", JSON.stringify(data));
-    };
-  }
-
-  public closeWebSocket() {
-    this.webSocket.close();
-  }
-
-  public async putMessage(message: Message) {
-    const sessionKey = message.session.sessionKey;
-    let messageList = this.messageMap.get(sessionKey);
-    if (messageList == null) {
-      messageList = [];
-      this.messageMap.set(sessionKey, messageList);
+    constructor(translator: Translator, redirectLogin: () => void, loginUser: LoginUser) {
+        this.translator = translator;
+        this.currentUser = ChatUser.fromLoginUser(loginUser);
+        this.contactContainer = new ContactContainer(this.translator, this.currentUser);
+        this.sessionContainer = new SessionContainer(
+            this.translator,
+            this.contactContainer,
+            this.currentUser
+        );
+        const sparrowWebSocket = new SparrowWebSocket(
+            WEBSOCKET as string,
+            this.translator
+        );
+        // 网关 10 秒无数据会关闭连接，心跳须提前发送。
+        sparrowWebSocket.heartTime = 5000;
+        sparrowWebSocket.heartbeatMessage = () => Protocol.ping().toBytes();
+        // FETCH_USER_STATUS is a one-byte query; contact filters are not part of this protocol segment.
+        sparrowWebSocket.statusMonitorMessage = () => Protocol.fetchUserStatus().toBytes();
+        sparrowWebSocket.connect();
+        this.webSocket = sparrowWebSocket;
+        sparrowWebSocket.redirectLogin = redirectLogin;
+        this.webSocket.onMsgCallback = (buf: ArrayBuffer) => {
+            this.websocketMsgCallback(buf).catch(() => {
+                console.warn("Unable to process WebSocket protocol frame");
+            });
+        };
+        this.webSocket.offlineCallback = () => {
+            if (this.translator) {
+                toast.error(this.translator("offline"));
+            }
+        };
+        this.webSocket.monitorStatus = () => {
+            console.log("websocket monitor status");
+            return [];
+        };
+        this.webSocket.monitorStatusCallback = (data: ContactStatus[]) => {
+            console.log("websocket monitor status callback", JSON.stringify(data));
+        };
     }
-    messageList.push(message);
-    await this.sessionContainer.newSession(sessionKey).then(() => {
-      this.sessionContainer.appendLastMessage(message);
-    });
-  }
 
-  public sendMessage(sessionKey: string, content: string): void {
-    const chatSession = ChatSession.parse(sessionKey);
-    let protocol;
-    if (chatSession?.chatType == ChatType.CHAT_1_TO_1) {
-      const oppositeUser = chatSession.getOppositeUser(this.currentUser);
-      protocol = Protocol.create121Chat(
-        this.currentUser,
-        MessageType.TEXT,
-        oppositeUser as ChatUser,
-        content,
-        new Date().getTime()
-      );
-    } else {
-      protocol = Protocol.createGroupChat(
-        this.currentUser,
-        sessionKey,
-        MessageType.TEXT,
-        content,
-        new Date().getTime()
-      );
+    public closeWebSocket() {
+        this.webSocket.close();
     }
-    const message = Message.fromProtocol(protocol);
-    this.putMessage(message).then(() => {
-      this.sessionContainer.read(message.session);
-      this.webSocket?.sendMessage(protocol.toBytes());
-      this.newMessageSignal();
-    });
-  }
 
-  public async getMessageList(sessionKey: string) {
-    let messageList = this.messageMap.get(sessionKey);
-    if (messageList != null) {
-      return this.wrapMessages(messageList);
+    public async putMessage(message: Message) {
+        const sessionKey = message.session.sessionKey;
+        let messageList = this.messageMap.get(sessionKey);
+        if (messageList == null) {
+            messageList = [];
+            this.messageMap.set(sessionKey, messageList);
+        }
+        messageList.push(message);
+        await this.sessionContainer.newSession(sessionKey).then(() => {
+            this.sessionContainer.appendLastMessage(message);
+        });
     }
-    messageList = await ChatApi.getMessages(sessionKey, this.translator);
-    this.messageMap.set(sessionKey, messageList);
-    return this.wrapMessages(messageList);
-  }
 
-  public newMessageSignal = () => {};
-
-  public websocketMsgCallback(buf: ArrayBuffer) {
-    const protocol = Protocol.fromBytes(buf);
-    const message = Message.fromProtocol(protocol);
-    this.putMessage(message).then(() => {
-      this.sessionContainer.plusUnreadCount(message);
-      this.newMessageSignal();
-    });
-  }
-
-  /**
-   * 指定联系人初始化会话 普通用户或者游客
-   * @param contacts
-   */
-  public async initSessionsByContacts(contacts: string[]) {
-    this?.contactContainer?.initContact([]);
-    await this?.sessionContainer.initSessions(contacts);
-  }
-
-  //平台客服初始化，无联系人
-  public initSessions() {
-    this.contactContainer.initContact([]);
-    return this.sessionContainer.getChatSessions();
-  }
-
-  private wrapMessages(messages: Message[]): Message[] {
-    let preTime: number = 0;
-    const newMessages: Message[] = [];
-    for (const message of messages) {
-      message.currentUser = this.currentUser;
-      newMessages.push(message);
-      if (message.clientSendTime - preTime > 1000 * 60 * 5) {
-        newMessages.push(Message.newTimeLine(message.clientSendTime));
-      }
-      preTime = message.clientSendTime;
+    public sendMessage(sessionKey: string, content: string): void {
+        const chatSession = ChatSession.parse(sessionKey);
+        let protocol;
+        if (chatSession?.chatType == ChatType.CHAT_1_TO_1) {
+            const oppositeUser = chatSession.getOppositeUser(this.currentUser);
+            let protocolType = ProtocolType.IM;
+            if (oppositeUser?.category == process.env.NEXT_PUBLIC_USER_CATEGORY_AI) {
+                protocolType = ProtocolType.AI_REQUEST;
+            }
+            protocol = Protocol.create121Chat(
+                protocolType,
+                this.currentUser,
+                MessageType.TEXT,
+                oppositeUser as ChatUser,
+                content,
+                new Date().getTime()
+            );
+        } else {
+            protocol = Protocol.createGroupChat(
+                this.currentUser,
+                sessionKey,
+                MessageType.TEXT,
+                content,
+                new Date().getTime()
+            );
+        }
+        const message = Message.fromProtocol(protocol);
+        this.putMessage(message).then(() => {
+            this.sessionContainer.read(message.session);
+            this.webSocket?.sendMessage(protocol.toBytes());
+            this.newMessageSignal();
+        });
     }
-    return newMessages;
-  }
+
+    public async getMessageList(sessionKey: string) {
+        let messageList = this.messageMap.get(sessionKey);
+        if (messageList != null) {
+            return this.wrapMessages(messageList);
+        }
+        messageList = await ChatApi.getMessages(sessionKey, this.translator);
+        this.messageMap.set(sessionKey, messageList);
+        return this.wrapMessages(messageList);
+    }
+
+    public newMessageSignal = () => {
+    };
+
+    /** Non-chat events are exposed without inventing UI behavior for their payloads. */
+    public onControlEvent: (protocol: Protocol) => void = (protocol) => {
+        console.log("control event ", JSON.stringify(protocol));
+    };
+
+    public async websocketMsgCallback(buf: ArrayBuffer): Promise<void> {
+        const protocol = Protocol.fromBytes(buf);
+        if (protocol.protocolType === ProtocolType.PONG) {
+            console.log("receive PONG")
+            this.webSocket.receiveHeartbeat();
+            return;
+        }
+        if (protocol.protocolType === ProtocolType.OFFLINE) {
+            this.webSocket.offlineCallback?.({offline: true});
+            this.onControlEvent(protocol);
+            return;
+        }
+        if (protocol.protocolType !== ProtocolType.IM &&
+            protocol.protocolType !== ProtocolType.AI_REQUEST &&
+            protocol.protocolType !== ProtocolType.AI_RESPONSE) {
+            this.onControlEvent(protocol);
+            return;
+        }
+        const message = Message.fromProtocol(protocol);
+        await this.putMessage(message);
+        this.sessionContainer.plusUnreadCount(message);
+        this.newMessageSignal();
+    }
+
+    /**
+     * 指定联系人初始化会话 普通用户或者游客
+     * @param contacts
+     */
+    public async initSessionsByContacts(contacts: string[]) {
+        this?.contactContainer?.initContact([]);
+        await this?.sessionContainer.initSessions(contacts);
+    }
+
+    //平台客服初始化，无联系人
+    public initSessions() {
+        this.contactContainer.initContact([]);
+        return this.sessionContainer.getChatSessions();
+    }
+
+    private wrapMessages(messages: Message[]): Message[] {
+        let preTime: number = 0;
+        const newMessages: Message[] = [];
+        for (const message of messages) {
+            message.currentUser = this.currentUser;
+            newMessages.push(message);
+            if (message.clientSendTime - preTime > 1000 * 60 * 5) {
+                newMessages.push(Message.newTimeLine(message.clientSendTime));
+            }
+            preTime = message.clientSendTime;
+        }
+        return newMessages;
+    }
 }

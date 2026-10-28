@@ -19,7 +19,7 @@ export default function HistoryMessageItem(props: Props) {
 
   const { sender, content, receiver } = props.message;
   const senderDetail = props.messageWrap.userMap.get(sender.id);
-  const receiverDetail = props.messageWrap.userMap.get(receiver?.id);
+  const receiverDetail = receiver == null ? undefined : props.messageWrap.userMap.get(receiver.id);
   return (
     <div
       className={"im-history-item flex flex-row justify-start items-start gap-2 mt-2"}

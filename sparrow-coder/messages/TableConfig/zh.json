@@ -61,7 +61,12 @@
   "ErrorMessage": {
     "system_server_error": "系统错误，请稍侯再试...",
     "global_parameter_null": "参数不能为空...",
-    "user_not_login": "用户未登录..."
+    "user_not_login": "用户未登录...",
+    "http_forbidden": "没有权限执行此操作",
+    "http_bad_request": "请求内容有误",
+    "http_invalid_response": "服务器响应格式错误",
+    "http_request_failed": "请求失败（HTTP {status}）",
+    "business_error": "请求失败（错误码 {code}）"
   },
   "projectId": "项目",
   "actions": "操作",

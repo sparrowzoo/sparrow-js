@@ -1,0 +1,15 @@
+{
+  "name": "sparrow-js",
+  "private": true,
+  "packageManager": "yarn@1.22.19",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "workspaces": [
+    "common",
+    "sparrow-admin",
+    "sparrow-coder",
+    "sparrow-chat",
+    "sparrow-passport"
+  ]
+}

@@ -62,7 +62,14 @@ declare const messages: {
       "apply-to-group": "Join group",
       "apply-join-group": "Apply Join Group",
       "apply-join-group-success": "Apply to join group success",
-      "user_is_member": "you are member of this group,do not apply again"
+      "user_is_member": "you are member of this group,do not apply again",
+      "user_not_login": "Please sign in",
+      "http_forbidden": "You do not have permission to do this",
+      "http_bad_request": "Invalid request",
+      "system_server_error": "Server error, please try again later",
+      "http_invalid_response": "Invalid server response",
+      "http_request_failed": "Request failed (HTTP {status})",
+      "business_error": "Request failed (code {code})"
     }
   },
   "MessageBroker": {
@@ -74,7 +81,14 @@ declare const messages: {
     "message_empty": "Message can't be empty!",
     "send": "Send",
     "offline": "message sent, but receiver is Offline",
-    "account": "Account"
+    "account": "Account",
+    "user_not_login": "Please sign in",
+    "http_forbidden": "You do not have permission to do this",
+    "http_bad_request": "Invalid request",
+    "system_server_error": "Server error, please try again later",
+    "http_invalid_response": "Invalid server response",
+    "http_request_failed": "Request failed (HTTP {status})",
+    "business_error": "Request failed (code {code})"
   },
   "MessageSearch": {
     "content": "message content",

@@ -15,6 +15,7 @@ import {type ServiceId} from "../_content/services";
 import {menuRegistry} from "@/common/lib/MenuRegistry";
 import {ProductHero, ProductLink, SectionHeading} from "./product-ui";
 import PassportExperience from "./passport-experience";
+import ImCustomerService from "./im-customer-service";
 import styles from "../product.module.css";
 
 const featureIcons = {
@@ -87,6 +88,8 @@ export default async function ServiceProduct({id, locale}: {id: ServiceId; local
                     })}
                 </div>
             </section>
+
+            {id === "im" && <ImCustomerService locale={locale}/>}
 
             <section className={`${styles.section} ${styles.integration}`} id="integration"
                      aria-label={t("integrationLabel")}>

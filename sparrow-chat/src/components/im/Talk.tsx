@@ -15,7 +15,11 @@ import useNavigating from "@/common/hook/NavigatingHook";
 import {useTranslations} from "next-intl";
 import Result from "@/common/lib/protocol/Result";
 
-export default function Talk() {
+export interface TalkProps {
+    ai: boolean
+}
+
+export default function Talk(talkProps: TalkProps) {
     const t = useTranslations("ClientServer");
     const translator = useTranslations("MessageBroker");
     const {redirectToLogin} = useNavigating();
@@ -60,8 +64,12 @@ export default function Talk() {
                             "handshakeSuccess login user is ",
                             JSON.stringify(loginUser)
                         );
-                        let contacts = [loginUser.tenantId];
-                        if (!loginUser.tenantId || loginUser.tenantId == "0") {
+                        let contacts: any;
+                        if (talkProps.ai) {
+                            contacts = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY_AI?.split(
+                                ","
+                            ) as string[];
+                        } else {
                             contacts = process.env.NEXT_PUBLIC_SERVER_ID_ARRAY?.split(
                                 ","
                             ) as string[];

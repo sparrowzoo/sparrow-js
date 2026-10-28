@@ -4,8 +4,10 @@ set -euo pipefail
 usage() {
   cat <<'HELP'
 用法：bash deploy/build-static.sh
-需要 Node.js 22+、npm、tar，并已安装各子站的 npm 依赖。
-依次同步公共代码、执行 npm run build，全部校验成功后生成：
+需要 Node.js 22+、Yarn 1.22.19、tar。
+先在仓库根目录执行 yarn install --frozen-lockfile
+（workspaces 统一安装 common/admin/coder/chat/passport 五个项目）。
+依次同步公共代码、执行 yarn run build，全部校验成功后生成：
   artifacts/yyyyMMddHHmmss.tar.gz（使用本机时间）
 压缩包顶层目录及内容：
   admin/    <- sparrow-admin/out/
@@ -30,7 +32,7 @@ target="$root/artifacts"
 projects=(common sparrow-admin sparrow-chat sparrow-passport)
 sites=(www admin im passport)
 
-for command in node npm tar; do
+for command in node yarn tar; do
   command -v "$command" >/dev/null || { printf '缺少命令：%s\n' "$command" >&2; exit 1; }
 done
 node -e 'if (Number(process.versions.node.split(".")[0]) < 22) { console.error("需要 Node.js 22 或更新版本"); process.exit(1); }'
@@ -46,9 +48,9 @@ for project in "${projects[@]}"; do
   (
     cd -- "$root/$project"
     if [[ $project != common ]]; then
-      npm run copy
+      yarn run copy
     fi
-    npm run build
+    yarn run build
   )
 done
 

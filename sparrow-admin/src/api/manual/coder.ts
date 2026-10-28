@@ -2,6 +2,12 @@ import Fetcher, {DownloadResult} from "@/common/lib/Fetcher";
 import {IDENTITY} from "@/common/lib/protocol/Identity";
 import Result from "@/common/lib/protocol/Result";
 
+export interface CreateTableResult {
+    tableName: string;
+    status: "CREATED" | "SKIPPED" | "FAILED";
+    message: string;
+}
+
 export default class CoderApi {
     public static initByLocal(
         projectId: IDENTITY,
@@ -42,6 +48,34 @@ export default class CoderApi {
             url: "/coder/generate.json",
             body: JSON.stringify({projectId, tableNames}),
             translator: translator,
+            redirectToLogin: directToLogin
+        });
+    }
+
+    public static generateDDL(
+        projectId: IDENTITY,
+        tableNames: unknown[],
+        translator: (key: string) => string,
+        directToLogin: () => void
+    ): Promise<Result> {
+        return Fetcher.post({
+            url: "/coder/generate-ddl.json",
+            body: JSON.stringify({projectId, tableNames}),
+            translator,
+            redirectToLogin: directToLogin
+        });
+    }
+
+    public static createTables(
+        projectId: IDENTITY,
+        tableNames: unknown[],
+        translator: (key: string) => string,
+        directToLogin: () => void
+    ): Promise<Result<CreateTableResult[]>> {
+        return Fetcher.post<CreateTableResult[]>({
+            url: "/coder/create-tables.json",
+            body: JSON.stringify({projectId, tableNames}),
+            translator,
             redirectToLogin: directToLogin
         });
     }

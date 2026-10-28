@@ -60,7 +60,13 @@
       "apply-to-group": "申请加入群",
       "apply-join-group": "申请加群",
       "apply-join-group-success": "加群申请成功!",
-      "user_is_member": "您已是该群成员，无需申请"
+      "user_is_member": "您已是该群成员，无需申请",
+      "user_not_login": "请先登录",
+      "http_forbidden": "没有权限执行此操作",
+      "http_bad_request": "请求内容有误",
+      "http_invalid_response": "服务器响应格式错误",
+      "http_request_failed": "请求失败（HTTP {status}）",
+      "business_error": "请求失败（错误码 {code}）"
     }
   },
   "MessageBroker": {
@@ -72,7 +78,14 @@
     "message_empty": "别发空消息哟!",
     "send": "发送",
     "offline": "消息已发送，但对方不在线",
-    "account": "帐号"
+    "account": "帐号",
+    "user_not_login": "请先登录",
+    "http_forbidden": "没有权限执行此操作",
+    "http_bad_request": "请求内容有误",
+    "system_server_error": "服务器错误，请稍后再试",
+    "http_invalid_response": "服务器响应格式错误",
+    "http_request_failed": "请求失败（HTTP {status}）",
+    "business_error": "请求失败（错误码 {code}）"
   },
   "MessageSearch": {
     "content": "聊天内容",
@@ -105,6 +118,7 @@
     "title": "客服",
     "message-record-manage": "消息记录管理",
     "visitor": "游客",
+    "register": "普通用户",
     "student": "学生",
     "affiliate": "中介"
   }

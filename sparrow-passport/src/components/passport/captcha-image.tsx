@@ -5,7 +5,7 @@ import { RefreshCw } from "lucide-react";
 import styles from "./passport.module.css";
 
 type CaptchaImageProps = {
-  imageRef: RefObject<HTMLImageElement>;
+  imageRef: RefObject<HTMLImageElement | null>;
   alt: string;
   refreshLabel: string;
   disabled?: boolean;

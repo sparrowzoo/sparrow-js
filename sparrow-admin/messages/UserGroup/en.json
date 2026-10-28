@@ -33,5 +33,14 @@
       "check-message": "Please enter a valid positive integer",
       "empty-message": "Cannot be empty"
     }
+  },
+  "ErrorMessage": {
+    "user_not_login": "Please sign in",
+    "http_forbidden": "You do not have permission to do this",
+    "http_bad_request": "Invalid request",
+    "system_server_error": "Server error, please try again later",
+    "http_invalid_response": "Invalid server response",
+    "http_request_failed": "Request failed (HTTP {status})",
+    "business_error": "Request failed (code {code})"
   }
 }

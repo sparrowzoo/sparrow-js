@@ -72,7 +72,12 @@ export default function Page() {
                     deleteHandler={deleteHandler}
                     initHandler={init}
                     defaultPager={{pageIndex: 0, pageSize: -1}}
-                    RowOperationComponents={[TableConfigs, ClearScaffold, InitScaffold, DownloadScaffold]}
+                    RowOperationComponents={[
+                                            {component: TableConfigs},
+                                            {component: ClearScaffold},
+                                            {component: InitScaffold},
+                                            {component: DownloadScaffold},
+                                            ]}
                 ></DataTable>
             </div>
         </div>

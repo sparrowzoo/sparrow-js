@@ -66,7 +66,13 @@ declare const messages: {
       "password-placeholder": "Enter your password",
       "captcha-placeholder": "Verification code",
       "captcha-refresh": "Refresh verification code",
-      "submitting": "Signing in…"
+      "submitting": "Signing in…",
+      "user_not_login": "Please sign in",
+      "http_forbidden": "You do not have permission to do this",
+      "http_bad_request": "Invalid request",
+      "http_invalid_response": "Invalid server response",
+      "http_request_failed": "Request failed (HTTP {status})",
+      "business_error": "Request failed (code {code})"
     },
     "find-password": {
       "forgot-password": "Forgot password?",
@@ -76,7 +82,13 @@ declare const messages: {
       "password-reset-email-sent": "Password reset email sent, please check your email",
       "close": "Close",
       "global_validate_code_error": "Captcha error, please try again input",
-      "system_server_error": "System error, please try again later"
+      "system_server_error": "System error, please try again later",
+      "user_not_login": "Please sign in",
+      "http_forbidden": "You do not have permission to do this",
+      "http_bad_request": "Invalid request",
+      "http_invalid_response": "Invalid server response",
+      "http_request_failed": "Request failed (HTTP {status})",
+      "business_error": "Request failed (code {code})"
     },
     "PasswordTokenVerify": {
       "token-not-found": "Token not found",
@@ -110,7 +122,13 @@ declare const messages: {
       "sign-up-description": "A few details to get started with Sparrow Zoo.",
       "captcha-refresh": "Refresh verification code",
       "submitting": "Creating account…",
-      "sign-up-error": "Registration failed. Please try again."
+      "sign-up-error": "Registration failed. Please try again.",
+      "user_not_login": "Please sign in",
+      "http_forbidden": "You do not have permission to do this",
+      "http_bad_request": "Invalid request",
+      "http_invalid_response": "Invalid server response",
+      "http_request_failed": "Request failed (HTTP {status})",
+      "business_error": "Request failed (code {code})"
     },
     "navigation": {
       "brand": "Sparrow Zoo",
@@ -183,7 +201,13 @@ declare const messages: {
     "border-color": "Border Color",
     "opacity": "Opacity",
     "save": "Save",
-    "or": "Or"
+    "or": "Or",
+    "user_not_login": "Please sign in",
+    "http_forbidden": "You do not have permission to do this",
+    "http_bad_request": "Invalid request",
+    "http_invalid_response": "Invalid server response",
+    "http_request_failed": "Request failed (HTTP {status})",
+    "business_error": "Request failed (code {code})"
   }
 };
 export default messages;
