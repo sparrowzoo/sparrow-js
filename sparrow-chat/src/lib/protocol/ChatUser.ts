@@ -74,10 +74,6 @@ export default class ChatUser {
         return this.category == UserCategory.VISITOR;
     }
 
-    public isAdmin(): boolean {
-        return this.category == UserCategory.ADMIN;
-    }
-
     public isAI(): boolean {
         return this.category == UserCategory.AI;
     }
