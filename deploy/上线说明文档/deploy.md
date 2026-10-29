@@ -3,3 +3,5 @@
 /etc/nginx/nginx.conf
 
 vi /root/supervisord/supervisord.conf
+
+vi /usr/lib/systemd/system/supervisord.service
