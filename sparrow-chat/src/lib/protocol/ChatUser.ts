@@ -77,6 +77,10 @@ export default class ChatUser {
     public isAdmin(): boolean {
         return this.category == UserCategory.ADMIN;
     }
+
+    public isAI(): boolean {
+        return this.category == UserCategory.AI;
+    }
 }
 
 export type NullableChatUser = ChatUser | null;
