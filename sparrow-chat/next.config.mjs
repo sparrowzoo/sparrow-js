@@ -6,7 +6,8 @@ const nextConfig = {
         unoptimized: true  // 图片不压缩
     },
     reactStrictMode: false,
-    distDir: process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
+    distDir: process.env.SPARROW_MESSAGING_E2E === "1" ? ".next-messaging-e2e"
+        : process.env.NODE_ENV === "development" ? ".next-dev" : ".next",
     // Each site publishes its own out/ directory and same-origin framework assets.
     output: "export",
     trailingSlash: true,

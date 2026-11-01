@@ -4,7 +4,7 @@ import {Link} from "@/common/i18n/navigation";
 import * as React from "react";
 import { SidebarMenuItem } from "@/components/ui/sidebar";
 import AuditItemProps from "@/lib/protocol/audit/AuditItemProps";
-import ChatUser from "@/lib/protocol/ChatUser";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import {useLoginUser} from "@/common/lib/LoginUserProvider";
 import { resolveAvatar } from "@/common/lib/AvatarUtils";
 import { Button } from "@/components/ui/button";

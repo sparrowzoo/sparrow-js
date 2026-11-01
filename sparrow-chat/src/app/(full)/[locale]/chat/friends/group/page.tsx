@@ -2,7 +2,7 @@
 import * as React from "react";
 import { Suspense, useContext, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import DirectSession from "@/components/session/DirectSession";
 import MyAvatar from "@/components/MyAvatar";

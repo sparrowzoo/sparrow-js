@@ -6,7 +6,7 @@ import { SidebarMenuItem } from "@/components/ui/sidebar";
 import { AuditStatus } from "@/lib/protocol/audit/AuditStatus";
 import { Button } from "@/components/ui/button";
 import AuditStatusProps from "@/lib/protocol/audit/AuditStatusProps";
-import ChatUser from "@/lib/protocol/ChatUser";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import {useLoginUser} from "@/common/lib/LoginUserProvider";
 import Contact from "@/lib/protocol/contact/Contact";
 import { resolveAvatar } from "@/common/lib/AvatarUtils";

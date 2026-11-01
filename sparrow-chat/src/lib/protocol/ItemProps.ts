@@ -7,7 +7,4 @@ export default interface ItemProps {
   nationality: string;
 }
 
-export enum Position {
-  HEADER,
-  TAIL,
-}
+export {Position} from "@/common/lib/protocol/messaging/Position";

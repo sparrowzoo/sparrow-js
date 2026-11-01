@@ -1,6 +1,5 @@
-import {decodeUtf8, encodeUtf8} from "@/lib/protocol/Utf8";
-import LoginUser from "@/common/lib/protocol/LoginUser";
-import UserCategory from "@/common/lib/UserCategory";
+import {decodeUtf8, encodeUtf8} from "../../Utf8";
+import UserCategory from "../../UserCategory";
 
 interface ChatUserWithOffset {
     chatUser: NullableChatUser;
@@ -18,6 +17,18 @@ export default class ChatUser {
         this.id = id == null ? id : String(id);
         this.category = category;
         this.key = this.id + "_" + this.getSessionCategory();
+    }
+
+    public static fromLoginUser(loginUser: {userId: string; category: number}): ChatUser {
+        return new ChatUser(loginUser.userId, loginUser.category);
+    }
+
+    public isVisitor(): boolean {
+        return this.category == UserCategory.VISITOR;
+    }
+
+    public isAI(): boolean {
+        return this.category == UserCategory.AI;
     }
 
     static fromBytes(dataView: DataView, offset: number): ChatUserWithOffset {
@@ -43,10 +54,6 @@ export default class ChatUser {
         return new ChatUser(key.substring(0, separator), Number(category));
     }
 
-    public static fromLoginUser(loginUser: LoginUser): ChatUser {
-        return new ChatUser(loginUser.userId, loginUser.category);
-    }
-
     public getSessionCategory(): number {
         return this.category;
     }
@@ -70,13 +77,6 @@ export default class ChatUser {
         return bytes;
     }
 
-    public isVisitor(): boolean {
-        return this.category == UserCategory.VISITOR;
-    }
-
-    public isAI(): boolean {
-        return this.category == UserCategory.AI;
-    }
 }
 
 export type NullableChatUser = ChatUser | null;

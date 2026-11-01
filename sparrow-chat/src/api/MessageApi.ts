@@ -1,13 +1,24 @@
 import Fetcher from "@/common/lib/Fetcher";
-import Message from "@/lib/protocol/Message";
+import Message from "@/common/lib/protocol/messaging/Message";
 import HistoryMessageWrap from "@/lib/protocol/HistoryMessageWrap";
 import Contact from "@/lib/protocol/contact/Contact";
 import SessionMeta from "@/lib/protocol/session/SessionMeta";
 import Group from "@/lib/protocol/contact/Group";
 
+interface RemoteHistoryGroup {
+    id: string | number;
+    name: string;
+    avatar: string;
+    announcement: string;
+    nationality: string;
+    remark: string;
+    ownerId: string | number;
+    categoryId: number;
+}
+
 interface RemoteHistoryMessageWrap {
     historyMessages: Message[];
-    qunMaps: Record<string, Group>;
+    qunMaps: Record<string, RemoteHistoryGroup>;
     userMaps: Record<string, Contact>;
 }
 
@@ -67,7 +78,16 @@ export default class MessageApi {
                 if (!messageWrap.qunMaps.hasOwnProperty(groupId)) {
                     continue;
                 }
-                const group = Group.fromJson(messageWrap.qunMaps[groupId]);
+                const remoteGroup = messageWrap.qunMaps[groupId];
+                const group = new Group();
+                group.qunId = String(remoteGroup.id);
+                group.qunName = remoteGroup.name;
+                group.avatar = remoteGroup.avatar;
+                group.announcement = remoteGroup.announcement;
+                group.nationality = remoteGroup.nationality;
+                group.remark = remoteGroup.remark;
+                group.ownerId = String(remoteGroup.ownerId);
+                group.categoryId = remoteGroup.categoryId;
                 qunMaps.set(groupId, group);
             }
 

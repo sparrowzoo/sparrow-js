@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
-import { ChatType } from "@/lib/protocol/Chat";
+import { ChatType } from "@/common/lib/protocol/messaging/Chat";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import { Wifi, WifiOff } from "lucide-react";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
 import MyAvatar from "@/components/MyAvatar";

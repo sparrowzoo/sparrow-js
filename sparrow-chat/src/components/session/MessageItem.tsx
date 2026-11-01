@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Key, useContext } from "react";
-import Message from "@/lib/protocol/Message";
+import Message from "@/common/lib/protocol/messaging/Message";
 
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import { Separator } from "@/components/ui/separator";

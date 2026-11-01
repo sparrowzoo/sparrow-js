@@ -6,7 +6,7 @@ import {
 import { Sidebar, SidebarProvider } from "@/components/ui/sidebar";
 import * as React from "react";
 import Session from "@/components/session/Session";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import BaseTrigger from "@/components/session/item/BaseTrigger";
 import { Position } from "@/lib/protocol/ItemProps";
 import Draggable from "@/common/components/Draggable";

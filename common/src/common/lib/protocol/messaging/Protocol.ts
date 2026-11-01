@@ -1,6 +1,6 @@
-import {decodeUtf8, encodeUtf8} from "@/lib/protocol/Utf8";
-import ChatUser from "@/lib/protocol/ChatUser";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import {decodeUtf8, encodeUtf8} from "../../Utf8";
+import ChatUser from "./ChatUser";
+import SessionIdentity from "./SessionIdentity";
 import {
     ChatType,
     DeviceType,
@@ -8,7 +8,7 @@ import {
     PROTOCOL_DEFINITIONS,
     ProtocolSegmentIndex,
     ProtocolType
-} from "@/lib/protocol/Chat";
+} from "./Chat";
 
 /** Java Protocol wire format. All multibyte integers use big endian. */
 export default class Protocol {
@@ -16,7 +16,7 @@ export default class Protocol {
     public protocolType: ProtocolType | null = null;
     public messageType: number = MessageType.TEXT;
     public sessionLength = 0;
-    public chatSession: ChatSession | null = null;
+    public chatSession: SessionIdentity | null = null;
     public payload: string | null = null;
     public clientSendTime: number | null = null;
     public serverTime: number | null = null;
@@ -97,10 +97,11 @@ export default class Protocol {
         }
         protocol.sessionLength = reader.byte("sessionLength");
         const sessionKey = reader.text(protocol.sessionLength, "sessionKey");
-        if (sessionKey.length < 2 || sessionKey[0] !== String(protocol.chatType)) {
+        const session = SessionIdentity.parse(sessionKey);
+        if (session == null || session.chatType !== protocol.chatType || !session.id) {
             throw new Error("sessionKey must contain the chat type prefix and a non-empty ID");
         }
-        protocol.chatSession = ChatSession.parse(sessionKey);
+        protocol.chatSession = session;
         reader.requireComplete();
         return protocol;
     }
@@ -127,7 +128,7 @@ export default class Protocol {
         protocol.chatType = ChatType.GROUP;
         protocol.sender = sender;
         protocol.messageType = messageType;
-        protocol.chatSession = ChatSession.parse(sessionKey);
+        protocol.chatSession = SessionIdentity.parse(sessionKey);
         protocol.payload = payload;
         protocol.clientSendTime = clientSendTime;
         return protocol;
@@ -189,15 +190,14 @@ export default class Protocol {
             if (this.sender == null) throw new Error("sender is required");
             const senderBytes = this.sender.toBytes();
             if (this.isOne2One()) {
-                ChatSession.validateOneToOneUser(this.sender);
-                ChatSession.validateOneToOneUser(this.receiver);
+                SessionIdentity.validateOneToOneUser(this.sender);
+                SessionIdentity.validateOneToOneUser(this.receiver);
                 this.sessionLength = 0;
                 chunks.push(senderBytes, this.receiver!.toBytes());
             } else {
                 if (this.chatSession == null || this.chatSession.chatType !== this.chatType || !this.chatSession.id) {
                     throw new Error("Group chat requires a matching session with a non-empty ID");
                 }
-                // Compute from the fields, not the UI's potentially cached sessionKey.
                 const sessionBytes = this.chatSession.toBytes();
                 if (sessionBytes.length > 255) throw new Error("sessionKey UTF-8 byte length must not exceed 255");
                 this.sessionLength = sessionBytes.length;
@@ -232,7 +232,7 @@ export default class Protocol {
     private refreshOneToOneSession() {
         if (this.isOne2One()) {
             this.chatSession = this.sender == null || this.receiver == null ? null
-                : ChatSession.create121Session(this.sender, this.receiver);
+                : SessionIdentity.create121Session(this.sender, this.receiver);
         }
     }
 

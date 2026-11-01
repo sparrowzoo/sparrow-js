@@ -1,4 +1,4 @@
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import { Position } from "@/lib/protocol/ItemProps";
 
 export default interface SessionItemProps {

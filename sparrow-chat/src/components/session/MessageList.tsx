@@ -1,6 +1,6 @@
 import ChatItem from "@/components/session/MessageItem";
 import React, { MutableRefObject, useEffect, useRef } from "react";
-import Message from "@/lib/protocol/Message";
+import Message from "@/common/lib/protocol/messaging/Message";
 
 interface MessageListProps {
   messageList: Message[];

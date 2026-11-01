@@ -4,7 +4,7 @@ import { Position } from "@/lib/protocol/ItemProps";
 import * as React from "react";
 import { useContext } from "react";
 import BaseTrigger from "@/components/session/item/BaseTrigger";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import { Button } from "@/components/ui/button";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import { useRouter } from "@/common/i18n/navigation";

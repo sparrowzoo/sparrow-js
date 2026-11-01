@@ -1,4 +1,4 @@
-import ChatUser from "@/lib/protocol/ChatUser";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import { VISITOR_AVATAR_URL } from "@/common/lib/Env";
 import UserCategory from "@/common/lib/UserCategory";
 import { resolveAvatar } from "@/common/lib/AvatarUtils";

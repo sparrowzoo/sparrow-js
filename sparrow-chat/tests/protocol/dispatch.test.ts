@@ -1,9 +1,9 @@
 import {afterEach, describe, expect, it, vi} from "vitest";
-import Protocol from "@/lib/protocol/Protocol";
-import Message from "@/lib/protocol/Message";
+import Protocol from "@/common/lib/protocol/messaging/Protocol";
+import Message from "@/common/lib/protocol/messaging/Message";
 import MessageBroker from "@/lib/im/MessageBroker";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
-import {ChatType, DeviceType, ProtocolType} from "@/lib/protocol/Chat";
+import {ChatType, DeviceType, ProtocolType} from "@/common/lib/protocol/messaging/Chat";
 
 vi.mock("@/common/lib/CrosStorage", () => ({default: {getCrosStorage: () => ({})}}));
 
