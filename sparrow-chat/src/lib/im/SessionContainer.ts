@@ -1,8 +1,8 @@
 import ChatApi from "@/api/ChatApi";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import ContactContainer from "@/lib/im/ContactContainer";
-import Message from "@/lib/protocol/Message";
-import ChatUser from "@/lib/protocol/ChatUser";
+import Message from "@/common/lib/protocol/messaging/Message";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import UserCategory from "@/common/lib/UserCategory";
 import {SESSION_CATEGORY_GROUP, SESSION_CATEGORY_NAME_MAPPING,} from "@/common/lib/Env";
 import toast from "react-hot-toast";

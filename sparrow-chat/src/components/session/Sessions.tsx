@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import { SidebarMenu } from "@/components/ui/sidebar";
 import SessionItem from "@/components/session/SessionItem";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";

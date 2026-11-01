@@ -6,7 +6,7 @@ import {useState} from "react";
 import MessageApi from "@/api/MessageApi";
 import {Utils} from "@/common/lib/Utils";
 import SessionMeta from "@/lib/protocol/session/SessionMeta";
-import ChatUser from "@/lib/protocol/ChatUser";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import {useLoginUser} from "@/common/lib/LoginUserProvider";
 import {useTranslations} from "next-intl";
 import Draggable from "@/common/components/Draggable";

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Key } from "react";
-import Message from "@/lib/protocol/Message";
+import Message from "@/common/lib/protocol/messaging/Message";
 import MyAvatar from "@/components/MyAvatar";
 import HistoryMessageWrap from "@/lib/protocol/HistoryMessageWrap";
 import { useTranslations } from "next-intl";
@@ -43,8 +43,7 @@ export default function HistoryMessageItem(props: Props) {
             <>
               {t("in-group")}【
               {
-                props.messageWrap.qunMaps[props.message.session.sessionKey]
-                  ?.qunName
+                props.messageWrap.qunMaps.get(props.message.session.id)?.qunName
               }
               】{t("say")}
             </>

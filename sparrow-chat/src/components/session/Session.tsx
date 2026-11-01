@@ -4,7 +4,7 @@ import {useSearchParams} from "next/navigation";
 import MessageSender from "@/components/session/MessageSender";
 import SessionHeader from "@/components/session/SessionHeader";
 import {WebSocketContext} from "@/lib/im/WebSocketProvider";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 
 interface SessionProps {
     sessionKey?: string;

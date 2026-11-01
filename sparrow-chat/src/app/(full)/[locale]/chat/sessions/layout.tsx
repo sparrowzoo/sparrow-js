@@ -9,7 +9,7 @@ import {
   SidebarGroupLabel,
   SidebarProvider,
 } from "@/components/ui/sidebar";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import { useTranslations } from "next-intl";

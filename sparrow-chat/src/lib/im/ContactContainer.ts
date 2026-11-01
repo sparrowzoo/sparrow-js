@@ -1,7 +1,7 @@
 import ContactGroup from "@/lib/protocol/contact/ContactGroup";
 import ChatApi from "@/api/ChatApi";
 import Contact from "@/lib/protocol/contact/Contact";
-import ChatUser from "@/lib/protocol/ChatUser";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import QunDetailWrap from "@/lib/protocol/contact/QunDetailWrap";
 import QunAPI from "@/api/QunApi";
 import { Translator } from "@/common/lib/TranslatorType";

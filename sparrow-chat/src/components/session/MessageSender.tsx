@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
-import Message from "@/lib/protocol/Message";
+import Message from "@/common/lib/protocol/messaging/Message";
 import ThreeDotLoading from "@/common/components/ThreeDotLoading";
 import MessageList from "@/components/session/MessageList";
 import MessageEditor from "@/components/session/MessageEditor";

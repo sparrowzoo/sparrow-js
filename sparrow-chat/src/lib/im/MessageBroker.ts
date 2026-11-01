@@ -1,10 +1,10 @@
 import ChatApi from "@/api/ChatApi";
-import Message from "@/lib/protocol/Message";
-import Protocol from "@/lib/protocol/Protocol";
+import Message from "@/common/lib/protocol/messaging/Message";
+import Protocol from "@/common/lib/protocol/messaging/Protocol";
 import SparrowWebSocket from "@/common/lib/SparrowWebSocket";
-import ChatSession from "@/lib/protocol/session/ChatSession";
-import {ChatType, MessageType, ProtocolType} from "@/lib/protocol/Chat";
-import ChatUser from "@/lib/protocol/ChatUser";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
+import {ChatType, MessageType, ProtocolType} from "@/common/lib/protocol/messaging/Chat";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import toast from "react-hot-toast";
 import {WEBSOCKET} from "@/common/lib/Env";

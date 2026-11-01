@@ -1,8 +1,8 @@
 import {describe, expect, it, vi} from "vitest";
-import Protocol from "@/lib/protocol/Protocol";
-import ChatUser from "@/lib/protocol/ChatUser";
-import ChatSession from "@/lib/protocol/session/ChatSession";
-import {ChatType, DeviceType, ProtocolType, MessageType} from "@/lib/protocol/Chat";
+import Protocol from "@/common/lib/protocol/messaging/Protocol";
+import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
+import {ChatType, DeviceType, ProtocolType, MessageType} from "@/common/lib/protocol/messaging/Chat";
 import javaFrames from "./fixtures/java-frames.json";
 
 // Fixed bytes derived from Java's documented wire format, not the JS encoder.
@@ -65,7 +65,7 @@ describe("Java protocol compatibility", () => {
         expect(decoded.payload).toBe("你");
         expect(decoded.clientSendTime).toBe(12);
         expect(decoded.serverTime).toBe(34);
-        expect(decoded.chatSession!.sessionKey).toBe("0210121");
+        expect(decoded.chatSession!.sessionKey).toBe("021121");
         expect(decoded.toBytes()).toEqual(singleFrame);
     });
 
@@ -176,7 +176,7 @@ describe("Java protocol compatibility", () => {
         p.receiver = new ChatUser("2", 1);
         p.sender = new ChatUser("1", 1);
         p.chatType = ChatType.CHAT_1_TO_1;
-        expect(p.chatSession!.sessionKey).toBe("0110121");
+        expect(p.chatSession!.sessionKey).toBe("011121");
         p.receiver = null;
         expect(p.chatSession).toBeNull();
     });
@@ -217,11 +217,35 @@ describe("current gateway protocol alignment", () => {
 });
 
 describe("Java user and session identity", () => {
+    it.each([[0, "0"], [1, "1"], [9, "9"], [10, "A"], [35, "Z"], [36, "a"], [61, "z"]] as const)(
+        "uses Base62 chat type %i consistently in keys, parsing and bytes",
+        (type, code) => {
+            const session = ChatSession.createSession(type as ChatType, "group");
+            expect(session.sessionKey).toBe(`${code}group`);
+            expect(new TextDecoder().decode(session.toBytes())).toBe(`${code}group`);
+            const parsed = ChatSession.parse(`${code}group`)!;
+            expect(parsed.chatType).toBe(type);
+            expect(parsed.id).toBe("group");
+            expect(parsed.sessionKey).toBe(`${code}group`);
+        }
+    );
+
+    it.each([-1, 62, 1.5, NaN, Infinity])("rejects unencodable chat type %s in keys and bytes", type => {
+        const session = ChatSession.createSession(type as ChatType, "group");
+        expect(() => session.sessionKey).toThrow();
+        expect(() => session.toBytes()).toThrow();
+    });
+
+    it.each(["-group", "_group", ":group", " group", "群group", "A", "0"])(
+        "rejects an invalid chat type prefix or missing ID in %s",
+        key => expect(() => ChatSession.parse(key)).toThrow()
+    );
+
     it("sorts equal IDs by actual category in either direction", () => {
         const a = new ChatUser("same", 1);
         const b = new ChatUser("same", 2);
         const forward = ChatSession.create121Session(a, b);
-        expect(forward.sessionKey).toBe("02104samesame");
+        expect(forward.sessionKey).toBe("0214samesame");
         expect(ChatSession.create121Session(b, a).sessionKey).toBe(forward.sessionKey);
         expect(a.equals(b)).toBe(false);
         expect(forward.getOppositeUser(a)?.category).toBe(2);
@@ -229,11 +253,68 @@ describe("Java user and session identity", () => {
     });
 
     it("checks single-chat ID and category limits", () => {
-        for (const user of [new ChatUser("", 1), new ChatUser("x".repeat(100), 1), new ChatUser("1", 10)]) {
+        for (const user of [new ChatUser("", 1), new ChatUser("x".repeat(62), 1),
+            ...[-1, 62, 1.5, NaN, Infinity].map(category => new ChatUser("1", category))]) {
             expect(() => ChatSession.create121Session(user, new ChatUser("2", 1))).toThrow();
         }
-        expect(() => ChatSession.parse("0119912")?.getOppositeUser(new ChatUser("1", 1))).toThrow();
+        expect(() => ChatSession.parse("011z12")?.getOppositeUser(new ChatUser("1", 1))).toThrow();
     });
+
+    it.each([[1, "1"], [9, "9"], [10, "A"], [35, "Z"], [36, "a"], [60, "y"], [61, "z"]])(
+        "uses one alphanumeric character for an ID of length %i",
+        (length, lengthCode) => {
+            const bigUser = new ChatUser("z".repeat(length as number), 9);
+            const smallUser = new ChatUser("1", 0);
+            const session = ChatSession.create121Session(bigUser, smallUser);
+            expect(session.id).toBe(`90${lengthCode}${bigUser.id}1`);
+            expect(session.id.length).toBe(3 + bigUser.id.length + smallUser.id.length);
+            expect(ChatSession.create121Session(smallUser, bigUser).id).toBe(session.id);
+            const members = ChatSession.parse(session.sessionKey)!.get1To1Members();
+            expect(members[0].equals(bigUser)).toBe(true);
+            expect(members[1].equals(smallUser)).toBe(true);
+        }
+    );
+
+    it.each([[0, "0"], [9, "9"], [10, "A"], [11, "B"], [12, "C"], [35, "Z"], [36, "a"], [61, "z"]] as const)(
+        "encodes and decodes category %i in either user position",
+        (category, code) => {
+            const user = new ChatUser("z", category);
+            const other = new ChatUser("1", category);
+            const session = ChatSession.create121Session(user, other);
+            expect(session.id).toBe(`${code}${code}1z1`);
+            const parsed = ChatSession.parse(`0${code}${code}1z1`)!;
+            expect(parsed.get1To1Members().map(member => member.category)).toEqual([category, category]);
+            expect(parsed.getOppositeUser(user)?.equals(other)).toBe(true);
+            expect(ChatSession.create121Session(other, user).id).toBe(session.id);
+        }
+    );
+
+    it("sorts equal IDs using numeric categories across uppercase and lowercase codes", () => {
+        const a = new ChatUser("same", 35);
+        const b = new ChatUser("same", 36);
+        expect(ChatSession.create121Session(a, b).id).toBe("aZ4samesame");
+        expect(ChatSession.create121Session(b, a).id).toBe("aZ4samesame");
+        const members = ChatSession.createSession(ChatType.CHAT_1_TO_1, "aZ4samesame").get1To1Members();
+        expect(members[0].equals(b)).toBe(true);
+        expect(members[1].equals(a)).toBe(true);
+    });
+
+    it("preserves Base62 user categories through the binary protocol", () => {
+        const sender = new ChatUser("1", 10);
+        const receiver = new ChatUser("z", 61);
+        const protocol = Protocol.create121Chat(ProtocolType.IM, sender, 0, receiver, "hello", 12);
+        const decoded = Protocol.fromBytes(protocol.toBytes());
+        expect(decoded.chatSession!.id).toBe("zA1z1");
+        expect(decoded.chatSession!.getOppositeUser(sender)?.equals(receiver)).toBe(true);
+        expect(decoded.toBytes()).toEqual(protocol.toBytes());
+    });
+
+    it.each(["", "111x", "110ab", "11-ab", "11_ab", "11:ab", "-11ab", "1_1ab", "_11ab", "1-1ab", "112ab", "111a", "111a" + "b".repeat(62)])(
+        "rejects malformed compact single-chat ID %s",
+        id => {
+            expect(() => ChatSession.createSession(ChatType.CHAT_1_TO_1, id).get1To1Members()).toThrow();
+        }
+    );
 
     it("parses user keys at the last underscore and respects DataView offsets", () => {
         expect(ChatUser.parse("a_b_2")?.id).toBe("a_b");

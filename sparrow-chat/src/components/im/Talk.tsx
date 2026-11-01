@@ -8,7 +8,7 @@ import useCrosStorage from "@/common/hook/CrosStorageHook";
 import MessageBroker from "@/lib/im/MessageBroker";
 import {StorageType} from "@/common/lib/protocol/CrosProtocol";
 import ChatApi from "@/api/ChatApi";
-import ChatSession from "@/lib/protocol/session/ChatSession";
+import ChatSession from "@/common/lib/protocol/messaging/ChatSession";
 import Sessions from "@/components/session/Sessions";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import useNavigating from "@/common/hook/NavigatingHook";

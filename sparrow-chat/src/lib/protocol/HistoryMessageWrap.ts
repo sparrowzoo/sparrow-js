@@ -1,4 +1,4 @@
-import Message from "@/lib/protocol/Message";
+import Message from "@/common/lib/protocol/messaging/Message";
 import Contact from "@/lib/protocol/contact/Contact";
 import Group from "@/lib/protocol/contact/Group";
 
