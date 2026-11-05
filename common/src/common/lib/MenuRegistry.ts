@@ -1,8 +1,3 @@
-import {ADMIN_ROOT, BLOG_ROOT, IM_ROOT, PASSPORT_ROOT, WWW_ROOT} from "@/common/lib/Env";
-import type {Translator} from "@/common/lib/TranslatorType";
-
-export type MenuId = "passport" | "coder" | "im" | "file" | "ui" | "security" | "blog" | "study";
-
 /**
  * 菜单入口。
  * - landing：落地页 / 产品介绍页，官网导航使用。
@@ -10,9 +5,9 @@ export type MenuId = "passport" | "coder" | "im" | "file" | "ui" | "security" | 
  */
 export type MenuEntry = { landing: string | undefined; live: string | undefined } | null;
 
-/** 菜单定义（单一事实源）：含入口、分类、高亮、可用性。label 为 product 命名空间 key。 */
+/** 菜单定义：label 的翻译规则由上游提供。 */
 export type BannerMenuItem = {
-    id: MenuId;
+    id: string;
     label: string;
     entry: MenuEntry;
     available: boolean;
@@ -33,75 +28,46 @@ export type BannerMenuLink = {
     group?: "utility";
 };
 
-/**
- * Single source of truth for the site menu ecosystem. Edit here, then run
- * `npm run copy` in each product site to propagate.
- * Labels are translated through the `product` message namespace.
- * Property insertion order determines the menu navigation order.
- */
-export const menuRegistry: Readonly<Record<MenuId, BannerMenuItem>> = {
-    passport: {
-        id: "passport", label: "passport", available: true, entry: {
-            landing: `${WWW_ROOT}/lang/products/passport/`,
-            live: `${PASSPORT_ROOT}/lang/sign-in/`
-        }
-    },
-    im: {
-        id: "im", label: "im", available: true, entry: {
-            landing: `${WWW_ROOT}/lang/products/im/`,
-            live: `${IM_ROOT}/lang/chat/friends/contact/`
-        }
-    },
-    coder: {
-        id: "coder", label: "coder", available: true, entry: {
-            landing: `${WWW_ROOT}/lang/products/coder/`,
-            live: `${ADMIN_ROOT}/lang/`
-        }
-    },
-    file: {
-        id: "file", label: "file", available: true, entry: {
-            landing: `${WWW_ROOT}/lang/products/file/`,
-            live: `${WWW_ROOT}/lang/upload/`
-        }
-    },
-    ui: {
-        id: "ui", label: "ui", available: true, entry: {
-            landing: `${WWW_ROOT}/lang/ui/`,
-            live: `${WWW_ROOT}/lang/ui/`
-        }
-    },
-    security: {id: "security", label: "security", available: false, entry: null},
-    blog: {
-        id: "blog", label: "blog", available: true,
-        entry: BLOG_ROOT ? {landing: BLOG_ROOT, live: BLOG_ROOT} : null
-    },
-    study: {
-        id: "study", label: "study", available: true,
-        entry: {landing: `${WWW_ROOT}/lang/study/`, live: `${WWW_ROOT}/lang/study/`},
-        emphasized: true, icon: "graduation-cap", group: "utility"
-    },
-};
+/** 每个应用持有自己的实例，注册器不内置业务菜单。 */
+export class MenuRegistry {
+    private items: BannerMenuItem[] = [];
 
-/** 解析菜单为 banner 可渲染项：entry → href，label 经 product 命名空间翻译。 */
-export function getMenuNavigations(
-    locale: string,
-    live: boolean,
-    productTranslator: NonNullable<Translator>
-): BannerMenuLink[] {
-    const items: BannerMenuLink[] = [];
-    for (const item of Object.values(menuRegistry)) {
-        if (!item.available) continue;
-        const url = live ? item.entry?.live : item.entry?.landing;
-        if (!url) continue;
-        items.push({
-            id: item.id,
-            label: productTranslator(item.label),
-            href: url.replace("/lang/", `/${locale}/`),
-            emphasized: item.emphasized,
-            active: item.active,
-            icon: item.icon,
-            group: item.group,
-        });
+    /** 整组替换；重复 id 会抛错，保留原注册结果。注册完成后再交给 Header 渲染。 */
+    register(items: readonly BannerMenuItem[]): void {
+        const ids = new Set<string>();
+        for (const item of items) {
+            if (ids.has(item.id)) {
+                throw new Error(`菜单 id 重复：${item.id}`);
+            }
+            ids.add(item.id);
+        }
+        this.items = items.map(item => ({
+            ...item,
+            entry: item.entry ? {...item.entry} : null,
+        }));
     }
-    return items;
+
+    /** 选择入口、替换语言占位符，再由上游提供的函数翻译文字。 */
+    getMenuNavigations(
+        locale: string,
+        live: boolean,
+        translator: (key: string) => string
+    ): BannerMenuLink[] {
+        const items: BannerMenuLink[] = [];
+        for (const item of this.items) {
+            if (!item.available) continue;
+            const url = live ? item.entry?.live : item.entry?.landing;
+            if (!url) continue;
+            items.push({
+                id: item.id,
+                label: translator(item.label),
+                href: url.replace("/lang/", `/${locale}/`),
+                emphasized: item.emphasized,
+                active: item.active,
+                icon: item.icon,
+                group: item.group,
+            });
+        }
+        return items;
+    }
 }

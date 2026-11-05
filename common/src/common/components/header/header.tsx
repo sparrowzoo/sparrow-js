@@ -1,12 +1,13 @@
 "use client";
 
 import {useLocale, useTranslations} from "next-intl";
-import type {BannerMenuLink} from "@/common/lib/MenuRegistry";
-import {getMenuNavigations} from "@/common/lib/MenuRegistry";
+import type {MenuRegistry} from "@/common/lib/MenuRegistry";
 import SiteBanner from "@/common/components/header/site-banner";
 import {WWW_ROOT} from "@/common/lib/Env";
 
-type HeaderProps = {
+export type HeaderProps = {
+    menuRegistry: MenuRegistry;
+    translator?: (key: string) => string;
     i18n?: boolean;
     profile?: boolean;
     brandCaption?: string;
@@ -16,6 +17,8 @@ type HeaderProps = {
 
 /** Shared site header: menu comes from MenuRegistry, brand/home are host-provided. */
 export default function Header({
+                                   menuRegistry,
+                                   translator = (key: string) => key,
                                    i18n = true,
                                    profile = true,
                                    brandCaption = "Sparrow Zoo",
@@ -24,9 +27,8 @@ export default function Header({
                                }: HeaderProps) {
     const locale = useLocale();
     const t = useTranslations("Header");
-    const productTranslator = useTranslations("product");
     const homeHref = `${homePath}/${locale}`;
-    const items: BannerMenuLink[] = [...getMenuNavigations(locale, live, productTranslator)];
+    const items = menuRegistry.getMenuNavigations(locale, live, translator);
     return (
         <SiteBanner
             brandName={t("brand")}

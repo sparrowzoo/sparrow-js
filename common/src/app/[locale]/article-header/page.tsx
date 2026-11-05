@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import Header from "@/common/components/header/header";
+import Header from "@/sparrow/header";
 
 export const metadata: Metadata = {
     robots: {index: false, follow: false},

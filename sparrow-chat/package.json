@@ -9,7 +9,6 @@
     "build": "next build",
     "start": "node ../deploy/serve-static.mjs out 3003",
     "lint": "next lint",
-    "copy": "cpy ./../common/src/common  ./src/ --parents",
     "preview": "node ../deploy/serve-static.mjs out 3003"
   },
   "dependencies": {
