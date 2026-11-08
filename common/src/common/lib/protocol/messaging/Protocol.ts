@@ -134,21 +134,9 @@ export default class Protocol {
         return protocol;
     }
 
-    public static ping(): Protocol {
-        const protocol = new Protocol();
-        protocol.protocolType = ProtocolType.PING;
-        return protocol;
-    }
-
     public static fetchUserStatus(): Protocol {
         const protocol = new Protocol();
         protocol.protocolType = ProtocolType.FETCH_USER_STATUS;
-        return protocol;
-    }
-
-    public static pong(): Protocol {
-        const protocol = new Protocol();
-        protocol.protocolType = ProtocolType.PONG;
         return protocol;
     }
 

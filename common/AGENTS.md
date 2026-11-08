@@ -81,7 +81,7 @@ common/
 
 ### 4. WebSocket 长连接（`src/common/lib/SparrowWebSocket.ts`）
 
-带鉴权握手的 WebSocket 封装，支持：`PING/PONG` 心跳、超时重连、窗口焦点感知（`activeStatus` 判断是否在重连）、状态监控（`STATUS` 指令）、文本/二进制消息分发。鉴权成功后写 `sessionStorage[USER_INFO_KEY]` 并触发 `handshakeSuccess(LoginUser)`。
+带鉴权握手的 WebSocket 封装，支持断线重连、窗口焦点感知、连接状态回调及文本/二进制消息分发。心跳使用 WebSocket 原生控制帧：服务端 Netty 发送 PING 并检查接收超时，浏览器自动回复 PONG；前端不定义业务 PING/PONG，不启动心跳定时器。鉴权成功后停止重连重试、更新连接状态并触发无参 `handshakeSuccess()`；业务方可通过 `connectionStatusCallback` 和 `getConnectionStatus()` 更新界面。联系人状态由业务方在鉴权成功后单次发送 `FETCH_USER_STATUS` 查询，不再随心跳轮询。
 
 ### 5. 协议类型（`src/common/lib/protocol/`）
 

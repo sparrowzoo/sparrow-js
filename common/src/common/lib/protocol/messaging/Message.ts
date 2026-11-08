@@ -2,7 +2,7 @@ import ChatUser from "./ChatUser";
 import ChatSession from "./ChatSession";
 import {format} from "date-fns";
 import Protocol from "./Protocol";
-import {ProtocolType} from "./Chat";
+import {MessageType, ProtocolType} from "./Chat";
 
 export enum AlignType { left = "left", right = "right" }
 
@@ -12,6 +12,7 @@ export default class Message {
     public sender: ChatUser;
     public receiver: ChatUser | null;
     public content: string;
+    public messageType: MessageType = MessageType.TEXT;
     public session: ChatSession;
     public clientSendTime: number;
     public serverTime: number | null;
@@ -33,6 +34,7 @@ export default class Message {
         message.session = ChatSession.createSession(protocol.chatSession.chatType, protocol.chatSession.id);
         message.receiver = protocol.receiver == null ? null : new ChatUser(protocol.receiver.id, protocol.receiver.category);
         message.content = protocol.getStringPayload() ?? "";
+        message.messageType = protocol.messageType;
         message.clientSendTime = protocol.clientSendTime;
         message.serverTime = protocol.serverTime;
         message.messageId = protocol.clientSendTime + "" + protocol.sender.id;
@@ -48,6 +50,7 @@ export default class Message {
         localMessage.session = session as ChatSession;
         if (session?.isOne2One() && remoteMessage.receiver != null) localMessage.receiver = new ChatUser(remoteMessage.receiver.id, remoteMessage.receiver.category);
         localMessage.content = remoteMessage.content;
+        localMessage.messageType = remoteMessage.messageType ?? MessageType.TEXT;
         localMessage.clientSendTime = remoteMessage.clientSendTime;
         localMessage.serverTime = remoteMessage.serverTime;
         localMessage.messageId = remoteMessage.messageId;

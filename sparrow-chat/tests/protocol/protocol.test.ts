@@ -69,7 +69,7 @@ describe("Java protocol compatibility", () => {
         expect(decoded.toBytes()).toEqual(singleFrame);
     });
 
-    it.each([30, 40, 70, -99])("handles event-only %i including signed ERROR", type => {
+    it.each([45, 70, -99])("handles event-only %i including signed ERROR", type => {
         const p = new Protocol();
         p.protocolType = type;
         expect([...p.toBytes()]).toEqual([type & 255]);
@@ -194,7 +194,7 @@ describe("Java protocol compatibility", () => {
         expect(ack.serverTime).toBe(1234);
         expect(p.serverTime).toBeNull();
         expect(Protocol.fromBytes(ack.toBytes()).sender).toBeNull();
-        expect([...Protocol.pong().toBytes()]).toEqual([40]);
+        expect([...Protocol.fetchUserStatus().toBytes()]).toEqual([45]);
         vi.restoreAllMocks();
     });
 });

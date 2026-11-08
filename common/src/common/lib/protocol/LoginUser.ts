@@ -1,5 +1,6 @@
 import UserCategory from "@/common/lib/UserCategory";
 import {resolveAvatar} from "@/common/lib/AvatarUtils";
+import {decodeUtf8} from "@/common/lib/Utf8";
 
 export default class LoginUser {
     public userId: string;
@@ -32,7 +33,9 @@ export default class LoginUser {
         if (!body) {
             return null;
         }
-        const userJson = atob(body);
+        const base64 = body.replace(/-/g, "+").replace(/_/g, "/");
+        const decoded = atob(base64.padEnd(Math.ceil(base64.length / 4) * 4, "="));
+        const userJson = decodeUtf8(Uint8Array.from(decoded, character => character.charCodeAt(0)));
         const userInfo = JSON.parse(userJson).body;
         return LoginUser.parseLoginJSON(userInfo);
     }

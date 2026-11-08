@@ -30,7 +30,7 @@ export default function MessageSender(messageSenderProps: MessageSenderProps) {
   async function sendMessage(message: string) {
     const messageBroker = webSocketContextValue.messageBroker;
     const sparrowWebSocket = messageBroker.webSocket;
-    messageBroker.sendMessage(sessionKey as string, message);
+    await messageBroker.sendMessage(sessionKey as string, message);
     const messageList = await messageBroker.getMessageList(
       sessionKey as string
     );
@@ -67,7 +67,9 @@ export default function MessageSender(messageSenderProps: MessageSenderProps) {
         localMessageNo={localMessageNo}
         sessionKey={sessionKey as string}
       />
-      <MessageEditor sendMessage={sendMessage} />
+      <MessageEditor sendMessage={sendMessage}
+        disabled={webSocketContextValue.messageBroker.isPending(sessionKey as string)}
+        plainText={webSocketContextValue.messageBroker.isAiSession(sessionKey as string)}/>
     </>
   );
 }

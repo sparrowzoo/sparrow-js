@@ -10,6 +10,7 @@
     "test:auth:e2e": "playwright test --config playwright.auth.config.ts",
     "test:copy": "node --test tests/copy/copy-shared.test.mjs",
     "test:menu": "vitest run --config vitest.menu.config.mjs",
+    "test:messaging": "vitest run --config vitest.messaging.config.mjs",
     "copy-ling-admin": "node ./copy-shared.mjs ling-admin",
     "copy-ling-www": "node ./copy-shared.mjs ling-www",
     "copy": "node ./copy-shared.mjs",

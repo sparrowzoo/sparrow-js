@@ -8,10 +8,10 @@ import ChatUser from "@/common/lib/protocol/messaging/ChatUser";
 import LoginUser from "@/common/lib/protocol/LoginUser";
 import toast from "react-hot-toast";
 import {WEBSOCKET} from "@/common/lib/Env";
-import {ContactStatus} from "@/lib/protocol/ContactStatus";
 import ContactContainer from "@/lib/im/ContactContainer";
 import SessionContainer from "@/lib/im/SessionContainer";
 import {Translator} from "@/common/lib/TranslatorType";
+import {parseQuestion, QuestionEvent} from "@/lib/im/QuestionProtocol";
 
 export default class MessageBroker {
     public contactContainer: ContactContainer;
@@ -21,6 +21,10 @@ export default class MessageBroker {
     public currentUser: ChatUser;
     //key:session key,value:message list
     private messageMap: Map<string, Message[]> = new Map();
+    private pendingSessions = new Set<string>();
+    private activeQuestions = new Map<string, QuestionEvent>();
+    private submittedQuestions = new Set<string>();
+    private pendingQuestionIds = new Map<string, string>();
 
     constructor(translator: Translator, redirectLogin: () => void, loginUser: LoginUser) {
         this.translator = translator;
@@ -35,12 +39,6 @@ export default class MessageBroker {
             WEBSOCKET as string,
             this.translator
         );
-        // 网关 10 秒无数据会关闭连接，心跳须提前发送。
-        sparrowWebSocket.heartTime = 5000;
-        sparrowWebSocket.heartbeatMessage = () => Protocol.ping().toBytes();
-        // FETCH_USER_STATUS is a one-byte query; contact filters are not part of this protocol segment.
-        sparrowWebSocket.statusMonitorMessage = () => Protocol.fetchUserStatus().toBytes();
-        sparrowWebSocket.connect();
         this.webSocket = sparrowWebSocket;
         sparrowWebSocket.redirectLogin = redirectLogin;
         this.webSocket.onMsgCallback = (buf: ArrayBuffer) => {
@@ -53,13 +51,15 @@ export default class MessageBroker {
                 toast.error(this.translator("offline"));
             }
         };
-        this.webSocket.monitorStatus = () => {
-            console.log("websocket monitor status");
-            return [];
+        this.webSocket.connectionStatusCallback = status => {
+            this.newMessageSignal();
+            if (status === SparrowWebSocket.ACTIVE_STATUS) {
+                this.webSocket.sendMessage(Protocol.fetchUserStatus().toBytes());
+            }
         };
-        this.webSocket.monitorStatusCallback = (data: ContactStatus[]) => {
-            console.log("websocket monitor status callback", JSON.stringify(data));
-        };
+        this.webSocket.closeCallback = () => this.releasePending();
+        this.webSocket.errorCallback = () => this.releasePending();
+        sparrowWebSocket.connect();
     }
 
     public closeWebSocket() {
@@ -79,40 +79,69 @@ export default class MessageBroker {
         });
     }
 
-    public sendMessage(sessionKey: string, content: string): void {
-        const chatSession = ChatSession.parse(sessionKey);
-        let protocol;
-        if (chatSession?.chatType == ChatType.CHAT_1_TO_1) {
-            const oppositeUser = chatSession.getOppositeUser(this.currentUser);
-            let protocolType = ProtocolType.IM;
-            let messageType = MessageType.TEXT;
-            if (oppositeUser?.category == process.env.NEXT_PUBLIC_USER_CATEGORY_AI) {
-                protocolType = ProtocolType.AI_REQUEST;
-                messageType = MessageType.CONSULT;
-            }
-            protocol = Protocol.create121Chat(
-                protocolType,
-                this.currentUser,
-                messageType,
-                oppositeUser as ChatUser,
-                content,
-                new Date().getTime()
-            );
-        } else {
-            protocol = Protocol.createGroupChat(
-                this.currentUser,
-                sessionKey,
-                MessageType.TEXT,
-                content,
-                new Date().getTime()
-            );
-        }
-        const message = Message.fromProtocol(protocol);
-        this.putMessage(message).then(() => {
-            this.sessionContainer.read(message.session);
-            this.webSocket?.sendMessage(protocol.toBytes());
+    public isPending(sessionKey: string): boolean {
+        return this.pendingSessions.has(sessionKey);
+    }
+
+    public isAiSession(sessionKey: string): boolean {
+        return ChatSession.parse(sessionKey)?.getOppositeUser(this.currentUser)?.isAI() ?? false;
+    }
+
+    public canAnswer(sessionKey: string, questionId: string): boolean {
+        return !this.isPending(sessionKey) && !this.submittedQuestions.has(questionId)
+            && this.activeQuestions.get(sessionKey)?.questionId === questionId;
+    }
+
+    public async sendAnswer(sessionKey: string, questionId: string, answers: string[]): Promise<void> {
+        const question = this.activeQuestions.get(sessionKey);
+        if (!this.isAiSession(sessionKey) || !question || !this.canAnswer(sessionKey, questionId)) return;
+        if (answers.length !== question.questions.length || answers.some(answer => !answer.trim())) return;
+        const content = question.questions.map((item, index) => `${item.question}：${answers[index].trim()}`).join("\n");
+        this.submittedQuestions.add(questionId);
+        this.pendingQuestionIds.set(sessionKey, questionId);
+        try {
+            await this.send(sessionKey, JSON.stringify({questionId, content}), MessageType.ANSWER, content);
+        } catch (failure) {
+            this.submittedQuestions.delete(questionId);
+            this.pendingQuestionIds.delete(sessionKey);
             this.newMessageSignal();
-        });
+            throw failure;
+        }
+    }
+
+    public async sendMessage(sessionKey: string, content: string): Promise<void> {
+        await this.send(sessionKey, content, this.isAiSession(sessionKey) ? MessageType.AI : MessageType.HTML);
+    }
+
+    private async send(sessionKey: string, content: string, messageType: MessageType, displayContent = content): Promise<void> {
+        const chatSession = ChatSession.parse(sessionKey);
+        if (!chatSession || !content.trim() || this.isPending(sessionKey)) return;
+        const isAi = this.isAiSession(sessionKey);
+        const protocol = chatSession.chatType === ChatType.CHAT_1_TO_1
+            ? Protocol.create121Chat(isAi ? ProtocolType.AI_REQUEST : ProtocolType.IM, this.currentUser,
+                messageType, chatSession.getOppositeUser(this.currentUser) as ChatUser, content, Date.now())
+            : Protocol.createGroupChat(this.currentUser, sessionKey, messageType, content, Date.now());
+        if (isAi) this.pendingSessions.add(sessionKey);
+        try {
+            this.webSocket.sendMessage(protocol.toBytes());
+            const message = Message.fromProtocol(protocol);
+            message.content = displayContent;
+            if (isAi && messageType !== MessageType.ANSWER) this.activeQuestions.delete(sessionKey);
+            await this.putMessage(message);
+            this.sessionContainer.read(message.session);
+            this.newMessageSignal();
+        } catch (failure) {
+            this.pendingSessions.delete(sessionKey);
+            this.newMessageSignal();
+            throw failure;
+        }
+    }
+
+    private releasePending(): void {
+        for (const questionId of this.pendingQuestionIds.values()) this.submittedQuestions.delete(questionId);
+        this.pendingSessions.clear();
+        this.pendingQuestionIds.clear();
+        this.newMessageSignal();
     }
 
     public async getMessageList(sessionKey: string) {
@@ -135,9 +164,11 @@ export default class MessageBroker {
 
     public async websocketMsgCallback(buf: ArrayBuffer): Promise<void> {
         const protocol = Protocol.fromBytes(buf);
-        if (protocol.protocolType === ProtocolType.PONG) {
-            console.log("receive PONG")
-            this.webSocket.receiveHeartbeat();
+        if (protocol.protocolType === ProtocolType.ERROR) {
+            // ERROR 只有事件标记，没有 session 字段；结束当前等待并允许重新提交答案。
+            this.releasePending();
+            toast.error(this.translator?.("ai_reply_failed") ?? "AI could not reply. Please retry.");
+            this.onControlEvent(protocol);
             return;
         }
         if (protocol.protocolType === ProtocolType.OFFLINE) {
@@ -152,6 +183,19 @@ export default class MessageBroker {
             return;
         }
         const message = Message.fromProtocol(protocol);
+        if (protocol.protocolType === ProtocolType.AI_RESPONSE) {
+            const sessionKey = message.session.sessionKey;
+            this.pendingSessions.delete(sessionKey);
+            this.pendingQuestionIds.delete(sessionKey);
+            this.activeQuestions.delete(sessionKey);
+            if (message.messageType === MessageType.QUESTION) {
+                try {
+                    this.activeQuestions.set(sessionKey, parseQuestion(message.content));
+                } catch {
+                    // 仍交给渲染器显示无效问题提示，不能让一次坏消息卡住整个会话。
+                }
+            }
+        }
         await this.putMessage(message);
         this.sessionContainer.plusUnreadCount(message);
         this.newMessageSignal();
