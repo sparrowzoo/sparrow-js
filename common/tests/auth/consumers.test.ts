@@ -164,7 +164,6 @@ describe("S06/S07 existing consumers retain the original token transport", () =>
         const redirect = vi.fn();
         socket.redirectLogin = redirect;
         cleanups.push(() => {
-            socket.stopHeartBeat();
             socket.stopRetryConnect();
             socket.close();
         });

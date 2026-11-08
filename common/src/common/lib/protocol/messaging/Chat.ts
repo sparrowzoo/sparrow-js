@@ -3,7 +3,7 @@ export enum ChatType {
     GROUP = 1,
 }
 
-export enum MessageType { TEXT = 0, HTML = 1, MARKDOWN = 2, CONSULT = 10}
+export enum MessageType { TEXT = 0, HTML = 1, MARKDOWN = 2, AI = 3, QUESTION = 4, ANSWER = 5 }
 
 export enum DeviceType { UNKNOW = 0, PC = 1, MOBILE = 2, APP = 3 }
 
@@ -30,8 +30,6 @@ export enum ProtocolType {
     MESSAGE_CANCEL = 27,
     MESSAGE_DEAL = 28,
     READ = 20,
-    PING = 30,
-    PONG = 40,
     FETCH_USER_STATUS = 45,
     SEND_USER_STATUS = 50,
     OFFLINE = 70,
@@ -90,18 +88,6 @@ export const PROTOCOL_DEFINITIONS: Readonly<Record<ProtocolType, {
     [ProtocolType.READ]: {
         endOfSegmentIndex: ProtocolSegmentIndex.TIME_SEGMENT,
         direction: TransmissionDirection.UPLINK,
-        needBusiness: false,
-        localImmediately: true
-    },
-    [ProtocolType.PING]: {
-        endOfSegmentIndex: ProtocolSegmentIndex.PROTOCOL_SEGMENT,
-        direction: TransmissionDirection.UPLINK,
-        needBusiness: false,
-        localImmediately: true
-    },
-    [ProtocolType.PONG]: {
-        endOfSegmentIndex: ProtocolSegmentIndex.PROTOCOL_SEGMENT,
-        direction: TransmissionDirection.DOWNLINK,
         needBusiness: false,
         localImmediately: true
     },

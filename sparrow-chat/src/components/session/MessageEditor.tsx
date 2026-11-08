@@ -12,24 +12,31 @@ import { Utils } from "@/common/lib/Utils";
 import { useTranslations } from "next-intl";
 
 interface SenderProps {
-  sendMessage: (message: string) => void;
+  sendMessage: (message: string) => Promise<void>;
+  disabled?: boolean;
+  plainText?: boolean;
 }
 
 export default function MessageEditor(senderProps: SenderProps) {
   const t = useTranslations("MessageBroker");
 
-  const { sendMessage } = senderProps;
+  const { sendMessage, disabled, plainText } = senderProps;
   const editorRef = React.createRef<HTMLDivElement>();
   const uploadUrl = `${UPLOAD_URL}`;
 
   async function localSendMessage() {
-    const message = editorRef.current?.innerHTML;
+    if (disabled) return;
+    const message = plainText ? editorRef.current?.innerText : editorRef.current?.innerHTML;
     if (message === undefined || message.trim() === "") {
       toast.error(t("message_empty"));
       return;
     }
-    sendMessage(message.trim());
-    editorRef.current!.innerText = "";
+    try {
+      await sendMessage(message.trim());
+      editorRef.current!.innerText = "";
+    } catch {
+      toast.error(t("send_failed"));
+    }
   }
 
   function insertImage(url: string, fileName: string) {
@@ -77,7 +84,7 @@ export default function MessageEditor(senderProps: SenderProps) {
       </div>
       <div
         ref={editorRef}
-        contentEditable={"true"}
+        contentEditable={!disabled}
         onKeyDown={(event: React.KeyboardEvent<HTMLDivElement>) => {
           if (event.code === "Enter") {
             event.preventDefault(); // 阻止默认分段行为
@@ -95,6 +102,7 @@ export default function MessageEditor(senderProps: SenderProps) {
         }
       >
         <Button
+          disabled={disabled}
           className={"im-send-button cursor-pointer"}
           onClick={(event) => localSendMessage()}
         >

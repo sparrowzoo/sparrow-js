@@ -7,7 +7,7 @@ usage() {
 需要 Node.js 22+、Yarn 1.22.19、tar。
 先在仓库根目录执行 yarn install --frozen-lockfile
 （workspaces 统一安装 common/admin/coder/chat/passport 五个项目）。
-依次同步公共代码、执行 yarn run build，全部校验成功后生成：
+统一分发公共代码后，依次执行 yarn run build，全部校验成功后生成：
   artifacts/yyyyMMddHHmmss.tar.gz（使用本机时间）
 压缩包顶层目录及内容：
   admin/    <- sparrow-admin/out/
@@ -42,14 +42,13 @@ if [[ -L $target || ( -e $target && ! -d $target ) ]]; then
   exit 1
 fi
 
+yarn --cwd "$root/common" copy sparrow-admin sparrow-chat sparrow-passport
+
 export NEXT_TELEMETRY_DISABLED=1
 for project in "${projects[@]}"; do
   printf '\n构建 %s\n' "$project"
   (
     cd -- "$root/$project"
-    if [[ $project != common ]]; then
-      yarn run copy
-    fi
     yarn run build
   )
 done

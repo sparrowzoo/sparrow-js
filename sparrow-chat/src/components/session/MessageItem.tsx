@@ -5,6 +5,9 @@ import Message from "@/common/lib/protocol/messaging/Message";
 import { WebSocketContext } from "@/lib/im/WebSocketProvider";
 import { Separator } from "@/components/ui/separator";
 import MyAvatar from "@/components/MyAvatar";
+import MessageContent from "./MessageContent";
+import {useLocale} from "next-intl";
+import toast from "react-hot-toast";
 
 interface Props {
   message: Message;
@@ -15,6 +18,8 @@ interface Props {
 
 export default function MessageItem(props: Props) {
   const webSocketContextValue = useContext(WebSocketContext);
+  const zh = useLocale().startsWith("zh");
+  const broker = webSocketContextValue.messageBroker;
   if (props.message.timeline > 0) {
     return (
       <div className={"im-message-timeline text-gray-500 text-center text-sm"}>
@@ -52,12 +57,14 @@ export default function MessageItem(props: Props) {
           >
             {senderDetail?.userName} @{senderDetail?.nationality}
           </span>
-          <p
-            dangerouslySetInnerHTML={{ __html: content }}
-            className={
-              "im-message-bubble p-2 text-xs rounded-lg dark:text-background light:text-gray-900  bg-gray-100"
-            }
-          ></p>
+          <div className="im-message-bubble prose prose-sm max-w-none break-words p-3 rounded-lg bg-muted text-foreground dark:prose-invert">
+            <MessageContent message={props.message} zh={zh}
+              canAnswer={questionId => broker.canAnswer(props.message.session.sessionKey, questionId)}
+              onAnswer={(questionId, answers) => {
+                broker.sendAnswer(props.message.session.sessionKey, questionId, answers)
+                  .catch(() => toast.error(zh ? "发送失败，请重试。" : "Unable to send. Please retry."));
+              }}/>
+          </div>
         </div>
       </div>
     </div>

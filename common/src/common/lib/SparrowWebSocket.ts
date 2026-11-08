@@ -8,37 +8,39 @@ class SparrowWebSocket {
     public static ACTIVE_STATUS = "active";
     public static INACTIVE_STATUS = "inactive";
     public static CONNECTING_STATUS = "connecting";
-    //窗口的焦点状态，active 状态则可以执行重连，否则继续重试，直到获取窗口焦点
-    private static activeStatus: string = SparrowWebSocket.INACTIVE_STATUS;
-    //心跳状态 inactive 未探测到心跳，active 心跳正常
-    private static heartStatus: string = SparrowWebSocket.INACTIVE_STATUS;
-    //连接状态 inactive 未连接，connecting 正在连接，active 连接正常
-    private static connectionStatus: string = SparrowWebSocket.INACTIVE_STATUS;
     public translate: Translator;
     // 接收到信息后需要执行的事件
     public onMsgCallback: (data: ArrayBuffer) => void;
     public handshakeSuccess: () => void;
     public handshakeFail: (data: Result) => void;
+    public connectingCallback?: () => void;
+    public closeCallback?: () => void;
+    public errorCallback?: (error: unknown) => void;
+    public invalidMessageCallback?: (error: unknown) => void;
     public redirectLogin: () => void;
     public offlineCallback: (data: { offline: boolean }) => void;
-    public monitorStatus: () => [];
-    public monitorStatusCallback: (data: []) => void;
+    public connectionStatusCallback?: (status: string) => void;
     public txid = 0;
-    // 心跳间隔时间 ms
-    public heartTime = 10000;
-    private ws: WebSocket;
+    //窗口的焦点状态，active 状态则可以执行重连，否则继续重试，直到获取窗口焦点
+    private activeStatus: string = SparrowWebSocket.INACTIVE_STATUS;
+    private windowEventsBound = false;
+    private readonly activateWindow = () => {
+        this.activeStatus = SparrowWebSocket.ACTIVE_STATUS;
+    };
+    private readonly deactivateWindow = () => {
+        this.activeStatus = SparrowWebSocket.INACTIVE_STATUS;
+    };
+    //连接状态 inactive 未连接，connecting 正在连接，active 连接正常
+    private connectionStatus: string = SparrowWebSocket.INACTIVE_STATUS;
+    private ws: WebSocket | null = null;
     // websocket 连接的 url
     private url: string;
     // websocket 连接的 token
     private crosStorage: CrosStorage;
     // 重连重试时间 ms
     private reconnectTime = 15000;
-    private heartTimer: NodeJS.Timeout;
-    private lastHeartTime: number = 0;
-    private monitorTime: number = 10000;
-    private lastStatusMonitoredTime: number = 0;
-    private reconnectionTimer: NodeJS.Timeout;
-    private connectionTimestamp: number;
+    private reconnectionTimer: NodeJS.Timeout | null = null;
+    private generation = 0;
 
     constructor(url: string, translate: Translator) {
         this.url = url;
@@ -46,69 +48,57 @@ class SparrowWebSocket {
         this.crosStorage = CrosStorage.getCrosStorage();
     }
 
-    public heartbeatMessage: () => string | Uint8Array<ArrayBuffer> = () => "PING";
-
-    public statusMonitorMessage: (contacts: []) => string | Uint8Array<ArrayBuffer> = contacts =>
-        contacts.length > 0 ? "STATUS|" + JSON.stringify(contacts) : "STATUS";
-
     public userAuthCallback(data: Result) {
         if (data.code == "0") {
+            // Native PING/PONG is handled by the browser and Netty, outside JavaScript.
+            this.stopRetryConnect();
+            this.setConnectionStatus(SparrowWebSocket.ACTIVE_STATUS);
             if (!this.handshakeSuccess) {
                 console.warn("please defined handshakeSuccess callback method  ");
             } else {
                 this.handshakeSuccess();
             }
-            //鉴权成功后，启动心跳
-            this.connectionTimestamp = new Date().getTime();
-            SparrowWebSocket.connectionStatus = SparrowWebSocket.ACTIVE_STATUS;
-            // 启动心跳
-            this.startHeartBeat();
             return;
         }
+        const generation = this.generation;
         this.crosStorage.removeToken().then(() => {
+            if (generation !== this.generation) return;
             if (this.handshakeFail) {
                 this.handshakeFail(data);
                 return;
             }
             toast.error(this.translate ? this.translate(data.key ?? "") : data.message ?? "");
             this.redirectLogin();
+        }).catch(error => {
+            if (generation === this.generation) this.errorCallback?.(error);
         });
     }
 
-    public receiveHeartbeat() {
-        this.lastHeartTime = Date.now();
-        SparrowWebSocket.heartStatus = SparrowWebSocket.ACTIVE_STATUS;
-    }
-
-    public getHeartStatus() {
-        return SparrowWebSocket.heartStatus;
+    public getConnectionStatus(): string {
+        return this.connectionStatus;
     }
 
     public reconnectWebSocket() {
-        //关闭现有链接
+        const retrying = this.reconnectionTimer !== null;
+        // Detach the failed socket before its subsequent close event arrives.
         this.close();
-        //立即尝试重连
-        this.connect();
-        //发起重连
+        // Keep tracking focus while waiting for the next retry.
+        this.initWindowsFocusEvent();
+        // Each failed retry starts a fresh fifteen-second wait.
         this.reconnectionTimer = setInterval(() => {
-            if (SparrowWebSocket.activeStatus === SparrowWebSocket.INACTIVE_STATUS) {
+            if (this.activeStatus === SparrowWebSocket.INACTIVE_STATUS) {
                 console.log("窗口失去焦点，不进行重连");
                 return;
             }
 
-            if (SparrowWebSocket.heartStatus === SparrowWebSocket.ACTIVE_STATUS) {
-                console.log("心跳正常，不进行重连");
-                return;
-            }
-
             if (
-                SparrowWebSocket.connectionStatus === SparrowWebSocket.CONNECTING_STATUS
+                this.connectionStatus === SparrowWebSocket.CONNECTING_STATUS
             ) {
                 console.log("正在连接中，不进行重连");
                 return;
             }
             if (
-                SparrowWebSocket.connectionStatus === SparrowWebSocket.ACTIVE_STATUS
+                this.connectionStatus === SparrowWebSocket.ACTIVE_STATUS
             ) {
                 console.log("连接正常，不进行重连");
                 return;
@@ -116,16 +106,23 @@ class SparrowWebSocket {
 
             this.connect();
         }, this.reconnectTime);
+        // Try once immediately; later failures must wait for the retry timer.
+        if (!retrying) this.connect();
     }
 
     public connect() {
+        if (this.connectionStatus !== SparrowWebSocket.INACTIVE_STATUS) return;
+        const generation = ++this.generation;
         try {
-            SparrowWebSocket.connectionStatus = SparrowWebSocket.CONNECTING_STATUS;
+            this.setConnectionStatus(SparrowWebSocket.CONNECTING_STATUS);
+            this.connectingCallback?.();
             console.log("开始链接");
             if ("WebSocket" in window) {
                 this.initWindowsFocusEvent();
                 this.crosStorage.getToken(StorageType.AUTOMATIC).then((token) => {
+                    if (generation !== this.generation) return;
                     if (!token) {
+                        this.setConnectionStatus(SparrowWebSocket.INACTIVE_STATUS);
                         if (this.translate) {
                             toast.error(this.translate("shake-hands-no-login"));
                         }
@@ -138,79 +135,55 @@ class SparrowWebSocket {
                     this._onMsg();
                     this.onClose();
                     this.onError();
+                }).catch(error => {
+                    if (generation !== this.generation) return;
+                    this.setConnectionStatus(SparrowWebSocket.INACTIVE_STATUS);
+                    this.errorCallback?.(error);
                 });
             }
         } catch (e) {
-            SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
-            console.log("链接失败，直接重连", e);
-            this.reconnectWebSocket();
+            this.setConnectionStatus(SparrowWebSocket.INACTIVE_STATUS);
+            console.log("链接失败", e);
+            this.errorCallback?.(e);
         }
     }
 
     public onOpen() {
+        if (!this.ws) return;
         this.ws.onopen = (e) => {
             console.log("连接成功" + e);
         };
     }
 
     public onClose() {
-        this.ws.onclose = (e) => {
-            if (e.wasClean) {
-                SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
-            } else {
-                SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
-            }
+        const socket = this.ws;
+        if (!socket) return;
+        socket.onclose = (e) => {
+            if (this.ws !== socket) return;
+            this.setConnectionStatus(SparrowWebSocket.INACTIVE_STATUS);
             console.log("连接关闭,e.wasClean=" + e.wasClean);
+            this.closeCallback?.();
+            if (this.ws === socket) this.reconnectWebSocket();
         };
     }
 
     public onError() {
-        this.ws.onerror = (e) => {
+        const socket = this.ws;
+        if (!socket) return;
+        socket.onerror = (e) => {
+            if (this.ws !== socket) return;
             // 如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
             console.log("连接出错", e);
-            SparrowWebSocket.connectionStatus = SparrowWebSocket.INACTIVE_STATUS;
-            this.reconnectWebSocket();
+            this.setConnectionStatus(SparrowWebSocket.INACTIVE_STATUS);
+            this.errorCallback?.(e);
+            if (this.ws === socket) this.reconnectWebSocket();
         };
     }
 
-    // 心跳机制 --启动心跳
-    public startHeartBeat() {
-        this.stopRetryConnect();
-        this.stopHeartBeat();
-        this.lastHeartTime = new Date().getTime();
-        this.heartTimer = setInterval(() => {
-            const heartDiff = new Date().getTime() - this.lastHeartTime;
-            // 按当前配置计算超时，避免调整发送周期后仍使用旧的等待时长。
-            if (heartDiff > this.heartTime * 3) {
-                console.log("超时重连 heart diff {}", heartDiff);
-                this.stopHeartBeat();
-                this.reconnectWebSocket();
-                return;
-            }
-            // 开启一个心跳
-            try {
-                this.ws.send(this.heartbeatMessage());
-                if (
-                    new Date().getTime() - this.lastStatusMonitoredTime >
-                    this.monitorTime
-                ) {
-                    const contactsStatus = this.monitorStatus();
-                    this.ws.send(this.statusMonitorMessage(contactsStatus));
-                }
-            } catch (e) {
-                console.log("heart beat error:" + e);
-            }
-        }, this.heartTime);
-    }
-
-    // 关闭心跳
-    public stopHeartBeat() {
-        clearInterval(this.heartTimer);
-        SparrowWebSocket.heartStatus = SparrowWebSocket.INACTIVE_STATUS;
-    }
-
     public stopRetryConnect() {
+        if (this.reconnectionTimer === null) return;
         clearInterval(this.reconnectionTimer);
+        this.reconnectionTimer = null;
     }
 
     public increaseTxid(): number {
@@ -220,6 +193,7 @@ class SparrowWebSocket {
 
     //发送消息
     public sendMessage(data: string | ArrayBufferLike | ArrayBufferView) {
+        if (!this.ws || this.ws.readyState !== 1) throw new Error("WebSocket is not connected");
         this.increaseTxid();
         if (typeof data === "string") {
             this.ws.send(data);
@@ -237,45 +211,73 @@ class SparrowWebSocket {
 
     // 关闭连接
     public close() {
-        this.stopHeartBeat();
+        ++this.generation;
         this.stopRetryConnect();
+        this.removeWindowsFocusEvent();
+        this.setConnectionStatus(SparrowWebSocket.INACTIVE_STATUS);
         if (this.ws == null) {
             console.log("websocket is null");
             return;
         }
-        this.ws.close();
+        const socket = this.ws;
+        this.ws = null;
+        socket.onmessage = null;
+        socket.onclose = null;
+        socket.onerror = null;
+        socket.onopen = null;
+        socket.close();
+    }
+
+    private setConnectionStatus(status: string): void {
+        if (this.connectionStatus === status) return;
+        this.connectionStatus = status;
+        this.connectionStatusCallback?.(status);
     }
 
     private initWindowsFocusEvent() {
-        window.onfocus = function () {
-            console.log("window.onfocus");
-            SparrowWebSocket.activeStatus = SparrowWebSocket.ACTIVE_STATUS;
-        };
-        window.onclick = function () {
-            console.log("window.onclick");
-            SparrowWebSocket.activeStatus = SparrowWebSocket.ACTIVE_STATUS;
-        };
-        window.onblur = function () {
-            console.log("window.onblur");
-            SparrowWebSocket.activeStatus = SparrowWebSocket.INACTIVE_STATUS;
-        };
+        if (this.windowEventsBound) return;
+        if (typeof document !== "undefined") {
+            this.activeStatus = document.hasFocus()
+                ? SparrowWebSocket.ACTIVE_STATUS : SparrowWebSocket.INACTIVE_STATUS;
+        }
+        window.addEventListener("focus", this.activateWindow);
+        window.addEventListener("click", this.activateWindow);
+        window.addEventListener("blur", this.deactivateWindow);
+        this.windowEventsBound = true;
+    }
+
+    private removeWindowsFocusEvent() {
+        if (!this.windowEventsBound) return;
+        window.removeEventListener("focus", this.activateWindow);
+        window.removeEventListener("click", this.activateWindow);
+        window.removeEventListener("blur", this.deactivateWindow);
+        this.windowEventsBound = false;
+        this.activeStatus = SparrowWebSocket.INACTIVE_STATUS;
     }
 
     private _onMsg() {
-        this.ws.onmessage = async (e) => {
-            if (typeof e.data === "string") {
-                const result = JSON.parse(e.data);
-                if (result.instruction === "AUTH_BIND" || result.instruction === "AUTH") {
-                    if (this.userAuthCallback) {
-                        this.userAuthCallback(result);
+        const socket = this.ws;
+        if (!socket) return;
+        socket.onmessage = async (e) => {
+            if (this.ws !== socket) return;
+            try {
+                if (typeof e.data === "string") {
+                    const result = JSON.parse(e.data);
+                    if (result.instruction === "AUTH_BIND" || result.instruction === "AUTH") {
+                        if (this.userAuthCallback) {
+                            this.userAuthCallback(result);
+                        }
                     }
+                    return;
                 }
-                return;
-            }
-            const buf: ArrayBuffer = e.data instanceof ArrayBuffer ? e.data : await e.data.arrayBuffer();
-            this.increaseTxid();
-            if (this.onMsgCallback) {
-                this.onMsgCallback(buf);
+                const buf: ArrayBuffer = e.data instanceof ArrayBuffer ? e.data : await e.data.arrayBuffer();
+                if (this.ws !== socket) return;
+                this.increaseTxid();
+                if (this.onMsgCallback) {
+                    this.onMsgCallback(buf);
+                }
+            } catch (error) {
+                if (this.ws === socket) this.invalidMessageCallback?.(error);
             }
         };
     }

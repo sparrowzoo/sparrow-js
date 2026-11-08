@@ -9,8 +9,8 @@
     "build": "next build",
     "start": "node ../deploy/serve-static.mjs out 3003",
     "lint": "next lint",
-    "copy": "cpy ./../common/src/common  ./src/ --parents",
-    "preview": "node ../deploy/serve-static.mjs out 3003"
+    "preview": "node ../deploy/serve-static.mjs out 3003",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -80,7 +80,11 @@
     "@radix-ui/react-checkbox": "^1.3.2",
     "@tanstack/table-core": "^8.21.3",
     "dayjs": "^1.11.13",
-    "raw-loader": "^4.0.2"
+    "raw-loader": "^4.0.2",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "rehype-raw": "^7.0.0",
+    "rehype-sanitize": "^6.0.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.7",

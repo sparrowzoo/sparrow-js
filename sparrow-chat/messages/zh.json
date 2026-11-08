@@ -85,7 +85,9 @@
     "system_server_error": "服务器错误，请稍后再试",
     "http_invalid_response": "服务器响应格式错误",
     "http_request_failed": "请求失败（HTTP {status}）",
-    "business_error": "请求失败（错误码 {code}）"
+    "business_error": "请求失败（错误码 {code}）",
+    "send_failed": "发送失败，请重试。",
+    "ai_reply_failed": "AI 回复失败，请重试。"
   },
   "MessageSearch": {
     "content": "聊天内容",

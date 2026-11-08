@@ -88,7 +88,9 @@ declare const messages: {
     "system_server_error": "Server error, please try again later",
     "http_invalid_response": "Invalid server response",
     "http_request_failed": "Request failed (HTTP {status})",
-    "business_error": "Request failed (code {code})"
+    "business_error": "Request failed (code {code})",
+    "send_failed": "Unable to send. Please retry.",
+    "ai_reply_failed": "AI could not reply. Please retry."
   },
   "MessageSearch": {
     "content": "message content",

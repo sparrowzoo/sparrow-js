@@ -5,7 +5,7 @@ import {notFound} from "next/navigation";
 import {routing} from "@/i18n/routing";
 import {ThemeProvider} from "@/common/components/header/theme-provider";
 import "../globals.css";
-import Header from "@/common/components/header/header";
+import Header from "@/sparrow/header";
 import SiteFooter from "@/app/[locale]/_components/site-footer";
 import LoginUserProvider from "@/common/lib/LoginUserProvider";
 

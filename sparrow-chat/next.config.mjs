@@ -31,10 +31,9 @@ const nextConfig = {
         return config;
     }
 };
-//const withNextIntl = createNextIntlPlugin('./src/common/i18n/request.ts');
 
 const withNextIntl = createNextIntlPlugin({
-    requestConfig: './src/common/i18n/request.ts',
+    requestConfig: './src/i18n/request.ts',
     experimental: {
         createMessagesDeclaration: './messages/en.json'
     }
